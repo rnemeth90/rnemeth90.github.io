@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on GeekyRyan</title><link>https://rnemeth90.github.io/categories/docker/</link><description>GeekyRyan (Docker)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 15 Jul 2022 18:18:50 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/categories/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>Scheduled Kubernetes Worker Node Maintenance with Kured</title><link>https://rnemeth90.github.io/posts/2022-07-15-scheduled-kubernetes-worker-node-maintenance-with-kured/</link><pubDate>Fri, 15 Jul 2022 18:18:50 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-07-15-scheduled-kubernetes-worker-node-maintenance-with-kured/</guid><description>&lt;p>If you manage Linux nodes, you know how vital performing regular maintenance is. Installing software patches that modify Linux kernel headers requires a reboot. Normally, as in the past, we would cordon and drain the node and then manually reboot, wait for it to come back online, verify its health, and add it back to the cluster. That’s a lot of manual work! How can we automate this?&lt;/p>
+&lt;p>Weaveworks created a great tool for simplifying these steps: Kured (the &lt;em>&lt;strong>Ku&lt;/strong>bernetes &lt;strong>Re&lt;/strong>boot &lt;strong>D&lt;/strong>aemon&lt;/em>). Let’s start by deploying Kured to our cluster.&lt;/p>
+&lt;p>Kured can be deployed in one of several ways. In this article, we’ll focus on deploying it via Helm. This is the simplest and quickest way to get it running in our cluster.&lt;/p>
+&lt;p>Follow these steps to install the Helm chart:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 1) Add the Kured Helm repository&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>helm repo add kured https://weaveworks.github.io/kured
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 2) Update your local Helm chart repository cache&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>helm repo update
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 3) Create a dedicated namespace where you would like to deploy kured&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>kubectl create namespace kured
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 4) Install kured in that namespace with Helm 3 (only on Linux nodes)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>helm install kured kured/kured --namespace kured --set nodeSelector.&lt;span style="color:#e6db74">&amp;#34;kubernetes\.io/os&amp;#34;&lt;/span>&lt;span style="color:#f92672">=&lt;/span>linux
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If all went well with the command above, that’s it, you’re done! Have a nice day! 🙂&lt;/p>
+&lt;p>If you want to test Kured, login to one of your Linux nodes, and install some patches with your package manager of choice (any patch that requires a reboot, typically patches that modify kernel headers). Then, check for a file named ‘reboot-required’ in /var/run:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>ls -lisa /var/run/reboot-required
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you installed patches, and this file does not exist, none of your patches require a reboot. We can still fake the system into thinking a reboot is required by manually creating the ‘reboot-required’ file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo touch /var/run/reboot-required
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2022/07/image-1.png" alt="">&lt;/p>
+&lt;p>Then, we’ll use Kubetail to tail the logs of all our Kured pods:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>kubetail -label kured --namespace kured
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2022/07/image-1024x749.png" alt="">&lt;/p>
+&lt;p>By default, Kured checks for the existence of the sentinel file every 60 minutes. However, this behavior can be changed. See the github repo for more info:&lt;/p>
+&lt;p>&lt;img src="https://github.com/weaveworks/kured#reboot-sentinel-file--period" alt="weaveworks/kured: Kubernetes Reboot Daemon">&lt;/p>
+&lt;p>Scheduling on the node should be disabled if you are within the Kured schedule&lt;/p>
+&lt;p>&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2022/07/image-2.png" alt="">&lt;/p>
+&lt;p>Now that the node is cordoned off, running pods on the node are drained, and the node is rebooted.&lt;/p>
+&lt;p>That’s it for this article. Have a great day!&lt;/p></description></item><item><title>Running Docker in WSL v1</title><link>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</link><pubDate>Sun, 26 Jun 2022 15:00:28 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</guid><description>&lt;p>I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.&lt;/p>
+&lt;p>Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work. I receive this nice message:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ docker
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>The command &lt;span style="color:#e6db74">&amp;#39;docker&amp;#39;&lt;/span> could not be found in this WSL &lt;span style="color:#ae81ff">1&lt;/span> distro.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>We recommend to convert this distro to WSL &lt;span style="color:#ae81ff">2&lt;/span> and activate
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>the WSL integration in Docker Desktop settings.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>See https://docs.docker.com/docker-for-windows/wsl/ &lt;span style="color:#66d9ef">for&lt;/span> details.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>So I’m in somewhat of a catch-22 here…&lt;/p>
+&lt;p>To work around this problem until a proper solution is found, I was able to get Docker working with WSL v1.&lt;/p>
+&lt;p>If you happen to be having a similar issue (and it seems like quite a few people are, considering the number of Github posts I found), just follow these steps:&lt;/p>
+&lt;ul>
+&lt;li>Expose the Docker daemon in docker desktop settings:&lt;/li>
+&lt;/ul>
+&lt;p>&lt;a href="https://rnemeth90.github.io/wp-content/uploads/2022/02/image-10-1024x585.png">&lt;/a>&lt;/p>
+&lt;p>Install the stand-alone Docker client in WSL v1:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.5.tgz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ tar zxvf docker-20.10.5.tgz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ cd docker
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Set the default Docker daemon in WSL v1:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>export DOCKER_HOST&lt;span style="color:#f92672">=&lt;/span>tcp://localhost:2375
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Verify you can connect to Docker running on Windows from within WSL:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>./docker info
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This is also beneficial in that you only have one Docker host to manage your containers, network, etc., rather than two.&lt;/p></description></item></channel></rss>

@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>kubernetes on GeekyRyan</title><link>https://rnemeth90.github.io/categories/kubernetes/</link><description>GeekyRyan (kubernetes)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 15 Jul 2022 18:18:50 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml"/><item><title>Scheduled Kubernetes Worker Node Maintenance with Kured</title><link>https://rnemeth90.github.io/posts/2022-07-15-scheduled-kubernetes-worker-node-maintenance-with-kured/</link><pubDate>Fri, 15 Jul 2022 18:18:50 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-07-15-scheduled-kubernetes-worker-node-maintenance-with-kured/</guid><description>&lt;p>If you manage Linux nodes, you know how vital performing regular maintenance is. Installing software patches that modify Linux kernel headers requires a reboot. Normally, as in the past, we would cordon and drain the node and then manually reboot, wait for it to come back online, verify its health, and add it back to the cluster. That’s a lot of manual work! How can we automate this?&lt;/p>
+&lt;p>Weaveworks created a great tool for simplifying these steps: Kured (the &lt;em>&lt;strong>Ku&lt;/strong>bernetes &lt;strong>Re&lt;/strong>boot &lt;strong>D&lt;/strong>aemon&lt;/em>). Let’s start by deploying Kured to our cluster.&lt;/p>
+&lt;p>Kured can be deployed in one of several ways. In this article, we’ll focus on deploying it via Helm. This is the simplest and quickest way to get it running in our cluster.&lt;/p>
+&lt;p>Follow these steps to install the Helm chart:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 1) Add the Kured Helm repository&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>helm repo add kured https://weaveworks.github.io/kured
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 2) Update your local Helm chart repository cache&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>helm repo update
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 3) Create a dedicated namespace where you would like to deploy kured&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>kubectl create namespace kured
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 4) Install kured in that namespace with Helm 3 (only on Linux nodes)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>helm install kured kured/kured --namespace kured --set nodeSelector.&lt;span style="color:#e6db74">&amp;#34;kubernetes\.io/os&amp;#34;&lt;/span>&lt;span style="color:#f92672">=&lt;/span>linux
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If all went well with the command above, that’s it, you’re done! Have a nice day! 🙂&lt;/p>
+&lt;p>If you want to test Kured, login to one of your Linux nodes, and install some patches with your package manager of choice (any patch that requires a reboot, typically patches that modify kernel headers). Then, check for a file named ‘reboot-required’ in /var/run:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>ls -lisa /var/run/reboot-required
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you installed patches, and this file does not exist, none of your patches require a reboot. We can still fake the system into thinking a reboot is required by manually creating the ‘reboot-required’ file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo touch /var/run/reboot-required
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2022/07/image-1.png" alt="">&lt;/p>
+&lt;p>Then, we’ll use Kubetail to tail the logs of all our Kured pods:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>kubetail -label kured --namespace kured
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2022/07/image-1024x749.png" alt="">&lt;/p>
+&lt;p>By default, Kured checks for the existence of the sentinel file every 60 minutes. However, this behavior can be changed. See the github repo for more info:&lt;/p>
+&lt;p>&lt;img src="https://github.com/weaveworks/kured#reboot-sentinel-file--period" alt="weaveworks/kured: Kubernetes Reboot Daemon">&lt;/p>
+&lt;p>Scheduling on the node should be disabled if you are within the Kured schedule&lt;/p>
+&lt;p>&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2022/07/image-2.png" alt="">&lt;/p>
+&lt;p>Now that the node is cordoned off, running pods on the node are drained, and the node is rebooted.&lt;/p>
+&lt;p>That’s it for this article. Have a great day!&lt;/p></description></item><item><title>Running Docker in WSL v1</title><link>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</link><pubDate>Sun, 26 Jun 2022 15:00:28 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</guid><description>&lt;p>I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.&lt;/p>
+&lt;p>Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work. I receive this nice message:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ docker
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>The command &lt;span style="color:#e6db74">&amp;#39;docker&amp;#39;&lt;/span> could not be found in this WSL &lt;span style="color:#ae81ff">1&lt;/span> distro.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>We recommend to convert this distro to WSL &lt;span style="color:#ae81ff">2&lt;/span> and activate
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>the WSL integration in Docker Desktop settings.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>See https://docs.docker.com/docker-for-windows/wsl/ &lt;span style="color:#66d9ef">for&lt;/span> details.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>So I’m in somewhat of a catch-22 here…&lt;/p>
+&lt;p>To work around this problem until a proper solution is found, I was able to get Docker working with WSL v1.&lt;/p>
+&lt;p>If you happen to be having a similar issue (and it seems like quite a few people are, considering the number of Github posts I found), just follow these steps:&lt;/p>
+&lt;ul>
+&lt;li>Expose the Docker daemon in docker desktop settings:&lt;/li>
+&lt;/ul>
+&lt;p>&lt;a href="https://rnemeth90.github.io/wp-content/uploads/2022/02/image-10-1024x585.png">&lt;/a>&lt;/p>
+&lt;p>Install the stand-alone Docker client in WSL v1:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.5.tgz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ tar zxvf docker-20.10.5.tgz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ cd docker
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Set the default Docker daemon in WSL v1:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>export DOCKER_HOST&lt;span style="color:#f92672">=&lt;/span>tcp://localhost:2375
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Verify you can connect to Docker running on Windows from within WSL:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>./docker info
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This is also beneficial in that you only have one Docker host to manage your containers, network, etc., rather than two.&lt;/p></description></item><item><title>Remove Kubernetes Namespace Stuck in the Terminating State</title><link>https://rnemeth90.github.io/posts/2022-06-04-remove-kubernetes-namespace-stuck-in-the-terminating-state/</link><pubDate>Sat, 04 Jun 2022 18:29:41 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-06-04-remove-kubernetes-namespace-stuck-in-the-terminating-state/</guid><description>&lt;p>In this post, we will discuss how to remove a Kubernetes namespace that is stuck in the ‘terminating’ state.&lt;/p>
+&lt;p>A namespace is like a container. You can use it to store related objects in a Kubernetes environment. Maybe you are hosting a blog in Kubernetes. This blog will likely have a database, a frontend website, a load balancer (service) to spread the incoming traffic among ‘x’ number of frontend containers (pods), and maybe some middle-tier or utility applications. One day, you decide you no longer want this blog, so you plan to delete it. Rather than tediously deleting all of the various entities associated with this blog, you can delete the namespace that contains these entities. This will essentially ‘cascade delete’ the resources within the namespace as well.&lt;/p>
+&lt;p>After deleting the namespace for your blog, you notice that it still exists, but the state of it is ‘Terminating’, and it has been like this for a long time (hours or maybe even days).&lt;/p>
+&lt;p>&lt;a href="https://geekyryan.com/wp-content/uploads/2022/06/image.png">&lt;/a>&lt;/p>
+&lt;p>Kubernetes will occassionally fail to delete third-party resources when deleting a namespace, causing the namespace to linger. This can happen if the third-party API managing the resource is not responding to requests. To verify if any of these resources still exist, use this command:&lt;/p>
+&lt;pre tabindex="0">&lt;code>kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl get --show-kind --show-all --ignore-not-found -n &amp;lt;terminating-namespace&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>If you happen to see any resources in the output, you can try force deleting them and then try to delete the namespace again.&lt;/p>
+&lt;p>In my experience, the majority of the time you will not find any resources still hanging around. Rather, the namespace will be completely empty. What is going on here?&lt;/p>
+&lt;p>Let’s take a look at the namespace:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">$ kubectl get namespace darn-c101 -o yaml&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-YAML" data-lang="YAML">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">Namespace&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">annotations&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">kubectl.kubernetes.io/last-applied-configuration&lt;/span>: &lt;span style="color:#ae81ff">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">kubernetes.io/metadata.name&lt;/span>: &lt;span style="color:#ae81ff">darn-c101&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">finalizers&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">kubernetes&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">status&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">conditions&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">lastTransitionTime&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2022-06-01T19:05:31Z&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">message: &amp;#39;Some content in the namespace has finalizers remaining&lt;/span>: &lt;span style="color:#ae81ff">darn-c101.geekyryan.io/finalizer in 1 resource instances&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">reason&lt;/span>: &lt;span style="color:#ae81ff">SomeFinalizersRemain&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">status&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;True&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">type&lt;/span>: &lt;span style="color:#ae81ff">NamespaceFinalizersRemaining&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">phase&lt;/span>: &lt;span style="color:#ae81ff">Terminating&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Notice the inclusion of the finalizers field in the above JSON. Some namespaces have a finalizer defined under spec.&lt;/p>
+&lt;p>A finalizer is a special metadata key that tells Kubernetes to wait until a specific condition is met before it fully deletes a resource. Much like a finalizer in the .NET framework (does Java have those too? 😀 )&lt;/p>
+&lt;p>So when you run a command like &lt;code>kubectl delete namespace &amp;lt;namespace&amp;gt;&lt;/code>, Kubernetes checks for a finalizer in the &lt;code>metadata.finalizers&lt;/code> field. If the resource defined in the finalizer cannot be deleted, then the namespace is not deleted either. This puts the namespace into a perpetual terminating state and is never actually deleted.&lt;/p>
+&lt;p>When an object has been terminating for an excessive time, check its finalizers by inspecting the &lt;code>metadata.finalizers&lt;/code> field in its YAML.&lt;/p>
+&lt;p>So we now know what the problem is. How can we solve it? Well, it’s actually quite simple. If you are using bash, use this script:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>namespaces&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>kubectl get ns --field-selector&lt;span style="color:#f92672">=&lt;/span>status.phase&lt;span style="color:#f92672">==&lt;/span>Terminating -o jsonpath&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;{range .items[*]}{.metadata.name}{&amp;#34;\n&amp;#34;}{end}&amp;#39;&lt;/span>&lt;span style="color:#66d9ef">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">[&lt;/span> -z &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$namespaces&lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#f92672">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> echo &lt;span style="color:#e6db74">&amp;#34;No namespaces to delete.&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exit
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> namespace in $namespaces
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> echo &lt;span style="color:#e6db74">&amp;#34;[Removing Namespace]: &lt;/span>$namespace&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> kubectl get namespace $namespace -o json | tr -d &lt;span style="color:#e6db74">&amp;#34;\n&amp;#34;&lt;/span> | sed &lt;span style="color:#e6db74">&amp;#34;s/\&amp;#34;finalizers\&amp;#34;: \[[^]]\+\]/\&amp;#34;finalizers\&amp;#34;: []/&amp;#34;&lt;/span> | kubectl replace --raw /api/v1/namespaces/$namespace/finalize -f - &amp;gt; /dev/null 2&amp;gt;&amp;amp;&lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;a href="https://gist.github.com/rnemeth90/e83bb4c8808f0d28412cb40edb2487d3">Delete Terminating Kubernetes Namespaces with Bash (github.com)&lt;/a>&lt;/p>
+&lt;p>It will search for any namespace that is stuck in the terminating state and forcefully remove it by removing the finalizers field and then using &lt;code> kubectl replace&lt;/code> to commit the change back to the Kube API.&lt;/p>
+&lt;p>If you prefer Powershell, you can use this script:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>$terminatingNamespaces = kubectl get ns --field-selector=status.phase==Terminating -o jsonpath=&lt;span style="color:#e6db74">&amp;#34;{range .items[*]}{.metadata.name}{&amp;#39;\n&amp;#39;}{end}&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">foreach&lt;/span> ($ns &lt;span style="color:#66d9ef">in&lt;/span> $terminatingNamespaces) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Write-Verbose &lt;span style="color:#e6db74">&amp;#39;[FOUND]: Forcefully removing $ns&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> $jsonObj = kubectl get namespace $ns -o json | ConvertFrom-Json | foreach-object { $_.spec.finalizers = @(); $_ } |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> convertto-json | kubectl replace --raw /api/v1/namespaces/$namespace/finalize &lt;span style="color:#f92672">-f&lt;/span> -
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;a href="https://gist.github.com/rnemeth90/19d7de622a5009c1cf908c5d4deb5358">Delete Terminating Kubernetes Namespaces with Powershell (github.com)&lt;/a>&lt;/p>
+&lt;p>It does the same thing as the bash script, just in more of a Window-zy way.&lt;/p>
+&lt;p>It’s that simple. I hope this was helpful. If you have any questions, comments, or concerns, please feel free to reach out.&lt;/p></description></item><item><title>Kubernetes Storage Simplified</title><link>https://rnemeth90.github.io/posts/2022-03-01-kubernetes-storage-simplified/</link><pubDate>Tue, 01 Mar 2022 08:37:58 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-03-01-kubernetes-storage-simplified/</guid><description>&lt;p>In this blog post, we will attempt to explain the current storage options that exist in Kubernetes. If you are new to Kubernetes, learning about its capabilities of managing the application state can be a daunting task.&lt;/p>
+&lt;p>Container images are built-in layers, with the runtime layer being writable. However, any files on this writable layer are only available for the container’s lifetime. We can mount a volume to a directory inside the container to have persistent data.&lt;/p>
+&lt;p>Kubernetes storage uses the concepts of volumes. Ephemeral volumes are called volumes and only last the lifetime of a pod, and “persistent volumes” are used for long-term storage. A typical use case for Ephemeral volumes is storing logs that are not sent to stdout.&lt;/p>
+&lt;p>Mounting a persistent volume inside a container allows you to persist the state of your application long after the container is terminated. Persistent volumes can also take advantage of the typical storage idiosyncrasies such as backup, compression, and encryption.&lt;/p>
+&lt;h2 id="persistent-volumes" >Persistent Volumes
+&lt;span>
+&lt;a href="#persistent-volumes">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h2>&lt;p>Kubernetes has several types of persistent volumes. At its core, a persistent volume is simply a directory mounted inside a pod. How that volume is created, the configuration options and the medium that backs it are all determined by the type of volume created.&lt;/p>
+&lt;p>There are several types of volumes available, too many to list here. You may commonly see some volume types: NFS, iSCSI, hostpath, and local. If your Kubernetes cluster exists in a cloud environment such as Azure or AWS, other volume types are available to you (azureDisk, azureFile, and awsElasticBlockStore, respectively). A complete list of types can be found here:&lt;/p>
+&lt;p>&lt;a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#types-of-persistent-volumes">https://kubernetes.io/docs/concepts/storage/persistent-volumes/#types-of-persistent-volumes&lt;/a>&lt;/p>
+&lt;p>Creating a persistent volume is generally a simple task. The first step is determining the type of volume to create. In this post, we will cover creating a local volume. A local volume represents a disk, partition, or directory shared from a node. Local volumes are subject to the availability of the underlying node, meaning that if the node is offline, the volume is also offline and will not be accessible by any pod. Because of this, local volumes should not be used in production.&lt;/p>
+&lt;p>A persistent volume can only be created using a declarative approach. To create a persistent local volume, use the following YAML definition:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-YAML" data-lang="YAML">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">PersistentVolume&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">example-pv&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">capacity&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">storage&lt;/span>: &lt;span style="color:#ae81ff">100Gi&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumeMode&lt;/span>: &lt;span style="color:#ae81ff">Filesystem&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">accessModes&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">ReadWriteOnce&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">persistentVolumeReclaimPolicy&lt;/span>: &lt;span style="color:#ae81ff">Delete&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">storageClassName&lt;/span>: &lt;span style="color:#ae81ff">local-storage&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">local&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># the path to the volume or directory on the node&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">path&lt;/span>: &lt;span style="color:#ae81ff">/mnt/disks/ssd1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nodeAffinity&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">required&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nodeSelectorTerms&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">matchExpressions&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">key&lt;/span>: &lt;span style="color:#ae81ff">kubernetes.io/hostname&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">operator&lt;/span>: &lt;span style="color:#ae81ff">In&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">values&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># name of the node sharing the volume&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">node01&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When creating a persistent volume of this type, you must specify a node affinity. This ensures that the Kubernetes scheduler schedules any pods requesting access to this volume on the correct node. For example, any pod requesting access to the persistent volume named ‘example-PV will only be scheduled on the node ‘node01’.&lt;/p>
+&lt;p>Let’s dive into this persistent volume spec a bit more:&lt;/p>
+&lt;p>You can change the capacity of the persistent volume by updating:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-YAML" data-lang="YAML">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">capacity&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">storage&lt;/span>: &lt;span style="color:#ae81ff">100Gi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The accessModes will be determined by the storage provider being used. There are generally 3 access modes available: ReadWriteOnce, ReadWriteMany, and ReadOnlyMany.&lt;/p>
+&lt;ul>
+&lt;li>ReadWriteOnce – The volume can be mounted as read-write by a single node&lt;/li>
+&lt;li>ReadWriteMany – The volume can be mounted as read-write by many nodes&lt;/li>
+&lt;li>ReadOnlyMany – The volume can be mounted as read-only by many nodes&lt;/li>
+&lt;/ul>
+&lt;p>The “persistentVolumeReclaim” policy determines what happens to a persistent volume when it is no longer mounted by any pods (i.e., there are no claims to it, more on this later). There are three options available for the reclaim policy:&lt;/p>
+&lt;ul>
+&lt;li>Retain – The persistent volume is kept as-is. It must be manually removed when no longer needed.&lt;/li>
+&lt;li>Recycle – The persistent volume is scrubbed and can be re-used by other pods&lt;/li>
+&lt;li>Delete – The persistent volume is deleted.&lt;/li>
+&lt;/ul>
+&lt;p>Currently, only NFS and hostPath volumes support recycling. Cloud storage providers (Azure, AWS, and GCE) support deletion.&lt;/p>
+&lt;p>The other aspects of this spec are unique to the volume being used. Since we are using a local volume here, we must specify the path to the directory or volume on the host and the host which is sharing the directory or volume:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-YAML" data-lang="YAML">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">local&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># the path to the volume or directory on the node&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">path&lt;/span>: &lt;span style="color:#ae81ff">/mnt/disks/ssd1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nodeAffinity&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">required&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nodeSelectorTerms&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">matchExpressions&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">key&lt;/span>: &lt;span style="color:#ae81ff">kubernetes.io/hostname&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">operator&lt;/span>: &lt;span style="color:#ae81ff">In&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">values&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># name of the node sharing the volume&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">node01&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="ephemeral-volumes" >Ephemeral Volumes
+&lt;span>
+&lt;a href="#ephemeral-volumes">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h2>&lt;p>Note: The Kubernetes documentation recognizes configMaps and Secrets as ephemeral volumes. However, in this article, we will only discuss ephemeral volumes used for data storage (emptyDir volumes).&lt;/p>
+&lt;p>Ephemeral volumes are defined within the context of a pod. This means that you cannot create an ephemeral volume on its own. Instead, define the ephemeral volume in the pod or a deployment spec.&lt;/p>
+&lt;p>Ephemeral volumes are useful in a few scenarios:&lt;/p>
+&lt;ol>
+&lt;li>You want to share data between multiple containers in a pod&lt;/li>
+&lt;li>You want to cache temporary information such as log files&lt;/li>
+&lt;li>You need scratch space to store data before it is processed by another container or pod&lt;/li>
+&lt;/ol>
+&lt;p>If one of the containers in the pod happens to restart, data on the ephemeral volume will still exist; as long as one of the containers is mounting, it stays online. In other words, if a pod mounting the ephemeral volume is removed from a node, data on the ephemeral volume is lost. However, if a pod crashes, the data on the volume remains intact.&lt;/p>
+&lt;p>As stated previously, creating an ephemeral volume is done as part of the pod or deployment template:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-YAML" data-lang="YAML">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">Pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">test-pd&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">containers&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">k8s.gcr.io/test-webserver&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">test-container&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumeMounts&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">mountPath&lt;/span>: &lt;span style="color:#ae81ff">/cache&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">cache-volume&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumes&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">cache-volume&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">emptyDir&lt;/span>: {}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If the template, you add a volume of type ’emptyDir’ in the ‘volumes’ spec and name it. You can mount this volume in any container in the pod. The volume does not have to be mounted to the same directory in each container.&lt;/p>
+&lt;h2 id="persistent-volume-claims" >Persistent Volume Claims
+&lt;span>
+&lt;a href="#persistent-volume-claims">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h2>&lt;p>A persistentVolumeClaim (often referred to as a ‘PVC’) is used by a pod to create a ‘claim’ on storage. Using a PVC, a pod can mount multiple persistent volumes simultaneously to any directory in the pod.&lt;/p>
+&lt;p>PersistentVolumeClaim’s are a Kubernetes primitive that can be deployed from a manifest:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-YAML" data-lang="YAML">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">PersistentVolumeClaim&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">fast-storage-pvc&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">accessModes&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">ReadWriteMany&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumeMode&lt;/span>: &lt;span style="color:#ae81ff">Filesystem&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">resources&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">requests&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">storage&lt;/span>: &lt;span style="color:#ae81ff">8Gi&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">storageClassName&lt;/span>: &lt;span style="color:#ae81ff">fast&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Most of the options in the manifest above seem pretty obvious. The volumeMode specifies whether to consume the persistent volume as a FileSystem or block device. The resources section helps specify the amount of storage you require (8Gi in this example). We will cover the storageClassName in the next section. Finally, the accessModes are identical to those described above in the Persistent Volumes section.&lt;/p>
+&lt;p>Pods access a volume by using the persistentVolumeClaim as volume. Claims must exist in the same namespace as the pod using the claim. The controller finds the claim in the pods’ namespace and uses it to find a persistent volume capable of backing the claim. The volume is then mounted on the host and attached to the pod.&lt;/p>
+&lt;p>To create a pod that utilizes a PVC, use the following yaml definition:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-YAML" data-lang="YAML">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">Pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">test-pd&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">containers&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">k8s.gcr.io/test-webserver&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">test-container&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumeMounts&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">mountPath&lt;/span>: &lt;span style="color:#ae81ff">/mnt/share&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">azfileshare&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumes&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">cache-volume&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">persistentVolumeClaim&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">claimName&lt;/span>: &lt;span style="color:#ae81ff">azfileshare&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="storage-classes" >Storage Classes
+&lt;span>
+&lt;a href="#storage-classes">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h2>&lt;p>In this article, we will only be referencing Kubernetes storage classes with respect to dynamic provisioners. If you would like to learn more, please reference the Kubernetes docs:&lt;/p>
+&lt;p>&lt;a href="https://bit.ly/3ruJD2A">https://bit.ly/3ruJD2A&lt;/a>&lt;/p>
+&lt;p>Storage Classes have many uses. Kubernetes is unopinionated about what a storage class represents. They can be used to represent different characteristics of storage (performance, compression method, file system modes, etc.). Storage Classes can also be used to provision persistent volumes dynamically, which will be the focus of this article.&lt;/p>
+&lt;p>Storage classes are often packaged with CSI drivers. Each StorageClass contains the fields “provisioner”, “parameters”, and “reclaimPolicy”. The provisioner field is used to determine what CSI driver is used for provisioning volumes.&lt;/p>
+&lt;p>This is an example of the storage class packaged with the AzureFiles CSI driver:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-YAML" data-lang="YAML">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">StorageClass&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">storage.k8s.io/v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">azurefileshare&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">provisioner&lt;/span>: &lt;span style="color:#ae81ff">file.csi.azure.com&lt;/span> &lt;span style="color:#75715e"># replace with &amp;#34;kubernetes.io/azure-file&amp;#34; if aks version is less than 1.21&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">mountOptions&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">dir_mode=0777&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">file_mode=0777&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">uid=0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">gid=0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">mfsymlinks&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">cache=strict&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">actimeo=30&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">parameters&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">skuName&lt;/span>: &lt;span style="color:#ae81ff">Standard_LRS&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can see in the above manifest that the provisioner is set to ‘file.csi.azure.com.’ When a pod uses a PVC in its manifest that references this storage class, the provisioner will dynamically manage the underlying storage.&lt;/p>
+&lt;p>The name of the storageClass is referenced in the persistentVolumeClaim:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-YAML" data-lang="YAML">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">PersistentVolumeClaim&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">azfileshare&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">accessModes&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">ReadWriteMany&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">resources&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">requests&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">storage&lt;/span>: &lt;span style="color:#ae81ff">8Gi&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">storageClassName&lt;/span>: &lt;span style="color:#ae81ff">azurefileshare&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You could then reference this PVC in a pod:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-YAML" data-lang="YAML">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">Pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">test-pd&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">containers&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">k8s.gcr.io/test-webserver&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">test-container&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumeMounts&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">mountPath&lt;/span>: &lt;span style="color:#ae81ff">/mnt/share&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">azfileshare&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumes&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">cache-volume&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">persistentVolumeClaim&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">claimName&lt;/span>: &lt;span style="color:#ae81ff">azfileshare&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>That concludes this article. I know that is a lot of information! As always, if you have any questions or comments, please reach out.&lt;/p></description></item><item><title>Kubernetes Pod Eviction</title><link>https://rnemeth90.github.io/posts/2022-02-05-kubernetes-pod-eviction/</link><pubDate>Sat, 05 Feb 2022 23:49:16 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-02-05-kubernetes-pod-eviction/</guid><description>&lt;p>In this article, we will dive into the process of pod eviction in a Kubernetes cluster, how you can pod prevent pod eviction, and how you can recover from such a situation.&lt;/p>
+&lt;h2 id="what-is-pod-eviction" >What is Pod Eviction?
+&lt;span>
+&lt;a href="#what-is-pod-eviction">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h2>&lt;p>Kubernetes pod eviction is a type of involuntary service disruption in which a pod is forcefully stopped on a node or fails to be scheduled on a node. Pod eviction can happen for a variety of reasons. The most common of which is resource starvation on a node. This is referred to as “node-pressure eviction.”&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>NAME READY STATUS RESTARTS AGE
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nginx 0/1 Evicted &lt;span style="color:#ae81ff">0&lt;/span> 10s
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="eviction-process" >Eviction Process
+&lt;span>
+&lt;a href="#eviction-process">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h2>&lt;p>The kubelet process running on the node monitors resources such as CPU, memory, disk space, inodes, etc. When one of these resources reaches a certain consumption level, the kubelet will first attempt to clean up resources by deleting non-running pods and images (in the case of storage starvation). The kubelet will then fail one or more pods on the node to reclaim resources. The class of the pod determines the order in which it does this.&lt;/p>
+&lt;p>&lt;strong>Pod Classes&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Guaranteed: Pods that have requests and limits configured for both CPU and memory&lt;/li>
+&lt;li>Burstable: Pods with a resource request configured for memory or CPU&lt;/li>
+&lt;li>Best Effort: Pods without any requests or limits&lt;/li>
+&lt;/ul>
+&lt;p>The kubelet will first evict any “best-effort” pods. If this is not enough, the kubelet will evict any “burstable” pods. Pods within the “guaranteed” class are theoretically safe from eviction.&lt;/p>
+&lt;p>During a node-pressure eviction, the kubelet sets the PodPhase for the selected pods to “Failed.” This causes the pods to terminate. If a daemonSet or replicaSet manages the pod, the Kubernetes controller-manager will create new pods on another node.&lt;/p>
+&lt;h2 id="recovery" >Recovery
+&lt;span>
+&lt;a href="#recovery">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h2>&lt;p>Node-pressure eviction is almost always avoidable. We can prevent this type of issue by ensuring that we properly size our clusters and create resource limits for pods.&lt;/p>
+&lt;p>&lt;strong>Resource&lt;/strong> &lt;strong>Requests and Limits:&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Requests: The minimum amount of resources (CPU/memory) that a container needs to start.&lt;/li>
+&lt;li>Limits: The maximum amount of resources that a container is allowed to use.&lt;/li>
+&lt;/ul>
+&lt;p>Pod resources and requests can be defined in a pod spec or deployment spec. Below is an example of a pod spec with resource requests and limits defined:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-YAML" data-lang="YAML">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">Pod&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">frontend&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">containers&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">nginx&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">nginx&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">resources&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">requests&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">memory&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;64Mi&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">cpu&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;250m&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">limits&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">memory&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;128Mi&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">cpu&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;500m&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You will often need to clean up evicted pods manually. If you find that your cluster has a large amount of evicted pods, you can clean them up with the following kubectl commands:&lt;/p>
+&lt;p>&lt;strong>To see all failed pods in the cluster:&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>kubectl get pod --all-namespaces --field-selector&lt;span style="color:#f92672">=&lt;/span>status.phase&lt;span style="color:#f92672">==&lt;/span>Failed
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>To remove all failed pods in the cluster:&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>kubectl delete pod --all-namespaces --field-selector&lt;span style="color:#f92672">=&lt;/span>status.phase&lt;span style="color:#f92672">==&lt;/span>Failed
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>I hope this article has been helpful. Please reach out if you have any questions or comments! Also, if you would like to learn more, take a look at the official Kubernetes docs:&lt;/p>
+&lt;p>&lt;a href="https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/">https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/&lt;/a>&lt;/p></description></item><item><title>AKS Scale Down Mode</title><link>https://rnemeth90.github.io/posts/2022-07-19-aks-scale-down-mode/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-07-19-aks-scale-down-mode/</guid><description>&lt;p>By default, scale-out operations performed manually or by cluster autoscale rules require the allocation and provisioning of new nodes, and scale-in operations delete nodes. Scale-down mode is a relatively newer concept that allows us to choose whether to delete &lt;em>or&lt;/em> deallocate nodes.&lt;/p>
+&lt;p>Having the ability to deallocate, rather than delete, nodes is a major performance benefit, as the time it takes to spin up new nodes will be significantly decreased. You will not be charged when nodes are deallocated. However, you will still need to pay for any storage that the node is using. Having persistent storage also means that any container images that were cached on the node will still be there when the node starts back up. This can be a major performance benefit if you are using Windows containers because the images for these containers are typically very large.&lt;/p>
+&lt;p>Scale down mode can be configured in several ways. Here, we will look at configuring it via the Azure CLI and Terraform.&lt;/p>
+&lt;p>Azure CLI:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>az aks nodepool update --scale-down-mode Deallocate --name nplinux01 --cluster-name myAKSCluster --resource-group myResourceGroup
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Terraform:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">resource&lt;/span> &lt;span style="color:#e6db74">&amp;#34;azurerm_kubernetes_cluster_node_pool&amp;#34; &amp;#34;nodepool&amp;#34;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> name &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;nplinux01&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> kubernetes_cluster_id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">azurerm_kubernetes_cluster&lt;/span>.&lt;span style="color:#66d9ef">example&lt;/span>.&lt;span style="color:#66d9ef">id&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> vm_size &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Standard_DS2_v2&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> node_count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> scale_down_mode &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Deallocate&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> tags &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Environment &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;lab&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;em>At the time of this writing, Terraform does not support configuring scale-down mode for the default AKS node pool.&lt;/em>
+&lt;em>Node pools using ephemeral disks do not support &amp;lsquo;deallocate&amp;rsquo; mode&lt;/em>&lt;/p></description></item></channel></rss>
