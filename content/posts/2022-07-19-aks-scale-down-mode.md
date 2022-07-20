@@ -1,6 +1,7 @@
 ---
 title: 'AKS Scale Down Mode'
 author: Ryan
+date: '2022-07-19'
 layout: post
 excerpt: Lets learn how AKS Scale Down Mode works
 categories:
