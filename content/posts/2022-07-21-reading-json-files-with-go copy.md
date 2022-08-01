@@ -111,7 +111,7 @@ Create a file named employees.json with similar data:
 ]
 ~~~
 
-Now, we can run our main.go file:
+Now, we can run our main.go program:
 
 ~~~shell
 11:40:47 ryan@xerxes json → go run main.go
@@ -123,7 +123,6 @@ Avengers
 Clark
 Kent
 Justice League
-11:40:49 ryan@xerxes json
 ~~~
 
 Pretty simple! That's why I love go. We accomplished all of this with ~50 lines of code.
