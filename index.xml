@@ -1,4 +1,100 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GeekyRyan</title><link>https://rnemeth90.github.io/</link><description>GeekyRyan</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 19 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>AKS Scale Down Mode</title><link>https://rnemeth90.github.io/posts/2022-07-19-aks-scale-down-mode/</link><pubDate>Tue, 19 Jul 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-07-19-aks-scale-down-mode/</guid><description>&lt;p>By default, scale-out operations performed manually or by cluster autoscale rules require the allocation and provisioning of new nodes, and scale-in operations delete nodes. Scale-down mode is a relatively newer concept that allows us to choose whether to delete &lt;em>or&lt;/em> deallocate nodes.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GeekyRyan</title><link>https://rnemeth90.github.io/</link><description>GeekyRyan</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 21 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Reading Json Files with Go</title><link>https://rnemeth90.github.io/posts/2022-07-21-reading-json-files-with-go/</link><pubDate>Thu, 21 Jul 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-07-21-reading-json-files-with-go/</guid><description>&lt;p>JSON is a widely used format for representing structured data. Developers like it because it is easy to read, most common languages have a library for interacting
+with it, and most public APIs accept JSON in HTTP requests.&lt;/p>
+&lt;p>In this post, we&amp;rsquo;ll look at parsing a JSON file using Go! We will be using the io/ioutil package to open a json file on local disk, and encoding/json to parse the
+JSON data within the file into a memory structure.&lt;/p>
+&lt;p>Let&amp;rsquo;s assume we have the following JSON data representing an employee:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">1&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;firstName&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Steve&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;lastName&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Rogers&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;alias&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Captain America&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Department&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Avengers&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We need a way of representing this data in memory when decoding it from JSON. For this, we will need to create a struct:&lt;/p>
+&lt;p>We will build up our go module as we progress through the article&lt;/p>
+&lt;p>Let&amp;rsquo;s start:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// main.go
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;encoding/json&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;io/ioutil&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;log&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Hero represents an hero
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ALL fields must be exportable! Otherwise the JSON parsing will fail.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Hero&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Id&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">FirstName&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">LastName&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Alias&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Group&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Here we set the log prefix. When reading stack traces, this makes it easier to know
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// where a failure occurred.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">SetPrefix&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;main(): &amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// We first need to load the JSON file into memory
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">content&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">ioutil&lt;/span>.&lt;span style="color:#a6e22e">ReadFile&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;./heros.json&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Error opening the file: &amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Now we parse the JSON data into a memory structure. We know our JSON file will have more than one hero object,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// so we&amp;#39;ll use make() to create a []Hero slice. Since go is a pass-by-value language, we will then use the address-of
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// operator (&amp;amp;) to unmarshal our json data into the heros slice
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">heros&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> make([]&lt;span style="color:#a6e22e">Hero&lt;/span>, &lt;span style="color:#ae81ff">5&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">Unmarshal&lt;/span>(&lt;span style="color:#a6e22e">content&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">heros&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Error occurred during unmarshal: &amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// now we can read/interact with the data. We&amp;#39;ll loop over the array
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// and print the values in memory
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span> &amp;lt; len(&lt;span style="color:#a6e22e">heros&lt;/span>); &lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#a6e22e">heros&lt;/span>[&lt;span style="color:#a6e22e">i&lt;/span>].&lt;span style="color:#a6e22e">Id&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#a6e22e">heros&lt;/span>[&lt;span style="color:#a6e22e">i&lt;/span>].&lt;span style="color:#a6e22e">FirstName&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#a6e22e">heros&lt;/span>[&lt;span style="color:#a6e22e">i&lt;/span>].&lt;span style="color:#a6e22e">LastName&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#a6e22e">heros&lt;/span>[&lt;span style="color:#a6e22e">i&lt;/span>].&lt;span style="color:#a6e22e">Group&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Create a file named employees.json with similar data:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>[
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">1&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;firstName&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Steve&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;lastName&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Rogers&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;alias&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Captain America&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;group&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Avengers&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">2&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;firstName&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Clark&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;lastName&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Kent&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;alias&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Superman&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;group&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Justice League&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, we can run our main.go file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>11:40:47 ryan@xerxes json → go run main.go
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Steve
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Rogers
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Avengers
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">2&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Clark
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Kent
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Justice League
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>11:40:49 ryan@xerxes json
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Pretty simple! That&amp;rsquo;s why I love go. We accomplished all of this with ~50 lines of code.
+Doing something similar in asp.net project would easily double that count and involve creating
+multiple files! (nothing against asp.net or c#, I think c# is a great language and use it daily)&lt;/p>
+&lt;p>Now, &amp;lsquo;go&amp;rsquo; try this!&lt;/p></description></item><item><title>AKS Scale Down Mode</title><link>https://rnemeth90.github.io/posts/2022-07-19-aks-scale-down-mode/</link><pubDate>Tue, 19 Jul 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-07-19-aks-scale-down-mode/</guid><description>&lt;p>By default, scale-out operations performed manually or by cluster autoscale rules require the allocation and provisioning of new nodes, and scale-in operations delete nodes. Scale-down mode is a relatively newer concept that allows us to choose whether to delete &lt;em>or&lt;/em> deallocate nodes.&lt;/p>
 &lt;p>Having the ability to deallocate, rather than delete, nodes is a major performance benefit, as the time it takes to spin up new nodes will be significantly decreased. You will not be charged when nodes are deallocated. However, you will still need to pay for any storage that the node is using. Having persistent storage also means that any container images that were cached on the node will still be there when the node starts back up. This can be a major performance benefit if you are using Windows containers because the images for these containers are typically very large.&lt;/p>
 &lt;p>Scale down mode can be configured in several ways. Here, we will look at configuring it via the Azure CLI and Terraform.&lt;/p>
 &lt;p>Azure CLI:&lt;/p>
@@ -2084,9 +2180,31 @@ the RPC services were running. So what now?? I fired up NMAP on ServerB and did 
 &lt;p>&lt;a href="https://rnemeth90.github.io/wp-content/uploads/2014/11/UAC2BYellow.png">&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2014/11/UAC2BYellow.png" alt="">&lt;/a>&lt;/p>
 &lt;p>Figure 3&lt;/p>
 &lt;p>&lt;a href="https://rnemeth90.github.io/wp-content/uploads/2014/11/UAC2BRED.png">&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2014/11/UAC2BRED.png" alt="">&lt;/a>&lt;/p>
-&lt;p>Figure 4&lt;/p></description></item><item><title>About</title><link>https://rnemeth90.github.io/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/about/</guid><description>&lt;p>My name is Ryan Nemeth and this is my personal blog. I write down my thoughts regarding Microsoft Azure, Kubernetes, cloud-native technologies, and software development. I find that documenting these things not only helps others but also helps reinforce my own knowledge as well. I may also blog about life or other random things from time to time.&lt;/p>
-&lt;p>This blog previously existed as a Ghost blog, and I have been working to move it here to WordPress. If you happen to notice any bugs or issues, please be patient as I work on this.&lt;/p>
-&lt;p>I work as a Senior DevOps Engineer/SRE for Aprimo on the Systems team.&lt;/p>
+&lt;p>Figure 4&lt;/p></description></item><item><title>About</title><link>https://rnemeth90.github.io/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/about/</guid><description>&lt;img src="https://geekyryan.com/wp-content/uploads/2022/01/image.png" alt="drawing" width="200"/>
+&lt;p>My name is Ryan Nemeth and this is my personal blog. I write down my thoughts regarding Microsoft Azure, Kubernetes, cloud-native technologies, and software development. I find that documenting these things not only helps others but also helps reinforce my own knowledge as well. I may also blog about life or other random things from time to time.&lt;/p>
+&lt;p>This blog has had many lives over the years. It originally started as a Blogger blog way back in 2012, moved to Wordpress for a while, then back to blogger, then to Ghost (running on a small droplet over @ DigitalOcean), then back to Wordpress again, and now here on Github pages. That&amp;rsquo;s a lot of change (such is life)! So if you happen to come across a page that has some weird formatting, missing images, etc. Please be kind and let me know so that I may fix it.&lt;/p>
+&lt;p>I&amp;rsquo;m currently working remote as a Senior DevOps Engineer/SRE for Aprimo on the Systems team.&lt;/p>
 &lt;p>Before joining Aprimo, I was a cloud architect for a software company specializing in HCM software.&lt;/p>
 &lt;p>The opinions expressed here are my own personal opinions, and do not represent my employer’s view in any way.&lt;/p>
-&lt;p>Contact me through LinkedIn or Github.&lt;/p></description></item></channel></rss>
+&lt;p>Contact me through &lt;a href="https://www.linkedin.com/in/ryan-nemeth-b0b1504b/">LinkedIn&lt;/a> or &lt;a href="https://github.com/rnemeth90">Github&lt;/a>.
+&lt;br>
+&lt;br>&lt;/p>
+&lt;h2 id="currently-reading" >Currently Reading:
+&lt;span>
+&lt;a href="#currently-reading">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h2>&lt;ul>
+&lt;li>&lt;input disabled="" type="checkbox"> &lt;a href="https://www.amazon.com/Kubernetes-Patterns-Designing-Cloud-Native-Applications-ebook/dp/B07QH3JCC6/ref=sr_1_1?keywords=kubernetes+patterns&amp;amp;qid=1659346980&amp;amp;s=digital-text&amp;amp;sprefix=kubernetes+patt%2Cdigital-text%2C83&amp;amp;sr=1-1">Kubernetes Patterns&lt;/a>&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> &lt;a href="https://www.amazon.com/Self-Taught-Computer-Scientist-Beginners-Science/dp/1119724414/ref=sr_1_1?keywords=the+self+taught+computer+scientist&amp;amp;qid=1659346654&amp;amp;sprefix=the+self+taught+computer+%2Caps%2C82&amp;amp;sr=8-1">The Self-Taught Computer Scientist&lt;/a>&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> &lt;a href="https://www.amazon.com/Microservices-Second-Christian-Horsdal-Gammelgaard/dp/1617297925/ref=sr_1_2_sspa?crid=QPYAG2EFADPZ&amp;amp;keywords=microservices+in+.net&amp;amp;qid=1659346935&amp;amp;s=digital-text&amp;amp;sprefix=microservices+in+.ne%2Cdigital-text%2C73&amp;amp;sr=1-2-spons&amp;amp;psc=1&amp;amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzTFFTTVdJNjA0V1FCJmVuY3J5cHRlZElkPUEwNDU1MTc3MlE1VENVUEdQSVVCVSZlbmNyeXB0ZWRBZElkPUEwOTk5NzAwU0lOUUlWMzBEVTNNJndpZGdldE5hbWU9c3BfYXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Microservices in .NET&lt;/a>&lt;/li>
+&lt;li>&lt;input checked="" disabled="" type="checkbox"> &lt;a href="https://www.amazon.com/10-NET-Cross-Platform-Development-websites/dp/1801077363/ref=sr_1_1?keywords=c%23+10+and+.net+6&amp;amp;qid=1659346562&amp;amp;sprefix=c%23+10+and+.net+%2Caps%2C81&amp;amp;sr=8-1">C# 10 and .NET 6&lt;/a>&lt;/li>
+&lt;li>&lt;input checked="" disabled="" type="checkbox"> &lt;a href="https://www.amazon.com/Learning-Go-Idiomatic-Real-World-Programming/dp/1492077216/ref=sr_1_1?crid=YF687N53959K&amp;amp;keywords=learning+go&amp;amp;qid=1659346533&amp;amp;sprefix=learning+go%2Caps%2C102&amp;amp;sr=8-1">Learning Go&lt;/a>&lt;/li>
+&lt;li>&lt;input checked="" disabled="" type="checkbox"> &lt;a href="https://www.amazon.com/C-Players-Guide-5th/dp/0985580151/ref=sr_1_1?crid=1UMSSS98U2DA4&amp;amp;keywords=c%23+players+guide&amp;amp;qid=1659346365&amp;amp;sprefix=c+players+guid%2Caps%2C80&amp;amp;sr=8-1">C# Players Guide&lt;/a>&lt;/li>
+&lt;li>&lt;input checked="" disabled="" type="checkbox"> &lt;a href="https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship-ebook/dp/B001GSTOAM/ref=sr_1_1?crid=10U2VHYBRS2FA&amp;amp;keywords=clean+code&amp;amp;qid=1659347015&amp;amp;s=digital-text&amp;amp;sprefix=clean+cod%2Cdigital-text%2C88&amp;amp;sr=1-1">Clean Code&lt;/a>&lt;/li>
+&lt;li>&lt;input checked="" disabled="" type="checkbox"> &lt;a href="https://www.amazon.com/Site-Reliability-Engineering-Production-Systems-ebook/dp/B01DCPXKZ6/ref=sr_1_1?keywords=site+reliability+engineering&amp;amp;qid=1659346602&amp;amp;sprefix=site+reli%2Caps%2C79&amp;amp;sr=8-1">Site Reliability Engineering&lt;/a>&lt;/li>
+&lt;li>&lt;input checked="" disabled="" type="checkbox"> &lt;a href="https://www.amazon.com/Hands-Azure-Developers-ecosystems-containers/dp/1789340624/ref=sr_1_1?keywords=hands-on+azure+for+developers&amp;amp;qid=1659346632&amp;amp;sprefix=hands+on+azure+for+deve%2Caps%2C83&amp;amp;sr=8-1">Hands-On Azure for Developers&lt;/a>&lt;/li>
+&lt;li>&lt;input checked="" disabled="" type="checkbox"> &lt;a href="https://www.amazon.com/Kubernetes-Running-Dive-Future-Infrastructure-ebook/dp/B07YP1XSZ9/ref=sr_1_1?keywords=kubernetes+up+and+running&amp;amp;qid=1659346866&amp;amp;s=digital-text&amp;amp;sprefix=kubernetes+up+and%2Cdigital-text%2C75&amp;amp;sr=1-1">Kubernetes Up and Running&lt;/a>&lt;/li>
+&lt;li>&lt;input checked="" disabled="" type="checkbox"> &lt;a href="https://www.amazon.com/Kubernetes-Best-Practices-Blueprints-Applications-ebook/dp/B081J62KLW/ref=sr_1_1?crid=1OLDKB8KZ2G7N&amp;amp;keywords=kubernetes+best+practices&amp;amp;qid=1659346894&amp;amp;s=digital-text&amp;amp;sprefix=kubernetes+best+practice%2Cdigital-text%2C64&amp;amp;sr=1-1">Kubernetes Best Practices&lt;/a>&lt;/li>
+&lt;/ul></description></item></channel></rss>
