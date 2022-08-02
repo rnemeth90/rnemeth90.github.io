@@ -92,3 +92,58 @@ First, we'll need to install the Nuget package. To do that, run this command:
 ~~~Powershell
 dotnet add package System.CommandLine --prerelease
 ~~~
+
+Now, replace the contents of program.cs with this:
+
+~~~c#
+using static System.Console;
+using System.CommandLine;
+
+class Program
+{
+  static void Main(string[] args)
+  {
+
+  }
+}
+~~~
+
+The above code gives us a clean slate to start with. From here, we'll begin build a simple program
+that will take advantage of the System.CommandLine package. Let's first recreate the behavior from our
+first example above.
+
+Every console application in existence has a 'root command'. This is the executable itself. So, for example,
+if you use the the ping utility like this:
+
+~~~shell
+ping 8.8.8.8
+~~~
+
+'ping' is the root command.
+
+To define the root command for our application using the System.CommandLine package, we simply add two lines:
+
+~~~c#
+using static System.Console;
+using System.CommandLine;
+
+class Program
+{****
+    static void Main(string[] args)
+    {
+        var rootCommand = new RootCommand("My App");
+
+        rootCommand.Invoke(args);
+    }
+}
+~~~
+
+We first define a rootCommand variable, storing a RootCommand object. A description goes in the parentheses.
+
+~~~c#
+        var rootCommand = new RootCommand("My App");
+~~~
+
+Then, we invoke rootCommand. Invoke is an extension method that runs the command in question.
+
+https://docs.microsoft.com/en-us/dotnet/api/system.commandline.commandextensions.invoke#system-commandline-commandextensions-invoke(system-commandline-command-system-string-system-commandline-iconsole)
