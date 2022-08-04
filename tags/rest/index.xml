@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>rest on GeekyRyan</title><link>https://rnemeth90.github.io/tags/rest/</link><description>GeekyRyan (rest)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 04 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/rest/index.xml" rel="self" type="application/rss+xml"/><item><title>Querying REST APIs with Powershell</title><link>https://rnemeth90.github.io/posts/2022-08-04-querying-rest-with-powershell/</link><pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-08-04-querying-rest-with-powershell/</guid><description>&lt;p>This will be a short post on querying REST APIs with Powershell.&lt;/p>
+&lt;p>It&amp;rsquo;s hard to argue that REST APIs are the predominant technology for interacting
+with networked services. They provide a gateway for interacting with a 3rd party (or self-hosted)
+product without having to go through the exercise of a more complicated integration. REST APIs communicate
+in a common format, typically JSON. However, most will allow us to choose the response format by specifying an
+option in the &amp;lsquo;Accept&amp;rsquo; header. Most languages provide a native method for interacting with
+REST APIs. This objective for this post is to show you how simple this is with Powershell.&lt;/p>
+&lt;p>To get started, we&amp;rsquo;ll need a public API to interact with. I&amp;rsquo;m going to use &lt;a href="https://icanhazdadjoke.com/">https://icanhazdadjoke.com/&lt;/a>, because
+there is no authentication and no rate-limiting (two concepts we will cover in another post).&lt;/p>
+&lt;p>Calling the API is extremely simple:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>$url = &lt;span style="color:#e6db74">&amp;#34;https://icanhazdadjoke.com/&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Invoke-RestMethod -Uri $url -Method Get
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, this results in the content being returned as plain text. This isn&amp;rsquo;t ideal.&lt;/p>
+&lt;p>Let&amp;rsquo;s pass the &amp;lsquo;Accept&amp;rsquo; header to tell the API the format we are expecting to be returned:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>$url = &lt;span style="color:#e6db74">&amp;#34;https://icanhazdadjoke.com/&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$headers = @{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;Accept&amp;#39;&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;application/json&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Invoke-RestMethod -Uri $url -Method Get -Headers $headers
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Output:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>[15&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>04&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>34] C:\..\..\rnemeth90.github.io on &lt;span style="color:#960050;background-color:#1e0010">&lt;/span>main &lt;span style="color:#960050;background-color:#1e0010">&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&lt;/span> +1 &lt;span style="color:#960050;background-color:#1e0010">❯&lt;/span> Invoke-RestMethod -Uri $url -Method Get -Headers $headers
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>id joke status
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-- ---- ------
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>3LmyXvsPfqc I don&lt;span style="color:#e6db74">&amp;#39;t trust stairs. They&amp;#39;&lt;/span>re always up to something. 200
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>That looks a little better. For those of you familiar with Powershell, the output above probably
+looks completely normal. But for those not-so-familiar with Powershell, or those expecting
+more of a &amp;lsquo;json-esk&amp;rsquo; output, this may look a bit&amp;hellip; weird.&lt;/p>
+&lt;p>Powershell is an object oriented language. &lt;strong>Everything is an object&lt;/strong> in Powershell, even the response
+of this request. What you see in the output is simply the properties of the object.&lt;/p>
+&lt;p>Luckily Powershell provides us with a cmdlet to convert an object into json (aptly named: ConvertTo-Json). We can use it like this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>$url = &lt;span style="color:#e6db74">&amp;#34;https://icanhazdadjoke.com/&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$headers = @{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;Accept&amp;#39;&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;application/json&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Invoke-RestMethod -Uri $url -Method Get -Headers $headers | ConvertTo-Json
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here we are piping the output from Invoke-RestMethod to ConvertTo-Json. Pretty neat!&lt;/p>
+&lt;p>Output:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>[15&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>04&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>35] C:\..\..\rnemeth90.github.io on &lt;span style="color:#960050;background-color:#1e0010">&lt;/span>main &lt;span style="color:#960050;background-color:#1e0010">&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&lt;/span> +1 &lt;span style="color:#960050;background-color:#1e0010">❯&lt;/span> Invoke-RestMethod -Uri $url -Method Get -Headers $headers | Convertto-json
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;id&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;AAdFBXnGlyd&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;joke&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;If you walk into a forest and cut down a tree, but the tree doesn&amp;#39;t understand why you cut it down, do you think it&amp;#39;s stumped?&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;status&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> 200
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, that looks more normal.&lt;/p>
+&lt;p>There is much more we can do with Invoke-RestMethod. The &amp;lsquo;Method&amp;rsquo; parameter of this cmdlet accepts any of the common
+HTTP methods (GET, PUT, PATCH, DELETE, POST, HEAD). You can also specify other headers and a body (using the -body parameter).&lt;/p>
+&lt;p>Both of these parameters accept dictionaries:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>$url = &lt;span style="color:#e6db74">&amp;#34;https://icanhazdadjoke.com/&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$headers = @{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;Accept&amp;#39;&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;application/json&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;Host&amp;#39;&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;MyServer&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$body = @{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;Eat&amp;#39;&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;Pizza&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Invoke-RestMethod -Uri $url -Method Get -Headers $headers -Body $body | ConvertTo-Json
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Unfortunately I won&amp;rsquo;t be able to show the other HTTP methods, as this API only supports GET requests. So that&amp;rsquo;s all for now.&lt;/p></description></item></channel></rss>
