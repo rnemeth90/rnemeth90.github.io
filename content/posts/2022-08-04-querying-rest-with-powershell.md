@@ -1,5 +1,5 @@
 ---
-title: 'Querying REST APIs with Powershell'
+title: 'Powershell for Devops - Querying REST APIs with Powershell'
 author: Ryan
 date: '2022-08-04'
 layout: post
