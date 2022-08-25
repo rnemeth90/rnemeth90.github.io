@@ -19,7 +19,6 @@ Let's first take a look at the progression of processing cmd line arguments in a
 
 To get started, create a new console application:
 ~~~Powershell
-dotnet add package System.CommandLine --prerelease
 New-Item -Type Directory -Path c:\temp && Set-Location -Path c:\temp && dotnet new console --framework net6.0
 ~~~
 
@@ -68,17 +67,17 @@ Hello World!
 However, we can also specify our own string to process:
 ~~~Powershell
 [15:38:03] C:\..\consoleapp on ❯  .\bin\Debug\net6.0\consoleapp.exe "A fool and his money are soon parted"
-A fool and his money are soon parted!
+A fool and his money are soon parted
 ~~~
 
 Pretty cool, right!?
 
 This works fine for simple applications. But when you want your application to support multiple arguments, and maybe some
-options for those arguments, your code may get complicated and end up looking like a bowl of speghetti!
+options for those arguments, your code may get complicated and end up looking like a bowl of spaghetti!
 
 Also, how would someone know they are able to pass arguments to your console app? For that, we would need a help system.
-Most applications will print out some kind of help if you pass "/h", "/help", "--help", etc. Writing the code for this
-also takes time and muddies up our application.
+Most (properly designed) applications will print out some kind of help if you pass "/h", "/help", "--help", etc. Writing
+the code for this also takes time and muddies up our application.
 
 This is the reason that the dotnet team has introduced System.CommandLine (aka DragonFruit). You can spend time focusing
 on the logic of your application, rather than help systems and parsing commandline arguments and options.
@@ -86,7 +85,7 @@ on the logic of your application, rather than help systems and parsing commandli
 Use of the library also benefits the users of your application. It ensures that command-line input is parsed consistently
 according to POSIX or Windows conventions. It also automatically supports tab completion and response files.
 
-Let's now now dive a simple example using System.CommandLine.
+Let's now dive into a simple example using System.CommandLine.
 
 First, we'll need to install the Nuget package. To do that, run this command:
 ~~~Powershell
@@ -108,9 +107,9 @@ class Program
 }
 ~~~
 
-The above code gives us a clean slate to start with. From here, we'll begin build a simple program
+The above code gives us a clean slate to start with. From here, we'll begin building a simple program
 that will take advantage of the System.CommandLine package. Let's first recreate the behavior from our
-first example above.
+simple example above.
 
 Every console application in existence has a 'root command'. This is the executable itself. So, for example,
 if you use the the ping utility like this:
@@ -131,19 +130,98 @@ class Program
 {****
     static void Main(string[] args)
     {
-        var rootCommand = new RootCommand("My App");
+        var rootCommand = new RootCommand("The description of the app goes here!");
 
         rootCommand.Invoke(args);
     }
 }
 ~~~
 
-We first define a rootCommand variable, storing a RootCommand object. A description goes in the parentheses.
+We first define a rootCommand variable, storing a RootCommand object. A description goes in the parentheses:
 
-~~~c#
-        var rootCommand = new RootCommand("My App");
+Then, we invoke rootCommand. Invoke is an extension method that runs the command in question. You can read the low level details here: [Invoke()](https://docs.microsoft.com/en-us/dotnet/api/system.commandline.commandextensions.invoke#system-commandline-commandextensions-invoke(system-commandline-command-system-string-system-commandline-iconsole)********)
+
+Let's run the application and see what happens:
+
+~~~shell
+[14:12:38]   C:\..\..\..\..\net6.0 on ❯  .\consoleapp.exe
+
+[14:14:34]   C:\..\..\..\..\net6.0 on ❯
 ~~~
 
-Then, we invoke rootCommand. Invoke is an extension method that runs the command in question.
+We got no output, so let's pass a '-h' flag to see if we can get some help.
 
-https://docs.microsoft.com/en-us/dotnet/api/system.commandline.commandextensions.invoke#system-commandline-commandextensions-invoke(system-commandline-command-system-string-system-commandline-iconsole)
+~~~shell
+[14:14:34]   C:\..\..\..\..\net6.0 on ❯  .\consoleapp.exe -h
+Description:
+  The description of the app goes here!
+
+Usage:
+  consoleapp [options]
+
+Options:
+  --version       Show version information
+  -?, -h, --help  Show help and usage information
+
+~~~
+
+Now we're getting somewhere! You can see the rootCommand provides 2 options by default. We've already seen what '-h' can do (notice its variations).
+Version will obviously output the version of the app.
+
+Let's take a look at how we can add our own options. Replace the code in your class with the following:
+~~~c#
+using static System.Console;
+using System.CommandLine;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var nameOption = new Option<string?>(
+                                    name: "--name",
+                                    description: "Pass in a name");
+
+        var rootCommand = new RootCommand("The description of the app goes here!");
+        rootCommand.Add(nameOption);
+
+        rootCommand.SetHandler((nameOptionValue) =>
+        {
+            SayHello(nameOptionValue);
+        }, nameOption);
+
+
+        rootCommand.Invoke(args);
+    }
+
+    internal static void SayHello(string? name)
+    {
+        WriteLine($"Hello {name}");
+    }
+}
+~~~
+
+Now, compile and run the exe again with the -h option to see what our app is now capable of.
+
+~~~shell
+[14:24:33]   C:\..\..\..\..\net6.0 on ❯  .\consoleapp.exe -h
+Description:
+  The description of the app goes here!
+
+Usage:
+  consoleapp [options]
+
+Options:
+  --name <name>   Pass in a name
+  --version       Show version information
+  -?, -h, --help  Show help and usage information
+
+~~~
+
+We now have a --name argument that accepts a parameter. Let's see what that does.
+
+~~~shell
+[14:25:37]   C:\..\..\..\..\net6.0 on ❯  .\consoleapp.exe --name ryan
+Hello ryan
+~~~
+
+Nifty.
