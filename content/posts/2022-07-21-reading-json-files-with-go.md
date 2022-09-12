@@ -6,9 +6,9 @@ layout: post
 draft: false
 categories:
     - 'Software Development'
-    - Go
+    - golang
 tags:
-    - Go
+    - golang
     - Dev
     - Programming
     - Software
