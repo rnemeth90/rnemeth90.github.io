@@ -14,7 +14,7 @@ tags:
     - golang
 ---
 
-If you want to the local version of a dependency in Go rather than one in a remote repository, use the **replace** keyword.
+If you want to the local version of a dependency in Go rather than one in a remote repository, use the *replace* keyword.
 
 The replace line goes above your require statements, like so:
 
@@ -28,7 +28,7 @@ The replace line goes above your require statements, like so:
     	github.com/rnemeth90/bar v1.0.0
     )
 ~~~
-Now when you compile this module **go build** or **go install**, it will use your local code rather than the remote dependency.
+Now when you compile this module *go build* or *go install*, it will use your local code rather than the remote dependency.
 
 According to the docs, you do need to make sure that the code you’re pointing to also has a **go.mod** file:
 
