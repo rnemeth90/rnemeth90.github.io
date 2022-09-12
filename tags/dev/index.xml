@@ -1,4 +1,26 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Dev on GeekyRyan</title><link>https://rnemeth90.github.io/tags/dev/</link><description>GeekyRyan (Dev)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 06 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/dev/index.xml" rel="self" type="application/rss+xml"/><item><title>Use “replace” in go.mod to Point to a Local Module</title><link>https://rnemeth90.github.io/posts/2022-09-06-go-mod-replace-copy/</link><pubDate>Tue, 06 Sep 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-09-06-go-mod-replace-copy/</guid><description>&lt;p>If you want to the local version of a dependency in Go rather than one in a remote repository, use the &lt;em>replace&lt;/em> keyword.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Dev on GeekyRyan</title><link>https://rnemeth90.github.io/tags/dev/</link><description>GeekyRyan (Dev)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 06 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/dev/index.xml" rel="self" type="application/rss+xml"/><item><title>Use “replace” in go.mod to Point to a Local Module</title><link>https://rnemeth90.github.io/posts/2022-09-06-go-mod-replace-copy/</link><pubDate>Tue, 06 Sep 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-09-06-go-mod-replace-copy/</guid><description>&lt;h1 id="if-you-want-to-the-local-version-of-a-dependency-in-go-rather-than-one-in-a-remote-repository-use-the-replace-keyword" >&amp;laquo;&amp;laquo;&amp;laquo;&amp;lt; HEAD
+If you want to the local version of a dependency in Go rather than one in a remote repository, use the &lt;strong>replace&lt;/strong> keyword.
+&lt;span>
+&lt;a href="#if-you-want-to-the-local-version-of-a-dependency-in-go-rather-than-one-in-a-remote-repository-use-the-replace-keyword">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h1>&lt;p>If you want to the local version of a dependency in Go rather than one in a remote repository, use the &lt;em>replace&lt;/em> keyword.&lt;/p>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;p>81523e22c9593c19cae2a637126f78b89f76459e&lt;/p>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
 &lt;p>The replace line goes above your require statements, like so:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> module github.com/rnemeth90/foo
@@ -8,13 +30,57 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> require &lt;span style="color:#f92672">(&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> github.com/rnemeth90/bar v1.0.0
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now when you compile this module ~go build~ or ~go install~, it will use your local code rather than the remote dependency.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="now-when-you-compile-this-module-go-build-or-go-install-it-will-use-your-local-code-rather-than-the-remote-dependency" >&amp;laquo;&amp;laquo;&amp;laquo;&amp;lt; HEAD
+Now when you compile this module &lt;strong>go build&lt;/strong> or &lt;strong>go install&lt;/strong>, it will use your local code rather than the remote dependency.
+&lt;span>
+&lt;a href="#now-when-you-compile-this-module-go-build-or-go-install-it-will-use-your-local-code-rather-than-the-remote-dependency">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h1>&lt;p>Now when you compile this module ~go build~ or ~go install~, it will use your local code rather than the remote dependency.&lt;/p>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;p>81523e22c9593c19cae2a637126f78b89f76459e&lt;/p>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
 &lt;p>According to the docs, you do need to make sure that the code you’re pointing to also has a &lt;strong>go.mod&lt;/strong> file:&lt;/p>
 &lt;blockquote>
 &lt;p>&lt;strong>Note&lt;/strong>: if the right-hand side of a &lt;code>replace&lt;/code> directive is a filesystem path, then the target must have a &lt;code>go.mod&lt;/code> file at that location. If the &lt;code>go.mod&lt;/code> file is not present, you can create one with &lt;code>go mod init&lt;/code>.&lt;/p>
 &lt;p>&lt;a href="https://github.com/golang/go/wiki/Modules#when-should-i-use-the-replace-directive">https://github.com/golang/go/wiki/Modules#when-should-i-use-the-replace-directive&lt;/a>&lt;/p>
 &lt;/blockquote>
-&lt;p>You can also create this line from the command line using the &lt;strong>go mod edit&lt;/strong>&lt;/p>
+&lt;h1 id="you-can-also-create-this-line-from-the-command-line-using-the-go-mod-edit-command" >&amp;laquo;&amp;laquo;&amp;laquo;&amp;lt; HEAD
+You can also create this line from the command line using the &lt;strong>go mod edit&lt;/strong> command.
+&lt;span>
+&lt;a href="#you-can-also-create-this-line-from-the-command-line-using-the-go-mod-edit-command">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h1>&lt;p>You can also create this line from the command line using the &lt;strong>go mod edit&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;blockquote>
+&lt;p>81523e22c9593c19cae2a637126f78b89f76459e&lt;/p>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
+&lt;/blockquote>
 &lt;pre>&lt;code>$ go mod edit -replace github.com/rnemeth90/bar=/Users/rnemeth90/Projects/bar
 &lt;/code>&lt;/pre>
 &lt;p>Following the &lt;strong>-replace&lt;/strong> is first what you want to replace, then an equals sign, then what you’re replacing it with.&lt;/p>
