@@ -1,4 +1,24 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Dev on GeekyRyan</title><link>https://rnemeth90.github.io/tags/dev/</link><description>GeekyRyan (Dev)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 04 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/dev/index.xml" rel="self" type="application/rss+xml"/><item><title>Powershell for Devops - Querying REST APIs with Powershell</title><link>https://rnemeth90.github.io/posts/2022-08-04-querying-rest-with-powershell/</link><pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-08-04-querying-rest-with-powershell/</guid><description>&lt;p>This will be a short post on querying REST APIs with Powershell.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Dev on GeekyRyan</title><link>https://rnemeth90.github.io/tags/dev/</link><description>GeekyRyan (Dev)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 06 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/dev/index.xml" rel="self" type="application/rss+xml"/><item><title>Use “replace” in go.mod to Point to a Local Module</title><link>https://rnemeth90.github.io/posts/2022-09-06-go-mod-replace-copy/</link><pubDate>Tue, 06 Sep 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-09-06-go-mod-replace-copy/</guid><description>&lt;p>If you want to the local version of a dependency in Go rather than one in a remote repository, use the &lt;em>replace&lt;/em> keyword.&lt;/p>
+&lt;p>The replace line goes above your require statements, like so:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> module github.com/rnemeth90/foo
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> replace github.com/rnemeth90/bar &lt;span style="color:#f92672">=&lt;/span>&amp;gt; /Users/rnemeth90/Projects/bar
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> require &lt;span style="color:#f92672">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> github.com/rnemeth90/bar v1.0.0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now when you compile this module ~go build~ or ~go install~, it will use your local code rather than the remote dependency.&lt;/p>
+&lt;p>According to the docs, you do need to make sure that the code you’re pointing to also has a &lt;strong>go.mod&lt;/strong> file:&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;strong>Note&lt;/strong>: if the right-hand side of a &lt;code>replace&lt;/code> directive is a filesystem path, then the target must have a &lt;code>go.mod&lt;/code> file at that location. If the &lt;code>go.mod&lt;/code> file is not present, you can create one with &lt;code>go mod init&lt;/code>.&lt;/p>
+&lt;p>&lt;a href="https://github.com/golang/go/wiki/Modules#when-should-i-use-the-replace-directive">https://github.com/golang/go/wiki/Modules#when-should-i-use-the-replace-directive&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p>You can also create this line from the command line using the &lt;strong>go mod edit&lt;/strong>&lt;/p>
+&lt;pre>&lt;code>$ go mod edit -replace github.com/rnemeth90/bar=/Users/rnemeth90/Projects/bar
+&lt;/code>&lt;/pre>
+&lt;p>Following the &lt;strong>-replace&lt;/strong> is first what you want to replace, then an equals sign, then what you’re replacing it with.&lt;/p>
+&lt;p>Hopefully this helps someone who was stuck with this like me 🙂&lt;/p></description></item><item><title>Powershell for Devops - Querying REST APIs with Powershell</title><link>https://rnemeth90.github.io/posts/2022-08-04-querying-rest-with-powershell/</link><pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-08-04-querying-rest-with-powershell/</guid><description>&lt;p>This will be a short post on querying REST APIs with Powershell.&lt;/p>
 &lt;p>It&amp;rsquo;s hard to argue that REST APIs are the predominant technology for interacting
 with networked services. They provide a gateway for interacting with a 3rd party (or self-hosted)
 product without having to go through the exercise of a more complicated integration. REST APIs communicate

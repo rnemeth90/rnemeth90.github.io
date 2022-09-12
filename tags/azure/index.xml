@@ -1,4 +1,23 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>azure on GeekyRyan</title><link>https://rnemeth90.github.io/tags/azure/</link><description>GeekyRyan (azure)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 19 Feb 2022 16:02:50 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/azure/index.xml" rel="self" type="application/rss+xml"/><item><title>Accessing Secrets Securely in Azure DevOps Pipelines</title><link>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</link><pubDate>Sat, 19 Feb 2022 16:02:50 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</guid><description>&lt;p>This post will cover a secure method for accessing secrets in Azure DevOps pipelines.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>azure on GeekyRyan</title><link>https://rnemeth90.github.io/tags/azure/</link><description>GeekyRyan (azure)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 12 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/azure/index.xml" rel="self" type="application/rss+xml"/><item><title>Update Azure Devops SPN Secret</title><link>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</link><pubDate>Mon, 12 Sep 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</guid><description>&lt;p>If you need to update the secret for a service principal in Azure Devops, prior to it expiring, you may be surprised to find that this cannot be done via the Azure Portal.&lt;/p>
+&lt;p>In this article, I&amp;rsquo;ll show you two methods for updating a secret for a service principal prior to expiration.&lt;/p>
+&lt;h1 id="update-the-secret-via-the-azure-devops-portal" >Update the secret via the Azure Devops Portal:
+&lt;span>
+&lt;a href="#update-the-secret-via-the-azure-devops-portal">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h1>&lt;ul>
+&lt;li>Go to &amp;ldquo;Service Connections&amp;rdquo; in the Azure Devops portal&lt;/li>
+&lt;li>Find the SPN you want to update, then click &amp;ldquo;Manage Service Principal&amp;rdquo;&lt;/li>
+&lt;li>Then on the service principal page, click Certificates &amp;amp; Secrets&lt;/li>
+&lt;li>Create a &amp;ldquo;New Client Secret&amp;rdquo;, take note of the value&lt;/li>
+&lt;li>Delete the &amp;lsquo;old&amp;rsquo; secret&lt;/li>
+&lt;li>Return to the Service Connection in the Azure Devops portal&lt;/li>
+&lt;li>Click Edit - click the verify button. It should tell you the client certificate has expired&lt;/li>
+&lt;li>Now you need to make an arbitrary change and save it. I just type a character in the optional description and save.&lt;/li>
+&lt;li>Now edit again and click verify, it will now pick up the new client secret and all is happy.&lt;/li>
+&lt;li>You can now remove whatever you added to the description.&lt;/li>
+&lt;/ul></description></item><item><title>Accessing Secrets Securely in Azure DevOps Pipelines</title><link>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</link><pubDate>Sat, 19 Feb 2022 16:02:50 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</guid><description>&lt;p>This post will cover a secure method for accessing secrets in Azure DevOps pipelines.&lt;/p>
 &lt;h2 id="why-azure-key-vault" >Why Azure Key Vault?
 &lt;span>
 &lt;a href="#why-azure-key-vault">
