@@ -3,7 +3,7 @@ title: 'Use “replace” in go.mod to Point to a Local Module'
 author: Ryan
 date: '2022-09-06'
 layout: post
-draft: true
+draft: false
 categories:
     - 'Software Development'
     - golang
@@ -14,9 +14,11 @@ tags:
     - golang
 ---
 
-If you want to say, point to the local version of a dependency in Go rather than the one over the web, use the **replace** keyword.
+If you want to the local version of a dependency in Go rather than one in a remote repository, use the *replace* keyword.
 
 The replace line goes above your require statements, like so:
+
+~~~shell
 
     module github.com/rnemeth90/foo
 
@@ -25,9 +27,8 @@ The replace line goes above your require statements, like so:
     require (
     	github.com/rnemeth90/bar v1.0.0
     )
-
-
-And now when you compile this module (**go install**), it will use your local code rather than the other dependency.
+~~~
+Now when you compile this module ~go build~ or ~go install~, it will use your local code rather than the remote dependency.
 
 According to the docs, you do need to make sure that the code you’re pointing to also has a **go.mod** file:
 
@@ -41,4 +42,4 @@ You can also create this line from the command line using the **go mod edit**
 
 Following the **\-replace** is first what you want to replace, then an equals sign, then what you’re replacing it with.
 
-Hopefully this helps someone else get a quick answer to “how do I do this” in the future 🙂
+Hopefully this helps someone who was stuck with this like me 🙂
