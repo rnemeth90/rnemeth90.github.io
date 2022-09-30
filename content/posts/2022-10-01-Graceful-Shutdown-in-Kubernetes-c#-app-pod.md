@@ -20,6 +20,10 @@ tags:
     - Devops
 ---
 
+~~~dockerfile
+RUN reg add hklm\system\currentcontrolset\control /v WaitToKillServiceTimeout /t REG_SZ /d 60000 /f
+~~~
+
 ~~~c#
 
 namespace MarketingOps.APIConsoleHost
