@@ -20,9 +20,19 @@ tags:
     - Devops
 ---
 
+I was recently involved with troubleshooting some API's hosted in Kubernetes throwing http/502's. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us. It was actually a combination of these blogs (and the resolutions posted) that ended up resolving our issue.
+
+### So what was actually causing the 502's?
+As stated, these APIs are hosted in Kubernetes. They are written primarily in c# (.NET Framework) and hosted in Windows Server Core containers. The pods are load balanced using a service, and we have an Nginx ingress on top of the service. Nothing fancy, just a typical setup that you may have seen or even built yourself. We implement automatic scaling for our replica sets using a standard Kubernetes-native HPA or Keda, depending on the app. We have autoscale rules defined for the pods. Our clusters are hosted in Azure Kubernetes Service, and we autoscale our node pools. So, there are several layers of scaling happening in our clusters at any given time. Occasionally, when a pod was handling a client request, Kubelet or a controller would come along and scale the pod in. We were initially under the belief that the terminationGracePeriodSeconds value within our deployment would allow the pod to continue running for the defined number of seconds. However, we were mistaken. This value tells Kubernetes to allow the application running within the pod some time to clean up. It does *not* tell the app to continue running for the defined number of seconds after it receives a sigterm signal. This logic actually needs to be implemented within the application itself, or with a prestop hook. The prestop method is [well documented](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/), so I will not cover it here.
+
+To implement this in a c# app, you need to add this registry key to your container. This value tells Windows to wait a number of milliseconds before shutting down. Normally, Windows only waits for 5 seconds before shutting down any 'background' processes. Windows forcibly shuts down processes after this period of time.
+
+This can be done in the dockerfile:
 ~~~dockerfile
 RUN reg add hklm\system\currentcontrolset\control /v WaitToKillServiceTimeout /t REG_SZ /d 60000 /f
 ~~~
+
+Next, in the startup class, we'll add the following code. I have added inline comments to explain.
 
 ~~~c#
 
