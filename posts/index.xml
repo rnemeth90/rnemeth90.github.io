@@ -1,4 +1,98 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on GeekyRyan</title><link>https://rnemeth90.github.io/posts/</link><description>GeekyRyan (Posts)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 03 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Chaining YAML Pipelines in Azure Devops</title><link>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops/</link><pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops/</guid><description>&lt;p>In this article, we&amp;rsquo;ll take a quick look at chaining two pipelines together in Azure Devops, so that the completion of one pipeline, triggers the other to run.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on GeekyRyan</title><link>https://rnemeth90.github.io/posts/</link><description>GeekyRyan (Posts)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 23 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a Golang App with Github Actions</title><link>https://rnemeth90.github.io/posts/2022-11-03-gh-actions/</link><pubDate>Fri, 23 Dec 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-11-03-gh-actions/</guid><description>&lt;p>In this article, we&amp;rsquo;ll take a quick look at building a Golang app with Github actions. This process can be applied to just about any app
+written in any language though. We&amp;rsquo;ll cover the following:&lt;/p>
+&lt;ol>
+&lt;li>What are github actions?&lt;/li>
+&lt;li>Setting up the workflow to build, test, and deploy a binary&lt;/li>
+&lt;/ol>
+&lt;p>Github Actions is a cross-platform CI/CD pipeline that allows you to build, test, package, and release your software. Actions can be triggered manually or based on events that happen within your Github repo. They are powerful and I suggest you read more at the &lt;a href="https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions">Official Docs&lt;/a>&lt;/p>
+&lt;p>To get started, we&amp;rsquo;ll need a golang app to build. You can use my example &lt;a href="https://github.com/rnemeth90/golang-github-action-example">here&lt;/a> if you do not have your own.&lt;/p>
+&lt;p>The process is relatively simple. At the root of your repo, create the following directories:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir -p .github/workflows
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then create a yaml file (you can name it anything you want) with the content below:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">build-release-binary&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">run-name&lt;/span>: &lt;span style="color:#ae81ff">Create Github Release for GoLang binary&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># anytime we push to our repo with a tag starting with the&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># letter &amp;#39;r&amp;#39;, we run the build&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">on&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">push&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">tags&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#39;r*&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">jobs&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">build&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">runs-on&lt;/span>: &lt;span style="color:#ae81ff">ubuntu-22.04&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">permissions&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">contents&lt;/span>: &lt;span style="color:#ae81ff">write&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">steps&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># checkout our github repo to the build agent&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/checkout@v3&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">fetch-depth&lt;/span>: &lt;span style="color:#ae81ff">0&lt;/span> &lt;span style="color:#75715e"># get all tags, needed to get git log&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">ref&lt;/span>: &lt;span style="color:#ae81ff">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Setup the Go environment&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">setup Go Lang&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">id&lt;/span>: &lt;span style="color:#ae81ff">build&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/setup-go@v3&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">go-version&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;^1.19.2&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Build our application&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go version
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> cd src
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> if [ ! -e *.mod ]; then
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go mod init ${GITHUB_REPOSITORY}
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> fi
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go mod tidy
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go build -ldflags &amp;#34;-X main.Version=${GITHUB_REF_NAME} -X main.BuiltBy=github-actions&amp;#34; main.go
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> execFile=$(find . -type f -executable)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Output more values for debugging&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">git version&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">git branch&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">git tag&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># tag our release&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">get semantic tag version and release notes from commit messages&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">id&lt;/span>: &lt;span style="color:#ae81ff">tag&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> currentTag=${GITHUB_REF_NAME}
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> major_minor=$(echo &amp;#34;$currentTag&amp;#34; | cut -d&amp;#39;.&amp;#39; -f1-2)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> patch=$(echo &amp;#34;$currentTag&amp;#34; | cut -d&amp;#39;.&amp;#39; -f3)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> # avoid empty patch number
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> [ -n &amp;#34;$patch&amp;#34; ] &amp;amp;&amp;amp; ((patch--)) || patch=&amp;#34;.x&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> previousTag=&amp;#34;${major_minor}.${patch}&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;&amp;#34; &amp;gt; body.log
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> if git tag | grep $previousTag ; then
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> git log -q ${currentTag}...${previousTag} --pretty=&amp;#34;- %s&amp;#34; -q --no-color &amp;gt;&amp;gt; body.log
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> else
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> git log --pretty=&amp;#34;- %s&amp;#34; -q --no-color &amp;gt;&amp;gt; body.log
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> fi
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> line_count=$(cat body.log | wc -l)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;currentTag=$currentTag&amp;#34; &amp;gt;&amp;gt; $GITHUB_OUTPUT
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;previousTag=$previousTag&amp;#34; &amp;gt;&amp;gt; $GITHUB_OUTPUT
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;line_count=$line_count&amp;#34; &amp;gt;&amp;gt; $GITHUB_OUTPUT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># create Github release with release note from file and binary asset attached&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">ncipollo/release-action@v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">${{ env.GITHUB_REF_NAME }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">tag&lt;/span>: &lt;span style="color:#ae81ff">${{ env.GITHUB_REF_NAME }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">artifacts&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;src/main&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">bodyFile&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;body.log&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">token&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.GITHUB_TOKEN }}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Each step within this workflow starts with a hyphen. The steps are well-commented, so I will not explain them further. Once you have this file in your repo, push it to github. Then navigate to the Actions tab in your repository and you should see your workflow on the left hand side of the screen.&lt;/p>
+&lt;p>&lt;a href="https://rnemeth90.github.io/images/gh-actions-1.png">&lt;img src="https://rnemeth90.github.io/images/gh-actions-1.png" alt="">&lt;/a>&lt;/p>
+&lt;p>Now that we have our workflow setup, to get it run, all you need to do is tag and push your release to github. To do that, you can run the script in my repo &lt;a href="https://github.com/rnemeth90/golang-github-action-example/blob/main/create_new_gh_release.sh">create_new_gh_release.sh&lt;/a> or simply run the following commands (be sure to change the tag as needed):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>newtag&lt;span style="color:#f92672">=&lt;/span>r1.0.0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git tag $newtag &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> git push origin $newtag
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, go back to the Actions tab in your repo, and you should see the build running. Once it completes, go back to the Code tab in your github repo and you will see the release on the right hand side of the screen.&lt;/p>
+&lt;p>&lt;a href="https://rnemeth90.github.io/images/gh-actions-2.png">&lt;img src="https://rnemeth90.github.io/images/gh-actions-2.png" alt="">&lt;/a>&lt;/p></description></item><item><title>Chaining YAML Pipelines in Azure Devops</title><link>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</link><pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</guid><description>&lt;p>In this article, we&amp;rsquo;ll take a quick look at chaining two pipelines together in Azure Devops, so that the completion of one pipeline, triggers the other to run.
 Microsoft documentation is leaps and bounds ahead of where it used to be. However, I still feel like there is a lot of room for improvement, as it took me a while to
 figure this out.&lt;/p>
 &lt;p>Our two pipelines will exist in the same repository. We have a dependent-pipeline, that we only want to run once the source-pipeline is finished. This is useful if you have
@@ -106,11 +200,11 @@ there is no authentication and no rate-limiting (two concepts we will cover in a
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Invoke-RestMethod -Uri $url -Method Get -Headers $headers
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Output:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>[15&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>04&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>34] C:\..\..\rnemeth90.github.io on &lt;span style="color:#960050;background-color:#1e0010">&lt;/span>main &lt;span style="color:#960050;background-color:#1e0010">&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&lt;/span> +1 &lt;span style="color:#960050;background-color:#1e0010">❯&lt;/span> Invoke-RestMethod -Uri $url -Method Get -Headers $headers
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>[&lt;span style="color:#ae81ff">15&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">04&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">34&lt;/span>] C:\..\..\rnemeth90.github.io on &lt;span style="color:#960050;background-color:#1e0010">&lt;/span>main &lt;span style="color:#960050;background-color:#1e0010">&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&lt;/span> &lt;span style="color:#ae81ff">+1&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">❯&lt;/span> Invoke-RestMethod -Uri $url -Method Get -Headers $headers
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>id joke status
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-- ---- ------
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>3LmyXvsPfqc I don&lt;span style="color:#e6db74">&amp;#39;t trust stairs. They&amp;#39;&lt;/span>re always up to something. 200
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>3LmyXvsPfqc I don&lt;span style="color:#e6db74">&amp;#39;t trust stairs. They&amp;#39;&lt;/span>re always up to something. &lt;span style="color:#ae81ff">200&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>That looks a little better. For those of you familiar with Powershell, the output above probably
 looks completely normal. But for those not-so-familiar with Powershell, or those expecting
 more of a &amp;lsquo;json-esk&amp;rsquo; output, this may look a bit&amp;hellip; weird.&lt;/p>
@@ -124,11 +218,11 @@ of this request. What you see in the output is simply the properties of the obje
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Invoke-RestMethod -Uri $url -Method Get -Headers $headers | ConvertTo-Json
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here we are piping the output from Invoke-RestMethod to ConvertTo-Json. Pretty neat!&lt;/p>
 &lt;p>Output:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>[15&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>04&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>35] C:\..\..\rnemeth90.github.io on &lt;span style="color:#960050;background-color:#1e0010">&lt;/span>main &lt;span style="color:#960050;background-color:#1e0010">&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&lt;/span> +1 &lt;span style="color:#960050;background-color:#1e0010">❯&lt;/span> Invoke-RestMethod -Uri $url -Method Get -Headers $headers | Convertto-json
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>[&lt;span style="color:#ae81ff">15&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">04&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">35&lt;/span>] C:\..\..\rnemeth90.github.io on &lt;span style="color:#960050;background-color:#1e0010">&lt;/span>main &lt;span style="color:#960050;background-color:#1e0010">&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&lt;/span> &lt;span style="color:#ae81ff">+1&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">❯&lt;/span> Invoke-RestMethod -Uri $url -Method Get -Headers $headers | Convertto-json
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;id&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;AAdFBXnGlyd&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;joke&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;If you walk into a forest and cut down a tree, but the tree doesn&amp;#39;t understand why you cut it down, do you think it&amp;#39;s stumped?&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;status&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> 200
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;status&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> &lt;span style="color:#ae81ff">200&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, that looks more normal.&lt;/p>
 &lt;p>There is much more we can do with Invoke-RestMethod. The &amp;lsquo;Method&amp;rsquo; parameter of this cmdlet accepts any of the common
@@ -1991,7 +2085,7 @@ Configure time settings and NTP&lt;/p>
 &lt;p>Once this completes, you need to re-enable the deletion threshold. You can do this by running this cmdlet: &lt;span style="background: #F9F9F9;">&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>Enable-ADSyncExportDeletionThreshold -DeletionThreshold 500.
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>Enable-ADSyncExportDeletionThreshold -DeletionThreshold &lt;span style="color:#ae81ff">500&lt;/span>.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You will be prompted for credentials again. Just type in your Azure AD Global Admin creds. You can even lower the threshold if you’d like. I set mine to 100.&lt;/p></description></item><item><title>Remove Stubborn PSC or vCenter Appliance from an SSO Domain</title><link>https://rnemeth90.github.io/posts/2017-11-08-remove-stubborn-psc-or-vcenter/</link><pubDate>Wed, 08 Nov 2017 07:56:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2017-11-08-remove-stubborn-psc-or-vcenter/</guid><description>&lt;p>While attempting to decommission one of our vCenter sites, I ran into an issue removing one of the PSCs. This site consisted of two PSCs and one vCenter appliance. I removed the first PSC from the SSO domain successfully, and then removed the vCenter appliance. Things became a little tricky during the removal of the final PSC. This PSC did not get removed even after running the cmsso-util command. This article will detail the steps I took in decommissioning the site, as well as removing the stubborn PSC.&lt;/p>
 &lt;p>First, we need to check if vCenter is currently using the PSC we plan on decommissioning. If it is, we need to use the cmsso-util command to redirect vCenter to a different PSC. Instructions for redirecting vCenter can be found here: &lt;a href="https://kb.vmware.com/s/article/2113917?language=en_US">https://kb.vmware.com/s/article/2113917?language=en_US&lt;/a>&lt;/p>
 &lt;p>To check what PSC your vCSA is currently pointing to, browse to the Advanced Settings for the vCSA in the vSphere Web Client. Filter by this key: config.vpxd.sso.admin.uri&lt;/p>
@@ -2136,16 +2230,16 @@ Configure time settings and NTP&lt;/p>
 &lt;p>&lt;a href="https://rnemeth90.github.io/wp-content/uploads/2015/09/ExchangeForwarding.png">&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2015/09/ExchangeForwarding.png" alt="">&lt;/a>&lt;/p>
 &lt;p>This search showed me all of the mailboxes that have an alternate recipient (forwarding address) configured. Not sure if there is another way to obtain this information, but this is the way that worked for me. Hopefully this article is able to help someone in the same situation.&lt;/p></description></item><item><title>Script for Querying All AD Computers Time Source</title><link>https://rnemeth90.github.io/posts/2015-09-01-script-for-querying-all-ad-computers-time-source/</link><pubDate>Tue, 01 Sep 2015 21:05:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2015-09-01-script-for-querying-all-ad-computers-time-source/</guid><description>&lt;p>This script will iterate through all computers in Active Directory and return the configured time server for each computer.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;#
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> &lt;/span>&lt;span style="color:#e6db74">.SYNOPSIS&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> .&lt;/span>&lt;span style="color:#e6db74">SYNOPSIS&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> Get time source for all computers in domain
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> &lt;/span>&lt;span style="color:#e6db74">.EXAMPLE&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> .&lt;/span>&lt;span style="color:#e6db74">EXAMPLE&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> Get-TimeSource
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> &lt;/span>&lt;span style="color:#e6db74">.NOTES&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> .&lt;/span>&lt;span style="color:#e6db74">NOTES&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> Author: Ryan Nemeth - RyanNemeth@live.com
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> Site: http://www.geekyryan.com
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> &lt;/span>&lt;span style="color:#e6db74">.LINK&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> .&lt;/span>&lt;span style="color:#e6db74">LINK&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> http://www.geekyryan.com
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> &lt;/span>&lt;span style="color:#e6db74">.DESCRIPTION&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> .&lt;/span>&lt;span style="color:#e6db74">DESCRIPTION&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> This function will iterate through all computers/servers in a domain and return the time source
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> for each.
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#&amp;gt;&lt;/span>

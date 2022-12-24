@@ -72,16 +72,16 @@ Configure time settings and NTP&lt;/p>
 &lt;p>&lt;a href="https://rnemeth90.github.io/wp-content/uploads/2015/09/ExchangeForwarding.png">&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2015/09/ExchangeForwarding.png" alt="">&lt;/a>&lt;/p>
 &lt;p>This search showed me all of the mailboxes that have an alternate recipient (forwarding address) configured. Not sure if there is another way to obtain this information, but this is the way that worked for me. Hopefully this article is able to help someone in the same situation.&lt;/p></description></item><item><title>Script for Querying All AD Computers Time Source</title><link>https://rnemeth90.github.io/posts/2015-09-01-script-for-querying-all-ad-computers-time-source/</link><pubDate>Tue, 01 Sep 2015 21:05:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2015-09-01-script-for-querying-all-ad-computers-time-source/</guid><description>&lt;p>This script will iterate through all computers in Active Directory and return the configured time server for each computer.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Powershell" data-lang="Powershell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;#
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> &lt;/span>&lt;span style="color:#e6db74">.SYNOPSIS&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> .&lt;/span>&lt;span style="color:#e6db74">SYNOPSIS&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> Get time source for all computers in domain
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> &lt;/span>&lt;span style="color:#e6db74">.EXAMPLE&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> .&lt;/span>&lt;span style="color:#e6db74">EXAMPLE&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> Get-TimeSource
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> &lt;/span>&lt;span style="color:#e6db74">.NOTES&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> .&lt;/span>&lt;span style="color:#e6db74">NOTES&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> Author: Ryan Nemeth - RyanNemeth@live.com
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> Site: http://www.geekyryan.com
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> &lt;/span>&lt;span style="color:#e6db74">.LINK&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> .&lt;/span>&lt;span style="color:#e6db74">LINK&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> http://www.geekyryan.com
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> &lt;/span>&lt;span style="color:#e6db74">.DESCRIPTION&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> .&lt;/span>&lt;span style="color:#e6db74">DESCRIPTION&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> This function will iterate through all computers/servers in a domain and return the time source
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> for each.
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#&amp;gt;&lt;/span>
