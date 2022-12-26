@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>golang on GeekyRyan</title>
+    <link>https://rnemeth90.github.io/categories/golang/</link>
+    <description>Recent content in golang on GeekyRyan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 06 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/categories/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Use “replace” in go.mod to Point to a Local Module</title>
+      <link>https://rnemeth90.github.io/posts/2022-09-06-go-mod-replace-copy/</link>
+      <pubDate>Tue, 06 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-09-06-go-mod-replace-copy/</guid>
+      <description>If you want to the local version of a dependency in Go rather than one in a remote repository, use the replace keyword.
+The replace line goes above your require statements, like so:
+module github.com/rnemeth90/foo replace github.com/rnemeth90/bar =&amp;gt; /Users/rnemeth90/Projects/bar require ( github.com/rnemeth90/bar v1.0.0 ) Now when you compile this module go build or go install, it will use your local code rather than the remote dependency.
+According to the docs, you do need to make sure that the code you’re pointing to also has a go.</description>
+    </item>
+    
+    <item>
+      <title>Reading Json Files with Go</title>
+      <link>https://rnemeth90.github.io/posts/2022-07-21-reading-json-files-with-go/</link>
+      <pubDate>Thu, 21 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-07-21-reading-json-files-with-go/</guid>
+      <description>JSON is a widely used format for representing structured data. Developers like it because it is easy to read, most common languages have a library for interacting with it, and most public APIs accept JSON in HTTP requests.
+In this post, we&amp;rsquo;ll look at parsing a JSON file using Go! We will be using the io/ioutil package to open a json file on local disk, and encoding/json to parse the JSON data within the file into a memory structure.</description>
+    </item>
+    
+  </channel>
+</rss>

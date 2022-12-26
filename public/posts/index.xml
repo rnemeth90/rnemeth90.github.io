@@ -3,22 +3,732 @@
   <channel>
     <title>Posts on GeekyRyan</title>
     <link>https://rnemeth90.github.io/posts/</link>
-    <description>GeekyRyan (Posts)</description>
+    <description>Recent content in Posts on GeekyRyan</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 20 Jul 2022 13:26:43 -0400</lastBuildDate>
-    
-    <atom:link href="https://rnemeth90.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Fri, 23 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building a Golang App with Github Actions</title>
+      <link>https://rnemeth90.github.io/posts/2022-12-24-gh-actions-copy/</link>
+      <pubDate>Fri, 23 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-12-24-gh-actions-copy/</guid>
+      <description>In this article, we&amp;rsquo;ll take a quick look at building a Golang app with Github actions. This process can be applied to just about any app written in any language though. We&amp;rsquo;ll cover the following:
+ What are github actions? Setting up the workflow to build, test, and deploy a binary  Github Actions is a cross-platform CI/CD pipeline that allows you to build, test, package, and release your software. Actions can be triggered manually or based on events that happen within your Github repo.</description>
+    </item>
     
     <item>
-      <title>My First Post</title>
-      <link>https://rnemeth90.github.io/posts/my-first-post/</link>
-      <pubDate>Wed, 20 Jul 2022 13:26:43 -0400</pubDate>
+      <title>Chaining YAML Pipelines in Azure Devops</title>
+      <link>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</link>
+      <pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://rnemeth90.github.io/posts/my-first-post/</guid>
-      <description>&lt;p&gt;Hello World!&lt;/p&gt;
-</description>
+      <guid>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</guid>
+      <description>In this article, we&amp;rsquo;ll take a quick look at chaining two pipelines together in Azure Devops, so that the completion of one pipeline, triggers the other to run. Microsoft documentation is leaps and bounds ahead of where it used to be. However, I still feel like there is a lot of room for improvement, as it took me a while to figure this out.
+Our two pipelines will exist in the same repository.</description>
+    </item>
+    
+    <item>
+      <title>Update Azure Devops SPN Secret</title>
+      <link>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</link>
+      <pubDate>Mon, 12 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</guid>
+      <description>If you need to update the secret for a service principal in Azure Devops, prior to it expiring, you may be surprised to find that this cannot be done via the Azure Portal.
+In this article, I&amp;rsquo;ll show you two methods for updating a secret for a service principal prior to expiration.
+Update the secret via the Azure Devops Portal:  Go to &amp;ldquo;Service Connections&amp;rdquo; in the Azure Devops portal Find the SPN you want to update, then click &amp;ldquo;Manage Service Principal&amp;rdquo; Then on the service principal page, click Certificates &amp;amp; Secrets Create a &amp;ldquo;New Client Secret&amp;rdquo;, take note of the value Delete the &amp;lsquo;old&amp;rsquo; secret Return to the Service Connection in the Azure Devops portal Click Edit - click the verify button.</description>
+    </item>
+    
+    <item>
+      <title>Use “replace” in go.mod to Point to a Local Module</title>
+      <link>https://rnemeth90.github.io/posts/2022-09-06-go-mod-replace-copy/</link>
+      <pubDate>Tue, 06 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-09-06-go-mod-replace-copy/</guid>
+      <description>If you want to the local version of a dependency in Go rather than one in a remote repository, use the replace keyword.
+The replace line goes above your require statements, like so:
+module github.com/rnemeth90/foo replace github.com/rnemeth90/bar =&amp;gt; /Users/rnemeth90/Projects/bar require ( github.com/rnemeth90/bar v1.0.0 ) Now when you compile this module go build or go install, it will use your local code rather than the remote dependency.
+According to the docs, you do need to make sure that the code you’re pointing to also has a go.</description>
+    </item>
+    
+    <item>
+      <title>Powershell for Devops - Querying REST APIs with Powershell</title>
+      <link>https://rnemeth90.github.io/posts/2022-08-04-querying-rest-with-powershell/</link>
+      <pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-08-04-querying-rest-with-powershell/</guid>
+      <description>This will be a short post on querying REST APIs with Powershell.
+It&amp;rsquo;s hard to argue that REST APIs are the predominant technology for interacting with networked services. They provide a gateway for interacting with a 3rd party (or self-hosted) product without having to go through the exercise of a more complicated integration. REST APIs communicate in a common format, typically JSON. However, most will allow us to choose the response format by specifying an option in the &amp;lsquo;Accept&amp;rsquo; header.</description>
+    </item>
+    
+    <item>
+      <title>Reading Json Files with Go</title>
+      <link>https://rnemeth90.github.io/posts/2022-07-21-reading-json-files-with-go/</link>
+      <pubDate>Thu, 21 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-07-21-reading-json-files-with-go/</guid>
+      <description>JSON is a widely used format for representing structured data. Developers like it because it is easy to read, most common languages have a library for interacting with it, and most public APIs accept JSON in HTTP requests.
+In this post, we&amp;rsquo;ll look at parsing a JSON file using Go! We will be using the io/ioutil package to open a json file on local disk, and encoding/json to parse the JSON data within the file into a memory structure.</description>
+    </item>
+    
+    <item>
+      <title>AKS Scale Down Mode</title>
+      <link>https://rnemeth90.github.io/posts/2022-07-19-aks-scale-down-mode/</link>
+      <pubDate>Tue, 19 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-07-19-aks-scale-down-mode/</guid>
+      <description>By default, scale-out operations performed manually or by cluster autoscale rules require the allocation and provisioning of new nodes, and scale-in operations delete nodes. Scale-down mode is a relatively newer concept that allows us to choose whether to delete or deallocate nodes.
+Having the ability to deallocate, rather than delete, nodes is a major performance benefit, as the time it takes to spin up new nodes will be significantly decreased. You will not be charged when nodes are deallocated.</description>
+    </item>
+    
+    <item>
+      <title>Scheduled Kubernetes Worker Node Maintenance with Kured</title>
+      <link>https://rnemeth90.github.io/posts/2022-07-15-scheduled-kubernetes-worker-node-maintenance-with-kured/</link>
+      <pubDate>Fri, 15 Jul 2022 18:18:50 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-07-15-scheduled-kubernetes-worker-node-maintenance-with-kured/</guid>
+      <description>If you manage Linux nodes, you know how vital performing regular maintenance is. Installing software patches that modify Linux kernel headers requires a reboot. Normally, as in the past, we would cordon and drain the node and then manually reboot, wait for it to come back online, verify its health, and add it back to the cluster. That’s a lot of manual work! How can we automate this?
+Weaveworks created a great tool for simplifying these steps: Kured (the Kubernetes Reboot Daemon).</description>
+    </item>
+    
+    <item>
+      <title>Running Docker in WSL v1</title>
+      <link>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</link>
+      <pubDate>Sun, 26 Jun 2022 15:00:28 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</guid>
+      <description>I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.
+Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work.</description>
+    </item>
+    
+    <item>
+      <title>EF Core &amp;#8211; Unable to create an object of type DbContext</title>
+      <link>https://rnemeth90.github.io/posts/2022-06-12-ef-core-unable-to-create-an-object-of-type-dbcontext/</link>
+      <pubDate>Sun, 12 Jun 2022 13:58:52 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-06-12-ef-core-unable-to-create-an-object-of-type-dbcontext/</guid>
+      <description>This problem has bitten me more than once, and I can never remember how to fix it. So, why not write a blog post about it!
+When running EF Core migrations in a solution, you may come across this error:
+
+There are several apparent causes. However, in my case (every time I have seen this), it has been caused by having multiple startup projects selected in Visual Studio.
+To fix this, simply open your Solution properties and set the startup project to ‘Current Selection’.</description>
+    </item>
+    
+    <item>
+      <title>Remove Kubernetes Namespace Stuck in the Terminating State</title>
+      <link>https://rnemeth90.github.io/posts/2022-06-04-remove-kubernetes-namespace-stuck-in-the-terminating-state/</link>
+      <pubDate>Sat, 04 Jun 2022 18:29:41 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-06-04-remove-kubernetes-namespace-stuck-in-the-terminating-state/</guid>
+      <description>In this post, we will discuss how to remove a Kubernetes namespace that is stuck in the ‘terminating’ state.
+A namespace is like a container. You can use it to store related objects in a Kubernetes environment. Maybe you are hosting a blog in Kubernetes. This blog will likely have a database, a frontend website, a load balancer (service) to spread the incoming traffic among ‘x’ number of frontend containers (pods), and maybe some middle-tier or utility applications.</description>
+    </item>
+    
+    <item>
+      <title>Injecting multiple Kubernetes volumes to the same directory in a pod</title>
+      <link>https://rnemeth90.github.io/posts/2022-04-30-injecting-multiple-kubernetes-volumes-to-the-same-directory-in-a-pod/</link>
+      <pubDate>Sat, 30 Apr 2022 14:21:05 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-04-30-injecting-multiple-kubernetes-volumes-to-the-same-directory-in-a-pod/</guid>
+      <description>We can inject configuration into containers using Kubernetes config maps and secrets. These objects can be consumed by a pod as environment variables, command-line arguments, or as configuration files mounted in a volume. For the subject of this article, we will focus on mounting multiple config maps/secrets into a single directory on a pod.
+Mounting a configmap or secret in a Volume is relatively straightforward (for anyone familiar with Kubernetes primitives).</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes Storage Simplified</title>
+      <link>https://rnemeth90.github.io/posts/2022-03-01-kubernetes-storage-simplified/</link>
+      <pubDate>Tue, 01 Mar 2022 08:37:58 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-03-01-kubernetes-storage-simplified/</guid>
+      <description>In this blog post, we will attempt to explain the current storage options that exist in Kubernetes. If you are new to Kubernetes, learning about its capabilities of managing the application state can be a daunting task.
+Container images are built-in layers, with the runtime layer being writable. However, any files on this writable layer are only available for the container’s lifetime. We can mount a volume to a directory inside the container to have persistent data.</description>
+    </item>
+    
+    <item>
+      <title>Accessing Secrets Securely in Azure DevOps Pipelines</title>
+      <link>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</link>
+      <pubDate>Sat, 19 Feb 2022 16:02:50 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</guid>
+      <description>This post will cover a secure method for accessing secrets in Azure DevOps pipelines.
+Why Azure Key Vault? Azure Key Vault is an Azure cloud service used to securely store secrets, keys, and certificates. A secret can be any string of characters, such as API keys, passwords, URLs, etc. Azure Key Vault encrypts data at rest and in transit using HTTPS. Depending on the type of Key Vault you are using, data at rest is encrypted using software encryption (AES 256) or HSM-backed keys.</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes Pod Eviction</title>
+      <link>https://rnemeth90.github.io/posts/2022-02-05-kubernetes-pod-eviction/</link>
+      <pubDate>Sat, 05 Feb 2022 23:49:16 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-02-05-kubernetes-pod-eviction/</guid>
+      <description>In this article, we will dive into the process of pod eviction in a Kubernetes cluster, how you can pod prevent pod eviction, and how you can recover from such a situation.
+What is Pod Eviction? Kubernetes pod eviction is a type of involuntary service disruption in which a pod is forcefully stopped on a node or fails to be scheduled on a node. Pod eviction can happen for a variety of reasons.</description>
+    </item>
+    
+    <item>
+      <title>Azure Kubernetes sFTP Solution</title>
+      <link>https://rnemeth90.github.io/posts/2022-01-16-azure-kubernetes-sftp-solution/</link>
+      <pubDate>Sun, 16 Jan 2022 07:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-01-16-azure-kubernetes-sftp-solution/</guid>
+      <description>In this post, we’ll take a look at deploying a highly available sFTP solution to Azure Kubernetes with user files stored in an Azure NFSv4 File Share. The sFTP application reads user credentials from a file named users.conf, containing secrets from an Azure Key Vault.
+Here is the link to my Github account where you can download the code mentioned in this article:
+https://github.com/rnemeth90/kubernetes-sftp
+We will work through the following steps in this article:</description>
+    </item>
+    
+    <item>
+      <title>WSUS: Update Files Not Downloading</title>
+      <link>https://rnemeth90.github.io/posts/2022-01-14-wsus-update-files-not-downloading/</link>
+      <pubDate>Fri, 14 Jan 2022 22:01:40 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-01-14-wsus-update-files-not-downloading/</guid>
+      <description>This article will discuss an issue regarding WSUS failing to download updates from Microsoft Update servers. You may notice that the home page of your WSUS console states that it has downloaded 0MB of updates:
+
+You may also see this event (or similar) in the Event Log.
+
+This problem is caused by not specifying a valid path when assigning the WSUS content drive when first installing the role. The first time you load the WSUS console after installing the role, you will be prompted to specify the path to store Windows Update files.</description>
+    </item>
+    
+    <item>
+      <title>Active Directory Migration Toolkit The RPC Server is Unavailable</title>
+      <link>https://rnemeth90.github.io/posts/2022-01-14-active-directory-migration-toolkit-the-rpc-server-is-unavailable/</link>
+      <pubDate>Fri, 14 Jan 2022 21:55:56 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-01-14-active-directory-migration-toolkit-the-rpc-server-is-unavailable/</guid>
+      <description>When migrating computer objects using the Active Directory Migration Tool, you may encounter the following error:
+
+In addition, the Migration Log may show the following error:
+
+This is typically caused by a host-side firewall. To resolve this, deploy a GPO to disable the Windows firewall prior to migrating the computer account. I like to create a special OU for computers (I typically name it “PreMigration”) that I will move computer objects to prior to migrating them.</description>
+    </item>
+    
+    <item>
+      <title>Continuous Deployment Models</title>
+      <link>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</link>
+      <pubDate>Fri, 14 Jan 2022 19:24:01 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</guid>
+      <description>When deploying new software releases to servers or (insert -as-a-service&amp;gt; here), it’s a good idea to either deploy the releases in a controlled manner or to have a quick rollback plan. This article will be diving into blue/green deployments, canary deployments, ring-based deployments, and feature tag deployments.
+Blue/Green Deployments Blue/green deployments are a deployment model where a new application version never gets deployed to the production servers (green) directly. Instead, it gets deployed to another set of servers (blue) first.</description>
+    </item>
+    
+    <item>
+      <title>Deploy Azure VMs Using Azure Devops CI/CD Pipeline</title>
+      <link>https://rnemeth90.github.io/posts/2022-01-14-deploy-azure-vms-using-azure-devops-ci-cd-pipeline/</link>
+      <pubDate>Fri, 14 Jan 2022 18:46:35 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-01-14-deploy-azure-vms-using-azure-devops-ci-cd-pipeline/</guid>
+      <description>This article assumes that you have already created a pipeline in Azure Devops and have it linked to an Azure Devops repo. You will need to create a variable named $vmpassword and assign it the value stored in your key vault.
+To create a release pipeline that will automatically create a VM (using the password stored in key vault for the local administrator account), do the following:
+ Create a new release pipeline  3.</description>
+    </item>
+    
+    <item>
+      <title>Azure Devops &amp;#8211; Self Hosted Agent Service Won&amp;#8217;t Start &amp;#8211; Incorrect Function</title>
+      <link>https://rnemeth90.github.io/posts/2022-01-14-azure-devops-self-hosted-agent-service-wont-start-incorrect-function/</link>
+      <pubDate>Fri, 14 Jan 2022 18:45:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-01-14-azure-devops-self-hosted-agent-service-wont-start-incorrect-function/</guid>
+      <description>I setup a self hosted agent for Azure Devops this morning on Server 2012 R2 (legacy Visual Studio dependencies…) and found that I was unable to start the service. The error I received was “Error 1 Incorrect Function” when attempting to start the service in services.msc.
+I was attempting to run the agent from within my user profile downloads folder. I originally was not aware the service would be running from this directory.</description>
+    </item>
+    
+    <item>
+      <title>Azure Tenant Maintenance &amp;#8211; Purge Empty Resource Groups</title>
+      <link>https://rnemeth90.github.io/posts/2022-01-14-azure-tenant-maintenance-purge-empty-resource-groups/</link>
+      <pubDate>Fri, 14 Jan 2022 18:43:35 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-01-14-azure-tenant-maintenance-purge-empty-resource-groups/</guid>
+      <description>This will be the first article in a series about maintaining Azure tenants and subscriptions.
+If you currently, or have ever, worked in a large Azure environment, you know how easily resource creep can occur. Resource Groups, VM disks and network interfaces, network security groups, etc. can easily fall out of sight and be forgotten about. This isn’t a big concern for resources that are free of cost, like resource groups.</description>
+    </item>
+    
+    <item>
+      <title>Exam AZ-303: Microsoft Azure Architect Technologies Study Guide</title>
+      <link>https://rnemeth90.github.io/posts/2020-12-16-exam-az-303-microsoft-azure-architect/</link>
+      <pubDate>Wed, 16 Dec 2020 14:44:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2020-12-16-exam-az-303-microsoft-azure-architect/</guid>
+      <description>I recently passed the AZ-303 exam. Below are some of the resources I used to prepare for the exam. In addition to the links below, I also used Alan Rodrigues’ course on Udemy. 
+https://www.udemy.com/course/az-102-azure-administrator-certification-transition/ 
+The Udemy course and Microsoft Docs are enough to pass the exam. The course has some good practice exams and labs that align well with what you’ll see on the real exam regarding difficulty. I was scoring in the high 90’s on the Udemy exams.</description>
+    </item>
+    
+    <item>
+      <title>Azure AD Sync &amp;#8211; Set-MsolDirSyncEnabled : You cannot turn off Active Directory synchronization.</title>
+      <link>https://rnemeth90.github.io/posts/2020-11-26-azure-ad-sync-set-msoldirsyncenabled/</link>
+      <pubDate>Thu, 26 Nov 2020 16:31:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2020-11-26-azure-ad-sync-set-msoldirsyncenabled/</guid>
+      <description>I recently ran into a situation in my lab environment that required I resync all (2000+) user accounts to Azure AD. Though this sounds complex and daunting, its actually quite simple. T
+The basic steps involve disabling sync, and then removing the user objects. This can all be done with two PowerShell commands:
+1) Set-MsolDirSyncEnabled -EnableDirSync $false
+
+2) Get-MsolUser -All | Remove-MsolUser -force
+
+The account that you are currently running the commands as will not be removed.</description>
+    </item>
+    
+    <item>
+      <title>Azure VM Scale Set &amp;#8211; Get Instance IP Address</title>
+      <link>https://rnemeth90.github.io/posts/2020-11-19-azure-vm-scale-set-get-instance-ip/</link>
+      <pubDate>Thu, 19 Nov 2020 18:07:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2020-11-19-azure-vm-scale-set-get-instance-ip/</guid>
+      <description>If you are using VM Scale Sets in Azure, you know how important it can be to quickly obtain an instance IP address. This can of course be done using the Azure Portal. However, I am often working in a shell or VSCode, and I do not want to leave the comfort of my shell to login to the portal.
+There are a few options we have for retrieving information about a VMSS and its instances without using the Azure Portal.</description>
+    </item>
+    
+    <item>
+      <title>Azure Policy &amp;#8211; Allowed Locations for Resource Deployment</title>
+      <link>https://rnemeth90.github.io/posts/2020-11-17-azure-policy-allowed-locations-for/</link>
+      <pubDate>Tue, 17 Nov 2020 17:52:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2020-11-17-azure-policy-allowed-locations-for/</guid>
+      <description>Azure Policy allows us to control what actions users can perform regarding creating and managing resources in Azure. We can define policies for naming standards, require that certain extensions be installed on virtual machines, audit various resources for certain configurations… the possibilities are endless.
+In this article, well focus on defining what locations users can deploy resources in. To get started, login to the Azure Portal and search for “Policy”.</description>
+    </item>
+    
+    <item>
+      <title>Replicate an Azure VM Image Between Regions</title>
+      <link>https://rnemeth90.github.io/posts/2020-11-03-replicate-azure-vm-image-between-regions/</link>
+      <pubDate>Tue, 03 Nov 2020 20:15:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2020-11-03-replicate-azure-vm-image-between-regions/</guid>
+      <description>Let’s say you have a VM in Azure North Central. You created this VM from a custom image that you maintain in an Azure image repository. Now, what if you wanted to create that same VM in Azure South Central, and use the same reference image? A standard image repository is limited to the region that it exists in. The answer here is to create a Shared Image Library, add the image to it, and then configure the image to replicate to other Azure regions.</description>
+    </item>
+    
+    <item>
+      <title>Reset GRUB/root Password for vCenter/PSC Appliance</title>
+      <link>https://rnemeth90.github.io/posts/2020-10-31-reset-grubroot-password-for-vcenterpsc/</link>
+      <pubDate>Sat, 31 Oct 2020 01:22:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2020-10-31-reset-grubroot-password-for-vcenterpsc/</guid>
+      <description>In Redhat/Fedora/Cent, GRUB can be protected by running the grub-md5-crypt command and pasting the outputted password hash into the grub.conf file. vSphere 6.0 password protects grub by default. If you change the root password in the VAMI, the GRUB password is changed to match. If you do not change the root password, the GRUB password is “vmware”.
+To reset the GRUB password, we need to boot into a Cent or Redhat live CD.</description>
+    </item>
+    
+    <item>
+      <title>Deploy a New ADDS Forest on Server 2019 Core</title>
+      <link>https://rnemeth90.github.io/posts/2020-10-31-deploy-new-adds-forest-on-server-2019/</link>
+      <pubDate>Sat, 31 Oct 2020 01:02:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2020-10-31-deploy-new-adds-forest-on-server-2019/</guid>
+      <description>Prerequisites:
+Change server name and IP address Configure time settings and NTP
+In this post we will be reviewing the basic installation of the Active Directory Domain Services role and setup of a new forest on Windows Server Core 2019.
+To get started, login to your server with administrator privileges. You will first need to type in “powershell” in the cmd prompt to start powershell. Once you do that, type in the following command to install the Active Directory Domain Services role:</description>
+    </item>
+    
+    <item>
+      <title>Could not connect to VMware Directory Service via LDAP when Deploying New vCenter Appliance</title>
+      <link>https://rnemeth90.github.io/posts/2020-10-28-could-not-connect-to-vmware-directory/</link>
+      <pubDate>Wed, 28 Oct 2020 13:51:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2020-10-28-could-not-connect-to-vmware-directory/</guid>
+      <description>Problem:
+Deploying a brand new vCSA 6.7 appliance results in the following error during the second stage of the deployment.
+
+Solution:
+This problem is almost always caused by DNS resolution. Once you create the appropriate A and PTR record for your appliance on a LOCAL DNS server, you should be to successfully complete the deployment. Local DNS resolution is required, you cannot use a public DNS server while installing vCenter.</description>
+    </item>
+    
+    <item>
+      <title>Cisco AnyConnect &amp;#8211; VPN Establishment Capability from a Remote Desktop is Disabled</title>
+      <link>https://rnemeth90.github.io/posts/2020-10-07-cisco-anyconnect-vpn-establishment/</link>
+      <pubDate>Wed, 07 Oct 2020 13:28:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2020-10-07-cisco-anyconnect-vpn-establishment/</guid>
+      <description>I ran into this issue this morning when attempting to setup a VPN on a Hyper-V virtual machine. After an hour of searching the Google machine and troubleshooting, I came upon this solution.
+
+Upon installation, AnyConnect pulls down a profile from the ASA containing several settings. This profile is in xml format and is located (on a Windows machine) at %programdata%CiscoCisco AnyConnect Secure Mobility ClientProfileAnyConnectProfile.xsd.
+To resolve this issue and connect to your VPN, open this file with notepad (or any text editor, run as admin), search for the “WindowsVPNEstablishment” tag, and modify the value.</description>
+    </item>
+    
+    <item>
+      <title>Error When Reinstalling DirSync</title>
+      <link>https://rnemeth90.github.io/posts/2019-01-14-error-when-reinstalling-dirsync/</link>
+      <pubDate>Mon, 14 Jan 2019 21:47:04 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2019-01-14-error-when-reinstalling-dirsync/</guid>
+      <description>Today is just not my day! After a failed attempt at installing/configuring DirSync, I removed it and tried to install and configure it again. This time did not prove any more successful. I was getting this error midway through the install process:
+
+I was able to figure this out after a little while and wanted to sure what I learned. If you are seeing this error message after removing DirSync and trying to reinstall, here’s what you need to do:</description>
+    </item>
+    
+    <item>
+      <title>Active Directory Migration Toolkit &amp;#8211; The RPC Server is Unavailable (hr=0x800706ba)</title>
+      <link>https://rnemeth90.github.io/posts/2018-08-21-active-directory-migration-toolkit-rpc/</link>
+      <pubDate>Tue, 21 Aug 2018 17:34:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2018-08-21-active-directory-migration-toolkit-rpc/</guid>
+      <description>When migrating computer objects using the Active Directory Migration Tool, you may encounter the following error:
+
+In addition, the Migration Log may show the following error:
+
+This is typically caused by a host-side firewall. To resolve this, deploy a GPO to disable the Windows firewall prior to migrating the computer account. I like to create a special OU for computers (I typically name it “PreMigration”) that I will move computer objects to prior to migrating them.</description>
+    </item>
+    
+    <item>
+      <title>Azure Site Recovery &amp;#8211; VMware-to-Azure: Wrong IP address discovered for VM</title>
+      <link>https://rnemeth90.github.io/posts/2018-08-21-azure-site-recovery-vmware-to-azure/</link>
+      <pubDate>Tue, 21 Aug 2018 17:26:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2018-08-21-azure-site-recovery-vmware-to-azure/</guid>
+      <description>When replicating virtual machines from VMware to Azure using Site Recovery, you may encounter an issue where the Configuration server discovers the wrong IP address for a VM. This can be caused by stale entries within the infrastructurevms MySQL table that is used by ASR to track VM attributes.
+To resolve this issue, you first need to disable replication for the VM in the Azure Portal.
+
+Next, login to your ASR Configuration Server and open a CMD prompt as administrator.</description>
+    </item>
+    
+    <item>
+      <title>Azure AD Connect No-Start-Connection</title>
+      <link>https://rnemeth90.github.io/posts/2018-07-26-azure-ad-connect-no-start-connection/</link>
+      <pubDate>Thu, 26 Jul 2018 12:22:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2018-07-26-azure-ad-connect-no-start-connection/</guid>
+      <description>This morning, I ran into an issue with Azure AD Connect that I had never seen before. I received an email alert from Azure AD stating that Password Synchronization was not working for my forest, and the suggested fix was to restart the ADSync service on the server. I restarted the service and then forced a sync to verify it was working.
+After forcing the sync, I opened miisclient and noticed some strange errors.</description>
+    </item>
+    
+    <item>
+      <title>Azure AD Connect Health: Latest Data is not Available in Azure Portal</title>
+      <link>https://rnemeth90.github.io/posts/2018-07-18-azure-ad-connect-health-latest-data-is/</link>
+      <pubDate>Wed, 18 Jul 2018 16:38:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2018-07-18-azure-ad-connect-health-latest-data-is/</guid>
+      <description>I recently had to create a new Azure AD Connect server, and found that it was not able to report health status in the Azure Portal. After some troubleshooting/research, I was able to get the health status report working by registering the health agent on the server with Azure AD Health Services. Doing this involves running one PowerShell cmdlet on your AD Connect server and providing global administrator credentials.</description>
+    </item>
+    
+    <item>
+      <title>Removing a Forest from Azure AD Connect</title>
+      <link>https://rnemeth90.github.io/posts/2018-07-13-removing-forest-from-azure-ad-connect/</link>
+      <pubDate>Fri, 13 Jul 2018 15:30:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2018-07-13-removing-forest-from-azure-ad-connect/</guid>
+      <description>In an organization with multiple Active Directory forests, you may want to sync objects from trusted forests. Adding trusted forests to Azure AD Sync is a simple process that I will likely cover in a future article. The focus of this post is the not-so-obvious process of removing a forest from Azure AD Connect. This can be a daunting and somewhat scary thing to do. Not fully understanding the process or having someone to guide you can leave you with thoughts like “what happens when I remove the forest from Azure AD Sync?</description>
+    </item>
+    
+    <item>
+      <title>Remove Stubborn PSC or vCenter Appliance from an SSO Domain</title>
+      <link>https://rnemeth90.github.io/posts/2017-11-08-remove-stubborn-psc-or-vcenter/</link>
+      <pubDate>Wed, 08 Nov 2017 07:56:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2017-11-08-remove-stubborn-psc-or-vcenter/</guid>
+      <description>While attempting to decommission one of our vCenter sites, I ran into an issue removing one of the PSCs. This site consisted of two PSCs and one vCenter appliance. I removed the first PSC from the SSO domain successfully, and then removed the vCenter appliance. Things became a little tricky during the removal of the final PSC. This PSC did not get removed even after running the cmsso-util command. This article will detail the steps I took in decommissioning the site, as well as removing the stubborn PSC.</description>
+    </item>
+    
+    <item>
+      <title>Exchange 2016 Hybrid Deploy Check: Username or Password Invalid</title>
+      <link>https://rnemeth90.github.io/posts/2017-11-07-exchange-2016-hybrid-deploy-check-username-or-password-invalid/</link>
+      <pubDate>Tue, 07 Nov 2017 13:30:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2017-11-07-exchange-2016-hybrid-deploy-check-username-or-password-invalid/</guid>
+      <description>These days, it seems every Microsoft product comes with its own unique set of head scratchers. Microsoft Exchange Server is no exception to this. I was installing Exchange 2016 earlier today, to be used as a hybrid configuration server for Office 365 (no local mailboxes). I downloaded the self depackaging executable from Microsoft, and attempted to install it. If you currently have a hybrid configuration (which we did, with Exchange 2010), the Exchange 2016 installer will detect this and run some tests to verify that the Office 365 tenant is ready for Exchange 2016 (more info here: https://technet.</description>
+    </item>
+    
+    <item>
+      <title>Migrate Windows Deployment Services to New Server</title>
+      <link>https://rnemeth90.github.io/posts/2017-06-27-migrate-windows-deployment-services-to-new-server/</link>
+      <pubDate>Tue, 27 Jun 2017 09:21:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2017-06-27-migrate-windows-deployment-services-to-new-server/</guid>
+      <description>We have been making a great effort to move all of our internal services to Windows Server 2016. This past week, it was WDS’ turn to get migrated. Migrating this role is extremely simple. Here are the steps that I took:
+ Create new server and install WDS role. Stop WDS Service on old server Stop WDS Service on new server Use my “Copy-Files” PowerShell script (Available Here: Copy-Files.ps1) to copy RemoteInstall Share to new server Start WDS Service on new Server Shutdown old WDS Server completely Update option 66/67 in DHCP scopes to reflect new WDS Server Update any appropriate DNS records  Note:</description>
+    </item>
+    
+    <item>
+      <title>New Script: BulkAdd-SpamFilterWhitelist.ps1</title>
+      <link>https://rnemeth90.github.io/posts/2017-06-26-new-script-bulkadd-spamfilterwhitelist/</link>
+      <pubDate>Mon, 26 Jun 2017 22:16:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2017-06-26-new-script-bulkadd-spamfilterwhitelist/</guid>
+      <description>This script is capable of adding a list of domains to an Exchange Online Spam Filter policy. It can be downloaded from TechNet or Github.
+Github
+TechNet</description>
+    </item>
+    
+    <item>
+      <title>Windows 8 File History</title>
+      <link>https://rnemeth90.github.io/posts/2017-06-22-windows-8-file-history-windows-8-file-history/</link>
+      <pubDate>Thu, 22 Jun 2017 22:42:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2017-06-22-windows-8-file-history-windows-8-file-history/</guid>
+      <description>File history in Windows 8 allows users to automatically “backup” files that are in their libraries, contacts, favorites, Skydrive, and on the desktop. If the files are lost, they can be quickly restored. You can also restore a file from a specific point in time, being that File History creates a complete history of your files over time. You will need a separate drive other than the one you have Windows 8 installed on to use File History.</description>
+    </item>
+    
+    <item>
+      <title>How to Permanently Remove Office 365 Users</title>
+      <link>https://rnemeth90.github.io/posts/2017-06-20-how-to-permanently-remove-office-365-users/</link>
+      <pubDate>Tue, 20 Jun 2017 18:13:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2017-06-20-how-to-permanently-remove-office-365-users/</guid>
+      <description>After deleting a user in Office 365, their account is moved to a ‘recycle bin’ for 30 days. This allows the user account to be easily recovered. This can often cause issues when attempting to recreate a mailbox while a hybrid configuration is in place.
+To permanently delete the user within Office 365, first delete the user in the Office 365 Admin Portal or using Powershell. Then, connect to your Azure Active Directory environment with Powershell using the “Connect-MsolService” cmdlet.</description>
+    </item>
+    
+    <item>
+      <title>Access is Denied When Attempting to Delete a Dynamic Distribution Group</title>
+      <link>https://rnemeth90.github.io/posts/2017-06-12-access-is-denied-when-attempting-to-delete-a-dynamic-distribution-group/</link>
+      <pubDate>Mon, 12 Jun 2017 13:41:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2017-06-12-access-is-denied-when-attempting-to-delete-a-dynamic-distribution-group/</guid>
+      <description>You may receive the error below when attempting to delete a dynamic distribution group.
+
+To resolve this, open ADUC and show advanced features (Click View &amp;gt; Advanced Features). Then find the object for the dynamic distribution group and open the properties window. Browse to the “Object” tab and uncheck the “Protect object from accidental deletion” box. Wait for ADDS to replicate or force replication yourself.
+
+Go back to the ECP and you should be able to delete the group.</description>
+    </item>
+    
+    <item>
+      <title>Running vSphere in VMware Workstation 12</title>
+      <link>https://rnemeth90.github.io/posts/2017-05-29-running-vsphere-in-vmware-workstation-12/</link>
+      <pubDate>Mon, 29 May 2017 01:09:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2017-05-29-running-vsphere-in-vmware-workstation-12/</guid>
+      <description>In this post I’ll be walking through how to run a vSphere lab in VMware Workstation. I recently decided to obtain VCP6-DCV. Rather than driving up my electric bill like I’ve done in the past using physical servers, I’m attempting to run the entire lab on my workstation and a Synology NAS.
+If you’ve ever installed ESXi, installing it in Workstation will be a familiar process for you. VMware tools is included in the installation disc, which makes installing ESXi in Workstation dramatically easier than it used to be.</description>
+    </item>
+    
+    <item>
+      <title>WSUS: Update Files Not Downloading (Content File Download Failed)</title>
+      <link>https://rnemeth90.github.io/posts/2016-11-18-wsus-update-files-not-downloading/</link>
+      <pubDate>Fri, 18 Nov 2016 15:13:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2016-11-18-wsus-update-files-not-downloading/</guid>
+      <description>This article will discuss an issue regarding WSUS failing to download updates from Microsoft Update servers. You may notice that the home page of your WSUS console states that it has downloaded 0MB of updates:
+
+You may also see this event (or similar) in the Event Log.
+
+This problem is caused by not specifying a valid path when assigning the WSUS content drive when first installing the role. The first time you load the WSUS console after installing the role, you will be prompted to specify the path to store Windows Update files.</description>
+    </item>
+    
+    <item>
+      <title>WSUS: An error occurred trying to connect the WSUS server</title>
+      <link>https://rnemeth90.github.io/posts/2016-11-10-wsus-an-error-occurred-trying-to-connect-the-wsus-server/</link>
+      <pubDate>Thu, 10 Nov 2016 15:18:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2016-11-10-wsus-an-error-occurred-trying-to-connect-the-wsus-server/</guid>
+      <description>Ran into this error message when configuring a new WSUS server:
+
+Restarted the WSUS, WID, and IIS services to no avail. I even rebooted the server. The WSUS console would work for a short period of time, and then would randomly stop working.
+I found that the WSUS app pool in IIS was being disabled anytime new clients connected to the server. I believe this was because the app pool was running out of usable memory.</description>
+    </item>
+    
+    <item>
+      <title>WDS Service: The Service did not respond in a timely fashion</title>
+      <link>https://rnemeth90.github.io/posts/2016-11-10-wds-service-the-service-did-not-respond-in-a-timely-fashion/</link>
+      <pubDate>Thu, 10 Nov 2016 02:19:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2016-11-10-wds-service-the-service-did-not-respond-in-a-timely-fashion/</guid>
+      <description>This was a new one for me. Usually WDS is rock solid and it just works.
+Anyway, I was getting ready to deploy some servers in my lab and found that I couldn’t get WDS to start on my deployment server. I got this error message when trying to start the service:
+
+I then tried to start the service from the Services console and got this error message:</description>
+    </item>
+    
+    <item>
+      <title>Script to Move All Disabled AD Objects to a Specified OU</title>
+      <link>https://rnemeth90.github.io/posts/2016-10-06-script-to-move-all-disabled-ad-objects-to-a-specified-ou/</link>
+      <pubDate>Thu, 06 Oct 2016 03:03:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2016-10-06-script-to-move-all-disabled-ad-objects-to-a-specified-ou/</guid>
+      <description>The title says it all. This script will move all disabled AD objects to a specified OU. This script accepts parameters that will allow you to specify whether you want to move Users or Computers and the destination OU. It also accepts a “test mode” parameter that will run the script and output the results, without actually modifying Active Directory.
+This is revision 1 of the script. There are still several improvements I would like to make, including better error handling and recovery.</description>
+    </item>
+    
+    <item>
+      <title>Exchange 2013: Error 0x80070070 While Adding DAG Member</title>
+      <link>https://rnemeth90.github.io/posts/2016-10-04-exchange-2013-error-0x80070070-while/</link>
+      <pubDate>Tue, 04 Oct 2016 00:21:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2016-10-04-exchange-2013-error-0x80070070-while/</guid>
+      <description>Error: A server-side database availability group administrative operation failed. Error Failed to add or remove the Failover-Clustering feature. Error: The request to add or remove features on the specified server failed. A DISM session could not be opened. An error occurred accessing the temporary folder C:WindowsTEMP57ACE2DE-4CD2-4F5F-B7A0-93D867A89A12. Ensure that the path to the temporary folder exists and that you have Read/Write permissions on the folder. Error: 0x80070070
+Solution: I was attempting to remotely add the DAG member from the ECP on my workstation.</description>
+    </item>
+    
+    <item>
+      <title>Script for Setting the License for Multiple Office 365 User Accounts</title>
+      <link>https://rnemeth90.github.io/posts/2016-04-11-script-for-setting-the-license-for-multiple-office-365-user-accounts/</link>
+      <pubDate>Mon, 11 Apr 2016 01:25:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2016-04-11-script-for-setting-the-license-for-multiple-office-365-user-accounts/</guid>
+      <description>A script for setting the Office 365 license for multiple users. Requires a CSV file named users.csv. This file must in the same directory as the script. The CSV file must contain three columns. The title of the columns should be UPN, UsageLocation, and SKU.
+BulkSet-MsolUserLicense.ps1</description>
+    </item>
+    
+    <item>
+      <title>The User Profile Service service failed the logon</title>
+      <link>https://rnemeth90.github.io/posts/2015-12-30-the-user-profile-service-service-failed-the-logon/</link>
+      <pubDate>Wed, 30 Dec 2015 10:38:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2015-12-30-the-user-profile-service-service-failed-the-logon/</guid>
+      <description>One of my clients had a really strange issue the other day. He has a domain admin account in his domain and was not able to login to a server that I recently built. The server was an Exchange 2013 box, and was used in Coexistence mode to migrate his company from an Exchange 2007 box.
+He was getting this error message when attempting to login:
+
+This is a classic error message that I’m sure most technicians have seen before.</description>
+    </item>
+    
+    <item>
+      <title>Azure AD Connect Password Sync &amp;#8211; Disabled and Grayed Out</title>
+      <link>https://rnemeth90.github.io/posts/2015-10-15-azure-ad-connect-password-sync-disabled/</link>
+      <pubDate>Thu, 15 Oct 2015 10:18:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2015-10-15-azure-ad-connect-password-sync-disabled/</guid>
+      <description>Ran into a problem earlier with the new Azure AD Connect Wizard. We had configured the wizard and synced around 500 AD accounts. However, password sync was not working. I opened the wizard to confirm the configuration and found that “Password Hash Synchronization” was disabled. It was greyed out and could not be enabled.
+
+I called Microsoft and worked for a couple hours with a technician to resolve the issue.</description>
+    </item>
+    
+    <item>
+      <title>Finding All Mailboxes with a Forwarding Address in Exchange 2003</title>
+      <link>https://rnemeth90.github.io/posts/2015-09-07-finding-all-mailboxes-with-a-forwarding-address-in-exchange-2003/</link>
+      <pubDate>Mon, 07 Sep 2015 23:13:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2015-09-07-finding-all-mailboxes-with-a-forwarding-address-in-exchange-2003/</guid>
+      <description>Believe it or not, the MSP I work for still has a client who is using Exchange 2003 as their primary email service. Despite several attempts at convincing them of the power of Office 365, they refuse to migrate. Last week the CFO contacted me and requested we provide them with a report of all users who have their email forwarded to another mailbox. “Ok, no problem.” I said helpfully as the client informed me of their request (at the time I didn’t even think about them having Exchange 2003…).</description>
+    </item>
+    
+    <item>
+      <title>Script for Querying All AD Computers Time Source</title>
+      <link>https://rnemeth90.github.io/posts/2015-09-01-script-for-querying-all-ad-computers-time-source/</link>
+      <pubDate>Tue, 01 Sep 2015 21:05:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2015-09-01-script-for-querying-all-ad-computers-time-source/</guid>
+      <description>This script will iterate through all computers in Active Directory and return the configured time server for each computer.
+&amp;lt;# .SYNOPSISGet time source for all computers in domain .EXAMPLEGet-TimeSource .NOTESAuthor: Ryan Nemeth - RyanNemeth@live.com Site: http://www.geekyryan.com .LINKhttp://www.geekyryan.com .DESCRIPTIONThis function will iterate through all computers/servers in a domain and return the time source for each. #&amp;gt; Write-Host -foregroundcolor Red -BackgroundColor black &amp;#34;This script must be run on a domain controller and requires that the AD Powershell module be installed&amp;#34; $module = Get-Module -ListAvailable | Select-Object -ExpandProperty Name if($module -notcontains &amp;#34;ActiveDirectory&amp;#34;) { Write-Host -foregroundcolor red -backgroundcolor black &amp;#34;***Active Directory Powershell Module Not Found***&amp;#34; } else { Write-Host -foregroundcolor yellow &amp;#34;Found Active Directory Powershell Module.</description>
+    </item>
+    
+    <item>
+      <title>Error When Reinstalling DirSync</title>
+      <link>https://rnemeth90.github.io/posts/2015-08-13-error-when-reinstalling-dirsync/</link>
+      <pubDate>Thu, 13 Aug 2015 18:59:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2015-08-13-error-when-reinstalling-dirsync/</guid>
+      <description>Today is just not my day! After a failed attempt at installing/configuring DirSync, I removed it and tried to install and configure it again. This time did not prove any more successful. I was getting this error midway through the install process:
+
+I was able to figure this out after a little while and wanted to sure what I learned. If you are seeing this error message after removing DirSync and trying to reinstall, here’s what you need to do:</description>
+    </item>
+    
+    <item>
+      <title>Failed to Mount Exchange 2010 Database</title>
+      <link>https://rnemeth90.github.io/posts/2015-08-12-failed-to-mount-exchange-2010-database/</link>
+      <pubDate>Wed, 12 Aug 2015 12:59:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2015-08-12-failed-to-mount-exchange-2010-database/</guid>
+      <description>Recently, one of my users’ came to me and said he was missing two months worth of email. This was just after migrating to Exchange Online. We were using Exchange 2010 with System Center DPM for backups.
+I restored the database that the users’ mailbox was on from a backup then copied it over to the Exchange server from the network share I restored it to. All was going well, until I tried to mount the darn thing.</description>
+    </item>
+    
+    <item>
+      <title>Ping Sweeping with FPing</title>
+      <link>https://rnemeth90.github.io/posts/2015-03-09-ping-sweeping-with-fping/</link>
+      <pubDate>Mon, 09 Mar 2015 01:08:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2015-03-09-ping-sweeping-with-fping/</guid>
+      <description>I generally use NMAP for any type of host discovery, but recently started experimenting with FPing. One thing I found is that, when performing a ping sweep, not only do I see the hosts that replied to the ping, but FPing also sends any unreachable IP addresses to stdout (which is super annoying and ugly if you ask me…).
+
+Anyway, after a bit of research, I found a nifty way to suppress these messages.</description>
+    </item>
+    
+    <item>
+      <title>Powershell: SID to Username</title>
+      <link>https://rnemeth90.github.io/posts/2014-12-08-powershell-sid-to-username-powershell-sid-to-username/</link>
+      <pubDate>Mon, 08 Dec 2014 13:43:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2014-12-08-powershell-sid-to-username-powershell-sid-to-username/</guid>
+      <description>This is a simple script to convert a SID to a username
+# Returns a username based on a SID # Author: Ryan Nemeth # Date: 12/2/2014 $SID = read-host “Please enter the SID: ” $object = New-Object System.Security.Principal.SecurityIdentifier($SID) $User = $object.Translate( \[System.Security.Principal.NTAccount\]) write-host “The user is: ” $User.Value </description>
+    </item>
+    
+    <item>
+      <title>DHCP Address Negotiation Process</title>
+      <link>https://rnemeth90.github.io/posts/2014-12-08-dhcp-address-negotiation-process/</link>
+      <pubDate>Mon, 08 Dec 2014 03:08:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2014-12-08-dhcp-address-negotiation-process/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Unlock a Domain User from CMD Line</title>
+      <link>https://rnemeth90.github.io/posts/2014-12-08-unlock-domain-user-from-cmd-line/</link>
+      <pubDate>Mon, 08 Dec 2014 02:11:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2014-12-08-unlock-domain-user-from-cmd-line/</guid>
+      <description>To unlock a domain user from the command line, use this command:
+net user &amp;amp;lt;username&amp;amp;gt; /domain /active:yes This can also be done using Powershell:
+Unlock-ADAccount -identity “CN=John,OU=myUsers,DC=myDomain,DC=local” </description>
+    </item>
+    
+    <item>
+      <title>The Case of Transitive Trusts and Dropped RPC Connections</title>
+      <link>https://rnemeth90.github.io/posts/2014-11-25-the-case-of-transitive-trusts-and-dropped-rpc-connections/</link>
+      <pubDate>Tue, 25 Nov 2014 01:27:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2014-11-25-the-case-of-transitive-trusts-and-dropped-rpc-connections/</guid>
+      <description>I was at a client earlier this morning, working to get a transitive forest trust setup between their two domains. Setting up the trust on ServerA to DomainB went without issue. However, when trying to create the trust between ServerB and DomainA, I received this error: The secure channel reset on Active Directory Domain Controller (Your domain controller) of domain (Your domain) to domain (your other domain) failed with error: RPC server is unavailable.</description>
+    </item>
+    
+    <item>
+      <title>Creating Applocker Policies</title>
+      <link>https://rnemeth90.github.io/posts/2014-11-17-creating-applocker-policies/</link>
+      <pubDate>Mon, 17 Nov 2014 01:40:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2014-11-17-creating-applocker-policies/</guid>
+      <description>Application Control Policies can be used to restrict what programs a user is allowed to run. They can be created at the local Group Policy level or the Domain GPO level. There are 4 different types of Applocker RULES that you can implement, depending on what type of executable you want to control access to.
+Executable Rules – EXE’s, COM’s, etc.
+Script Rules – batch files, VB scripts, etc.
+AppX Rules – AppX Packages (Windows 8.</description>
+    </item>
+    
+    <item>
+      <title>TCP/IP Network Fundamentals</title>
+      <link>https://rnemeth90.github.io/posts/2014-11-16-tcpip-network-fundamentals/</link>
+      <pubDate>Sun, 16 Nov 2014 21:20:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2014-11-16-tcpip-network-fundamentals/</guid>
+      <description>Going over the basics of network fundamentals and all the models and ideas behind them. The most pushed idea is the OSI networking model which consists of 7 layers, all of which deal with a certain aspect of the networking model.
+A P S T N D P
+From the top down this represents the following
+Layer 7: Application – This layer is the channel between software and external requests. For example, a web server would work with this layer to process HTTP requests.</description>
+    </item>
+    
+    <item>
+      <title>BranchCache</title>
+      <link>https://rnemeth90.github.io/posts/2014-11-16-branchcache/</link>
+      <pubDate>Sun, 16 Nov 2014 21:16:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2014-11-16-branchcache/</guid>
+      <description>Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request.</description>
+    </item>
+    
+    <item>
+      <title>File History</title>
+      <link>https://rnemeth90.github.io/posts/2014-11-15-file-history/</link>
+      <pubDate>Sat, 15 Nov 2014 20:02:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2014-11-15-file-history/</guid>
+      <description>File history in Windows 8 allows users to automatically “backup” files that are in their libraries, contacts, favorites, Skydrive, and on the desktop. If the files are lost, they can be quickly restored. You can also restore a file from a specific point in time, being that File History creates a complete history of your files over time. You will need a separate drive other than the one you have Windows 8 installed on to use File History.</description>
+    </item>
+    
+    <item>
+      <title>Layer 2 Switching Fundamentals</title>
+      <link>https://rnemeth90.github.io/posts/2012-11-16-layer-2-switching-fundamentals/</link>
+      <pubDate>Fri, 16 Nov 2012 21:26:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2012-11-16-layer-2-switching-fundamentals/</guid>
+      <description>Switches are devices that support a large number of ports to connect devices to the network.
+Design: 
+More towards a CCNP or CCDA topic, but designing a network when it comes to the switching side can be done in three building blocks. The access layer, the distribution layer, and the core layer. The access layer generally has a high port density, can support VLANs, QoS, and access lists. The distribution layer will aggregate multiple access layer switches.</description>
+    </item>
+    
+    <item>
+      <title>User Account Control</title>
+      <link>https://rnemeth90.github.io/posts/2012-11-15-user-account-control-copy/</link>
+      <pubDate>Thu, 15 Nov 2012 16:01:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2012-11-15-user-account-control-copy/</guid>
+      <description>Many people rarely pay close attention to those pesky User Account Control prompts that pop up when attempting to run a program as an administrator. When a user logs into her account, she is assigned a security token based on the level of access that she has (basic user or admin). This token is what defines what programs are allowed to do. Using this concept, the users session is incapable of making changes that would affect the entire system.</description>
     </item>
     
     <item>
@@ -27,18 +737,7 @@
       <pubDate>Thu, 15 Nov 2012 16:01:00 +0000</pubDate>
       
       <guid>https://rnemeth90.github.io/posts/2012-11-15-user-account-control/</guid>
-      <description>&lt;p&gt;Many people rarely pay close attention to those pesky User Account Control prompts that pop up when attempting to run a program as an administrator. When a user logs into her account, she is assigned a security token based on the level of access that she has (basic user or admin). This token is what defines what programs are allowed to do. Using this concept, the users session is incapable of making changes that would affect the entire system.&lt;/p&gt;
-&lt;p&gt;For a standard user, a token with the most basic privileges is assigned. Administrators have two tokens assigned, the first token contains all privileges usually awarded to an administrator (unrestricted), and the second is similar to that awarded to a basic user. This way, all programs that the administrator runs, including the Windows Shell, are run in basic user mode (this is why administrators still receive UAC prompts, but do not get asked for credentials). When an application requests higher privileges, the higher integrity token is used.&lt;/p&gt;
-&lt;p&gt;User Account Control prompts each have their own meaning based on the color (blue, grey, yellow, or red. The blue prompt (Figure 1) means that a built in Windows component that is signed by Microsoft is requesting administrative privileges to continue. This prompt has a multicolored shield in the upper left corner. The grey prompt (Figure 2) means a software application that is signed by a third party developer is requesting admin privileges. This prompt has a yellow shield with a black exclamation mark in the upper left corner. The yellow prompt (Figure 3) signifies that a unsigned executable is requesting administrator privileges. This prompt also had a yellow shield with black exclamation mark in the upper left corner, and looks somewhat generic. Finally, the red prompt (Figure 4) means a program that was specifically blocked by an administrator has attempted to run.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2014/11/UAC2BBlue.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2014/11/UAC2BBlue.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Figure 1&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2014/11/UAC2BGrey.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2014/11/UAC2BGrey.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Figure 2&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2014/11/UAC2BYellow.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2014/11/UAC2BYellow.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Figure 3&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2014/11/UAC2BRED.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2014/11/UAC2BRED.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Figure 4&lt;/p&gt;
-</description>
+      <description>Many people rarely pay close attention to those pesky User Account Control prompts that pop up when attempting to run a program as an administrator. When a user logs into her account, she is assigned a security token based on the level of access that she has (basic user or admin). This token is what defines what programs are allowed to do. Using this concept, the users session is incapable of making changes that would affect the entire system.</description>
     </item>
     
   </channel>

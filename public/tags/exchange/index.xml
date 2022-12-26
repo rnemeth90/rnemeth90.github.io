@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Exchange on GeekyRyan</title>
+    <link>https://rnemeth90.github.io/tags/exchange/</link>
+    <description>Recent content in Exchange on GeekyRyan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 07 Nov 2017 13:30:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/exchange/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Exchange 2016 Hybrid Deploy Check: Username or Password Invalid</title>
+      <link>https://rnemeth90.github.io/posts/2017-11-07-exchange-2016-hybrid-deploy-check-username-or-password-invalid/</link>
+      <pubDate>Tue, 07 Nov 2017 13:30:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2017-11-07-exchange-2016-hybrid-deploy-check-username-or-password-invalid/</guid>
+      <description>These days, it seems every Microsoft product comes with its own unique set of head scratchers. Microsoft Exchange Server is no exception to this. I was installing Exchange 2016 earlier today, to be used as a hybrid configuration server for Office 365 (no local mailboxes). I downloaded the self depackaging executable from Microsoft, and attempted to install it. If you currently have a hybrid configuration (which we did, with Exchange 2010), the Exchange 2016 installer will detect this and run some tests to verify that the Office 365 tenant is ready for Exchange 2016 (more info here: https://technet.</description>
+    </item>
+    
+    <item>
+      <title>New Script: BulkAdd-SpamFilterWhitelist.ps1</title>
+      <link>https://rnemeth90.github.io/posts/2017-06-26-new-script-bulkadd-spamfilterwhitelist/</link>
+      <pubDate>Mon, 26 Jun 2017 22:16:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2017-06-26-new-script-bulkadd-spamfilterwhitelist/</guid>
+      <description>This script is capable of adding a list of domains to an Exchange Online Spam Filter policy. It can be downloaded from TechNet or Github.
+Github
+TechNet</description>
+    </item>
+    
+    <item>
+      <title>How to Permanently Remove Office 365 Users</title>
+      <link>https://rnemeth90.github.io/posts/2017-06-20-how-to-permanently-remove-office-365-users/</link>
+      <pubDate>Tue, 20 Jun 2017 18:13:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2017-06-20-how-to-permanently-remove-office-365-users/</guid>
+      <description>After deleting a user in Office 365, their account is moved to a ‘recycle bin’ for 30 days. This allows the user account to be easily recovered. This can often cause issues when attempting to recreate a mailbox while a hybrid configuration is in place.
+To permanently delete the user within Office 365, first delete the user in the Office 365 Admin Portal or using Powershell. Then, connect to your Azure Active Directory environment with Powershell using the “Connect-MsolService” cmdlet.</description>
+    </item>
+    
+    <item>
+      <title>Access is Denied When Attempting to Delete a Dynamic Distribution Group</title>
+      <link>https://rnemeth90.github.io/posts/2017-06-12-access-is-denied-when-attempting-to-delete-a-dynamic-distribution-group/</link>
+      <pubDate>Mon, 12 Jun 2017 13:41:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2017-06-12-access-is-denied-when-attempting-to-delete-a-dynamic-distribution-group/</guid>
+      <description>You may receive the error below when attempting to delete a dynamic distribution group.
+
+To resolve this, open ADUC and show advanced features (Click View &amp;gt; Advanced Features). Then find the object for the dynamic distribution group and open the properties window. Browse to the “Object” tab and uncheck the “Protect object from accidental deletion” box. Wait for ADDS to replicate or force replication yourself.
+
+Go back to the ECP and you should be able to delete the group.</description>
+    </item>
+    
+    <item>
+      <title>Exchange 2013: Error 0x80070070 While Adding DAG Member</title>
+      <link>https://rnemeth90.github.io/posts/2016-10-04-exchange-2013-error-0x80070070-while/</link>
+      <pubDate>Tue, 04 Oct 2016 00:21:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2016-10-04-exchange-2013-error-0x80070070-while/</guid>
+      <description>Error: A server-side database availability group administrative operation failed. Error Failed to add or remove the Failover-Clustering feature. Error: The request to add or remove features on the specified server failed. A DISM session could not be opened. An error occurred accessing the temporary folder C:WindowsTEMP57ACE2DE-4CD2-4F5F-B7A0-93D867A89A12. Ensure that the path to the temporary folder exists and that you have Read/Write permissions on the folder. Error: 0x80070070
+Solution: I was attempting to remotely add the DAG member from the ECP on my workstation.</description>
+    </item>
+    
+    <item>
+      <title>Finding All Mailboxes with a Forwarding Address in Exchange 2003</title>
+      <link>https://rnemeth90.github.io/posts/2015-09-07-finding-all-mailboxes-with-a-forwarding-address-in-exchange-2003/</link>
+      <pubDate>Mon, 07 Sep 2015 23:13:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2015-09-07-finding-all-mailboxes-with-a-forwarding-address-in-exchange-2003/</guid>
+      <description>Believe it or not, the MSP I work for still has a client who is using Exchange 2003 as their primary email service. Despite several attempts at convincing them of the power of Office 365, they refuse to migrate. Last week the CFO contacted me and requested we provide them with a report of all users who have their email forwarded to another mailbox. “Ok, no problem.” I said helpfully as the client informed me of their request (at the time I didn’t even think about them having Exchange 2003…).</description>
+    </item>
+    
+    <item>
+      <title>Failed to Mount Exchange 2010 Database</title>
+      <link>https://rnemeth90.github.io/posts/2015-08-12-failed-to-mount-exchange-2010-database/</link>
+      <pubDate>Wed, 12 Aug 2015 12:59:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2015-08-12-failed-to-mount-exchange-2010-database/</guid>
+      <description>Recently, one of my users’ came to me and said he was missing two months worth of email. This was just after migrating to Exchange Online. We were using Exchange 2010 with System Center DPM for backups.
+I restored the database that the users’ mailbox was on from a backup then copied it over to the Exchange server from the network share I restored it to. All was going well, until I tried to mount the darn thing.</description>
+    </item>
+    
+  </channel>
+</rss>

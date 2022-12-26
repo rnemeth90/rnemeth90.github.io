@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>devops on GeekyRyan</title>
+    <link>https://rnemeth90.github.io/tags/devops/</link>
+    <description>Recent content in devops on GeekyRyan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 03 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Chaining YAML Pipelines in Azure Devops</title>
+      <link>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</link>
+      <pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</guid>
+      <description>In this article, we&amp;rsquo;ll take a quick look at chaining two pipelines together in Azure Devops, so that the completion of one pipeline, triggers the other to run. Microsoft documentation is leaps and bounds ahead of where it used to be. However, I still feel like there is a lot of room for improvement, as it took me a while to figure this out.
+Our two pipelines will exist in the same repository.</description>
+    </item>
+    
+    <item>
+      <title>Update Azure Devops SPN Secret</title>
+      <link>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</link>
+      <pubDate>Mon, 12 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</guid>
+      <description>If you need to update the secret for a service principal in Azure Devops, prior to it expiring, you may be surprised to find that this cannot be done via the Azure Portal.
+In this article, I&amp;rsquo;ll show you two methods for updating a secret for a service principal prior to expiration.
+Update the secret via the Azure Devops Portal:  Go to &amp;ldquo;Service Connections&amp;rdquo; in the Azure Devops portal Find the SPN you want to update, then click &amp;ldquo;Manage Service Principal&amp;rdquo; Then on the service principal page, click Certificates &amp;amp; Secrets Create a &amp;ldquo;New Client Secret&amp;rdquo;, take note of the value Delete the &amp;lsquo;old&amp;rsquo; secret Return to the Service Connection in the Azure Devops portal Click Edit - click the verify button.</description>
+    </item>
+    
+    <item>
+      <title>Running Docker in WSL v1</title>
+      <link>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</link>
+      <pubDate>Sun, 26 Jun 2022 15:00:28 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</guid>
+      <description>I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.
+Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work.</description>
+    </item>
+    
+    <item>
+      <title>Accessing Secrets Securely in Azure DevOps Pipelines</title>
+      <link>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</link>
+      <pubDate>Sat, 19 Feb 2022 16:02:50 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</guid>
+      <description>This post will cover a secure method for accessing secrets in Azure DevOps pipelines.
+Why Azure Key Vault? Azure Key Vault is an Azure cloud service used to securely store secrets, keys, and certificates. A secret can be any string of characters, such as API keys, passwords, URLs, etc. Azure Key Vault encrypts data at rest and in transit using HTTPS. Depending on the type of Key Vault you are using, data at rest is encrypted using software encryption (AES 256) or HSM-backed keys.</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes Pod Eviction</title>
+      <link>https://rnemeth90.github.io/posts/2022-02-05-kubernetes-pod-eviction/</link>
+      <pubDate>Sat, 05 Feb 2022 23:49:16 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-02-05-kubernetes-pod-eviction/</guid>
+      <description>In this article, we will dive into the process of pod eviction in a Kubernetes cluster, how you can pod prevent pod eviction, and how you can recover from such a situation.
+What is Pod Eviction? Kubernetes pod eviction is a type of involuntary service disruption in which a pod is forcefully stopped on a node or fails to be scheduled on a node. Pod eviction can happen for a variety of reasons.</description>
+    </item>
+    
+    <item>
+      <title>Continuous Deployment Models</title>
+      <link>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</link>
+      <pubDate>Fri, 14 Jan 2022 19:24:01 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</guid>
+      <description>When deploying new software releases to servers or (insert -as-a-service&amp;gt; here), it’s a good idea to either deploy the releases in a controlled manner or to have a quick rollback plan. This article will be diving into blue/green deployments, canary deployments, ring-based deployments, and feature tag deployments.
+Blue/Green Deployments Blue/green deployments are a deployment model where a new application version never gets deployed to the production servers (green) directly. Instead, it gets deployed to another set of servers (blue) first.</description>
+    </item>
+    
+    <item>
+      <title>Deploy Azure VMs Using Azure Devops CI/CD Pipeline</title>
+      <link>https://rnemeth90.github.io/posts/2022-01-14-deploy-azure-vms-using-azure-devops-ci-cd-pipeline/</link>
+      <pubDate>Fri, 14 Jan 2022 18:46:35 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-01-14-deploy-azure-vms-using-azure-devops-ci-cd-pipeline/</guid>
+      <description>This article assumes that you have already created a pipeline in Azure Devops and have it linked to an Azure Devops repo. You will need to create a variable named $vmpassword and assign it the value stored in your key vault.
+To create a release pipeline that will automatically create a VM (using the password stored in key vault for the local administrator account), do the following:
+ Create a new release pipeline  3.</description>
+    </item>
+    
+    <item>
+      <title>Azure Devops &amp;#8211; Self Hosted Agent Service Won&amp;#8217;t Start &amp;#8211; Incorrect Function</title>
+      <link>https://rnemeth90.github.io/posts/2022-01-14-azure-devops-self-hosted-agent-service-wont-start-incorrect-function/</link>
+      <pubDate>Fri, 14 Jan 2022 18:45:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-01-14-azure-devops-self-hosted-agent-service-wont-start-incorrect-function/</guid>
+      <description>I setup a self hosted agent for Azure Devops this morning on Server 2012 R2 (legacy Visual Studio dependencies…) and found that I was unable to start the service. The error I received was “Error 1 Incorrect Function” when attempting to start the service in services.msc.
+I was attempting to run the agent from within my user profile downloads folder. I originally was not aware the service would be running from this directory.</description>
+    </item>
+    
+  </channel>
+</rss>

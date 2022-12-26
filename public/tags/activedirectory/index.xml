@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ActiveDirectory on GeekyRyan</title>
+    <link>https://rnemeth90.github.io/tags/activedirectory/</link>
+    <description>Recent content in ActiveDirectory on GeekyRyan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 26 Nov 2020 16:31:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/activedirectory/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Azure AD Sync &amp;#8211; Set-MsolDirSyncEnabled : You cannot turn off Active Directory synchronization.</title>
+      <link>https://rnemeth90.github.io/posts/2020-11-26-azure-ad-sync-set-msoldirsyncenabled/</link>
+      <pubDate>Thu, 26 Nov 2020 16:31:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2020-11-26-azure-ad-sync-set-msoldirsyncenabled/</guid>
+      <description>I recently ran into a situation in my lab environment that required I resync all (2000+) user accounts to Azure AD. Though this sounds complex and daunting, its actually quite simple. T
+The basic steps involve disabling sync, and then removing the user objects. This can all be done with two PowerShell commands:
+1) Set-MsolDirSyncEnabled -EnableDirSync $false
+
+2) Get-MsolUser -All | Remove-MsolUser -force
+
+The account that you are currently running the commands as will not be removed.</description>
+    </item>
+    
+    <item>
+      <title>Deploy a New ADDS Forest on Server 2019 Core</title>
+      <link>https://rnemeth90.github.io/posts/2020-10-31-deploy-new-adds-forest-on-server-2019/</link>
+      <pubDate>Sat, 31 Oct 2020 01:02:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2020-10-31-deploy-new-adds-forest-on-server-2019/</guid>
+      <description>Prerequisites:
+Change server name and IP address Configure time settings and NTP
+In this post we will be reviewing the basic installation of the Active Directory Domain Services role and setup of a new forest on Windows Server Core 2019.
+To get started, login to your server with administrator privileges. You will first need to type in “powershell” in the cmd prompt to start powershell. Once you do that, type in the following command to install the Active Directory Domain Services role:</description>
+    </item>
+    
+    <item>
+      <title>Active Directory Migration Toolkit &amp;#8211; The RPC Server is Unavailable (hr=0x800706ba)</title>
+      <link>https://rnemeth90.github.io/posts/2018-08-21-active-directory-migration-toolkit-rpc/</link>
+      <pubDate>Tue, 21 Aug 2018 17:34:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2018-08-21-active-directory-migration-toolkit-rpc/</guid>
+      <description>When migrating computer objects using the Active Directory Migration Tool, you may encounter the following error:
+
+In addition, the Migration Log may show the following error:
+
+This is typically caused by a host-side firewall. To resolve this, deploy a GPO to disable the Windows firewall prior to migrating the computer account. I like to create a special OU for computers (I typically name it “PreMigration”) that I will move computer objects to prior to migrating them.</description>
+    </item>
+    
+    <item>
+      <title>Azure AD Connect No-Start-Connection</title>
+      <link>https://rnemeth90.github.io/posts/2018-07-26-azure-ad-connect-no-start-connection/</link>
+      <pubDate>Thu, 26 Jul 2018 12:22:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2018-07-26-azure-ad-connect-no-start-connection/</guid>
+      <description>This morning, I ran into an issue with Azure AD Connect that I had never seen before. I received an email alert from Azure AD stating that Password Synchronization was not working for my forest, and the suggested fix was to restart the ADSync service on the server. I restarted the service and then forced a sync to verify it was working.
+After forcing the sync, I opened miisclient and noticed some strange errors.</description>
+    </item>
+    
+    <item>
+      <title>Azure AD Connect Health: Latest Data is not Available in Azure Portal</title>
+      <link>https://rnemeth90.github.io/posts/2018-07-18-azure-ad-connect-health-latest-data-is/</link>
+      <pubDate>Wed, 18 Jul 2018 16:38:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2018-07-18-azure-ad-connect-health-latest-data-is/</guid>
+      <description>I recently had to create a new Azure AD Connect server, and found that it was not able to report health status in the Azure Portal. After some troubleshooting/research, I was able to get the health status report working by registering the health agent on the server with Azure AD Health Services. Doing this involves running one PowerShell cmdlet on your AD Connect server and providing global administrator credentials.</description>
+    </item>
+    
+    <item>
+      <title>Removing a Forest from Azure AD Connect</title>
+      <link>https://rnemeth90.github.io/posts/2018-07-13-removing-forest-from-azure-ad-connect/</link>
+      <pubDate>Fri, 13 Jul 2018 15:30:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2018-07-13-removing-forest-from-azure-ad-connect/</guid>
+      <description>In an organization with multiple Active Directory forests, you may want to sync objects from trusted forests. Adding trusted forests to Azure AD Sync is a simple process that I will likely cover in a future article. The focus of this post is the not-so-obvious process of removing a forest from Azure AD Connect. This can be a daunting and somewhat scary thing to do. Not fully understanding the process or having someone to guide you can leave you with thoughts like “what happens when I remove the forest from Azure AD Sync?</description>
+    </item>
+    
+    <item>
+      <title>Access is Denied When Attempting to Delete a Dynamic Distribution Group</title>
+      <link>https://rnemeth90.github.io/posts/2017-06-12-access-is-denied-when-attempting-to-delete-a-dynamic-distribution-group/</link>
+      <pubDate>Mon, 12 Jun 2017 13:41:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2017-06-12-access-is-denied-when-attempting-to-delete-a-dynamic-distribution-group/</guid>
+      <description>You may receive the error below when attempting to delete a dynamic distribution group.
+
+To resolve this, open ADUC and show advanced features (Click View &amp;gt; Advanced Features). Then find the object for the dynamic distribution group and open the properties window. Browse to the “Object” tab and uncheck the “Protect object from accidental deletion” box. Wait for ADDS to replicate or force replication yourself.
+
+Go back to the ECP and you should be able to delete the group.</description>
+    </item>
+    
+    <item>
+      <title>The User Profile Service service failed the logon</title>
+      <link>https://rnemeth90.github.io/posts/2015-12-30-the-user-profile-service-service-failed-the-logon/</link>
+      <pubDate>Wed, 30 Dec 2015 10:38:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2015-12-30-the-user-profile-service-service-failed-the-logon/</guid>
+      <description>One of my clients had a really strange issue the other day. He has a domain admin account in his domain and was not able to login to a server that I recently built. The server was an Exchange 2013 box, and was used in Coexistence mode to migrate his company from an Exchange 2007 box.
+He was getting this error message when attempting to login:
+
+This is a classic error message that I’m sure most technicians have seen before.</description>
+    </item>
+    
+    <item>
+      <title>Script for Querying All AD Computers Time Source</title>
+      <link>https://rnemeth90.github.io/posts/2015-09-01-script-for-querying-all-ad-computers-time-source/</link>
+      <pubDate>Tue, 01 Sep 2015 21:05:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2015-09-01-script-for-querying-all-ad-computers-time-source/</guid>
+      <description>This script will iterate through all computers in Active Directory and return the configured time server for each computer.
+&amp;lt;# .SYNOPSISGet time source for all computers in domain .EXAMPLEGet-TimeSource .NOTESAuthor: Ryan Nemeth - RyanNemeth@live.com Site: http://www.geekyryan.com .LINKhttp://www.geekyryan.com .DESCRIPTIONThis function will iterate through all computers/servers in a domain and return the time source for each. #&amp;gt; Write-Host -foregroundcolor Red -BackgroundColor black &amp;#34;This script must be run on a domain controller and requires that the AD Powershell module be installed&amp;#34; $module = Get-Module -ListAvailable | Select-Object -ExpandProperty Name if($module -notcontains &amp;#34;ActiveDirectory&amp;#34;) { Write-Host -foregroundcolor red -backgroundcolor black &amp;#34;***Active Directory Powershell Module Not Found***&amp;#34; } else { Write-Host -foregroundcolor yellow &amp;#34;Found Active Directory Powershell Module.</description>
+    </item>
+    
+    <item>
+      <title>Powershell: SID to Username</title>
+      <link>https://rnemeth90.github.io/posts/2014-12-08-powershell-sid-to-username-powershell-sid-to-username/</link>
+      <pubDate>Mon, 08 Dec 2014 13:43:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2014-12-08-powershell-sid-to-username-powershell-sid-to-username/</guid>
+      <description>This is a simple script to convert a SID to a username
+# Returns a username based on a SID # Author: Ryan Nemeth # Date: 12/2/2014 $SID = read-host “Please enter the SID: ” $object = New-Object System.Security.Principal.SecurityIdentifier($SID) $User = $object.Translate( \[System.Security.Principal.NTAccount\]) write-host “The user is: ” $User.Value </description>
+    </item>
+    
+    <item>
+      <title>Unlock a Domain User from CMD Line</title>
+      <link>https://rnemeth90.github.io/posts/2014-12-08-unlock-domain-user-from-cmd-line/</link>
+      <pubDate>Mon, 08 Dec 2014 02:11:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2014-12-08-unlock-domain-user-from-cmd-line/</guid>
+      <description>To unlock a domain user from the command line, use this command:
+net user &amp;amp;lt;username&amp;amp;gt; /domain /active:yes This can also be done using Powershell:
+Unlock-ADAccount -identity “CN=John,OU=myUsers,DC=myDomain,DC=local” </description>
+    </item>
+    
+    <item>
+      <title>The Case of Transitive Trusts and Dropped RPC Connections</title>
+      <link>https://rnemeth90.github.io/posts/2014-11-25-the-case-of-transitive-trusts-and-dropped-rpc-connections/</link>
+      <pubDate>Tue, 25 Nov 2014 01:27:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2014-11-25-the-case-of-transitive-trusts-and-dropped-rpc-connections/</guid>
+      <description>I was at a client earlier this morning, working to get a transitive forest trust setup between their two domains. Setting up the trust on ServerA to DomainB went without issue. However, when trying to create the trust between ServerB and DomainA, I received this error: The secure channel reset on Active Directory Domain Controller (Your domain controller) of domain (Your domain) to domain (your other domain) failed with error: RPC server is unavailable.</description>
+    </item>
+    
+  </channel>
+</rss>
