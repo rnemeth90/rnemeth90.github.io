@@ -29,7 +29,7 @@ For my purposes, I'm going to choose Microsoft OneDrive:
 
 When prompted to authenticate, login to your OneDrive account. Then, configure the sync settings. You can create a name for the connection, add a local path in which to sync your files to, choose which remote folders/files to sync, the sync direction, a schedule, etc.
 
-[![](https://rnemeth90.github.io/images/synology-cloud-sync-01.png)](https://rnemeth90.github.io/images/synology-cloud-sync-01.png)
+[![](https://rnemeth90.github.io/images/synology-cloud-sync-02.png)](https://rnemeth90.github.io/images/synology-cloud-sync-02.png)
 
 Click Next, and then finish the wizard. Simple.
 
