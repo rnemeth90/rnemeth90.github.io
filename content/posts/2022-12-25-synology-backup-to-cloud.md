@@ -1,9 +1,9 @@
 ---
 title: 'Backup Synology NAS to Azure Storage'
 author: Ryan
-date: '2022-12-25'
+date: '2022-12-27'
 layout: post
-draft: true
+draft: false
 categories:
     - 'Synology'
     - 'Azure'
@@ -12,9 +12,9 @@ tags:
 
 ---
 
-I'm not really a fan of photography. I don't particularly enjoy the intracies of tuning a high-end DSLR camera. Nor am I a fan of being out in nature to photograph a fall sunrise (though, that does sound peaceful). However, I do take a lot of pictures with my phone (currently, a Pixel 6). Moreso now that I am a new father. I am protective of these photos. So much that I sync them automatically from my phone to two cloud storage solutions. I thought the other day, how painful it would be for either of these cloud storage providers to go offline. Though unlikely, anything is possible, right?
+I'm not really a fan of photography. I don't particularly enjoy the intracies of tuning a high-end DSLR camera. Nor am I a fan of being out in nature to photograph a fall sunrise (though, that does sound peaceful). However, I do take a lot of pictures with my phone (currently, a Pixel 6). Moreso now that I am a new father. I am protective of these photos. So much that I sync them automatically from my phone to two cloud storage providers. I thought the other day, how painful it would be for either of these cloud storage providers to go offline. Though unlikely, anything is possible, right?
 
-So, like any good engineer, I started looking for a solution for this concern. I have 2 Synology NAS devices here at my home. Calling a Synology a NAS is almost an insult. They are much more than that. Though they specialize in storage, they provide a plethora of apps that extend the functionality of the device. A Synology device can provide storage, email, DNS, media, etc. services though OEM and third-party apps. A single device can also link up with other devices to form an a highly-available mesh of Synology services. Pretty neat for just a little black desktop box! Anyway, I'm not a Synology salesman, so let's get back on track...
+So, like any good engineer, I started looking for a solution for this concern. I have 2 Synology NAS devices here at my home. Calling a Synology a NAS is almost an insult. They are much more than that. Though they specialize in storage, they provide a plethora of apps that extend the functionality of the device. A Synology device can provide storage, email, DNS, media, etc. services though OEM and third-party apps. A single device can also link up with other devices to form a highly-available mesh of Synology services. Pretty neat for just a little black desktop box! Anyway, I'm not a Synology salesman, so let's get back on track...
 
 I wanted to be able to have a local copy of all of my photos (and other files) that are currently synced to the cloud. I then wanted to backup this local copy to another remote location (something like a 3-2-1 backup architecture, but not really...). Synology provides an app called Cloud Sync that can be used to sync files from a cloud storage provider like Google Photos/Drive or Microsoft OneDrive to a local device. They also provide another app called Hyper Backup that can be used to backup local files to remote storage, like an Azure Storage Account or Amazon S3 Bucket. By now, you probably get where this is going.
 
@@ -59,4 +59,4 @@ On the last page, we configure our backup rotation settings. I am going to keep 
 
 [![](https://rnemeth90.github.io/images/synology-hyper-backup-06.png)](https://rnemeth90.github.io/images/synology-hyper-backup-06.png)
 
-That's all for configuring the backups! Very simple. Depending on how much data you have and your ISP, it may take a while to backup your files. If you configured notifications, you should receive a notification once the job is complete. 
+That's all for configuring the backups! Very simple. Depending on how much data you have and your ISP, it may take a while to backup your files. If you configured notifications, you should receive a notification once the job is complete.
