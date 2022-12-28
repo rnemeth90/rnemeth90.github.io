@@ -133,7 +133,7 @@ namespace MyApp.APIConsoleHost
 ~~~
 
 
-To prevent the HandlerRoutine instance from being recycled before the program exits, the HandlerRoutine of static is used in the above example. This is important because if the handlerroutine is recycled before the application is finished, it will throw an error, as shown in the following code:
+To prevent the HandlerRoutine instance from being recycled by the GC before the program exits, the HandlerRoutine must be static (as seen in the above example). This is important because if the handlerroutine is recycled before the application is finished, it will throw an error, as shown here:
 ~~~
 A callback was made on a garbage collected delegate of type 'Program+HandlerRoutine::Invoke'. This may cause application crashes, corruption and data loss. When passing delegates to unmanaged code, they must be kept alive by the managed application until it is guaranteed that they will never be called.
 ~~~
