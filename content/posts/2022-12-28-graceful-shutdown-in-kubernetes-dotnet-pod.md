@@ -4,6 +4,7 @@ author: Ryan
 date: '2022-12-28'
 layout: post
 draft: false
+favorite: true
 categories:
     - 'Software Development'
     - SRE
