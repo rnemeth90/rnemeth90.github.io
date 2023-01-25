@@ -73,7 +73,7 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can see the byte array returned from &lt;code>cmd.CombinedOutput()&lt;/code> has some additional bytes in it at the end (32,10,10). What exactly are 32, 10, and 10? To figure this out, I went over to the (go playground)[https://go.dev/play/].&lt;/p>
 &lt;p>Let&amp;rsquo;s see what happens when we create a byte array with a single number and print it out as a string to the console:&lt;/p>
 &lt;p>&lt;a href="https://rnemeth90.github.io/images/golang-strings-not-equal-01.png">&lt;img src="https://rnemeth90.github.io/images/golang-strings-not-equal-01.png" alt="">&lt;/a>&lt;/p>
-&lt;p>Interesting, we can see that &lt;code>m&lt;/code> was output to the console. So what do our mysterious characters additional characters in our test result represent? Let&amp;rsquo;s see:&lt;/p>
+&lt;p>Interesting, we can see that &lt;code>m&lt;/code> was output to the console. So what do our mysterious additional characters in our test result represent? Let&amp;rsquo;s see:&lt;/p>
 &lt;p>&lt;a href="https://rnemeth90.github.io/images/golang-strings-not-equal-02.png">&lt;img src="https://rnemeth90.github.io/images/golang-strings-not-equal-02.png" alt="">&lt;/a>&lt;/p>
 &lt;p>It&amp;rsquo;s hard to tell from the output, but if you look in the results pane, you&amp;rsquo;ll see a space and two new lines. So &lt;code>32&lt;/code> represents a space, and &lt;code>10&lt;/code> represents a new line!&lt;/p>
 &lt;p>You can play with this code yourself: &lt;a href="https://go.dev/play/p/fGUIxJM6KnV">https://go.dev/play/p/fGUIxJM6KnV&lt;/a>&lt;/p>
