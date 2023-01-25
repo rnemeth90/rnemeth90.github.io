@@ -110,7 +110,7 @@ Let's see what happens when we create a byte array with a single number and prin
 
 [![](https://rnemeth90.github.io/images/golang-strings-not-equal-01.png)](https://rnemeth90.github.io/images/golang-strings-not-equal-01.png)
 
-Interesting, we can see that `m` was output to the console. So what do our mysterious characters additional characters in our test result represent? Let's see:
+Interesting, we can see that `m` was output to the console. So what do our mysterious additional characters in our test result represent? Let's see:
 
 [![](https://rnemeth90.github.io/images/golang-strings-not-equal-02.png)](https://rnemeth90.github.io/images/golang-strings-not-equal-02.png)
 
