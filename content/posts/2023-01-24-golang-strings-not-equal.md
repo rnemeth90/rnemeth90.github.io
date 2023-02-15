@@ -104,7 +104,7 @@ got      [91 32 93 32 49 58 32 116 101 115 116 32 116 97 115 107 32 110 117 109 
 expected [91 32 93 32 49 58 32 116 101 115 116 32 116 97 115 107 32 110 117 109 98 101 114 32 49]
 ~~~
 
-We can see the byte array returned from `cmd.CombinedOutput()` has some additional bytes in it at the end (32,10,10). What exactly are 32, 10, and 10? To figure this out, I went over to the (go playground)[https://go.dev/play/].
+We can see the byte array returned from `cmd.CombinedOutput()` has some additional bytes in it at the end (32,10,10). What exactly are 32, 10, and 10? To figure this out, I went over to the go playground: https://go.dev/play/.
 
 Let's see what happens when we create a byte array with a single number and print it out as a string to the console:
 
