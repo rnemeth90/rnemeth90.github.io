@@ -1,9 +1,9 @@
 ---
 title: 'An Analysis of "x-" HTTP Headers and Why We Should Stop Using Them'
 author: Ryan
-date: '2023-01-24'
+date: '2023-09-24'
 layout: post
-draft: false
+draft: true
 categories:
     - Golang
     - Devops
