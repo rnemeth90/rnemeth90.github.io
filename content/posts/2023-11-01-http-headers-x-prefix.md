@@ -12,6 +12,6 @@ tags:
     - Software Development
 ---
 
+*Disclaimer: This article assumes you have some familiarity with the HTTP protocol in regards to headers.*
 
-
-
+If you've worked in web development (or related roles) for any period of time, you have likely come across HTTP headers. There are common headers that you have likely seen, such as `host` or `content-type`, and others that you may be less familiar with. 
