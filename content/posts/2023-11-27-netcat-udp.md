@@ -16,9 +16,9 @@ tags:
 
 ## Introduction
 
-Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the "network swiss-army knife". While commonly associated with TCP connections, netcat can also handle UDP (User Datagram Protocol) connections. 
+Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the "network swiss-army knife". Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new Linux admins or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed. 
 
-In this blog post, we'll explore the process of creating a UDP connection using netcat and demonstrate its utility for network communication.
+While commonly associated with TCP connections, netcat can also handle UDP (User Datagram Protocol) connections. In this blog post, we'll explore the process of creating a UDP connection using netcat and demonstrate its utility for network communication.
 
 ## Understanding UDP
 
