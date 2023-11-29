@@ -1,5 +1,5 @@
 ---
-title: 'Exploring UDP Connections with Netcat'
+title: 'Exploring Netcat'
 author: Ryan
 date: '2023-11-27'
 layout: post
@@ -15,33 +15,65 @@ tags:
 ---
 
 ## Introduction
+Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the "network swiss-army knife". Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed. 
 
-Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the "network swiss-army knife". Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new Linux admins or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed. 
-
-While commonly associated with TCP connections, netcat can also handle UDP (User Datagram Protocol) connections. In this blog post, we'll explore the process of creating a UDP connection using netcat and demonstrate its utility for network communication.
+Netcat is a simple utility that reads and writes data across raw TCP/UDP sockets. Netcat is a command-line tool available out of the box on most *nix operating systems and can also be installed on Windows. It's a powerful tool for debugging and investigating networks. It can even be used for tasks like port scanning, transferring files, chatting with friends on a network, and even creating backdoors (for testing purposes, obviously :) ).
 
 ## Understanding UDP
-
 Before we dive into exploring UDP connections with netcat, let's quickly get a refresher on UDP. UDP is a connectionless transport layer protocol that does not provide the same reliability, flow-control, and error-checking mechanisms as TCP. Unlike TCP, UDP also does not establish a persistent connection between the sender and receiver. Instead, it sends data packets, known as datagrams, individually using a 'fire and forget' method. UDP is often used for applications where real-time communication and low overhead are crucial, such as streaming media, gaming, DNS (though, certain functions of DNS may also use TCP), and IoT devices.
 
-## The Netcat Utility
+## Understanding TCP
+It's also crucial to have a fundamental knowledge of the TCP protocol. TCP is one of the main protocols in the Internet protocol suite, laying the foundation for the majority of data exchange over the Internet. Unlike its counterpart, UDP (User Datagram Protocol), TCP is connection-oriented, meaning a connection is established and maintained until the application programs at each end have finished exchanging messages. This ensures reliable, ordered, and error-checked delivery of a stream of data between applications running on hosts communicating over an IP network. Key features of TCP include its ability to manage data packet size, data transfer rate, and network traffic congestion, making it ideal for applications where data integrity and accuracy are crucial, such as web browsing, email, and file transfer. Understanding TCP is essential for effectively utilizing tools like Netcat, as it provides the basis for establishing stable and secure connections across a network.
 
-Netcat is a command-line tool available out of the box on most *nix operating systems and can also be installed on Windows. It provides a simple interface for creating and handling network connections. Netcat supports various protocols, including TCP and UDP, making it an excellent choice for network testing, debugging, and even penetration testing.
+## Creating a Simple Client/Server
+The following will create a simple UDP server and client.
 
-## Creating a UDP Connection
-
-To create a UDP connection using netcat, open a terminal or command prompt and follow these steps:
-
-1. Launch netcat and type the following command (you can specify the target host and port to establish the UDP connection. For example, to connect to a remote server with IP address 192.168.1.100 on port 5000):
+1. Launch a shell and type the following command. This will tell netcat to listen (`-l`) on UDP (`-u`) port (`-p`) 5555.
 
 ```
-nc -u 192.168.1.100 5000
+nc -l -u -p 5555
 ```
 
-2. Once the connection is established, you can start sending and receiving data. Type your message and hit Enter to send it. Any response received will be displayed on your terminal.
+2. Launch another shell and type the following. This will connect to the server we created above. 
+```
+nc -u 127.0.0.1 5555
+```
 
-## Practical Examples
+3. You can now send messages to the server, like so:
+Client:
+```
+$ nc -u 127.0.0.1 5555
+hello
+```
 
+Server:
+```
+$ nc -l -u -p 5555
+hello
+```
+
+You can do the same thing with TCP, just leave out the `-u` in each command above.
+
+## Transfer a File
+
+On the receiving end:
+```
+nc -l -p 5555 > outputfile
+```
+
+On the sending end:
+```
+nc [hostname or IP address of server] 5555 < inputfile
+```
+
+## Port Scanning:
+```
+netcat -v -z -n -w 1 v.txvip1 1-1023
+```
+
+**Note** In the examples above, I always use port 5555. You can technically use just about any port you want. However, attempting to use any port below 1024 will require root privileges. The port you choose cannot be in use by another process.
+
+## Other Practical Examples
 Let's explore a few practical examples to illustrate the usefulness of netcat's UDP capabilities.
 
 ### Example 1: Testing a UDP Server
