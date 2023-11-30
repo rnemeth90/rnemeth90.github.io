@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Azure on GeekyRyan</title>
+    <link>https://rnemeth90.github.io/categories/azure/</link>
+    <description>GeekyRyan (Azure)</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 27 Dec 2022 00:00:00 +0000</lastBuildDate>
+    
+    <atom:link href="https://rnemeth90.github.io/categories/azure/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Backup Synology NAS to Azure Storage</title>
+      <link>https://rnemeth90.github.io/posts/2022-12-25-synology-backup-to-cloud/</link>
+      <pubDate>Tue, 27 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2022-12-25-synology-backup-to-cloud/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;m not really a fan of photography. I don&amp;rsquo;t particularly enjoy the intracies of tuning a high-end DSLR camera. Nor am I a fan of being out in nature to photograph a fall sunrise (though, that does sound peaceful). However, I do take a lot of pictures with my phone (currently, a Pixel 6). Moreso now that I am a new father. I am protective of these photos. So much that I sync them automatically from my phone to two cloud storage providers. I thought the other day, how painful it would be for either of these cloud storage providers to go offline. Though unlikely, anything is possible, right?&lt;/p&gt;
+&lt;p&gt;So, like any good engineer, I started looking for a solution for this concern. I have 2 Synology NAS devices here at my home. Calling a Synology a NAS is almost an insult. They are much more than that. Though they specialize in storage, they provide a plethora of apps that extend the functionality of the device. A Synology device can provide storage, email, DNS, media, etc. services though OEM and third-party apps. A single device can also link up with other devices to form a highly-available mesh of Synology services. Pretty neat for just a little black desktop box! Anyway, I&amp;rsquo;m not a Synology salesman, so let&amp;rsquo;s get back on track&amp;hellip;&lt;/p&gt;
+&lt;p&gt;I wanted to be able to have a local copy of all of my photos (and other files) that are currently synced to the cloud. I then wanted to backup this local copy to another remote location (something like a 3-2-1 backup architecture, but not really&amp;hellip;). Synology provides an app called Cloud Sync that can be used to sync files from a cloud storage provider like Google Photos/Drive or Microsoft OneDrive to a local device. They also provide another app called Hyper Backup that can be used to backup local files to remote storage, like an Azure Storage Account or Amazon S3 Bucket. By now, you probably get where this is going.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;m going to configure Cloud Sync to pull files down to my Synology and then use Hyper Backup to push a weekly backup to Azure Blob Storage. Let&amp;rsquo;s dive in!
+If you&amp;rsquo;re following along, you&amp;rsquo;ll need to install both of these apps. They are available via One-Click install in the Synology Package Center, so I won&amp;rsquo;t cover the installation process. The setup is extremely simple as well, but I&amp;rsquo;ll go over it just because.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ll first setup Cloud Sync. Open Cloud Sync and click the &amp;lsquo;+&amp;rsquo; symbol to add a new account.&lt;/p&gt;
+&lt;p&gt;For my purposes, I&amp;rsquo;m going to choose Microsoft OneDrive:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/images/synology-cloud-sync-01.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/images/synology-cloud-sync-01.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;When prompted to authenticate, login to your OneDrive account. Then, configure the sync settings. You can create a name for the connection, add a local path in which to sync your files to, choose which remote folders/files to sync, the sync direction, a schedule, etc.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/images/synology-cloud-sync-02.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/images/synology-cloud-sync-02.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Click Next, and then finish the wizard. Simple.&lt;/p&gt;
+&lt;p&gt;Depending on the amount of files you have, you&amp;rsquo;ll need to allow some time for your files to sync.&lt;/p&gt;
+&lt;p&gt;Now, we&amp;rsquo;ll setup Hyper Backup to backup the files you sync&amp;rsquo;d locally to remote storage. As stated previously, I&amp;rsquo;ll be backing up my files to Azure Blob Storage. I have already created the Storage Account in Azure, and will not be covering that in this article.&lt;/p&gt;
+&lt;p&gt;Open Hyper Backup and click the &amp;lsquo;+&amp;rsquo; symbol in the lower left corner, and then click &amp;lsquo;Data Backup Task&amp;rsquo;. Then, choose &amp;lsquo;Microsoft Azure&amp;rsquo;:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/images/synology-hyper-backup-01.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/images/synology-hyper-backup-01.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;
+&lt;a href=&#34;https://rnemeth90.github.io/images/synology-hyper-backup-02.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/images/synology-hyper-backup-02.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;On the next page, enter in your Storage Account info and then click Next. You can then choose which local folders on your Synology to backup:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/images/synology-hyper-backup-03.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/images/synology-hyper-backup-03.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Click next and choose to backup application settings:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/images/synology-hyper-backup-04.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/images/synology-hyper-backup-04.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;On this page, we can configure the backup settings. Name the task, and configure your notification settings, schedule, compression, and encryption.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/images/synology-hyper-backup-05.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/images/synology-hyper-backup-05.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;On the last page, we configure our backup rotation settings. I am going to keep 31 days of backups, starting from the oldest backup. This means that at any given time I will have 31 days worth of backups in the storage account.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/images/synology-hyper-backup-06.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/images/synology-hyper-backup-06.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s all for configuring the backups! Very simple. Depending on how much data you have and your ISP, it may take a while to backup your files. If you configured notifications, you should receive a notification once the job is complete.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -3,21 +3,29 @@
   <channel>
     <title>ef core on GeekyRyan</title>
     <link>https://rnemeth90.github.io/tags/ef-core/</link>
-    <description>Recent content in ef core on GeekyRyan</description>
+    <description>GeekyRyan (ef core)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 12 Jun 2022 13:58:52 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/ef-core/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 12 Jun 2022 13:58:52 +0000</lastBuildDate>
+    
+    <atom:link href="https://rnemeth90.github.io/tags/ef-core/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>EF Core &amp;#8211; Unable to create an object of type DbContext</title>
       <link>https://rnemeth90.github.io/posts/2022-06-12-ef-core-unable-to-create-an-object-of-type-dbcontext/</link>
       <pubDate>Sun, 12 Jun 2022 13:58:52 +0000</pubDate>
       
       <guid>https://rnemeth90.github.io/posts/2022-06-12-ef-core-unable-to-create-an-object-of-type-dbcontext/</guid>
-      <description>This problem has bitten me more than once, and I can never remember how to fix it. So, why not write a blog post about it!
-When running EF Core migrations in a solution, you may come across this error:
-
-There are several apparent causes. However, in my case (every time I have seen this), it has been caused by having multiple startup projects selected in Visual Studio.
-To fix this, simply open your Solution properties and set the startup project to ‘Current Selection’.</description>
+      <description>&lt;p&gt;This problem has bitten me more than once, and I can never remember how to fix it. So, why not write a blog post about it!&lt;/p&gt;
+&lt;p&gt;When running EF Core migrations in a solution, you may come across this error:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2022/06/image-1-1024x142.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;There are several apparent causes. However, in my case (every time I have seen this), it has been caused by having multiple startup projects selected in Visual Studio.&lt;/p&gt;
+&lt;p&gt;To fix this, simply open your Solution properties and set the startup project to ‘Current Selection’.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2022/06/image-2.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;If you are using clean architecture, or some other architecture that has your startup context and your dbContext in different projects, you will need to set your startup project to your runtime, and the ‘Default Project’ in the package manager console to the project containing your dbContext.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2022/06/image-3-1024x493.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+</description>
     </item>
     
   </channel>

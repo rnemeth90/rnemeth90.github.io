@@ -3,19 +3,39 @@
   <channel>
     <title>Networking on GeekyRyan</title>
     <link>https://rnemeth90.github.io/categories/networking/</link>
-    <description>Recent content in Networking on GeekyRyan</description>
+    <description>GeekyRyan (Networking)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 16 Nov 2012 21:26:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/categories/networking/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 16 Nov 2012 21:26:00 +0000</lastBuildDate>
+    
+    <atom:link href="https://rnemeth90.github.io/categories/networking/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>Layer 2 Switching Fundamentals</title>
       <link>https://rnemeth90.github.io/posts/2012-11-16-layer-2-switching-fundamentals/</link>
       <pubDate>Fri, 16 Nov 2012 21:26:00 +0000</pubDate>
       
       <guid>https://rnemeth90.github.io/posts/2012-11-16-layer-2-switching-fundamentals/</guid>
-      <description>Switches are devices that support a large number of ports to connect devices to the network.
-Design: 
-More towards a CCNP or CCDA topic, but designing a network when it comes to the switching side can be done in three building blocks. The access layer, the distribution layer, and the core layer. The access layer generally has a high port density, can support VLANs, QoS, and access lists. The distribution layer will aggregate multiple access layer switches.</description>
+      <description>&lt;p&gt;Switches are devices that support a large number of ports to connect devices to the network.&lt;/p&gt;
+&lt;h3 id=&#34;design&#34; &gt;Design:
+&lt;span&gt;
+    &lt;a href=&#34;#design&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h3&gt;&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2014/11/2014-11-16_16h22_54.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2014/11/2014-11-16_16h22_54.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;More towards a CCNP or CCDA topic, but designing a network when it comes to the switching side can be done in three building blocks. The access layer, the distribution layer, and the core layer. The access layer generally has a high port density, can support VLANs, QoS, and access lists. The distribution layer will aggregate multiple access layer switches. These are also generally Layer 3 switches to allow routing among an enterprise. It will need to be able to handle the volume of traffic in addition to supporting the same features as the access layer switches. The core layer is the device which will need the highest bandwidth backplane to deal with all of the traffic.&lt;/p&gt;
+&lt;h3 id=&#34;how-switches-handle-traffic&#34; &gt;How switches handle traffic:
+&lt;span&gt;
+    &lt;a href=&#34;#how-switches-handle-traffic&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h3&gt;&lt;p&gt;A switch is an intelligent device that can make some decisions on how to handle the data it is given. Switches can be divided into two categories for these decisions: Layer 2 or Layer 3 switches. For the CCNA we will only be interested in the layer 2 switches. Layer 2 switches operate at the data link layer. This layer deals primarily with MAC addresses. A Layer 2 switch will build a CAM table full of dynamically learned MAC addresses. The way it learns these addresses is by inspecting the layer 2 header/trailer and learning the source MAC addresses on the frames it receives. A frame is what a packet is encapsulated in when it moves from device to device across the network.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2014/11/2014-11-16_16h23_04.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2014/11/2014-11-16_16h23_04.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;With this example the switch has learned PC1/PC2/and PC3′s MAC addresses. If a packet came in on Fa0/4 from PC4, the switch would look at the source MAC address and put an entry for 4444.4444.4444 on Fa0/4. A switch will route traffic based on this table. There are a few decisions it must make to determine how to handle traffic. When it first receives a frame it will consult it’s CAM table to determine whether or not it has the source MAC address listed for that port. If not, it will add it to the CAM table. In the example above, PC1 sent a frame to the switch, the switch noticed PC1′s MAC address was not in it’s table and added it. The next thing it looks at is the destination MAC address. The CAM table is again consulted. If it finds a match the switch will send the frame directly to the recipient it needs to on whatever port it is on. In the example above, PC1 sends a frame to PC3. Because the switch sees 1111.1111.1111 sending to 3333.3333.3333 and has an entry for 3333.3333.3333 it will send the frame out of port Fa0/3 to the recipient. If a destination is not in the CAM table the switch will need to try to find the recipient. In this case the switch will decide to broadcast the frame out of every port EXCEPT the one it came in on. In this example, PC1 sends a frame destined for PC4. The switch will see a frame from 1111.1111.1111 to 4444.4444.4444. PC4′s MAC address is not in it’s table. The switch will then send the frame out of every port except for Fa0/1 (the source). When PC2 and PC3 get this frame, it will determine if the frame was meant for it, and if not it will ignore it. PC4 will also make the same decision and PC4 will respond. Once PC4 has responded the switch will be able to add PC4′s MAC address to it’s table on Fa0/4.&lt;/p&gt;
+</description>
     </item>
     
   </channel>
