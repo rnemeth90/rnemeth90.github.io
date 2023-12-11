@@ -1,4 +1,37 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>kubernetes on GeekyRyan</title><link>https://rnemeth90.github.io/tags/kubernetes/</link><description>GeekyRyan (kubernetes)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 28 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml"/><item><title>Handling Graceful Shutdown in a .NET App Hosted in Kubernetes</title><link>https://rnemeth90.github.io/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/</link><pubDate>Wed, 28 Dec 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/</guid><description>&lt;p>I was recently involved with troubleshooting some API&amp;rsquo;s hosted in Kubernetes throwing http/502&amp;rsquo;s. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us. It was actually a combination of these blogs (and the resolutions posted) that ended up resolving our issue.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>kubernetes on GeekyRyan</title><link>https://rnemeth90.github.io/tags/kubernetes/</link><description>GeekyRyan (kubernetes)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 11 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml"/><item><title>Nginx Ingress Response Header Size - A Cautionary Tale</title><link>https://rnemeth90.github.io/posts/2023-12-04-nginx-ingress-resp-header-size/</link><pubDate>Mon, 11 Dec 2023 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2023-12-04-nginx-ingress-resp-header-size/</guid><description>&lt;p>This will be a short post about a recent issue I encountered when using Nginx as a Kubernetes ingress. Though, this could also be encountered when using Nginx as a reverse proxy as well. The two definitions are functionally similar.&lt;/p>
+&lt;p>We recently had a client call in complaining of our application returning random 502s (Bad Gateway).&lt;/p>
+&lt;p>After some investigation and the common finger-pointing, I found this entry in the logs of our ingress controllers:&lt;/p>
+&lt;p>&lt;em>note&lt;/em> this log entry is truncated&lt;/p>
+&lt;pre tabindex="0">&lt;code>[error] 193#193:
+*25 upstream sent too big header while reading response header from upstream
+&lt;/code>&lt;/pre>&lt;p>This error message pointed towards a limitation in Nginx&amp;rsquo;s default configuration - it struggles with large headers. This is a known quirk of Nginx, contrasting with some other web servers that can handle larger headers by default.&lt;/p>
+&lt;p>We later found that this client&amp;rsquo;s large HTTP headers were due to a large content security policy header.&lt;/p>
+&lt;p>The solution seemed straightforward: increase the buffer size in Nginx to accommodate larger headers. For a typical Nginx setup, this could be achieved by tweaking the configuration file:&lt;/p>
+&lt;pre tabindex="0">&lt;code>proxy_buffers 8 16k; # 8 buffers of 16k each
+proxy_buffer_size 16k; # 16k for headers
+&lt;/code>&lt;/pre>&lt;p>However, the situation gets a bit more complex when dealing with Nginx as an ingress controller in a Kubernetes environment.&lt;/p>
+&lt;h3 id="configuring-nginx-ingress-controller" >Configuring Nginx Ingress controller
+&lt;span>
+&lt;a href="#configuring-nginx-ingress-controller">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h3>&lt;p>Fortunately, the Nginx Ingress controller is designed to cater to such customizations. It allows configuration changes through a Kubernetes ConfigMap, which maps to Nginx&amp;rsquo;s internal settings. To adjust the buffer size, you need to:&lt;/p>
+&lt;ol>
+&lt;li>Deploy a ConfigMap with your desired settings, or add entries to an existing ConfigMap. For example, setting proxy-buffer-size to &amp;ldquo;16k&amp;rdquo; to handle larger headers:&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>kind: ConfigMap
+apiVersion: v1
+metadata:
+name: nginx-configuration
+namespace: kube-system
+data:
+proxy-buffer-size: &amp;#34;16k&amp;#34;
+&lt;/code>&lt;/pre>&lt;p>If creating a new ConfigMap, you will need to tell Nginx pods to read it. This involves passing the name of your ConfigMap as an argument in your deployment configuration:&lt;/p>
+&lt;pre tabindex="0">&lt;code>args:
+- /nginx-ingress-controller
+- --configmap=$(POD_NAMESPACE)/nginx-configuration
+&lt;/code>&lt;/pre>&lt;p>Once the ConfigMap is in place, the Nginx pods will pickup and apply the new settings&lt;/p></description></item><item><title>Handling Graceful Shutdown in a .NET App Hosted in Kubernetes</title><link>https://rnemeth90.github.io/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/</link><pubDate>Wed, 28 Dec 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/</guid><description>&lt;p>I was recently involved with troubleshooting some API&amp;rsquo;s hosted in Kubernetes throwing http/502&amp;rsquo;s. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us. It was actually a combination of these blogs (and the resolutions posted) that ended up resolving our issue.&lt;/p>
 &lt;h3 id="so-what-was-actually-causing-the-502s" >So what was actually causing the 502&amp;rsquo;s?
 &lt;span>
 &lt;a href="#so-what-was-actually-causing-the-502s">
