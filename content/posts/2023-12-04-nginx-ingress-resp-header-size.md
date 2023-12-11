@@ -3,7 +3,7 @@ title: 'Nginx Ingress Response Header Size - A Cautionary Tale'
 author: Ryan
 date: '2023-12-11'
 layout: post
-draft: true
+draft: false
 categories:
     - nginx
 tags:
