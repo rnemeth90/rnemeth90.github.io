@@ -22,11 +22,13 @@ Contact me through [LinkedIn](https://www.linkedin.com/in/ryan-nemeth-b0b1504b/)
 
 
 ## Currently Reading:
-- [ ] [How Linux Works](https://www.amazon.com/How-Linux-Works-Brian-Ward/dp/1718500408/ref=sr_1_1?crid=1VMED792IBVXJ&keywords=how+linux+works&qid=1672841276&s=books&sprefix=how+linux+work%2Cstripbooks%2C92&sr=1-1)
-- [ ] [Learning Go](https://www.amazon.com/Learning-Go-Idiomatic-Real-World-Programming/dp/1492077216/ref=sr_1_1?crid=YF687N53959K&keywords=learning+go&qid=1659346533&sprefix=learning+go%2Caps%2C102&sr=8-1)
-- [ ] [Powerful Command-Line Applications in Go](https://www.amazon.com/Learning-Go-Idiomatic-Real-World-Programming/dp/1492077216/ref=sr_1_1?crid=YF687N53959K&keywords=learning+go&qid=1659346533&sprefix=learning+go%2Caps%2C102&sr=8-1)
+- [ ] [Systems Performance](https://www.amazon.com/Systems-Performance-Brendan-Gregg/dp/0136820158/ref=sr_1_1?crid=1ESL437096HOM&keywords=systems+performance+gregg&qid=1702331347&s=books&sprefix=systems+performance%2Cstripbooks%2C118&sr=1-1)
+- [ ] [Attacking Network Protocols](https://www.amazon.com/Attacking-Network-Protocols-Analysis-Exploitation/dp/1593277504/ref=sr_1_1?crid=IT9LI4I7XLO4&keywords=attacking+network+protocols&qid=1702331327&s=books&sprefix=attacking+network+prot%2Cstripbooks%2C119&sr=1-1)
 
 ## Finished
+- [x] [How Linux Works](https://www.amazon.com/How-Linux-Works-Brian-Ward/dp/1718500408/ref=sr_1_1?crid=1VMED792IBVXJ&keywords=how+linux+works&qid=1672841276&s=books&sprefix=how+linux+work%2Cstripbooks%2C92&sr=1-1)
+- [x] [Learning Go](https://www.amazon.com/Learning-Go-Idiomatic-Real-World-Programming/dp/1492077216/ref=sr_1_1?crid=YF687N53959K&keywords=learning+go&qid=1659346533&sprefix=learning+go%2Caps%2C102&sr=8-1)
+- [x] [Powerful Command-Line Applications in Go](https://www.amazon.com/Learning-Go-Idiomatic-Real-World-Programming/dp/1492077216/ref=sr_1_1?crid=YF687N53959K&keywords=learning+go&qid=1659346533&sprefix=learning+go%2Caps%2C102&sr=8-1)
 - [x] [Microservices in .NET](https://www.amazon.com/Microservices-Second-Christian-Horsdal-Gammelgaard/dp/1617297925/ref=sr_1_2_sspa?crid=QPYAG2EFADPZ&keywords=microservices+in+.net&qid=1659346935&s=digital-text&sprefix=microservices+in+.ne%2Cdigital-text%2C73&sr=1-2-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzTFFTTVdJNjA0V1FCJmVuY3J5cHRlZElkPUEwNDU1MTc3MlE1VENVUEdQSVVCVSZlbmNyeXB0ZWRBZElkPUEwOTk5NzAwU0lOUUlWMzBEVTNNJndpZGdldE5hbWU9c3BfYXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==)
 - [x] [Kubernetes Patterns](https://www.amazon.com/Kubernetes-Patterns-Designing-Cloud-Native-Applications-ebook/dp/B07QH3JCC6/ref=sr_1_1?keywords=kubernetes+patterns&qid=1659346980&s=digital-text&sprefix=kubernetes+patt%2Cdigital-text%2C83&sr=1-1)
 - [x] [C# 10 and .NET 6](https://www.amazon.com/10-NET-Cross-Platform-Development-websites/dp/1801077363/ref=sr_1_1?keywords=c%23+10+and+.net+6&qid=1659346562&sprefix=c%23+10+and+.net+%2Caps%2C81&sr=8-1)
