@@ -1,4 +1,37 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on GeekyRyan</title><link>https://rnemeth90.github.io/posts/</link><description>GeekyRyan (Posts)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 11 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Nginx Ingress Response Header Size - A Cautionary Tale</title><link>https://rnemeth90.github.io/posts/2023-12-04-nginx-ingress-resp-header-size/</link><pubDate>Mon, 11 Dec 2023 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2023-12-04-nginx-ingress-resp-header-size/</guid><description>&lt;p>This will be a short post about a recent issue I encountered when using Nginx as a Kubernetes ingress. Though, this could also be encountered when using Nginx as a reverse proxy as well. The two definitions are functionally similar.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on GeekyRyan</title><link>https://rnemeth90.github.io/posts/</link><description>GeekyRyan (Posts)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 19 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Validating URLs with Go</title><link>https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/</link><pubDate>Tue, 19 Dec 2023 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/</guid><description>&lt;h2 id="introduction" >Introduction
+&lt;span>
+&lt;a href="#introduction">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h2>&lt;p>In this post, we&amp;rsquo;ll take a quick look at URL validation using Golang. It&amp;rsquo;s common to implement URL validation as a task within a HTTP request pipeline, typically as middleware. There are many different definitions of &amp;ldquo;validation&amp;rdquo;. For the purpose of this article, we will simply validate that a URL conforms to a particular text pattern.&lt;/p>
+&lt;p>I often see people (mistakenly) use URL and URI interchangeably. URL is actually is a sub-type of URI. A URL is a reference to a web resource, typically seen as a web address (e.g. &lt;a href="https://golang.org/project/)">https://golang.org/project/)&lt;/a>. A URI, on the other hand, can be used to identify any type of resource, not just those on the internet.&lt;/p>
+&lt;p>To validate a URL in Go, we could test our URL against a regex pattern, such as &lt;code>https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&amp;amp;//=]*)&lt;/code>. However, the Golang team was nice enough to provide this functionality to us via the net/url package.&lt;/p>
+&lt;p>To validate a URL, we can simply use the &lt;code>url.ParseRequestURI()&lt;/code> function. The definition of this function is below (taken from pkg.go.dev)&lt;/p>
+&lt;pre tabindex="0">&lt;code>func ParseRequestURI(rawurl string) (*URL, error)
+ParseRequestURI parses rawurl into a URL structure. It assumes that rawurl was received in an HTTP request, so the rawurl is interpreted only as an absolute URI or an absolute path. The string rawurl is assumed not to have a #fragment suffix. (Web browsers strip #fragment before sending the URL to a web server.)
+&lt;/code>&lt;/pre>&lt;p>Let&amp;rsquo;s see how we can use &lt;code>url.ParseRequestURI()&lt;/code>:&lt;/p>
+&lt;pre tabindex="0">&lt;code>package main
+import (
+&amp;#34;log&amp;#34;
+&amp;#34;net/url&amp;#34;
+)
+func main() {
+u, err := url.ParseRequestURI(&amp;#34;hello&amp;#34;)
+log.Printf(&amp;#34;err=%+v url=%+v\n&amp;#34;, err, u)
+u, err = url.ParseRequestURI(&amp;#34;http://rnemeth90.github.com/&amp;#34;)
+log.Printf(&amp;#34;err=%+v url=%+v\n&amp;#34;, err, u)
+u, err = url.ParseRequestURI(&amp;#34;http://golang.org/index.html?#page1&amp;#34;)
+log.Printf(&amp;#34;err=%+v url=%+v\n&amp;#34;, err, u)
+u, err = url.ParseRequestURI(&amp;#34;golang.org&amp;#34;)
+log.Printf(&amp;#34;err=%+v url=%+v\n&amp;#34;, err, u)
+}
+&lt;/code>&lt;/pre>&lt;p>Which outputs the following:&lt;/p>
+&lt;pre tabindex="0">&lt;code>2023/12/19 19:50:07 err=parse &amp;#34;hello&amp;#34;: invalid URI for request url=&amp;lt;nil&amp;gt;
+2023/12/19 19:50:07 err=&amp;lt;nil&amp;gt; url=http://rnemeth90.github.com/
+2023/12/19 19:50:07 err=&amp;lt;nil&amp;gt; url=http://golang.org/index.html?#page1
+2023/12/19 19:50:07 err=parse &amp;#34;golang.org&amp;#34;: invalid URI for request url=&amp;lt;nil&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>That&amp;rsquo;s it! This is a short article, but it&amp;rsquo;s just that easy to validate URLs in Go. I was learning about this recently and wanted to document what I learned. Until next time!&lt;/p></description></item><item><title>Nginx Ingress Response Header Size - A Cautionary Tale</title><link>https://rnemeth90.github.io/posts/2023-12-04-nginx-ingress-resp-header-size/</link><pubDate>Mon, 11 Dec 2023 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2023-12-04-nginx-ingress-resp-header-size/</guid><description>&lt;p>This will be a short post about a recent issue I encountered when using Nginx as a Kubernetes ingress. Though, this could also be encountered when using Nginx as a reverse proxy as well. The two definitions are functionally similar.&lt;/p>
 &lt;p>We recently had a client call in complaining of our application returning random 502s (Bad Gateway).&lt;/p>
 &lt;p>After some investigation and the common finger-pointing, I found this entry in the logs of our ingress controllers:&lt;/p>
 &lt;p>&lt;em>note&lt;/em> this log entry is truncated&lt;/p>
