@@ -24,6 +24,7 @@ Contact me through [LinkedIn](https://www.linkedin.com/in/ryan-nemeth-b0b1504b/)
 ## Currently Reading:
 - [ ] [Systems Performance](https://www.amazon.com/Systems-Performance-Brendan-Gregg/dp/0136820158/ref=sr_1_1?crid=1ESL437096HOM&keywords=systems+performance+gregg&qid=1702331347&s=books&sprefix=systems+performance%2Cstripbooks%2C118&sr=1-1)
 - [ ] [Attacking Network Protocols](https://www.amazon.com/Attacking-Network-Protocols-Analysis-Exploitation/dp/1593277504/ref=sr_1_1?crid=IT9LI4I7XLO4&keywords=attacking+network+protocols&qid=1702331327&s=books&sprefix=attacking+network+prot%2Cstripbooks%2C119&sr=1-1)
+- [ ] [Dive Into Systems](https://www.amazon.com/Dive-Into-Systems-Introduction-Computer/dp/1718501366)
 
 ## Finished
 - [x] [How Linux Works](https://www.amazon.com/How-Linux-Works-Brian-Ward/dp/1718500408/ref=sr_1_1?crid=1VMED792IBVXJ&keywords=how+linux+works&qid=1672841276&s=books&sprefix=how+linux+work%2Cstripbooks%2C92&sr=1-1)
