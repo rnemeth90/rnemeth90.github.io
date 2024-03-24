@@ -15,17 +15,18 @@ tags:
     - url
 ---
 
-I recently purchased a Framework laptop with the intention of replacing my Dell XPS. In this blog post, I'll cover some of the setup and configuration, as well as my reasoning for purchasing a Framework laptop.
+I recently purchased a Framework laptop with the intention of replacing my Dell XPS. In this blog post, I'll cover some of the setup and configuration, as well as my reasoning for purchasing a Framework laptop. I'll also dive into what I like about Framework and what I don't like about Framework.
 
 # Why Framework?
-Framework is a relatively new 
-TL;DR; I’m extremely impressed and very happy with this laptop - it is by far one of the best devices I’ve owned in a long time. It is near-silent, It uses ~3watts at idle, it’s fast, it’s sturdy and it looks good!
+Framework is a relatively new company to the personal computer industry. I purchased a Framework 13 shortly after they were first released, but returned it because of some problems I encountered. That was well over a year ago. My Dell XPS is aging (like cheese, unfortunately) and has me wanting to give Framework another shot. I recently read several reviews of the Framework 13 that have re-instilled my confidence in them.
+
+TL;DR; I’m extremely impressed and very happy with this laptop - it is by far one of the best devices I’ve owned in a long time. It is near-silent, It uses ~3watts at idle, it’s fast, it’s sturdy and it looks good! The build quality and feel is on par with my Macbook 13.
 
 # Why Arch?
-
+I have been using Linux for nearly 2 decades. Over that time, I have used numerous distros; from Slackware to Ubuntu and everything in between. I like Arch for it's simplicity. It doesn't have a ton of bloatware pre-installed (it does not have much of anything pre-installed!) and it's stable. I can install the operating system, and using my dotfiles, by up and running in a matter of minutes with MY configuration. I emphasize the work "my" in the previous sentence because with Arch, the computer truly feels like it is mine. It has no pre-conceived notions or conditions of what another person (or giant corporation) thinks I may like or not like. It allows me to express myself.
 
 # BIOS Settings
-You can find the BIOS guide on the Framework community website. The only settings I changed were:
+You can find the recommended BIOS guide on the Framework community website. The only settings I changed were:
 
 CPU Configuration -> Boot Performance mode: MAX BATTERY
 CPU Configuration -> Intel Turbo Boost Max Technology 3.0: DISABLED
