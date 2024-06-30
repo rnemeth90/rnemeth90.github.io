@@ -1,4 +1,67 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Web Development on GeekyRyan</title><link>https://rnemeth90.github.io/tags/web-development/</link><description>GeekyRyan (Web Development)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 27 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/web-development/index.xml" rel="self" type="application/rss+xml"/><item><title>Detecting MIME Types in Go</title><link>https://rnemeth90.github.io/posts/2024-03-27-golang-detect-file-type/</link><pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2024-03-27-golang-detect-file-type/</guid><description>&lt;h1 id="introduction" >Introduction
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Web Development on GeekyRyan</title><link>https://rnemeth90.github.io/tags/web-development/</link><description>GeekyRyan (Web Development)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 29 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/web-development/index.xml" rel="self" type="application/rss+xml"/><item><title>Mounting Multiple Kubernetes Secrets into One Directory</title><link>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</link><pubDate>Sat, 29 Jun 2024 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</guid><description>&lt;h1 id="introduction" >Introduction
+&lt;span>
+&lt;a href="#introduction">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h1>&lt;p>Combining multiple Kubernetes secrets into a single directory can streamline secret management in your applications. This guide walks you through the process of achieving this in Kubernetes, ensuring efficient and organized secret management.&lt;/p>
+&lt;h1 id="creating-secrets" >Creating Secrets
+&lt;span>
+&lt;a href="#creating-secrets">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h1>&lt;p>First, create your secrets using the &lt;code>kubectl create secret&lt;/code> command:&lt;/p>
+&lt;pre tabindex="0">&lt;code>kubectl create secret generic secret-one --from-literal=key1=value1
+kubectl create secret generic secret-two --from-literal=key2=value2
+&lt;/code>&lt;/pre>&lt;p>Each secret can contain multiple key-value pairs, and you can add more secrets as needed.&lt;/p>
+&lt;h1 id="configuring-the-pod" >Configuring the Pod
+&lt;span>
+&lt;a href="#configuring-the-pod">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h1>&lt;p>Next, define the pod configuration to mount these secrets into a single directory. Here’s an example configuration:&lt;/p>
+&lt;pre tabindex="0">&lt;code>apiVersion: v1
+kind: Pod
+metadata:
+name: mypod
+spec:
+containers:
+- name: mycontainer
+image: myimage
+volumeMounts:
+- name: secret-volume1
+mountPath: &amp;#34;/etc/secrets/secret-one&amp;#34;
+subPath: key1
+- name: secret-volume2
+mountPath: &amp;#34;/etc/secrets/secret-two&amp;#34;
+subPath: key2
+volumes:
+- name: secret-volume1
+secret:
+secretName: secret-one
+- name: secret-volume2
+secret:
+secretName: secret-two
+&lt;/code>&lt;/pre>&lt;h1 id="detailed-explanation" >Detailed Explanation
+&lt;span>
+&lt;a href="#detailed-explanation">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h1>&lt;ul>
+&lt;li>Volume Mounts: The &lt;code>volumeMounts&lt;/code> section specifies where the secrets will be mounted within the container&amp;rsquo;s file system. By using the &lt;code>subPath&lt;/code> property, you can place each secret&amp;rsquo;s content into a specific file within the target directory.&lt;/li>
+&lt;li>Volumes: The volumes section links each volume to a Kubernetes secret. This ensures that the secrets are available to the container at runtime.&lt;/li>
+&lt;/ul>
+&lt;p>In this example, secret-one and secret-two are mounted into &lt;code>/etc/secrets/secret-one&lt;/code> and &lt;code>/etc/secrets/secret-two&lt;/code>, respectively. The &lt;code>subPath&lt;/code> ensures that each key-value pair from the secrets is mapped to a separate file within the specified directory.&lt;/p>
+&lt;h1 id="conclusion" >Conclusion
+&lt;span>
+&lt;a href="#conclusion">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h1>&lt;p>By mounting secrets into subdirectories using the &lt;code>subPath&lt;/code> property, you can effectively manage multiple secrets within a single directory. This method enhances organization and accessibility, making it easier to handle secrets in your Kubernetes applications.&lt;/p></description></item><item><title>Detecting MIME Types in Go</title><link>https://rnemeth90.github.io/posts/2024-03-27-golang-detect-file-type/</link><pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2024-03-27-golang-detect-file-type/</guid><description>&lt;h1 id="introduction" >Introduction
 &lt;span>
 &lt;a href="#introduction">
 &lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>

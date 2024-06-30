@@ -58,7 +58,7 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">secretName&lt;/span>: &lt;span style="color:#ae81ff">hello-world-credentials&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When this deployment is created, we see two directories are created in this pod (one for the configMap, and one for the secret). How can we mount these as two &lt;em>files&lt;/em> in the ‘config’ directory, rather than two individual directories?&lt;/p>
 &lt;p>&lt;a href="https://geekyryan.com/wp-content/uploads/2022/04/image.png">&lt;/a>&lt;/p>
-&lt;p>The ~VolumeMounts~ directive within the container spec of the deployment has an optional (less-known) parameter named ‘subPath’. By using this parameter, we can mount a configMap and secret in the same directory within a pod.&lt;/p>
+&lt;p>The &lt;del>VolumeMounts&lt;/del> directive within the container spec of the deployment has an optional (less-known) parameter named ‘subPath’. By using this parameter, we can mount a configMap and secret in the same directory within a pod.&lt;/p>
 &lt;p>Let’s focus on the following deployment spec:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-YAML" data-lang="YAML">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">ConfigMap&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">v1&lt;/span>
