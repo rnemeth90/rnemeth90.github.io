@@ -3,7 +3,7 @@ title: 'Mounting Multiple Kubernetes Secrets into One Directory'
 author: Ryan
 date: '2024-06-29'
 layout: post
-draft: false
+draft: true
 categories:
   - Kubernetes
 tags:
