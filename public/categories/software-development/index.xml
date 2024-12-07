@@ -6,10 +6,113 @@
     <description>GeekyRyan (Software Development)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 15 Aug 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 27 Mar 2024 00:00:00 +0000</lastBuildDate>
     
     <atom:link href="https://rnemeth90.github.io/categories/software-development/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Detecting MIME Types in Go</title>
+      <link>https://rnemeth90.github.io/posts/2024-03-27-golang-detect-file-type/</link>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2024-03-27-golang-detect-file-type/</guid>
+      <description>&lt;h1 id=&#34;introduction&#34; &gt;Introduction
+&lt;span&gt;
+    &lt;a href=&#34;#introduction&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;Knowing the type of a file you&amp;rsquo;re working with is not just a matter of curiosity — it&amp;rsquo;s often a necessity. This is especially true when you&amp;rsquo;re deciding whether or not a particular operation can be carried out on that file. Go, with its comprehensive standard library, offers a straightforward approach to identifying a file&amp;rsquo;s MIME type, ensuring that developers have the tools they need to make informed decisions about file manipulation. You may expect to find this functionality in the &lt;code&gt;file&lt;/code&gt; package, but you&amp;rsquo;d be wrong! Read on&amp;hellip;&lt;/p&gt;
+&lt;h2 id=&#34;the-nethttp-package-your-gateway-to-mime-detection&#34; &gt;The net/http Package: Your Gateway to MIME Detection
+&lt;span&gt;
+    &lt;a href=&#34;#the-nethttp-package-your-gateway-to-mime-detection&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h2&gt;&lt;p&gt;At the heart of Go&amp;rsquo;s approach to MIME type detection is the &lt;code&gt;net/http&lt;/code&gt; package. This package provides everything developers need for identifying file types. The method in question, &lt;code&gt;DetectContentType()&lt;/code&gt;, is nothing short of a detective dedicated to uncovering the secrets held within the first 512 bytes of a file.&lt;/p&gt;
+&lt;p&gt;Imagine you&amp;rsquo;re downloading an image for processing from a URL, but before you proceed, you need to confirm its type. Here&amp;rsquo;s how you&amp;rsquo;d &lt;em&gt;go&lt;/em&gt; about it:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;resp, err := client.Get(&amp;#34;https://rnemeth90.github.io/images/synology-cloud-sync-01.png&amp;#34;)
+if err != nil {
+	log.Fatal(err)
+}
+defer resp.Body.Close()
+
+bytes, err := ioutil.ReadAll(resp.Body)
+if err != nil {
+	log.Fatal(err)
+}
+
+// detecting the MIME type
+mimeType := http.DetectContentType(bytes)
+fmt.Println(mimeType) // Voila! It&amp;#39;s an image/png
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In this snippet, &lt;code&gt;DetectContentType()&lt;/code&gt; takes the stage, examining the initial bytes of the file and returning a MIME type, such as &lt;code&gt;image/png&lt;/code&gt;. Should it find itself at a loss, unable to pin down the file&amp;rsquo;s type, it defaults to &lt;code&gt;application/octet-stream&lt;/code&gt;, a way of saying, &amp;ldquo;This is a file, but beyond that, you&amp;rsquo;re on your own.&amp;rdquo;&lt;/p&gt;
+&lt;h1 id=&#34;beyond-the-basics-when-you-need-more&#34; &gt;Beyond the Basics: When You Need More
+&lt;span&gt;
+    &lt;a href=&#34;#beyond-the-basics-when-you-need-more&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;While &lt;code&gt;DetectContentType()&lt;/code&gt; serves well for a number of common file types, its repertoire is not unlimited. There are scenarios where you might find yourself needing to identify more obscure or specific file types. This is where the mimetype library steps in, offering a more extensive catalog of file types. If &lt;code&gt;DetectContentType()&lt;/code&gt; isn&amp;rsquo;t able to help you, considering this library might just be your next move.&lt;/p&gt;
+&lt;h1 id=&#34;conclusion&#34; &gt;Conclusion
+&lt;span&gt;
+    &lt;a href=&#34;#conclusion&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;Go&amp;rsquo;s &lt;code&gt;net/http&lt;/code&gt; package, with its &lt;code&gt;DetectContentType()&lt;/code&gt; method, provides a solid foundation for this task. And for those times when you need to &lt;em&gt;go&lt;/em&gt; further, the &lt;code&gt;mimetype&lt;/code&gt; library is there to help.&lt;/p&gt;
+&lt;p&gt;Whether you&amp;rsquo;re safeguarding against the wrong file types in an upload process or curating content based on its nature, understanding and utilizing MIME type detection is an invaluable skill. Thanks for reading!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Validating URLs with Go</title>
+      <link>https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/</link>
+      <pubDate>Tue, 19 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34; &gt;Introduction
+&lt;span&gt;
+    &lt;a href=&#34;#introduction&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h2&gt;&lt;p&gt;In this post, we&amp;rsquo;ll take a quick look at URL validation using Golang. It&amp;rsquo;s common to implement URL validation as a task within a HTTP request pipeline, typically as middleware. There are many different definitions of &amp;ldquo;validation&amp;rdquo;. For the purpose of this article, we will simply validate that a URL conforms to a particular text pattern.&lt;/p&gt;
+&lt;p&gt;I often see people (mistakenly) use URL and URI interchangeably. URL is actually is a sub-type of URI. A URL is a reference to a web resource, typically seen as a web address (e.g. &lt;a href=&#34;https://golang.org/project/)&#34;&gt;https://golang.org/project/)&lt;/a&gt;. A URI, on the other hand, can be used to identify any type of resource, not just those on the internet.&lt;/p&gt;
+&lt;p&gt;To validate a URL in Go, we could test our URL against a regex pattern, such as &lt;code&gt;https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&amp;amp;//=]*)&lt;/code&gt;. However, the Golang team was nice enough to provide this functionality to us via the net/url package.&lt;/p&gt;
+&lt;p&gt;To validate a URL, we can simply use the &lt;code&gt;url.ParseRequestURI()&lt;/code&gt; function. The definition of this function is below (taken from pkg.go.dev)&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;func ParseRequestURI(rawurl string) (*URL, error)
+
+ParseRequestURI parses rawurl into a URL structure. It assumes that rawurl was received in an HTTP request, so the rawurl is interpreted only as an absolute URI or an absolute path. The string rawurl is assumed not to have a #fragment suffix. (Web browsers strip #fragment before sending the URL to a web server.)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Let&amp;rsquo;s see how we can use &lt;code&gt;url.ParseRequestURI()&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;package main
+
+import (
+  &amp;#34;log&amp;#34;
+  &amp;#34;net/url&amp;#34;
+)
+
+func main() {
+  u, err := url.ParseRequestURI(&amp;#34;hello&amp;#34;)
+  log.Printf(&amp;#34;err=%+v url=%+v\n&amp;#34;, err, u)
+
+  u, err = url.ParseRequestURI(&amp;#34;http://rnemeth90.github.com/&amp;#34;)
+  log.Printf(&amp;#34;err=%+v url=%+v\n&amp;#34;, err, u)
+
+  u, err = url.ParseRequestURI(&amp;#34;http://golang.org/index.html?#page1&amp;#34;)
+  log.Printf(&amp;#34;err=%+v url=%+v\n&amp;#34;, err, u)
+
+  u, err = url.ParseRequestURI(&amp;#34;golang.org&amp;#34;)
+  log.Printf(&amp;#34;err=%+v url=%+v\n&amp;#34;, err, u)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Which outputs the following:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;2023/12/19 19:50:07 err=parse &amp;#34;hello&amp;#34;: invalid URI for request url=&amp;lt;nil&amp;gt;
+2023/12/19 19:50:07 err=&amp;lt;nil&amp;gt; url=http://rnemeth90.github.com/
+2023/12/19 19:50:07 err=&amp;lt;nil&amp;gt; url=http://golang.org/index.html?#page1
+2023/12/19 19:50:07 err=parse &amp;#34;golang.org&amp;#34;: invalid URI for request url=&amp;lt;nil&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;That&amp;rsquo;s it! This is a short article, but it&amp;rsquo;s just that easy to validate URLs in Go. I was learning about this recently and wanted to document what I learned. Until next time!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Using try/catch/finally Blocks in PowerShell</title>
