@@ -6,10 +6,351 @@
     <description>GeekyRyan</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 15 Aug 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 05 Dec 2024 00:00:00 +0000</lastBuildDate>
     
     <atom:link href="https://rnemeth90.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Mounting Multiple Kubernetes Secrets into One Directory</title>
+      <link>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</link>
+      <pubDate>Sat, 29 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</guid>
+      <description>&lt;h1 id=&#34;introduction&#34; &gt;Introduction
+&lt;span&gt;
+    &lt;a href=&#34;#introduction&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;Combining multiple Kubernetes secrets into a single directory can streamline secret management in your applications. This guide walks you through the process of achieving this in Kubernetes, ensuring efficient and organized secret management.&lt;/p&gt;
+&lt;h1 id=&#34;creating-secrets&#34; &gt;Creating Secrets
+&lt;span&gt;
+    &lt;a href=&#34;#creating-secrets&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;First, create your secrets using the &lt;code&gt;kubectl create secret&lt;/code&gt; command:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl create secret generic secret-one --from-literal=key1=value1
+kubectl create secret generic secret-two --from-literal=key2=value2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Each secret can contain multiple key-value pairs, and you can add more secrets as needed.&lt;/p&gt;
+&lt;h1 id=&#34;configuring-the-pod&#34; &gt;Configuring the Pod
+&lt;span&gt;
+    &lt;a href=&#34;#configuring-the-pod&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;Next, define the pod configuration to mount these secrets into a single directory. Here’s an example configuration:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mycontainer
+    image: myimage
+    volumeMounts:
+    - name: secret-volume1
+      mountPath: &amp;#34;/etc/secrets/secret-one&amp;#34;
+      subPath: key1
+    - name: secret-volume2
+      mountPath: &amp;#34;/etc/secrets/secret-two&amp;#34;
+      subPath: key2
+  volumes:
+  - name: secret-volume1
+    secret:
+      secretName: secret-one
+  - name: secret-volume2
+    secret:
+      secretName: secret-two
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;detailed-explanation&#34; &gt;Detailed Explanation
+&lt;span&gt;
+    &lt;a href=&#34;#detailed-explanation&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;Volume Mounts: The &lt;code&gt;volumeMounts&lt;/code&gt; section specifies where the secrets will be mounted within the container&amp;rsquo;s file system. By using the &lt;code&gt;subPath&lt;/code&gt; property, you can place each secret&amp;rsquo;s content into a specific file within the target directory.&lt;/li&gt;
+&lt;li&gt;Volumes: The volumes section links each volume to a Kubernetes secret. This ensures that the secrets are available to the container at runtime.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In this example, secret-one and secret-two are mounted into &lt;code&gt;/etc/secrets/secret-one&lt;/code&gt; and &lt;code&gt;/etc/secrets/secret-two&lt;/code&gt;, respectively. The &lt;code&gt;subPath&lt;/code&gt; ensures that each key-value pair from the secrets is mapped to a separate file within the specified directory.&lt;/p&gt;
+&lt;h1 id=&#34;conclusion&#34; &gt;Conclusion
+&lt;span&gt;
+    &lt;a href=&#34;#conclusion&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;By mounting secrets into subdirectories using the &lt;code&gt;subPath&lt;/code&gt; property, you can effectively manage multiple secrets within a single directory. This method enhances organization and accessibility, making it easier to handle secrets in your Kubernetes applications.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Detecting MIME Types in Go</title>
+      <link>https://rnemeth90.github.io/posts/2024-03-27-golang-detect-file-type/</link>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2024-03-27-golang-detect-file-type/</guid>
+      <description>&lt;h1 id=&#34;introduction&#34; &gt;Introduction
+&lt;span&gt;
+    &lt;a href=&#34;#introduction&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;Knowing the type of a file you&amp;rsquo;re working with is not just a matter of curiosity — it&amp;rsquo;s often a necessity. This is especially true when you&amp;rsquo;re deciding whether or not a particular operation can be carried out on that file. Go, with its comprehensive standard library, offers a straightforward approach to identifying a file&amp;rsquo;s MIME type, ensuring that developers have the tools they need to make informed decisions about file manipulation. You may expect to find this functionality in the &lt;code&gt;file&lt;/code&gt; package, but you&amp;rsquo;d be wrong! Read on&amp;hellip;&lt;/p&gt;
+&lt;h2 id=&#34;the-nethttp-package-your-gateway-to-mime-detection&#34; &gt;The net/http Package: Your Gateway to MIME Detection
+&lt;span&gt;
+    &lt;a href=&#34;#the-nethttp-package-your-gateway-to-mime-detection&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h2&gt;&lt;p&gt;At the heart of Go&amp;rsquo;s approach to MIME type detection is the &lt;code&gt;net/http&lt;/code&gt; package. This package provides everything developers need for identifying file types. The method in question, &lt;code&gt;DetectContentType()&lt;/code&gt;, is nothing short of a detective dedicated to uncovering the secrets held within the first 512 bytes of a file.&lt;/p&gt;
+&lt;p&gt;Imagine you&amp;rsquo;re downloading an image for processing from a URL, but before you proceed, you need to confirm its type. Here&amp;rsquo;s how you&amp;rsquo;d &lt;em&gt;go&lt;/em&gt; about it:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;resp, err := client.Get(&amp;#34;https://rnemeth90.github.io/images/synology-cloud-sync-01.png&amp;#34;)
+if err != nil {
+	log.Fatal(err)
+}
+defer resp.Body.Close()
+
+bytes, err := ioutil.ReadAll(resp.Body)
+if err != nil {
+	log.Fatal(err)
+}
+
+// detecting the MIME type
+mimeType := http.DetectContentType(bytes)
+fmt.Println(mimeType) // Voila! It&amp;#39;s an image/png
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In this snippet, &lt;code&gt;DetectContentType()&lt;/code&gt; takes the stage, examining the initial bytes of the file and returning a MIME type, such as &lt;code&gt;image/png&lt;/code&gt;. Should it find itself at a loss, unable to pin down the file&amp;rsquo;s type, it defaults to &lt;code&gt;application/octet-stream&lt;/code&gt;, a way of saying, &amp;ldquo;This is a file, but beyond that, you&amp;rsquo;re on your own.&amp;rdquo;&lt;/p&gt;
+&lt;h1 id=&#34;beyond-the-basics-when-you-need-more&#34; &gt;Beyond the Basics: When You Need More
+&lt;span&gt;
+    &lt;a href=&#34;#beyond-the-basics-when-you-need-more&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;While &lt;code&gt;DetectContentType()&lt;/code&gt; serves well for a number of common file types, its repertoire is not unlimited. There are scenarios where you might find yourself needing to identify more obscure or specific file types. This is where the mimetype library steps in, offering a more extensive catalog of file types. If &lt;code&gt;DetectContentType()&lt;/code&gt; isn&amp;rsquo;t able to help you, considering this library might just be your next move.&lt;/p&gt;
+&lt;h1 id=&#34;conclusion&#34; &gt;Conclusion
+&lt;span&gt;
+    &lt;a href=&#34;#conclusion&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;Go&amp;rsquo;s &lt;code&gt;net/http&lt;/code&gt; package, with its &lt;code&gt;DetectContentType()&lt;/code&gt; method, provides a solid foundation for this task. And for those times when you need to &lt;em&gt;go&lt;/em&gt; further, the &lt;code&gt;mimetype&lt;/code&gt; library is there to help.&lt;/p&gt;
+&lt;p&gt;Whether you&amp;rsquo;re safeguarding against the wrong file types in an upload process or curating content based on its nature, understanding and utilizing MIME type detection is an invaluable skill. Thanks for reading!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Validating URLs with Go</title>
+      <link>https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/</link>
+      <pubDate>Tue, 19 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34; &gt;Introduction
+&lt;span&gt;
+    &lt;a href=&#34;#introduction&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h2&gt;&lt;p&gt;In this post, we&amp;rsquo;ll take a quick look at URL validation using Golang. It&amp;rsquo;s common to implement URL validation as a task within a HTTP request pipeline, typically as middleware. There are many different definitions of &amp;ldquo;validation&amp;rdquo;. For the purpose of this article, we will simply validate that a URL conforms to a particular text pattern.&lt;/p&gt;
+&lt;p&gt;I often see people (mistakenly) use URL and URI interchangeably. URL is actually is a sub-type of URI. A URL is a reference to a web resource, typically seen as a web address (e.g. &lt;a href=&#34;https://golang.org/project/)&#34;&gt;https://golang.org/project/)&lt;/a&gt;. A URI, on the other hand, can be used to identify any type of resource, not just those on the internet.&lt;/p&gt;
+&lt;p&gt;To validate a URL in Go, we could test our URL against a regex pattern, such as &lt;code&gt;https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&amp;amp;//=]*)&lt;/code&gt;. However, the Golang team was nice enough to provide this functionality to us via the net/url package.&lt;/p&gt;
+&lt;p&gt;To validate a URL, we can simply use the &lt;code&gt;url.ParseRequestURI()&lt;/code&gt; function. The definition of this function is below (taken from pkg.go.dev)&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;func ParseRequestURI(rawurl string) (*URL, error)
+
+ParseRequestURI parses rawurl into a URL structure. It assumes that rawurl was received in an HTTP request, so the rawurl is interpreted only as an absolute URI or an absolute path. The string rawurl is assumed not to have a #fragment suffix. (Web browsers strip #fragment before sending the URL to a web server.)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Let&amp;rsquo;s see how we can use &lt;code&gt;url.ParseRequestURI()&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;package main
+
+import (
+  &amp;#34;log&amp;#34;
+  &amp;#34;net/url&amp;#34;
+)
+
+func main() {
+  u, err := url.ParseRequestURI(&amp;#34;hello&amp;#34;)
+  log.Printf(&amp;#34;err=%+v url=%+v\n&amp;#34;, err, u)
+
+  u, err = url.ParseRequestURI(&amp;#34;http://rnemeth90.github.com/&amp;#34;)
+  log.Printf(&amp;#34;err=%+v url=%+v\n&amp;#34;, err, u)
+
+  u, err = url.ParseRequestURI(&amp;#34;http://golang.org/index.html?#page1&amp;#34;)
+  log.Printf(&amp;#34;err=%+v url=%+v\n&amp;#34;, err, u)
+
+  u, err = url.ParseRequestURI(&amp;#34;golang.org&amp;#34;)
+  log.Printf(&amp;#34;err=%+v url=%+v\n&amp;#34;, err, u)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Which outputs the following:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;2023/12/19 19:50:07 err=parse &amp;#34;hello&amp;#34;: invalid URI for request url=&amp;lt;nil&amp;gt;
+2023/12/19 19:50:07 err=&amp;lt;nil&amp;gt; url=http://rnemeth90.github.com/
+2023/12/19 19:50:07 err=&amp;lt;nil&amp;gt; url=http://golang.org/index.html?#page1
+2023/12/19 19:50:07 err=parse &amp;#34;golang.org&amp;#34;: invalid URI for request url=&amp;lt;nil&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;That&amp;rsquo;s it! This is a short article, but it&amp;rsquo;s just that easy to validate URLs in Go. I was learning about this recently and wanted to document what I learned. Until next time!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Nginx Ingress Response Header Size - A Cautionary Tale</title>
+      <link>https://rnemeth90.github.io/posts/2023-12-04-nginx-ingress-resp-header-size/</link>
+      <pubDate>Mon, 11 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2023-12-04-nginx-ingress-resp-header-size/</guid>
+      <description>&lt;p&gt;This will be a short post about a recent issue I encountered when using Nginx as a Kubernetes ingress. Though, this could also be encountered when using Nginx as a reverse proxy as well. The two definitions are functionally similar.&lt;/p&gt;
+&lt;p&gt;We recently had a client call in complaining of our application returning random 502s (Bad Gateway).&lt;/p&gt;
+&lt;p&gt;After some investigation and the common finger-pointing, I found this entry in the logs of our ingress controllers:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;note&lt;/em&gt; this log entry is truncated&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[error] 193#193: 
+    *25 upstream sent too big header while reading response header from upstream
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This error message pointed towards a limitation in Nginx&amp;rsquo;s default configuration - it struggles with large headers. This is a known quirk of Nginx, contrasting with some other web servers that can handle larger headers by default.&lt;/p&gt;
+&lt;p&gt;We later found that this client&amp;rsquo;s large HTTP headers were due to a large content security policy header.&lt;/p&gt;
+&lt;p&gt;The solution seemed straightforward: increase the buffer size in Nginx to accommodate larger headers. For a typical Nginx setup, this could be achieved by tweaking the configuration file:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;proxy_buffers 8 16k;  # 8 buffers of 16k each
+proxy_buffer_size 16k; # 16k for headers
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;However, the situation gets a bit more complex when dealing with Nginx as an ingress controller in a Kubernetes environment.&lt;/p&gt;
+&lt;h3 id=&#34;configuring-nginx-ingress-controller&#34; &gt;Configuring Nginx Ingress controller
+&lt;span&gt;
+    &lt;a href=&#34;#configuring-nginx-ingress-controller&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h3&gt;&lt;p&gt;Fortunately, the Nginx Ingress controller is designed to cater to such customizations. It allows configuration changes through a Kubernetes ConfigMap, which maps to Nginx&amp;rsquo;s internal settings. To adjust the buffer size, you need to:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Deploy a ConfigMap with your desired settings, or add entries to an existing ConfigMap. For example, setting proxy-buffer-size to &amp;ldquo;16k&amp;rdquo; to handle larger headers:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-configuration
+  namespace: kube-system
+data:
+  proxy-buffer-size: &amp;#34;16k&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If creating a new ConfigMap, you will need to tell Nginx pods to read it. This involves passing the name of your ConfigMap as an argument in your deployment configuration:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;args:
+  - /nginx-ingress-controller
+  - --configmap=$(POD_NAMESPACE)/nginx-configuration
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once the ConfigMap is in place, the Nginx pods will pickup and apply the new settings&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Exploring Netcat</title>
+      <link>https://rnemeth90.github.io/posts/2023-11-27-netcat/</link>
+      <pubDate>Mon, 27 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2023-11-27-netcat/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34; &gt;Introduction
+&lt;span&gt;
+    &lt;a href=&#34;#introduction&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h2&gt;&lt;p&gt;Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the &amp;ldquo;network swiss-army knife&amp;rdquo;. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed.&lt;/p&gt;
+&lt;p&gt;Netcat is a simple utility that reads and writes data across raw TCP/UDP sockets. Netcat is a command-line tool available out of the box on most *nix operating systems and can also be installed on Windows. It&amp;rsquo;s a powerful tool for debugging and investigating networks. It can even be used for tasks like port scanning, transferring files, chatting with friends on a network, and even creating backdoors (for testing purposes, obviously :) ).&lt;/p&gt;
+&lt;h2 id=&#34;understanding-udp&#34; &gt;Understanding UDP
+&lt;span&gt;
+    &lt;a href=&#34;#understanding-udp&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h2&gt;&lt;p&gt;Before we dive into exploring UDP connections with netcat, let&amp;rsquo;s quickly get a refresher on UDP. UDP is a connectionless transport layer protocol that does not provide the same reliability, flow-control, and error-checking mechanisms as TCP. Unlike TCP, UDP also does not establish a persistent connection between the sender and receiver. Instead, it sends data packets, known as datagrams, individually using a &amp;lsquo;fire and forget&amp;rsquo; method. UDP is often used for applications where real-time communication and low overhead are crucial, such as streaming media, gaming, DNS (though, certain functions of DNS may also use TCP), and IoT devices.&lt;/p&gt;
+&lt;h2 id=&#34;understanding-tcp&#34; &gt;Understanding TCP
+&lt;span&gt;
+    &lt;a href=&#34;#understanding-tcp&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h2&gt;&lt;p&gt;It&amp;rsquo;s also crucial to have a fundamental knowledge of the TCP protocol. TCP is one of the main protocols in the Internet protocol suite, laying the foundation for the majority of data exchange over the Internet. Unlike its counterpart, UDP (User Datagram Protocol), TCP is connection-oriented, meaning a connection is established and maintained until the application programs at each end have finished exchanging messages. This ensures reliable, ordered, and error-checked delivery of a stream of data between applications running on hosts communicating over an IP network. Key features of TCP include its ability to manage data packet size, data transfer rate, and network traffic congestion, making it ideal for applications where data integrity and accuracy are crucial, such as web browsing, email, and file transfer. Understanding TCP is essential for effectively utilizing tools like Netcat, as it provides the basis for establishing stable and secure connections across a network.&lt;/p&gt;
+&lt;h2 id=&#34;creating-a-simple-clientserver&#34; &gt;Creating a Simple Client/Server
+&lt;span&gt;
+    &lt;a href=&#34;#creating-a-simple-clientserver&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h2&gt;&lt;p&gt;The following will create a simple UDP server and client.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Launch a shell and type the following command. This will tell netcat to listen (&lt;code&gt;-l&lt;/code&gt;) on UDP (&lt;code&gt;-u&lt;/code&gt;) port (&lt;code&gt;-p&lt;/code&gt;) 5555.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;nc -l -u -p 5555
+&lt;/code&gt;&lt;/pre&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Launch another shell and type the following. This will connect to the server we created above.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;nc -u 127.0.0.1 5555
+&lt;/code&gt;&lt;/pre&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;You can now send messages to the server, like so:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Client:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ nc -u 127.0.0.1 5555
+hello
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Server:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ nc -l -u -p 5555
+hello
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can do the same thing with TCP, just leave out the &lt;code&gt;-u&lt;/code&gt; in each command above.&lt;/p&gt;
+&lt;h2 id=&#34;transfer-a-file&#34; &gt;Transfer a File
+&lt;span&gt;
+    &lt;a href=&#34;#transfer-a-file&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h2&gt;&lt;p&gt;On the receiving end:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;nc -l -p 5555 &amp;gt; outputfile
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;On the sending end:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;nc [hostname or IP address of server] 5555 &amp;lt; inputfile
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;port-scanning&#34; &gt;Port Scanning:
+&lt;span&gt;
+    &lt;a href=&#34;#port-scanning&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h2&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;netcat -v -z -n -w 1 v.txvip1 1-1023
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;serve-a-web-page&#34; &gt;Serve a web page:
+&lt;span&gt;
+    &lt;a href=&#34;#serve-a-web-page&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h2&gt;&lt;p&gt;If you have an html file, you can create a simple web server for it. Here we tell netcat to listen on port 8080 and redirect the contents of index.html to any &amp;rsquo;thing&amp;rsquo; that connects:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;nc -l -p 8080 &amp;lt; index.html
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: In the examples above, I always use port 5555. You can technically use just about any port you want. However, attempting to use any port below 1024 will require root privileges. The port you choose cannot be in use by another process.&lt;/p&gt;
+&lt;h2 id=&#34;other-practical-examples&#34; &gt;Other Practical Examples
+&lt;span&gt;
+    &lt;a href=&#34;#other-practical-examples&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h2&gt;&lt;p&gt;Let&amp;rsquo;s explore a few more practical examples to illustrate the usefulness of netcat&amp;rsquo;s UDP capabilities. I will leave the actual implementation as an exercise for you to try.&lt;/p&gt;
+&lt;h3 id=&#34;example-1-testing-a-tcpudp-server&#34; &gt;Example 1: Testing a TCP/UDP Server
+&lt;span&gt;
+    &lt;a href=&#34;#example-1-testing-a-tcpudp-server&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h3&gt;&lt;p&gt;Suppose you are developing a UDP server application, and you want to test its functionality. You can use netcat to send TCP/UDP packets to your server and observe its response. By monitoring the server&amp;rsquo;s behavior, you can ensure that it correctly handles incoming UDP traffic.&lt;/p&gt;
+&lt;h3 id=&#34;example-2-interacting-with-networked-devices&#34; &gt;Example 2: Interacting with Networked Devices
+&lt;span&gt;
+    &lt;a href=&#34;#example-2-interacting-with-networked-devices&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h3&gt;&lt;p&gt;Netcat can be handy when interacting with networked devices, such as routers, IoT devices, or even network-enabled printers. By establishing a TCP/UDP connection, you can send commands, queries, or configuration data to these devices, enabling you to troubleshoot or configure them remotely.&lt;/p&gt;
+&lt;h3 id=&#34;example-3-banner-grabbing&#34; &gt;Example 3. Banner Grabbing
+&lt;span&gt;
+    &lt;a href=&#34;#example-3-banner-grabbing&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h3&gt;&lt;p&gt;This is a technique used in network security to gather information about a remote server, including the type and version of the operating system and applications running. The basic concept is that you connect to a network service and see what kind of &amp;lsquo;banner&amp;rsquo; (if any) it returns in the output. When I was starting out in the IT world, this was a common thing to do to enumerate devices and services on a network. Though, I would like to believe this is no longer as much of a concern, given the simplicity of preventing this type of information discovery attack.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34; &gt;Conclusion
+&lt;span&gt;
+    &lt;a href=&#34;#conclusion&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h2&gt;&lt;p&gt;Netcat&amp;rsquo;s ability to handle UDP connections makes it an invaluable tool for various network-related tasks. Whether you are testing a UDP server, interacting with networked devices, or exploring your network&amp;rsquo;s services, netcat provides a convenient and straightforward approach.&lt;/p&gt;
+&lt;p&gt;In this blog post, we walked through the process of creating a UDP connection using netcat, discussed the fundamentals of UDP, and explored practical examples where netcat can prove useful. By mastering netcat&amp;rsquo;s capabilities, you can enhance your network troubleshooting and debugging skills, and gain a deeper understanding of UDP communication.&lt;/p&gt;
+&lt;p&gt;You can read more about netcat in the man pages:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;man nc
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The OpenBSD repository contains the original source written by Hobbit decades ago:
+&lt;a href=&#34;https://github.com/openbsd/src/blob/master/usr.bin/nc/netcat.c&#34;&gt;netcat.c&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Using try/catch/finally Blocks in PowerShell</title>
@@ -3548,9 +3889,9 @@ the RPC services were running. So what now?? I fired up NMAP on ServerB and did 
     &lt;/a&gt;
 &lt;/span&gt;
 &lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; &lt;a href=&#34;https://www.amazon.com/How-Linux-Works-Brian-Ward/dp/1718500408/ref=sr_1_1?crid=1VMED792IBVXJ&amp;amp;keywords=how+linux+works&amp;amp;qid=1672841276&amp;amp;s=books&amp;amp;sprefix=how+linux+work%2Cstripbooks%2C92&amp;amp;sr=1-1&#34;&gt;How Linux Works&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; &lt;a href=&#34;https://www.amazon.com/Learning-Go-Idiomatic-Real-World-Programming/dp/1492077216/ref=sr_1_1?crid=YF687N53959K&amp;amp;keywords=learning+go&amp;amp;qid=1659346533&amp;amp;sprefix=learning+go%2Caps%2C102&amp;amp;sr=8-1&#34;&gt;Learning Go&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; &lt;a href=&#34;https://www.amazon.com/Learning-Go-Idiomatic-Real-World-Programming/dp/1492077216/ref=sr_1_1?crid=YF687N53959K&amp;amp;keywords=learning+go&amp;amp;qid=1659346533&amp;amp;sprefix=learning+go%2Caps%2C102&amp;amp;sr=8-1&#34;&gt;Powerful Command-Line Applications in Go&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; &lt;a href=&#34;https://www.amazon.com/Systems-Performance-Brendan-Gregg/dp/0136820158/ref=sr_1_1?crid=1ESL437096HOM&amp;amp;keywords=systems+performance+gregg&amp;amp;qid=1702331347&amp;amp;s=books&amp;amp;sprefix=systems+performance%2Cstripbooks%2C118&amp;amp;sr=1-1&#34;&gt;Systems Performance&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; &lt;a href=&#34;https://www.amazon.com/Attacking-Network-Protocols-Analysis-Exploitation/dp/1593277504/ref=sr_1_1?crid=IT9LI4I7XLO4&amp;amp;keywords=attacking+network+protocols&amp;amp;qid=1702331327&amp;amp;s=books&amp;amp;sprefix=attacking+network+prot%2Cstripbooks%2C119&amp;amp;sr=1-1&#34;&gt;Attacking Network Protocols&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; &lt;a href=&#34;https://www.amazon.com/Dive-Into-Systems-Introduction-Computer/dp/1718501366&#34;&gt;Dive Into Systems&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;finished&#34; &gt;Finished
 &lt;span&gt;
@@ -3559,6 +3900,9 @@ the RPC services were running. So what now?? I fired up NMAP on ServerB and did 
     &lt;/a&gt;
 &lt;/span&gt;
 &lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; &lt;a href=&#34;https://www.amazon.com/How-Linux-Works-Brian-Ward/dp/1718500408/ref=sr_1_1?crid=1VMED792IBVXJ&amp;amp;keywords=how+linux+works&amp;amp;qid=1672841276&amp;amp;s=books&amp;amp;sprefix=how+linux+work%2Cstripbooks%2C92&amp;amp;sr=1-1&#34;&gt;How Linux Works&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; &lt;a href=&#34;https://www.amazon.com/Learning-Go-Idiomatic-Real-World-Programming/dp/1492077216/ref=sr_1_1?crid=YF687N53959K&amp;amp;keywords=learning+go&amp;amp;qid=1659346533&amp;amp;sprefix=learning+go%2Caps%2C102&amp;amp;sr=8-1&#34;&gt;Learning Go&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; &lt;a href=&#34;https://www.amazon.com/Learning-Go-Idiomatic-Real-World-Programming/dp/1492077216/ref=sr_1_1?crid=YF687N53959K&amp;amp;keywords=learning+go&amp;amp;qid=1659346533&amp;amp;sprefix=learning+go%2Caps%2C102&amp;amp;sr=8-1&#34;&gt;Powerful Command-Line Applications in Go&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; &lt;a href=&#34;https://www.amazon.com/Microservices-Second-Christian-Horsdal-Gammelgaard/dp/1617297925/ref=sr_1_2_sspa?crid=QPYAG2EFADPZ&amp;amp;keywords=microservices+in+.net&amp;amp;qid=1659346935&amp;amp;s=digital-text&amp;amp;sprefix=microservices+in+.ne%2Cdigital-text%2C73&amp;amp;sr=1-2-spons&amp;amp;psc=1&amp;amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzTFFTTVdJNjA0V1FCJmVuY3J5cHRlZElkPUEwNDU1MTc3MlE1VENVUEdQSVVCVSZlbmNyeXB0ZWRBZElkPUEwOTk5NzAwU0lOUUlWMzBEVTNNJndpZGdldE5hbWU9c3BfYXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==&#34;&gt;Microservices in .NET&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; &lt;a href=&#34;https://www.amazon.com/Kubernetes-Patterns-Designing-Cloud-Native-Applications-ebook/dp/B07QH3JCC6/ref=sr_1_1?keywords=kubernetes+patterns&amp;amp;qid=1659346980&amp;amp;s=digital-text&amp;amp;sprefix=kubernetes+patt%2Cdigital-text%2C83&amp;amp;sr=1-1&#34;&gt;Kubernetes Patterns&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; &lt;a href=&#34;https://www.amazon.com/10-NET-Cross-Platform-Development-websites/dp/1801077363/ref=sr_1_1?keywords=c%23+10+and+.net+6&amp;amp;qid=1659346562&amp;amp;sprefix=c%23+10+and+.net+%2Caps%2C81&amp;amp;sr=8-1&#34;&gt;C# 10 and .NET 6&lt;/a&gt;&lt;/li&gt;

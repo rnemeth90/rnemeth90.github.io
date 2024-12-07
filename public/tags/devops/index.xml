@@ -1,15 +1,88 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>devops on GeekyRyan</title>
+    <title>Devops on GeekyRyan</title>
     <link>https://rnemeth90.github.io/tags/devops/</link>
-    <description>GeekyRyan (devops)</description>
+    <description>GeekyRyan (Devops)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 15 Aug 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 29 Jun 2024 00:00:00 +0000</lastBuildDate>
     
     <atom:link href="https://rnemeth90.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Mounting Multiple Kubernetes Secrets into One Directory</title>
+      <link>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</link>
+      <pubDate>Sat, 29 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</guid>
+      <description>&lt;h1 id=&#34;introduction&#34; &gt;Introduction
+&lt;span&gt;
+    &lt;a href=&#34;#introduction&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;Combining multiple Kubernetes secrets into a single directory can streamline secret management in your applications. This guide walks you through the process of achieving this in Kubernetes, ensuring efficient and organized secret management.&lt;/p&gt;
+&lt;h1 id=&#34;creating-secrets&#34; &gt;Creating Secrets
+&lt;span&gt;
+    &lt;a href=&#34;#creating-secrets&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;First, create your secrets using the &lt;code&gt;kubectl create secret&lt;/code&gt; command:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl create secret generic secret-one --from-literal=key1=value1
+kubectl create secret generic secret-two --from-literal=key2=value2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Each secret can contain multiple key-value pairs, and you can add more secrets as needed.&lt;/p&gt;
+&lt;h1 id=&#34;configuring-the-pod&#34; &gt;Configuring the Pod
+&lt;span&gt;
+    &lt;a href=&#34;#configuring-the-pod&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;Next, define the pod configuration to mount these secrets into a single directory. Here’s an example configuration:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mycontainer
+    image: myimage
+    volumeMounts:
+    - name: secret-volume1
+      mountPath: &amp;#34;/etc/secrets/secret-one&amp;#34;
+      subPath: key1
+    - name: secret-volume2
+      mountPath: &amp;#34;/etc/secrets/secret-two&amp;#34;
+      subPath: key2
+  volumes:
+  - name: secret-volume1
+    secret:
+      secretName: secret-one
+  - name: secret-volume2
+    secret:
+      secretName: secret-two
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;detailed-explanation&#34; &gt;Detailed Explanation
+&lt;span&gt;
+    &lt;a href=&#34;#detailed-explanation&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;Volume Mounts: The &lt;code&gt;volumeMounts&lt;/code&gt; section specifies where the secrets will be mounted within the container&amp;rsquo;s file system. By using the &lt;code&gt;subPath&lt;/code&gt; property, you can place each secret&amp;rsquo;s content into a specific file within the target directory.&lt;/li&gt;
+&lt;li&gt;Volumes: The volumes section links each volume to a Kubernetes secret. This ensures that the secrets are available to the container at runtime.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In this example, secret-one and secret-two are mounted into &lt;code&gt;/etc/secrets/secret-one&lt;/code&gt; and &lt;code&gt;/etc/secrets/secret-two&lt;/code&gt;, respectively. The &lt;code&gt;subPath&lt;/code&gt; ensures that each key-value pair from the secrets is mapped to a separate file within the specified directory.&lt;/p&gt;
+&lt;h1 id=&#34;conclusion&#34; &gt;Conclusion
+&lt;span&gt;
+    &lt;a href=&#34;#conclusion&#34;&gt;
+        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
+    &lt;/a&gt;
+&lt;/span&gt;
+&lt;/h1&gt;&lt;p&gt;By mounting secrets into subdirectories using the &lt;code&gt;subPath&lt;/code&gt; property, you can effectively manage multiple secrets within a single directory. This method enhances organization and accessibility, making it easier to handle secrets in your Kubernetes applications.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Using try/catch/finally Blocks in PowerShell</title>
