@@ -3,7 +3,7 @@ title: 'Kubernetes Health Probing in Dotnet Console Apps'
 author: Ryan
 date: '2024-12-05'
 layout: post
-draft: true
+draft: false
 categories:
   - Kubernetes
 tags:
@@ -15,11 +15,14 @@ tags:
 
 # Introduction
 
-This post covers a simple and efficient solution for implementing liveness probes in pods running console applications (think background services or utility DaemonSets). A common question in Kubernetes forums is:
+This post covers a simple and efficient solution for implementing liveness probes in pods running console applications (think background services or utility DaemonSets). A common question I see in Kubernetes forums is:
 
     “How do I use health probes with console apps?”
 
-The typical responses often suggest: 1. Sidecar Container with HTTP Server: Requires coding the server, building a sidecar container, and managing additional infrastructure. While effective, this can be overkill for lightweight applications. 2. Exec Probes with Shell Scripts: Feels hacky and can waste resources, depending on what the script does.
+The typical responses often suggest:
+
+1. Sidecar Container with HTTP Server: Requires coding the server, building a sidecar container, and managing additional infrastructure. While effective, this can be overkill for lightweight applications.
+2. Exec Probes with Shell Scripts: Feels hacky and can waste resources, depending on what the script does.
 
 Pods are meant to be lightweight, and both solutions can deviate from that principle.
 
@@ -36,7 +39,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        int port = 6379; // You can run this on a different port if necessary
+        int port = 666; // You can run this on a different port if necessary
 
         Thread tcpServerThread = new Thread(() => StartTcpServer(port));
         tcpServerThread.IsBackground = true;
@@ -90,4 +93,14 @@ class Program
 }
 ```
 
-You can learn more about health probes here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+The StartTcpServer() method starts a simple TCP server in a thread running concurrent to the main thread. Use a `tcpSocket` liveness probe in your Kubernetes manifest. Kubernetes will then attempt to establish a TCP connection at configured intervals. You can test it by doing the same, or using a tool like `netcat`:
+
+```
+echo "ping" | nc localhost 666
+```
+
+'pong' should be returned.
+
+Simply add this TCP server to your application and then configure the liveness probe. Examples can be found in the Kubernetes docs linked below.
+
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
