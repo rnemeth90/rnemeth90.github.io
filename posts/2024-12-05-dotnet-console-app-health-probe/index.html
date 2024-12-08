@@ -1,0 +1,105 @@
+<!doctype html><html lang=en><head><title>Kubernetes Health Probing in Dotnet Console Apps · GeekyRyan
+</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><meta name=author content="Ryan Nemeth"><meta name=description content="
+  Introduction
+  
+    
+    Link to heading
+  
+
+This post covers a simple and efficient solution for implementing liveness probes in pods running console applications (think background services or utility DaemonSets). A common question I see in Kubernetes forums is:
+“How do I use health probes with console apps?”
+
+The typical responses often suggest:
+
+Sidecar Container with HTTP Server: Requires coding the server, building a sidecar container, and managing additional infrastructure. While effective, this can be overkill for lightweight applications.
+Exec Probes with Shell Scripts: Feels hacky and can waste resources, depending on what the script does.
+
+Pods are meant to be lightweight, and both solutions can deviate from that principle."><meta name=keywords content="blog,developer,personal,devops"><meta name=twitter:card content="summary"><meta name=twitter:title content="Kubernetes Health Probing in Dotnet Console Apps"><meta name=twitter:description content="Introduction Link to heading This post covers a simple and efficient solution for implementing liveness probes in pods running console applications (think background services or utility DaemonSets). A common question I see in Kubernetes forums is:
+“How do I use health probes with console apps?” The typical responses often suggest:
+Sidecar Container with HTTP Server: Requires coding the server, building a sidecar container, and managing additional infrastructure. While effective, this can be overkill for lightweight applications. Exec Probes with Shell Scripts: Feels hacky and can waste resources, depending on what the script does. Pods are meant to be lightweight, and both solutions can deviate from that principle."><meta property="og:url" content="https://rnemeth90.github.io/posts/2024-12-05-dotnet-console-app-health-probe/"><meta property="og:site_name" content="GeekyRyan"><meta property="og:title" content="Kubernetes Health Probing in Dotnet Console Apps"><meta property="og:description" content="Introduction Link to heading This post covers a simple and efficient solution for implementing liveness probes in pods running console applications (think background services or utility DaemonSets). A common question I see in Kubernetes forums is:
+“How do I use health probes with console apps?” The typical responses often suggest:
+Sidecar Container with HTTP Server: Requires coding the server, building a sidecar container, and managing additional infrastructure. While effective, this can be overkill for lightweight applications. Exec Probes with Shell Scripts: Feels hacky and can waste resources, depending on what the script does. Pods are meant to be lightweight, and both solutions can deviate from that principle."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-12-05T00:00:00+00:00"><meta property="article:modified_time" content="2024-12-05T00:00:00+00:00"><meta property="article:tag" content="Devops"><meta property="article:tag" content="Software Development"><meta property="article:tag" content="Dotnet"><meta property="article:tag" content="Sre"><link rel=canonical href=https://rnemeth90.github.io/posts/2024-12-05-dotnet-console-app-health-probe/><link rel=preload href=/fonts/fa-brands-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-regular-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-solid-900.woff2 as=font type=font/woff2 crossorigin><link rel=stylesheet href=/css/coder.min.ed30115a76cdaa62f2229e973d5b1c89b2d3dd4b1d9c07a729baad06aa3b0cbe.css integrity="sha256-7TARWnbNqmLyIp6XPVscibLT3UsdnAenKbqtBqo7DL4=" crossorigin=anonymous media=screen><link rel=stylesheet href=/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin=anonymous media=screen><link rel=icon type=image/svg+xml href=/images/favicon.svg sizes=any><link rel=icon type=image/png href=/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/images/favicon-16x16.png sizes=16x16><link rel=apple-touch-icon href=/images/apple-touch-icon.png><link rel=apple-touch-icon sizes=180x180 href=/images/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/images/safari-pinned-tab.svg color=#5bbad5></head><body class="preload-transitions colorscheme-auto"><div class=float-container><a id=dark-mode-toggle class=colorscheme-toggle><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></a></div><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=https://rnemeth90.github.io/>GeekyRyan
+</a><input type=checkbox id=menu-toggle>
+<label class="menu-button float-right" for=menu-toggle><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=/about/>About</a></li><li class=navigation-item><a class=navigation-link href=/posts/>Blog</a></li><li class=navigation-item><a class=navigation-link href=/projects/>Projects</a></li><li class=navigation-item><a class=navigation-link href=/tags/>Tags</a></li></ul></section></nav><div class=content><section class="container post"><article><header><div class=post-title><h1 class=title><a class=title-link href=https://rnemeth90.github.io/posts/2024-12-05-dotnet-console-app-health-probe/>Kubernetes Health Probing in Dotnet Console Apps</a></h1></div><div class=post-meta><div class=date><span class=posted-on><i class="fa-solid fa-calendar" aria-hidden=true></i>
+<time datetime=2024-12-05T00:00:00Z>2024-12-05
+</time></span><span class=reading-time><i class="fa-solid fa-clock" aria-hidden=true></i>
+2-minute read</span></div><div class=categories><i class="fa-solid fa-folder" aria-hidden=true></i>
+<a href=/categories/kubernetes/>Kubernetes</a></div><div class=tags><i class="fa-solid fa-tag" aria-hidden=true></i>
+<span class=tag><a href=/tags/devops/>Devops</a>
+</span><span class=separator>•</span>
+<span class=tag><a href=/tags/software-development/>Software Development</a>
+</span><span class=separator>•</span>
+<span class=tag><a href=/tags/dotnet/>Dotnet</a>
+</span><span class=separator>•</span>
+<span class=tag><a href=/tags/sre/>Sre</a></span></div></div></header><div class=post-content><h1 id=introduction>Introduction
+<a class=heading-link href=#introduction><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h1><p>This post covers a simple and efficient solution for implementing liveness probes in pods running console applications (think background services or utility DaemonSets). A common question I see in Kubernetes forums is:</p><pre><code>“How do I use health probes with console apps?”
+</code></pre><p>The typical responses often suggest:</p><ol><li>Sidecar Container with HTTP Server: Requires coding the server, building a sidecar container, and managing additional infrastructure. While effective, this can be overkill for lightweight applications.</li><li>Exec Probes with Shell Scripts: Feels hacky and can waste resources, depending on what the script does.</li></ol><p>Pods are meant to be lightweight, and both solutions can deviate from that principle.</p><p>Instead, we’ll use a simple TCP listener to create an efficient liveness probe. Here’s the code:</p><pre tabindex=0><code>using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        int port = 666; // You can run this on a different port if necessary
+
+        Thread tcpServerThread = new Thread(() =&gt; StartTcpServer(port));
+        tcpServerThread.IsBackground = true;
+        tcpServerThread.Start();
+
+        Console.WriteLine(&#34;Application is running...&#34;);
+        while (true)
+        {
+            // do some work
+            Thread.Sleep(1000);
+        }
+    }
+
+    static void StartTcpServer(int port)
+    {
+        TcpListener server = null;
+
+        try
+        {
+            server = new TcpListener(IPAddress.Any, port);
+            server.Start();
+            Console.WriteLine($&#34;Liveness server started on port {port}.&#34;);
+
+            while (true)
+            {
+                TcpClient client = server.AcceptTcpClient();
+                NetworkStream stream = client.GetStream();
+
+                byte[] buffer = new byte[256];
+                int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                string request = Encoding.ASCII.GetString(buffer, 0, bytesRead).Trim();
+
+                if (request.Equals(&#34;ping&#34;, StringComparison.OrdinalIgnoreCase))
+                {
+                    byte[] response = Encoding.ASCII.GetBytes(&#34;pong\n&#34;);
+                    stream.Write(response, 0, response.Length);
+                }
+
+                client.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($&#34;Error in liveness server: {ex.Message}&#34;);
+        }
+        finally
+        {
+            server?.Stop();
+        }
+    }
+}
+</code></pre><p>The StartTcpServer() method starts a simple TCP server in a thread running concurrent to the main thread. Use a <code>tcpSocket</code> liveness probe in your Kubernetes manifest. Kubernetes will then attempt to establish a TCP connection at configured intervals. You can test it by doing the same, or using a tool like <code>netcat</code>:</p><pre tabindex=0><code>echo &#34;ping&#34; | nc localhost 666
+</code></pre><p>&lsquo;pong&rsquo; should be returned.</p><p>Simply add this TCP server to your application and then configure the liveness probe. Examples can be found in the Kubernetes docs linked below.</p><p><a href=https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/ class=external-link target=_blank rel=noopener>https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/</a></p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
+2012 -
+2024
+Ryan Nemeth
+·
+Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>
