@@ -3,144 +3,45 @@
   <channel>
     <title>Vmware on GeekyRyan</title>
     <link>http://localhost:1313/tags/vmware/</link>
-    <description>GeekyRyan (Vmware)</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <description>Recent content in Vmware on GeekyRyan</description>
+    <generator>Hugo</generator>
+    <language>en</language>
     <lastBuildDate>Sat, 31 Oct 2020 01:22:00 +0000</lastBuildDate>
-    
     <atom:link href="http://localhost:1313/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
-    
-    
     <item>
       <title>Reset GRUB/root Password for vCenter/PSC Appliance</title>
       <link>http://localhost:1313/posts/2020-10-31-reset-grubroot-password-for-vcenterpsc/</link>
       <pubDate>Sat, 31 Oct 2020 01:22:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2020-10-31-reset-grubroot-password-for-vcenterpsc/</guid>
-      <description>&lt;p&gt;In Redhat/Fedora/Cent, GRUB can be protected by running the grub-md5-crypt command and pasting the outputted password hash into the grub.conf file. vSphere 6.0 password protects grub by default. If you change the root password in the VAMI, the GRUB password is changed to match. If you do not change the root password, the GRUB password is “vmware”.&lt;/p&gt;
-&lt;p&gt;To reset the GRUB password, we need to boot into a Cent or Redhat live CD. The ISO can be obtained here: &lt;a href=&#34;https://www.centos.org/download/&#34;&gt;https://www.centos.org/download/&lt;/a&gt;. Its best to upload the ISO to a datastore that the appliance has access to.&lt;/p&gt;
-&lt;p&gt;Stop the appliance and attach the ISO:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/image.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Be sure to select the “Connect at Power On” option. Boot the VM into the ISO and select the “Troubleshooting” option.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/image-1.png&#34; alt=&#34;&#34;&gt;
-Next, choose “Rescure a Red hat (or CentOS depending on your ISO) Enterprise Linux System”&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/image-2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Select “Continue” to mount the VCSA 6.0’s root filesystem in Read/write mode under /mnt/sysimage. RHEL 7.2 is capable to detect the VCSA’s root volume and mounts it.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/image-3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;The VCSA root filesystem is mounted under /mnt/sysimage and you can now access (and modify) it using the shell. Navigate to /mnt/sysimage/boot and list the contents. You’ll see we now have access to the grub directory:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/image-4.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;cd to the grub directory and list the contents. Look for a file called “menu.lst”. This file holds the grub boot loader password. Open this file with vi by typing “vi menu.lst”. Navigate to the line beginning with “password” using the arrow keys, and then type “dd” to remove the line.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/image-5.png&#34; alt=&#34;&#34;&gt;
-You can then save the file by pressing “:wq” (without quotes). You can now cat the file and see that the password has been removed.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/image-6.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Exit the shell (this will reboot the server). Detach the ISO and boot the appliance. Once the system is booted, stop the VCSA in the GRUB menu (by pressing the escape key during boot) to break the OS root password.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/image-7.png&#34;&gt;&lt;/a&gt;
-Press “e” to edit the boot commands for the kernel.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/image-8.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Append “init=/bin/bash” to the line in this step and press enter.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/image-9.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Press “b” to boot the system.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/image-10.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;You will now boot into a bash shell where you can set the root password.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/image-11.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Once this is done, exit the shell by typing “exit”. You can now boot the appliance and login with your new root password.&lt;/p&gt;
-</description>
+      <description>In Redhat/Fedora/Cent, GRUB can be protected by running the grub-md5-crypt command and pasting the outputted password hash into the grub.conf file. vSphere 6.0 password protects grub by default. If you change the root password in the VAMI, the GRUB password is changed to match. If you do not change the root password, the GRUB password is “vmware”.&#xA;To reset the GRUB password, we need to boot into a Cent or Redhat live CD.</description>
     </item>
-    
     <item>
       <title>Could not connect to VMware Directory Service via LDAP when Deploying New vCenter Appliance</title>
       <link>http://localhost:1313/posts/2020-10-28-could-not-connect-to-vmware-directory/</link>
       <pubDate>Wed, 28 Oct 2020 13:51:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2020-10-28-could-not-connect-to-vmware-directory/</guid>
-      <description>&lt;p&gt;Problem:&lt;/p&gt;
-&lt;p&gt;Deploying a brand new vCSA 6.7 appliance results in the following error during the second stage of the deployment.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/2020-10-28_07h29_02.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/2020-10-28_07h29_02.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;span style=&#34;text-align: left;&#34;&gt; &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Solution:&lt;/p&gt;
-&lt;p&gt;This problem is almost always caused by DNS resolution. Once you create the appropriate A and PTR record for your appliance on a LOCAL DNS server, you should be to successfully complete the deployment. Local DNS resolution is required, you cannot use a public DNS server while installing vCenter. For example, 8.8.8.8 will not work.&lt;/p&gt;
-&lt;p&gt;Since you have already completed Stage 1 of the deployment, you can login to the appliance via SSH and update the DNS settings. This will only work if you chose to enable SSH during Stage 2 of the deployment.&lt;/p&gt;
-&lt;p&gt;SSH to the appliance and run “/opt/vmware/share/vami/vami_config_net” (without quotes). Choose option 4 to update DNS settings and option 3 to update the hostname (if necessary). The deployment wizard states that a hostname is optional, but it is actually required. I have never had a successful deployment without specifying the hostname.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/2020-10-28_07h33_18.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/2020-10-28_07h33_18.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;You can then verify the DNS settings have been updated in the resolve.conf:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/2020-10-28_07h33_57.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/2020-10-28_07h33_57.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/2020-10-28_08h47_36.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/10/2020-10-28_08h47_36.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-</description>
+      <description>Problem:&#xA;Deploying a brand new vCSA 6.7 appliance results in the following error during the second stage of the deployment.&#xA;Solution:&#xA;This problem is almost always caused by DNS resolution. Once you create the appropriate A and PTR record for your appliance on a LOCAL DNS server, you should be to successfully complete the deployment. Local DNS resolution is required, you cannot use a public DNS server while installing vCenter. For example, 8.</description>
     </item>
-    
     <item>
       <title>Azure Site Recovery &amp;#8211; VMware-to-Azure: Wrong IP address discovered for VM</title>
       <link>http://localhost:1313/posts/2018-08-21-azure-site-recovery-vmware-to-azure/</link>
       <pubDate>Tue, 21 Aug 2018 17:26:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2018-08-21-azure-site-recovery-vmware-to-azure/</guid>
-      <description>&lt;p&gt;When replicating virtual machines from VMware to Azure using Site Recovery, you may encounter an issue where the Configuration server discovers the wrong IP address for a VM. This can be caused by stale entries within the infrastructurevms MySQL table that is used by ASR to track VM attributes.&lt;/p&gt;
-&lt;p&gt;To resolve this issue, you first need to disable replication for the VM in the Azure Portal.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/08/2018-08-21_13h20_26.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/08/2018-08-21_13h20_26.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Next, login to your ASR Configuration Server and open a CMD prompt as administrator. Browse to the bin directory for your ASR installation. For example, in my case ASR is installed on the E: partition under the following directory:&lt;/p&gt;
-&lt;p&gt;E:\Program Files (x86)Microsoft Azure Site Recoveryhomesvsystemsbin&lt;/p&gt;
-&lt;p&gt;Type in this command to remove the VM from the ASR database (replace IP address with the IP of your VM):&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-perl&#34; data-lang=&#34;perl&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;perl Unregister&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;ASRComponent&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;pl &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;IPAddress &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.0.4&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;Component Source
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That’s it. You should now be able to reconfigure replication for the VM, and ASR will discover the correct info about the VM.&lt;/p&gt;
-</description>
+      <description>When replicating virtual machines from VMware to Azure using Site Recovery, you may encounter an issue where the Configuration server discovers the wrong IP address for a VM. This can be caused by stale entries within the infrastructurevms MySQL table that is used by ASR to track VM attributes.&#xA;To resolve this issue, you first need to disable replication for the VM in the Azure Portal.&#xA;Next, login to your ASR Configuration Server and open a CMD prompt as administrator.</description>
     </item>
-    
     <item>
       <title>Remove Stubborn PSC or vCenter Appliance from an SSO Domain</title>
       <link>http://localhost:1313/posts/2017-11-08-remove-stubborn-psc-or-vcenter/</link>
       <pubDate>Wed, 08 Nov 2017 07:56:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2017-11-08-remove-stubborn-psc-or-vcenter/</guid>
-      <description>&lt;p&gt;While attempting to decommission one of our vCenter sites, I ran into an issue removing one of the PSCs. This site consisted of two PSCs and one vCenter appliance. I removed the first PSC from the SSO domain successfully, and then removed the vCenter appliance. Things became a little tricky during the removal of the final PSC. This PSC did not get removed even after running the cmsso-util command. This article will detail the steps I took in decommissioning the site, as well as removing the stubborn PSC.&lt;/p&gt;
-&lt;p&gt;First, we need to check if vCenter is currently using the PSC we plan on decommissioning. If it is, we need to use the cmsso-util command to redirect vCenter to a different PSC. Instructions for redirecting vCenter can be found here: &lt;a href=&#34;https://kb.vmware.com/s/article/2113917?language=en_US&#34;&gt;https://kb.vmware.com/s/article/2113917?language=en_US&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;To check what PSC your vCSA is currently pointing to, browse to the Advanced Settings for the vCSA in the vSphere Web Client. Filter by this key: config.vpxd.sso.admin.uri&lt;/p&gt;
-&lt;p&gt;To remove a PSC or vCSA from an SSO domain, connect to a PSC via SSH and run these commands:&lt;/p&gt;
-&lt;p&gt;To remove a PSC from the vSphere SSO domain:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cmsso-util unregister –node-pnid psc01.ad.vcplab.local –username administrator@your&lt;span style=&#34;color:#ae81ff&#34;&gt;\_&lt;/span&gt;domain&lt;span style=&#34;color:#ae81ff&#34;&gt;\_&lt;/span&gt;name –passwd vCenter&lt;span style=&#34;color:#ae81ff&#34;&gt;\_&lt;/span&gt;Single&lt;span style=&#34;color:#ae81ff&#34;&gt;\_&lt;/span&gt;Sign&lt;span style=&#34;color:#ae81ff&#34;&gt;\_&lt;/span&gt;On&lt;span style=&#34;color:#ae81ff&#34;&gt;\_&lt;/span&gt;password
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To remove a vCSA from the vSphere SSO domain:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cmsso-util unregister –node-pnid vcsa.ad.vcplab.local –username administrator@your&lt;span style=&#34;color:#ae81ff&#34;&gt;\_&lt;/span&gt;domain&lt;span style=&#34;color:#ae81ff&#34;&gt;\_&lt;/span&gt;name –passwd vCenter&lt;span style=&#34;color:#ae81ff&#34;&gt;\_&lt;/span&gt;Single&lt;span style=&#34;color:#ae81ff&#34;&gt;\_&lt;/span&gt;Sign&lt;span style=&#34;color:#ae81ff&#34;&gt;\_&lt;/span&gt;On&lt;span style=&#34;color:#ae81ff&#34;&gt;\_&lt;/span&gt;password
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After running these commands, delete the virtual appliances. You can also verify the appliances have been removed by browsing to Administration &amp;gt; System Configuration &amp;gt; Nodes in the vSphere Web Client.&lt;/p&gt;
-&lt;p&gt;If cmsso-util fails to remove any of the nodes, you can use this command to force the removal:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;vdcleavefed -h vcsa.ad.vcplab.local -u Administrator -w Passw0rd!
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Upon successful completion, you should see something like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/usr/lib/vmware-vmdir/bin/vdcleavefed -h vcsa.ad.vcplab.local -u administrator* password:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;vdcleavefd offline &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; server vcsa.ad.vcplab.local
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Leave federation cleanup &lt;span style=&#34;color:#66d9ef&#34;&gt;done&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When specifying the username, use the SSO admin (administrator). However, do not use the full UPN (&lt;a href=&#34;mailto:administrator@vsphere.local&#34;&gt;administrator@vsphere.local&lt;/a&gt;). Doing so will cause the command to fail.&lt;/p&gt;
-</description>
+      <description>While attempting to decommission one of our vCenter sites, I ran into an issue removing one of the PSCs. This site consisted of two PSCs and one vCenter appliance. I removed the first PSC from the SSO domain successfully, and then removed the vCenter appliance. Things became a little tricky during the removal of the final PSC. This PSC did not get removed even after running the cmsso-util command. This article will detail the steps I took in decommissioning the site, as well as removing the stubborn PSC.</description>
     </item>
-    
     <item>
       <title>Running vSphere in VMware Workstation 12</title>
       <link>http://localhost:1313/posts/2017-05-29-running-vsphere-in-vmware-workstation-12/</link>
       <pubDate>Mon, 29 May 2017 01:09:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2017-05-29-running-vsphere-in-vmware-workstation-12/</guid>
-      <description>&lt;p&gt;In this post I’ll be walking through how to run a vSphere lab in VMware Workstation. I recently decided to obtain VCP6-DCV. Rather than driving up my electric bill like I’ve done in the past using physical servers, I’m attempting to run the entire lab on my workstation and a Synology NAS.&lt;/p&gt;
-&lt;p&gt;If you’ve ever installed ESXi, installing it in Workstation will be a familiar process for you. VMware tools is included in the installation disc, which makes installing ESXi in Workstation dramatically easier than it used to be. . The process is very simple, so I won’t be going through those steps here unless someone asks me to in the comments. I also will not be going through the process of installing Windows Server or configuring a domain controller/DNS/DHCP, as I am sure you have done so in the past if you are reading this.&lt;/p&gt;
-&lt;p&gt;So that really only leaves us with installing vCenter. Most of the blogs I found for installing vCenter in VMware Workstation 12 were not accurate, and often left me with a broken installation. The process is somewhat straight-forward when deploying from the OVA. Let’s get started.&lt;/p&gt;
-&lt;p&gt;First, download the OVA for vCenter here: &lt;a href=&#34;https://my.vmware.com/web/vmware/details?productId=614&amp;amp;downloadGroup=VC650&#34;&gt;Download vCenter&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Once the download has completed, click File &amp;gt; Open in Workstation. Browse to the OVA, then give your new VM a name and location if necessary. Accept the EULA when prompted.&lt;/p&gt;
-&lt;p&gt;Be sure to read it! 😎&lt;/p&gt;
-&lt;p&gt;Once the OVA finishes importing, do not power on the VM! There is some customization we need to do first. Close Workstation if it is open. Browse to the location on your PC that you imported the VM to. I’m using a Windows OS, so I will use File Explorer. Open the .VMX file (use Notepad or another text editor):&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-28_21h00_04.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-28_21h00_04.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;This is the configuration file for your virtual machine. We can use it to customize the name, IPv4/6 details, DNS domain, etc. Scroll down to the last line of text, and paste this in:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;guestinfo.cis.vmdir.password &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; “vmware!”
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;guestinfo.cis.appliance.net.addr.family &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; “ipv4”
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;guestinfo.cis.appliance.net.addr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; “10.0.0.15”
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;guestinfo.cis.appliance.net.prefix &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; “24”
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;guestinfo.cis.appliance.net.mode &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; “static”
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;guestinfo.cis.appliance.net.dns.servers &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; “10.0.0.10”
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;guestinfo.cis.appliance.net.gateway &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; “10.0.0.1”
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;guestinfo.cis.appliance.root.passwd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; “vmware!”
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Customize the above code to your needs. You will likely need to change the IPv4 details. Save the .VMX file and close your text editor. Now you can power on the virtual machine, and vCenter will run through the installation process. The installation can take around 10-15 minute in my experience. You may see generic login screens during the installation of Photon, do not login or interrupt the installation. Once it is complete, you should see the DCUI below:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h11_00.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h11_00.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;You should now be able to browse to the IP address or DNS name of your vCenter server. Once you complete the configuration, you can login and see the page below:
-&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h10_39.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h10_39.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;In my lab I am running 3 ESXi hosts, 1 Windows Server, and one vCenter server. Plenty to study for the VCP lab.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h11_31.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h11_31.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Good luck and be sure to leave a comment if you have any questions!&lt;/p&gt;
-</description>
+      <description>In this post I’ll be walking through how to run a vSphere lab in VMware Workstation. I recently decided to obtain VCP6-DCV. Rather than driving up my electric bill like I’ve done in the past using physical servers, I’m attempting to run the entire lab on my workstation and a Synology NAS.&#xA;If you’ve ever installed ESXi, installing it in Workstation will be a familiar process for you. VMware tools is included in the installation disc, which makes installing ESXi in Workstation dramatically easier than it used to be.</description>
     </item>
-    
   </channel>
 </rss>

@@ -3,28 +3,17 @@
   <channel>
     <title>VMSS on GeekyRyan</title>
     <link>http://localhost:1313/tags/vmss/</link>
-    <description>GeekyRyan (VMSS)</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <description>Recent content in VMSS on GeekyRyan</description>
+    <generator>Hugo</generator>
+    <language>en</language>
     <lastBuildDate>Thu, 19 Nov 2020 18:07:00 +0000</lastBuildDate>
-    
     <atom:link href="http://localhost:1313/tags/vmss/index.xml" rel="self" type="application/rss+xml" />
-    
-    
     <item>
       <title>Azure VM Scale Set &amp;#8211; Get Instance IP Address</title>
       <link>http://localhost:1313/posts/2020-11-19-azure-vm-scale-set-get-instance-ip/</link>
       <pubDate>Thu, 19 Nov 2020 18:07:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2020-11-19-azure-vm-scale-set-get-instance-ip/</guid>
-      <description>&lt;p&gt;If you are using VM Scale Sets in Azure, you know how important it can be to quickly obtain an instance IP address. This can of course be done using the Azure Portal. However, I am often working in a shell or VSCode, and I do not want to leave the comfort of my shell to login to the portal.&lt;/p&gt;
-&lt;p&gt;There are a few options we have for retrieving information about a VMSS and its instances without using the Azure Portal. We can use PowerShell or the Azure CLI. Being that I am constantly flipping between Windows and Linux, I will detail both here.&lt;/p&gt;
-&lt;p&gt;You will need to have the AZ module installed. To install this module, simple open PowerShell (as admin) and type in “Install-Module -Name az”. To get the IP address of the instances within a scale set, use the following script:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/rnemeth90/Get-VmssInstanceIpAddress&#34;&gt;https://github.com/rnemeth90/Get-VmssInstanceIpAddress&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;You can also use the Azure CLI to obtain individual instance IP addresses. This method is much simpler than PowerShell, and only requires one line of code:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;az vmss nic list –resource-group myResourceGroup –vmss-name myVmss | grep –w “privateIpAddress”
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+      <description>If you are using VM Scale Sets in Azure, you know how important it can be to quickly obtain an instance IP address. This can of course be done using the Azure Portal. However, I am often working in a shell or VSCode, and I do not want to leave the comfort of my shell to login to the portal.&#xA;There are a few options we have for retrieving information about a VMSS and its instances without using the Azure Portal.</description>
     </item>
-    
   </channel>
 </rss>

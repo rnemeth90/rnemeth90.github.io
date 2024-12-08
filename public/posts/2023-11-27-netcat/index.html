@@ -1,90 +1,32 @@
 <!DOCTYPE html>
+<html lang="en">
 
-
-<html lang="en-us" data-theme="">
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
-    
-        
-<meta charset="utf-8">
-<meta name="HandheldFriendly" content="True">
+  <title>
+  Exploring Netcat · GeekyRyan
+</title>
+  <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="referrer" content="no-referrer-when-downgrade">
-
-<title>Exploring Netcat - GeekyRyan</title>
-
-<meta name="description" content="Introduction Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the &ldquo;network swiss-army knife&rdquo;. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed.">
+<meta name="color-scheme" content="light dark">
 
 
 
 
-
-<link rel="icon" type="image/x-icon" href="http://localhost:1313/favicon.ico">
-<link rel="apple-touch-icon-precomposed" href="http://localhost:1313/favicon.png">
-
-
-<style>
-  body {
-    visibility: hidden;
-    opacity: 0;
-  }
-</style>
-
-<noscript>
-  <style>
-    body {
-      visibility: visible;
-      opacity: 1;
-    }
-  </style>
-</noscript>
+<meta name="author" content="Ryan Nemeth">
+<meta name="description" content="Introduction Link to heading Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the &ldquo;network swiss-army knife&rdquo;. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar.">
+<meta name="keywords" content="blog,developer,personal,devops">
 
 
 
-    
-
-
-
-
-
-    
-    
-    
-
-    
-        <link rel="stylesheet" href="http://localhost:1313/css/style.779ec8e6902530eb27b55bc5845f86cfa59dc8ffedf4c6fdc6377c90b514db02.css" integrity="sha256-d57I5pAlMOsntVvFhF&#43;Gz6WdyP/t9Mb9xjd8kLUU2wI=">
-    
-
-
-
-
-
-    
-
-    
-
-
-
-
-
-    
-    
-    
-
-    
-        <script src="http://localhost:1313/js/script.32e751300d2d69e2cb56a98d2c9d964d54a53a8fb7281ccdbd80f055c88e8d86.js" type="text/javascript" charset="utf-8" integrity="sha256-MudRMA0taeLLVqmNLJ2WTVSlOo&#43;3KBzNvYDwVciOjYY="></script>
-    
-
-
-
-
-
-
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Exploring Netcat">
+  <meta name="twitter:description" content="Introduction Link to heading Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the “network swiss-army knife”. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2023-11-27-netcat/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Exploring Netcat">
-  <meta property="og:description" content="Introduction Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the “network swiss-army knife”. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed.">
-  <meta property="og:locale" content="en_us">
+  <meta property="og:description" content="Introduction Link to heading Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the “network swiss-army knife”. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar.">
+  <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2023-11-27T00:00:00+00:00">
@@ -94,21 +36,47 @@
     <meta property="article:tag" content="Linux">
 
 
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Exploring Netcat">
-  <meta name="twitter:description" content="Introduction Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the “network swiss-army knife”. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed.">
+
+
+<link rel="canonical" href="http://localhost:1313/posts/2023-11-27-netcat/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
 
 
 
+
+
+
+  
     
-        <link rel="webmention" href="https://webmention.io/hugo-theme-anubis/webmention" />
-        
-            <link rel="pingback" href="https://webmention.io/hugo-theme-anubis/xmlrpc" />
-        
     
-    
-        <link rel="webmention" href="https://yourdomain.com/webemntions/receive" />
-    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
 
 
 
@@ -118,139 +86,148 @@
 
 
 
-    
 </head>
-<body>
-    <a class="skip-main" href="#main">Skip to main content</a>
-    <div class="container">
-        <header class="common-header"> 
-            
-                <div class="header-top">
-    <h1 class="site-title">
-    <a href="/">GeekyRyan</a>
-</h1>
-    <ul class="social-icons">
-
-
-    
-        
-        
-        <li>
-            <a href="https://github.com/rnemeth90" title="Github" rel="me">
-            <span class="inline-svg" >
 
 
 
 
-    
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
-
-</span>
-
-            </a>
-        </li>
-    
-
-    
-        
-        
-        <li>
-            <a href="https://twitter.com/geeky_ryan" title="Twitter" rel="me">
-            <span class="inline-svg" >
 
 
-
-
-    
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
-
-</span>
-
-            </a>
-        </li>
-    
-
-
-
-    <li>
-            <a href="http://localhost:1313/index.xml" title="RSS" rel="me">
-            <span class="inline-svg" >
-
-
-
-
-    
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M128.081 415.959c0 35.369-28.672 64.041-64.041 64.041S0 451.328 0 415.959s28.672-64.041 64.041-64.041 64.04 28.673 64.04 64.041zm175.66 47.25c-8.354-154.6-132.185-278.587-286.95-286.95C7.656 175.765 0 183.105 0 192.253v48.069c0 8.415 6.49 15.472 14.887 16.018 111.832 7.284 201.473 96.702 208.772 208.772.547 8.397 7.604 14.887 16.018 14.887h48.069c9.149.001 16.489-7.655 15.995-16.79zm144.249.288C439.596 229.677 251.465 40.445 16.503 32.01 7.473 31.686 0 38.981 0 48.016v48.068c0 8.625 6.835 15.645 15.453 15.999 191.179 7.839 344.627 161.316 352.465 352.465.353 8.618 7.373 15.453 15.999 15.453h48.068c9.034-.001 16.329-7.474 16.005-16.504z"/></svg>
-
-</span>
-
-            </a>
-        </li>
-    
-
-</ul>
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
 </div>
 
-    <nav>
-        
-        
-        <a class="" href="http://localhost:1313/about" title="about">About</a>
-        
-        <a class="" href="http://localhost:1313/tags/" title="tags">Tags</a>
-        
-        <a class="" href="http://localhost:1313/posts/" title="Archive">Archive</a>
-        
-    </nav>
 
-
-
-
-
-
-            
-        </header>
-        <main id="main" tabindex="-1"> 
-            
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
     
+    <a class="navigation-title" href="http://localhost:1313/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
 
-    <article class="post h-entry">
-        <div class="post-header">
-            <header>
-                <h1 class="p-name post-title">Exploring Netcat</h1>
 
-                
-            </header>
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/2023-11-27-netcat/">
+              Exploring Netcat
+            </a>
+          </h1>
         </div>
-        <div class="content e-content">
-            <h2 id="introduction" >Introduction
-<span>
-    <a href="#introduction">
-        <svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/></svg>
-    </a>
-</span>
-</h2><p>Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the &ldquo;network swiss-army knife&rdquo;. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed.</p>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2023-11-27T00:00:00Z">
+                2023-11-27
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              5-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/networking/">Networking</a>
+      <span class="separator">•</span>
+    <a href="/categories/netcat/">Netcat</a>
+      <span class="separator">•</span>
+    <a href="/categories/linux/">Linux</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/networking/">Networking</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/netcat/">Netcat</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/linux/">Linux</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h2 id="introduction">
+  Introduction
+  <a class="heading-link" href="#introduction">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the &ldquo;network swiss-army knife&rdquo;. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed.</p>
 <p>Netcat is a simple utility that reads and writes data across raw TCP/UDP sockets. Netcat is a command-line tool available out of the box on most *nix operating systems and can also be installed on Windows. It&rsquo;s a powerful tool for debugging and investigating networks. It can even be used for tasks like port scanning, transferring files, chatting with friends on a network, and even creating backdoors (for testing purposes, obviously :) ).</p>
-<h2 id="understanding-udp" >Understanding UDP
-<span>
-    <a href="#understanding-udp">
-        <svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/></svg>
-    </a>
-</span>
-</h2><p>Before we dive into exploring UDP connections with netcat, let&rsquo;s quickly get a refresher on UDP. UDP is a connectionless transport layer protocol that does not provide the same reliability, flow-control, and error-checking mechanisms as TCP. Unlike TCP, UDP also does not establish a persistent connection between the sender and receiver. Instead, it sends data packets, known as datagrams, individually using a &lsquo;fire and forget&rsquo; method. UDP is often used for applications where real-time communication and low overhead are crucial, such as streaming media, gaming, DNS (though, certain functions of DNS may also use TCP), and IoT devices.</p>
-<h2 id="understanding-tcp" >Understanding TCP
-<span>
-    <a href="#understanding-tcp">
-        <svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/></svg>
-    </a>
-</span>
-</h2><p>It&rsquo;s also crucial to have a fundamental knowledge of the TCP protocol. TCP is one of the main protocols in the Internet protocol suite, laying the foundation for the majority of data exchange over the Internet. Unlike its counterpart, UDP (User Datagram Protocol), TCP is connection-oriented, meaning a connection is established and maintained until the application programs at each end have finished exchanging messages. This ensures reliable, ordered, and error-checked delivery of a stream of data between applications running on hosts communicating over an IP network. Key features of TCP include its ability to manage data packet size, data transfer rate, and network traffic congestion, making it ideal for applications where data integrity and accuracy are crucial, such as web browsing, email, and file transfer. Understanding TCP is essential for effectively utilizing tools like Netcat, as it provides the basis for establishing stable and secure connections across a network.</p>
-<h2 id="creating-a-simple-clientserver" >Creating a Simple Client/Server
-<span>
-    <a href="#creating-a-simple-clientserver">
-        <svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/></svg>
-    </a>
-</span>
-</h2><p>The following will create a simple UDP server and client.</p>
+<h2 id="understanding-udp">
+  Understanding UDP
+  <a class="heading-link" href="#understanding-udp">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Before we dive into exploring UDP connections with netcat, let&rsquo;s quickly get a refresher on UDP. UDP is a connectionless transport layer protocol that does not provide the same reliability, flow-control, and error-checking mechanisms as TCP. Unlike TCP, UDP also does not establish a persistent connection between the sender and receiver. Instead, it sends data packets, known as datagrams, individually using a &lsquo;fire and forget&rsquo; method. UDP is often used for applications where real-time communication and low overhead are crucial, such as streaming media, gaming, DNS (though, certain functions of DNS may also use TCP), and IoT devices.</p>
+<h2 id="understanding-tcp">
+  Understanding TCP
+  <a class="heading-link" href="#understanding-tcp">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>It&rsquo;s also crucial to have a fundamental knowledge of the TCP protocol. TCP is one of the main protocols in the Internet protocol suite, laying the foundation for the majority of data exchange over the Internet. Unlike its counterpart, UDP (User Datagram Protocol), TCP is connection-oriented, meaning a connection is established and maintained until the application programs at each end have finished exchanging messages. This ensures reliable, ordered, and error-checked delivery of a stream of data between applications running on hosts communicating over an IP network. Key features of TCP include its ability to manage data packet size, data transfer rate, and network traffic congestion, making it ideal for applications where data integrity and accuracy are crucial, such as web browsing, email, and file transfer. Understanding TCP is essential for effectively utilizing tools like Netcat, as it provides the basis for establishing stable and secure connections across a network.</p>
+<h2 id="creating-a-simple-clientserver">
+  Creating a Simple Client/Server
+  <a class="heading-link" href="#creating-a-simple-clientserver">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>The following will create a simple UDP server and client.</p>
 <ol>
 <li>Launch a shell and type the following command. This will tell netcat to listen (<code>-l</code>) on UDP (<code>-u</code>) port (<code>-p</code>) 5555.</li>
 </ol>
@@ -269,303 +246,168 @@ hello
 <pre tabindex="0"><code>$ nc -l -u -p 5555
 hello
 </code></pre><p>You can do the same thing with TCP, just leave out the <code>-u</code> in each command above.</p>
-<h2 id="transfer-a-file" >Transfer a File
-<span>
-    <a href="#transfer-a-file">
-        <svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/></svg>
-    </a>
-</span>
-</h2><p>On the receiving end:</p>
+<h2 id="transfer-a-file">
+  Transfer a File
+  <a class="heading-link" href="#transfer-a-file">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>On the receiving end:</p>
 <pre tabindex="0"><code>nc -l -p 5555 &gt; outputfile
 </code></pre><p>On the sending end:</p>
 <pre tabindex="0"><code>nc [hostname or IP address of server] 5555 &lt; inputfile
-</code></pre><h2 id="port-scanning" >Port Scanning:
-<span>
-    <a href="#port-scanning">
-        <svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/></svg>
-    </a>
-</span>
-</h2><pre tabindex="0"><code>netcat -v -z -n -w 1 v.txvip1 1-1023
-</code></pre><h2 id="serve-a-web-page" >Serve a web page:
-<span>
-    <a href="#serve-a-web-page">
-        <svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/></svg>
-    </a>
-</span>
-</h2><p>If you have an html file, you can create a simple web server for it. Here we tell netcat to listen on port 8080 and redirect the contents of index.html to any &rsquo;thing&rsquo; that connects:</p>
+</code></pre><h2 id="port-scanning">
+  Port Scanning:
+  <a class="heading-link" href="#port-scanning">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<pre tabindex="0"><code>netcat -v -z -n -w 1 v.txvip1 1-1023
+</code></pre><h2 id="serve-a-web-page">
+  Serve a web page:
+  <a class="heading-link" href="#serve-a-web-page">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>If you have an html file, you can create a simple web server for it. Here we tell netcat to listen on port 8080 and redirect the contents of index.html to any &rsquo;thing&rsquo; that connects:</p>
 <pre tabindex="0"><code>nc -l -p 8080 &lt; index.html
 </code></pre><p><strong>Note</strong>: In the examples above, I always use port 5555. You can technically use just about any port you want. However, attempting to use any port below 1024 will require root privileges. The port you choose cannot be in use by another process.</p>
-<h2 id="other-practical-examples" >Other Practical Examples
-<span>
-    <a href="#other-practical-examples">
-        <svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/></svg>
-    </a>
-</span>
-</h2><p>Let&rsquo;s explore a few more practical examples to illustrate the usefulness of netcat&rsquo;s UDP capabilities. I will leave the actual implementation as an exercise for you to try.</p>
-<h3 id="example-1-testing-a-tcpudp-server" >Example 1: Testing a TCP/UDP Server
-<span>
-    <a href="#example-1-testing-a-tcpudp-server">
-        <svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/></svg>
-    </a>
-</span>
-</h3><p>Suppose you are developing a UDP server application, and you want to test its functionality. You can use netcat to send TCP/UDP packets to your server and observe its response. By monitoring the server&rsquo;s behavior, you can ensure that it correctly handles incoming UDP traffic.</p>
-<h3 id="example-2-interacting-with-networked-devices" >Example 2: Interacting with Networked Devices
-<span>
-    <a href="#example-2-interacting-with-networked-devices">
-        <svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/></svg>
-    </a>
-</span>
-</h3><p>Netcat can be handy when interacting with networked devices, such as routers, IoT devices, or even network-enabled printers. By establishing a TCP/UDP connection, you can send commands, queries, or configuration data to these devices, enabling you to troubleshoot or configure them remotely.</p>
-<h3 id="example-3-banner-grabbing" >Example 3. Banner Grabbing
-<span>
-    <a href="#example-3-banner-grabbing">
-        <svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/></svg>
-    </a>
-</span>
-</h3><p>This is a technique used in network security to gather information about a remote server, including the type and version of the operating system and applications running. The basic concept is that you connect to a network service and see what kind of &lsquo;banner&rsquo; (if any) it returns in the output. When I was starting out in the IT world, this was a common thing to do to enumerate devices and services on a network. Though, I would like to believe this is no longer as much of a concern, given the simplicity of preventing this type of information discovery attack.</p>
-<h2 id="conclusion" >Conclusion
-<span>
-    <a href="#conclusion">
-        <svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/></svg>
-    </a>
-</span>
-</h2><p>Netcat&rsquo;s ability to handle UDP connections makes it an invaluable tool for various network-related tasks. Whether you are testing a UDP server, interacting with networked devices, or exploring your network&rsquo;s services, netcat provides a convenient and straightforward approach.</p>
+<h2 id="other-practical-examples">
+  Other Practical Examples
+  <a class="heading-link" href="#other-practical-examples">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Let&rsquo;s explore a few more practical examples to illustrate the usefulness of netcat&rsquo;s UDP capabilities. I will leave the actual implementation as an exercise for you to try.</p>
+<h3 id="example-1-testing-a-tcpudp-server">
+  Example 1: Testing a TCP/UDP Server
+  <a class="heading-link" href="#example-1-testing-a-tcpudp-server">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Suppose you are developing a UDP server application, and you want to test its functionality. You can use netcat to send TCP/UDP packets to your server and observe its response. By monitoring the server&rsquo;s behavior, you can ensure that it correctly handles incoming UDP traffic.</p>
+<h3 id="example-2-interacting-with-networked-devices">
+  Example 2: Interacting with Networked Devices
+  <a class="heading-link" href="#example-2-interacting-with-networked-devices">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Netcat can be handy when interacting with networked devices, such as routers, IoT devices, or even network-enabled printers. By establishing a TCP/UDP connection, you can send commands, queries, or configuration data to these devices, enabling you to troubleshoot or configure them remotely.</p>
+<h3 id="example-3-banner-grabbing">
+  Example 3. Banner Grabbing
+  <a class="heading-link" href="#example-3-banner-grabbing">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>This is a technique used in network security to gather information about a remote server, including the type and version of the operating system and applications running. The basic concept is that you connect to a network service and see what kind of &lsquo;banner&rsquo; (if any) it returns in the output. When I was starting out in the IT world, this was a common thing to do to enumerate devices and services on a network. Though, I would like to believe this is no longer as much of a concern, given the simplicity of preventing this type of information discovery attack.</p>
+<h2 id="conclusion">
+  Conclusion
+  <a class="heading-link" href="#conclusion">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Netcat&rsquo;s ability to handle UDP connections makes it an invaluable tool for various network-related tasks. Whether you are testing a UDP server, interacting with networked devices, or exploring your network&rsquo;s services, netcat provides a convenient and straightforward approach.</p>
 <p>In this blog post, we walked through the process of creating a UDP connection using netcat, discussed the fundamentals of UDP, and explored practical examples where netcat can prove useful. By mastering netcat&rsquo;s capabilities, you can enhance your network troubleshooting and debugging skills, and gain a deeper understanding of UDP communication.</p>
 <p>You can read more about netcat in the man pages:</p>
 <pre tabindex="0"><code>man nc
 </code></pre><p>The OpenBSD repository contains the original source written by Hobbit decades ago:
-<a href="https://github.com/openbsd/src/blob/master/usr.bin/nc/netcat.c">netcat.c</a></p>
+<a href="https://github.com/openbsd/src/blob/master/usr.bin/nc/netcat.c"  class="external-link" target="_blank" rel="noopener">netcat.c</a></p>
 
-        </div>
+      </div>
+
+
+      <footer>
         
 
-    
 
-
-<div class="post-info">
-    
-        <div class="post-date dt-published">2023-11-27</div>
-    
-
-    <a class="post-hidden-url u-url" href="http://localhost:1313/posts/2023-11-27-netcat/">http://localhost:1313/posts/2023-11-27-netcat/</a>
-    <a href="http://localhost:1313/" class="p-name p-author post-hidden-author h-card" rel="me">Ryan</a>
-
-
-    <div class="post-taxonomies">
         
-            <ul class="post-categories">
-                
-                    
-                    <li><a href="http://localhost:1313/categories/networking/">Networking</a></li>
-                
-                    
-                    <li><a href="http://localhost:1313/categories/netcat/">Netcat</a></li>
-                
-                    
-                    <li><a href="http://localhost:1313/categories/linux/">Linux</a></li>
-                
-            </ul>
-            
-            
-                <ul class="post-tags">
-                    
-                        
-                        <li><a href="http://localhost:1313/tags/networking/">#Networking</a></li>
-                    
-                        
-                        <li><a href="http://localhost:1313/tags/netcat/">#Netcat</a></li>
-                    
-                        
-                        <li><a href="http://localhost:1313/tags/linux/">#Linux</a></li>
-                    
-                </ul>
         
-    </div>
-</div>
-
+        
+        
+        
+        
+        
+      </footer>
     </article>
 
     
-        
-        
-    
+  </section>
 
-    
-        
-    <div class="pagination post-pagination">
-        <div class="left pagination-item ">
-            
-                <a href="/posts/2023-12-04-nginx-ingress-resp-header-size/">Nginx Ingress Response Header Size - A Cautionary Tale</a>
-            
-        </div>
-        <div class="right pagination-item ">
-            
-                <a href="/posts/2023-08-15-powershell-try-catch/">Using try/catch/finally Blocks in PowerShell</a>
-            
-        </div>
     </div>
 
-
-
-
+    <footer class="footer">
+  <section class="container">
+    ©
     
-
+      2012 -
     
-        
-
-
-
-
+    2024
+     Ryan Nemeth 
+    ·
     
-
-
-
-
-
-<article class="post">
-<script
-    data-isso="https://comments.example.com/"
-    data-isso-id="thread-id"
-    data-isso-css="true"
-    data-isso-lang="de"
-    data-isso-reply-to-self="true"
-    data-isso-require-author="true"
-    data-isso-require-email="true"
-    data-isso-avatar="true"
-    data-isso-avatar-bg="#f0f0f0"
-    data-isso-feed="false"
-    src="https://comments.example.com/js/embed.min.js">
-</script>
-<noscript>Please enable JavaScript to view the comments powered by <a href="https://posativ.org/isso/">Isso</a>.</noscript>
-<div>
-  <section id="isso-thread"></section>
-</div>
-</article>
-
-
-
-
-
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
-
-        </main>
-        
-            <footer class="common-footer">
-    
-    
-
-    <div class="common-footer-bottom">
-        
-        <div class="copyright">
-            <p>© Ryan Nemeth, 2024<br>
-            Powered by <a target="_blank" rel="noopener noreferrer" href="https://gohugo.io/">Hugo</a>, theme <a target="_blank" rel="noopener noreferrer" href="https://github.com/mitrichius/hugo-theme-anubis">Anubis</a>.<br>
-            
-            </p>  
-        </div> 
-
-        
-
-    
-
-
-
-    <button class="theme-switcher">
-        Dark theme
-    </button>
-
-
-<script>
-const STORAGE_KEY = 'user-color-scheme'
-const defaultTheme = "dark"
-
-let currentTheme
-let switchButton
-let autoDefinedScheme = window.matchMedia('(prefers-color-scheme: dark)')
-
-const autoChangeScheme = e => {
-    currentTheme = e.matches ? 'dark' : 'light'
-    document.documentElement.setAttribute('data-theme', currentTheme)
-    changeButtonText()
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    switchButton = document.querySelector('.theme-switcher')
-    currentTheme = detectCurrentScheme()
-    if (currentTheme == 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark')
-    }
-    if (currentTheme == 'auto') {
-        autoChangeScheme(autoDefinedScheme);
-        autoDefinedScheme.addListener(autoChangeScheme);
-    }
-
-    if (switchButton) {
-        changeButtonText()
-        switchButton.addEventListener('click', switchTheme, false)
-    }
-  
-    showContent()
-})
-
-function detectCurrentScheme() {
-    if (localStorage.getItem(STORAGE_KEY)) {
-        return localStorage.getItem(STORAGE_KEY)
-    } 
-    if (defaultTheme) {
-        return defaultTheme
-    } 
-    if (!window.matchMedia) {
-        return 'light'
-    } 
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark'
-    }
-    return 'light'
-}
-
-function changeButtonText()
-{   
-    if (switchButton) {
-        switchButton.textContent = currentTheme == 'dark' ?  "Light theme" : "Dark theme"
-    }
-}
-
-function switchTheme(e) {
-    if (currentTheme == 'dark') {
-        localStorage.setItem(STORAGE_KEY, 'light')
-        document.documentElement.setAttribute('data-theme', 'light')
-        currentTheme = 'light'
-    } else {
-        localStorage.setItem(STORAGE_KEY, 'dark')
-        document.documentElement.setAttribute('data-theme', 'dark')
-        currentTheme = 'dark'
-    }
-    changeButtonText()
-}
-
-function showContent() {
-    document.body.style.visibility = 'visible';
-    document.body.style.opacity = 1;
-}
-</script>   
-    </div>
-
-    <p class="h-card vcard">
-
-    <a href=http://localhost:1313/ class="p-name u-url url fn" rel="me">Ryan Nemeth</a> 
-
-     
-        /
-        <a class="p-email u-email email" rel="me" href="mailto:ryannemeth@live.com">ryannemeth@live.com</a>
-    
-
-     
-        <img class="u-photo" src="/images/bobble.jpg" />
-    
-</p> 
+  </section>
 </footer>
 
-        
-    </div>
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 </body>
+
 </html>

@@ -3,83 +3,17 @@
   <channel>
     <title>Pod Eviction on GeekyRyan</title>
     <link>http://localhost:1313/tags/pod-eviction/</link>
-    <description>GeekyRyan (Pod Eviction)</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <description>Recent content in Pod Eviction on GeekyRyan</description>
+    <generator>Hugo</generator>
+    <language>en</language>
     <lastBuildDate>Sat, 05 Feb 2022 23:49:16 +0000</lastBuildDate>
-    
     <atom:link href="http://localhost:1313/tags/pod-eviction/index.xml" rel="self" type="application/rss+xml" />
-    
-    
     <item>
       <title>Kubernetes Pod Eviction</title>
       <link>http://localhost:1313/posts/2022-02-05-kubernetes-pod-eviction/</link>
       <pubDate>Sat, 05 Feb 2022 23:49:16 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2022-02-05-kubernetes-pod-eviction/</guid>
-      <description>&lt;p&gt;In this article, we will dive into the process of pod eviction in a Kubernetes cluster, how you can pod prevent pod eviction, and how you can recover from such a situation.&lt;/p&gt;
-&lt;h2 id=&#34;what-is-pod-eviction&#34; &gt;What is Pod Eviction?
-&lt;span&gt;
-    &lt;a href=&#34;#what-is-pod-eviction&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;Kubernetes pod eviction is a type of involuntary service disruption in which a pod is forcefully stopped on a node or fails to be scheduled on a node. Pod eviction can happen for a variety of reasons. The most common of which is resource starvation on a node. This is referred to as “node-pressure eviction.”&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;NAME       READY   STATUS    RESTARTS   AGE
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nginx      0/1     Evicted   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          10s
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;eviction-process&#34; &gt;Eviction Process
-&lt;span&gt;
-    &lt;a href=&#34;#eviction-process&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;The kubelet process running on the node monitors resources such as CPU, memory, disk space, inodes, etc. When one of these resources reaches a certain consumption level, the kubelet will first attempt to clean up resources by deleting non-running pods and images (in the case of storage starvation). The kubelet will then fail one or more pods on the node to reclaim resources. The class of the pod determines the order in which it does this.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Pod Classes&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Guaranteed: Pods that have requests and limits configured for both CPU and memory&lt;/li&gt;
-&lt;li&gt;Burstable: Pods with a resource request configured for memory or CPU&lt;/li&gt;
-&lt;li&gt;Best Effort: Pods without any requests or limits&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The kubelet will first evict any “best-effort” pods. If this is not enough, the kubelet will evict any “burstable” pods. Pods within the “guaranteed” class are theoretically safe from eviction.&lt;/p&gt;
-&lt;p&gt;During a node-pressure eviction, the kubelet sets the PodPhase for the selected pods to “Failed.” This causes the pods to terminate. If a daemonSet or replicaSet manages the pod, the Kubernetes controller-manager will create new pods on another node.&lt;/p&gt;
-&lt;h2 id=&#34;recovery&#34; &gt;Recovery
-&lt;span&gt;
-    &lt;a href=&#34;#recovery&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;Node-pressure eviction is almost always avoidable. We can prevent this type of issue by ensuring that we properly size our clusters and create resource limits for pods.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Resource&lt;/strong&gt; &lt;strong&gt;Requests and Limits:&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Requests: The minimum amount of resources (CPU/memory) that a container needs to start.&lt;/li&gt;
-&lt;li&gt;Limits: The maximum amount of resources that a container is allowed to use.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Pod resources and requests can be defined in a pod spec or deployment spec. Below is an example of a pod spec with resource requests and limits defined:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-YAML&#34; data-lang=&#34;YAML&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;v1&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Pod&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;frontend&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;containers&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;nginx&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;image&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;nginx&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;resources&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;requests&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;memory&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;64Mi&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;cpu&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;250m&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;limits&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;memory&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;128Mi&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;cpu&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;500m&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You will often need to clean up evicted pods manually. If you find that your cluster has a large amount of evicted pods, you can clean them up with the following kubectl commands:&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;To see all failed pods in the cluster:&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl get pod --all-namespaces --field-selector&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;status.phase&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;Failed
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;To remove all failed pods in the cluster:&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl delete pod --all-namespaces --field-selector&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;status.phase&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;Failed
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I hope this article has been helpful. Please reach out if you have any questions or comments! Also, if you would like to learn more, take a look at the official Kubernetes docs:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/&#34;&gt;https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/&lt;/a&gt;&lt;/p&gt;
-</description>
+      <description>In this article, we will dive into the process of pod eviction in a Kubernetes cluster, how you can pod prevent pod eviction, and how you can recover from such a situation.&#xA;What is Pod Eviction? Link to heading Kubernetes pod eviction is a type of involuntary service disruption in which a pod is forcefully stopped on a node or fails to be scheduled on a node. Pod eviction can happen for a variety of reasons.</description>
     </item>
-    
   </channel>
 </rss>

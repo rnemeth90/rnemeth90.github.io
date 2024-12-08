@@ -1,87 +1,32 @@
 <!DOCTYPE html>
+<html lang="en">
 
-
-<html lang="en-us" data-theme="">
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
-    
-        
-<meta charset="utf-8">
-<meta name="HandheldFriendly" content="True">
+  <title>
+  Azure Kubernetes sFTP Solution · GeekyRyan
+</title>
+  <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="referrer" content="no-referrer-when-downgrade">
+<meta name="color-scheme" content="light dark">
 
-<title>Azure Kubernetes sFTP Solution - GeekyRyan</title>
 
+
+
+<meta name="author" content="Ryan Nemeth">
 <meta name="description" content="In this post, we’ll take a look at deploying a highly available sFTP solution to Azure Kubernetes with user files stored in an Azure NFSv4 File Share. The sFTP application reads user credentials from a file named users.conf, containing secrets from an Azure Key Vault.
 Here is the link to my Github account where you can download the code mentioned in this article:
 https://github.com/rnemeth90/kubernetes-sftp
 We will work through the following steps in this article:">
+<meta name="keywords" content="blog,developer,personal,devops">
 
 
 
-
-
-<link rel="icon" type="image/x-icon" href="http://localhost:1313/favicon.ico">
-<link rel="apple-touch-icon-precomposed" href="http://localhost:1313/favicon.png">
-
-
-<style>
-  body {
-    visibility: hidden;
-    opacity: 0;
-  }
-</style>
-
-<noscript>
-  <style>
-    body {
-      visibility: visible;
-      opacity: 1;
-    }
-  </style>
-</noscript>
-
-
-
-    
-
-
-
-
-
-    
-    
-    
-
-    
-        <link rel="stylesheet" href="http://localhost:1313/css/style.779ec8e6902530eb27b55bc5845f86cfa59dc8ffedf4c6fdc6377c90b514db02.css" integrity="sha256-d57I5pAlMOsntVvFhF&#43;Gz6WdyP/t9Mb9xjd8kLUU2wI=">
-    
-
-
-
-
-
-    
-
-    
-
-
-
-
-
-    
-    
-    
-
-    
-        <script src="http://localhost:1313/js/script.32e751300d2d69e2cb56a98d2c9d964d54a53a8fb7281ccdbd80f055c88e8d86.js" type="text/javascript" charset="utf-8" integrity="sha256-MudRMA0taeLLVqmNLJ2WTVSlOo&#43;3KBzNvYDwVciOjYY="></script>
-    
-
-
-
-
-
-
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Azure Kubernetes sFTP Solution">
+  <meta name="twitter:description" content="In this post, we’ll take a look at deploying a highly available sFTP solution to Azure Kubernetes with user files stored in an Azure NFSv4 File Share. The sFTP application reads user credentials from a file named users.conf, containing secrets from an Azure Key Vault.
+Here is the link to my Github account where you can download the code mentioned in this article:
+https://github.com/rnemeth90/kubernetes-sftp
+We will work through the following steps in this article:">
 
 <meta property="og:url" content="http://localhost:1313/posts/2022-01-16-azure-kubernetes-sftp-solution/">
   <meta property="og:site_name" content="GeekyRyan">
@@ -90,7 +35,7 @@ We will work through the following steps in this article:">
 Here is the link to my Github account where you can download the code mentioned in this article:
 https://github.com/rnemeth90/kubernetes-sftp
 We will work through the following steps in this article:">
-  <meta property="og:locale" content="en_us">
+  <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2022-01-16T07:00:00+00:00">
@@ -102,24 +47,47 @@ We will work through the following steps in this article:">
     <meta property="article:tag" content="Kubernetes">
 
 
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Azure Kubernetes sFTP Solution">
-  <meta name="twitter:description" content="In this post, we’ll take a look at deploying a highly available sFTP solution to Azure Kubernetes with user files stored in an Azure NFSv4 File Share. The sFTP application reads user credentials from a file named users.conf, containing secrets from an Azure Key Vault.
-Here is the link to my Github account where you can download the code mentioned in this article:
-https://github.com/rnemeth90/kubernetes-sftp
-We will work through the following steps in this article:">
+
+
+<link rel="canonical" href="http://localhost:1313/posts/2022-01-16-azure-kubernetes-sftp-solution/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
 
 
 
+
+
+
+  
     
-        <link rel="webmention" href="https://webmention.io/hugo-theme-anubis/webmention" />
-        
-            <link rel="pingback" href="https://webmention.io/hugo-theme-anubis/xmlrpc" />
-        
     
-    
-        <link rel="webmention" href="https://yourdomain.com/webemntions/receive" />
-    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
 
 
 
@@ -129,113 +97,124 @@ We will work through the following steps in this article:">
 
 
 
-    
 </head>
-<body>
-    <a class="skip-main" href="#main">Skip to main content</a>
-    <div class="container">
-        <header class="common-header"> 
-            
-                <div class="header-top">
-    <h1 class="site-title">
-    <a href="/">GeekyRyan</a>
-</h1>
-    <ul class="social-icons">
-
-
-    
-        
-        
-        <li>
-            <a href="https://github.com/rnemeth90" title="Github" rel="me">
-            <span class="inline-svg" >
 
 
 
 
-    
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
-
-</span>
-
-            </a>
-        </li>
-    
-
-    
-        
-        
-        <li>
-            <a href="https://twitter.com/geeky_ryan" title="Twitter" rel="me">
-            <span class="inline-svg" >
 
 
-
-
-    
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
-
-</span>
-
-            </a>
-        </li>
-    
-
-
-
-    <li>
-            <a href="http://localhost:1313/index.xml" title="RSS" rel="me">
-            <span class="inline-svg" >
-
-
-
-
-    
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M128.081 415.959c0 35.369-28.672 64.041-64.041 64.041S0 451.328 0 415.959s28.672-64.041 64.041-64.041 64.04 28.673 64.04 64.041zm175.66 47.25c-8.354-154.6-132.185-278.587-286.95-286.95C7.656 175.765 0 183.105 0 192.253v48.069c0 8.415 6.49 15.472 14.887 16.018 111.832 7.284 201.473 96.702 208.772 208.772.547 8.397 7.604 14.887 16.018 14.887h48.069c9.149.001 16.489-7.655 15.995-16.79zm144.249.288C439.596 229.677 251.465 40.445 16.503 32.01 7.473 31.686 0 38.981 0 48.016v48.068c0 8.625 6.835 15.645 15.453 15.999 191.179 7.839 344.627 161.316 352.465 352.465.353 8.618 7.373 15.453 15.999 15.453h48.068c9.034-.001 16.329-7.474 16.005-16.504z"/></svg>
-
-</span>
-
-            </a>
-        </li>
-    
-
-</ul>
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
 </div>
 
-    <nav>
-        
-        
-        <a class="" href="http://localhost:1313/about" title="about">About</a>
-        
-        <a class="" href="http://localhost:1313/tags/" title="tags">Tags</a>
-        
-        <a class="" href="http://localhost:1313/posts/" title="Archive">Archive</a>
-        
-    </nav>
 
-
-
-
-
-
-            
-        </header>
-        <main id="main" tabindex="-1"> 
-            
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
     
+    <a class="navigation-title" href="http://localhost:1313/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
 
-    <article class="post h-entry">
-        <div class="post-header">
-            <header>
-                <h1 class="p-name post-title">Azure Kubernetes sFTP Solution</h1>
 
-                
-            </header>
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/2022-01-16-azure-kubernetes-sftp-solution/">
+              Azure Kubernetes sFTP Solution
+            </a>
+          </h1>
         </div>
-        <div class="content e-content">
-            <p>In this post, we’ll take a look at deploying a highly available sFTP solution to Azure Kubernetes with user files stored in an Azure NFSv4 File Share. The sFTP application reads user credentials from a file named users.conf, containing secrets from an Azure Key Vault.</p>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2022-01-16T07:00:00Z">
+                2022-01-16
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              5-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/azure-kubernetes-service/">Azure Kubernetes Service</a>
+      <span class="separator">•</span>
+    <a href="/categories/sftp/">SFTP</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/aks/">Aks</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/azure/">Azure</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/azure-kubernetes-service/">Azure Kubernetes Service</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/ftp/">Ftp</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/kubernetes/">Kubernetes</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>In this post, we’ll take a look at deploying a highly available sFTP solution to Azure Kubernetes with user files stored in an Azure NFSv4 File Share. The sFTP application reads user credentials from a file named users.conf, containing secrets from an Azure Key Vault.</p>
 <p>Here is the link to my Github account where you can download the code mentioned in this article:</p>
-<p><a href="https://github.com/rnemeth90/kubernetes-sftp">https://github.com/rnemeth90/kubernetes-sftp</a></p>
+<p><a href="https://github.com/rnemeth90/kubernetes-sftp"  class="external-link" target="_blank" rel="noopener">https://github.com/rnemeth90/kubernetes-sftp</a></p>
 <p>We will work through the following steps in this article:</p>
 <ol>
 <li>Deploy the AzureFile CSI driver to the AKS cluster</li>
@@ -246,416 +225,255 @@ We will work through the following steps in this article:">
 </ol>
 <p>First, you will need to deploy the Azure Files CSI driver to your AKS cluster. AKS uses this daemon set to dynamically provision/destroy Azure NFSv4 File Shares. The Azure Files CSI driver creates a storage account in the node pool resource group, in which it will then provision the file share.</p>
 <p>Deploying the Azure Files CSI driver is a simple task. You will need to run this script:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>curl -skSL https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/deploy/install-driver.sh | bash -s master --
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">curl -skSL https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/deploy/install-driver.sh <span class="p">|</span> bash -s master --
 </span></span></code></pre></div><p>You can use the following commands to verify that the daemon set has exists:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl -n kube-system get pod -o wide --watch -l app<span style="color:#f92672">=</span>csi-azurefile-controller
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>kubectl -n kube-system get pod -o wide --watch -l app<span style="color:#f92672">=</span>csi-azurefile-node
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl -n kube-system get pod -o wide --watch -l <span class="nv">app</span><span class="o">=</span>csi-azurefile-controller
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">kubectl -n kube-system get pod -o wide --watch -l <span class="nv">app</span><span class="o">=</span>csi-azurefile-node
 </span></span></code></pre></div><figure class="wp-block-coblocks-gallery-masonry masonry-grid has-border-radius-10 has-medium-gutter"><figure class="wp-block-image size-large masonry-brick">[![Image gallery image](https://rnemeth90.github.io/wp-content/uploads/2022/01/image-1-1024x434.png)](https://rnemeth90.github.io/wp-content/uploads/2022/01/image-1.png)</figure></figure>Next, you need to create a storage class by deploying this yaml file:
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl create -f https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/deploy/example/storageclass-azurefile-nfs.yaml
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl create -f https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/deploy/example/storageclass-azurefile-nfs.yaml
 </span></span></code></pre></div><p>Read more about the AzureFiles CSI driver at the following Github link:</p>
-<p><a href="https://github.com/kubernetes-sigs/azurefile-csi-driver/blob/master/docs/install-driver-on-aks.md">https://github.com/kubernetes-sigs/azurefile-csi-driver/blob/master/docs/install-driver-on-aks.md</a></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ConfigMap</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">creationTimestamp</span>: <span style="color:#66d9ef">null</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">testcm</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">data</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">init.sh</span>: |-<span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    #!/bin/bash
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    CONF_FILE=&#34;/etc/sftp/users.conf&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    KEYVAULT=&#34;Insert name of Key Vault&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    AZ_SPN_ID=&#34;Insert service principal Id&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    AZ_SPN_PASSWORD=&#34;Insert service principal password&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    AZ_SPN_TENANT_ID=&#34;Insert Az AAD Tenant Id&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    AZ_SUBSCRIPTION_ID=&#34;Insert Az Subscription Id&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    az login --service-principal --username &#34;${AZ_SPN_ID}&#34; --password &#34;${AZ_SPN_PASSWORD}&#34; --tenant &#34;${AZ_SPN_TENANT_ID}&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    az account set --subscription &#34;${AZ_SUBSCRIPTION_ID}&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    SECRETS+=($(az keyvault secret list --vault-name $KEYVAULT --query &#34;[].id&#34; -o tsv))
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    chmod 755 /home
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    if [[ -e $CONF_FILE ]]; then
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        rm -rf &#34;${CONF_FILE}&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        touch $CONF_FILE
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    else
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        touch $CONF_FILE
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    fi
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    for SECRET in &#34;${SECRETS[@]}&#34;; do
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        SECRETNAME=$(basename $SECRET |  tr -d &#39;\r&#39;)
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        SECRETVALUE=$(az keyvault secret show --vault-name $KEYVAULT --name $SECRETNAME --query &#39;value&#39; | tr -d &#39;&#34;&#39; | tr -d &#39;\r&#39;)
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        echo &#34;$SECRETNAME:$SECRETVALUE:::upload&#34; &gt;&gt; $CONF_FILE
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    done
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    if [[ ! -s $CONF_FILE ]]; then
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        echo &#34;** ERROR: user.conf is empty&#34; 1&gt;&amp;2
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        exit 1
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    fi</span>    
-</span></span></code></pre></div><p>The initContainer will use this configMap to read secrets from an Azure Key Vault and then write the secrets to the users.conf file. The users.conf file contains user account information. In the Key Vault, the secret name should be the username and the secret value should be the password. This Key Vault must exist and contain the secrets prior to deploying this solution.</p>
+<p><a href="https://github.com/kubernetes-sigs/azurefile-csi-driver/blob/master/docs/install-driver-on-aks.md"  class="external-link" target="_blank" rel="noopener">https://github.com/kubernetes-sigs/azurefile-csi-driver/blob/master/docs/install-driver-on-aks.md</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ConfigMap</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">creationTimestamp</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">testcm</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">data</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">init.sh</span><span class="p">:</span><span class="w"> </span><span class="p">|-</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    #!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    CONF_FILE=&#34;/etc/sftp/users.conf&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">    KEYVAULT=&#34;Insert name of Key Vault&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">    AZ_SPN_ID=&#34;Insert service principal Id&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">    AZ_SPN_PASSWORD=&#34;Insert service principal password&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">    AZ_SPN_TENANT_ID=&#34;Insert Az AAD Tenant Id&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">    AZ_SUBSCRIPTION_ID=&#34;Insert Az Subscription Id&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    az login --service-principal --username &#34;${AZ_SPN_ID}&#34; --password &#34;${AZ_SPN_PASSWORD}&#34; --tenant &#34;${AZ_SPN_TENANT_ID}&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">    az account set --subscription &#34;${AZ_SUBSCRIPTION_ID}&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    SECRETS+=($(az keyvault secret list --vault-name $KEYVAULT --query &#34;[].id&#34; -o tsv))
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    chmod 755 /home
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    if [[ -e $CONF_FILE ]]; then
+</span></span></span><span class="line"><span class="cl"><span class="sd">        rm -rf &#34;${CONF_FILE}&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">        touch $CONF_FILE
+</span></span></span><span class="line"><span class="cl"><span class="sd">    else
+</span></span></span><span class="line"><span class="cl"><span class="sd">        touch $CONF_FILE
+</span></span></span><span class="line"><span class="cl"><span class="sd">    fi
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    for SECRET in &#34;${SECRETS[@]}&#34;; do
+</span></span></span><span class="line"><span class="cl"><span class="sd">        SECRETNAME=$(basename $SECRET |  tr -d &#39;\r&#39;)
+</span></span></span><span class="line"><span class="cl"><span class="sd">        SECRETVALUE=$(az keyvault secret show --vault-name $KEYVAULT --name $SECRETNAME --query &#39;value&#39; | tr -d &#39;&#34;&#39; | tr -d &#39;\r&#39;)
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">        echo &#34;$SECRETNAME:$SECRETVALUE:::upload&#34; &gt;&gt; $CONF_FILE
+</span></span></span><span class="line"><span class="cl"><span class="sd">    done
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    if [[ ! -s $CONF_FILE ]]; then
+</span></span></span><span class="line"><span class="cl"><span class="sd">        echo &#34;** ERROR: user.conf is empty&#34; 1&gt;&amp;2
+</span></span></span><span class="line"><span class="cl"><span class="sd">        exit 1
+</span></span></span><span class="line"><span class="cl"><span class="sd">    fi</span><span class="w">    
+</span></span></span></code></pre></div><p>The initContainer will use this configMap to read secrets from an Azure Key Vault and then write the secrets to the users.conf file. The users.conf file contains user account information. In the Key Vault, the secret name should be the username and the secret value should be the password. This Key Vault must exist and contain the secrets prior to deploying this solution.</p>
 <p>When I deployed this solution in my environment, I used an Azure DevOps pipeline to create/manage the Key Vault with Terraform and then deploy the secrets using an inline Powershell script. However, this is beyond the scope of this article, and I will not be covering it here. You will also need to create a Service Principal in your AAD tenant and grant it access to the Key Vault. The Service Principal needs to have at least read access to the Key Vault.</p>
 <p>Before deploying the configMap, you need to fill in values for these variables:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>    KEYVAULT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Insert name of Key Vault&#34;</span>
-</span></span><span style="display:flex;"><span>    AZ_SPN_ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Insert service principal Id&#34;</span>
-</span></span><span style="display:flex;"><span>    AZ_SPN_PASSWORD<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Insert service principal password&#34;</span>
-</span></span><span style="display:flex;"><span>    AZ_SPN_TENANT_ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Insert Az AAD Tenant Id&#34;</span>
-</span></span><span style="display:flex;"><span>    AZ_SUBSCRIPTION_ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Insert Az Subscription Id&#34;</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">    <span class="nv">KEYVAULT</span><span class="o">=</span><span class="s2">&#34;Insert name of Key Vault&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">AZ_SPN_ID</span><span class="o">=</span><span class="s2">&#34;Insert service principal Id&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">AZ_SPN_PASSWORD</span><span class="o">=</span><span class="s2">&#34;Insert service principal password&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">AZ_SPN_TENANT_ID</span><span class="o">=</span><span class="s2">&#34;Insert Az AAD Tenant Id&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">AZ_SUBSCRIPTION_ID</span><span class="o">=</span><span class="s2">&#34;Insert Az Subscription Id&#34;</span>
 </span></span></code></pre></div><p>These values pertain to the service principal with read access to the Key Vault. After filling out these variables, you can deploy the configMap using kubectl.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl create -f configmap.yaml
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl create -f configmap.yaml
 </span></span></code></pre></div><p>You can deploy the PVC using this yaml file:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-YAML" data-lang="YAML"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PersistentVolumeClaim</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">pvc-ftp-clientdirs</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">accessModes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">ReadWriteMany</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">resources</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">requests</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">100Gi</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storageClassName</span>: <span style="color:#ae81ff">azurefile-csi-nfs</span>
-</span></span></code></pre></div><p>When creating the persistent volume claim for the deployment, you specify azurefile-csi-nfs as the StorageClass. This will create an NFSv4 share in a premium storage account. The reclaim policy of the storage class ensures that the file share is deleted when the associated Persistent Volume is deleted. Change the reclaim policy to “Retain” if you want the file shares to persist after deleting the PV. Furthermore, the storage class enables the file share to be expandable by modifying the storage request size on the PVC.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PersistentVolumeClaim</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">pvc-ftp-clientdirs</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">accessModes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">ReadWriteMany</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">requests</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">100Gi</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l">azurefile-csi-nfs</span><span class="w">
+</span></span></span></code></pre></div><p>When creating the persistent volume claim for the deployment, you specify azurefile-csi-nfs as the StorageClass. This will create an NFSv4 share in a premium storage account. The reclaim policy of the storage class ensures that the file share is deleted when the associated Persistent Volume is deleted. Change the reclaim policy to “Retain” if you want the file shares to persist after deleting the PV. Furthermore, the storage class enables the file share to be expandable by modifying the storage request size on the PVC.</p>
 <p>After deploying the PVC, you can verify its existence by running:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl get pvc
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl get pvc
 </span></span></code></pre></div><p>You should see output similar to the following (the manifest for the replicaSet is by far the most complicated of all the code referenced here):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-YAML" data-lang="YAML"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">apps/v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Deployment</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">labels</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">sftp</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">sftp</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">replicas</span>: <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">selector</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">app</span>: <span style="color:#ae81ff">sftp</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">strategy</span>: {}
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">template</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">labels</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">app</span>: <span style="color:#ae81ff">sftp</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">initContainer</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">enabled</span>: <span style="color:#66d9ef">true</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">name</span>: <span style="color:#ae81ff">chmodder</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">image</span>: <span style="color:#ae81ff">mcr.microsoft.com/azure-cli</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">command</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#ae81ff">/bin/sh</span>
-</span></span><span style="display:flex;"><span>        - -<span style="color:#ae81ff">c</span>
-</span></span><span style="display:flex;"><span>        - <span style="color:#e6db74">&#34;/scripts/init.sh&#34;</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">volumeMounts</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">init-shell-script</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">mountPath</span>: <span style="color:#ae81ff">/scripts</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">containers</span>:
-</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">sftp</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">image</span>: <span style="color:#ae81ff">docker.io/atmoz/sftp:alpine</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">IfNotPresent</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">resources</span>:
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">requests</span>:
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">memory</span>: <span style="color:#e6db74">&#34;64Mi&#34;</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">cpu</span>: <span style="color:#e6db74">&#34;250m&#34;</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">limits</span>:
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">memory</span>: <span style="color:#e6db74">&#34;128Mi&#34;</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">cpu</span>: <span style="color:#e6db74">&#34;500m&#34;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">livenessProbe</span>:
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">tcpSocket</span>:
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">port</span>: <span style="color:#ae81ff">22</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">initialDelaySeconds</span>: <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">timeoutSeconds</span>: <span style="color:#ae81ff">5</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">periodSeconds</span>: <span style="color:#ae81ff">10</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">failureThreshold</span>: <span style="color:#ae81ff">3</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">readinessProbe</span>:
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">tcpSocket</span>:
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">port</span>: <span style="color:#ae81ff">22</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">initialDelaySeconds</span>: <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">timeoutSeconds</span>: <span style="color:#ae81ff">5</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">periodSeconds</span>: <span style="color:#ae81ff">10</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">failureThreshold</span>: <span style="color:#ae81ff">3</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">volumeMounts</span>:
-</span></span><span style="display:flex;"><span>          - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">pvc-ftp-clientdirs</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">mountPath</span>: <span style="color:#ae81ff">/home</span>
-</span></span><span style="display:flex;"><span>          - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">sftp</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">mountPath</span>: <span style="color:#ae81ff">/etc/sftp</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">dnsPolicy</span>: <span style="color:#ae81ff">ClusterFirst</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">restartPolicy</span>: <span style="color:#ae81ff">Never</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
-</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">pvc-ftp-clientdirs</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">persistentVolumeClaim</span>:
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">claimName</span>: <span style="color:#ae81ff">pvc-ftp-clientdirs</span>
-</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">init-shell-script</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">configMap</span>:
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">init-shell-script</span>
-</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">sftp</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">emptyDir</span>: {}
-</span></span></code></pre></div><p>You may need to change the CPU/memory requests and limits. These values worked for me, but your results may vary. You can also add/change the labels as you see fit.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">apps/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Deployment</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">sftp</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">sftp</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">sftp</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">sftp</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">initContainer</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">chmodder</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">mcr.microsoft.com/azure-cli</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">/bin/sh</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- -<span class="l">c</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="s2">&#34;/scripts/init.sh&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">volumeMounts</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">init-shell-script</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l">/scripts</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">sftp</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">docker.io/atmoz/sftp:alpine</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">IfNotPresent</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">requests</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;64Mi&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;250m&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">limits</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;128Mi&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;500m&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">livenessProbe</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">tcpSocket</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">22</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">5</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">readinessProbe</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">tcpSocket</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">22</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">5</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">pvc-ftp-clientdirs</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l">/home</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">sftp</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l">/etc/sftp</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">dnsPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterFirst</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">Never</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">pvc-ftp-clientdirs</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">persistentVolumeClaim</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="l">pvc-ftp-clientdirs</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">init-shell-script</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">configMap</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">init-shell-script</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">sftp</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span></code></pre></div><p>You may need to change the CPU/memory requests and limits. These values worked for me, but your results may vary. You can also add/change the labels as you see fit.</p>
 <p>This will handle routing traffic to our pods.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-YAML" data-lang="YAML"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Service</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">sftp-service</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">selector</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">sftp</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">type</span>: <span style="color:#ae81ff">LoadBalancer</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ports</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">port</span>: <span style="color:#ae81ff">22</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">targetPort</span>: <span style="color:#ae81ff">22</span>
-</span></span></code></pre></div><p>Users will be connected in a round-robin fashion to the pods. This manifest will create a service of type LoadBalancer. Which will in turn create a new public Azure Load Balancer in the resource group that contains your Azure Kubernetes Service cluster if one does not already exist. If you already have a public load balancer, a new frontend IP address will be added.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Service</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">sftp-service</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">sftp</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">LoadBalancer</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ports</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l">TCP</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">22</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="m">22</span><span class="w">
+</span></span></span></code></pre></div><p>Users will be connected in a round-robin fashion to the pods. This manifest will create a service of type LoadBalancer. Which will in turn create a new public Azure Load Balancer in the resource group that contains your Azure Kubernetes Service cluster if one does not already exist. If you already have a public load balancer, a new frontend IP address will be added.</p>
 <p>That’s all for now. Please feel free to contact me if you have any questions.</p>
 
-        </div>
+      </div>
+
+
+      <footer>
         
 
-    
 
-
-<div class="post-info">
-    
-        <div class="post-date dt-published">2022-01-16</div>
-    
-
-    <a class="post-hidden-url u-url" href="http://localhost:1313/posts/2022-01-16-azure-kubernetes-sftp-solution/">http://localhost:1313/posts/2022-01-16-azure-kubernetes-sftp-solution/</a>
-    <a href="http://localhost:1313/" class="p-name p-author post-hidden-author h-card" rel="me">Ryan</a>
-
-
-    <div class="post-taxonomies">
         
-            <ul class="post-categories">
-                
-                    
-                    <li><a href="http://localhost:1313/categories/azure-kubernetes-service/">Azure Kubernetes Service</a></li>
-                
-                    
-                    <li><a href="http://localhost:1313/categories/sftp/">SFTP</a></li>
-                
-            </ul>
-            
-            
-                <ul class="post-tags">
-                    
-                        
-                        <li><a href="http://localhost:1313/tags/aks/">#Aks</a></li>
-                    
-                        
-                        <li><a href="http://localhost:1313/tags/azure/">#Azure</a></li>
-                    
-                        
-                        <li><a href="http://localhost:1313/tags/azure-kubernetes-service/">#Azure Kubernetes Service</a></li>
-                    
-                        
-                        <li><a href="http://localhost:1313/tags/ftp/">#Ftp</a></li>
-                    
-                        
-                        <li><a href="http://localhost:1313/tags/kubernetes/">#Kubernetes</a></li>
-                    
-                </ul>
         
-    </div>
-</div>
-
+        
+        
+        
+        
+        
+      </footer>
     </article>
 
     
-        
-        
-            <h3 class="read-next-title">Read next</h3>
-            <ul class="read-next-posts">
-                
-                <li><a href="/posts/2022-01-14-continuous-deployment-models/">Continuous Deployment Models</a></li>
-                
-                <li><a href="/posts/2022-01-14-deploy-azure-vms-using-azure-devops-ci-cd-pipeline/">Deploy Azure VMs Using Azure Devops CI/CD Pipeline</a></li>
-                
-                <li><a href="/posts/2022-01-14-azure-devops-self-hosted-agent-service-wont-start-incorrect-function/">Azure Devops &amp;#8211; Self Hosted Agent Service Won&amp;#8217;t Start &amp;#8211; Incorrect Function</a></li>
-                
-                <li><a href="/posts/2020-12-16-exam-az-303-microsoft-azure-architect/">Exam AZ-303: Microsoft Azure Architect Technologies Study Guide</a></li>
-                
-                <li><a href="/posts/2020-11-26-azure-ad-sync-set-msoldirsyncenabled/">Azure AD Sync &amp;#8211; Set-MsolDirSyncEnabled : You cannot turn off Active Directory synchronization.</a></li>
-                
-            </ul>
-        
-    
+  </section>
 
-    
-        
-    <div class="pagination post-pagination">
-        <div class="left pagination-item ">
-            
-                <a href="/posts/2022-02-05-kubernetes-pod-eviction/">Kubernetes Pod Eviction</a>
-            
-        </div>
-        <div class="right pagination-item ">
-            
-                <a href="/posts/2022-01-14-wsus-update-files-not-downloading/">WSUS: Update Files Not Downloading</a>
-            
-        </div>
     </div>
 
-
-
-
+    <footer class="footer">
+  <section class="container">
+    ©
     
-
+      2012 -
     
-        
-
-
-
-
+    2024
+     Ryan Nemeth 
+    ·
     
-
-
-
-
-
-<article class="post">
-<script
-    data-isso="https://comments.example.com/"
-    data-isso-id="thread-id"
-    data-isso-css="true"
-    data-isso-lang="de"
-    data-isso-reply-to-self="true"
-    data-isso-require-author="true"
-    data-isso-require-email="true"
-    data-isso-avatar="true"
-    data-isso-avatar-bg="#f0f0f0"
-    data-isso-feed="false"
-    src="https://comments.example.com/js/embed.min.js">
-</script>
-<noscript>Please enable JavaScript to view the comments powered by <a href="https://posativ.org/isso/">Isso</a>.</noscript>
-<div>
-  <section id="isso-thread"></section>
-</div>
-</article>
-
-
-
-
-
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
-
-        </main>
-        
-            <footer class="common-footer">
-    
-    
-
-    <div class="common-footer-bottom">
-        
-        <div class="copyright">
-            <p>© Ryan Nemeth, 2024<br>
-            Powered by <a target="_blank" rel="noopener noreferrer" href="https://gohugo.io/">Hugo</a>, theme <a target="_blank" rel="noopener noreferrer" href="https://github.com/mitrichius/hugo-theme-anubis">Anubis</a>.<br>
-            
-            </p>  
-        </div> 
-
-        
-
-    
-
-
-
-    <button class="theme-switcher">
-        Dark theme
-    </button>
-
-
-<script>
-const STORAGE_KEY = 'user-color-scheme'
-const defaultTheme = "dark"
-
-let currentTheme
-let switchButton
-let autoDefinedScheme = window.matchMedia('(prefers-color-scheme: dark)')
-
-const autoChangeScheme = e => {
-    currentTheme = e.matches ? 'dark' : 'light'
-    document.documentElement.setAttribute('data-theme', currentTheme)
-    changeButtonText()
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    switchButton = document.querySelector('.theme-switcher')
-    currentTheme = detectCurrentScheme()
-    if (currentTheme == 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark')
-    }
-    if (currentTheme == 'auto') {
-        autoChangeScheme(autoDefinedScheme);
-        autoDefinedScheme.addListener(autoChangeScheme);
-    }
-
-    if (switchButton) {
-        changeButtonText()
-        switchButton.addEventListener('click', switchTheme, false)
-    }
-  
-    showContent()
-})
-
-function detectCurrentScheme() {
-    if (localStorage.getItem(STORAGE_KEY)) {
-        return localStorage.getItem(STORAGE_KEY)
-    } 
-    if (defaultTheme) {
-        return defaultTheme
-    } 
-    if (!window.matchMedia) {
-        return 'light'
-    } 
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark'
-    }
-    return 'light'
-}
-
-function changeButtonText()
-{   
-    if (switchButton) {
-        switchButton.textContent = currentTheme == 'dark' ?  "Light theme" : "Dark theme"
-    }
-}
-
-function switchTheme(e) {
-    if (currentTheme == 'dark') {
-        localStorage.setItem(STORAGE_KEY, 'light')
-        document.documentElement.setAttribute('data-theme', 'light')
-        currentTheme = 'light'
-    } else {
-        localStorage.setItem(STORAGE_KEY, 'dark')
-        document.documentElement.setAttribute('data-theme', 'dark')
-        currentTheme = 'dark'
-    }
-    changeButtonText()
-}
-
-function showContent() {
-    document.body.style.visibility = 'visible';
-    document.body.style.opacity = 1;
-}
-</script>   
-    </div>
-
-    <p class="h-card vcard">
-
-    <a href=http://localhost:1313/ class="p-name u-url url fn" rel="me">Ryan Nemeth</a> 
-
-     
-        /
-        <a class="p-email u-email email" rel="me" href="mailto:ryannemeth@live.com">ryannemeth@live.com</a>
-    
-
-     
-        <img class="u-photo" src="/images/bobble.jpg" />
-    
-</p> 
+  </section>
 </footer>
 
-        
-    </div>
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 </body>
+
 </html>

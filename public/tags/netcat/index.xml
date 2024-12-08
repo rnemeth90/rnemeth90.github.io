@@ -3,135 +3,17 @@
   <channel>
     <title>Netcat on GeekyRyan</title>
     <link>http://localhost:1313/tags/netcat/</link>
-    <description>GeekyRyan (Netcat)</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <description>Recent content in Netcat on GeekyRyan</description>
+    <generator>Hugo</generator>
+    <language>en</language>
     <lastBuildDate>Mon, 27 Nov 2023 00:00:00 +0000</lastBuildDate>
-    
     <atom:link href="http://localhost:1313/tags/netcat/index.xml" rel="self" type="application/rss+xml" />
-    
-    
     <item>
       <title>Exploring Netcat</title>
       <link>http://localhost:1313/posts/2023-11-27-netcat/</link>
       <pubDate>Mon, 27 Nov 2023 00:00:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2023-11-27-netcat/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34; &gt;Introduction
-&lt;span&gt;
-    &lt;a href=&#34;#introduction&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the &amp;ldquo;network swiss-army knife&amp;rdquo;. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed.&lt;/p&gt;
-&lt;p&gt;Netcat is a simple utility that reads and writes data across raw TCP/UDP sockets. Netcat is a command-line tool available out of the box on most *nix operating systems and can also be installed on Windows. It&amp;rsquo;s a powerful tool for debugging and investigating networks. It can even be used for tasks like port scanning, transferring files, chatting with friends on a network, and even creating backdoors (for testing purposes, obviously :) ).&lt;/p&gt;
-&lt;h2 id=&#34;understanding-udp&#34; &gt;Understanding UDP
-&lt;span&gt;
-    &lt;a href=&#34;#understanding-udp&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;Before we dive into exploring UDP connections with netcat, let&amp;rsquo;s quickly get a refresher on UDP. UDP is a connectionless transport layer protocol that does not provide the same reliability, flow-control, and error-checking mechanisms as TCP. Unlike TCP, UDP also does not establish a persistent connection between the sender and receiver. Instead, it sends data packets, known as datagrams, individually using a &amp;lsquo;fire and forget&amp;rsquo; method. UDP is often used for applications where real-time communication and low overhead are crucial, such as streaming media, gaming, DNS (though, certain functions of DNS may also use TCP), and IoT devices.&lt;/p&gt;
-&lt;h2 id=&#34;understanding-tcp&#34; &gt;Understanding TCP
-&lt;span&gt;
-    &lt;a href=&#34;#understanding-tcp&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;It&amp;rsquo;s also crucial to have a fundamental knowledge of the TCP protocol. TCP is one of the main protocols in the Internet protocol suite, laying the foundation for the majority of data exchange over the Internet. Unlike its counterpart, UDP (User Datagram Protocol), TCP is connection-oriented, meaning a connection is established and maintained until the application programs at each end have finished exchanging messages. This ensures reliable, ordered, and error-checked delivery of a stream of data between applications running on hosts communicating over an IP network. Key features of TCP include its ability to manage data packet size, data transfer rate, and network traffic congestion, making it ideal for applications where data integrity and accuracy are crucial, such as web browsing, email, and file transfer. Understanding TCP is essential for effectively utilizing tools like Netcat, as it provides the basis for establishing stable and secure connections across a network.&lt;/p&gt;
-&lt;h2 id=&#34;creating-a-simple-clientserver&#34; &gt;Creating a Simple Client/Server
-&lt;span&gt;
-    &lt;a href=&#34;#creating-a-simple-clientserver&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;The following will create a simple UDP server and client.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Launch a shell and type the following command. This will tell netcat to listen (&lt;code&gt;-l&lt;/code&gt;) on UDP (&lt;code&gt;-u&lt;/code&gt;) port (&lt;code&gt;-p&lt;/code&gt;) 5555.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;nc -l -u -p 5555
-&lt;/code&gt;&lt;/pre&gt;&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;Launch another shell and type the following. This will connect to the server we created above.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;nc -u 127.0.0.1 5555
-&lt;/code&gt;&lt;/pre&gt;&lt;ol start=&#34;3&#34;&gt;
-&lt;li&gt;You can now send messages to the server, like so:&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Client:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ nc -u 127.0.0.1 5555
-hello
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Server:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ nc -l -u -p 5555
-hello
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can do the same thing with TCP, just leave out the &lt;code&gt;-u&lt;/code&gt; in each command above.&lt;/p&gt;
-&lt;h2 id=&#34;transfer-a-file&#34; &gt;Transfer a File
-&lt;span&gt;
-    &lt;a href=&#34;#transfer-a-file&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;On the receiving end:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;nc -l -p 5555 &amp;gt; outputfile
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;On the sending end:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;nc [hostname or IP address of server] 5555 &amp;lt; inputfile
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;port-scanning&#34; &gt;Port Scanning:
-&lt;span&gt;
-    &lt;a href=&#34;#port-scanning&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;netcat -v -z -n -w 1 v.txvip1 1-1023
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;serve-a-web-page&#34; &gt;Serve a web page:
-&lt;span&gt;
-    &lt;a href=&#34;#serve-a-web-page&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;If you have an html file, you can create a simple web server for it. Here we tell netcat to listen on port 8080 and redirect the contents of index.html to any &amp;rsquo;thing&amp;rsquo; that connects:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;nc -l -p 8080 &amp;lt; index.html
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: In the examples above, I always use port 5555. You can technically use just about any port you want. However, attempting to use any port below 1024 will require root privileges. The port you choose cannot be in use by another process.&lt;/p&gt;
-&lt;h2 id=&#34;other-practical-examples&#34; &gt;Other Practical Examples
-&lt;span&gt;
-    &lt;a href=&#34;#other-practical-examples&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;Let&amp;rsquo;s explore a few more practical examples to illustrate the usefulness of netcat&amp;rsquo;s UDP capabilities. I will leave the actual implementation as an exercise for you to try.&lt;/p&gt;
-&lt;h3 id=&#34;example-1-testing-a-tcpudp-server&#34; &gt;Example 1: Testing a TCP/UDP Server
-&lt;span&gt;
-    &lt;a href=&#34;#example-1-testing-a-tcpudp-server&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h3&gt;&lt;p&gt;Suppose you are developing a UDP server application, and you want to test its functionality. You can use netcat to send TCP/UDP packets to your server and observe its response. By monitoring the server&amp;rsquo;s behavior, you can ensure that it correctly handles incoming UDP traffic.&lt;/p&gt;
-&lt;h3 id=&#34;example-2-interacting-with-networked-devices&#34; &gt;Example 2: Interacting with Networked Devices
-&lt;span&gt;
-    &lt;a href=&#34;#example-2-interacting-with-networked-devices&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h3&gt;&lt;p&gt;Netcat can be handy when interacting with networked devices, such as routers, IoT devices, or even network-enabled printers. By establishing a TCP/UDP connection, you can send commands, queries, or configuration data to these devices, enabling you to troubleshoot or configure them remotely.&lt;/p&gt;
-&lt;h3 id=&#34;example-3-banner-grabbing&#34; &gt;Example 3. Banner Grabbing
-&lt;span&gt;
-    &lt;a href=&#34;#example-3-banner-grabbing&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h3&gt;&lt;p&gt;This is a technique used in network security to gather information about a remote server, including the type and version of the operating system and applications running. The basic concept is that you connect to a network service and see what kind of &amp;lsquo;banner&amp;rsquo; (if any) it returns in the output. When I was starting out in the IT world, this was a common thing to do to enumerate devices and services on a network. Though, I would like to believe this is no longer as much of a concern, given the simplicity of preventing this type of information discovery attack.&lt;/p&gt;
-&lt;h2 id=&#34;conclusion&#34; &gt;Conclusion
-&lt;span&gt;
-    &lt;a href=&#34;#conclusion&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;Netcat&amp;rsquo;s ability to handle UDP connections makes it an invaluable tool for various network-related tasks. Whether you are testing a UDP server, interacting with networked devices, or exploring your network&amp;rsquo;s services, netcat provides a convenient and straightforward approach.&lt;/p&gt;
-&lt;p&gt;In this blog post, we walked through the process of creating a UDP connection using netcat, discussed the fundamentals of UDP, and explored practical examples where netcat can prove useful. By mastering netcat&amp;rsquo;s capabilities, you can enhance your network troubleshooting and debugging skills, and gain a deeper understanding of UDP communication.&lt;/p&gt;
-&lt;p&gt;You can read more about netcat in the man pages:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;man nc
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The OpenBSD repository contains the original source written by Hobbit decades ago:
-&lt;a href=&#34;https://github.com/openbsd/src/blob/master/usr.bin/nc/netcat.c&#34;&gt;netcat.c&lt;/a&gt;&lt;/p&gt;
-</description>
+      <description>Introduction Link to heading Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the &amp;ldquo;network swiss-army knife&amp;rdquo;. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar.</description>
     </item>
-    
   </channel>
 </rss>

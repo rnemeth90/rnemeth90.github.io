@@ -3,47 +3,17 @@
   <channel>
     <title>Docker on GeekyRyan</title>
     <link>http://localhost:1313/tags/docker/</link>
-    <description>GeekyRyan (Docker)</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <description>Recent content in Docker on GeekyRyan</description>
+    <generator>Hugo</generator>
+    <language>en</language>
     <lastBuildDate>Sun, 26 Jun 2022 15:00:28 +0000</lastBuildDate>
-    
     <atom:link href="http://localhost:1313/tags/docker/index.xml" rel="self" type="application/rss+xml" />
-    
-    
     <item>
       <title>Running Docker in WSL v1</title>
       <link>http://localhost:1313/posts/2022-06-26-running-docker-in-wsl-v1/</link>
       <pubDate>Sun, 26 Jun 2022 15:00:28 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2022-06-26-running-docker-in-wsl-v1/</guid>
-      <description>&lt;p&gt;I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.&lt;/p&gt;
-&lt;p&gt;Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work. I receive this nice message:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ docker
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The command &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;docker&amp;#39;&lt;/span&gt; could not be found in this WSL &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; distro.
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;We recommend to convert this distro to WSL &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; and activate
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;the WSL integration in Docker Desktop settings.
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;See https://docs.docker.com/docker-for-windows/wsl/ &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; details.
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So I’m in somewhat of a catch-22 here…&lt;/p&gt;
-&lt;p&gt;To work around this problem until a proper solution is found, I was able to get Docker working with WSL v1.&lt;/p&gt;
-&lt;p&gt;If you happen to be having a similar issue (and it seems like quite a few people are, considering the number of Github posts I found), just follow these steps:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Expose the Docker daemon in docker desktop settings:&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2022/02/image-10-1024x585.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Install the stand-alone Docker client in WSL v1:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.5.tgz
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tar zxvf docker-20.10.5.tgz
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cd docker
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Set the default Docker daemon in WSL v1:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;export DOCKER_HOST&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;tcp://localhost:2375
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Verify you can connect to Docker running on Windows from within WSL:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;./docker info
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is also beneficial in that you only have one Docker host to manage your containers, network, etc., rather than two.&lt;/p&gt;
-</description>
+      <description>I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.&#xA;Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work.</description>
     </item>
-    
   </channel>
 </rss>

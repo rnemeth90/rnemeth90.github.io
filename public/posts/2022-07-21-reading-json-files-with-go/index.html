@@ -1,92 +1,35 @@
 <!DOCTYPE html>
+<html lang="en">
 
-
-<html lang="en-us" data-theme="">
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
-    
-        
-<meta charset="utf-8">
-<meta name="HandheldFriendly" content="True">
+  <title>
+  Reading Json Files with Go · GeekyRyan
+</title>
+  <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="referrer" content="no-referrer-when-downgrade">
+<meta name="color-scheme" content="light dark">
 
-<title>Reading Json Files with Go - GeekyRyan</title>
 
+
+
+<meta name="author" content="Ryan Nemeth">
 <meta name="description" content="JSON is a widely used format for representing structured data. Developers like it because it is easy to read, most common languages have a library for interacting with it, and most public APIs accept JSON in HTTP requests.
 In this post, we&rsquo;ll look at parsing a JSON file using Go! We will be using the io/ioutil package to open a json file on local disk, and encoding/json to parse the JSON data within the file into a memory structure.">
+<meta name="keywords" content="blog,developer,personal,devops">
 
 
 
-
-
-<link rel="icon" type="image/x-icon" href="http://localhost:1313/favicon.ico">
-<link rel="apple-touch-icon-precomposed" href="http://localhost:1313/favicon.png">
-
-
-<style>
-  body {
-    visibility: hidden;
-    opacity: 0;
-  }
-</style>
-
-<noscript>
-  <style>
-    body {
-      visibility: visible;
-      opacity: 1;
-    }
-  </style>
-</noscript>
-
-
-
-    
-
-
-
-
-
-    
-    
-    
-
-    
-        <link rel="stylesheet" href="http://localhost:1313/css/style.779ec8e6902530eb27b55bc5845f86cfa59dc8ffedf4c6fdc6377c90b514db02.css" integrity="sha256-d57I5pAlMOsntVvFhF&#43;Gz6WdyP/t9Mb9xjd8kLUU2wI=">
-    
-
-
-
-
-
-    
-
-    
-
-
-
-
-
-    
-    
-    
-
-    
-        <script src="http://localhost:1313/js/script.32e751300d2d69e2cb56a98d2c9d964d54a53a8fb7281ccdbd80f055c88e8d86.js" type="text/javascript" charset="utf-8" integrity="sha256-MudRMA0taeLLVqmNLJ2WTVSlOo&#43;3KBzNvYDwVciOjYY="></script>
-    
-
-
-
-
-
-
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Reading Json Files with Go">
+  <meta name="twitter:description" content="JSON is a widely used format for representing structured data. Developers like it because it is easy to read, most common languages have a library for interacting with it, and most public APIs accept JSON in HTTP requests.
+In this post, we’ll look at parsing a JSON file using Go! We will be using the io/ioutil package to open a json file on local disk, and encoding/json to parse the JSON data within the file into a memory structure.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2022-07-21-reading-json-files-with-go/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Reading Json Files with Go">
   <meta property="og:description" content="JSON is a widely used format for representing structured data. Developers like it because it is easy to read, most common languages have a library for interacting with it, and most public APIs accept JSON in HTTP requests.
 In this post, we’ll look at parsing a JSON file using Go! We will be using the io/ioutil package to open a json file on local disk, and encoding/json to parse the JSON data within the file into a memory structure.">
-  <meta property="og:locale" content="en_us">
+  <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2022-07-21T00:00:00+00:00">
@@ -98,22 +41,47 @@ In this post, we’ll look at parsing a JSON file using Go! We will be using the
     <meta property="article:tag" content="Json">
 
 
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Reading Json Files with Go">
-  <meta name="twitter:description" content="JSON is a widely used format for representing structured data. Developers like it because it is easy to read, most common languages have a library for interacting with it, and most public APIs accept JSON in HTTP requests.
-In this post, we’ll look at parsing a JSON file using Go! We will be using the io/ioutil package to open a json file on local disk, and encoding/json to parse the JSON data within the file into a memory structure.">
+
+
+<link rel="canonical" href="http://localhost:1313/posts/2022-07-21-reading-json-files-with-go/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
 
 
 
+
+
+
+  
     
-        <link rel="webmention" href="https://webmention.io/hugo-theme-anubis/webmention" />
-        
-            <link rel="pingback" href="https://webmention.io/hugo-theme-anubis/xmlrpc" />
-        
     
-    
-        <link rel="webmention" href="https://yourdomain.com/webemntions/receive" />
-    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
 
 
 
@@ -123,441 +91,306 @@ In this post, we’ll look at parsing a JSON file using Go! We will be using the
 
 
 
-    
 </head>
-<body>
-    <a class="skip-main" href="#main">Skip to main content</a>
-    <div class="container">
-        <header class="common-header"> 
-            
-                <div class="header-top">
-    <h1 class="site-title">
-    <a href="/">GeekyRyan</a>
-</h1>
-    <ul class="social-icons">
-
-
-    
-        
-        
-        <li>
-            <a href="https://github.com/rnemeth90" title="Github" rel="me">
-            <span class="inline-svg" >
 
 
 
 
-    
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
-
-</span>
-
-            </a>
-        </li>
-    
-
-    
-        
-        
-        <li>
-            <a href="https://twitter.com/geeky_ryan" title="Twitter" rel="me">
-            <span class="inline-svg" >
 
 
-
-
-    
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
-
-</span>
-
-            </a>
-        </li>
-    
-
-
-
-    <li>
-            <a href="http://localhost:1313/index.xml" title="RSS" rel="me">
-            <span class="inline-svg" >
-
-
-
-
-    
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M128.081 415.959c0 35.369-28.672 64.041-64.041 64.041S0 451.328 0 415.959s28.672-64.041 64.041-64.041 64.04 28.673 64.04 64.041zm175.66 47.25c-8.354-154.6-132.185-278.587-286.95-286.95C7.656 175.765 0 183.105 0 192.253v48.069c0 8.415 6.49 15.472 14.887 16.018 111.832 7.284 201.473 96.702 208.772 208.772.547 8.397 7.604 14.887 16.018 14.887h48.069c9.149.001 16.489-7.655 15.995-16.79zm144.249.288C439.596 229.677 251.465 40.445 16.503 32.01 7.473 31.686 0 38.981 0 48.016v48.068c0 8.625 6.835 15.645 15.453 15.999 191.179 7.839 344.627 161.316 352.465 352.465.353 8.618 7.373 15.453 15.999 15.453h48.068c9.034-.001 16.329-7.474 16.005-16.504z"/></svg>
-
-</span>
-
-            </a>
-        </li>
-    
-
-</ul>
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
 </div>
 
-    <nav>
-        
-        
-        <a class="" href="http://localhost:1313/about" title="about">About</a>
-        
-        <a class="" href="http://localhost:1313/tags/" title="tags">Tags</a>
-        
-        <a class="" href="http://localhost:1313/posts/" title="Archive">Archive</a>
-        
-    </nav>
 
-
-
-
-
-
-            
-        </header>
-        <main id="main" tabindex="-1"> 
-            
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
     
+    <a class="navigation-title" href="http://localhost:1313/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
 
-    <article class="post h-entry">
-        <div class="post-header">
-            <header>
-                <h1 class="p-name post-title">Reading Json Files with Go</h1>
 
-                
-            </header>
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/2022-07-21-reading-json-files-with-go/">
+              Reading Json Files with Go
+            </a>
+          </h1>
         </div>
-        <div class="content e-content">
-            <p>JSON is a widely used format for representing structured data. Developers like it because it is easy to read, most common languages have a library for interacting
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2022-07-21T00:00:00Z">
+                2022-07-21
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/software-development/">Software Development</a>
+      <span class="separator">•</span>
+    <a href="/categories/golang/">Golang</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/golang/">Golang</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/dev/">Dev</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/programming/">Programming</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/software/">Software</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/json/">Json</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>JSON is a widely used format for representing structured data. Developers like it because it is easy to read, most common languages have a library for interacting
 with it, and most public APIs accept JSON in HTTP requests.</p>
 <p>In this post, we&rsquo;ll look at parsing a JSON file using Go! We will be using the io/ioutil package to open a json file on local disk, and encoding/json to parse the
 JSON data within the file into a memory structure.</p>
 <p>Let&rsquo;s assume we have the following JSON data representing an employee:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Id&#34;</span>: <span style="color:#ae81ff">1</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;firstName&#34;</span>: <span style="color:#e6db74">&#34;Steve&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;lastName&#34;</span>: <span style="color:#e6db74">&#34;Rogers&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;alias&#34;</span>: <span style="color:#e6db74">&#34;Captain America&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Department&#34;</span>: <span style="color:#e6db74">&#34;Avengers&#34;</span>
-</span></span><span style="display:flex;"><span>}
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;Id&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;firstName&#34;</span><span class="p">:</span> <span class="s2">&#34;Steve&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;lastName&#34;</span><span class="p">:</span> <span class="s2">&#34;Rogers&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;alias&#34;</span><span class="p">:</span> <span class="s2">&#34;Captain America&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;Department&#34;</span><span class="p">:</span> <span class="s2">&#34;Avengers&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>We need a way of representing this data in memory when decoding it from JSON. For this, we will need to create a struct:</p>
 <p>We will build up our go module as we progress through the article</p>
 <p>Let&rsquo;s start:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// main.go
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
-</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;encoding/json&#34;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;fmt&#34;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;io/ioutil&#34;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;log&#34;</span>
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Hero represents an hero
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// ALL fields must be exportable! Otherwise the JSON parsing will fail.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Hero</span> <span style="color:#66d9ef">struct</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Id</span>        <span style="color:#66d9ef">int</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">FirstName</span> <span style="color:#66d9ef">string</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">LastName</span>  <span style="color:#66d9ef">string</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Alias</span>     <span style="color:#66d9ef">string</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Group</span>     <span style="color:#66d9ef">string</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// Here we set the log prefix. When reading stack traces, this makes it easier to know
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#75715e">// where a failure occurred.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">SetPrefix</span>(<span style="color:#e6db74">&#34;main(): &#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// We first need to load the JSON file into memory
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">content</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">ReadFile</span>(<span style="color:#e6db74">&#34;./heros.json&#34;</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatal</span>(<span style="color:#e6db74">&#34;Error opening the file: &#34;</span>, <span style="color:#a6e22e">err</span>)
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// Now we parse the JSON data into a memory structure. We know our JSON file will have more than one hero object,
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#75715e">// so we&#39;ll use make() to create a []Hero slice. Since go is a pass-by-value language, we will then use the address-of
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#75715e">// operator (&amp;) to unmarshal our json data into the heros slice
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">heros</span> <span style="color:#f92672">:=</span> make([]<span style="color:#a6e22e">Hero</span>, <span style="color:#ae81ff">5</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Unmarshal</span>(<span style="color:#a6e22e">content</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">heros</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatal</span>(<span style="color:#e6db74">&#34;Error occurred during unmarshal: &#34;</span>, <span style="color:#a6e22e">err</span>)
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// now we can read/interact with the data. We&#39;ll loop over the array
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#75715e">// and print the values in memory
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">heros</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">heros</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Id</span>)
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">heros</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">FirstName</span>)
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">heros</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">LastName</span>)
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">heros</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Group</span>)
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>}
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// main.go
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;encoding/json&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;io/ioutil&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;log&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Hero represents an hero
+</span></span></span><span class="line"><span class="cl"><span class="c1">// ALL fields must be exportable! Otherwise the JSON parsing will fail.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">Hero</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">Id</span>        <span class="kt">int</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">FirstName</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">LastName</span>  <span class="kt">string</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">Alias</span>     <span class="kt">string</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">Group</span>     <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// Here we set the log prefix. When reading stack traces, this makes it easier to know
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// where a failure occurred.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">log</span><span class="p">.</span><span class="nf">SetPrefix</span><span class="p">(</span><span class="s">&#34;main(): &#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// We first need to load the JSON file into memory
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">content</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ioutil</span><span class="p">.</span><span class="nf">ReadFile</span><span class="p">(</span><span class="s">&#34;./heros.json&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">log</span><span class="p">.</span><span class="nf">Fatal</span><span class="p">(</span><span class="s">&#34;Error opening the file: &#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// Now we parse the JSON data into a memory structure. We know our JSON file will have more than one hero object,
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// so we&#39;ll use make() to create a []Hero slice. Since go is a pass-by-value language, we will then use the address-of
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// operator (&amp;) to unmarshal our json data into the heros slice
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">heros</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="nx">Hero</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">err</span> <span class="p">=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">content</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">heros</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">log</span><span class="p">.</span><span class="nf">Fatal</span><span class="p">(</span><span class="s">&#34;Error occurred during unmarshal: &#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// now we can read/interact with the data. We&#39;ll loop over the array
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// and print the values in memory
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">heros</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">heros</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">Id</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">heros</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">FirstName</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">heros</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">LastName</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">heros</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">Group</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>Create a file named employees.json with similar data:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[
-</span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Id&#34;</span>: <span style="color:#ae81ff">1</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;firstName&#34;</span>: <span style="color:#e6db74">&#34;Steve&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;lastName&#34;</span>: <span style="color:#e6db74">&#34;Rogers&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;alias&#34;</span>: <span style="color:#e6db74">&#34;Captain America&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;group&#34;</span>: <span style="color:#e6db74">&#34;Avengers&#34;</span>
-</span></span><span style="display:flex;"><span>  },
-</span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Id&#34;</span>: <span style="color:#ae81ff">2</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;firstName&#34;</span>: <span style="color:#e6db74">&#34;Clark&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;lastName&#34;</span>: <span style="color:#e6db74">&#34;Kent&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;alias&#34;</span>: <span style="color:#e6db74">&#34;Superman&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;group&#34;</span>: <span style="color:#e6db74">&#34;Justice League&#34;</span>
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>]
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">[</span>
+</span></span><span class="line"><span class="cl">  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;Id&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;firstName&#34;</span><span class="p">:</span> <span class="s2">&#34;Steve&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lastName&#34;</span><span class="p">:</span> <span class="s2">&#34;Rogers&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;alias&#34;</span><span class="p">:</span> <span class="s2">&#34;Captain America&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;group&#34;</span><span class="p">:</span> <span class="s2">&#34;Avengers&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;Id&#34;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;firstName&#34;</span><span class="p">:</span> <span class="s2">&#34;Clark&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lastName&#34;</span><span class="p">:</span> <span class="s2">&#34;Kent&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;alias&#34;</span><span class="p">:</span> <span class="s2">&#34;Superman&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;group&#34;</span><span class="p">:</span> <span class="s2">&#34;Justice League&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
 </span></span></code></pre></div><p>Now, we can run our main.go file:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>11:40:47 ryan@xerxes json → go run main.go
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>Steve
-</span></span><span style="display:flex;"><span>Rogers
-</span></span><span style="display:flex;"><span>Avengers
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>Clark
-</span></span><span style="display:flex;"><span>Kent
-</span></span><span style="display:flex;"><span>Justice League
-</span></span><span style="display:flex;"><span>11:40:49 ryan@xerxes json
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">11:40:47 ryan@xerxes json → go run main.go
+</span></span><span class="line"><span class="cl"><span class="m">1</span>
+</span></span><span class="line"><span class="cl">Steve
+</span></span><span class="line"><span class="cl">Rogers
+</span></span><span class="line"><span class="cl">Avengers
+</span></span><span class="line"><span class="cl"><span class="m">2</span>
+</span></span><span class="line"><span class="cl">Clark
+</span></span><span class="line"><span class="cl">Kent
+</span></span><span class="line"><span class="cl">Justice League
+</span></span><span class="line"><span class="cl">11:40:49 ryan@xerxes json
 </span></span></code></pre></div><p>Pretty simple! That&rsquo;s why I love go. We accomplished all of this with ~50 lines of code.
 Doing something similar in asp.net project would easily double that count and involve creating
 multiple files! (nothing against asp.net or c#, I think c# is a great language and use it daily)</p>
 <p>Now, &lsquo;go&rsquo; try this!</p>
 
-        </div>
+      </div>
+
+
+      <footer>
         
 
-    
 
-
-<div class="post-info">
-    
-        <div class="post-date dt-published">2022-07-21</div>
-    
-
-    <a class="post-hidden-url u-url" href="http://localhost:1313/posts/2022-07-21-reading-json-files-with-go/">http://localhost:1313/posts/2022-07-21-reading-json-files-with-go/</a>
-    <a href="http://localhost:1313/" class="p-name p-author post-hidden-author h-card" rel="me">Ryan</a>
-
-
-    <div class="post-taxonomies">
         
-            <ul class="post-categories">
-                
-                    
-                    <li><a href="http://localhost:1313/categories/software-development/">Software Development</a></li>
-                
-                    
-                    <li><a href="http://localhost:1313/categories/golang/">Golang</a></li>
-                
-            </ul>
-            
-            
-                <ul class="post-tags">
-                    
-                        
-                        <li><a href="http://localhost:1313/tags/golang/">#Golang</a></li>
-                    
-                        
-                        <li><a href="http://localhost:1313/tags/dev/">#Dev</a></li>
-                    
-                        
-                        <li><a href="http://localhost:1313/tags/programming/">#Programming</a></li>
-                    
-                        
-                        <li><a href="http://localhost:1313/tags/software/">#Software</a></li>
-                    
-                        
-                        <li><a href="http://localhost:1313/tags/json/">#Json</a></li>
-                    
-                </ul>
         
-    </div>
-</div>
-
+        
+        
+        
+        
+        
+      </footer>
     </article>
 
     
-        
-        
-    
+  </section>
 
-    
-        
-    <div class="pagination post-pagination">
-        <div class="left pagination-item ">
-            
-                <a href="/posts/2022-08-04-querying-rest-with-powershell/">Powershell for Devops - Querying REST APIs with Powershell</a>
-            
-        </div>
-        <div class="right pagination-item ">
-            
-                <a href="/posts/2022-07-19-aks-scale-down-mode/">AKS Scale Down Mode</a>
-            
-        </div>
     </div>
 
-
-
-
+    <footer class="footer">
+  <section class="container">
+    ©
     
-
+      2012 -
     
-        
-
-
-
-
+    2024
+     Ryan Nemeth 
+    ·
     
-
-
-
-
-
-<article class="post">
-<script
-    data-isso="https://comments.example.com/"
-    data-isso-id="thread-id"
-    data-isso-css="true"
-    data-isso-lang="de"
-    data-isso-reply-to-self="true"
-    data-isso-require-author="true"
-    data-isso-require-email="true"
-    data-isso-avatar="true"
-    data-isso-avatar-bg="#f0f0f0"
-    data-isso-feed="false"
-    src="https://comments.example.com/js/embed.min.js">
-</script>
-<noscript>Please enable JavaScript to view the comments powered by <a href="https://posativ.org/isso/">Isso</a>.</noscript>
-<div>
-  <section id="isso-thread"></section>
-</div>
-</article>
-
-
-
-
-
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
-
-        </main>
-        
-            <footer class="common-footer">
-    
-    
-
-    <div class="common-footer-bottom">
-        
-        <div class="copyright">
-            <p>© Ryan Nemeth, 2024<br>
-            Powered by <a target="_blank" rel="noopener noreferrer" href="https://gohugo.io/">Hugo</a>, theme <a target="_blank" rel="noopener noreferrer" href="https://github.com/mitrichius/hugo-theme-anubis">Anubis</a>.<br>
-            
-            </p>  
-        </div> 
-
-        
-
-    
-
-
-
-    <button class="theme-switcher">
-        Dark theme
-    </button>
-
-
-<script>
-const STORAGE_KEY = 'user-color-scheme'
-const defaultTheme = "dark"
-
-let currentTheme
-let switchButton
-let autoDefinedScheme = window.matchMedia('(prefers-color-scheme: dark)')
-
-const autoChangeScheme = e => {
-    currentTheme = e.matches ? 'dark' : 'light'
-    document.documentElement.setAttribute('data-theme', currentTheme)
-    changeButtonText()
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    switchButton = document.querySelector('.theme-switcher')
-    currentTheme = detectCurrentScheme()
-    if (currentTheme == 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark')
-    }
-    if (currentTheme == 'auto') {
-        autoChangeScheme(autoDefinedScheme);
-        autoDefinedScheme.addListener(autoChangeScheme);
-    }
-
-    if (switchButton) {
-        changeButtonText()
-        switchButton.addEventListener('click', switchTheme, false)
-    }
-  
-    showContent()
-})
-
-function detectCurrentScheme() {
-    if (localStorage.getItem(STORAGE_KEY)) {
-        return localStorage.getItem(STORAGE_KEY)
-    } 
-    if (defaultTheme) {
-        return defaultTheme
-    } 
-    if (!window.matchMedia) {
-        return 'light'
-    } 
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark'
-    }
-    return 'light'
-}
-
-function changeButtonText()
-{   
-    if (switchButton) {
-        switchButton.textContent = currentTheme == 'dark' ?  "Light theme" : "Dark theme"
-    }
-}
-
-function switchTheme(e) {
-    if (currentTheme == 'dark') {
-        localStorage.setItem(STORAGE_KEY, 'light')
-        document.documentElement.setAttribute('data-theme', 'light')
-        currentTheme = 'light'
-    } else {
-        localStorage.setItem(STORAGE_KEY, 'dark')
-        document.documentElement.setAttribute('data-theme', 'dark')
-        currentTheme = 'dark'
-    }
-    changeButtonText()
-}
-
-function showContent() {
-    document.body.style.visibility = 'visible';
-    document.body.style.opacity = 1;
-}
-</script>   
-    </div>
-
-    <p class="h-card vcard">
-
-    <a href=http://localhost:1313/ class="p-name u-url url fn" rel="me">Ryan Nemeth</a> 
-
-     
-        /
-        <a class="p-email u-email email" rel="me" href="mailto:ryannemeth@live.com">ryannemeth@live.com</a>
-    
-
-     
-        <img class="u-photo" src="/images/bobble.jpg" />
-    
-</p> 
+  </section>
 </footer>
 
-        
-    </div>
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 </body>
+
 </html>

@@ -3,121 +3,59 @@
   <channel>
     <title>Exchange on GeekyRyan</title>
     <link>http://localhost:1313/tags/exchange/</link>
-    <description>GeekyRyan (Exchange)</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <description>Recent content in Exchange on GeekyRyan</description>
+    <generator>Hugo</generator>
+    <language>en</language>
     <lastBuildDate>Tue, 07 Nov 2017 13:30:00 +0000</lastBuildDate>
-    
     <atom:link href="http://localhost:1313/tags/exchange/index.xml" rel="self" type="application/rss+xml" />
-    
-    
     <item>
       <title>Exchange 2016 Hybrid Deploy Check: Username or Password Invalid</title>
       <link>http://localhost:1313/posts/2017-11-07-exchange-2016-hybrid-deploy-check-username-or-password-invalid/</link>
       <pubDate>Tue, 07 Nov 2017 13:30:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2017-11-07-exchange-2016-hybrid-deploy-check-username-or-password-invalid/</guid>
-      <description>&lt;p&gt;These days, it seems every Microsoft product comes with its own unique set of head scratchers. Microsoft Exchange Server is no exception to this. I was installing Exchange 2016 earlier today, to be used as a hybrid configuration server for Office 365 (no local mailboxes). I downloaded the self depackaging executable from Microsoft, and attempted to install it. If you currently have a hybrid configuration (which we did, with Exchange 2010), the Exchange 2016 installer will detect this and run some tests to verify that the Office 365 tenant is ready for Exchange 2016 (more info here: &lt;a href=&#34;https://technet.microsoft.com/en-us/library/ms.exch.setup.hybridconfigurationstatuspage(v=exchg.160).aspx&#34;&gt;https://technet.microsoft.com/en-us/library/ms.exch.setup.hybridconfigurationstatuspage(v=exchg.160).aspx&lt;/a&gt;). You’ll be prompted for Office 365 credentials (the user must have the Organization Management role). Seems simple enough, right? Wrong.&lt;/p&gt;
-&lt;p&gt;After typing in the username and &lt;em&gt;pasting&lt;/em&gt; the password into the password field, setup came back with an error message stating the username or password was wrong. I then clicked the back button, and it crashed. I ran through this process a few more times, all with the same outcome. I even rebooted the server, which (in my opinion) should never be the resolution to a software problem. I looked through setup logs and found no indication of what the problem could be…&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/11/2017-11-07_12h57_08.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;It was on the fourth try that I typed in the password, and this seemed to work. I didn’t receive any error messages about the credentials being wrong. The Exchange setup seemed to continue on successfully. However, it then failed with a different error:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/11/2017-11-07_13h12_02.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;I again looked through the setup logs and found that this error happened anytime setup tried to run the “Get-OrganizationConfig” cmdlet. After troubleshooting for a little while, and no resolution in sight, I turned to Google. One of the posts I came across said that this is a bug in the Exchange installer, and to try and use the Cumulative Update installer instead. Apparently, with Exchange 2016, the Cumulative Update installer’s include all of the Exchange binaries, not just the updated binaries. I downloaded the installer for CU7 (all 6 gigabytes of it…) and successfully installed Exchange 2016. Hope this helps anyone out there struggling with this.&lt;/p&gt;
-</description>
+      <description>These days, it seems every Microsoft product comes with its own unique set of head scratchers. Microsoft Exchange Server is no exception to this. I was installing Exchange 2016 earlier today, to be used as a hybrid configuration server for Office 365 (no local mailboxes). I downloaded the self depackaging executable from Microsoft, and attempted to install it. If you currently have a hybrid configuration (which we did, with Exchange 2010), the Exchange 2016 installer will detect this and run some tests to verify that the Office 365 tenant is ready for Exchange 2016 (more info here: https://technet.</description>
     </item>
-    
     <item>
       <title>New Script: BulkAdd-SpamFilterWhitelist.ps1</title>
       <link>http://localhost:1313/posts/2017-06-26-new-script-bulkadd-spamfilterwhitelist/</link>
       <pubDate>Mon, 26 Jun 2017 22:16:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2017-06-26-new-script-bulkadd-spamfilterwhitelist/</guid>
-      <description>&lt;p&gt;This script is capable of adding a list of domains to an Exchange Online Spam Filter policy. It can be downloaded from TechNet or Github.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/rnemeth90/PowerShell/blob/master/BulkAdd-SpamFilterWhitelist.ps1&#34;&gt;Github&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://gallery.technet.microsoft.com/BulkAdd-SpamFilterWhitelist-2d2b596a&#34;&gt;TechNet&lt;/a&gt;&lt;/p&gt;
-</description>
+      <description>This script is capable of adding a list of domains to an Exchange Online Spam Filter policy. It can be downloaded from TechNet or Github.&#xA;Github&#xA;TechNet</description>
     </item>
-    
     <item>
       <title>How to Permanently Remove Office 365 Users</title>
       <link>http://localhost:1313/posts/2017-06-20-how-to-permanently-remove-office-365-users/</link>
       <pubDate>Tue, 20 Jun 2017 18:13:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2017-06-20-how-to-permanently-remove-office-365-users/</guid>
-      <description>&lt;p&gt;After deleting a user in Office 365, their account is moved to a ‘recycle bin’ for 30 days. This allows the user account to be easily recovered. This can often cause issues when attempting to recreate a mailbox while a hybrid configuration is in place.&lt;/p&gt;
-&lt;p&gt;To permanently delete the user within Office 365, first delete the user in the Office 365 Admin Portal or using Powershell. Then, connect to your Azure Active Directory environment with Powershell using the “Connect-MsolService” cmdlet.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h06_20.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h06_20.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;To see a list of user accounts currently in the recycle bin, run this cmdlet:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h09_47.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h09_47.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Then, to permanently delete all accounts in the recycle bin, run this cmdlet:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h10_16.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h10_16.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;To remove a specific user, run this cmdlet:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h11_15.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h11_15.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-</description>
+      <description>After deleting a user in Office 365, their account is moved to a ‘recycle bin’ for 30 days. This allows the user account to be easily recovered. This can often cause issues when attempting to recreate a mailbox while a hybrid configuration is in place.&#xA;To permanently delete the user within Office 365, first delete the user in the Office 365 Admin Portal or using Powershell. Then, connect to your Azure Active Directory environment with Powershell using the “Connect-MsolService” cmdlet.</description>
     </item>
-    
     <item>
       <title>Access is Denied When Attempting to Delete a Dynamic Distribution Group</title>
       <link>http://localhost:1313/posts/2017-06-12-access-is-denied-when-attempting-to-delete-a-dynamic-distribution-group/</link>
       <pubDate>Mon, 12 Jun 2017 13:41:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2017-06-12-access-is-denied-when-attempting-to-delete-a-dynamic-distribution-group/</guid>
-      <description>&lt;p&gt;You may receive the error below when attempting to delete a dynamic distribution group.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-12_09h29_20.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-12_09h29_20.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;To resolve this, open ADUC and show advanced features (Click View &amp;gt; Advanced Features). Then find the object for the dynamic distribution group and open the properties window. Browse to the “Object” tab and uncheck the “Protect object from accidental deletion” box. Wait for ADDS to replicate or force replication yourself.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-12_09h34_20.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-12_09h34_20.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Go back to the ECP and you should be able to delete the group.&lt;/p&gt;
-</description>
+      <description>You may receive the error below when attempting to delete a dynamic distribution group.&#xA;To resolve this, open ADUC and show advanced features (Click View &amp;gt; Advanced Features). Then find the object for the dynamic distribution group and open the properties window. Browse to the “Object” tab and uncheck the “Protect object from accidental deletion” box. Wait for ADDS to replicate or force replication yourself.&#xA;Go back to the ECP and you should be able to delete the group.</description>
     </item>
-    
     <item>
       <title>Exchange 2013: Error 0x80070070 While Adding DAG Member</title>
       <link>http://localhost:1313/posts/2016-10-04-exchange-2013-error-0x80070070-while/</link>
       <pubDate>Tue, 04 Oct 2016 00:21:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2016-10-04-exchange-2013-error-0x80070070-while/</guid>
-      <description>&lt;p&gt;Error: A server-side database availability group administrative operation failed. Error Failed to add or remove the Failover-Clustering feature. Error: The request to add or remove features on the specified server failed. A DISM session could not be opened. An error occurred accessing the temporary folder C:WindowsTEMP57ACE2DE-4CD2-4F5F-B7A0-93D867A89A12. Ensure that the path to the temporary folder exists and that you have Read/Write permissions on the folder. Error: 0x80070070&lt;/p&gt;
-&lt;p&gt;Solution: I was attempting to remotely add the DAG member from the ECP on my workstation. I logged into the server and found that the system drive was nearly full (~100MB free). Luckily this mailbox server was a virtual machine, and I was able to quickly expand the drive using VMM. After doing this I was able to successfully add the mailbox server to the DAG.&lt;/p&gt;
-</description>
+      <description>Error: A server-side database availability group administrative operation failed. Error Failed to add or remove the Failover-Clustering feature. Error: The request to add or remove features on the specified server failed. A DISM session could not be opened. An error occurred accessing the temporary folder C:WindowsTEMP57ACE2DE-4CD2-4F5F-B7A0-93D867A89A12. Ensure that the path to the temporary folder exists and that you have Read/Write permissions on the folder. Error: 0x80070070&#xA;Solution: I was attempting to remotely add the DAG member from the ECP on my workstation.</description>
     </item>
-    
     <item>
       <title>Finding All Mailboxes with a Forwarding Address in Exchange 2003</title>
       <link>http://localhost:1313/posts/2015-09-07-finding-all-mailboxes-with-a-forwarding-address-in-exchange-2003/</link>
       <pubDate>Mon, 07 Sep 2015 23:13:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2015-09-07-finding-all-mailboxes-with-a-forwarding-address-in-exchange-2003/</guid>
-      <description>&lt;p&gt;Believe it or not, the MSP I work for still has a client who is using Exchange 2003 as their primary email service. Despite several attempts at convincing them of the power of Office 365, they refuse to migrate. Last week the CFO contacted me and requested we provide them with a report of all users who have their email forwarded to another mailbox. “Ok, no problem.” I said helpfully as the client informed me of their request (at the time I didn’t even think about them having Exchange 2003…). I figured I would just connect to their server and do some quick PowerShell magic, and that would be it. Quick and painless, right? Wrong.&lt;/p&gt;
-&lt;p&gt;I did the RDP dance and got connected to their server, and my jaw just about hit the floor when I couldn’t find the Exchange Management Shell! I asked around the office to see if any of the other guys could help, but no one knew what to do. However, after talking with one of the guys, I remembered that this is Active Directory we are dealing with. There are objects, and those objects have attributes. The mailboxes/user accounts are objects, and those objects have attributes. So what attribute is it that controls forwarding addresses? I manually found one of the users who had a forwarding address configured. Then I opened up Active Directory Users and Computers, opened up her account properties, and went to the Attribute Editor tab. I filtered for attributes that have values and was able to see the email address that her mail was forwarding to. This was the “altRecipient” attribute.&lt;/p&gt;
-&lt;p&gt;I then did an “Advanced” search in Active Directory Users and Computers for any objects that have the “altRecipient” attribute configured, like so:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/09/ExchangeForwarding.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/09/ExchangeForwarding.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;This search showed me all of the mailboxes that have an alternate recipient (forwarding address) configured. Not sure if there is another way to obtain this information, but this is the way that worked for me. Hopefully this article is able to help someone in the same situation.&lt;/p&gt;
-</description>
+      <description>Believe it or not, the MSP I work for still has a client who is using Exchange 2003 as their primary email service. Despite several attempts at convincing them of the power of Office 365, they refuse to migrate. Last week the CFO contacted me and requested we provide them with a report of all users who have their email forwarded to another mailbox. “Ok, no problem.” I said helpfully as the client informed me of their request (at the time I didn’t even think about them having Exchange 2003…).</description>
     </item>
-    
     <item>
       <title>Failed to Mount Exchange 2010 Database</title>
       <link>http://localhost:1313/posts/2015-08-12-failed-to-mount-exchange-2010-database/</link>
       <pubDate>Wed, 12 Aug 2015 12:59:00 +0000</pubDate>
-      
       <guid>http://localhost:1313/posts/2015-08-12-failed-to-mount-exchange-2010-database/</guid>
-      <description>&lt;p&gt;Recently, one of my users’ came to me and said he was missing two months worth of email. This was just after migrating to Exchange Online. We were using Exchange 2010 with System Center DPM for backups.&lt;/p&gt;
-&lt;p&gt;I restored the database that the users’ mailbox was on from a backup then copied it over to the Exchange server from the network share I restored it to. All was going well, until I tried to mount the darn thing.&lt;/p&gt;
-&lt;p&gt;I was getting this error and could not for the life of me decry-pt the meaning of it. There is obviously some type of IO issue/file not found. But what could it be?&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/1-1.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/1-1.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;I figured I’d better kick this one off with some basic troubleshooting. First, I checked the health of the database and made sure it was clean. Passed that test…&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/2-1.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/2-1.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Then ran a repair on the database, to no avail.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/3-1.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/3-1.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;After racking my brain for a good thirty minutes, and a few failed Google searches, I found the solution. It was so simple! I created the log file directory in the folder with the database, and voila, the database mounted without a single error!&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/7.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/7.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/4-1.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/4-1.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/5-1.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/5-1.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;I was able to see the ‘supposed’ location of the log file by opening the Exchange Management Shell and running the ‘Get-MailboxDatabase’ cmdlet, like so:&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Get-MailBoxDatabase –Identity &lt;Recovery DB Name&gt; | FL Name, ServerName, EDBFilePath, LogFolderPath&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/6.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/08/6.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;I’m not sure why the database mounting process isn’t capable of creating the log file directory… I think Microsoft would have thought and planned for a situation like this. Hope this helps!&lt;/p&gt;
-</description>
+      <description>Recently, one of my users’ came to me and said he was missing two months worth of email. This was just after migrating to Exchange Online. We were using Exchange 2010 with System Center DPM for backups.&#xA;I restored the database that the users’ mailbox was on from a backup then copied it over to the Exchange server from the network share I restored it to. All was going well, until I tried to mount the darn thing.</description>
     </item>
-    
   </channel>
 </rss>
