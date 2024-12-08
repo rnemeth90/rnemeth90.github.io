@@ -1,134 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CI/CD on GeekyRyan</title><link>https://rnemeth90.github.io/tags/ci/cd/</link><description>GeekyRyan (CI/CD)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 23 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/ci/cd/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a Golang App with Github Actions</title><link>https://rnemeth90.github.io/posts/2022-12-24-gh-actions-copy/</link><pubDate>Fri, 23 Dec 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-12-24-gh-actions-copy/</guid><description>&lt;p>In this article, we&amp;rsquo;ll take a quick look at building a Golang app with Github actions. This process can be applied to just about any app
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CI/CD on GeekyRyan</title><link>https://rnemeth90.github.io/tags/ci/cd/</link><description>Recent content in CI/CD on GeekyRyan</description><generator>Hugo</generator><language>en</language><lastBuildDate>Fri, 23 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/ci/cd/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a Golang App with Github Actions</title><link>https://rnemeth90.github.io/posts/2022-12-24-gh-actions-copy/</link><pubDate>Fri, 23 Dec 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-12-24-gh-actions-copy/</guid><description>&lt;p>In this article, we&amp;rsquo;ll take a quick look at building a Golang app with Github actions. This process can be applied to just about any app
 written in any language though. We&amp;rsquo;ll cover the following:&lt;/p>
 &lt;ol>
 &lt;li>What are github actions?&lt;/li>
 &lt;li>Setting up the workflow to build, test, and deploy a binary&lt;/li>
 &lt;/ol>
-&lt;p>Github Actions is a cross-platform CI/CD pipeline that allows you to build, test, package, and release your software. Actions can be triggered manually or based on events that happen within your Github repo. They are powerful and I suggest you read more at the &lt;a href="https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions">Official Docs&lt;/a>&lt;/p>
-&lt;p>To get started, we&amp;rsquo;ll need a golang app to build. You can use my example &lt;a href="https://github.com/rnemeth90/golang-github-action-example">here&lt;/a> if you do not have your own.&lt;/p>
-&lt;p>The process is relatively simple. At the root of your repo, create the following directories:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir -p .github/workflows
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then create a yaml file (you can name it anything you want) with the content below:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">build-release-binary&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">run-name&lt;/span>: &lt;span style="color:#ae81ff">Create Github Release for GoLang binary&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># anytime we push to our repo with a tag starting with the&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># letter &amp;#39;r&amp;#39;, we run the build&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">on&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">push&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">tags&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#39;r*&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">jobs&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">build&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">runs-on&lt;/span>: &lt;span style="color:#ae81ff">ubuntu-22.04&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">permissions&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">contents&lt;/span>: &lt;span style="color:#ae81ff">write&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">steps&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># checkout our github repo to the build agent&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/checkout@v3&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">fetch-depth&lt;/span>: &lt;span style="color:#ae81ff">0&lt;/span> &lt;span style="color:#75715e"># get all tags, needed to get git log&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">ref&lt;/span>: &lt;span style="color:#ae81ff">main&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Setup the Go environment&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">setup Go Lang&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">id&lt;/span>: &lt;span style="color:#ae81ff">build&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/setup-go@v3&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">go-version&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;^1.19.2&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Build our application&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go version
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> cd src
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> if [ ! -e *.mod ]; then
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go mod init ${GITHUB_REPOSITORY}
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> fi
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go mod tidy
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go build -ldflags &amp;#34;-X main.Version=${GITHUB_REF_NAME} -X main.BuiltBy=github-actions&amp;#34; main.go
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> execFile=$(find . -type f -executable)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Output more values for debugging&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">git version&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">git branch&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">git tag&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># tag our release&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">get semantic tag version and release notes from commit messages&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">id&lt;/span>: &lt;span style="color:#ae81ff">tag&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> currentTag=${GITHUB_REF_NAME}
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> major_minor=$(echo &amp;#34;$currentTag&amp;#34; | cut -d&amp;#39;.&amp;#39; -f1-2)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> patch=$(echo &amp;#34;$currentTag&amp;#34; | cut -d&amp;#39;.&amp;#39; -f3)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> # avoid empty patch number
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> [ -n &amp;#34;$patch&amp;#34; ] &amp;amp;&amp;amp; ((patch--)) || patch=&amp;#34;.x&amp;#34;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> previousTag=&amp;#34;${major_minor}.${patch}&amp;#34;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;&amp;#34; &amp;gt; body.log
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> if git tag | grep $previousTag ; then
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> git log -q ${currentTag}...${previousTag} --pretty=&amp;#34;- %s&amp;#34; -q --no-color &amp;gt;&amp;gt; body.log
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> else
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> git log --pretty=&amp;#34;- %s&amp;#34; -q --no-color &amp;gt;&amp;gt; body.log
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> fi
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> line_count=$(cat body.log | wc -l)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;currentTag=$currentTag&amp;#34; &amp;gt;&amp;gt; $GITHUB_OUTPUT
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;previousTag=$previousTag&amp;#34; &amp;gt;&amp;gt; $GITHUB_OUTPUT
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;line_count=$line_count&amp;#34; &amp;gt;&amp;gt; $GITHUB_OUTPUT&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># create Github release with release note from file and binary asset attached&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">ncipollo/release-action@v1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">${{ env.GITHUB_REF_NAME }}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">tag&lt;/span>: &lt;span style="color:#ae81ff">${{ env.GITHUB_REF_NAME }}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">artifacts&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;src/main&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">bodyFile&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;body.log&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">token&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.GITHUB_TOKEN }}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Each step within this workflow starts with a hyphen. The steps are well-commented, so I will not explain them further. Once you have this file in your repo, push it to github. Then navigate to the Actions tab in your repository and you should see your workflow on the left hand side of the screen.&lt;/p>
-&lt;p>&lt;a href="https://rnemeth90.github.io/images/gh-actions-1.png">&lt;img src="https://rnemeth90.github.io/images/gh-actions-1.png" alt="">&lt;/a>&lt;/p>
-&lt;p>Now that we have our workflow setup, to get it run, all you need to do is tag and push your release to github. To do that, you can run the script in my repo &lt;a href="https://github.com/rnemeth90/golang-github-action-example/blob/main/create_new_gh_release.sh">create_new_gh_release.sh&lt;/a> or simply run the following commands (be sure to change the tag as needed):&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>newtag&lt;span style="color:#f92672">=&lt;/span>r1.0.0
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git tag $newtag &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> git push origin $newtag
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, go back to the Actions tab in your repo, and you should see the build running. Once it completes, go back to the Code tab in your github repo and you will see the release on the right hand side of the screen.&lt;/p>
-&lt;p>&lt;a href="https://rnemeth90.github.io/images/gh-actions-2.png">&lt;img src="https://rnemeth90.github.io/images/gh-actions-2.png" alt="">&lt;/a>&lt;/p></description></item><item><title>Continuous Deployment Models</title><link>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</link><pubDate>Fri, 14 Jan 2022 19:24:01 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</guid><description>&lt;p>When deploying new software releases to servers or (insert -as-a-service&amp;gt; here), it’s a good idea to either deploy the releases in a controlled manner or to have a quick rollback plan. This article will be diving into blue/green deployments, canary deployments, ring-based deployments, and feature tag deployments.&lt;/p>
-&lt;h2 id="bluegreen-deployments" >Blue/Green Deployments
-&lt;span>
-&lt;a href="#bluegreen-deployments">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;p>Blue/green deployments are a deployment model where a new application version never gets deployed to the production servers (green) directly. Instead, it gets deployed to another set of servers (blue) first. Since the blue servers are not currently serving any traffic for users, the deployment has no impact. However, once the deployment has been completed successfully and tested, users will be directed to the new deployment (blue). You can control all user traffic or a subset of user traffic if your load balancer supports it (referred to as ‘Progressive Exposure’).&lt;/p>
-&lt;p>The next release will then repeat the same process. Blue would be the current production environment, so you would first deploy to the green servers. This model requires two sets of identical hosts and a load balancer or reverse proxy in front of them. If there are any unexpected issues with the new release, it is straightforward to switch back to the previous release. The disadvantage to this type of model is that it requires having redundant environments (and potentially wasted resources). However, this is less of a concern if using container orchestration platforms such as Kubernetes.&lt;/p>
-&lt;p>&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2022/01/2022-01-19_07h57_58-1024x575.png" alt="Blue Green deployment model">&lt;/p>
-&lt;h2 id="immutable-servers" >Immutable Servers
-&lt;span>
-&lt;a href="#immutable-servers">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;p>There is an alternative method of blue/green deployments called “immutable servers”. This method is identical to blue/green deployments as described above. However, after switching user traffic over to the servers with the new release, the old servers are destroyed. They are not used again. This type of model becomes particularly efficient when using a pipeline that is capable of creating servers for you (i.e., Azure DevOps Pipelines)&lt;/p>
-&lt;h2 id="canary-deployments" >Canary Deployments
-&lt;span>
-&lt;a href="#canary-deployments">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;p>In a canary deployment, not all users are routed to the new release immediately. Only a limited percentage of users get access to the new release. These users are the canaries. They should be monitored closely, so it is important to be using Not all users are routed to the new release immediately in a canary deployment. Only a limited percentage of users get access to the latest release. These users are the canaries.&lt;/p>
-&lt;p>Organizations should monitor the canaries closely, so it is essential to be using monitoring software capable of looking at the statistics of a web application from the users’ perspective (for example, Application Insights). The number of canaries can increase until all traffic is directed to the new release over time. The most significant advantage of this method is limited exposure to issues. If a problem appears after the release is deployed, only a small subset of users will experience it. After you fix the issues and redeploy the release, it’s best to select a different group of users to be canaries.&lt;/p>
-&lt;h2 id="ring-based-deployments" >Ring Based Deployments
-&lt;span>
-&lt;a href="#ring-based-deployments">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;p>A ring-based deployment has multiple production environments. Each serves a limited number of users, similar to a canary deployment. However, you can have as many production environments as you want with a ring-based deployment. New releases are deployed to the rings one by one over time.&lt;/p>
-&lt;h2 id="feature-flag-deployments" >Feature Flag Deployments
-&lt;span>
-&lt;a href="#feature-flag-deployments">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;p>Feature flags are used to expose new features to sets of users slowly. Unlike the other deployment models, they are not implemented in the infrastructure. Instead, they are typically implemented and enabled in code or database. An example would be a feature flag in a database that gives users access to a button on your web page. A developer could enable the flag for a set of users. These users would be able to see the button; other users would not. Feature flags can even toggle bug fixes or performance improvements.&lt;/p>
-&lt;p>I will cover implementing blue/green deployments in Azure using Azure DevOps and App Services in a future article.&lt;/p></description></item></channel></rss>
+&lt;p>Github Actions is a cross-platform CI/CD pipeline that allows you to build, test, package, and release your software. Actions can be triggered manually or based on events that happen within your Github repo. They are powerful and I suggest you read more at the &lt;a href="https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions" class="external-link" target="_blank" rel="noopener">Official Docs&lt;/a>&lt;/p></description></item><item><title>Continuous Deployment Models</title><link>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</link><pubDate>Fri, 14 Jan 2022 19:24:01 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</guid><description>&lt;p>When deploying new software releases to servers or (insert -as-a-service&amp;gt; here), it’s a good idea to either deploy the releases in a controlled manner or to have a quick rollback plan. This article will be diving into blue/green deployments, canary deployments, ring-based deployments, and feature tag deployments.&lt;/p>
+&lt;h2 id="bluegreen-deployments">
+ Blue/Green Deployments
+ &lt;a class="heading-link" href="#bluegreen-deployments">
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading">&lt;/i>
+ &lt;span class="sr-only">Link to heading&lt;/span>
+ &lt;/a>
+&lt;/h2>
+&lt;p>Blue/green deployments are a deployment model where a new application version never gets deployed to the production servers (green) directly. Instead, it gets deployed to another set of servers (blue) first. Since the blue servers are not currently serving any traffic for users, the deployment has no impact. However, once the deployment has been completed successfully and tested, users will be directed to the new deployment (blue). You can control all user traffic or a subset of user traffic if your load balancer supports it (referred to as ‘Progressive Exposure’).&lt;/p></description></item></channel></rss>

@@ -1,60 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Azure Devops on GeekyRyan</title><link>https://rnemeth90.github.io/categories/azure-devops/</link><description>GeekyRyan (Azure Devops)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 03 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/categories/azure-devops/index.xml" rel="self" type="application/rss+xml"/><item><title>Chaining YAML Pipelines in Azure Devops</title><link>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</link><pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</guid><description>&lt;p>In this article, we&amp;rsquo;ll take a quick look at chaining two pipelines together in Azure Devops, so that the completion of one pipeline, triggers the other to run.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Azure Devops on GeekyRyan</title><link>https://rnemeth90.github.io/categories/azure-devops/</link><description>Recent content in Azure Devops on GeekyRyan</description><generator>Hugo</generator><language>en</language><lastBuildDate>Thu, 03 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/categories/azure-devops/index.xml" rel="self" type="application/rss+xml"/><item><title>Chaining YAML Pipelines in Azure Devops</title><link>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</link><pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</guid><description>&lt;p>In this article, we&amp;rsquo;ll take a quick look at chaining two pipelines together in Azure Devops, so that the completion of one pipeline, triggers the other to run.
 Microsoft documentation is leaps and bounds ahead of where it used to be. However, I still feel like there is a lot of room for improvement, as it took me a while to
 figure this out.&lt;/p>
 &lt;p>Our two pipelines will exist in the same repository. We have a dependent-pipeline, that we only want to run once the source-pipeline is finished. This is useful if you have
-some infrastructure you want to build, prior to deploying something to that infrastructure.&lt;/p>
-&lt;p>The process is actually quite simple. First, let&amp;rsquo;s define our source pipeline:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># source-pipeline&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">trigger&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#ae81ff">main&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">pool&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">vmImage&lt;/span>: &lt;span style="color:#ae81ff">ubuntu-latest&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">steps&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#f92672">script&lt;/span>: &lt;span style="color:#ae81ff">echo Hello, world!&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">displayName&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;Run a one-line script&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#f92672">script&lt;/span>: |&lt;span style="color:#e6db74">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo Add other tasks to build, test, and deploy your project.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo See https://aka.ms/yaml&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">displayName&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;Run a multi-line script&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Nothing fancy here, just the build in template pipeline that Microsoft gives us for free when we create a &amp;ldquo;Starter Pipeline&amp;rdquo;.&lt;/p>
-&lt;p>Now, let&amp;rsquo;s create another pipeline in the same repo that will be triggered when the pipeline above completes:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># dependent-pipeline&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">trigger&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#ae81ff">none&lt;/span> &lt;span style="color:#75715e"># we want this pipeline to be triggered manually, not based on PR, etc.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">pool&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">vmImage&lt;/span>: &lt;span style="color:#ae81ff">ubuntu-latest&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">resources&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">pipelines&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">pipeline&lt;/span>: &lt;span style="color:#ae81ff">source-pipeline&lt;/span> &lt;span style="color:#75715e">#this can be anything&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">source&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;source-pipeline&amp;#39;&lt;/span> &lt;span style="color:#75715e">#this needs to be the name of the &amp;#39;source&amp;#39; pipeline&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">trigger&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span> &lt;span style="color:#75715e"># Run dependent-pipeline pipeline when any run of security-lib-ci completes&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">steps&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#f92672">script&lt;/span>: &lt;span style="color:#ae81ff">echo Hello, world!&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">displayName&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;Run a one-line script&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#f92672">script&lt;/span>: |&lt;span style="color:#e6db74">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo Add other tasks to build, test, and deploy your project.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo See https://aka.ms/yaml&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">displayName&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;Run a multi-line script&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The resources block above defines our dependency. You want to be sure to configure the trigger of the dependent pipeline appropriately as well.&lt;/p>
-&lt;p>There are several options for fine-tuning this process. See the office Microsoft documentation below:&lt;/p>
-&lt;p>&lt;a href="https://learn.microsoft.com/en-us/azure/devops/pipelines/process/pipeline-triggers?view=azure-devops">Link to the Microsoft Docs&lt;/a>&lt;/p></description></item><item><title>Update Azure Devops SPN Secret</title><link>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</link><pubDate>Mon, 12 Sep 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</guid><description>&lt;p>If you need to update the secret for a service principal in Azure Devops, prior to it expiring, you may be surprised to find that this cannot be done via the Azure Portal.&lt;/p>
+some infrastructure you want to build, prior to deploying something to that infrastructure.&lt;/p></description></item><item><title>Update Azure Devops SPN Secret</title><link>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</link><pubDate>Mon, 12 Sep 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</guid><description>&lt;p>If you need to update the secret for a service principal in Azure Devops, prior to it expiring, you may be surprised to find that this cannot be done via the Azure Portal.&lt;/p>
 &lt;p>In this article, I&amp;rsquo;ll show you two methods for updating a secret for a service principal prior to expiration.&lt;/p>
-&lt;h1 id="update-the-secret-via-the-azure-devops-portal" >Update the secret via the Azure Devops Portal:
-&lt;span>
-&lt;a href="#update-the-secret-via-the-azure-devops-portal">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h1>&lt;ul>
+&lt;h1 id="update-the-secret-via-the-azure-devops-portal">
+ Update the secret via the Azure Devops Portal:
+ &lt;a class="heading-link" href="#update-the-secret-via-the-azure-devops-portal">
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading">&lt;/i>
+ &lt;span class="sr-only">Link to heading&lt;/span>
+ &lt;/a>
+&lt;/h1>
+&lt;ul>
 &lt;li>Go to &amp;ldquo;Service Connections&amp;rdquo; in the Azure Devops portal&lt;/li>
 &lt;li>Find the SPN you want to update, then click &amp;ldquo;Manage Service Principal&amp;rdquo;&lt;/li>
 &lt;li>Then on the service principal page, click Certificates &amp;amp; Secrets&lt;/li>

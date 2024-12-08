@@ -1,130 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Networking on GeekyRyan</title><link>https://rnemeth90.github.io/categories/networking/</link><description>GeekyRyan (Networking)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 27 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/categories/networking/index.xml" rel="self" type="application/rss+xml"/><item><title>Exploring Netcat</title><link>https://rnemeth90.github.io/posts/2023-11-27-netcat/</link><pubDate>Mon, 27 Nov 2023 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2023-11-27-netcat/</guid><description>&lt;h2 id="introduction" >Introduction
-&lt;span>
-&lt;a href="#introduction">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;p>Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the &amp;ldquo;network swiss-army knife&amp;rdquo;. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed.&lt;/p>
-&lt;p>Netcat is a simple utility that reads and writes data across raw TCP/UDP sockets. Netcat is a command-line tool available out of the box on most *nix operating systems and can also be installed on Windows. It&amp;rsquo;s a powerful tool for debugging and investigating networks. It can even be used for tasks like port scanning, transferring files, chatting with friends on a network, and even creating backdoors (for testing purposes, obviously :) ).&lt;/p>
-&lt;h2 id="understanding-udp" >Understanding UDP
-&lt;span>
-&lt;a href="#understanding-udp">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;p>Before we dive into exploring UDP connections with netcat, let&amp;rsquo;s quickly get a refresher on UDP. UDP is a connectionless transport layer protocol that does not provide the same reliability, flow-control, and error-checking mechanisms as TCP. Unlike TCP, UDP also does not establish a persistent connection between the sender and receiver. Instead, it sends data packets, known as datagrams, individually using a &amp;lsquo;fire and forget&amp;rsquo; method. UDP is often used for applications where real-time communication and low overhead are crucial, such as streaming media, gaming, DNS (though, certain functions of DNS may also use TCP), and IoT devices.&lt;/p>
-&lt;h2 id="understanding-tcp" >Understanding TCP
-&lt;span>
-&lt;a href="#understanding-tcp">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;p>It&amp;rsquo;s also crucial to have a fundamental knowledge of the TCP protocol. TCP is one of the main protocols in the Internet protocol suite, laying the foundation for the majority of data exchange over the Internet. Unlike its counterpart, UDP (User Datagram Protocol), TCP is connection-oriented, meaning a connection is established and maintained until the application programs at each end have finished exchanging messages. This ensures reliable, ordered, and error-checked delivery of a stream of data between applications running on hosts communicating over an IP network. Key features of TCP include its ability to manage data packet size, data transfer rate, and network traffic congestion, making it ideal for applications where data integrity and accuracy are crucial, such as web browsing, email, and file transfer. Understanding TCP is essential for effectively utilizing tools like Netcat, as it provides the basis for establishing stable and secure connections across a network.&lt;/p>
-&lt;h2 id="creating-a-simple-clientserver" >Creating a Simple Client/Server
-&lt;span>
-&lt;a href="#creating-a-simple-clientserver">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;p>The following will create a simple UDP server and client.&lt;/p>
-&lt;ol>
-&lt;li>Launch a shell and type the following command. This will tell netcat to listen (&lt;code>-l&lt;/code>) on UDP (&lt;code>-u&lt;/code>) port (&lt;code>-p&lt;/code>) 5555.&lt;/li>
-&lt;/ol>
-&lt;pre tabindex="0">&lt;code>nc -l -u -p 5555
-&lt;/code>&lt;/pre>&lt;ol start="2">
-&lt;li>Launch another shell and type the following. This will connect to the server we created above.&lt;/li>
-&lt;/ol>
-&lt;pre tabindex="0">&lt;code>nc -u 127.0.0.1 5555
-&lt;/code>&lt;/pre>&lt;ol start="3">
-&lt;li>You can now send messages to the server, like so:&lt;/li>
-&lt;/ol>
-&lt;p>Client:&lt;/p>
-&lt;pre tabindex="0">&lt;code>$ nc -u 127.0.0.1 5555
-hello
-&lt;/code>&lt;/pre>&lt;p>Server:&lt;/p>
-&lt;pre tabindex="0">&lt;code>$ nc -l -u -p 5555
-hello
-&lt;/code>&lt;/pre>&lt;p>You can do the same thing with TCP, just leave out the &lt;code>-u&lt;/code> in each command above.&lt;/p>
-&lt;h2 id="transfer-a-file" >Transfer a File
-&lt;span>
-&lt;a href="#transfer-a-file">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;p>On the receiving end:&lt;/p>
-&lt;pre tabindex="0">&lt;code>nc -l -p 5555 &amp;gt; outputfile
-&lt;/code>&lt;/pre>&lt;p>On the sending end:&lt;/p>
-&lt;pre tabindex="0">&lt;code>nc [hostname or IP address of server] 5555 &amp;lt; inputfile
-&lt;/code>&lt;/pre>&lt;h2 id="port-scanning" >Port Scanning:
-&lt;span>
-&lt;a href="#port-scanning">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;pre tabindex="0">&lt;code>netcat -v -z -n -w 1 v.txvip1 1-1023
-&lt;/code>&lt;/pre>&lt;h2 id="serve-a-web-page" >Serve a web page:
-&lt;span>
-&lt;a href="#serve-a-web-page">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;p>If you have an html file, you can create a simple web server for it. Here we tell netcat to listen on port 8080 and redirect the contents of index.html to any &amp;rsquo;thing&amp;rsquo; that connects:&lt;/p>
-&lt;pre tabindex="0">&lt;code>nc -l -p 8080 &amp;lt; index.html
-&lt;/code>&lt;/pre>&lt;p>&lt;strong>Note&lt;/strong>: In the examples above, I always use port 5555. You can technically use just about any port you want. However, attempting to use any port below 1024 will require root privileges. The port you choose cannot be in use by another process.&lt;/p>
-&lt;h2 id="other-practical-examples" >Other Practical Examples
-&lt;span>
-&lt;a href="#other-practical-examples">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;p>Let&amp;rsquo;s explore a few more practical examples to illustrate the usefulness of netcat&amp;rsquo;s UDP capabilities. I will leave the actual implementation as an exercise for you to try.&lt;/p>
-&lt;h3 id="example-1-testing-a-tcpudp-server" >Example 1: Testing a TCP/UDP Server
-&lt;span>
-&lt;a href="#example-1-testing-a-tcpudp-server">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h3>&lt;p>Suppose you are developing a UDP server application, and you want to test its functionality. You can use netcat to send TCP/UDP packets to your server and observe its response. By monitoring the server&amp;rsquo;s behavior, you can ensure that it correctly handles incoming UDP traffic.&lt;/p>
-&lt;h3 id="example-2-interacting-with-networked-devices" >Example 2: Interacting with Networked Devices
-&lt;span>
-&lt;a href="#example-2-interacting-with-networked-devices">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h3>&lt;p>Netcat can be handy when interacting with networked devices, such as routers, IoT devices, or even network-enabled printers. By establishing a TCP/UDP connection, you can send commands, queries, or configuration data to these devices, enabling you to troubleshoot or configure them remotely.&lt;/p>
-&lt;h3 id="example-3-banner-grabbing" >Example 3. Banner Grabbing
-&lt;span>
-&lt;a href="#example-3-banner-grabbing">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h3>&lt;p>This is a technique used in network security to gather information about a remote server, including the type and version of the operating system and applications running. The basic concept is that you connect to a network service and see what kind of &amp;lsquo;banner&amp;rsquo; (if any) it returns in the output. When I was starting out in the IT world, this was a common thing to do to enumerate devices and services on a network. Though, I would like to believe this is no longer as much of a concern, given the simplicity of preventing this type of information discovery attack.&lt;/p>
-&lt;h2 id="conclusion" >Conclusion
-&lt;span>
-&lt;a href="#conclusion">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h2>&lt;p>Netcat&amp;rsquo;s ability to handle UDP connections makes it an invaluable tool for various network-related tasks. Whether you are testing a UDP server, interacting with networked devices, or exploring your network&amp;rsquo;s services, netcat provides a convenient and straightforward approach.&lt;/p>
-&lt;p>In this blog post, we walked through the process of creating a UDP connection using netcat, discussed the fundamentals of UDP, and explored practical examples where netcat can prove useful. By mastering netcat&amp;rsquo;s capabilities, you can enhance your network troubleshooting and debugging skills, and gain a deeper understanding of UDP communication.&lt;/p>
-&lt;p>You can read more about netcat in the man pages:&lt;/p>
-&lt;pre tabindex="0">&lt;code>man nc
-&lt;/code>&lt;/pre>&lt;p>The OpenBSD repository contains the original source written by Hobbit decades ago:
-&lt;a href="https://github.com/openbsd/src/blob/master/usr.bin/nc/netcat.c">netcat.c&lt;/a>&lt;/p></description></item><item><title>Layer 2 Switching Fundamentals</title><link>https://rnemeth90.github.io/posts/2012-11-16-layer-2-switching-fundamentals/</link><pubDate>Fri, 16 Nov 2012 21:26:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2012-11-16-layer-2-switching-fundamentals/</guid><description>&lt;p>Switches are devices that support a large number of ports to connect devices to the network.&lt;/p>
-&lt;h3 id="design" >Design:
-&lt;span>
-&lt;a href="#design">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h3>&lt;p>&lt;a href="https://rnemeth90.github.io/wp-content/uploads/2014/11/2014-11-16_16h22_54.png">&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2014/11/2014-11-16_16h22_54.png" alt="">&lt;/a>&lt;/p>
-&lt;p>More towards a CCNP or CCDA topic, but designing a network when it comes to the switching side can be done in three building blocks. The access layer, the distribution layer, and the core layer. The access layer generally has a high port density, can support VLANs, QoS, and access lists. The distribution layer will aggregate multiple access layer switches. These are also generally Layer 3 switches to allow routing among an enterprise. It will need to be able to handle the volume of traffic in addition to supporting the same features as the access layer switches. The core layer is the device which will need the highest bandwidth backplane to deal with all of the traffic.&lt;/p>
-&lt;h3 id="how-switches-handle-traffic" >How switches handle traffic:
-&lt;span>
-&lt;a href="#how-switches-handle-traffic">
-&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
-&lt;/a>
-&lt;/span>
-&lt;/h3>&lt;p>A switch is an intelligent device that can make some decisions on how to handle the data it is given. Switches can be divided into two categories for these decisions: Layer 2 or Layer 3 switches. For the CCNA we will only be interested in the layer 2 switches. Layer 2 switches operate at the data link layer. This layer deals primarily with MAC addresses. A Layer 2 switch will build a CAM table full of dynamically learned MAC addresses. The way it learns these addresses is by inspecting the layer 2 header/trailer and learning the source MAC addresses on the frames it receives. A frame is what a packet is encapsulated in when it moves from device to device across the network.&lt;/p>
-&lt;p>&lt;a href="https://rnemeth90.github.io/wp-content/uploads/2014/11/2014-11-16_16h23_04.png">&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2014/11/2014-11-16_16h23_04.png" alt="">&lt;/a>&lt;/p>
-&lt;p>With this example the switch has learned PC1/PC2/and PC3′s MAC addresses. If a packet came in on Fa0/4 from PC4, the switch would look at the source MAC address and put an entry for 4444.4444.4444 on Fa0/4. A switch will route traffic based on this table. There are a few decisions it must make to determine how to handle traffic. When it first receives a frame it will consult it’s CAM table to determine whether or not it has the source MAC address listed for that port. If not, it will add it to the CAM table. In the example above, PC1 sent a frame to the switch, the switch noticed PC1′s MAC address was not in it’s table and added it. The next thing it looks at is the destination MAC address. The CAM table is again consulted. If it finds a match the switch will send the frame directly to the recipient it needs to on whatever port it is on. In the example above, PC1 sends a frame to PC3. Because the switch sees 1111.1111.1111 sending to 3333.3333.3333 and has an entry for 3333.3333.3333 it will send the frame out of port Fa0/3 to the recipient. If a destination is not in the CAM table the switch will need to try to find the recipient. In this case the switch will decide to broadcast the frame out of every port EXCEPT the one it came in on. In this example, PC1 sends a frame destined for PC4. The switch will see a frame from 1111.1111.1111 to 4444.4444.4444. PC4′s MAC address is not in it’s table. The switch will then send the frame out of every port except for Fa0/1 (the source). When PC2 and PC3 get this frame, it will determine if the frame was meant for it, and if not it will ignore it. PC4 will also make the same decision and PC4 will respond. Once PC4 has responded the switch will be able to add PC4′s MAC address to it’s table on Fa0/4.&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Networking on GeekyRyan</title><link>https://rnemeth90.github.io/categories/networking/</link><description>Recent content in Networking on GeekyRyan</description><generator>Hugo</generator><language>en</language><lastBuildDate>Mon, 27 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/categories/networking/index.xml" rel="self" type="application/rss+xml"/><item><title>Exploring Netcat</title><link>https://rnemeth90.github.io/posts/2023-11-27-netcat/</link><pubDate>Mon, 27 Nov 2023 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2023-11-27-netcat/</guid><description>&lt;h2 id="introduction">
+ Introduction
+ &lt;a class="heading-link" href="#introduction">
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading">&lt;/i>
+ &lt;span class="sr-only">Link to heading&lt;/span>
+ &lt;/a>
+&lt;/h2>
+&lt;p>Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the &amp;ldquo;network swiss-army knife&amp;rdquo;. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed.&lt;/p></description></item><item><title>Layer 2 Switching Fundamentals</title><link>https://rnemeth90.github.io/posts/2012-11-16-layer-2-switching-fundamentals/</link><pubDate>Fri, 16 Nov 2012 21:26:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2012-11-16-layer-2-switching-fundamentals/</guid><description>&lt;p>Switches are devices that support a large number of ports to connect devices to the network.&lt;/p>
+&lt;h3 id="design">
+ Design:
+ &lt;a class="heading-link" href="#design">
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading">&lt;/i>
+ &lt;span class="sr-only">Link to heading&lt;/span>
+ &lt;/a>
+&lt;/h3>
+&lt;p>&lt;a href="https://rnemeth90.github.io/wp-content/uploads/2014/11/2014-11-16_16h22_54.png" class="external-link" target="_blank" rel="noopener">&lt;img src="https://rnemeth90.github.io/wp-content/uploads/2014/11/2014-11-16_16h22_54.png">&lt;/a>&lt;/p>
+&lt;p>More towards a CCNP or CCDA topic, but designing a network when it comes to the switching side can be done in three building blocks. The access layer, the distribution layer, and the core layer. The access layer generally has a high port density, can support VLANs, QoS, and access lists. The distribution layer will aggregate multiple access layer switches. These are also generally Layer 3 switches to allow routing among an enterprise. It will need to be able to handle the volume of traffic in addition to supporting the same features as the access layer switches. The core layer is the device which will need the highest bandwidth backplane to deal with all of the traffic.&lt;/p></description></item></channel></rss>
