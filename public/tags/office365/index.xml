@@ -2,233 +2,81 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Office365 on GeekyRyan</title>
-    <link>https://rnemeth90.github.io/tags/office365/</link>
-    <description>GeekyRyan (Office365)</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <link>http://localhost:1313/tags/office365/</link>
+    <description>Recent content in Office365 on GeekyRyan</description>
+    <generator>Hugo</generator>
+    <language>en</language>
     <lastBuildDate>Thu, 26 Nov 2020 16:31:00 +0000</lastBuildDate>
-    
-    <atom:link href="https://rnemeth90.github.io/tags/office365/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <atom:link href="http://localhost:1313/tags/office365/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Azure AD Sync &amp;#8211; Set-MsolDirSyncEnabled : You cannot turn off Active Directory synchronization.</title>
-      <link>https://rnemeth90.github.io/posts/2020-11-26-azure-ad-sync-set-msoldirsyncenabled/</link>
+      <link>http://localhost:1313/posts/2020-11-26-azure-ad-sync-set-msoldirsyncenabled/</link>
       <pubDate>Thu, 26 Nov 2020 16:31:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2020-11-26-azure-ad-sync-set-msoldirsyncenabled/</guid>
-      <description>&lt;p&gt;I recently ran into a situation in my lab environment that required I resync all (2000+) user accounts to Azure AD. Though this sounds complex and daunting, its actually quite simple. T&lt;/p&gt;
-&lt;p&gt;The basic steps involve disabling sync, and then removing the user objects. This can all be done with two PowerShell commands:&lt;/p&gt;
-&lt;p&gt;1) Set-MsolDirSyncEnabled -EnableDirSync $false&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://lh3.googleusercontent.com/-rGK18FXw7ns/X7_WthQR0CI/AAAAAAAAyCM/gg7MsY2fcVIcWMMbvxYzPpbpPyKwgHP8ACLcBGAsYHQ/image.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/11/image.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;2) Get-MsolUser -All | Remove-MsolUser -force&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://lh3.googleusercontent.com/-miyfN7OISGo/X7_WzDCc6iI/AAAAAAAAyCQ/PtHURTTVMQ4uypzO7L1UaLfyEs0fpYGdACLcBGAsYHQ/image.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/11/image-1.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;The account that you are currently running the commands as will not be removed.&lt;/p&gt;
-&lt;p&gt;To enable Azure AD Sync, you simply reverse the boolean operation on the Set-MsolDirSyncEnabled cmdlet above. However, I ran into an issue when trying to enable Azure AD Sync.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://lh3.googleusercontent.com/-R1TPVgYaEBE/X7_XM5_ljKI/AAAAAAAAyCY/VIJZnlgNEPQbhL9p3D0J3XsekBrGiNS3QCLcBGAsYHQ/image.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/11/image-2.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;After some research, it turns out you must wait a period of time (up to 12 hours in some cases) before you can make a second change to the Azure AD Sync status. This error simply means that we made a recent change to Azure AD Sync, and we must wait before making another change. To prove this, there is a “DirectorySynchronizationStatus” member for the Get-MsolCompanyInformation cmdlet. If we take a look at this member, we can see the status is “PendingDisabled”.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://lh3.googleusercontent.com/-0OBwKDDD5xQ/X7_X1bBxXjI/AAAAAAAAyCk/FyRlaMpCDT4aBe08TL_8sLiwUBnHkcPJQCLcBGAsYHQ/image.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2020/11/image-3.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Check the status of this periodically over the next 12 hours or so, and once it says “Enabled” or “Disabled”, you should be able to change the state once more.&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2020-11-26-azure-ad-sync-set-msoldirsyncenabled/</guid>
+      <description>I recently ran into a situation in my lab environment that required I resync all (2000+) user accounts to Azure AD. Though this sounds complex and daunting, its actually quite simple. T&#xA;The basic steps involve disabling sync, and then removing the user objects. This can all be done with two PowerShell commands:&#xA;1) Set-MsolDirSyncEnabled -EnableDirSync $false&#xA;2) Get-MsolUser -All | Remove-MsolUser -force&#xA;The account that you are currently running the commands as will not be removed.</description>
     </item>
-    
     <item>
       <title>Azure AD Connect No-Start-Connection</title>
-      <link>https://rnemeth90.github.io/posts/2018-07-26-azure-ad-connect-no-start-connection/</link>
+      <link>http://localhost:1313/posts/2018-07-26-azure-ad-connect-no-start-connection/</link>
       <pubDate>Thu, 26 Jul 2018 12:22:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2018-07-26-azure-ad-connect-no-start-connection/</guid>
-      <description>&lt;p&gt;This morning, I ran into an issue with Azure AD Connect that I had never seen before. I received an email alert from Azure AD stating that Password Synchronization was not working for my forest, and the suggested fix was to restart the ADSync service on the server. I restarted the service and then forced a sync to verify it was working.&lt;/p&gt;
-&lt;p&gt;After forcing the sync, I opened miisclient and noticed some strange errors. We sync multiple on-prem AD forests to Azure AD, and the status for one of them was “no-start-connection”. That error in itself does not seem significant to me. However, after clicking on the “failed-connection” link in the Connection Status pane, things became much more clear.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-26_08h03_05.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-26_08h03_05.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-26_08h03_18.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-26_08h03_18.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;The domain controllers for the forest in question are in a datacenter that is geographically separated from the datacenter that our Azure AD Sync server lives in. The two sites are connected via a S2S VPN.&lt;/p&gt;
-&lt;p&gt;There was obviously some type of connection issue between our two datacenters. In my case, the issue was transient, and resolved itself after a few minutes. But if you’re experiencing this error message, check your L2/L3 connection. Also, verify DNS is working and someone didn’t make changes to your firewall(s). Just walk up or down the OSI model and you’ll eventually find the problem.&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2018-07-26-azure-ad-connect-no-start-connection/</guid>
+      <description>This morning, I ran into an issue with Azure AD Connect that I had never seen before. I received an email alert from Azure AD stating that Password Synchronization was not working for my forest, and the suggested fix was to restart the ADSync service on the server. I restarted the service and then forced a sync to verify it was working.&#xA;After forcing the sync, I opened miisclient and noticed some strange errors.</description>
     </item>
-    
     <item>
       <title>Azure AD Connect Health: Latest Data is not Available in Azure Portal</title>
-      <link>https://rnemeth90.github.io/posts/2018-07-18-azure-ad-connect-health-latest-data-is/</link>
+      <link>http://localhost:1313/posts/2018-07-18-azure-ad-connect-health-latest-data-is/</link>
       <pubDate>Wed, 18 Jul 2018 16:38:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2018-07-18-azure-ad-connect-health-latest-data-is/</guid>
-      <description>&lt;p&gt;I recently had to create a new Azure AD Connect server, and found that it was not able to report health status in the Azure Portal. After some troubleshooting/research, I was able to get the health status report working by registering the health agent on the server with Azure AD Health Services. Doing this involves running one PowerShell cmdlet on your AD Connect server and providing global administrator credentials.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_56.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_56.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;First, let’s test the status of the agent communication:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_19.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_19.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;If you do not receive any errors, that means the Azure AD Connect Health agent on your server is able to successfully communicate with the cloud service. Now, let’s register the agent:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_05.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_05.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;You will be prompted for credentials. The credentials you provide need to be a global administrator account in your Azure AD tenant.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_42.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_42.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;You should receive some output stating that the registration is successful (or it failed).&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h25_20.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h25_20.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Now, just go back to the Azure Portal and refresh the page. The message stating that the
-“latest data is not available” should be gone.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h36_42.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h36_42.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2018-07-18-azure-ad-connect-health-latest-data-is/</guid>
+      <description>I recently had to create a new Azure AD Connect server, and found that it was not able to report health status in the Azure Portal. After some troubleshooting/research, I was able to get the health status report working by registering the health agent on the server with Azure AD Health Services. Doing this involves running one PowerShell cmdlet on your AD Connect server and providing global administrator credentials.&#xA;First, let’s test the status of the agent communication:</description>
     </item>
-    
     <item>
       <title>Removing a Forest from Azure AD Connect</title>
-      <link>https://rnemeth90.github.io/posts/2018-07-13-removing-forest-from-azure-ad-connect/</link>
+      <link>http://localhost:1313/posts/2018-07-13-removing-forest-from-azure-ad-connect/</link>
       <pubDate>Fri, 13 Jul 2018 15:30:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2018-07-13-removing-forest-from-azure-ad-connect/</guid>
-      <description>&lt;p&gt;In an organization with multiple Active Directory forests, you may want to sync objects from trusted forests. Adding trusted forests to Azure AD Sync is a simple process that I will likely cover in a future article. The focus of this post is the not-so-obvious process of removing a forest from Azure AD Connect. This can be a daunting and somewhat scary thing to do. Not fully understanding the process or having someone to guide you can leave you with thoughts like “what happens when I remove the forest from Azure AD Sync? Do on-premises objects get deleted? Are cloud objects deleted?”. I will try to answer these questions to the best of my ability and hopefully make the process simple and stress-free for you.&lt;/p&gt;
-&lt;p&gt;To get started, we first need to open PowerShell and disable the AD Sync scheduler. You can do this by running the “Set-ADSyncScheduler” cmdlet:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h47_05.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h47_05.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;This cmdlet is included in the ADSync PowerShell module. You may need to load the module prior to using the cmdlet:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-Powershell&#34; data-lang=&#34;Powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Import-Module ADSync
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The next step is to open FIM (miisclient) located in the install directory of Microsoft Azure AD Sync. By default, this is C:Program FilesMicrosoft Azure AD SyncUIShellmiisclient.exe. Once you have FIM open, click on the Connectors tab, then right click on the connector for the forest that you want to delete, and click “Delete”.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h50_26.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h50_26.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;You will then be prompted, asking if you want to just delete the Connector Space, or delete the Connector and the Connector Space. The former open removes all data, but keeps the configuration in case you want to use it again later. The latter option deleted the data and the configuration. This open should only be used if you don’t plan on syncing the forest again.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h50_09.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h50_09.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;The connector for the forest is now deleted, but what actually happens? Your on-premises objects do not get removed for the forest, and cloud objects &lt;strong&gt;are&lt;/strong&gt; removed. Simple enough, right?&lt;/p&gt;
-&lt;p&gt;Now you just need to re-enable the AD Sync Scheduler with this cmdlet:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-Powershell&#34; data-lang=&#34;Powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Set-ADSyncScheduler -SyncCycleEnabled $true
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;One last thing to mention… You may receive an email from the Microsoft Online Services Team stating that the identity synchronization failed due to a deletion threshold being met. By default, Azure AD Connect will not allow you to delete more than 500 objects in your cloud directory. This is to protect you from making a careless (potentially resume generating) mistake. The email will look something like this:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h56_04.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h56_04.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;If you are certain that you want to proceed with deleting the objects, here are the steps:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;Disable the deletion threshold protection. Open PowerShell on your Azure AD Sync server and type in this cmdlet: Disable-ADSyncExportDeletionThreshold. You will be prompted for credentials, sign-in with an Azure AD Global Admin account.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Open FIM (miisclient), and click on the “Connectors” button at the top of the window. Right click on the connector of type “Windows Azure Active Directory”, and select “Run…”.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_11h07_39.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_11h07_39.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;ol start=&#34;3&#34;&gt;
-&lt;li&gt;Next, click Export and then click Ok.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_11h07_58.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_11h07_58.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;ol start=&#34;4&#34;&gt;
-&lt;li&gt;
-&lt;p&gt;Allow the connector to run. This will take a few minutes. You can monitor the progress by clicking the Operations button.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Once this completes, you need to re-enable the deletion threshold. You can do this by running this cmdlet: &lt;span style=&#34;background: #F9F9F9;&#34;&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-Powershell&#34; data-lang=&#34;Powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Enable-ADSyncExportDeletionThreshold -DeletionThreshold &lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;.
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You will be prompted for credentials again. Just type in your Azure AD Global Admin creds. You can even lower the threshold if you’d like. I set mine to 100.&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2018-07-13-removing-forest-from-azure-ad-connect/</guid>
+      <description>In an organization with multiple Active Directory forests, you may want to sync objects from trusted forests. Adding trusted forests to Azure AD Sync is a simple process that I will likely cover in a future article. The focus of this post is the not-so-obvious process of removing a forest from Azure AD Connect. This can be a daunting and somewhat scary thing to do. Not fully understanding the process or having someone to guide you can leave you with thoughts like “what happens when I remove the forest from Azure AD Sync?</description>
     </item>
-    
     <item>
       <title>Exchange 2016 Hybrid Deploy Check: Username or Password Invalid</title>
-      <link>https://rnemeth90.github.io/posts/2017-11-07-exchange-2016-hybrid-deploy-check-username-or-password-invalid/</link>
+      <link>http://localhost:1313/posts/2017-11-07-exchange-2016-hybrid-deploy-check-username-or-password-invalid/</link>
       <pubDate>Tue, 07 Nov 2017 13:30:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2017-11-07-exchange-2016-hybrid-deploy-check-username-or-password-invalid/</guid>
-      <description>&lt;p&gt;These days, it seems every Microsoft product comes with its own unique set of head scratchers. Microsoft Exchange Server is no exception to this. I was installing Exchange 2016 earlier today, to be used as a hybrid configuration server for Office 365 (no local mailboxes). I downloaded the self depackaging executable from Microsoft, and attempted to install it. If you currently have a hybrid configuration (which we did, with Exchange 2010), the Exchange 2016 installer will detect this and run some tests to verify that the Office 365 tenant is ready for Exchange 2016 (more info here: &lt;a href=&#34;https://technet.microsoft.com/en-us/library/ms.exch.setup.hybridconfigurationstatuspage(v=exchg.160).aspx&#34;&gt;https://technet.microsoft.com/en-us/library/ms.exch.setup.hybridconfigurationstatuspage(v=exchg.160).aspx&lt;/a&gt;). You’ll be prompted for Office 365 credentials (the user must have the Organization Management role). Seems simple enough, right? Wrong.&lt;/p&gt;
-&lt;p&gt;After typing in the username and &lt;em&gt;pasting&lt;/em&gt; the password into the password field, setup came back with an error message stating the username or password was wrong. I then clicked the back button, and it crashed. I ran through this process a few more times, all with the same outcome. I even rebooted the server, which (in my opinion) should never be the resolution to a software problem. I looked through setup logs and found no indication of what the problem could be…&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/11/2017-11-07_12h57_08.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;It was on the fourth try that I typed in the password, and this seemed to work. I didn’t receive any error messages about the credentials being wrong. The Exchange setup seemed to continue on successfully. However, it then failed with a different error:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/11/2017-11-07_13h12_02.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;I again looked through the setup logs and found that this error happened anytime setup tried to run the “Get-OrganizationConfig” cmdlet. After troubleshooting for a little while, and no resolution in sight, I turned to Google. One of the posts I came across said that this is a bug in the Exchange installer, and to try and use the Cumulative Update installer instead. Apparently, with Exchange 2016, the Cumulative Update installer’s include all of the Exchange binaries, not just the updated binaries. I downloaded the installer for CU7 (all 6 gigabytes of it…) and successfully installed Exchange 2016. Hope this helps anyone out there struggling with this.&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2017-11-07-exchange-2016-hybrid-deploy-check-username-or-password-invalid/</guid>
+      <description>These days, it seems every Microsoft product comes with its own unique set of head scratchers. Microsoft Exchange Server is no exception to this. I was installing Exchange 2016 earlier today, to be used as a hybrid configuration server for Office 365 (no local mailboxes). I downloaded the self depackaging executable from Microsoft, and attempted to install it. If you currently have a hybrid configuration (which we did, with Exchange 2010), the Exchange 2016 installer will detect this and run some tests to verify that the Office 365 tenant is ready for Exchange 2016 (more info here: https://technet.</description>
     </item>
-    
     <item>
       <title>New Script: BulkAdd-SpamFilterWhitelist.ps1</title>
-      <link>https://rnemeth90.github.io/posts/2017-06-26-new-script-bulkadd-spamfilterwhitelist/</link>
+      <link>http://localhost:1313/posts/2017-06-26-new-script-bulkadd-spamfilterwhitelist/</link>
       <pubDate>Mon, 26 Jun 2017 22:16:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2017-06-26-new-script-bulkadd-spamfilterwhitelist/</guid>
-      <description>&lt;p&gt;This script is capable of adding a list of domains to an Exchange Online Spam Filter policy. It can be downloaded from TechNet or Github.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/rnemeth90/PowerShell/blob/master/BulkAdd-SpamFilterWhitelist.ps1&#34;&gt;Github&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://gallery.technet.microsoft.com/BulkAdd-SpamFilterWhitelist-2d2b596a&#34;&gt;TechNet&lt;/a&gt;&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2017-06-26-new-script-bulkadd-spamfilterwhitelist/</guid>
+      <description>This script is capable of adding a list of domains to an Exchange Online Spam Filter policy. It can be downloaded from TechNet or Github.&#xA;Github&#xA;TechNet</description>
     </item>
-    
     <item>
       <title>How to Permanently Remove Office 365 Users</title>
-      <link>https://rnemeth90.github.io/posts/2017-06-20-how-to-permanently-remove-office-365-users/</link>
+      <link>http://localhost:1313/posts/2017-06-20-how-to-permanently-remove-office-365-users/</link>
       <pubDate>Tue, 20 Jun 2017 18:13:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2017-06-20-how-to-permanently-remove-office-365-users/</guid>
-      <description>&lt;p&gt;After deleting a user in Office 365, their account is moved to a ‘recycle bin’ for 30 days. This allows the user account to be easily recovered. This can often cause issues when attempting to recreate a mailbox while a hybrid configuration is in place.&lt;/p&gt;
-&lt;p&gt;To permanently delete the user within Office 365, first delete the user in the Office 365 Admin Portal or using Powershell. Then, connect to your Azure Active Directory environment with Powershell using the “Connect-MsolService” cmdlet.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h06_20.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h06_20.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;To see a list of user accounts currently in the recycle bin, run this cmdlet:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h09_47.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h09_47.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Then, to permanently delete all accounts in the recycle bin, run this cmdlet:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h10_16.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h10_16.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;To remove a specific user, run this cmdlet:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h11_15.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2017/06/2017-06-20_14h11_15.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2017-06-20-how-to-permanently-remove-office-365-users/</guid>
+      <description>After deleting a user in Office 365, their account is moved to a ‘recycle bin’ for 30 days. This allows the user account to be easily recovered. This can often cause issues when attempting to recreate a mailbox while a hybrid configuration is in place.&#xA;To permanently delete the user within Office 365, first delete the user in the Office 365 Admin Portal or using Powershell. Then, connect to your Azure Active Directory environment with Powershell using the “Connect-MsolService” cmdlet.</description>
     </item>
-    
     <item>
       <title>Script for Setting the License for Multiple Office 365 User Accounts</title>
-      <link>https://rnemeth90.github.io/posts/2016-04-11-script-for-setting-the-license-for-multiple-office-365-user-accounts/</link>
+      <link>http://localhost:1313/posts/2016-04-11-script-for-setting-the-license-for-multiple-office-365-user-accounts/</link>
       <pubDate>Mon, 11 Apr 2016 01:25:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2016-04-11-script-for-setting-the-license-for-multiple-office-365-user-accounts/</guid>
-      <description>&lt;p&gt;A script for setting the Office 365 license for multiple users. Requires a CSV file named users.csv. This file must in the same directory as the script. The CSV file must contain three columns. The title of the columns should be UPN, UsageLocation, and SKU.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://drive.google.com/open?id=0B2K6VOnt6zeXZ2Z6OFZhZVoyenc&#34;&gt;BulkSet-MsolUserLicense.ps1&lt;/a&gt;&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2016-04-11-script-for-setting-the-license-for-multiple-office-365-user-accounts/</guid>
+      <description>A script for setting the Office 365 license for multiple users. Requires a CSV file named users.csv. This file must in the same directory as the script. The CSV file must contain three columns. The title of the columns should be UPN, UsageLocation, and SKU.&#xA;BulkSet-MsolUserLicense.ps1</description>
     </item>
-    
     <item>
       <title>Azure AD Connect Password Sync &amp;#8211; Disabled and Grayed Out</title>
-      <link>https://rnemeth90.github.io/posts/2015-10-15-azure-ad-connect-password-sync-disabled/</link>
+      <link>http://localhost:1313/posts/2015-10-15-azure-ad-connect-password-sync-disabled/</link>
       <pubDate>Thu, 15 Oct 2015 10:18:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2015-10-15-azure-ad-connect-password-sync-disabled/</guid>
-      <description>&lt;p&gt;Ran into a problem earlier with the new Azure AD Connect Wizard. We had configured the wizard and synced around 500 AD accounts. However, password sync was not working. I opened the wizard to confirm the configuration and found that “Password Hash Synchronization” was disabled. It was greyed out and could not be enabled.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/10/2015-10-15_08h43_18.jpg&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/10/2015-10-15_08h43_18.jpg&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;I called Microsoft and worked for a couple hours with a technician to resolve the issue. Thought I should post the resolution here in case anyone else encounters this.&lt;/p&gt;
-&lt;p&gt;You can enable password sync by running the following script:&lt;/p&gt;
-&lt;p&gt;Import-Module ADSync&lt;/p&gt;
-&lt;p&gt;$adConnector = “&amp;lt;Local AD Connector Name&amp;gt;”&lt;/p&gt;
-&lt;p&gt;$aadConnector = “&amp;lt;Azure AD Connector Name&amp;gt;”&lt;/p&gt;
-&lt;p&gt;Set-ADSyncAADPasswordSyncState -ConnectorName $aadConnector –Enable $true&lt;/p&gt;
-&lt;p&gt;Set-ADSyncAADPasswordSyncConfiguration -SourceConnector $adConnector -TargetConnector $aadConnector -Enable $true&lt;/p&gt;
-&lt;p&gt;get-ADSyncAADPasswordSyncConfiguration -sourceconnector $adConnector&lt;/p&gt;
-&lt;p&gt;You need to set the value of the $adConnector and $aadConnector variables with the names of your Connectors found in the MIISClient.&lt;/p&gt;
-&lt;p&gt;Open the MIISClient by browsing to:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/10/2015-10-15_09h39_42.jpg&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/10/2015-10-15_09h39_42.jpg&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Right click on MIISClient.exe and click “Run As Administrator”.&lt;/p&gt;
-&lt;p&gt;You can obtain the names of your connectors in by going to the Connectors tab and looking at the Names column. There are two values here that you need to pay attention to. The Windows Azure Active Directory connector is your Azure Connector (obviously), and the other connector is your on-prem connector.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/10/2015-10-15_09h39_31.jpg&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/10/2015-10-15_09h39_31.jpg&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Now that you have the names, just plug them into the script and run it. You can go back to the Azure AD Connect Wizard and verify that password sync is enabled. You can also go to the Event Viewer -&amp;gt; Application log and look for events 576 and 577. These two events are related to password sync and should show you all AD accounts that have successfully synced passwords.&lt;/p&gt;
-&lt;p&gt;You can force a sync by going to this location and running “DirectorySyncClientCmd.exe”.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/10/2015-10-15_10h21_12.jpg&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/10/2015-10-15_10h21_12.jpg&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2015-10-15-azure-ad-connect-password-sync-disabled/</guid>
+      <description>Ran into a problem earlier with the new Azure AD Connect Wizard. We had configured the wizard and synced around 500 AD accounts. However, password sync was not working. I opened the wizard to confirm the configuration and found that “Password Hash Synchronization” was disabled. It was greyed out and could not be enabled.&#xA;I called Microsoft and worked for a couple hours with a technician to resolve the issue. Thought I should post the resolution here in case anyone else encounters this.</description>
     </item>
-    
     <item>
       <title>Error When Reinstalling DirSync</title>
-      <link>https://rnemeth90.github.io/posts/2015-08-13-error-when-reinstalling-dirsync/</link>
+      <link>http://localhost:1313/posts/2015-08-13-error-when-reinstalling-dirsync/</link>
       <pubDate>Thu, 13 Aug 2015 18:59:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2015-08-13-error-when-reinstalling-dirsync/</guid>
-      <description>&lt;p&gt;Today is just not my day! After a failed attempt at installing/configuring DirSync, I removed it and tried to install and configure it again. This time did not prove any more successful. I was getting this error midway through the install process:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://geekyryan.com/wp-content/uploads/2015/08/1.png&#34;&gt;&lt;img src=&#34;https://geekyryan.com/wp-content/uploads/2015/08/1.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;I was able to figure this out after a little while and wanted to sure what I learned. If you are seeing this error message after removing DirSync and trying to reinstall, here’s what you need to do:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Uninstall Windows Azure Active Directory Sync tool and reboot
-&lt;a href=&#34;https://geekyryan.com/wp-content/uploads/2015/08/2.png&#34;&gt;&lt;img src=&#34;https://geekyryan.com/wp-content/uploads/2015/08/2.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Remove this directory and all subfolders: C:Program FilesWindows Azure Active Directory Sync
-&lt;a href=&#34;https://geekyryan.com/wp-content/uploads/2015/08/3.png&#34;&gt;&lt;img src=&#34;https://geekyryan.com/wp-content/uploads/2015/08/3.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;If you created a domain account to use for DirSync, remove it. Also remove the Office 365 account you created.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Delete the Group accounts that the DirSync wizard created. Their names all begin with “FIM”&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;a href=&#34;https://geekyryan.com/wp-content/uploads/2015/08/4.png&#34;&gt;&lt;img src=&#34;https://geekyryan.com/wp-content/uploads/2015/08/4.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Uninstall MSSQL:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Delete the MSSQL directory: C:Program FilesMicrosoft SQL Server&lt;/li&gt;
-&lt;li&gt;Reboot!&lt;/li&gt;
-&lt;li&gt;You should be able to install and configure DirSync now.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;a href=&#34;https://geekyryan.com/wp-content/uploads/2015/08/5.png&#34;&gt;&lt;img src=&#34;https://geekyryan.com/wp-content/uploads/2015/08/5.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2015-08-13-error-when-reinstalling-dirsync/</guid>
+      <description>Today is just not my day! After a failed attempt at installing/configuring DirSync, I removed it and tried to install and configure it again. This time did not prove any more successful. I was getting this error midway through the install process:&#xA;I was able to figure this out after a little while and wanted to sure what I learned. If you are seeing this error message after removing DirSync and trying to reinstall, here’s what you need to do:</description>
     </item>
-    
   </channel>
 </rss>

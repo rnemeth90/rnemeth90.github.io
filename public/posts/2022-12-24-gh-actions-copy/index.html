@@ -1,115 +1,85 @@
 <!DOCTYPE html>
+<html lang="en">
 
-
-<html lang="en-us" data-theme="">
-<head>
-    
-        
-<meta charset="utf-8">
-<meta name="HandheldFriendly" content="True">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  Building a Golang App with Github Actions · GeekyRyan
+</title>
+  <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="referrer" content="no-referrer-when-downgrade">
+<meta name="color-scheme" content="light dark">
 
-<title>Building a Golang App with Github Actions - GeekyRyan</title>
 
+
+
+<meta name="author" content="Ryan Nemeth">
 <meta name="description" content="In this article, we&rsquo;ll take a quick look at building a Golang app with Github actions. This process can be applied to just about any app written in any language though. We&rsquo;ll cover the following:
 What are github actions? Setting up the workflow to build, test, and deploy a binary Github Actions is a cross-platform CI/CD pipeline that allows you to build, test, package, and release your software. Actions can be triggered manually or based on events that happen within your Github repo.">
+<meta name="keywords" content="blog,developer,personal,devops">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Building a Golang App with Github Actions">
+  <meta name="twitter:description" content="In this article, we’ll take a quick look at building a Golang app with Github actions. This process can be applied to just about any app written in any language though. We’ll cover the following:
+What are github actions? Setting up the workflow to build, test, and deploy a binary Github Actions is a cross-platform CI/CD pipeline that allows you to build, test, package, and release your software. Actions can be triggered manually or based on events that happen within your Github repo.">
+
+<meta property="og:url" content="http://localhost:1313/posts/2022-12-24-gh-actions-copy/">
+  <meta property="og:site_name" content="GeekyRyan">
+  <meta property="og:title" content="Building a Golang App with Github Actions">
+  <meta property="og:description" content="In this article, we’ll take a quick look at building a Golang app with Github actions. This process can be applied to just about any app written in any language though. We’ll cover the following:
+What are github actions? Setting up the workflow to build, test, and deploy a binary Github Actions is a cross-platform CI/CD pipeline that allows you to build, test, package, and release your software. Actions can be triggered manually or based on events that happen within your Github repo.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-12-23T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-12-23T00:00:00+00:00">
+    <meta property="article:tag" content="Golang">
+    <meta property="article:tag" content="Github-Actions">
+    <meta property="article:tag" content="CI/CD">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/2022-12-24-gh-actions-copy/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
 
 
 
 
 
-<link rel="icon" type="image/x-icon" href="https://rnemeth90.github.io/favicon.ico">
-<link rel="apple-touch-icon-precomposed" href="https://rnemeth90.github.io/favicon.png">
 
-
-<style>
-  body {
-    visibility: hidden;
-    opacity: 0;
-  }
-</style>
-
-<noscript>
-  <style>
-    body {
-      visibility: visible;
-      opacity: 1;
-    }
-  </style>
-</noscript>
-
-
-
-    
-
-
-
-
-
-    
-    
-        
-    
-    
-
-    
-        <link rel="stylesheet" href="https://rnemeth90.github.io/css/style.min.65a6fe530f7f8ef21128f582fec92c4cf1e7ba18ed6aad0eadf7b1bb42f2d616.css" integrity="sha256-Zab&#43;Uw9/jvIRKPWC/sksTPHnuhjtaq0Orfexu0Ly1hY=">
-    
-
-
-
-
-
-    
-
-    
-
-
-
-
-
+  
     
     
-        
-    
-    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
 
-    
-        <script src="https://rnemeth90.github.io/js/script.min.74bf1a3fcf1af396efa4acf3e660e876b61a2153ab9cbe1893ac24ea6d4f94ee.js" type="text/javascript" charset="utf-8" integrity="sha256-dL8aP88a85bvpKzz5mDodrYaIVOrnL4Yk6wk6m1PlO4="></script>
-    
 
+
+ 
 
 
 
 
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
 
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
 
-<meta property="og:title" content="Building a Golang App with Github Actions" />
-<meta property="og:description" content="In this article, we&rsquo;ll take a quick look at building a Golang app with Github actions. This process can be applied to just about any app written in any language though. We&rsquo;ll cover the following:
-What are github actions? Setting up the workflow to build, test, and deploy a binary Github Actions is a cross-platform CI/CD pipeline that allows you to build, test, package, and release your software. Actions can be triggered manually or based on events that happen within your Github repo." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://rnemeth90.github.io/posts/2022-12-24-gh-actions-copy/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-12-23T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-12-23T00:00:00+00:00" />
-
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Building a Golang App with Github Actions"/>
-<meta name="twitter:description" content="In this article, we&rsquo;ll take a quick look at building a Golang app with Github actions. This process can be applied to just about any app written in any language though. We&rsquo;ll cover the following:
-What are github actions? Setting up the workflow to build, test, and deploy a binary Github Actions is a cross-platform CI/CD pipeline that allows you to build, test, package, and release your software. Actions can be triggered manually or based on events that happen within your Github repo."/>
-
-
-
-    
-        <link rel="webmention" href="https://webmention.io/hugo-theme-anubis/webmention" />
-        
-            <link rel="pingback" href="https://webmention.io/hugo-theme-anubis/xmlrpc" />
-        
-    
-    
-        <link rel="webmention" href="https://yourdomain.com/webemntions/receive" />
-    
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
 
 
 
@@ -119,447 +89,298 @@ What are github actions? Setting up the workflow to build, test, and deploy a bi
 
 
 
-    
 </head>
-<body>
-    <a class="skip-main" href="#main">Skip to main content</a>
-    <div class="container">
-        <header class="common-header"> 
-            
-                <div class="header-top">
-    <h1 class="site-title">
-    <a href="/">GeekyRyan</a>
-</h1>
-    <ul class="social-icons">
-
-
-    
-        
-        
-        <li>
-            <a href="https://github.com/rnemeth90" title="Github" rel="me">
-            <span class="inline-svg" >
 
 
 
 
-    
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
-
-</span>
-
-            </a>
-        </li>
-    
-
-    
-        
-        
-        <li>
-            <a href="https://twitter.com/geeky_ryan" title="Twitter" rel="me">
-            <span class="inline-svg" >
 
 
-
-
-    
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
-
-</span>
-
-            </a>
-        </li>
-    
-
-
-
-    <li>
-            <a href="https://rnemeth90.github.io/index.xml" title="RSS" rel="me">
-            <span class="inline-svg" >
-
-
-
-
-    
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M128.081 415.959c0 35.369-28.672 64.041-64.041 64.041S0 451.328 0 415.959s28.672-64.041 64.041-64.041 64.04 28.673 64.04 64.041zm175.66 47.25c-8.354-154.6-132.185-278.587-286.95-286.95C7.656 175.765 0 183.105 0 192.253v48.069c0 8.415 6.49 15.472 14.887 16.018 111.832 7.284 201.473 96.702 208.772 208.772.547 8.397 7.604 14.887 16.018 14.887h48.069c9.149.001 16.489-7.655 15.995-16.79zm144.249.288C439.596 229.677 251.465 40.445 16.503 32.01 7.473 31.686 0 38.981 0 48.016v48.068c0 8.625 6.835 15.645 15.453 15.999 191.179 7.839 344.627 161.316 352.465 352.465.353 8.618 7.373 15.453 15.999 15.453h48.068c9.034-.001 16.329-7.474 16.005-16.504z"/></svg>
-
-</span>
-
-            </a>
-        </li>
-    
-
-</ul>
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
 </div>
 
-    <nav>
-        
-        
-        <a class="" href="https://rnemeth90.github.io/about" title="about">About</a>
-        
-        <a class="" href="https://rnemeth90.github.io/tags/" title="tags">Tags</a>
-        
-        <a class="" href="https://rnemeth90.github.io/posts/" title="Archive">Archive</a>
-        
-    </nav>
 
-
-
-
-
-
-            
-        </header>
-        <main id="main" tabindex="-1"> 
-            
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
     
+    <a class="navigation-title" href="http://localhost:1313/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
 
-    <article class="post h-entry">
-        <div class="post-header">
-            <header>
-                <h1 class="p-name post-title">Building a Golang App with Github Actions</h1>
 
-                
-            </header>
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/2022-12-24-gh-actions-copy/">
+              Building a Golang App with Github Actions
+            </a>
+          </h1>
         </div>
-        <div class="content e-content">
-            <p>In this article, we&rsquo;ll take a quick look at building a Golang app with Github actions. This process can be applied to just about any app
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2022-12-23T00:00:00Z">
+                2022-12-23
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/software-development/">Software Development</a>
+      <span class="separator">•</span>
+    <a href="/categories/github/">Github</a>
+      <span class="separator">•</span>
+    <a href="/categories/devops/">Devops</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/golang/">Golang</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/github-actions/">Github-Actions</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/ci/cd/">CI/CD</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>In this article, we&rsquo;ll take a quick look at building a Golang app with Github actions. This process can be applied to just about any app
 written in any language though. We&rsquo;ll cover the following:</p>
 <ol>
 <li>What are github actions?</li>
 <li>Setting up the workflow to build, test, and deploy a binary</li>
 </ol>
-<p>Github Actions is a cross-platform CI/CD pipeline that allows you to build, test, package, and release your software. Actions can be triggered manually or based on events that happen within your Github repo. They are powerful and I suggest you read more at the <a href="https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions">Official Docs</a></p>
-<p>To get started, we&rsquo;ll need a golang app to build. You can use my example <a href="https://github.com/rnemeth90/golang-github-action-example">here</a> if you do not have your own.</p>
+<p>Github Actions is a cross-platform CI/CD pipeline that allows you to build, test, package, and release your software. Actions can be triggered manually or based on events that happen within your Github repo. They are powerful and I suggest you read more at the <a href="https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions"  class="external-link" target="_blank" rel="noopener">Official Docs</a></p>
+<p>To get started, we&rsquo;ll need a golang app to build. You can use my example <a href="https://github.com/rnemeth90/golang-github-action-example"  class="external-link" target="_blank" rel="noopener">here</a> if you do not have your own.</p>
 <p>The process is relatively simple. At the root of your repo, create the following directories:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>mkdir -p .github/workflows
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">mkdir -p .github/workflows
 </span></span></code></pre></div><p>Then create a yaml file (you can name it anything you want) with the content below:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">build-release-binary</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">run-name</span>: <span style="color:#ae81ff">Create Github Release for GoLang binary</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># anytime we push to our repo with a tag starting with the</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># letter &#39;r&#39;, we run the build</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">on</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">push</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">tags</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#e6db74">&#39;r*&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">jobs</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">build</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-22.04</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">permissions</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">contents</span>: <span style="color:#ae81ff">write</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">steps</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># checkout our github repo to the build agent</span>
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v3</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">with</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">fetch-depth</span>: <span style="color:#ae81ff">0</span> <span style="color:#75715e"># get all tags, needed to get git log</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">ref</span>: <span style="color:#ae81ff">main</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Setup the Go environment</span>
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">setup Go Lang</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">id</span>: <span style="color:#ae81ff">build</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/setup-go@v3</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">with</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">go-version</span>: <span style="color:#e6db74">&#39;^1.19.2&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Build our application</span>
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">run</span>: |<span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        go version
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        cd src
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        if [ ! -e *.mod ]; then
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          go mod init ${GITHUB_REPOSITORY}
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        fi
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        go mod tidy
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        go build -ldflags &#34;-X main.Version=${GITHUB_REF_NAME} -X main.BuiltBy=github-actions&#34; main.go
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        execFile=$(find . -type f -executable)</span>        
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Output more values for debugging</span>
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">run</span>: <span style="color:#ae81ff">git version</span>
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">run</span>: <span style="color:#ae81ff">git branch</span>
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">run</span>: <span style="color:#ae81ff">git tag</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># tag our release</span>
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">get semantic tag version and release notes from commit messages</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">id</span>: <span style="color:#ae81ff">tag</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">run</span>: |<span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        currentTag=${GITHUB_REF_NAME}
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        major_minor=$(echo &#34;$currentTag&#34; | cut -d&#39;.&#39; -f1-2)
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        patch=$(echo &#34;$currentTag&#34; | cut -d&#39;.&#39; -f3)
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        # avoid empty patch number
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        [ -n &#34;$patch&#34; ] &amp;&amp; ((patch--)) || patch=&#34;.x&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        previousTag=&#34;${major_minor}.${patch}&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        echo &#34;&#34; &gt; body.log
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        if git tag | grep $previousTag ; then
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git log -q ${currentTag}...${previousTag} --pretty=&#34;- %s&#34; -q --no-color &gt;&gt; body.log
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        else
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git log --pretty=&#34;- %s&#34; -q --no-color &gt;&gt; body.log
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        fi
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        line_count=$(cat body.log | wc -l)
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        echo &#34;currentTag=$currentTag&#34; &gt;&gt; $GITHUB_OUTPUT
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        echo &#34;previousTag=$previousTag&#34; &gt;&gt; $GITHUB_OUTPUT
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        echo &#34;line_count=$line_count&#34; &gt;&gt; $GITHUB_OUTPUT</span>        
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#  create Github release with release note from file and binary asset attached</span>
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">ncipollo/release-action@v1</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">with</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">name</span>: <span style="color:#ae81ff">${{ env.GITHUB_REF_NAME }}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">tag</span>: <span style="color:#ae81ff">${{ env.GITHUB_REF_NAME }}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">artifacts</span>: <span style="color:#e6db74">&#34;src/main&#34;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">bodyFile</span>: <span style="color:#e6db74">&#34;body.log&#34;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">token</span>: <span style="color:#ae81ff">${{ secrets.GITHUB_TOKEN }}</span>
-</span></span></code></pre></div><p>Each step within this workflow starts with a hyphen. The steps are well-commented, so I will not explain them further. Once you have this file in your repo, push it to github. Then navigate to the Actions tab in your repository and you should see your workflow on the left hand side of the screen.</p>
-<p><a href="https://rnemeth90.github.io/images/gh-actions-1.png"><img src="https://rnemeth90.github.io/images/gh-actions-1.png" alt=""></a></p>
-<p>Now that we have our workflow setup, to get it run, all you need to do is tag and push your release to github. To do that, you can run the script in my repo <a href="https://github.com/rnemeth90/golang-github-action-example/blob/main/create_new_gh_release.sh">create_new_gh_release.sh</a> or simply run the following commands (be sure to change the tag as needed):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>newtag<span style="color:#f92672">=</span>r1.0.0
-</span></span><span style="display:flex;"><span>git tag $newtag <span style="color:#f92672">&amp;&amp;</span> git push origin $newtag
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">build-release-binary</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">run-name</span><span class="p">:</span><span class="w"> </span><span class="l">Create Github Release for GoLang binary</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c"># anytime we push to our repo with a tag starting with the</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c"># letter &#39;r&#39;, we run the build</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">on</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">push</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="s1">&#39;r*&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">build</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l">ubuntu-22.04</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">permissions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l">write</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c"># checkout our github repo to the build agent</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="c"># get all tags, needed to get git log</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">ref</span><span class="p">:</span><span class="w"> </span><span class="l">main</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c"># Setup the Go environment</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">setup Go Lang</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">build</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/setup-go@v3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">go-version</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;^1.19.2&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c"># Build our application</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">        go version
+</span></span></span><span class="line"><span class="cl"><span class="sd">        cd src
+</span></span></span><span class="line"><span class="cl"><span class="sd">        if [ ! -e *.mod ]; then
+</span></span></span><span class="line"><span class="cl"><span class="sd">          go mod init ${GITHUB_REPOSITORY}
+</span></span></span><span class="line"><span class="cl"><span class="sd">        fi
+</span></span></span><span class="line"><span class="cl"><span class="sd">        go mod tidy
+</span></span></span><span class="line"><span class="cl"><span class="sd">        go build -ldflags &#34;-X main.Version=${GITHUB_REF_NAME} -X main.BuiltBy=github-actions&#34; main.go
+</span></span></span><span class="line"><span class="cl"><span class="sd">        execFile=$(find . -type f -executable)</span><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c"># Output more values for debugging</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">git version</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">git branch</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">git tag</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c"># tag our release</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">get semantic tag version and release notes from commit messages</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">tag</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">        currentTag=${GITHUB_REF_NAME}
+</span></span></span><span class="line"><span class="cl"><span class="sd">        major_minor=$(echo &#34;$currentTag&#34; | cut -d&#39;.&#39; -f1-2)
+</span></span></span><span class="line"><span class="cl"><span class="sd">        patch=$(echo &#34;$currentTag&#34; | cut -d&#39;.&#39; -f3)
+</span></span></span><span class="line"><span class="cl"><span class="sd">        # avoid empty patch number
+</span></span></span><span class="line"><span class="cl"><span class="sd">        [ -n &#34;$patch&#34; ] &amp;&amp; ((patch--)) || patch=&#34;.x&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">        previousTag=&#34;${major_minor}.${patch}&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">        echo &#34;&#34; &gt; body.log
+</span></span></span><span class="line"><span class="cl"><span class="sd">        if git tag | grep $previousTag ; then
+</span></span></span><span class="line"><span class="cl"><span class="sd">          git log -q ${currentTag}...${previousTag} --pretty=&#34;- %s&#34; -q --no-color &gt;&gt; body.log
+</span></span></span><span class="line"><span class="cl"><span class="sd">        else
+</span></span></span><span class="line"><span class="cl"><span class="sd">          git log --pretty=&#34;- %s&#34; -q --no-color &gt;&gt; body.log
+</span></span></span><span class="line"><span class="cl"><span class="sd">        fi
+</span></span></span><span class="line"><span class="cl"><span class="sd">        line_count=$(cat body.log | wc -l)
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">        echo &#34;currentTag=$currentTag&#34; &gt;&gt; $GITHUB_OUTPUT
+</span></span></span><span class="line"><span class="cl"><span class="sd">        echo &#34;previousTag=$previousTag&#34; &gt;&gt; $GITHUB_OUTPUT
+</span></span></span><span class="line"><span class="cl"><span class="sd">        echo &#34;line_count=$line_count&#34; &gt;&gt; $GITHUB_OUTPUT</span><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c">#  create Github release with release note from file and binary asset attached</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">ncipollo/release-action@v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">${{ env.GITHUB_REF_NAME }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="l">${{ env.GITHUB_REF_NAME }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">artifacts</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;src/main&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">bodyFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;body.log&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l">${{ secrets.GITHUB_TOKEN }}</span><span class="w">
+</span></span></span></code></pre></div><p>Each step within this workflow starts with a hyphen. The steps are well-commented, so I will not explain them further. Once you have this file in your repo, push it to github. Then navigate to the Actions tab in your repository and you should see your workflow on the left hand side of the screen.</p>
+<p><a href="https://rnemeth90.github.io/images/gh-actions-1.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/images/gh-actions-1.png"></a></p>
+<p>Now that we have our workflow setup, to get it run, all you need to do is tag and push your release to github. To do that, you can run the script in my repo <a href="https://github.com/rnemeth90/golang-github-action-example/blob/main/create_new_gh_release.sh"  class="external-link" target="_blank" rel="noopener">create_new_gh_release.sh</a> or simply run the following commands (be sure to change the tag as needed):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nv">newtag</span><span class="o">=</span>r1.0.0
+</span></span><span class="line"><span class="cl">git tag <span class="nv">$newtag</span> <span class="o">&amp;&amp;</span> git push origin <span class="nv">$newtag</span>
 </span></span></code></pre></div><p>Now, go back to the Actions tab in your repo, and you should see the build running. Once it completes, go back to the Code tab in your github repo and you will see the release on the right hand side of the screen.</p>
-<p><a href="https://rnemeth90.github.io/images/gh-actions-2.png"><img src="https://rnemeth90.github.io/images/gh-actions-2.png" alt=""></a></p>
+<p><a href="https://rnemeth90.github.io/images/gh-actions-2.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/images/gh-actions-2.png"></a></p>
 
-        </div>
+      </div>
+
+
+      <footer>
         
 
-    
 
-
-<div class="post-info">
-    
-        <div class="post-date dt-published">2022-12-23</div>
-    
-
-    <a class="post-hidden-url u-url" href="https://rnemeth90.github.io/posts/2022-12-24-gh-actions-copy/">https://rnemeth90.github.io/posts/2022-12-24-gh-actions-copy/</a>
-    <a href="https://rnemeth90.github.io" class="p-name p-author post-hidden-author h-card" rel="me">Ryan</a>
-
-
-    <div class="post-taxonomies">
         
-            <ul class="post-categories">
-                
-                    
-                    <li><a href="">Software Development</a></li>
-                
-                    
-                    <li><a href="https://rnemeth90.github.io/categories/github/">Github</a></li>
-                
-                    
-                    <li><a href="https://rnemeth90.github.io/categories/devops/">Devops</a></li>
-                
-            </ul>
-            
-            
-                <ul class="post-tags">
-                    
-                        
-                        <li><a href="https://rnemeth90.github.io/tags/golang/">#golang</a></li>
-                    
-                        
-                        <li><a href="https://rnemeth90.github.io/tags/github-actions/">#github-actions</a></li>
-                    
-                        
-                        <li><a href="https://rnemeth90.github.io/tags/ci/cd/">#CI/CD</a></li>
-                    
-                </ul>
         
-    </div>
-</div>
-
+        
+        
+        
+        
+        
+      </footer>
     </article>
 
     
-        
-        
-            <h3 class="read-next-title">Read next</h3>
-            <ul class="read-next-posts">
-                
-                <li><a href="/posts/2022-09-06-go-mod-replace-copy/">Use “replace” in go.mod to Point to a Local Module</a></li>
-                
-                <li><a href="/posts/2022-07-21-reading-json-files-with-go/">Reading Json Files with Go</a></li>
-                
-                <li><a href="/posts/2022-01-14-continuous-deployment-models/">Continuous Deployment Models</a></li>
-                
-            </ul>
-        
-    
+  </section>
 
-    
-        
-    <div class="pagination post-pagination">
-        <div class="left pagination-item ">
-            
-                <a href="/posts/2022-12-25-synology-backup-to-cloud/">Backup Synology NAS to Azure Storage</a>
-            
-        </div>
-        <div class="right pagination-item ">
-            
-                <a href="/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/">Chaining YAML Pipelines in Azure Devops</a>
-            
-        </div>
     </div>
 
-
-
-
+    <footer class="footer">
+  <section class="container">
+    ©
     
-
+      2012 -
     
-        
-
-
-
-
+    2024
+     Ryan Nemeth 
+    ·
     
-
-
-
-
-
-<article class="post">
-<script
-    data-isso="https://comments.example.com/"
-    data-isso-id="thread-id"
-    data-isso-css="true"
-    data-isso-lang="de"
-    data-isso-reply-to-self="true"
-    data-isso-require-author="true"
-    data-isso-require-email="true"
-    data-isso-avatar="true"
-    data-isso-avatar-bg="#f0f0f0"
-    data-isso-feed="false"
-    src="https://comments.example.com/js/embed.min.js">
-</script>
-<noscript>Please enable JavaScript to view the comments powered by <a href="https://posativ.org/isso/">Isso</a>.</noscript>
-<div>
-  <section id="isso-thread"></section>
-</div>
-</article>
-
-
-
-
-
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
-
-        </main>
-        
-            <footer class="common-footer">
-    
-    
-
-    <div class="common-footer-bottom">
-        
-        <div class="copyright">
-            <p>© Ryan Nemeth, 2023<br>
-            Powered by <a target="_blank" rel="noopener noreferrer" href="https://gohugo.io/">Hugo</a>, theme <a target="_blank" rel="noopener noreferrer" href="https://github.com/mitrichius/hugo-theme-anubis">Anubis</a>.<br>
-            
-            </p>  
-        </div> 
-
-        
-
-    
-
-
-
-    <button class="theme-switcher">
-        Dark theme
-    </button>
-
-
-<script>
-const STORAGE_KEY = 'user-color-scheme'
-const defaultTheme = "dark"
-
-let currentTheme
-let switchButton
-let autoDefinedScheme = window.matchMedia('(prefers-color-scheme: dark)')
-
-const autoChangeScheme = e => {
-    currentTheme = e.matches ? 'dark' : 'light'
-    document.documentElement.setAttribute('data-theme', currentTheme)
-    changeButtonText()
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    switchButton = document.querySelector('.theme-switcher')
-    currentTheme = detectCurrentScheme()
-    if (currentTheme == 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark')
-    }
-    if (currentTheme == 'auto') {
-        autoChangeScheme(autoDefinedScheme);
-        autoDefinedScheme.addListener(autoChangeScheme);
-    }
-
-    if (switchButton) {
-        changeButtonText()
-        switchButton.addEventListener('click', switchTheme, false)
-    }
-  
-    showContent()
-})
-
-function detectCurrentScheme() {
-    if (localStorage.getItem(STORAGE_KEY)) {
-        return localStorage.getItem(STORAGE_KEY)
-    } 
-    if (defaultTheme) {
-        return defaultTheme
-    } 
-    if (!window.matchMedia) {
-        return 'light'
-    } 
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark'
-    }
-    return 'light'
-}
-
-function changeButtonText()
-{   
-    if (switchButton) {
-        switchButton.textContent = currentTheme == 'dark' ?  "Light theme" : "Dark theme"
-    }
-}
-
-function switchTheme(e) {
-    if (currentTheme == 'dark') {
-        localStorage.setItem(STORAGE_KEY, 'light')
-        document.documentElement.setAttribute('data-theme', 'light')
-        currentTheme = 'light'
-    } else {
-        localStorage.setItem(STORAGE_KEY, 'dark')
-        document.documentElement.setAttribute('data-theme', 'dark')
-        currentTheme = 'dark'
-    }
-    changeButtonText()
-}
-
-function showContent() {
-    document.body.style.visibility = 'visible';
-    document.body.style.opacity = 1;
-}
-</script>   
-    </div>
-
-    <p class="h-card vcard">
-
-    <a href=https://rnemeth90.github.io class="p-name u-url url fn" rel="me">Ryan Nemeth</a> 
-
-     
-        /
-        <a class="p-email u-email email" rel="me" href="mailto:ryannemeth@live.com">ryannemeth@live.com</a>
-    
-
-     
-        <img class="u-photo" src="/images/bobble.jpg" />
-    
-</p> 
+  </section>
 </footer>
 
-        
-    </div>
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 </body>
+
 </html>

@@ -1,0 +1,72 @@
+languageCode: 'en-us'
+name: 'GeekyRyan'
+baseUrl: 'https://rnemeth90.github.io'
+title: 'GeekyRyan'
+theme: 'anubis2'
+paginate: 10
+enableRobotsTXT: true
+
+menu:
+  main:
+    - identifier: archive
+      name: Archive
+      title: Archive
+      url: /posts/
+      weight: 3
+    - identifier: about
+      name: About
+      title: about
+      url: /about
+      weight: 1
+    - identifier: tags
+      name: Tags
+      title: tags
+      url: /tags/
+      weight: 2
+
+taxonomies:
+  category: 'categories'
+  tag: 'tags'
+
+params:
+  author: 'Ryan Nemeth'
+  email: ryannemeth@live.com # used for microformats
+  avatar: '/images/bobble.jpg' # used for microformats
+  description: ''
+  dateFormat: '2006-01-02'
+  name: 'GeekyRyan'
+  paginationSinglePost: true
+  style: dark
+  readMore: true # show read more button
+  readNextPosts: 5 # show 5 related posts, 0 by default
+  disableSummary: false
+  copyCodeButton: true # true by default
+  rssAsSocialIcon: true
+  utterancesRepo: '' # mandatory
+  utterancesTheme: '' # optional
+  utterancesIssue: '' # optional
+  utterancesLabel: '' # optional
+  isso:
+    enabled: true # mandatory
+    data: 'https://comments.example.com/' # mandatory
+    jsLocation: 'https://comments.example.com/js/embed.min.js' # mandatory
+    css: true # optional
+    lang: 'de' # optional
+    replyToSelf: true # mandatory
+    requireAuthor: true # mandatory
+    requireEmail: true # mandatory
+    id: 'thread-id' # optional
+    avatar: true # optional
+    avatar-bg: '#f0f0f0' # optional
+    feed: false # optional
+  graphcommentId: ''
+  social:
+    - id: github
+      name: rnemeth90
+
+markup:
+  highlight:
+    style: 'base16-snazzy'
+  goldmark:
+    renderer:
+      unsafe: true # enable raw HTML in Markdown
