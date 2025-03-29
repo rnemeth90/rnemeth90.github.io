@@ -63,7 +63,7 @@ written in any language though. We&rsquo;ll cover the following:</p><ol><li>What
 </span></span></span><span class=line><span class=cl><span class=sd>        fi
 </span></span></span><span class=line><span class=cl><span class=sd>        go mod tidy
 </span></span></span><span class=line><span class=cl><span class=sd>        go build -ldflags &#34;-X main.Version=${GITHUB_REF_NAME} -X main.BuiltBy=github-actions&#34; main.go
-</span></span></span><span class=line><span class=cl><span class=sd>        execFile=$(find . -type f -executable)</span><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=sd>        execFile=$(find . -type f -executable)</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c># Output more values for debugging</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=nt>run</span><span class=p>:</span><span class=w> </span><span class=l>git version</span><span class=w>
@@ -91,7 +91,7 @@ written in any language though. We&rsquo;ll cover the following:</p><ol><li>What
 </span></span></span><span class=line><span class=cl><span class=sd>
 </span></span></span><span class=line><span class=cl><span class=sd>        echo &#34;currentTag=$currentTag&#34; &gt;&gt; $GITHUB_OUTPUT
 </span></span></span><span class=line><span class=cl><span class=sd>        echo &#34;previousTag=$previousTag&#34; &gt;&gt; $GITHUB_OUTPUT
-</span></span></span><span class=line><span class=cl><span class=sd>        echo &#34;line_count=$line_count&#34; &gt;&gt; $GITHUB_OUTPUT</span><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=sd>        echo &#34;line_count=$line_count&#34; &gt;&gt; $GITHUB_OUTPUT</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c>#  create Github release with release note from file and binary asset attached</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>ncipollo/release-action@v1</span><span class=w>
@@ -105,7 +105,7 @@ written in any language though. We&rsquo;ll cover the following:</p><ol><li>What
 </span></span><span class=line><span class=cl>git tag <span class=nv>$newtag</span> <span class=o>&amp;&amp;</span> git push origin <span class=nv>$newtag</span>
 </span></span></code></pre></div><p>Now, go back to the Actions tab in your repo, and you should see the build running. Once it completes, go back to the Code tab in your github repo and you will see the release on the right hand side of the screen.</p><p><a href=https://rnemeth90.github.io/images/gh-actions-2.png class=external-link target=_blank rel=noopener><img src=https://rnemeth90.github.io/images/gh-actions-2.png alt></a></p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
 2012 -
-2024
+2025
 Ryan Nemeth
 ·
 Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>

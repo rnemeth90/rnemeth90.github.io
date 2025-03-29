@@ -35,7 +35,7 @@ Weaveworks created a great tool for simplifying these steps: Kured (the Kubernet
 </span></span></code></pre></div><p><img src=https://rnemeth90.github.io/wp-content/uploads/2022/07/image-1.png alt></p><p>Then, we’ll use Kubetail to tail the logs of all our Kured pods:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>kubetail -label kured --namespace kured
 </span></span></code></pre></div><p><img src=https://rnemeth90.github.io/wp-content/uploads/2022/07/image-1024x749.png alt></p><p>By default, Kured checks for the existence of the sentinel file every 60 minutes. However, this behavior can be changed. See the github repo for more info:</p><p><img src=https://github.com/weaveworks/kured#reboot-sentinel-file--period alt="weaveworks/kured: Kubernetes Reboot Daemon"></p><p>Scheduling on the node should be disabled if you are within the Kured schedule</p><p><img src=https://rnemeth90.github.io/wp-content/uploads/2022/07/image-2.png alt></p><p>Now that the node is cordoned off, running pods on the node are drained, and the node is rebooted.</p><p>That’s it for this article. Have a great day!</p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
 2012 -
-2024
+2025
 Ryan Nemeth
 ·
 Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>

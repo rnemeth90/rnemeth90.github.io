@@ -35,8 +35,8 @@ I was writing a little CLI tool in Golang to track todo items. Just a dumb littl
 </span></span><span class=line><span class=cl>		<span class=p>}</span>
 </span></span><span class=line><span class=cl>	<span class=p>})</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>  <span class=c1>// failing test
-</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>t</span><span class=p>.</span><span class=nf>Run</span><span class=p>(</span><span class=s>&#34;ListTasks&#34;</span><span class=p>,</span> <span class=kd>func</span><span class=p>(</span><span class=nx>t</span> <span class=o>*</span><span class=nx>testing</span><span class=p>.</span><span class=nx>T</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// failing test</span>
+</span></span><span class=line><span class=cl>	<span class=nx>t</span><span class=p>.</span><span class=nf>Run</span><span class=p>(</span><span class=s>&#34;ListTasks&#34;</span><span class=p>,</span> <span class=kd>func</span><span class=p>(</span><span class=nx>t</span> <span class=o>*</span><span class=nx>testing</span><span class=p>.</span><span class=nx>T</span><span class=p>)</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>		<span class=nx>cmd</span> <span class=o>:=</span> <span class=nx>exec</span><span class=p>.</span><span class=nf>Command</span><span class=p>(</span><span class=nx>cmdPath</span><span class=p>,</span> <span class=s>&#34;-list&#34;</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>		<span class=nx>out</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>cmd</span><span class=p>.</span><span class=nf>CombinedOutput</span><span class=p>()</span>
 </span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
@@ -108,8 +108,8 @@ I was writing a little CLI tool in Golang to track todo items. Just a dumb littl
 </span></span><span class=line><span class=cl>			<span class=nx>t</span><span class=p>.</span><span class=nf>Fatal</span><span class=p>(</span><span class=nx>err</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>		<span class=p>}</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>    <span class=c1>// add this line
-</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=nx>out</span> <span class=p>=</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=nx>strings</span><span class=p>.</span><span class=nf>TrimSuffix</span><span class=p>(</span><span class=nb>string</span><span class=p>(</span><span class=nx>out</span><span class=p>),</span> <span class=s>&#34; \n\n&#34;</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// add this line</span>
+</span></span><span class=line><span class=cl>		<span class=nx>out</span> <span class=p>=</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=nx>strings</span><span class=p>.</span><span class=nf>TrimSuffix</span><span class=p>(</span><span class=nb>string</span><span class=p>(</span><span class=nx>out</span><span class=p>),</span> <span class=s>&#34; \n\n&#34;</span><span class=p>))</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>		<span class=nx>expected</span> <span class=o>:=</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;[ ] 1: %s&#34;</span><span class=p>,</span> <span class=nx>task</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>
@@ -133,7 +133,7 @@ I was writing a little CLI tool in Golang to track todo items. Just a dumb littl
 </span></span><span class=line><span class=cl>ok      github.com/rnemeth90/todo/cmd/todo      0.106s
 </span></span></code></pre></div></div><footer></footer></article></section></div><footer class=footer><section class=container>©
 2012 -
-2024
+2025
 Ryan Nemeth
 ·
 Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>

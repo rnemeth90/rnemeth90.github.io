@@ -70,7 +70,7 @@ We will work through the following steps in this article:"><meta property="og:lo
 </span></span></span><span class=line><span class=cl><span class=sd>    if [[ ! -s $CONF_FILE ]]; then
 </span></span></span><span class=line><span class=cl><span class=sd>        echo &#34;** ERROR: user.conf is empty&#34; 1&gt;&amp;2
 </span></span></span><span class=line><span class=cl><span class=sd>        exit 1
-</span></span></span><span class=line><span class=cl><span class=sd>    fi</span><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=sd>    fi</span><span class=w>
 </span></span></span></code></pre></div><p>The initContainer will use this configMap to read secrets from an Azure Key Vault and then write the secrets to the users.conf file. The users.conf file contains user account information. In the Key Vault, the secret name should be the username and the secret value should be the password. This Key Vault must exist and contain the secrets prior to deploying this solution.</p><p>When I deployed this solution in my environment, I used an Azure DevOps pipeline to create/manage the Key Vault with Terraform and then deploy the secrets using an inline Powershell script. However, this is beyond the scope of this article, and I will not be covering it here. You will also need to create a Service Principal in your AAD tenant and grant it access to the Key Vault. The Service Principal needs to have at least read access to the Key Vault.</p><p>Before deploying the configMap, you need to fill in values for these variables:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>    <span class=nv>KEYVAULT</span><span class=o>=</span><span class=s2>&#34;Insert name of Key Vault&#34;</span>
 </span></span><span class=line><span class=cl>    <span class=nv>AZ_SPN_ID</span><span class=o>=</span><span class=s2>&#34;Insert service principal Id&#34;</span>
 </span></span><span class=line><span class=cl>    <span class=nv>AZ_SPN_PASSWORD</span><span class=o>=</span><span class=s2>&#34;Insert service principal password&#34;</span>
@@ -172,7 +172,7 @@ We will work through the following steps in this article:"><meta property="og:lo
 </span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>targetPort</span><span class=p>:</span><span class=w> </span><span class=m>22</span><span class=w>
 </span></span></span></code></pre></div><p>Users will be connected in a round-robin fashion to the pods. This manifest will create a service of type LoadBalancer. Which will in turn create a new public Azure Load Balancer in the resource group that contains your Azure Kubernetes Service cluster if one does not already exist. If you already have a public load balancer, a new frontend IP address will be added.</p><p>That’s all for now. Please feel free to contact me if you have any questions.</p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
 2012 -
-2024
+2025
 Ryan Nemeth
 ·
 Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>
