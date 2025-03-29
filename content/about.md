@@ -3,7 +3,7 @@ title: About
 permalink: /about/
 ---
 
-<img src="https://geekyryan.com/wp-content/uploads/2022/01/image.png" alt="drawing" width="200"/>
+<img src="https://rnemeth90.github.io/images/meface.png" alt="drawing" width="200"/>
 
 My name is Ryan Nemeth and this is my personal blog. I write down my thoughts regarding Microsoft Azure, Kubernetes, cloud-native technologies, and software development. I find that documenting these things not only helps others but also helps reinforce my own knowledge as well. I may also blog about life or other random things from time to time.
 
