@@ -3,7 +3,7 @@ id: 232
 title: 'User Account Control'
 date: '2012-11-15T16:01:00+00:00'
 author: Ryan
-layout: til
+layout: post
 image: /wp-content/uploads/2014/11/UAC2BBlue.png
 categories:
     - Uncategorized
