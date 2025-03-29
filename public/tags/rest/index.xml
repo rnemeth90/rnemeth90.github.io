@@ -1,83 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>rest on GeekyRyan</title>
-    <link>https://rnemeth90.github.io/tags/rest/</link>
-    <description>GeekyRyan (rest)</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <title>Rest on GeekyRyan</title>
+    <link>http://localhost:1313/tags/rest/</link>
+    <description>Recent content in Rest on GeekyRyan</description>
+    <generator>Hugo</generator>
+    <language>en</language>
     <lastBuildDate>Thu, 04 Aug 2022 00:00:00 +0000</lastBuildDate>
-    
-    <atom:link href="https://rnemeth90.github.io/tags/rest/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <atom:link href="http://localhost:1313/tags/rest/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Powershell for Devops - Querying REST APIs with Powershell</title>
-      <link>https://rnemeth90.github.io/posts/2022-08-04-querying-rest-with-powershell/</link>
+      <link>http://localhost:1313/posts/2022-08-04-querying-rest-with-powershell/</link>
       <pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2022-08-04-querying-rest-with-powershell/</guid>
-      <description>&lt;p&gt;This will be a short post on querying REST APIs with Powershell.&lt;/p&gt;
-&lt;p&gt;It&amp;rsquo;s hard to argue that REST APIs are the predominant technology for interacting
-with networked services. They provide a gateway for interacting with a 3rd party (or self-hosted)
-product without having to go through the exercise of a more complicated integration. REST APIs communicate
-in a common format, typically JSON. However, most will allow us to choose the response format by specifying an
-option in the &amp;lsquo;Accept&amp;rsquo; header.  Most languages provide a native method for interacting with
-REST APIs. This objective for this post is to show you how simple this is with Powershell.&lt;/p&gt;
-&lt;p&gt;To get started, we&amp;rsquo;ll need a public API to interact with. I&amp;rsquo;m going to use &lt;a href=&#34;https://icanhazdadjoke.com/&#34;&gt;https://icanhazdadjoke.com/&lt;/a&gt;, because
-there is no authentication and no rate-limiting (two concepts we will cover in another post).&lt;/p&gt;
-&lt;p&gt;Calling the API is extremely simple:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-Powershell&#34; data-lang=&#34;Powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$url = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://icanhazdadjoke.com/&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Invoke-RestMethod -Uri $url -Method Get
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, this results in the content being returned as plain text. This isn&amp;rsquo;t ideal.&lt;/p&gt;
-&lt;p&gt;Let&amp;rsquo;s pass the &amp;lsquo;Accept&amp;rsquo; header to tell the API the format we are expecting to be returned:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-Powershell&#34; data-lang=&#34;Powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$url = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://icanhazdadjoke.com/&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$headers = @{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Accept&amp;#39;&lt;/span&gt; = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;application/json&amp;#39;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Invoke-RestMethod -Uri $url -Method Get -Headers $headers
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Output:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-Powershell&#34; data-lang=&#34;Powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;04&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;34&lt;/span&gt;] C:\..\..\rnemeth90.github.io on &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;main &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;+1&lt;/span&gt;  &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;❯&lt;/span&gt;  Invoke-RestMethod -Uri $url -Method Get -Headers $headers
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;id          joke                                                  status
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;--          ----                                                  ------
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;3LmyXvsPfqc I don&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;t trust stairs. They&amp;#39;&lt;/span&gt;re always up to something.    &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That looks a little better. For those of you familiar with Powershell, the output above probably
-looks completely normal. But for those not-so-familiar with Powershell, or those expecting
-more of a &amp;lsquo;json-esk&amp;rsquo; output, this may look a bit&amp;hellip; weird.&lt;/p&gt;
-&lt;p&gt;Powershell is an object oriented language. &lt;strong&gt;Everything is an object&lt;/strong&gt; in Powershell, even the response
-of this request. What you see in the output is simply the properties of the object.&lt;/p&gt;
-&lt;p&gt;Luckily Powershell provides us with a cmdlet to convert an object into json (aptly named: ConvertTo-Json). We can use it like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-Powershell&#34; data-lang=&#34;Powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$url = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://icanhazdadjoke.com/&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$headers = @{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Accept&amp;#39;&lt;/span&gt; = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;application/json&amp;#39;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Invoke-RestMethod -Uri $url -Method Get -Headers $headers | ConvertTo-Json
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here we are piping the output from Invoke-RestMethod to ConvertTo-Json. Pretty neat!&lt;/p&gt;
-&lt;p&gt;Output:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-Powershell&#34; data-lang=&#34;Powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;04&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;35&lt;/span&gt;] C:\..\..\rnemeth90.github.io on &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;main &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;+1&lt;/span&gt;  &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;❯&lt;/span&gt;  Invoke-RestMethod -Uri $url -Method Get -Headers $headers | Convertto-json
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AAdFBXnGlyd&amp;#34;&lt;/span&gt;,
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;joke&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;If you walk into a forest and cut down a tree, but the tree doesn&amp;#39;t understand why you cut it down, do you think it&amp;#39;s stumped?&amp;#34;&lt;/span&gt;,
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;status&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, that looks more normal.&lt;/p&gt;
-&lt;p&gt;There is much more we can do with Invoke-RestMethod. The &amp;lsquo;Method&amp;rsquo; parameter of this cmdlet accepts any of the common
-HTTP methods (GET, PUT, PATCH, DELETE, POST, HEAD). You can also specify other headers and a body (using the -body parameter).&lt;/p&gt;
-&lt;p&gt;Both of these parameters accept dictionaries:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-Powershell&#34; data-lang=&#34;Powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$url = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://icanhazdadjoke.com/&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$headers = @{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Accept&amp;#39;&lt;/span&gt; = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;application/json&amp;#39;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Host&amp;#39;&lt;/span&gt; = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;MyServer&amp;#39;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$body = @{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Eat&amp;#39;&lt;/span&gt; = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Pizza&amp;#39;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Invoke-RestMethod -Uri $url -Method Get -Headers $headers -Body $body | ConvertTo-Json
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Unfortunately I won&amp;rsquo;t be able to show the other HTTP methods, as this API only supports GET requests. So that&amp;rsquo;s all for now.&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2022-08-04-querying-rest-with-powershell/</guid>
+      <description>This will be a short post on querying REST APIs with Powershell.&#xA;It&amp;rsquo;s hard to argue that REST APIs are the predominant technology for interacting with networked services. They provide a gateway for interacting with a 3rd party (or self-hosted) product without having to go through the exercise of a more complicated integration. REST APIs communicate in a common format, typically JSON. However, most will allow us to choose the response format by specifying an option in the &amp;lsquo;Accept&amp;rsquo; header.</description>
     </item>
-    
   </channel>
 </rss>

@@ -2,197 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Software Deployment on GeekyRyan</title>
-    <link>https://rnemeth90.github.io/categories/software-deployment/</link>
-    <description>GeekyRyan (Software Deployment)</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <link>http://localhost:1313/categories/software-deployment/</link>
+    <description>Recent content in Software Deployment on GeekyRyan</description>
+    <generator>Hugo</generator>
+    <language>en</language>
     <lastBuildDate>Sun, 26 Jun 2022 15:00:28 +0000</lastBuildDate>
-    
-    <atom:link href="https://rnemeth90.github.io/categories/software-deployment/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <atom:link href="http://localhost:1313/categories/software-deployment/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Running Docker in WSL v1</title>
-      <link>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</link>
+      <link>http://localhost:1313/posts/2022-06-26-running-docker-in-wsl-v1/</link>
       <pubDate>Sun, 26 Jun 2022 15:00:28 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</guid>
-      <description>&lt;p&gt;I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.&lt;/p&gt;
-&lt;p&gt;Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work. I receive this nice message:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ docker
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The command &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;docker&amp;#39;&lt;/span&gt; could not be found in this WSL &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; distro.
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;We recommend to convert this distro to WSL &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; and activate
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;the WSL integration in Docker Desktop settings.
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;See https://docs.docker.com/docker-for-windows/wsl/ &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; details.
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So I’m in somewhat of a catch-22 here…&lt;/p&gt;
-&lt;p&gt;To work around this problem until a proper solution is found, I was able to get Docker working with WSL v1.&lt;/p&gt;
-&lt;p&gt;If you happen to be having a similar issue (and it seems like quite a few people are, considering the number of Github posts I found), just follow these steps:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Expose the Docker daemon in docker desktop settings:&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2022/02/image-10-1024x585.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Install the stand-alone Docker client in WSL v1:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.5.tgz
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tar zxvf docker-20.10.5.tgz
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cd docker
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Set the default Docker daemon in WSL v1:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;export DOCKER_HOST&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;tcp://localhost:2375
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Verify you can connect to Docker running on Windows from within WSL:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;./docker info
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is also beneficial in that you only have one Docker host to manage your containers, network, etc., rather than two.&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2022-06-26-running-docker-in-wsl-v1/</guid>
+      <description>I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.&#xA;Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work.</description>
     </item>
-    
     <item>
       <title>Accessing Secrets Securely in Azure DevOps Pipelines</title>
-      <link>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</link>
+      <link>http://localhost:1313/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</link>
       <pubDate>Sat, 19 Feb 2022 16:02:50 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</guid>
-      <description>&lt;p&gt;This post will cover a secure method for accessing secrets in Azure DevOps pipelines.&lt;/p&gt;
-&lt;h2 id=&#34;why-azure-key-vault&#34; &gt;Why Azure Key Vault?
-&lt;span&gt;
-    &lt;a href=&#34;#why-azure-key-vault&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;Azure Key Vault is an Azure cloud service used to securely store secrets, keys, and certificates. A secret can be any string of characters, such as API keys, passwords, URLs, etc. Azure Key Vault encrypts data at rest and in transit using HTTPS. Depending on the type of Key Vault you are using, data at rest is encrypted using software encryption (AES 256) or HSM-backed keys.&lt;/p&gt;
-&lt;p&gt;Azure Key Vault also gives us the ability to control access to secrets, keys, and certificates using native Key Vault access policies or the newer option of Azure IAM (RBAC) integration.&lt;/p&gt;
-&lt;h2 id=&#34;what-are-variable-groups&#34; &gt;What are Variable Groups?
-&lt;span&gt;
-    &lt;a href=&#34;#what-are-variable-groups&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;It’s all in the name. Variable groups are simply a method of grouping Azure DevOps pipeline variables. If you created a release for an application named MyAwesomeApp, you could create a variable group named myawesomeapp-var-group that could then store all of the variables you reference in the release. It’s simply a method of organizing variables.&lt;/p&gt;
-&lt;p&gt;You apply permissions to variable groups so that only certain people and pipelines/releases are able to use them.&lt;/p&gt;
-&lt;p&gt;You can read more here about variable groups and their usage:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://docs.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azure-devops&amp;amp;tabs=yaml#use-a-variable-group&#34;&gt;https://docs.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azure-devops&amp;amp;tabs=yaml#use-a-variable-group&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;creating-a-key-vault-and-adding-secrets&#34; &gt;Creating a Key Vault and Adding Secrets
-&lt;span&gt;
-    &lt;a href=&#34;#creating-a-key-vault-and-adding-secrets&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;If you already have a Key Vault, skip this section.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;In this post, we will create a Key Vault using the AzureCLI. To create the Vault and a secret, run these commands:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Create a resource group&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;az group create --location &amp;lt;location&amp;gt; --name &amp;lt;resource-group-name&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Create a KeyVault&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;az keyvault create --name &amp;lt;keyvault-name&amp;gt; --resource-group &amp;lt;resource-group-name&amp;gt; --enable-soft-delete
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Create some secrets in the Key Vault&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;az keyvault secret set --name username --vault-name &amp;lt;keyvault-name&amp;gt; --value &amp;lt;username&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;az keyvault secret set --name password --vault-name &amp;lt;keyvault-name&amp;gt; --value &amp;lt;password&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;az keyvault secret set --name tenantId--vault-name &amp;lt;keyvault-name&amp;gt; --value &amp;lt;tenant id&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You will need to update the location and resource group name with whatever values you want. You will also need to update the username, password, and your Azure AD tenant ID. The username you choose will need read access to your subscription.&lt;/p&gt;
-&lt;h2 id=&#34;creating-a-variable-group&#34; &gt;Creating a Variable Group
-&lt;span&gt;
-    &lt;a href=&#34;#creating-a-variable-group&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;Now we’ll create the variable group in Azure DevOps.&lt;/p&gt;
-&lt;p&gt;Go to your Azure DevOps project &amp;gt; Pipelines &amp;gt; Library and click “+ Variable Group”:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://geekyryan.com/wp-content/uploads/2022/02/image.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Give your variable group a name. Then toggle the switch “Link secrets from an Azure key vault as variables”. Select your Azure Subscription (you may need to authorize DevOps access to the subscription, and then select the Key Vault.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://geekyryan.com/wp-content/uploads/2022/02/image-1.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Now we can add the secrets from the Key Vault to the variable group. Under “Variables”, click the “+ Add” button. Select the checkbox next to any secrets you want to add to the variable group, and then click “Ok”.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://geekyryan.com/wp-content/uploads/2022/02/image-7.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Finally, click the “Save” button. You now have a variable group with secrets linked to a Key Vault. Notice the name of the secret is the only thing visible from the variable group. If you were to update the secret value in the Key Vault, Azure DevOps would automatically pick up the new value.&lt;/p&gt;
-&lt;h2 id=&#34;use-the-variable-group-in-a-pipeline&#34; &gt;Use the Variable Group in a Pipeline
-&lt;span&gt;
-    &lt;a href=&#34;#use-the-variable-group-in-a-pipeline&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;Now that we have our variable group in place, let’s use it in a pipeline. In Azure DevOps, go to Pipelines and click “New pipeline”.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://geekyryan.com/wp-content/uploads/2022/02/image-8-1024x596.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Choose “Azure Repos Git” &amp;gt; “&amp;lt; your git repo&amp;gt; “, “Starter Pipeline”, and then paste in the following code (You will need to update the ‘azureSubscription’ field with your SPN):&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-YAML&#34; data-lang=&#34;YAML&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;trigger&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- &lt;span style=&#34;color:#ae81ff&#34;&gt;main&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;pool&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;vmImage&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ubuntu-latest&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;variables&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#f92672&#34;&gt;group&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;kv-secrets&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;pr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;none&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;stages&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#f92672&#34;&gt;stage&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;print_resource_groups&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;jobs&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;job&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;print_resource_groups&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;continueOnError&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;steps&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#f92672&#34;&gt;task&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;AzureCLI@2&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;inputs&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;azureSubscription&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;lt;Your SPN&amp;gt;&amp;#39;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;scriptType&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;bash&amp;#39;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;scriptLocation&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;inlineScript&amp;#39;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;inlineScript&lt;/span&gt;: |&lt;span style=&#34;color:#e6db74&#34;&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;              az login --service-principal --username  $(username) --password $(password) --tenant $(tenantId)
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;              az group list&lt;/span&gt;              
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now click “Save and Run”, and then “Save and Run” again.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://geekyryan.com/wp-content/uploads/2022/02/image-9-1024x596.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Once the pipeline finishes running, you can see that it was able to read the subscription and create a list of all resource groups found.&lt;/p&gt;
-&lt;p&gt;This is a simple example of using Key Vault credentials in a pipeline. But you can imagine how useful this could be in more complex scenarios.&lt;/p&gt;
-&lt;p&gt;That’s all for now. If you have any questions, feel free to reach out!&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</guid>
+      <description>This post will cover a secure method for accessing secrets in Azure DevOps pipelines.&#xA;Why Azure Key Vault? Link to heading Azure Key Vault is an Azure cloud service used to securely store secrets, keys, and certificates. A secret can be any string of characters, such as API keys, passwords, URLs, etc. Azure Key Vault encrypts data at rest and in transit using HTTPS. Depending on the type of Key Vault you are using, data at rest is encrypted using software encryption (AES 256) or HSM-backed keys.</description>
     </item>
-    
     <item>
       <title>Continuous Deployment Models</title>
-      <link>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</link>
+      <link>http://localhost:1313/posts/2022-01-14-continuous-deployment-models/</link>
       <pubDate>Fri, 14 Jan 2022 19:24:01 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</guid>
-      <description>&lt;p&gt;When deploying new software releases to servers or (insert -as-a-service&amp;gt; here), it’s a good idea to either deploy the releases in a controlled manner or to have a quick rollback plan. This article will be diving into blue/green deployments, canary deployments, ring-based deployments, and feature tag deployments.&lt;/p&gt;
-&lt;h2 id=&#34;bluegreen-deployments&#34; &gt;Blue/Green Deployments
-&lt;span&gt;
-    &lt;a href=&#34;#bluegreen-deployments&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;Blue/green deployments are a deployment model where a new application version never gets deployed to the production servers (green) directly. Instead, it gets deployed to another set of servers (blue) first. Since the blue servers are not currently serving any traffic for users, the deployment has no impact. However, once the deployment has been completed successfully and tested, users will be directed to the new deployment (blue). You can control all user traffic or a subset of user traffic if your load balancer supports it (referred to as ‘Progressive Exposure’).&lt;/p&gt;
-&lt;p&gt;The next release will then repeat the same process. Blue would be the current production environment, so you would first deploy to the green servers. This model requires two sets of identical hosts and a load balancer or reverse proxy in front of them. If there are any unexpected issues with the new release, it is straightforward to switch back to the previous release. The disadvantage to this type of model is that it requires having redundant environments (and potentially wasted resources). However, this is less of a concern if using container orchestration platforms such as Kubernetes.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2022/01/2022-01-19_07h57_58-1024x575.png&#34; alt=&#34;Blue Green deployment model&#34;&gt;&lt;/p&gt;
-&lt;h2 id=&#34;immutable-servers&#34; &gt;Immutable Servers
-&lt;span&gt;
-    &lt;a href=&#34;#immutable-servers&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;There is an alternative method of blue/green deployments called “immutable servers”. This method is identical to blue/green deployments as described above. However, after switching user traffic over to the servers with the new release, the old servers are destroyed. They are not used again. This type of model becomes particularly efficient when using a pipeline that is capable of creating servers for you (i.e., Azure DevOps Pipelines)&lt;/p&gt;
-&lt;h2 id=&#34;canary-deployments&#34; &gt;Canary Deployments
-&lt;span&gt;
-    &lt;a href=&#34;#canary-deployments&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;In a canary deployment, not all users are routed to the new release immediately. Only a limited percentage of users get access to the new release. These users are the canaries. They should be monitored closely, so it is important to be using Not all users are routed to the new release immediately in a canary deployment. Only a limited percentage of users get access to the latest release. These users are the canaries.&lt;/p&gt;
-&lt;p&gt;Organizations should monitor the canaries closely, so it is essential to be using monitoring software capable of looking at the statistics of a web application from the users’ perspective (for example, Application Insights). The number of canaries can increase until all traffic is directed to the new release over time. The most significant advantage of this method is limited exposure to issues. If a problem appears after the release is deployed, only a small subset of users will experience it. After you fix the issues and redeploy the release, it’s best to select a different group of users to be canaries.&lt;/p&gt;
-&lt;h2 id=&#34;ring-based-deployments&#34; &gt;Ring Based Deployments
-&lt;span&gt;
-    &lt;a href=&#34;#ring-based-deployments&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;A ring-based deployment has multiple production environments. Each serves a limited number of users, similar to a canary deployment. However, you can have as many production environments as you want with a ring-based deployment. New releases are deployed to the rings one by one over time.&lt;/p&gt;
-&lt;h2 id=&#34;feature-flag-deployments&#34; &gt;Feature Flag Deployments
-&lt;span&gt;
-    &lt;a href=&#34;#feature-flag-deployments&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;Feature flags are used to expose new features to sets of users slowly. Unlike the other deployment models, they are not implemented in the infrastructure. Instead, they are typically implemented and enabled in code or database. An example would be a feature flag in a database that gives users access to a button on your web page. A developer could enable the flag for a set of users. These users would be able to see the button; other users would not. Feature flags can even toggle bug fixes or performance improvements.&lt;/p&gt;
-&lt;p&gt;I will cover implementing blue/green deployments in Azure using Azure DevOps and App Services in a future article.&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2022-01-14-continuous-deployment-models/</guid>
+      <description>When deploying new software releases to servers or (insert -as-a-service&amp;gt; here), it’s a good idea to either deploy the releases in a controlled manner or to have a quick rollback plan. This article will be diving into blue/green deployments, canary deployments, ring-based deployments, and feature tag deployments.&#xA;Blue/Green Deployments Link to heading Blue/green deployments are a deployment model where a new application version never gets deployed to the production servers (green) directly.</description>
     </item>
-    
   </channel>
 </rss>

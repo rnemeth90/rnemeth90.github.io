@@ -2,387 +2,53 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Software Development on GeekyRyan</title>
-    <link>https://rnemeth90.github.io/tags/software-development/</link>
-    <description>GeekyRyan (Software Development)</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Tue, 15 Aug 2023 00:00:00 +0000</lastBuildDate>
-    
-    <atom:link href="https://rnemeth90.github.io/tags/software-development/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <link>http://localhost:1313/tags/software-development/</link>
+    <description>Recent content in Software Development on GeekyRyan</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 29 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/software-development/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mounting Multiple Kubernetes Secrets into One Directory</title>
+      <link>http://localhost:1313/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</link>
+      <pubDate>Sat, 29 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</guid>
+      <description>Introduction Link to heading Combining multiple Kubernetes secrets into a single directory can streamline secret management in your applications. This guide walks you through the process of achieving this in Kubernetes, ensuring efficient and organized secret management.&#xA;Creating Secrets Link to heading First, create your secrets using the kubectl create secret command:&#xA;kubectl create secret generic secret-one --from-literal=key1=value1 kubectl create secret generic secret-two --from-literal=key2=value2 Each secret can contain multiple key-value pairs, and you can add more secrets as needed.</description>
+    </item>
+    <item>
+      <title>Detecting MIME Types in Go</title>
+      <link>http://localhost:1313/posts/2024-03-27-golang-detect-file-type/</link>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/2024-03-27-golang-detect-file-type/</guid>
+      <description>Introduction Link to heading Knowing the type of a file you&amp;rsquo;re working with is not just a matter of curiosity — it&amp;rsquo;s often a necessity. This is especially true when you&amp;rsquo;re deciding whether or not a particular operation can be carried out on that file. Go, with its comprehensive standard library, offers a straightforward approach to identifying a file&amp;rsquo;s MIME type, ensuring that developers have the tools they need to make informed decisions about file manipulation.</description>
+    </item>
+    <item>
+      <title>Validating URLs with Go</title>
+      <link>http://localhost:1313/posts/2023-12-12-golang-url-validation/</link>
+      <pubDate>Tue, 19 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/2023-12-12-golang-url-validation/</guid>
+      <description>Introduction Link to heading In this post, we&amp;rsquo;ll take a quick look at URL validation using Golang. It&amp;rsquo;s common to implement URL validation as a task within a HTTP request pipeline, typically as middleware. There are many different definitions of &amp;ldquo;validation&amp;rdquo;. For the purpose of this article, we will simply validate that a URL conforms to a particular text pattern.&#xA;I often see people (mistakenly) use URL and URI interchangeably.</description>
+    </item>
     <item>
       <title>Using try/catch/finally Blocks in PowerShell</title>
-      <link>https://rnemeth90.github.io/posts/2023-08-15-powershell-try-catch/</link>
+      <link>http://localhost:1313/posts/2023-08-15-powershell-try-catch/</link>
       <pubDate>Tue, 15 Aug 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2023-08-15-powershell-try-catch/</guid>
-      <description>&lt;p&gt;Despite being a great language, PowerShell is not impervious to errors. Errors that occur within your code can stop it&amp;rsquo;s execution or even cause unexpected changes in the resources that your script is managing. Learning to handle these errors gracefully is the foundation of defensive coding. Today, we&amp;rsquo;ll take a quick look at how PowerShell handles errors with Try-Catch-Finally blocks. They allow you to gracefully handle errors and perform cleanup operations, ensuring that your script doesn&amp;rsquo;t crash when the unexpected occurs. We&amp;rsquo;ll then cover the differences in terminating and non-terminating errors and why you should take these into consideration when implementing error handling.&lt;/p&gt;
-&lt;h2 id=&#34;the-try-block&#34; &gt;The Try Block
-&lt;span&gt;
-    &lt;a href=&#34;#the-try-block&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;The Try block is where you place the code that might generate an error. Think of it as a protective bubble around your potentially troublesome code. If an error occurs within the Try block, PowerShell will immediately jump to the corresponding Catch block.&lt;/p&gt;
-&lt;p&gt;Here&amp;rsquo;s a simple example:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;try {
-    # Code that might generate an error
-    Get-Item -Path &amp;#34;NonexistentFile.txt&amp;#34;
-}
-catch {
-    # Code to handle the error
-    Write-Host &amp;#34;An error occurred: $_&amp;#34;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;the-catch-block&#34; &gt;The Catch Block
-&lt;span&gt;
-    &lt;a href=&#34;#the-catch-block&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;The Catch block is where you can handle the error. PowerShell provides you with a special variable $_ that contains information about the error. You can use this variable to display error messages or even take corrective actions.&lt;/p&gt;
-&lt;p&gt;In the example above, we&amp;rsquo;re capturing the error generated by attempting to retrieve a nonexistent file. The $_ variable holds the error message, which we&amp;rsquo;re displaying using Write-Host.&lt;/p&gt;
-&lt;h2 id=&#34;the-finally-block&#34; &gt;The Finally Block
-&lt;span&gt;
-    &lt;a href=&#34;#the-finally-block&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;Now, let&amp;rsquo;s talk about the unsung hero – the Finally block. This block is executed regardless of whether an error occurred or not. It&amp;rsquo;s where you can place cleanup code that ensures your script leaves no trace behind, even in the face of adversity. Some tasks that are commonly done in the finally block are closing database connections, removing temp files, etc. The finally block is completely optional.&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;
-try {
-    # Code that might generate an error
-    # ...
-}
-catch {
-    # Code to handle the error
-    # ...
-}
-finally {
-    # Cleanup code here
-    # ...
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;terminatingnon-terminating-errors&#34; &gt;Terminating/non-terminating Errors
-&lt;span&gt;
-    &lt;a href=&#34;#terminatingnon-terminating-errors&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;non-terminating errors are any error that will not stop the execution of your script. Most cmdlets in PowerShell are non-terminating. They may output an error, but your script will continue to run. These kinds of errors cannot be caught with a catch block by default. The reason for this is the default &lt;code&gt;ErrorAction&lt;/code&gt; in your PowerShell profile, which is set to &lt;code&gt;Continue&lt;/code&gt;.&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# To show your default error action type
-$ErrorActionPreference
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Let&amp;rsquo;s go back and look at our first example:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;try {
-    # Code that might generate an error
-    Get-Item -Path &amp;#34;NonexistentFile.txt&amp;#34;
-}
-catch {
-    # Code to handle the error
-    Write-Host &amp;#34;An error occurred: $_&amp;#34;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you took the time to run this code, you may have noticed that the &lt;code&gt;Write-Host&lt;/code&gt; cmdlet in the &lt;code&gt;catch&lt;/code&gt; block was never ran. Why did we get a red error message in our PowerShell console, rather than the text &lt;code&gt;An error occurred: ...&lt;/code&gt;? The reason is that the non-existing path isn&amp;rsquo;t a terminating error, and the default &lt;code&gt;ErrorAction&lt;/code&gt; is &lt;code&gt;Continue&lt;/code&gt;. To catch the error, you will need to change the &lt;code&gt;ErrorAction&lt;/code&gt; in your PowerShell console to &lt;code&gt;Stop&lt;/code&gt;. This can be done in multiple ways. You can add &lt;code&gt;-ErrorAction Stop&lt;/code&gt; to the cmdlet, like this:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;try {
-    # Code that might generate an error
-    Get-Item -Path &amp;#34;NonexistentFile.txt&amp;#34; -ErrorAction Stop
-}
-catch {
-    # Code to handle the error
-    Write-Host &amp;#34;An error occurred: $_&amp;#34;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Or you can change the &lt;code&gt;ErrorActionPreference&lt;/code&gt; for the entire script, by adding this to the top of the script:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ErrorActionPreference = &amp;#34;Stop&amp;#34;
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;exceptions&#34; &gt;Exceptions
-&lt;span&gt;
-    &lt;a href=&#34;#exceptions&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;If you have ever worked with exceptions in C# you can skip this section. In the previous examples, we used simple &lt;code&gt;catch&lt;/code&gt; blocks that will catch &lt;em&gt;any&lt;/em&gt; error. This is a good start, but we can do better. PowerShell allows you to catch individual exceptions based on the exception type, similar to how C# handles catching exceptions.&lt;/p&gt;
-&lt;p&gt;Let&amp;rsquo;s look at an example:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;try {
-    # Attempt to open a non-existent file
-    $file = Get-Content -Path &amp;#34;NonexistentFile.txt&amp;#34;
-}
-catch [System.IO.FileNotFoundException] {
-    Write-Host &amp;#34;Caught a FileNotFoundException: $_&amp;#34;
-}
-catch {
-    Write-Host &amp;#34;Caught an exception: $_&amp;#34;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We now have two &lt;code&gt;catch&lt;/code&gt; blocks. If we encounter an exception of type &lt;code&gt;System.IO.FileNotFoundException&lt;/code&gt;, the first &lt;code&gt;catch&lt;/code&gt; block will catch the exception and handle it accordingly. The second &lt;code&gt;catch&lt;/code&gt; block will handle any other generic error.&lt;/p&gt;
-&lt;h2 id=&#34;conclusion&#34; &gt;Conclusion
-&lt;span&gt;
-    &lt;a href=&#34;#conclusion&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h2&gt;&lt;p&gt;Error handling might seem daunting at first, but with the power of Try-Catch-Finally blocks at your fingertips, you&amp;rsquo;re well-equipped to handle errors gracefully and ensure the resilience of your PowerShell scripts. Remember, every error is an opportunity to refine your skills and make your scripts more robust.&lt;/p&gt;
-&lt;p&gt;Thanks for reading!&lt;/p&gt;
-&lt;p&gt;Official Microsoft Documentation for Try-Catch-Finally in PowerShell:
-&lt;a href=&#34;https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_try_catch_finally?view=powershell-7.3&#34;&gt;about_try_catch_finally&lt;/a&gt;&lt;/p&gt;
-</description>
+      <guid>http://localhost:1313/posts/2023-08-15-powershell-try-catch/</guid>
+      <description>Despite being a great language, PowerShell is not impervious to errors. Errors that occur within your code can stop it&amp;rsquo;s execution or even cause unexpected changes in the resources that your script is managing. Learning to handle these errors gracefully is the foundation of defensive coding. Today, we&amp;rsquo;ll take a quick look at how PowerShell handles errors with Try-Catch-Finally blocks. They allow you to gracefully handle errors and perform cleanup operations, ensuring that your script doesn&amp;rsquo;t crash when the unexpected occurs.</description>
     </item>
-    
     <item>
       <title>Golang: When Identical Strings are Not Equal</title>
-      <link>https://rnemeth90.github.io/posts/2023-01-24-golang-strings-not-equal/</link>
+      <link>http://localhost:1313/posts/2023-01-24-golang-strings-not-equal/</link>
       <pubDate>Tue, 24 Jan 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2023-01-24-golang-strings-not-equal/</guid>
-      <description>&lt;p&gt;&lt;em&gt;This will be a quick and dirty post, so please forgive any spelling/grammar mistakes.&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;I was writing a little CLI tool in Golang to track todo items. Just a dumb little app to help hone my skills a bit, but still something useful that serves a purpose to me. I don&amp;rsquo;t write a ton of code at work (mostly just scripting/pipelines when I do), so I&amp;rsquo;m constantly working on something like this in my spare time. Anyway, I was writing this app, got everything working like I wanted it to. I then wrote some of the tests and was iterating over them. I noticed the &lt;code&gt;ListTasks&lt;/code&gt; test was failing:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;TestAddTask&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;testing&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;T&lt;/span&gt;) {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;task&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;test task number 1&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;dir&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;os&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Getwd&lt;/span&gt;()
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Fatal&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;cmdPath&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;filepath&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Join&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;dir&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;binaryName&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Run&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AddNewTask&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;testing&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;T&lt;/span&gt;) {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#a6e22e&#34;&gt;cmd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;exec&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Command&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;cmdPath&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-add&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;task&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;cmd&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Run&lt;/span&gt;(); &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Fatal&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	})
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;// failing test
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Run&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ListTasks&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;testing&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;T&lt;/span&gt;) {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#a6e22e&#34;&gt;cmd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;exec&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Command&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;cmdPath&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-list&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;cmd&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;CombinedOutput&lt;/span&gt;()
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Fatal&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#a6e22e&#34;&gt;expected&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Sprintf&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;[ ] 1: %s&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;task&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;strings&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Compare&lt;/span&gt;(string(&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;), &lt;span style=&#34;color:#a6e22e&#34;&gt;expected&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Errorf&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;got %v, expected %v\n&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;, []byte(&lt;span style=&#34;color:#a6e22e&#34;&gt;expected&lt;/span&gt;))
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	})
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Seems strange, considering the strings appear to be equivalent in the output:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ryan:todo/  |main U:4 ?:1 ✗|$ go test -v
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Building tool...
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;using /tmp/.testtodo.json
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;running...
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; RUN   TestAddTask
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; RUN   TestAddTask/AddNewTask
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; RUN   TestAddTask/ListTasks
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    main_test.go:82: got &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; 1: test task number &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        , expected &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; 1: test task number &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;--- FAIL: TestAddTask &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0.00s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    --- PASS: TestAddTask/AddNewTask &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0.00s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    --- FAIL: TestAddTask/ListTasks &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0.00s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FAIL
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cleaning up...
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;exit status &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FAIL    github.com/rnemeth90/todo/cmd/todo      0.105s
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What could be happening? After banging my head on the desk a few times, a revelation came to me&amp;hellip;&lt;/p&gt;
-&lt;p&gt;In Go, strings are simply slices of bytes. I decided to print out each string as a byte array:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ryan:todo/  |main U:4 ?:1 ✗|$ go test -v
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Building tool...
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;using /tmp/.testtodo.json
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;running...
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; RUN   TestAddTask
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; RUN   TestAddTask/AddNewTask
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; RUN   TestAddTask/ListTasks
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    main_test.go:80: got &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;91&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;93&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;49&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;58&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;101&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;115&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;97&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;115&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;107&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;110&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;117&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;109&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;98&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;101&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;114&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;49&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; 10&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;, expected &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;91&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;93&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;49&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;58&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;101&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;115&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;97&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;115&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;107&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;110&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;117&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;109&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;98&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;101&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;114&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; 49&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;--- FAIL: TestAddTask &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0.00s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    --- PASS: TestAddTask/AddNewTask &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0.00s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    --- FAIL: TestAddTask/ListTasks &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0.00s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FAIL
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cleaning up...
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;exit status &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FAIL    github.com/rnemeth90/todo/cmd/todo      0.144s
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s take a closer look at the byte arrays from the test output:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;got      &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;91&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;93&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;49&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;58&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;101&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;115&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;97&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;115&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;107&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;110&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;117&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;109&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;98&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;101&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;114&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;49&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; 10&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;expected &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;91&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;93&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;49&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;58&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;101&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;115&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;97&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;115&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;107&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;110&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;117&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;109&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;98&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;101&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;114&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt; 49&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can see the byte array returned from &lt;code&gt;cmd.CombinedOutput()&lt;/code&gt; has some additional bytes in it at the end (32,10,10). What exactly are 32, 10, and 10? To figure this out, I went over to the go playground: &lt;a href=&#34;https://go.dev/play/&#34;&gt;https://go.dev/play/&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Let&amp;rsquo;s see what happens when we create a byte array with a single number and print it out as a string to the console:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/images/golang-strings-not-equal-01.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/images/golang-strings-not-equal-01.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Interesting, we can see that &lt;code&gt;m&lt;/code&gt; was output to the console. So what do our mysterious additional characters in our test result represent? Let&amp;rsquo;s see:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/images/golang-strings-not-equal-02.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/images/golang-strings-not-equal-02.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;It&amp;rsquo;s hard to tell from the output, but if you look in the results pane, you&amp;rsquo;ll see a space and two new lines. So &lt;code&gt;32&lt;/code&gt; represents a space, and &lt;code&gt;10&lt;/code&gt; represents a new line!&lt;/p&gt;
-&lt;p&gt;You can play with this code yourself: &lt;a href=&#34;https://go.dev/play/p/fGUIxJM6KnV&#34;&gt;https://go.dev/play/p/fGUIxJM6KnV&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Ok, so let&amp;rsquo;s fix our failing test:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;TestAddTask&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;testing&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;T&lt;/span&gt;) {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;task&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;test task number 1&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;dir&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;os&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Getwd&lt;/span&gt;()
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Fatal&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;cmdPath&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;filepath&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Join&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;dir&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;binaryName&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Run&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AddNewTask&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;testing&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;T&lt;/span&gt;) {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#a6e22e&#34;&gt;cmd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;exec&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Command&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;cmdPath&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-add&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;task&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;cmd&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Run&lt;/span&gt;(); &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Fatal&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	})
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Run&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ListTasks&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;testing&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;T&lt;/span&gt;) {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#a6e22e&#34;&gt;cmd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;exec&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Command&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;cmdPath&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-list&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;cmd&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;CombinedOutput&lt;/span&gt;()
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Fatal&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// add this line
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;		&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt; = []byte(&lt;span style=&#34;color:#a6e22e&#34;&gt;strings&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;TrimSuffix&lt;/span&gt;(string(&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;), &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; \n\n&amp;#34;&lt;/span&gt;))
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#a6e22e&#34;&gt;expected&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Sprintf&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;[ ] 1: %s&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;task&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;strings&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Compare&lt;/span&gt;(string(&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;), &lt;span style=&#34;color:#a6e22e&#34;&gt;expected&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#a6e22e&#34;&gt;t&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Errorf&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;got %v, expected %v\n&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;, []byte(&lt;span style=&#34;color:#a6e22e&#34;&gt;expected&lt;/span&gt;))
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	})
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;strings&lt;/code&gt; package has a &lt;code&gt;TrimSuffix&lt;/code&gt; function that is useful for trimming bits off the end of a string. In the code above, you can see that we added &lt;code&gt;out = []byte(strings.TrimSuffix(string(out), &amp;quot; \n\n&amp;quot;))&lt;/code&gt;, which will trim off the space (character 32) and the two new lines (character 10). Now when we run our integration test, it passes:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ryan:todo/  |main U:4 ?:1 ✗|$ go test -v
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Building tool...
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;using /tmp/.testtodo.json
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;running...
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; RUN   TestAddTask
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; RUN   TestAddTask/AddNewTask
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; RUN   TestAddTask/ListTasks
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;--- PASS: TestAddTask &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0.00s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    --- PASS: TestAddTask/AddNewTask &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0.00s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    --- PASS: TestAddTask/ListTasks &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0.00s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;PASS
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cleaning up...
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ok      github.com/rnemeth90/todo/cmd/todo      0.106s
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+      <guid>http://localhost:1313/posts/2023-01-24-golang-strings-not-equal/</guid>
+      <description>This will be a quick and dirty post, so please forgive any spelling/grammar mistakes.&#xA;I was writing a little CLI tool in Golang to track todo items. Just a dumb little app to help hone my skills a bit, but still something useful that serves a purpose to me. I don&amp;rsquo;t write a ton of code at work (mostly just scripting/pipelines when I do), so I&amp;rsquo;m constantly working on something like this in my spare time.</description>
     </item>
-    
     <item>
       <title>Handling Graceful Shutdown in a .NET App Hosted in Kubernetes</title>
-      <link>https://rnemeth90.github.io/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/</link>
+      <link>http://localhost:1313/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/</link>
       <pubDate>Wed, 28 Dec 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://rnemeth90.github.io/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/</guid>
-      <description>&lt;p&gt;I was recently involved with troubleshooting some API&amp;rsquo;s hosted in Kubernetes throwing http/502&amp;rsquo;s. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us. It was actually a combination of these blogs (and the resolutions posted) that ended up resolving our issue.&lt;/p&gt;
-&lt;h3 id=&#34;so-what-was-actually-causing-the-502s&#34; &gt;So what was actually causing the 502&amp;rsquo;s?
-&lt;span&gt;
-    &lt;a href=&#34;#so-what-was-actually-causing-the-502s&#34;&gt;
-        &lt;svg viewBox=&#34;0 0 28 23&#34; height=&#34;100%&#34; width=&#34;19&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34; fill=&#34;none&#34; stroke-linecap=&#34;round&#34; stroke-miterlimit=&#34;10&#34; stroke-width=&#34;2&#34;/&gt;&lt;/svg&gt;
-    &lt;/a&gt;
-&lt;/span&gt;
-&lt;/h3&gt;&lt;p&gt;As stated, these APIs are hosted in Kubernetes. They are written primarily in c# (.NET Framework) and hosted in Windows Server Core containers. The pods are load balanced using a service, and we have an Nginx ingress on top of the service. Nothing fancy, just a typical setup that you may have seen or even built yourself. We implement automatic scaling for our replica sets using a standard Kubernetes-native HPA or Keda, depending on the app. We have autoscale rules defined for the pods. Our clusters are hosted in Azure Kubernetes Service, and we autoscale our node pools. So, there are several layers of scaling happening in our clusters at any given time. Occasionally, when a pod was handling a client request, Kubelet or a controller would come along and scale the pod in. We were initially under the belief that the &lt;code&gt;terminationGracePeriodSeconds&lt;/code&gt; value within our deployment would allow the pod to continue running for the defined number of seconds. However, we were mistaken. This value tells Kubernetes to allow the application running within the pod some time to clean up. It does &lt;em&gt;not&lt;/em&gt; tell the app to continue running for the defined number of seconds after it receives a sigterm signal. This logic actually needs to be implemented within the application itself, or with a prestop hook. The prestop method is &lt;a href=&#34;https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/&#34;&gt;well documented&lt;/a&gt;, so I will not cover it here.&lt;/p&gt;
-&lt;p&gt;To implement this in a .NET Framework app running in Windows, you need to add this registry key to your container.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;RUN&lt;/span&gt; reg add hklm&lt;span style=&#34;color:#ae81ff&#34;&gt;\s&lt;/span&gt;ystem&lt;span style=&#34;color:#ae81ff&#34;&gt;\c&lt;/span&gt;urrentcontrolset&lt;span style=&#34;color:#ae81ff&#34;&gt;\c&lt;/span&gt;ontrol /v WaitToKillServiceTimeout /t REG_SZ /d &lt;span style=&#34;color:#ae81ff&#34;&gt;60000&lt;/span&gt; /f&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This value tells Windows to wait a number of milliseconds before shutting down Normally, Windows only waits for 5 seconds (default) before shutting down any &amp;lsquo;background&amp;rsquo; processes. Windows forcibly shuts down processes after this period of time.&lt;/p&gt;
-&lt;p&gt;Next, in the startup class, we&amp;rsquo;ll add the following code. I have added inline comments to explain.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c#&#34; data-lang=&#34;c#&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; MyApp.APIConsoleHost
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Program&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;/*
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;      Register the SetConsoleCtrlHandler function in kernel32.dll in the
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;      application to capture CTRL_SHUTDOWN_EVENT events for resource reclamation
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    */&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;		[DllImport(&amp;#34;Kernel32&amp;#34;)]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;extern&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; SetConsoleCtrlHandler(HandlerRoutine handler, &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;add&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// Define a delegate for our handler routine&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;delegate&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; HandlerRoutine(CtrlTypes ctrlType);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;volatile&lt;/span&gt; ManualResetEvent _exitEvent = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; ManualResetEvent(&lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; HandlerRoutine _handler;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;/*
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;      Define the event types that we want to handle when the application receives a SIGTERM
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;          CTRL_C_EVENT = 0,
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;          CTRL_BREAK_EVENT = 1,
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;          CTRL_CLOSE_EVENT = 2,
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;          CTRL_LOGOFF_EVENT = 5,
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;          CTRL_SHUTDOWN_EVENT = 6
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    */&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; CtrlTypes
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			CTRL_SHUTDOWN_EVENT = &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;/*
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        Here we are defining how we want to handle the shutdown
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        We get a timeout value from an env variable named APP_SHUTDOWN_TIMEOUT
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        If that env variable is not found, we default to 60 seconds.
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        We then switch on our CtrlTypes enum and handle each value accordingly,
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        and then return true.
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    */&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; ConsoleCtrlCheck(CtrlTypes ctrlType)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; timeout = ConfigurationManager.AppSettings[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;APP_SHUTDOWN_TIMEOUT&amp;#34;&lt;/span&gt;];
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;.IsNullOrEmpty(timeout)) { timeout = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;60&amp;#34;&lt;/span&gt;; }
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; counter = &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;.Parse(timeout);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#66d9ef&#34;&gt;switch&lt;/span&gt; (ctrlType)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;				&lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; CtrlTypes.CTRL_SHUTDOWN_EVENT:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;					Console.WriteLine(&lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;[{DateTime.UtcNow}] CTRL_SHUTDOWN received&amp;#34;&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;					Console.WriteLine(&lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;[{DateTime.UtcNow}] Web Server is stopping in {counter} seconds&amp;#34;&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;					&lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (counter &amp;gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;					{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;						Thread.Sleep(TimeSpan.FromSeconds(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;						counter--;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;					}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;					_exitEvent.Set();
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;					&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;				&lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;					&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;/*
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        Our main method is pretty standard. However, we first register a new handler (_handler),
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        and then pass it to to the SetConsoleCtrlHandler() method we imported from Kernel32.dll.
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        The only other &amp;#39;unique&amp;#39; thing is the _exitEvent.WaitOne(); call defined at the bottom of main().
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        This is necessary so that main does not immediately exit, and wait&amp;#39;s for a signal. We defined a
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        property for this _exitEvent of type ManualResetEvent at the top of this class file.
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    */&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; Main(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;[] args)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			_handler += &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; HandlerRoutine(ConsoleCtrlCheck);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			SetConsoleCtrlHandler(_handler, &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;// redacted ....&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; startOptions = BuildStartOptions();
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;// redacted ....&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      WebApp.Start&amp;lt;SelfHostStartup&amp;gt;(startOptions);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			Console.WriteLine(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Press CTRL+C to stop it&amp;#34;&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			_exitEvent.WaitOne();
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; StartOptions BuildStartOptions()
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		{
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; startOptions = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; StartOptions();
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;// redacted start options&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; startOptions;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	}
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To prevent the HandlerRoutine instance from being recycled by the GC before the program exits, the HandlerRoutine must be static (as seen in the above example). This is important because if the handlerroutine is recycled before the application is finished, it will throw an error, as shown here:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;A callback was made on a garbage collected delegate of type &amp;#39;Program+HandlerRoutine::Invoke&amp;#39;. This may cause application crashes, corruption and data loss. When passing delegates to unmanaged code, they must be kept alive by the managed application until it is guaranteed that they will never be called.
-&lt;/code&gt;&lt;/pre&gt;</description>
+      <guid>http://localhost:1313/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/</guid>
+      <description>I was recently involved with troubleshooting some API&amp;rsquo;s hosted in Kubernetes throwing http/502&amp;rsquo;s. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us.</description>
     </item>
-    
   </channel>
 </rss>
