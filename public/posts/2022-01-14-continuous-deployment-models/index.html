@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  Continuous Deployment Models · GeekyRyan
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Ryan Nemeth">
+<meta name="description" content="When deploying new software releases to servers or (insert -as-a-service&gt; here), it’s a good idea to either deploy the releases in a controlled manner or to have a quick rollback plan. This article will be diving into blue/green deployments, canary deployments, ring-based deployments, and feature tag deployments.
+Blue/Green Deployments Link to heading Blue/green deployments are a deployment model where a new application version never gets deployed to the production servers (green) directly.">
+<meta name="keywords" content="blog,developer,personal,devops">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Continuous Deployment Models">
+  <meta name="twitter:description" content="When deploying new software releases to servers or (insert -as-a-service&gt; here), it’s a good idea to either deploy the releases in a controlled manner or to have a quick rollback plan. This article will be diving into blue/green deployments, canary deployments, ring-based deployments, and feature tag deployments.
+Blue/Green Deployments Link to heading Blue/green deployments are a deployment model where a new application version never gets deployed to the production servers (green) directly.">
+
+<meta property="og:url" content="http://localhost:1313/posts/2022-01-14-continuous-deployment-models/">
+  <meta property="og:site_name" content="GeekyRyan">
+  <meta property="og:title" content="Continuous Deployment Models">
+  <meta property="og:description" content="When deploying new software releases to servers or (insert -as-a-service&gt; here), it’s a good idea to either deploy the releases in a controlled manner or to have a quick rollback plan. This article will be diving into blue/green deployments, canary deployments, ring-based deployments, and feature tag deployments.
+Blue/Green Deployments Link to heading Blue/green deployments are a deployment model where a new application version never gets deployed to the production servers (green) directly.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-01-14T19:24:01+00:00">
+    <meta property="article:modified_time" content="2022-01-14T19:24:01+00:00">
+    <meta property="article:tag" content="Azure">
+    <meta property="article:tag" content="CI/CD">
+    <meta property="article:tag" content="Devops">
+    <meta property="article:tag" content="Software Deployment">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/2022-01-14-continuous-deployment-models/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/2022-01-14-continuous-deployment-models/">
+              Continuous Deployment Models
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2022-01-14T19:24:01Z">
+                2022-01-14
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              4-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/ci/cd/">CI/CD</a>
+      <span class="separator">•</span>
+    <a href="/categories/software-deployment/">Software Deployment</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/azure/">Azure</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/ci/cd/">CI/CD</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/devops/">Devops</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/software-deployment/">Software Deployment</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>When deploying new software releases to servers or (insert -as-a-service&gt; here), it’s a good idea to either deploy the releases in a controlled manner or to have a quick rollback plan. This article will be diving into blue/green deployments, canary deployments, ring-based deployments, and feature tag deployments.</p>
+<h2 id="bluegreen-deployments">
+  Blue/Green Deployments
+  <a class="heading-link" href="#bluegreen-deployments">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Blue/green deployments are a deployment model where a new application version never gets deployed to the production servers (green) directly. Instead, it gets deployed to another set of servers (blue) first. Since the blue servers are not currently serving any traffic for users, the deployment has no impact. However, once the deployment has been completed successfully and tested, users will be directed to the new deployment (blue). You can control all user traffic or a subset of user traffic if your load balancer supports it (referred to as ‘Progressive Exposure’).</p>
+<p>The next release will then repeat the same process. Blue would be the current production environment, so you would first deploy to the green servers. This model requires two sets of identical hosts and a load balancer or reverse proxy in front of them. If there are any unexpected issues with the new release, it is straightforward to switch back to the previous release. The disadvantage to this type of model is that it requires having redundant environments (and potentially wasted resources). However, this is less of a concern if using container orchestration platforms such as Kubernetes.</p>
+<p><img alt="Blue Green deployment model" src="https://rnemeth90.github.io/wp-content/uploads/2022/01/2022-01-19_07h57_58-1024x575.png"></p>
+<h2 id="immutable-servers">
+  Immutable Servers
+  <a class="heading-link" href="#immutable-servers">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>There is an alternative method of blue/green deployments called “immutable servers”. This method is identical to blue/green deployments as described above. However, after switching user traffic over to the servers with the new release, the old servers are destroyed. They are not used again. This type of model becomes particularly efficient when using a pipeline that is capable of creating servers for you (i.e., Azure DevOps Pipelines)</p>
+<h2 id="canary-deployments">
+  Canary Deployments
+  <a class="heading-link" href="#canary-deployments">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>In a canary deployment, not all users are routed to the new release immediately. Only a limited percentage of users get access to the new release. These users are the canaries. They should be monitored closely, so it is important to be using Not all users are routed to the new release immediately in a canary deployment. Only a limited percentage of users get access to the latest release. These users are the canaries.</p>
+<p>Organizations should monitor the canaries closely, so it is essential to be using monitoring software capable of looking at the statistics of a web application from the users’ perspective (for example, Application Insights). The number of canaries can increase until all traffic is directed to the new release over time. The most significant advantage of this method is limited exposure to issues. If a problem appears after the release is deployed, only a small subset of users will experience it. After you fix the issues and redeploy the release, it’s best to select a different group of users to be canaries.</p>
+<h2 id="ring-based-deployments">
+  Ring Based Deployments
+  <a class="heading-link" href="#ring-based-deployments">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>A ring-based deployment has multiple production environments. Each serves a limited number of users, similar to a canary deployment. However, you can have as many production environments as you want with a ring-based deployment. New releases are deployed to the rings one by one over time.</p>
+<h2 id="feature-flag-deployments">
+  Feature Flag Deployments
+  <a class="heading-link" href="#feature-flag-deployments">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Feature flags are used to expose new features to sets of users slowly. Unlike the other deployment models, they are not implemented in the infrastructure. Instead, they are typically implemented and enabled in code or database. An example would be a feature flag in a database that gives users access to a button on your web page. A developer could enable the flag for a set of users. These users would be able to see the button; other users would not. Feature flags can even toggle bug fixes or performance improvements.</p>
+<p>I will cover implementing blue/green deployments in Azure using Azure DevOps and App Services in a future article.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2012 -
+    
+    2024
+     Ryan Nemeth 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

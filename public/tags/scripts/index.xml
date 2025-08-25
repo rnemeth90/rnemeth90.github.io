@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Scripts on GeekyRyan</title>
+    <link>http://localhost:1313/tags/scripts/</link>
+    <description>Recent content in Scripts on GeekyRyan</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 06 Oct 2016 03:03:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/scripts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Script to Move All Disabled AD Objects to a Specified OU</title>
+      <link>http://localhost:1313/posts/2016-10-06-script-to-move-all-disabled-ad-objects-to-a-specified-ou/</link>
+      <pubDate>Thu, 06 Oct 2016 03:03:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/2016-10-06-script-to-move-all-disabled-ad-objects-to-a-specified-ou/</guid>
+      <description>The title says it all. This script will move all disabled AD objects to a specified OU. This script accepts parameters that will allow you to specify whether you want to move Users or Computers and the destination OU. It also accepts a “test mode” parameter that will run the script and output the results, without actually modifying Active Directory.&#xA;This is revision 1 of the script. There are still several improvements I would like to make, including better error handling and recovery.</description>
+    </item>
+    <item>
+      <title>Script for Setting the License for Multiple Office 365 User Accounts</title>
+      <link>http://localhost:1313/posts/2016-04-11-script-for-setting-the-license-for-multiple-office-365-user-accounts/</link>
+      <pubDate>Mon, 11 Apr 2016 01:25:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/2016-04-11-script-for-setting-the-license-for-multiple-office-365-user-accounts/</guid>
+      <description>A script for setting the Office 365 license for multiple users. Requires a CSV file named users.csv. This file must in the same directory as the script. The CSV file must contain three columns. The title of the columns should be UPN, UsageLocation, and SKU.&#xA;BulkSet-MsolUserLicense.ps1</description>
+    </item>
+    <item>
+      <title>Script for Querying All AD Computers Time Source</title>
+      <link>http://localhost:1313/posts/2015-09-01-script-for-querying-all-ad-computers-time-source/</link>
+      <pubDate>Tue, 01 Sep 2015 21:05:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/2015-09-01-script-for-querying-all-ad-computers-time-source/</guid>
+      <description>This script will iterate through all computers in Active Directory and return the configured time server for each computer.&#xA;&amp;lt;# .SYNOPSIS Get time source for all computers in domain .EXAMPLE Get-TimeSource .NOTES Author: Ryan Nemeth - RyanNemeth@live.com Site: http://www.geekyryan.com .LINK http://www.geekyryan.com .DESCRIPTION This function will iterate through all computers/servers in a domain and return the time source for each. #&amp;gt; Write-Host -foregroundcolor Red -BackgroundColor black &amp;#34;This script must be run on a domain controller and requires that the AD Powershell module be installed&amp;#34; $module = Get-Module -ListAvailable | Select-Object -ExpandProperty Name if($module -notcontains &amp;#34;ActiveDirectory&amp;#34;) { Write-Host -foregroundcolor red -backgroundcolor black &amp;#34;***Active Directory Powershell Module Not Found***&amp;#34; } else { Write-Host -foregroundcolor yellow &amp;#34;Found Active Directory Powershell Module.</description>
+    </item>
+    <item>
+      <title>Ping Sweeping with FPing</title>
+      <link>http://localhost:1313/posts/2015-03-09-ping-sweeping-with-fping/</link>
+      <pubDate>Mon, 09 Mar 2015 01:08:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/2015-03-09-ping-sweeping-with-fping/</guid>
+      <description>I generally use NMAP for any type of host discovery, but recently started experimenting with FPing. One thing I found is that, when performing a ping sweep, not only do I see the hosts that replied to the ping, but FPing also sends any unreachable IP addresses to stdout (which is super annoying and ugly if you ask me…).&#xA;Anyway, after a bit of research, I found a nifty way to suppress these messages.</description>
+    </item>
+    <item>
+      <title>Powershell: SID to Username</title>
+      <link>http://localhost:1313/posts/2014-12-08-powershell-sid-to-username-powershell-sid-to-username/</link>
+      <pubDate>Mon, 08 Dec 2014 13:43:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/2014-12-08-powershell-sid-to-username-powershell-sid-to-username/</guid>
+      <description>This is a simple script to convert a SID to a username&#xA;# Returns a username based on a SID # Author: Ryan Nemeth # Date: 12/2/2014 $SID = read-host “Please enter the SID: ” $object = New-Object System.Security.Principal.SecurityIdentifier($SID) $User = $object.Translate( \[System.Security.Principal.NTAccount\]) write-host “The user is: ” $User.Value </description>
+    </item>
+  </channel>
+</rss>

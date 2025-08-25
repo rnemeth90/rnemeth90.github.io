@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  Remove Kubernetes Namespace Stuck in the Terminating State · GeekyRyan
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Ryan Nemeth">
+<meta name="description" content="In this post, we will discuss how to remove a Kubernetes namespace that is stuck in the ‘terminating’ state.
+A namespace is like a container. You can use it to store related objects in a Kubernetes environment. Maybe you are hosting a blog in Kubernetes. This blog will likely have a database, a frontend website, a load balancer (service) to spread the incoming traffic among ‘x’ number of frontend containers (pods), and maybe some middle-tier or utility applications.">
+<meta name="keywords" content="blog,developer,personal,devops">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Remove Kubernetes Namespace Stuck in the Terminating State">
+  <meta name="twitter:description" content="In this post, we will discuss how to remove a Kubernetes namespace that is stuck in the ‘terminating’ state.
+A namespace is like a container. You can use it to store related objects in a Kubernetes environment. Maybe you are hosting a blog in Kubernetes. This blog will likely have a database, a frontend website, a load balancer (service) to spread the incoming traffic among ‘x’ number of frontend containers (pods), and maybe some middle-tier or utility applications.">
+
+<meta property="og:url" content="http://localhost:1313/posts/2022-06-04-remove-kubernetes-namespace-stuck-in-the-terminating-state/">
+  <meta property="og:site_name" content="GeekyRyan">
+  <meta property="og:title" content="Remove Kubernetes Namespace Stuck in the Terminating State">
+  <meta property="og:description" content="In this post, we will discuss how to remove a Kubernetes namespace that is stuck in the ‘terminating’ state.
+A namespace is like a container. You can use it to store related objects in a Kubernetes environment. Maybe you are hosting a blog in Kubernetes. This blog will likely have a database, a frontend website, a load balancer (service) to spread the incoming traffic among ‘x’ number of frontend containers (pods), and maybe some middle-tier or utility applications.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-06-04T18:29:41+00:00">
+    <meta property="article:modified_time" content="2022-06-04T18:29:41+00:00">
+    <meta property="article:tag" content="Aks">
+    <meta property="article:tag" content="Azure Kubernetes Service">
+    <meta property="article:tag" content="Bash">
+    <meta property="article:tag" content="Kubernetes">
+    <meta property="article:tag" content="Linux">
+    <meta property="article:tag" content="PowerShell">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/2022-06-04-remove-kubernetes-namespace-stuck-in-the-terminating-state/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/2022-06-04-remove-kubernetes-namespace-stuck-in-the-terminating-state/">
+              Remove Kubernetes Namespace Stuck in the Terminating State
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2022-06-04T18:29:41Z">
+                2022-06-04
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              4-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/azure-kubernetes-service/">Azure Kubernetes Service</a>
+      <span class="separator">•</span>
+    <a href="/categories/kubernetes/">Kubernetes</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/aks/">Aks</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/azure-kubernetes-service/">Azure Kubernetes Service</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/bash/">Bash</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/kubernetes/">Kubernetes</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/linux/">Linux</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/powershell/">PowerShell</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>In this post, we will discuss how to remove a Kubernetes namespace that is stuck in the ‘terminating’ state.</p>
+<p>A namespace is like a container. You can use it to store related objects in a Kubernetes environment. Maybe you are hosting a blog in Kubernetes. This blog will likely have a database, a frontend website, a load balancer (service) to spread the incoming traffic among ‘x’ number of frontend containers (pods), and maybe some middle-tier or utility applications. One day, you decide you no longer want this blog, so you plan to delete it. Rather than tediously deleting all of the various entities associated with this blog, you can delete the namespace that contains these entities. This will essentially ‘cascade delete’ the resources within the namespace as well.</p>
+<p>After deleting the namespace for your blog, you notice that it still exists, but the state of it is ‘Terminating’, and it has been like this for a long time (hours or maybe even days).</p>
+<p><a href="https://geekyryan.com/wp-content/uploads/2022/06/image.png"  class="external-link" target="_blank" rel="noopener"></a></p>
+<p>Kubernetes will occassionally fail to delete third-party resources when deleting a namespace, causing the namespace to linger. This can happen if the third-party API managing the resource is not responding to requests. To verify if any of these resources still exist, use this command:</p>
+<pre tabindex="0"><code>kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl get --show-kind --show-all --ignore-not-found -n &lt;terminating-namespace&gt;
+</code></pre><p>If you happen to see any resources in the output, you can try force deleting them and then try to delete the namespace again.</p>
+<p>In my experience, the majority of the time you will not find any resources still hanging around. Rather, the namespace will be completely empty. What is going on here?</p>
+<p>Let’s take a look at the namespace:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="l">$ kubectl get namespace darn-c101 -o yaml</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Namespace</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">annotations</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nt">kubectl.kubernetes.io/last-applied-configuration</span><span class="p">:</span><span class="w"> </span><span class="l">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nt">kubernetes.io/metadata.name</span><span class="p">:</span><span class="w"> </span><span class="l">darn-c101</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">finalizers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">kubernetes</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">status</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">conditions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> </span>- <span class="nt">lastTransitionTime</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;2022-06-01T19:05:31Z&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nt">message: &#39;Some content in the namespace has finalizers remaining</span><span class="p">:</span><span class="w"> </span><span class="l">darn-c101.geekyryan.io/finalizer in 1 resource instances&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nt">reason</span><span class="p">:</span><span class="w"> </span><span class="l">SomeFinalizersRemain</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;True&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">NamespaceFinalizersRemaining</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">phase</span><span class="p">:</span><span class="w"> </span><span class="l">Terminating</span><span class="w">
+</span></span></span></code></pre></div><p>Notice the inclusion of the finalizers field in the above JSON. Some namespaces have a finalizer defined under spec.</p>
+<p>A finalizer is a special metadata key that tells Kubernetes to wait until a specific condition is met before it fully deletes a resource. Much like a finalizer in the .NET framework (does Java have those too? 😀 )</p>
+<p>So when you run a command like <code>kubectl delete namespace &lt;namespace&gt;</code>, Kubernetes checks for a finalizer in the <code>metadata.finalizers</code> field. If the resource defined in the finalizer cannot be deleted, then the namespace is not deleted either. This puts the namespace into a perpetual terminating state and is never actually deleted.</p>
+<p>When an object has been terminating for an excessive time, check its finalizers by inspecting the <code>metadata.finalizers</code> field in its YAML.</p>
+<p>So we now know what the problem is. How can we solve it? Well, it’s actually quite simple. If you are using bash, use this script:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="nv">namespaces</span><span class="o">=</span><span class="k">$(</span>kubectl get ns --field-selector<span class="o">=</span>status.phase<span class="o">==</span>Terminating -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{range .items[*]}{.metadata.name}{&#34;\n&#34;}{end}&#39;</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[</span> -z <span class="s2">&#34;</span><span class="nv">$namespaces</span><span class="s2">&#34;</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="k">then</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">echo</span> <span class="s2">&#34;No namespaces to delete.&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">exit</span>
+</span></span><span class="line"><span class="cl"><span class="k">else</span>
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> namespace in <span class="nv">$namespaces</span>
+</span></span><span class="line"><span class="cl">  <span class="k">do</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s2">&#34;[Removing Namespace]: </span><span class="nv">$namespace</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    kubectl get namespace <span class="nv">$namespace</span> -o json <span class="p">|</span> tr -d <span class="s2">&#34;\n&#34;</span> <span class="p">|</span> sed <span class="s2">&#34;s/\&#34;finalizers\&#34;: \[[^]]\+\]/\&#34;finalizers\&#34;: []/&#34;</span> <span class="p">|</span> kubectl replace --raw /api/v1/namespaces/<span class="nv">$namespace</span>/finalize -f - &gt; /dev/null 2&gt;<span class="p">&amp;</span><span class="m">1</span>
+</span></span><span class="line"><span class="cl">  <span class="k">done</span>
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span></code></pre></div><p><a href="https://gist.github.com/rnemeth90/e83bb4c8808f0d28412cb40edb2487d3"  class="external-link" target="_blank" rel="noopener">Delete Terminating Kubernetes Namespaces with Bash (github.com)</a></p>
+<p>It will search for any namespace that is stuck in the terminating state and forcefully remove it by removing the finalizers field and then using <code> kubectl replace</code> to commit the change back to the Kube API.</p>
+<p>If you prefer Powershell, you can use this script:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Powershell" data-lang="Powershell"><span class="line"><span class="cl"><span class="nv">$terminatingNamespaces</span> <span class="p">=</span> <span class="n">kubectl</span> <span class="n">get</span> <span class="n">ns</span> <span class="p">-</span><span class="n">-field-selector</span><span class="p">=</span><span class="n">status</span><span class="p">.</span><span class="n">phase</span><span class="p">==</span><span class="n">Terminating</span> <span class="n">-o</span> <span class="n">jsonpath</span><span class="p">=</span><span class="s2">&#34;{range .items[*]}{.metadata.name}{&#39;\n&#39;}{end}&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">foreach</span> <span class="p">(</span><span class="nv">$ns</span> <span class="k">in</span> <span class="nv">$terminatingNamespaces</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">Write-Verbose</span> <span class="s1">&#39;[FOUND]: Forcefully removing $ns&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$jsonObj</span> <span class="p">=</span> <span class="n">kubectl</span> <span class="n">get</span> <span class="n">namespace</span> <span class="nv">$ns</span> <span class="n">-o</span> <span class="n">json</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span> <span class="p">|</span> <span class="nb">foreach-object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="py">spec</span><span class="p">.</span><span class="py">finalizers</span> <span class="p">=</span> <span class="vm">@</span><span class="p">();</span> <span class="nv">$_</span> <span class="p">}</span> <span class="p">|</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">convertto-json</span> <span class="p">|</span> <span class="n">kubectl</span> <span class="n">replace</span> <span class="p">-</span><span class="n">-raw</span> <span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">v1</span><span class="p">/</span><span class="n">namespaces</span><span class="p">/</span><span class="nv">$namespace</span><span class="p">/</span><span class="n">finalize</span> <span class="o">-f</span> <span class="p">-</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><a href="https://gist.github.com/rnemeth90/19d7de622a5009c1cf908c5d4deb5358"  class="external-link" target="_blank" rel="noopener">Delete Terminating Kubernetes Namespaces with Powershell (github.com)</a></p>
+<p>It does the same thing as the bash script, just in more of a Window-zy way.</p>
+<p>It’s that simple. I hope this was helpful. If you have any questions, comments, or concerns, please feel free to reach out.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2012 -
+    
+    2024
+     Ryan Nemeth 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

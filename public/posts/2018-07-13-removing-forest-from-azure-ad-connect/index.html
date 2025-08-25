@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  Removing a Forest from Azure AD Connect · GeekyRyan
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Ryan Nemeth">
+<meta name="description" content="In an organization with multiple Active Directory forests, you may want to sync objects from trusted forests. Adding trusted forests to Azure AD Sync is a simple process that I will likely cover in a future article. The focus of this post is the not-so-obvious process of removing a forest from Azure AD Connect. This can be a daunting and somewhat scary thing to do. Not fully understanding the process or having someone to guide you can leave you with thoughts like “what happens when I remove the forest from Azure AD Sync?">
+<meta name="keywords" content="blog,developer,personal,devops">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Removing a Forest from Azure AD Connect">
+  <meta name="twitter:description" content="In an organization with multiple Active Directory forests, you may want to sync objects from trusted forests. Adding trusted forests to Azure AD Sync is a simple process that I will likely cover in a future article. The focus of this post is the not-so-obvious process of removing a forest from Azure AD Connect. This can be a daunting and somewhat scary thing to do. Not fully understanding the process or having someone to guide you can leave you with thoughts like “what happens when I remove the forest from Azure AD Sync?">
+
+<meta property="og:url" content="http://localhost:1313/posts/2018-07-13-removing-forest-from-azure-ad-connect/">
+  <meta property="og:site_name" content="GeekyRyan">
+  <meta property="og:title" content="Removing a Forest from Azure AD Connect">
+  <meta property="og:description" content="In an organization with multiple Active Directory forests, you may want to sync objects from trusted forests. Adding trusted forests to Azure AD Sync is a simple process that I will likely cover in a future article. The focus of this post is the not-so-obvious process of removing a forest from Azure AD Connect. This can be a daunting and somewhat scary thing to do. Not fully understanding the process or having someone to guide you can leave you with thoughts like “what happens when I remove the forest from Azure AD Sync?">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2018-07-13T15:30:00+00:00">
+    <meta property="article:modified_time" content="2018-07-13T15:30:00+00:00">
+    <meta property="article:tag" content="ActiveDirectory">
+    <meta property="article:tag" content="Azure">
+    <meta property="article:tag" content="Office365">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/2018-07-13-removing-forest-from-azure-ad-connect/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/2018-07-13-removing-forest-from-azure-ad-connect/">
+              Removing a Forest from Azure AD Connect
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2018-07-13T15:30:00Z">
+                2018-07-13
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/uncategorized/">Uncategorized</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/activedirectory/">ActiveDirectory</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/azure/">Azure</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/office365/">Office365</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>In an organization with multiple Active Directory forests, you may want to sync objects from trusted forests. Adding trusted forests to Azure AD Sync is a simple process that I will likely cover in a future article. The focus of this post is the not-so-obvious process of removing a forest from Azure AD Connect. This can be a daunting and somewhat scary thing to do. Not fully understanding the process or having someone to guide you can leave you with thoughts like “what happens when I remove the forest from Azure AD Sync? Do on-premises objects get deleted? Are cloud objects deleted?”. I will try to answer these questions to the best of my ability and hopefully make the process simple and stress-free for you.</p>
+<p>To get started, we first need to open PowerShell and disable the AD Sync scheduler. You can do this by running the “Set-ADSyncScheduler” cmdlet:</p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h47_05.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h47_05.png"></a></p>
+<p>This cmdlet is included in the ADSync PowerShell module. You may need to load the module prior to using the cmdlet:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Powershell" data-lang="Powershell"><span class="line"><span class="cl"><span class="nb">Import-Module</span> <span class="n">ADSync</span>
+</span></span></code></pre></div><p>The next step is to open FIM (miisclient) located in the install directory of Microsoft Azure AD Sync. By default, this is C:Program FilesMicrosoft Azure AD SyncUIShellmiisclient.exe. Once you have FIM open, click on the Connectors tab, then right click on the connector for the forest that you want to delete, and click “Delete”.</p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h50_26.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h50_26.png"></a></p>
+<p>You will then be prompted, asking if you want to just delete the Connector Space, or delete the Connector and the Connector Space. The former open removes all data, but keeps the configuration in case you want to use it again later. The latter option deleted the data and the configuration. This open should only be used if you don’t plan on syncing the forest again.</p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h50_09.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h50_09.png"></a></p>
+<p>The connector for the forest is now deleted, but what actually happens? Your on-premises objects do not get removed for the forest, and cloud objects <strong>are</strong> removed. Simple enough, right?</p>
+<p>Now you just need to re-enable the AD Sync Scheduler with this cmdlet:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Powershell" data-lang="Powershell"><span class="line"><span class="cl"><span class="nb">Set-ADSyncScheduler</span> <span class="n">-SyncCycleEnabled</span> <span class="vm">$true</span>
+</span></span></code></pre></div><p>One last thing to mention… You may receive an email from the Microsoft Online Services Team stating that the identity synchronization failed due to a deletion threshold being met. By default, Azure AD Connect will not allow you to delete more than 500 objects in your cloud directory. This is to protect you from making a careless (potentially resume generating) mistake. The email will look something like this:</p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h56_04.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_10h56_04.png"></a></p>
+<p>If you are certain that you want to proceed with deleting the objects, here are the steps:</p>
+<ol>
+<li>
+<p>Disable the deletion threshold protection. Open PowerShell on your Azure AD Sync server and type in this cmdlet: Disable-ADSyncExportDeletionThreshold. You will be prompted for credentials, sign-in with an Azure AD Global Admin account.</p>
+</li>
+<li>
+<p>Open FIM (miisclient), and click on the “Connectors” button at the top of the window. Right click on the connector of type “Windows Azure Active Directory”, and select “Run…”.</p>
+</li>
+</ol>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_11h07_39.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_11h07_39.png"></a></p>
+<ol start="3">
+<li>Next, click Export and then click Ok.</li>
+</ol>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_11h07_58.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-13_11h07_58.png"></a></p>
+<ol start="4">
+<li>
+<p>Allow the connector to run. This will take a few minutes. You can monitor the progress by clicking the Operations button.</p>
+</li>
+<li>
+<p>Once this completes, you need to re-enable the deletion threshold. You can do this by running this cmdlet: <span style="background: #F9F9F9;"></p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Powershell" data-lang="Powershell"><span class="line"><span class="cl"><span class="nb">Enable-ADSyncExportDeletionThreshold</span> <span class="n">-DeletionThreshold</span> <span class="mf">500</span><span class="p">.</span>
+</span></span></code></pre></div><p>You will be prompted for credentials again. Just type in your Azure AD Global Admin creds. You can even lower the threshold if you’d like. I set mine to 100.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2012 -
+    
+    2024
+     Ryan Nemeth 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
