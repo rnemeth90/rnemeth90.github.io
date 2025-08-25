@@ -1,1 +1,2 @@
-my blog and stuff: https://rnemeth90.github.io
+my blog and stuffs: https://rnemeth90.github.io
+
