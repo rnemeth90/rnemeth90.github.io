@@ -1,25 +1,25 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Azure Devops on GeekyRyan</title><link>https://rnemeth90.github.io/categories/azure-devops/</link><description>Recent content in Azure Devops on GeekyRyan</description><generator>Hugo</generator><language>en</language><lastBuildDate>Thu, 03 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/categories/azure-devops/index.xml" rel="self" type="application/rss+xml"/><item><title>Chaining YAML Pipelines in Azure Devops</title><link>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</link><pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</guid><description>&lt;p>In this article, we&amp;rsquo;ll take a quick look at chaining two pipelines together in Azure Devops, so that the completion of one pipeline, triggers the other to run.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Azure Devops on GeekyRyan</title><link>https://rnemeth90.github.io/categories/azure-devops/</link><description>Recent content in Azure Devops on GeekyRyan</description><generator>Hugo</generator><language>en</language><lastBuildDate>Thu, 03 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/categories/azure-devops/index.xml" rel="self" type="application/rss+xml"/><item><title>Chaining YAML Pipelines in Azure Devops</title><link>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</link><pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</guid><description>&lt;p&gt;In this article, we&amp;rsquo;ll take a quick look at chaining two pipelines together in Azure Devops, so that the completion of one pipeline, triggers the other to run.
 Microsoft documentation is leaps and bounds ahead of where it used to be. However, I still feel like there is a lot of room for improvement, as it took me a while to
-figure this out.&lt;/p>
-&lt;p>Our two pipelines will exist in the same repository. We have a dependent-pipeline, that we only want to run once the source-pipeline is finished. This is useful if you have
-some infrastructure you want to build, prior to deploying something to that infrastructure.&lt;/p></description></item><item><title>Update Azure Devops SPN Secret</title><link>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</link><pubDate>Mon, 12 Sep 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</guid><description>&lt;p>If you need to update the secret for a service principal in Azure Devops, prior to it expiring, you may be surprised to find that this cannot be done via the Azure Portal.&lt;/p>
-&lt;p>In this article, I&amp;rsquo;ll show you two methods for updating a secret for a service principal prior to expiration.&lt;/p>
-&lt;h1 id="update-the-secret-via-the-azure-devops-portal">
+figure this out.&lt;/p&gt;
+&lt;p&gt;Our two pipelines will exist in the same repository. We have a dependent-pipeline, that we only want to run once the source-pipeline is finished. This is useful if you have
+some infrastructure you want to build, prior to deploying something to that infrastructure.&lt;/p&gt;</description></item><item><title>Update Azure Devops SPN Secret</title><link>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</link><pubDate>Mon, 12 Sep 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</guid><description>&lt;p&gt;If you need to update the secret for a service principal in Azure Devops, prior to it expiring, you may be surprised to find that this cannot be done via the Azure Portal.&lt;/p&gt;
+&lt;p&gt;In this article, I&amp;rsquo;ll show you two methods for updating a secret for a service principal prior to expiration.&lt;/p&gt;
+&lt;h1 id="update-the-secret-via-the-azure-devops-portal"&gt;
  Update the secret via the Azure Devops Portal:
- &lt;a class="heading-link" href="#update-the-secret-via-the-azure-devops-portal">
- &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading">&lt;/i>
- &lt;span class="sr-only">Link to heading&lt;/span>
- &lt;/a>
-&lt;/h1>
-&lt;ul>
-&lt;li>Go to &amp;ldquo;Service Connections&amp;rdquo; in the Azure Devops portal&lt;/li>
-&lt;li>Find the SPN you want to update, then click &amp;ldquo;Manage Service Principal&amp;rdquo;&lt;/li>
-&lt;li>Then on the service principal page, click Certificates &amp;amp; Secrets&lt;/li>
-&lt;li>Create a &amp;ldquo;New Client Secret&amp;rdquo;, take note of the value&lt;/li>
-&lt;li>Delete the &amp;lsquo;old&amp;rsquo; secret&lt;/li>
-&lt;li>Return to the Service Connection in the Azure Devops portal&lt;/li>
-&lt;li>Click Edit - click the verify button. It should tell you the client certificate has expired&lt;/li>
-&lt;li>Now you need to make an arbitrary change and save it. I just type a character in the optional description and save.&lt;/li>
-&lt;li>Now edit again and click verify, it will now pick up the new client secret and all is happy.&lt;/li>
-&lt;li>You can now remove whatever you added to the description.&lt;/li>
-&lt;/ul></description></item></channel></rss>
+ &lt;a class="heading-link" href="#update-the-secret-via-the-azure-devops-portal"&gt;
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
+ &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
+ &lt;/a&gt;
+&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;Go to &amp;ldquo;Service Connections&amp;rdquo; in the Azure Devops portal&lt;/li&gt;
+&lt;li&gt;Find the SPN you want to update, then click &amp;ldquo;Manage Service Principal&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Then on the service principal page, click Certificates &amp;amp; Secrets&lt;/li&gt;
+&lt;li&gt;Create a &amp;ldquo;New Client Secret&amp;rdquo;, take note of the value&lt;/li&gt;
+&lt;li&gt;Delete the &amp;lsquo;old&amp;rsquo; secret&lt;/li&gt;
+&lt;li&gt;Return to the Service Connection in the Azure Devops portal&lt;/li&gt;
+&lt;li&gt;Click Edit - click the verify button. It should tell you the client certificate has expired&lt;/li&gt;
+&lt;li&gt;Now you need to make an arbitrary change and save it. I just type a character in the optional description and save.&lt;/li&gt;
+&lt;li&gt;Now edit again and click verify, it will now pick up the new client secret and all is happy.&lt;/li&gt;
+&lt;li&gt;You can now remove whatever you added to the description.&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>
