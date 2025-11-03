@@ -1,4 +1,27 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GeekyRyan</title><link>https://rnemeth90.github.io/</link><description>Recent content on GeekyRyan</description><generator>Hugo</generator><language>en</language><lastBuildDate>Fri, 31 Oct 2025 16:01:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux initramfs</title><link>https://rnemeth90.github.io/til/2025-10-31-initramfs/</link><pubDate>Fri, 31 Oct 2025 16:01:00 +0000</pubDate><guid>https://rnemeth90.github.io/til/2025-10-31-initramfs/</guid><description>&lt;p&gt;The initramfs (initial RAM filesystem) is a temporary in-memory filesystem used for systems that do not know in advance certain things about their hardware at boot time. It is used to bootstrap the real root filesystem and provide necessary drivers and tools to mount it.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GeekyRyan</title><link>https://rnemeth90.github.io/</link><description>Recent content on GeekyRyan</description><generator>Hugo</generator><language>en</language><lastBuildDate>Sun, 02 Nov 2025 16:01:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Understanding Why “module main” Breaks Go Tests</title><link>https://rnemeth90.github.io/posts/2025-11-02-go-mod-breaks-tests/</link><pubDate>Sun, 02 Nov 2025 16:01:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2025-11-02-go-mod-breaks-tests/</guid><description>&lt;h2 id="introduction"&gt;
+ Introduction
+ &lt;a class="heading-link" href="#introduction"&gt;
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
+ &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;
+&lt;p&gt;If you’ve ever initialized a new Go project with &lt;code&gt;go mod init main&lt;/code&gt; and later tried to write tests for it, you may have seen this cryptic error:&lt;/p&gt;
+&lt;h3 id=""&gt;
+ 
+ &lt;a class="heading-link" href="#"&gt;
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
+ &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;
+&lt;p&gt;cannot import &amp;ldquo;main&amp;rdquo;&lt;/p&gt;
+&lt;h3 id=""&gt;
+ 
+ &lt;a class="heading-link" href="#"&gt;
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
+ &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;
+&lt;p&gt;At first glance, this doesn’t make much sense — after all, your code and tests are both in &lt;code&gt;package main&lt;/code&gt;. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.&lt;/p&gt;</description></item><item><title>Linux initramfs</title><link>https://rnemeth90.github.io/til/2025-10-31-initramfs/</link><pubDate>Fri, 31 Oct 2025 16:01:00 +0000</pubDate><guid>https://rnemeth90.github.io/til/2025-10-31-initramfs/</guid><description>&lt;p&gt;The initramfs (initial RAM filesystem) is a temporary in-memory filesystem used for systems that do not know in advance certain things about their hardware at boot time. It is used to bootstrap the real root filesystem and provide necessary drivers and tools to mount it.&lt;/p&gt;
 &lt;p&gt;Some examples of when an initramfs is needed include:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Systems that use encrypted root filesystems, where the initramfs contains the tools to prompt for a decryption key.&lt;/li&gt;
