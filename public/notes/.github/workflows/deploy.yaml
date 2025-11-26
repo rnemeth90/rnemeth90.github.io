@@ -1,0 +1,32 @@
+name: Build and Deploy mdBook
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Install mdBook
+      run: cargo install mdbook
+
+    - name: Generate SUMMARY.md
+      run: python3 generate_summary.py
+
+    - name: Build mdBook
+      run: mdbook build
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./book
+

@@ -20,7 +20,7 @@
     Link to heading
   
 
-If you’ve ever initialized a new Go project with go mod init main and later tried to write tests for it, you may have seen this cryptic error:
+If you have ever initialized a new Go project with go mod init main and later tried to write tests for it, you may have seen this cryptic error:
 cannot import &#34;main&#34;
 At first glance, this doesn’t make much sense — after all, your code and tests are both in package main. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.">
 <meta name="keywords" content="blog,developer,personal,devops">
@@ -29,13 +29,13 @@ At first glance, this doesn’t make much sense — after all, your code and tes
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Understanding Why “module main” Breaks Go Tests">
-  <meta name="twitter:description" content="Introduction Link to heading If you’ve ever initialized a new Go project with go mod init main and later tried to write tests for it, you may have seen this cryptic error:
+  <meta name="twitter:description" content="Introduction Link to heading If you have ever initialized a new Go project with go mod init main and later tried to write tests for it, you may have seen this cryptic error:
 cannot import &#34;main&#34; At first glance, this doesn’t make much sense — after all, your code and tests are both in package main. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2025-11-02-go-mod-breaks-tests/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Understanding Why “module main” Breaks Go Tests">
-  <meta property="og:description" content="Introduction Link to heading If you’ve ever initialized a new Go project with go mod init main and later tried to write tests for it, you may have seen this cryptic error:
+  <meta property="og:description" content="Introduction Link to heading If you have ever initialized a new Go project with go mod init main and later tried to write tests for it, you may have seen this cryptic error:
 cannot import &#34;main&#34; At first glance, this doesn’t make much sense — after all, your code and tests are both in package main. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
@@ -146,6 +146,10 @@ cannot import &#34;main&#34; At first glance, this doesn’t make much sense —
               <a class="navigation-link " href="/tags/">Tags</a>
             </li>
           
+            <li class="navigation-item">
+              <a class="navigation-link " href="/notes/">Notes</a>
+            </li>
+          
         
         
       </ul>
@@ -199,7 +203,7 @@ cannot import &#34;main&#34; At first glance, this doesn’t make much sense —
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<p>If you’ve ever initialized a new Go project with <code>go mod init main</code> and later tried to write tests for it, you may have seen this cryptic error:</p>
+<p>If you have ever initialized a new Go project with <code>go mod init main</code> and later tried to write tests for it, you may have seen this cryptic error:</p>
 <pre tabindex="0"><code>cannot import &#34;main&#34;
 </code></pre><p>At first glance, this doesn’t make much sense — after all, your code and tests are both in <code>package main</code>. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.</p>
 <hr>
