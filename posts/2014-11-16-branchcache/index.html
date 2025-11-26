@@ -1,20 +1,289 @@
-<!doctype html><html lang=en><head><title>BranchCache · GeekyRyan</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><meta name=author content="Ryan Nemeth"><meta name=description content="Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request. That way, all future client requests will not have to go across the wide area network, rather opting to access the local caching server until the data changes."><meta name=keywords content="blog,developer,personal,devops"><meta name=twitter:card content="summary"><meta name=twitter:title content="BranchCache"><meta name=twitter:description content="Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request. That way, all future client requests will not have to go across the wide area network, rather opting to access the local caching server until the data changes."><meta property="og:url" content="https://rnemeth90.github.io/posts/2014-11-16-branchcache/"><meta property="og:site_name" content="GeekyRyan"><meta property="og:title" content="BranchCache"><meta property="og:description" content="Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request. That way, all future client requests will not have to go across the wide area network, rather opting to access the local caching server until the data changes."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2014-11-16T21:16:00+00:00"><meta property="article:modified_time" content="2014-11-16T21:16:00+00:00"><meta property="article:tag" content="WindowsServer"><link rel=canonical href=https://rnemeth90.github.io/posts/2014-11-16-branchcache/><link rel=preload href=/fonts/fa-brands-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-regular-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-solid-900.woff2 as=font type=font/woff2 crossorigin><link rel=stylesheet href=/css/coder.min.f8ac2fdd0cb7e56145845d949b5c036d40cd5061c013fd446f2f54a63ade62e8.css integrity="sha256-+Kwv3Qy35WFFhF2Um1wDbUDNUGHAE/1Eby9UpjreYug=" crossorigin=anonymous media=screen><link rel=stylesheet href=/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin=anonymous media=screen><link rel=icon type=image/svg+xml href=/images/favicon.svg sizes=any><link rel=icon type=image/png href=/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/images/favicon-16x16.png sizes=16x16><link rel=apple-touch-icon href=/images/apple-touch-icon.png><link rel=apple-touch-icon sizes=180x180 href=/images/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/images/safari-pinned-tab.svg color=#5bbad5></head><body class="preload-transitions colorscheme-auto"><div class=float-container><a id=dark-mode-toggle class=colorscheme-toggle><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></a></div><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=https://rnemeth90.github.io/>GeekyRyan
-</a><input type=checkbox id=menu-toggle>
-<label class="menu-button float-right" for=menu-toggle><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=/about/>About</a></li><li class=navigation-item><a class=navigation-link href=/posts/>Blog</a></li><li class=navigation-item><a class=navigation-link href=/til/>TIL</a></li><li class=navigation-item><a class=navigation-link href=/projects/>Projects</a></li><li class=navigation-item><a class=navigation-link href=/tags/>Tags</a></li></ul></section></nav><div class=content><section class="container post"><article><header><div class=post-title><h1 class=title><a class=title-link href=https://rnemeth90.github.io/posts/2014-11-16-branchcache/>BranchCache</a></h1></div><div class=post-meta><div class=date><span class=posted-on><i class="fa-solid fa-calendar" aria-hidden=true></i>
-<time datetime=2014-11-16T21:16:00Z>2014-11-16
-</time></span><span class=reading-time><i class="fa-solid fa-clock" aria-hidden=true></i>
-2-minute read</span></div><div class=categories><i class="fa-solid fa-folder" aria-hidden=true></i>
-<a href=/categories/uncategorized/>Uncategorized</a></div><div class=tags><i class="fa-solid fa-tag" aria-hidden=true></i>
-<span class=tag><a href=/tags/windowsserver/>WindowsServer</a></span></div></div></header><div class=post-content><p>Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request. That way, all future client requests will not have to go across the wide area network, rather opting to access the local caching server until the data changes.</p><p>Branchcache is only available on Windows 7 clients running Enterprise or Ultimate, and Windows Server 2008 R2. Branchcache becomes active when the round trip latency time from client to remote server exceeds 80 milliseconds.</p><p>Branchcache is available in two modes: distributed cache mode and hosted cache mode. What you just read above was the basics of hosted cached mode. Distributed cache mode works differently to achieve the same results. When a client accesses data across the WAN, it stores that data in its own cache. This way, if another client needs access to the data, it can retrieve it locally. Also, this allows each client to host part of the cache, rather than one machine hosting the entire cache.</p><p>There are two steps to configuring Branchcache on a Windows 7 client. I will not include the server configuration at this point in time.</p><p>Enable Branchcache (Hosted or Distributed, Server 08 R2 will be required for Hosted mode)</p><p>Configure the appropriate ports within the Windows Firewall</p><p>You can enable Branchcache from within Group Policy or by using the Netsh command. When using Group Policy, navigate to Computer Configuration > Administrative Templates > Network > Branchcache. From here you can turn on Branchcache and enable the mode you want to use. You can also set the percentage of disk space to be used for caching. After this, open the Windows Firewall and unblock the Branchcache ports. You only need to do this when configuring Branchcache via Group Policy. Using the Netsh command automatically configures the firewall. Here are the basic commands for Netsh:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>Netsh Branchcache <span class=nb>set</span> service <span class=nv>mode</span><span class=o>=</span>distributed
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>Netsh Branchcache reset
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>Netsh Branchcache show status
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>Netsh Branchcache <span class=nb>set</span> cachesize
-</span></span></code></pre></div><p>*Configuring Branchcache must be done from an administrative command prompt.</p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
-2012 -
-2025
-Ryan Nemeth
-·
-Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  BranchCache · GeekyRyan
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Ryan Nemeth">
+<meta name="description" content="Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request. That way, all future client requests will not have to go across the wide area network, rather opting to access the local caching server until the data changes.">
+<meta name="keywords" content="blog,developer,personal,devops">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="BranchCache">
+  <meta name="twitter:description" content="Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request. That way, all future client requests will not have to go across the wide area network, rather opting to access the local caching server until the data changes.">
+
+<meta property="og:url" content="http://localhost:1313/posts/2014-11-16-branchcache/">
+  <meta property="og:site_name" content="GeekyRyan">
+  <meta property="og:title" content="BranchCache">
+  <meta property="og:description" content="Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request. That way, all future client requests will not have to go across the wide area network, rather opting to access the local caching server until the data changes.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2014-11-16T21:16:00+00:00">
+    <meta property="article:modified_time" content="2014-11-16T21:16:00+00:00">
+    <meta property="article:tag" content="WindowsServer">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/2014-11-16-branchcache/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/2014-11-16-branchcache/">
+              BranchCache
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2014-11-16T21:16:00Z">
+                2014-11-16
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/uncategorized/">Uncategorized</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/windowsserver/">WindowsServer</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request. That way, all future client requests will not have to go across the wide area network, rather opting to access the local caching server until the data changes.</p>
+<p>Branchcache is only available on Windows 7 clients running Enterprise or Ultimate, and Windows Server 2008 R2. Branchcache becomes active when the round trip latency time from client to remote server exceeds 80 milliseconds.</p>
+<p>Branchcache is available in two modes: distributed cache mode and hosted cache mode. What you just read above was the basics of hosted cached mode. Distributed cache mode works differently to achieve the same results. When a client accesses data across the WAN, it stores that data in its own cache. This way, if another client needs access to the data, it can retrieve it locally. Also, this allows each client to host part of the cache, rather than one machine hosting the entire cache.</p>
+<p>There are two steps to configuring Branchcache on a Windows 7 client. I will not include the server configuration at this point in time.</p>
+<p>Enable Branchcache (Hosted or Distributed, Server 08 R2 will be required for Hosted mode)</p>
+<p>Configure the appropriate ports within the Windows Firewall</p>
+<p>You can enable Branchcache from within Group Policy or by using the Netsh command. When using Group Policy, navigate to Computer Configuration &gt; Administrative Templates &gt; Network &gt; Branchcache. From here you can turn on Branchcache and enable the mode you want to use. You can also set the percentage of disk space to be used for caching. After this, open the Windows Firewall and unblock the Branchcache ports. You only need to do this when configuring Branchcache via Group Policy. Using the Netsh command automatically configures the firewall. Here are the basic commands for Netsh:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">Netsh Branchcache <span class="nb">set</span> service <span class="nv">mode</span><span class="o">=</span>distributed
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Netsh Branchcache reset
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Netsh Branchcache show status
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Netsh Branchcache <span class="nb">set</span> cachesize</span></span></code></pre></div><p>*Configuring Branchcache must be done from an administrative command prompt.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2012 -
+    
+    2025
+     Ryan Nemeth 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

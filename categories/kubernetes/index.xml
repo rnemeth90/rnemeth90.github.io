@@ -1,10 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kubernetes on GeekyRyan</title><link>https://rnemeth90.github.io/categories/kubernetes/</link><description>Recent content in Kubernetes on GeekyRyan</description><generator>Hugo</generator><language>en</language><lastBuildDate>Thu, 05 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes Health Probing in Dotnet Console Apps</title><link>https://rnemeth90.github.io/posts/2024-12-05-dotnet-console-app-health-probe/</link><pubDate>Thu, 05 Dec 2024 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2024-12-05-dotnet-console-app-health-probe/</guid><description>&lt;h1 id="introduction"&gt;
- Introduction
- &lt;a class="heading-link" href="#introduction"&gt;
- &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
- &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
- &lt;/a&gt;
-&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kubernetes on GeekyRyan</title><link>https://rnemeth90.github.io/categories/kubernetes/</link><description>Recent content in Kubernetes on GeekyRyan</description><generator>Hugo</generator><language>en</language><lastBuildDate>Thu, 05 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes Health Probing in Dotnet Console Apps</title><link>https://rnemeth90.github.io/posts/2024-12-05-dotnet-console-app-health-probe/</link><pubDate>Thu, 05 Dec 2024 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2024-12-05-dotnet-console-app-health-probe/</guid><description>&lt;h1 id="introduction"&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;This post covers a simple and efficient solution for implementing liveness probes in pods running console applications (think background services or utility DaemonSets). A common question I see in Kubernetes forums is:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;“How do I use health probes with console apps?”
 &lt;/code&gt;&lt;/pre&gt;
@@ -13,21 +7,9 @@
 &lt;li&gt;Sidecar Container with HTTP Server: Requires coding the server, building a sidecar container, and managing additional infrastructure. While effective, this can be overkill for lightweight applications.&lt;/li&gt;
 &lt;li&gt;Exec Probes with Shell Scripts: Feels hacky and can waste resources, depending on what the script does.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;Pods are meant to be lightweight, and both solutions can deviate from that principle.&lt;/p&gt;</description></item><item><title>Mounting Multiple Kubernetes Secrets into One Directory</title><link>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</link><pubDate>Sat, 29 Jun 2024 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</guid><description>&lt;h1 id="introduction"&gt;
- Introduction
- &lt;a class="heading-link" href="#introduction"&gt;
- &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
- &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
- &lt;/a&gt;
-&lt;/h1&gt;
+&lt;p&gt;Pods are meant to be lightweight, and both solutions can deviate from that principle.&lt;/p&gt;</description></item><item><title>Mounting Multiple Kubernetes Secrets into One Directory</title><link>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</link><pubDate>Sat, 29 Jun 2024 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</guid><description>&lt;h1 id="introduction"&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;Combining multiple Kubernetes secrets into a single directory can streamline secret management in your applications. This guide walks you through the process of achieving this in Kubernetes, ensuring efficient and organized secret management.&lt;/p&gt;
-&lt;h1 id="creating-secrets"&gt;
- Creating Secrets
- &lt;a class="heading-link" href="#creating-secrets"&gt;
- &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
- &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
- &lt;/a&gt;
-&lt;/h1&gt;
+&lt;h1 id="creating-secrets"&gt;Creating Secrets&lt;/h1&gt;
 &lt;p&gt;First, create your secrets using the &lt;code&gt;kubectl create secret&lt;/code&gt; command:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;kubectl create secret generic secret-one --from-literal=key1=value1
 kubectl create secret generic secret-two --from-literal=key2=value2
@@ -37,11 +19,5 @@ kubectl create secret generic secret-two --from-literal=key2=value2
 &lt;p&gt;Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work. I receive this nice message:&lt;/p&gt;</description></item><item><title>Remove Kubernetes Namespace Stuck in the Terminating State</title><link>https://rnemeth90.github.io/posts/2022-06-04-remove-kubernetes-namespace-stuck-in-the-terminating-state/</link><pubDate>Sat, 04 Jun 2022 18:29:41 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-06-04-remove-kubernetes-namespace-stuck-in-the-terminating-state/</guid><description>&lt;p&gt;In this post, we will discuss how to remove a Kubernetes namespace that is stuck in the ‘terminating’ state.&lt;/p&gt;
 &lt;p&gt;A namespace is like a container. You can use it to store related objects in a Kubernetes environment. Maybe you are hosting a blog in Kubernetes. This blog will likely have a database, a frontend website, a load balancer (service) to spread the incoming traffic among ‘x’ number of frontend containers (pods), and maybe some middle-tier or utility applications. One day, you decide you no longer want this blog, so you plan to delete it. Rather than tediously deleting all of the various entities associated with this blog, you can delete the namespace that contains these entities. This will essentially ‘cascade delete’ the resources within the namespace as well.&lt;/p&gt;</description></item><item><title>Kubernetes Storage Simplified</title><link>https://rnemeth90.github.io/posts/2022-03-01-kubernetes-storage-simplified/</link><pubDate>Tue, 01 Mar 2022 08:37:58 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-03-01-kubernetes-storage-simplified/</guid><description>&lt;p&gt;In this blog post, we will attempt to explain the current storage options that exist in Kubernetes. If you are new to Kubernetes, learning about its capabilities of managing the application state can be a daunting task.&lt;/p&gt;
 &lt;p&gt;Container images are built-in layers, with the runtime layer being writable. However, any files on this writable layer are only available for the container’s lifetime. We can mount a volume to a directory inside the container to have persistent data.&lt;/p&gt;</description></item><item><title>Kubernetes Pod Eviction</title><link>https://rnemeth90.github.io/posts/2022-02-05-kubernetes-pod-eviction/</link><pubDate>Sat, 05 Feb 2022 23:49:16 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-02-05-kubernetes-pod-eviction/</guid><description>&lt;p&gt;In this article, we will dive into the process of pod eviction in a Kubernetes cluster, how you can pod prevent pod eviction, and how you can recover from such a situation.&lt;/p&gt;
-&lt;h2 id="what-is-pod-eviction"&gt;
- What is Pod Eviction?
- &lt;a class="heading-link" href="#what-is-pod-eviction"&gt;
- &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
- &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
- &lt;/a&gt;
-&lt;/h2&gt;
+&lt;h2 id="what-is-pod-eviction"&gt;What is Pod Eviction?&lt;/h2&gt;
 &lt;p&gt;Kubernetes pod eviction is a type of involuntary service disruption in which a pod is forcefully stopped on a node or fails to be scheduled on a node. Pod eviction can happen for a variety of reasons. The most common of which is resource starvation on a node. This is referred to as “node-pressure eviction.”&lt;/p&gt;</description></item></channel></rss>

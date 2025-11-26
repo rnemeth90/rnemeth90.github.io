@@ -1,28 +1,315 @@
-<!doctype html><html lang=en><head><title>Deploy a New ADDS Forest on Server 2019 Core · GeekyRyan</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><meta name=author content="Ryan Nemeth"><meta name=description content="Prerequisites:
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  Deploy a New ADDS Forest on Server 2019 Core · GeekyRyan
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Ryan Nemeth">
+<meta name="description" content="Prerequisites:
 Change server name and IP address
 Configure time settings and NTP
 In this post we will be reviewing the basic installation of the Active Directory Domain Services role and setup of a new forest on Windows Server Core 2019.
-To get started, login to your server with administrator privileges. You will first need to type in “powershell” in the cmd prompt to start powershell. Once you do that, type in the following command to install the Active Directory Domain Services role:"><meta name=keywords content="blog,developer,personal,devops"><meta name=twitter:card content="summary"><meta name=twitter:title content="Deploy a New ADDS Forest on Server 2019 Core"><meta name=twitter:description content="Prerequisites:
+To get started, login to your server with administrator privileges. You will first need to type in “powershell” in the cmd prompt to start powershell. Once you do that, type in the following command to install the Active Directory Domain Services role:">
+<meta name="keywords" content="blog,developer,personal,devops">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Deploy a New ADDS Forest on Server 2019 Core">
+  <meta name="twitter:description" content="Prerequisites:
 Change server name and IP address Configure time settings and NTP
 In this post we will be reviewing the basic installation of the Active Directory Domain Services role and setup of a new forest on Windows Server Core 2019.
-To get started, login to your server with administrator privileges. You will first need to type in “powershell” in the cmd prompt to start powershell. Once you do that, type in the following command to install the Active Directory Domain Services role:"><meta property="og:url" content="https://rnemeth90.github.io/posts/2020-10-31-deploy-new-adds-forest-on-server-2019/"><meta property="og:site_name" content="GeekyRyan"><meta property="og:title" content="Deploy a New ADDS Forest on Server 2019 Core"><meta property="og:description" content="Prerequisites:
+To get started, login to your server with administrator privileges. You will first need to type in “powershell” in the cmd prompt to start powershell. Once you do that, type in the following command to install the Active Directory Domain Services role:">
+
+<meta property="og:url" content="http://localhost:1313/posts/2020-10-31-deploy-new-adds-forest-on-server-2019/">
+  <meta property="og:site_name" content="GeekyRyan">
+  <meta property="og:title" content="Deploy a New ADDS Forest on Server 2019 Core">
+  <meta property="og:description" content="Prerequisites:
 Change server name and IP address Configure time settings and NTP
 In this post we will be reviewing the basic installation of the Active Directory Domain Services role and setup of a new forest on Windows Server Core 2019.
-To get started, login to your server with administrator privileges. You will first need to type in “powershell” in the cmd prompt to start powershell. Once you do that, type in the following command to install the Active Directory Domain Services role:"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2020-10-31T01:02:00+00:00"><meta property="article:modified_time" content="2020-10-31T01:02:00+00:00"><meta property="article:tag" content="ActiveDirectory"><meta property="article:tag" content="WindowsServer"><link rel=canonical href=https://rnemeth90.github.io/posts/2020-10-31-deploy-new-adds-forest-on-server-2019/><link rel=preload href=/fonts/fa-brands-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-regular-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-solid-900.woff2 as=font type=font/woff2 crossorigin><link rel=stylesheet href=/css/coder.min.f8ac2fdd0cb7e56145845d949b5c036d40cd5061c013fd446f2f54a63ade62e8.css integrity="sha256-+Kwv3Qy35WFFhF2Um1wDbUDNUGHAE/1Eby9UpjreYug=" crossorigin=anonymous media=screen><link rel=stylesheet href=/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin=anonymous media=screen><link rel=icon type=image/svg+xml href=/images/favicon.svg sizes=any><link rel=icon type=image/png href=/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/images/favicon-16x16.png sizes=16x16><link rel=apple-touch-icon href=/images/apple-touch-icon.png><link rel=apple-touch-icon sizes=180x180 href=/images/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/images/safari-pinned-tab.svg color=#5bbad5></head><body class="preload-transitions colorscheme-auto"><div class=float-container><a id=dark-mode-toggle class=colorscheme-toggle><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></a></div><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=https://rnemeth90.github.io/>GeekyRyan
-</a><input type=checkbox id=menu-toggle>
-<label class="menu-button float-right" for=menu-toggle><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=/about/>About</a></li><li class=navigation-item><a class=navigation-link href=/posts/>Blog</a></li><li class=navigation-item><a class=navigation-link href=/til/>TIL</a></li><li class=navigation-item><a class=navigation-link href=/projects/>Projects</a></li><li class=navigation-item><a class=navigation-link href=/tags/>Tags</a></li></ul></section></nav><div class=content><section class="container post"><article><header><div class=post-title><h1 class=title><a class=title-link href=https://rnemeth90.github.io/posts/2020-10-31-deploy-new-adds-forest-on-server-2019/>Deploy a New ADDS Forest on Server 2019 Core</a></h1></div><div class=post-meta><div class=date><span class=posted-on><i class="fa-solid fa-calendar" aria-hidden=true></i>
-<time datetime=2020-10-31T01:02:00Z>2020-10-31
-</time></span><span class=reading-time><i class="fa-solid fa-clock" aria-hidden=true></i>
-3-minute read</span></div><div class=categories><i class="fa-solid fa-folder" aria-hidden=true></i>
-<a href=/categories/uncategorized/>Uncategorized</a></div><div class=tags><i class="fa-solid fa-tag" aria-hidden=true></i>
-<span class=tag><a href=/tags/activedirectory/>ActiveDirectory</a>
-</span><span class=separator>•</span>
-<span class=tag><a href=/tags/windowsserver/>WindowsServer</a></span></div></div></header><div class=post-content><p>Prerequisites:</p><p>Change server name and IP address
-Configure time settings and NTP</p><p>In this post we will be reviewing the basic installation of the Active Directory Domain Services role and setup of a new forest on Windows Server Core 2019.</p><p>To get started, login to your server with administrator privileges. You will first need to type in “powershell” in the cmd prompt to start powershell. Once you do that, type in the following command to install the Active Directory Domain Services role:</p><p><a href=https://lh3.googleusercontent.com/-LnSTbXjG2Hc/X5y3R3F-eWI/AAAAAAAAx2A/lWQBpA44Dmo-Jpbck2iPmgibU6z0DM1YwCLcBGAsYHQ/image.png class=external-link target=_blank rel=noopener><img src=https://rnemeth90.github.io/wp-content/uploads/2020/10/image-12.png alt></a></p><p>After installing the role, we’ll continue by creating a new ADDS Forest and promoting this server to the primary domain controller.</p><p>First, we’ll need to gather a password. This password will not be used for a domain user account. The local administrator on this server will become the domain administrator account for the domain. The password we’re gathering in the next step will be used for Directory Services Restore Mode (DSRM). DSRM is a recovery mode used to recover domain controllers that won’t boot up. We technically only need a password, not a username for this account.</p><p>Type in the following:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-Powershell data-lang=Powershell><span class=line><span class=cl><span class=nv>$cred</span> <span class=p>=</span> <span class=nb>Get-Credential</span>
-</span></span></code></pre></div><p>In the username field for the credentials prompt below, just type in anything you want, as the value will not be used. This prompt will store our username/password in a variable object. We can then access the password within the credential object by typing:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-Powershell data-lang=Powershell><span class=line><span class=cl><span class=nv>$cred</span><span class=p>.</span><span class=py>password</span>
-</span></span></code></pre></div><p>We can see that this password is stored as a secure string object. Let’s continue on with the Directory Services installation.</p><p><a href=https://lh3.googleusercontent.com/-n-W0yvwr2Zs/X5y3X64NjZI/AAAAAAAAx2E/rx5urA7p_NMl3peX5g0J7Ax7biWwNADAgCLcBGAsYHQ/image.png class=external-link target=_blank rel=noopener><img src=https://rnemeth90.github.io/wp-content/uploads/2020/10/image-13.png alt></a></p><p><a href=https://lh3.googleusercontent.com/-0k-aZrMhyGw/X5y3ckH10pI/AAAAAAAAx2I/FS56uvXCirAaBHKwWmIRQ4xIGU_jp_GFwCLcBGAsYHQ/image.png class=external-link target=_blank rel=noopener><img src=https://rnemeth90.github.io/wp-content/uploads/2020/10/image-14.png alt></a></p><p>Once we have our credential variable, we can install a new forest and domain controller using the command below. Let us break down what this cmd is doing:</p><p><a href=https://lh3.googleusercontent.com/-OF_HVfCPZIM/X5y3ijEA5YI/AAAAAAAAx2M/0vMV3CJczT8D3q5x8hzPAZVSL5DycplBACLcBGAsYHQ/image.png class=external-link target=_blank rel=noopener><img src=https://rnemeth90.github.io/wp-content/uploads/2020/10/image-15.png alt></a></p><p>Install-ADDSForest: The powershell cmdlet to create a new forest and domain controller</p><p>-DomainName: The domain name to be used for the forest</p><p>-DomainNetBiosName: The domain “Short name” to be used for the forest. This is the value used when you type in a username in the domainusername format. Example “myDomainbgates”.</p><p>-SafeModeAdministratorPassword: The value we captured in our credential prompt above. This is used for Directory Services Restore Mode. This mode can be accessed by pressing F8 while the server is booting. It is commonly used for recovering a failed domain controller.</p><p>-DatabasePath: The path for the Active Directory database. It’s a best practice to put this database on its own disk.</p><p>-LogPath: The directory for ADDS log files</p><p>-DomainMode: The domain functional level. The domain functional level specifies the attributes and capabilities available to objects within the domain. The higher the level you choose, the more features will be available to you.</p><p>-ForestMode: The forest functional level. Similar to the domain functional level but applies to the entire forest.</p><p>-InstallDNS: Install the DNS role alongside the ADDS role.</p><p>-WhatIf: This is a powershell “thing”. Most cmdlets have the “whatif” parameter. It basically allows you to run the cmdlet in “test” mode without actually making any changes to your environment. Once you’re happy with the output, you can remove the “whatif” parameter and run the command to install ADDS and promote this server to a domain controller.</p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
-2012 -
-2025
-Ryan Nemeth
-·
-Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>
+To get started, login to your server with administrator privileges. You will first need to type in “powershell” in the cmd prompt to start powershell. Once you do that, type in the following command to install the Active Directory Domain Services role:">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-10-31T01:02:00+00:00">
+    <meta property="article:modified_time" content="2020-10-31T01:02:00+00:00">
+    <meta property="article:tag" content="ActiveDirectory">
+    <meta property="article:tag" content="WindowsServer">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/2020-10-31-deploy-new-adds-forest-on-server-2019/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/2020-10-31-deploy-new-adds-forest-on-server-2019/">
+              Deploy a New ADDS Forest on Server 2019 Core
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2020-10-31T01:02:00Z">
+                2020-10-31
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/uncategorized/">Uncategorized</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/activedirectory/">ActiveDirectory</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/windowsserver/">WindowsServer</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>Prerequisites:</p>
+<p>Change server name and IP address
+Configure time settings and NTP</p>
+<p>In this post we will be reviewing the basic installation of the Active Directory Domain Services role and setup of a new forest on Windows Server Core 2019.</p>
+<p>To get started, login to your server with administrator privileges. You will first need to type in “powershell” in the cmd prompt to start powershell. Once you do that, type in the following command to install the Active Directory Domain Services role:</p>
+<p><a href="https://lh3.googleusercontent.com/-LnSTbXjG2Hc/X5y3R3F-eWI/AAAAAAAAx2A/lWQBpA44Dmo-Jpbck2iPmgibU6z0DM1YwCLcBGAsYHQ/image.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-12.png" alt="" /></a></p>
+<p>After installing the role, we’ll continue by creating a new ADDS Forest and promoting this server to the primary domain controller.</p>
+<p>First, we’ll need to gather a password. This password will not be used for a domain user account. The local administrator on this server will become the domain administrator account for the domain. The password we’re gathering in the next step will be used for Directory Services Restore Mode (DSRM). DSRM is a recovery mode used to recover domain controllers that won’t boot up. We technically only need a password, not a username for this account.</p>
+<p>Type in the following:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Powershell" data-lang="Powershell"><span class="line"><span class="cl"><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Get-Credential</span></span></span></code></pre></div><p>In the username field for the credentials prompt below, just type in anything you want, as the value will not be used. This prompt will store our username/password in a variable object. We can then access the password within the credential object by typing:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Powershell" data-lang="Powershell"><span class="line"><span class="cl"><span class="nv">$cred</span><span class="p">.</span><span class="n">password</span></span></span></code></pre></div><p>We can see that this password is stored as a secure string object. Let’s continue on with the Directory Services installation.</p>
+<p><a href="https://lh3.googleusercontent.com/-n-W0yvwr2Zs/X5y3X64NjZI/AAAAAAAAx2E/rx5urA7p_NMl3peX5g0J7Ax7biWwNADAgCLcBGAsYHQ/image.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-13.png" alt="" /></a></p>
+<p><a href="https://lh3.googleusercontent.com/-0k-aZrMhyGw/X5y3ckH10pI/AAAAAAAAx2I/FS56uvXCirAaBHKwWmIRQ4xIGU_jp_GFwCLcBGAsYHQ/image.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-14.png" alt="" /></a></p>
+<p>Once we have our credential variable, we can install a new forest and domain controller using the command below. Let us break down what this cmd is doing:</p>
+<p><a href="https://lh3.googleusercontent.com/-OF_HVfCPZIM/X5y3ijEA5YI/AAAAAAAAx2M/0vMV3CJczT8D3q5x8hzPAZVSL5DycplBACLcBGAsYHQ/image.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-15.png" alt="" /></a></p>
+<p>Install-ADDSForest: The powershell cmdlet to create a new forest and domain controller</p>
+<p>-DomainName: The domain name to be used for the forest</p>
+<p>-DomainNetBiosName: The domain “Short name” to be used for the forest. This is the value used when you type in a username in the domainusername format. Example “myDomainbgates”.</p>
+<p>-SafeModeAdministratorPassword: The value we captured in our credential prompt above. This is used for Directory Services Restore Mode. This mode can be accessed by pressing F8 while the server is booting. It is commonly used for recovering a failed domain controller.</p>
+<p>-DatabasePath: The path for the Active Directory database. It’s a best practice to put this database on its own disk.</p>
+<p>-LogPath: The directory for ADDS log files</p>
+<p>-DomainMode: The domain functional level. The domain functional level specifies the attributes and capabilities available to objects within the domain. The higher the level you choose, the more features will be available to you.</p>
+<p>-ForestMode: The forest functional level. Similar to the domain functional level but applies to the entire forest.</p>
+<p>-InstallDNS: Install the DNS role alongside the ADDS role.</p>
+<p>-WhatIf: This is a powershell “thing”. Most cmdlets have the “whatif” parameter. It basically allows you to run the cmdlet in “test” mode without actually making any changes to your environment. Once you’re happy with the output, you can remove the “whatif” parameter and run the command to install ADDS and promote this server to a domain controller.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2012 -
+    
+    2025
+     Ryan Nemeth 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

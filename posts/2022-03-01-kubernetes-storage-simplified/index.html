@@ -1,153 +1,486 @@
-<!doctype html><html lang=en><head><title>Kubernetes Storage Simplified · GeekyRyan</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><meta name=author content="Ryan Nemeth"><meta name=description content="In this blog post, we will attempt to explain the current storage options that exist in Kubernetes. If you are new to Kubernetes, learning about its capabilities of managing the application state can be a daunting task.
-Container images are built-in layers, with the runtime layer being writable. However, any files on this writable layer are only available for the container’s lifetime. We can mount a volume to a directory inside the container to have persistent data."><meta name=keywords content="blog,developer,personal,devops"><meta name=twitter:card content="summary"><meta name=twitter:title content="Kubernetes Storage Simplified"><meta name=twitter:description content="In this blog post, we will attempt to explain the current storage options that exist in Kubernetes. If you are new to Kubernetes, learning about its capabilities of managing the application state can be a daunting task.
-Container images are built-in layers, with the runtime layer being writable. However, any files on this writable layer are only available for the container’s lifetime. We can mount a volume to a directory inside the container to have persistent data."><meta property="og:url" content="https://rnemeth90.github.io/posts/2022-03-01-kubernetes-storage-simplified/"><meta property="og:site_name" content="GeekyRyan"><meta property="og:title" content="Kubernetes Storage Simplified"><meta property="og:description" content="In this blog post, we will attempt to explain the current storage options that exist in Kubernetes. If you are new to Kubernetes, learning about its capabilities of managing the application state can be a daunting task.
-Container images are built-in layers, with the runtime layer being writable. However, any files on this writable layer are only available for the container’s lifetime. We can mount a volume to a directory inside the container to have persistent data."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-03-01T08:37:58+00:00"><meta property="article:modified_time" content="2022-03-01T08:37:58+00:00"><meta property="article:tag" content="Aks"><meta property="article:tag" content="Azure Kubernetes Service"><meta property="article:tag" content="Kubernetes"><meta property="article:tag" content="Storage"><link rel=canonical href=https://rnemeth90.github.io/posts/2022-03-01-kubernetes-storage-simplified/><link rel=preload href=/fonts/fa-brands-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-regular-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-solid-900.woff2 as=font type=font/woff2 crossorigin><link rel=stylesheet href=/css/coder.min.f8ac2fdd0cb7e56145845d949b5c036d40cd5061c013fd446f2f54a63ade62e8.css integrity="sha256-+Kwv3Qy35WFFhF2Um1wDbUDNUGHAE/1Eby9UpjreYug=" crossorigin=anonymous media=screen><link rel=stylesheet href=/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin=anonymous media=screen><link rel=icon type=image/svg+xml href=/images/favicon.svg sizes=any><link rel=icon type=image/png href=/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/images/favicon-16x16.png sizes=16x16><link rel=apple-touch-icon href=/images/apple-touch-icon.png><link rel=apple-touch-icon sizes=180x180 href=/images/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/images/safari-pinned-tab.svg color=#5bbad5></head><body class="preload-transitions colorscheme-auto"><div class=float-container><a id=dark-mode-toggle class=colorscheme-toggle><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></a></div><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=https://rnemeth90.github.io/>GeekyRyan
-</a><input type=checkbox id=menu-toggle>
-<label class="menu-button float-right" for=menu-toggle><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=/about/>About</a></li><li class=navigation-item><a class=navigation-link href=/posts/>Blog</a></li><li class=navigation-item><a class=navigation-link href=/til/>TIL</a></li><li class=navigation-item><a class=navigation-link href=/projects/>Projects</a></li><li class=navigation-item><a class=navigation-link href=/tags/>Tags</a></li></ul></section></nav><div class=content><section class="container post"><article><header><div class=post-title><h1 class=title><a class=title-link href=https://rnemeth90.github.io/posts/2022-03-01-kubernetes-storage-simplified/>Kubernetes Storage Simplified</a></h1></div><div class=post-meta><div class=date><span class=posted-on><i class="fa-solid fa-calendar" aria-hidden=true></i>
-<time datetime=2022-03-01T08:37:58Z>2022-03-01
-</time></span><span class=reading-time><i class="fa-solid fa-clock" aria-hidden=true></i>
-8-minute read</span></div><div class=categories><i class="fa-solid fa-folder" aria-hidden=true></i>
-<a href=/categories/azure-kubernetes-service/>Azure Kubernetes Service</a>
-<span class=separator>•</span>
-<a href=/categories/kubernetes/>Kubernetes</a></div><div class=tags><i class="fa-solid fa-tag" aria-hidden=true></i>
-<span class=tag><a href=/tags/aks/>Aks</a>
-</span><span class=separator>•</span>
-<span class=tag><a href=/tags/azure-kubernetes-service/>Azure Kubernetes Service</a>
-</span><span class=separator>•</span>
-<span class=tag><a href=/tags/kubernetes/>Kubernetes</a>
-</span><span class=separator>•</span>
-<span class=tag><a href=/tags/storage/>Storage</a></span></div></div></header><div class=post-content><p>In this blog post, we will attempt to explain the current storage options that exist in Kubernetes. If you are new to Kubernetes, learning about its capabilities of managing the application state can be a daunting task.</p><p>Container images are built-in layers, with the runtime layer being writable. However, any files on this writable layer are only available for the container’s lifetime. We can mount a volume to a directory inside the container to have persistent data.</p><p>Kubernetes storage uses the concepts of volumes. Ephemeral volumes are called volumes and only last the lifetime of a pod, and “persistent volumes” are used for long-term storage. A typical use case for Ephemeral volumes is storing logs that are not sent to stdout.</p><p>Mounting a persistent volume inside a container allows you to persist the state of your application long after the container is terminated. Persistent volumes can also take advantage of the typical storage idiosyncrasies such as backup, compression, and encryption.</p><h2 id=persistent-volumes>Persistent Volumes
-<a class=heading-link href=#persistent-volumes><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
-<span class=sr-only>Link to heading</span></a></h2><p>Kubernetes has several types of persistent volumes. At its core, a persistent volume is simply a directory mounted inside a pod. How that volume is created, the configuration options and the medium that backs it are all determined by the type of volume created.</p><p>There are several types of volumes available, too many to list here. You may commonly see some volume types: NFS, iSCSI, hostpath, and local. If your Kubernetes cluster exists in a cloud environment such as Azure or AWS, other volume types are available to you (azureDisk, azureFile, and awsElasticBlockStore, respectively). A complete list of types can be found here:</p><p><a href=https://kubernetes.io/docs/concepts/storage/persistent-volumes/#types-of-persistent-volumes class=external-link target=_blank rel=noopener>https://kubernetes.io/docs/concepts/storage/persistent-volumes/#types-of-persistent-volumes</a></p><p>Creating a persistent volume is generally a simple task. The first step is determining the type of volume to create. In this post, we will cover creating a local volume. A local volume represents a disk, partition, or directory shared from a node. Local volumes are subject to the availability of the underlying node, meaning that if the node is offline, the volume is also offline and will not be accessible by any pod. Because of this, local volumes should not be used in production.</p><p>A persistent volume can only be created using a declarative approach. To create a persistent local volume, use the following YAML definition:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-YAML data-lang=YAML><span class=line><span class=cl><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>PersistentVolume</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>example-pv</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>capacity</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>storage</span><span class=p>:</span><span class=w> </span><span class=l>100Gi</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>volumeMode</span><span class=p>:</span><span class=w> </span><span class=l>Filesystem</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>accessModes</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=l>ReadWriteOnce</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>persistentVolumeReclaimPolicy</span><span class=p>:</span><span class=w> </span><span class=l>Delete</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>storageClassName</span><span class=p>:</span><span class=w> </span><span class=l>local-storage</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>local</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c># the path to the volume or directory on the node</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=l>/mnt/disks/ssd1</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>nodeAffinity</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>required</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>nodeSelectorTerms</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>matchExpressions</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span>- <span class=nt>key</span><span class=p>:</span><span class=w> </span><span class=l>kubernetes.io/hostname</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>operator</span><span class=p>:</span><span class=w> </span><span class=l>In</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>values</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=c># name of the node sharing the volume</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=l>node01</span><span class=w>
-</span></span></span></code></pre></div><p>When creating a persistent volume of this type, you must specify a node affinity. This ensures that the Kubernetes scheduler schedules any pods requesting access to this volume on the correct node. For example, any pod requesting access to the persistent volume named ‘example-PV will only be scheduled on the node ‘node01’.</p><p>Let’s dive into this persistent volume spec a bit more:</p><p>You can change the capacity of the persistent volume by updating:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-YAML data-lang=YAML><span class=line><span class=cl><span class=nt>spec</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>capacity</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>storage</span><span class=p>:</span><span class=w> </span><span class=l>100Gi</span><span class=w>
-</span></span></span></code></pre></div><p>The accessModes will be determined by the storage provider being used. There are generally 3 access modes available: ReadWriteOnce, ReadWriteMany, and ReadOnlyMany.</p><ul><li>ReadWriteOnce – The volume can be mounted as read-write by a single node</li><li>ReadWriteMany – The volume can be mounted as read-write by many nodes</li><li>ReadOnlyMany – The volume can be mounted as read-only by many nodes</li></ul><p>The “persistentVolumeReclaim” policy determines what happens to a persistent volume when it is no longer mounted by any pods (i.e., there are no claims to it, more on this later). There are three options available for the reclaim policy:</p><ul><li>Retain – The persistent volume is kept as-is. It must be manually removed when no longer needed.</li><li>Recycle – The persistent volume is scrubbed and can be re-used by other pods</li><li>Delete – The persistent volume is deleted.</li></ul><p>Currently, only NFS and hostPath volumes support recycling. Cloud storage providers (Azure, AWS, and GCE) support deletion.</p><p>The other aspects of this spec are unique to the volume being used. Since we are using a local volume here, we must specify the path to the directory or volume on the host and the host which is sharing the directory or volume:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-YAML data-lang=YAML><span class=line><span class=cl><span class=w>  </span><span class=nt>local</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c># the path to the volume or directory on the node</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=l>/mnt/disks/ssd1</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>nodeAffinity</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>required</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>nodeSelectorTerms</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>matchExpressions</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span>- <span class=nt>key</span><span class=p>:</span><span class=w> </span><span class=l>kubernetes.io/hostname</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>operator</span><span class=p>:</span><span class=w> </span><span class=l>In</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>values</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=c># name of the node sharing the volume</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=l>node01</span><span class=w>
-</span></span></span></code></pre></div><h2 id=ephemeral-volumes>Ephemeral Volumes
-<a class=heading-link href=#ephemeral-volumes><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
-<span class=sr-only>Link to heading</span></a></h2><p>Note: The Kubernetes documentation recognizes configMaps and Secrets as ephemeral volumes. However, in this article, we will only discuss ephemeral volumes used for data storage (emptyDir volumes).</p><p>Ephemeral volumes are defined within the context of a pod. This means that you cannot create an ephemeral volume on its own. Instead, define the ephemeral volume in the pod or a deployment spec.</p><p>Ephemeral volumes are useful in a few scenarios:</p><ol><li>You want to share data between multiple containers in a pod</li><li>You want to cache temporary information such as log files</li><li>You need scratch space to store data before it is processed by another container or pod</li></ol><p>If one of the containers in the pod happens to restart, data on the ephemeral volume will still exist; as long as one of the containers is mounting, it stays online. In other words, if a pod mounting the ephemeral volume is removed from a node, data on the ephemeral volume is lost. However, if a pod crashes, the data on the volume remains intact.</p><p>As stated previously, creating an ephemeral volume is done as part of the pod or deployment template:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-YAML data-lang=YAML><span class=line><span class=cl><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Pod</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>test-pd</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>containers</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>k8s.gcr.io/test-webserver</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>test-container</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumeMounts</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=nt>mountPath</span><span class=p>:</span><span class=w> </span><span class=l>/cache</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>cache-volume</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>cache-volume</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>emptyDir</span><span class=p>:</span><span class=w> </span>{}<span class=w>
-</span></span></span></code></pre></div><p>If the template, you add a volume of type ’emptyDir’ in the ‘volumes’ spec and name it. You can mount this volume in any container in the pod. The volume does not have to be mounted to the same directory in each container.</p><h2 id=persistent-volume-claims>Persistent Volume Claims
-<a class=heading-link href=#persistent-volume-claims><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
-<span class=sr-only>Link to heading</span></a></h2><p>A persistentVolumeClaim (often referred to as a ‘PVC’) is used by a pod to create a ‘claim’ on storage. Using a PVC, a pod can mount multiple persistent volumes simultaneously to any directory in the pod.</p><p>PersistentVolumeClaim’s are a Kubernetes primitive that can be deployed from a manifest:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-YAML data-lang=YAML><span class=line><span class=cl><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>PersistentVolumeClaim</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>fast-storage-pvc</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>accessModes</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=l>ReadWriteMany</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>volumeMode</span><span class=p>:</span><span class=w> </span><span class=l>Filesystem</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>resources</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>requests</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>storage</span><span class=p>:</span><span class=w> </span><span class=l>8Gi</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>storageClassName</span><span class=p>:</span><span class=w> </span><span class=l>fast</span><span class=w>
-</span></span></span></code></pre></div><p>Most of the options in the manifest above seem pretty obvious. The volumeMode specifies whether to consume the persistent volume as a FileSystem or block device. The resources section helps specify the amount of storage you require (8Gi in this example). We will cover the storageClassName in the next section. Finally, the accessModes are identical to those described above in the Persistent Volumes section.</p><p>Pods access a volume by using the persistentVolumeClaim as volume. Claims must exist in the same namespace as the pod using the claim. The controller finds the claim in the pods’ namespace and uses it to find a persistent volume capable of backing the claim. The volume is then mounted on the host and attached to the pod.</p><p>To create a pod that utilizes a PVC, use the following yaml definition:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-YAML data-lang=YAML><span class=line><span class=cl><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Pod</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>test-pd</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>containers</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>k8s.gcr.io/test-webserver</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>test-container</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumeMounts</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=nt>mountPath</span><span class=p>:</span><span class=w> </span><span class=l>/mnt/share</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>azfileshare</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>cache-volume</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>persistentVolumeClaim</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>claimName</span><span class=p>:</span><span class=w> </span><span class=l>azfileshare</span><span class=w>
-</span></span></span></code></pre></div><h2 id=storage-classes>Storage Classes
-<a class=heading-link href=#storage-classes><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
-<span class=sr-only>Link to heading</span></a></h2><p>In this article, we will only be referencing Kubernetes storage classes with respect to dynamic provisioners. If you would like to learn more, please reference the Kubernetes docs:</p><p><a href=https://bit.ly/3ruJD2A class=external-link target=_blank rel=noopener>https://bit.ly/3ruJD2A</a></p><p>Storage Classes have many uses. Kubernetes is unopinionated about what a storage class represents. They can be used to represent different characteristics of storage (performance, compression method, file system modes, etc.). Storage Classes can also be used to provision persistent volumes dynamically, which will be the focus of this article.</p><p>Storage classes are often packaged with CSI drivers. Each StorageClass contains the fields “provisioner”, “parameters”, and “reclaimPolicy”. The provisioner field is used to determine what CSI driver is used for provisioning volumes.</p><p>This is an example of the storage class packaged with the AzureFiles CSI driver:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-YAML data-lang=YAML><span class=line><span class=cl><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>StorageClass</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>storage.k8s.io/v1</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>azurefileshare</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>provisioner</span><span class=p>:</span><span class=w> </span><span class=l>file.csi.azure.com</span><span class=w> </span><span class=c># replace with &#34;kubernetes.io/azure-file&#34; if aks version is less than 1.21</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>mountOptions</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=l>dir_mode=0777</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=l>file_mode=0777</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=l>uid=0</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=l>gid=0</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=l>mfsymlinks</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=l>cache=strict</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=l>actimeo=30</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>parameters</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>skuName</span><span class=p>:</span><span class=w> </span><span class=l>Standard_LRS</span><span class=w>
-</span></span></span></code></pre></div><p>You can see in the above manifest that the provisioner is set to ‘file.csi.azure.com.’ When a pod uses a PVC in its manifest that references this storage class, the provisioner will dynamically manage the underlying storage.</p><p>The name of the storageClass is referenced in the persistentVolumeClaim:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-YAML data-lang=YAML><span class=line><span class=cl><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>PersistentVolumeClaim</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>azfileshare</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>accessModes</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=l>ReadWriteMany</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>resources</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>requests</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>storage</span><span class=p>:</span><span class=w> </span><span class=l>8Gi</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>storageClassName</span><span class=p>:</span><span class=w> </span><span class=l>azurefileshare</span><span class=w>
-</span></span></span></code></pre></div><p>You could then reference this PVC in a pod:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-YAML data-lang=YAML><span class=line><span class=cl><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Pod</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>test-pd</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>containers</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>k8s.gcr.io/test-webserver</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>test-container</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumeMounts</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=nt>mountPath</span><span class=p>:</span><span class=w> </span><span class=l>/mnt/share</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>azfileshare</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>cache-volume</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>persistentVolumeClaim</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>claimName</span><span class=p>:</span><span class=w> </span><span class=l>azfileshare</span><span class=w>
-</span></span></span></code></pre></div><p>That concludes this article. I know that is a lot of information! As always, if you have any questions or comments, please reach out.</p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
-2012 -
-2025
-Ryan Nemeth
-·
-Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  Kubernetes Storage Simplified · GeekyRyan
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Ryan Nemeth">
+<meta name="description" content="In this blog post, we will attempt to explain the current storage options that exist in Kubernetes. If you are new to Kubernetes, learning about its capabilities of managing the application state can be a daunting task.
+Container images are built-in layers, with the runtime layer being writable. However, any files on this writable layer are only available for the container’s lifetime. We can mount a volume to a directory inside the container to have persistent data.">
+<meta name="keywords" content="blog,developer,personal,devops">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Kubernetes Storage Simplified">
+  <meta name="twitter:description" content="In this blog post, we will attempt to explain the current storage options that exist in Kubernetes. If you are new to Kubernetes, learning about its capabilities of managing the application state can be a daunting task.
+Container images are built-in layers, with the runtime layer being writable. However, any files on this writable layer are only available for the container’s lifetime. We can mount a volume to a directory inside the container to have persistent data.">
+
+<meta property="og:url" content="http://localhost:1313/posts/2022-03-01-kubernetes-storage-simplified/">
+  <meta property="og:site_name" content="GeekyRyan">
+  <meta property="og:title" content="Kubernetes Storage Simplified">
+  <meta property="og:description" content="In this blog post, we will attempt to explain the current storage options that exist in Kubernetes. If you are new to Kubernetes, learning about its capabilities of managing the application state can be a daunting task.
+Container images are built-in layers, with the runtime layer being writable. However, any files on this writable layer are only available for the container’s lifetime. We can mount a volume to a directory inside the container to have persistent data.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-03-01T08:37:58+00:00">
+    <meta property="article:modified_time" content="2022-03-01T08:37:58+00:00">
+    <meta property="article:tag" content="Aks">
+    <meta property="article:tag" content="Azure Kubernetes Service">
+    <meta property="article:tag" content="Kubernetes">
+    <meta property="article:tag" content="Storage">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/2022-03-01-kubernetes-storage-simplified/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/2022-03-01-kubernetes-storage-simplified/">
+              Kubernetes Storage Simplified
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2022-03-01T08:37:58Z">
+                2022-03-01
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              8-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/azure-kubernetes-service/">Azure Kubernetes Service</a>
+      <span class="separator">•</span>
+    <a href="/categories/kubernetes/">Kubernetes</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/aks/">Aks</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/azure-kubernetes-service/">Azure Kubernetes Service</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/kubernetes/">Kubernetes</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/storage/">Storage</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>In this blog post, we will attempt to explain the current storage options that exist in Kubernetes. If you are new to Kubernetes, learning about its capabilities of managing the application state can be a daunting task.</p>
+<p>Container images are built-in layers, with the runtime layer being writable. However, any files on this writable layer are only available for the container’s lifetime. We can mount a volume to a directory inside the container to have persistent data.</p>
+<p>Kubernetes storage uses the concepts of volumes. Ephemeral volumes are called volumes and only last the lifetime of a pod, and “persistent volumes” are used for long-term storage. A typical use case for Ephemeral volumes is storing logs that are not sent to stdout.</p>
+<p>Mounting a persistent volume inside a container allows you to persist the state of your application long after the container is terminated. Persistent volumes can also take advantage of the typical storage idiosyncrasies such as backup, compression, and encryption.</p>
+<h2 id="persistent-volumes">
+  Persistent Volumes
+  <a class="heading-link" href="#persistent-volumes">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Kubernetes has several types of persistent volumes. At its core, a persistent volume is simply a directory mounted inside a pod. How that volume is created, the configuration options and the medium that backs it are all determined by the type of volume created.</p>
+<p>There are several types of volumes available, too many to list here. You may commonly see some volume types: NFS, iSCSI, hostpath, and local. If your Kubernetes cluster exists in a cloud environment such as Azure or AWS, other volume types are available to you (azureDisk, azureFile, and awsElasticBlockStore, respectively). A complete list of types can be found here:</p>
+<p><a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#types-of-persistent-volumes"  class="external-link" target="_blank" rel="noopener">https://kubernetes.io/docs/concepts/storage/persistent-volumes/#types-of-persistent-volumes</a></p>
+<p>Creating a persistent volume is generally a simple task. The first step is determining the type of volume to create. In this post, we will cover creating a local volume. A local volume represents a disk, partition, or directory shared from a node. Local volumes are subject to the availability of the underlying node, meaning that if the node is offline, the volume is also offline and will not be accessible by any pod. Because of this, local volumes should not be used in production.</p>
+<p>A persistent volume can only be created using a declarative approach. To create a persistent local volume, use the following YAML definition:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PersistentVolume</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">example-pv</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">capacity</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">100Gi</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">volumeMode</span><span class="p">:</span><span class="w"> </span><span class="l">Filesystem</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">accessModes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">ReadWriteOnce</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">persistentVolumeReclaimPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">Delete</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l">local-storage</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">local</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c"># the path to the volume or directory on the node</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l">/mnt/disks/ssd1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">nodeAffinity</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">nodeSelectorTerms</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">matchExpressions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l">kubernetes.io/hostname</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l">In</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">values</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c"># name of the node sharing the volume</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="l">node01</span></span></span></code></pre></div><p>When creating a persistent volume of this type, you must specify a node affinity. This ensures that the Kubernetes scheduler schedules any pods requesting access to this volume on the correct node. For example, any pod requesting access to the persistent volume named ‘example-PV will only be scheduled on the node ‘node01’.</p>
+<p>Let’s dive into this persistent volume spec a bit more:</p>
+<p>You can change the capacity of the persistent volume by updating:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">capacity</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">100Gi</span></span></span></code></pre></div><p>The accessModes will be determined by the storage provider being used. There are generally 3 access modes available: ReadWriteOnce, ReadWriteMany, and ReadOnlyMany.</p>
+<ul>
+<li>ReadWriteOnce – The volume can be mounted as read-write by a single node</li>
+<li>ReadWriteMany – The volume can be mounted as read-write by many nodes</li>
+<li>ReadOnlyMany – The volume can be mounted as read-only by many nodes</li>
+</ul>
+<p>The “persistentVolumeReclaim” policy determines what happens to a persistent volume when it is no longer mounted by any pods (i.e., there are no claims to it, more on this later). There are three options available for the reclaim policy:</p>
+<ul>
+<li>Retain – The persistent volume is kept as-is. It must be manually removed when no longer needed.</li>
+<li>Recycle – The persistent volume is scrubbed and can be re-used by other pods</li>
+<li>Delete – The persistent volume is deleted.</li>
+</ul>
+<p>Currently, only NFS and hostPath volumes support recycling. Cloud storage providers (Azure, AWS, and GCE) support deletion.</p>
+<p>The other aspects of this spec are unique to the volume being used. Since we are using a local volume here, we must specify the path to the directory or volume on the host and the host which is sharing the directory or volume:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="w">  </span><span class="nt">local</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c"># the path to the volume or directory on the node</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l">/mnt/disks/ssd1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">nodeAffinity</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">nodeSelectorTerms</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">matchExpressions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l">kubernetes.io/hostname</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l">In</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">values</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c"># name of the node sharing the volume</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="l">node01</span></span></span></code></pre></div><h2 id="ephemeral-volumes">
+  Ephemeral Volumes
+  <a class="heading-link" href="#ephemeral-volumes">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Note: The Kubernetes documentation recognizes configMaps and Secrets as ephemeral volumes. However, in this article, we will only discuss ephemeral volumes used for data storage (emptyDir volumes).</p>
+<p>Ephemeral volumes are defined within the context of a pod. This means that you cannot create an ephemeral volume on its own. Instead, define the ephemeral volume in the pod or a deployment spec.</p>
+<p>Ephemeral volumes are useful in a few scenarios:</p>
+<ol>
+<li>You want to share data between multiple containers in a pod</li>
+<li>You want to cache temporary information such as log files</li>
+<li>You need scratch space to store data before it is processed by another container or pod</li>
+</ol>
+<p>If one of the containers in the pod happens to restart, data on the ephemeral volume will still exist; as long as one of the containers is mounting, it stays online. In other words, if a pod mounting the ephemeral volume is removed from a node, data on the ephemeral volume is lost. However, if a pod crashes, the data on the volume remains intact.</p>
+<p>As stated previously, creating an ephemeral volume is done as part of the pod or deployment template:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Pod</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">test-pd</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">k8s.gcr.io/test-webserver</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">test-container</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">volumeMounts</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l">/cache</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">cache-volume</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">cache-volume</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre></div><p>If the template, you add a volume of type ’emptyDir’ in the ‘volumes’ spec and name it. You can mount this volume in any container in the pod. The volume does not have to be mounted to the same directory in each container.</p>
+<h2 id="persistent-volume-claims">
+  Persistent Volume Claims
+  <a class="heading-link" href="#persistent-volume-claims">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>A persistentVolumeClaim (often referred to as a ‘PVC’) is used by a pod to create a ‘claim’ on storage. Using a PVC, a pod can mount multiple persistent volumes simultaneously to any directory in the pod.</p>
+<p>PersistentVolumeClaim’s are a Kubernetes primitive that can be deployed from a manifest:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PersistentVolumeClaim</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">fast-storage-pvc</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">accessModes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">ReadWriteMany</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">volumeMode</span><span class="p">:</span><span class="w"> </span><span class="l">Filesystem</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">requests</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">8Gi</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l">fast</span></span></span></code></pre></div><p>Most of the options in the manifest above seem pretty obvious. The volumeMode specifies whether to consume the persistent volume as a FileSystem or block device. The resources section helps specify the amount of storage you require (8Gi in this example). We will cover the storageClassName in the next section. Finally, the accessModes are identical to those described above in the Persistent Volumes section.</p>
+<p>Pods access a volume by using the persistentVolumeClaim as volume. Claims must exist in the same namespace as the pod using the claim. The controller finds the claim in the pods’ namespace and uses it to find a persistent volume capable of backing the claim. The volume is then mounted on the host and attached to the pod.</p>
+<p>To create a pod that utilizes a PVC, use the following yaml definition:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Pod</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">test-pd</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">k8s.gcr.io/test-webserver</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">test-container</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">volumeMounts</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l">/mnt/share</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">azfileshare</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">cache-volume</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">persistentVolumeClaim</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="l">azfileshare</span></span></span></code></pre></div><h2 id="storage-classes">
+  Storage Classes
+  <a class="heading-link" href="#storage-classes">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>In this article, we will only be referencing Kubernetes storage classes with respect to dynamic provisioners. If you would like to learn more, please reference the Kubernetes docs:</p>
+<p><a href="https://bit.ly/3ruJD2A"  class="external-link" target="_blank" rel="noopener">https://bit.ly/3ruJD2A</a></p>
+<p>Storage Classes have many uses. Kubernetes is unopinionated about what a storage class represents. They can be used to represent different characteristics of storage (performance, compression method, file system modes, etc.). Storage Classes can also be used to provision persistent volumes dynamically, which will be the focus of this article.</p>
+<p>Storage classes are often packaged with CSI drivers. Each StorageClass contains the fields “provisioner”, “parameters”, and “reclaimPolicy”. The provisioner field is used to determine what CSI driver is used for provisioning volumes.</p>
+<p>This is an example of the storage class packaged with the AzureFiles CSI driver:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">StorageClass</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">storage.k8s.io/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">azurefileshare</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">provisioner</span><span class="p">:</span><span class="w"> </span><span class="l">file.csi.azure.com</span><span class="w"> </span><span class="c"># replace with &#34;kubernetes.io/azure-file&#34; if aks version is less than 1.21</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">mountOptions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">dir_mode=0777</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">file_mode=0777</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">uid=0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">gid=0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">mfsymlinks</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">cache=strict</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">actimeo=30</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">parameters</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">skuName</span><span class="p">:</span><span class="w"> </span><span class="l">Standard_LRS</span></span></span></code></pre></div><p>You can see in the above manifest that the provisioner is set to ‘file.csi.azure.com.’ When a pod uses a PVC in its manifest that references this storage class, the provisioner will dynamically manage the underlying storage.</p>
+<p>The name of the storageClass is referenced in the persistentVolumeClaim:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PersistentVolumeClaim</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">azfileshare</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">accessModes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">ReadWriteMany</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">requests</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">8Gi</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l">azurefileshare</span></span></span></code></pre></div><p>You could then reference this PVC in a pod:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Pod</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">test-pd</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">k8s.gcr.io/test-webserver</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">test-container</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">volumeMounts</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l">/mnt/share</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">azfileshare</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">cache-volume</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">persistentVolumeClaim</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="l">azfileshare</span></span></span></code></pre></div><p>That concludes this article. I know that is a lot of information! As always, if you have any questions or comments, please reach out.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2012 -
+    
+    2025
+     Ryan Nemeth 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
