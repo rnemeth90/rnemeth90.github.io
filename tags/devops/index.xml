@@ -1,4 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Devops on GeekyRyan</title><link>https://rnemeth90.github.io/tags/devops/</link><description>Recent content in Devops on GeekyRyan</description><generator>Hugo</generator><language>en</language><lastBuildDate>Thu, 05 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes Health Probing in Dotnet Console Apps</title><link>https://rnemeth90.github.io/posts/2024-12-05-dotnet-console-app-health-probe/</link><pubDate>Thu, 05 Dec 2024 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2024-12-05-dotnet-console-app-health-probe/</guid><description>&lt;h1 id="introduction"&gt;Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Devops on GeekyRyan</title><link>https://rnemeth90.github.io/tags/devops/</link><description>Recent content in Devops on GeekyRyan</description><generator>Hugo</generator><language>en</language><lastBuildDate>Thu, 05 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://rnemeth90.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes Health Probing in Dotnet Console Apps</title><link>https://rnemeth90.github.io/posts/2024-12-05-dotnet-console-app-health-probe/</link><pubDate>Thu, 05 Dec 2024 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2024-12-05-dotnet-console-app-health-probe/</guid><description>&lt;h1 id="introduction"&gt;
+ Introduction
+ &lt;a class="heading-link" href="#introduction"&gt;
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
+ &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
+ &lt;/a&gt;
+&lt;/h1&gt;
 &lt;p&gt;This post covers a simple and efficient solution for implementing liveness probes in pods running console applications (think background services or utility DaemonSets). A common question I see in Kubernetes forums is:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;“How do I use health probes with console apps?”
 &lt;/code&gt;&lt;/pre&gt;
@@ -7,9 +13,21 @@
 &lt;li&gt;Sidecar Container with HTTP Server: Requires coding the server, building a sidecar container, and managing additional infrastructure. While effective, this can be overkill for lightweight applications.&lt;/li&gt;
 &lt;li&gt;Exec Probes with Shell Scripts: Feels hacky and can waste resources, depending on what the script does.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;Pods are meant to be lightweight, and both solutions can deviate from that principle.&lt;/p&gt;</description></item><item><title>Mounting Multiple Kubernetes Secrets into One Directory</title><link>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</link><pubDate>Sat, 29 Jun 2024 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</guid><description>&lt;h1 id="introduction"&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;Pods are meant to be lightweight, and both solutions can deviate from that principle.&lt;/p&gt;</description></item><item><title>Mounting Multiple Kubernetes Secrets into One Directory</title><link>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</link><pubDate>Sat, 29 Jun 2024 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</guid><description>&lt;h1 id="introduction"&gt;
+ Introduction
+ &lt;a class="heading-link" href="#introduction"&gt;
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
+ &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
+ &lt;/a&gt;
+&lt;/h1&gt;
 &lt;p&gt;Combining multiple Kubernetes secrets into a single directory can streamline secret management in your applications. This guide walks you through the process of achieving this in Kubernetes, ensuring efficient and organized secret management.&lt;/p&gt;
-&lt;h1 id="creating-secrets"&gt;Creating Secrets&lt;/h1&gt;
+&lt;h1 id="creating-secrets"&gt;
+ Creating Secrets
+ &lt;a class="heading-link" href="#creating-secrets"&gt;
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
+ &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
+ &lt;/a&gt;
+&lt;/h1&gt;
 &lt;p&gt;First, create your secrets using the &lt;code&gt;kubectl create secret&lt;/code&gt; command:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;kubectl create secret generic secret-one --from-literal=key1=value1
 kubectl create secret generic secret-two --from-literal=key2=value2
@@ -20,7 +38,13 @@ figure this out.&lt;/p&gt;
 &lt;p&gt;Our two pipelines will exist in the same repository. We have a dependent-pipeline, that we only want to run once the source-pipeline is finished. This is useful if you have
 some infrastructure you want to build, prior to deploying something to that infrastructure.&lt;/p&gt;</description></item><item><title>Update Azure Devops SPN Secret</title><link>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</link><pubDate>Mon, 12 Sep 2022 00:00:00 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</guid><description>&lt;p&gt;If you need to update the secret for a service principal in Azure Devops, prior to it expiring, you may be surprised to find that this cannot be done via the Azure Portal.&lt;/p&gt;
 &lt;p&gt;In this article, I&amp;rsquo;ll show you two methods for updating a secret for a service principal prior to expiration.&lt;/p&gt;
-&lt;h1 id="update-the-secret-via-the-azure-devops-portal"&gt;Update the secret via the Azure Devops Portal:&lt;/h1&gt;
+&lt;h1 id="update-the-secret-via-the-azure-devops-portal"&gt;
+ Update the secret via the Azure Devops Portal:
+ &lt;a class="heading-link" href="#update-the-secret-via-the-azure-devops-portal"&gt;
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
+ &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
+ &lt;/a&gt;
+&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;Go to &amp;ldquo;Service Connections&amp;rdquo; in the Azure Devops portal&lt;/li&gt;
 &lt;li&gt;Find the SPN you want to update, then click &amp;ldquo;Manage Service Principal&amp;rdquo;&lt;/li&gt;
@@ -34,11 +58,29 @@ some infrastructure you want to build, prior to deploying something to that infr
 &lt;li&gt;You can now remove whatever you added to the description.&lt;/li&gt;
 &lt;/ul&gt;</description></item><item><title>Running Docker in WSL v1</title><link>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</link><pubDate>Sun, 26 Jun 2022 15:00:28 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</guid><description>&lt;p&gt;I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.&lt;/p&gt;
 &lt;p&gt;Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work. I receive this nice message:&lt;/p&gt;</description></item><item><title>Accessing Secrets Securely in Azure DevOps Pipelines</title><link>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</link><pubDate>Sat, 19 Feb 2022 16:02:50 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</guid><description>&lt;p&gt;This post will cover a secure method for accessing secrets in Azure DevOps pipelines.&lt;/p&gt;
-&lt;h2 id="why-azure-key-vault"&gt;Why Azure Key Vault?&lt;/h2&gt;
+&lt;h2 id="why-azure-key-vault"&gt;
+ Why Azure Key Vault?
+ &lt;a class="heading-link" href="#why-azure-key-vault"&gt;
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
+ &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;
 &lt;p&gt;Azure Key Vault is an Azure cloud service used to securely store secrets, keys, and certificates. A secret can be any string of characters, such as API keys, passwords, URLs, etc. Azure Key Vault encrypts data at rest and in transit using HTTPS. Depending on the type of Key Vault you are using, data at rest is encrypted using software encryption (AES 256) or HSM-backed keys.&lt;/p&gt;</description></item><item><title>Kubernetes Pod Eviction</title><link>https://rnemeth90.github.io/posts/2022-02-05-kubernetes-pod-eviction/</link><pubDate>Sat, 05 Feb 2022 23:49:16 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-02-05-kubernetes-pod-eviction/</guid><description>&lt;p&gt;In this article, we will dive into the process of pod eviction in a Kubernetes cluster, how you can pod prevent pod eviction, and how you can recover from such a situation.&lt;/p&gt;
-&lt;h2 id="what-is-pod-eviction"&gt;What is Pod Eviction?&lt;/h2&gt;
+&lt;h2 id="what-is-pod-eviction"&gt;
+ What is Pod Eviction?
+ &lt;a class="heading-link" href="#what-is-pod-eviction"&gt;
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
+ &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;
 &lt;p&gt;Kubernetes pod eviction is a type of involuntary service disruption in which a pod is forcefully stopped on a node or fails to be scheduled on a node. Pod eviction can happen for a variety of reasons. The most common of which is resource starvation on a node. This is referred to as “node-pressure eviction.”&lt;/p&gt;</description></item><item><title>Continuous Deployment Models</title><link>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</link><pubDate>Fri, 14 Jan 2022 19:24:01 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</guid><description>&lt;p&gt;When deploying new software releases to servers or (insert -as-a-service&amp;gt; here), it’s a good idea to either deploy the releases in a controlled manner or to have a quick rollback plan. This article will be diving into blue/green deployments, canary deployments, ring-based deployments, and feature tag deployments.&lt;/p&gt;
-&lt;h2 id="bluegreen-deployments"&gt;Blue/Green Deployments&lt;/h2&gt;
+&lt;h2 id="bluegreen-deployments"&gt;
+ Blue/Green Deployments
+ &lt;a class="heading-link" href="#bluegreen-deployments"&gt;
+ &lt;i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"&gt;&lt;/i&gt;
+ &lt;span class="sr-only"&gt;Link to heading&lt;/span&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;
 &lt;p&gt;Blue/green deployments are a deployment model where a new application version never gets deployed to the production servers (green) directly. Instead, it gets deployed to another set of servers (blue) first. Since the blue servers are not currently serving any traffic for users, the deployment has no impact. However, once the deployment has been completed successfully and tested, users will be directed to the new deployment (blue). You can control all user traffic or a subset of user traffic if your load balancer supports it (referred to as ‘Progressive Exposure’).&lt;/p&gt;</description></item><item><title>Deploy Azure VMs Using Azure Devops CI/CD Pipeline</title><link>https://rnemeth90.github.io/posts/2022-01-14-deploy-azure-vms-using-azure-devops-ci-cd-pipeline/</link><pubDate>Fri, 14 Jan 2022 18:46:35 +0000</pubDate><guid>https://rnemeth90.github.io/posts/2022-01-14-deploy-azure-vms-using-azure-devops-ci-cd-pipeline/</guid><description>&lt;p&gt;This article assumes that you have already created a pipeline in Azure Devops and have it linked to an Azure Devops repo. You will need to create a variable named $vmpassword and assign it the value stored in your key vault.&lt;/p&gt;
 &lt;p&gt;To create a release pipeline that will automatically create a VM (using the password stored in key vault for the local administrator account), do the following:&lt;/p&gt;
 &lt;ol&gt;

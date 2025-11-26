@@ -1,19 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
-  <title>
-  Understanding Why “module main” Breaks Go Tests · GeekyRyan
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
-<meta name="author" content="Ryan Nemeth">
-<meta name="description" content="
+<!doctype html><html lang=en><head><title>Understanding Why “module main” Breaks Go Tests · GeekyRyan</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><meta name=author content="Ryan Nemeth"><meta name=description content='
   Introduction
   
     
@@ -21,540 +6,67 @@
   
 
 If you’ve ever initialized a new Go project with go mod init main and later tried to write tests for it, you may have seen this cryptic error:
-
-  
-  
-    
-    Link to heading
-  
-
-cannot import &ldquo;main&rdquo;
-
-  
-  
-    
-    Link to heading
-  
-
-At first glance, this doesn’t make much sense — after all, your code and tests are both in package main. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.">
-<meta name="keywords" content="blog,developer,personal,devops">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Understanding Why “module main” Breaks Go Tests">
-  <meta name="twitter:description" content="Introduction Link to heading If you’ve ever initialized a new Go project with go mod init main and later tried to write tests for it, you may have seen this cryptic error:
-Link to heading cannot import “main”
-Link to heading At first glance, this doesn’t make much sense — after all, your code and tests are both in package main. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.">
-
-<meta property="og:url" content="http://localhost:1313/posts/2025-11-02-go-mod-breaks-tests/">
-  <meta property="og:site_name" content="GeekyRyan">
-  <meta property="og:title" content="Understanding Why “module main” Breaks Go Tests">
-  <meta property="og:description" content="Introduction Link to heading If you’ve ever initialized a new Go project with go mod init main and later tried to write tests for it, you may have seen this cryptic error:
-Link to heading cannot import “main”
-Link to heading At first glance, this doesn’t make much sense — after all, your code and tests are both in package main. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2025-11-02T16:01:00+00:00">
-    <meta property="article:modified_time" content="2025-11-02T16:01:00+00:00">
-
-
-
-
-<link rel="canonical" href="http://localhost:1313/posts/2025-11-02-go-mod-breaks-tests/">
-
-
-<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="/css/coder.css" media="screen">
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-
-<link rel="manifest" href="/site.webmanifest">
-<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
-</head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="http://localhost:1313/">
-      GeekyRyan
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="/about/">About</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="/posts/">Blog</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="/til/">TIL</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="/projects/">Projects</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="/tags/">Tags</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="http://localhost:1313/posts/2025-11-02-go-mod-breaks-tests/">
-              Understanding Why “module main” Breaks Go Tests
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2025-11-02T16:01:00Z">
-                2025-11-02
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              3-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="/categories/golang/">Golang</a>
-      <span class="separator">•</span>
-    <a href="/categories/programming/">Programming</a></div>
-
-          
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <h2 id="introduction">
-  Introduction
-  <a class="heading-link" href="#introduction">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>If you’ve ever initialized a new Go project with <code>go mod init main</code> and later tried to write tests for it, you may have seen this cryptic error:</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>cannot import &ldquo;main&rdquo;</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>At first glance, this doesn’t make much sense — after all, your code and tests are both in <code>package main</code>. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.</p>
-<hr>
-<h2 id="setting-up-the-problem">
-  Setting Up the Problem
-  <a class="heading-link" href="#setting-up-the-problem">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<h3 id="the-gomod-file">
-  The <code>go.mod</code> File
-  <a class="heading-link" href="#the-gomod-file">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>When you initialize a new Go module for an executable project, it’s common to do something like:</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>go mod init main</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>That creates the following <code>go.mod</code> file:</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>module main
-go 1.25.3</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>Then you might have a simple file like this:</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>package main</p>
-<p>func main() {
-square(4)
-}</p>
-<p>func square(n int) int {
-return n * n
-}</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>Now you decide to write a quick unit test in <code>main_test.go</code>:</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>package main</p>
-<p>import &ldquo;testing&rdquo;</p>
-<p>func TestSquare(t *testing.T) {
-t.Log(&ldquo;Test successful&rdquo;)
-}</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>At this point, everything looks fine — until you run:</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>go test</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>and get the following output:</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<h1 id="maintest">
-  main.test
-  <a class="heading-link" href="#maintest">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h1>
-<p>$WORK/b001/_testmain.go:14:8: could not import main (cannot import &ldquo;main&rdquo;)
-FAIL    main [build failed]
-FAIL</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<hr>
-<h2 id="why-this-happens">
-  Why This Happens
-  <a class="heading-link" href="#why-this-happens">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>When you run <code>go test</code>, the Go toolchain generates a temporary test harness (a <code>_testmain.go</code> file). This harness imports the package under test so that it can invoke your test functions.</p>
-<p>Here’s the catch: the test harness <strong>must import the module</strong> under its module path. When your module path is literally <code>&quot;main&quot;</code>, the compiler refuses — because <code>main</code> is reserved for executables and cannot be imported like a normal package.</p>
-<p>This only affects <code>go test</code> (and <code>go test .</code>), because those commands rely on the generated import. When you explicitly specify files (e.g., <code>go test *.go</code>), Go skips module resolution and compiles everything together manually, avoiding the import step entirely.</p>
-<hr>
-<h2 id="the-fix">
-  The Fix
-  <a class="heading-link" href="#the-fix">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<h3 id="option-1-rename-the-module">
-  Option 1: Rename the Module
-  <a class="heading-link" href="#option-1-rename-the-module">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>Change your <code>go.mod</code> file to use a different name, for example:</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>module myapp
-go 1.25.3</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>Then rerun:</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>go test</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>You should now see:</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>ok   myapp  0.35s</p>
-<h3 id="">
-  
-  <a class="heading-link" href="#">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<h3 id="option-2-move-testable-code-out-of-main">
-  Option 2: Move Testable Code Out of <code>main</code>
-  <a class="heading-link" href="#option-2-move-testable-code-out-of-main">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>In most cases, your <code>main</code> package should be minimal — it should only wire dependencies together. Any functions that need unit tests should live in a separate package (for example, <code>internal/mathutil</code>), which can then be imported both from your main application and from your test files.</p>
-<hr>
-<h2 id="key-takeaways">
-  Key Takeaways
-  <a class="heading-link" href="#key-takeaways">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<ul>
-<li>The Go test harness always imports the package under test.</li>
-<li>A module named <code>main</code> can’t be imported, which breaks that process.</li>
-<li>Rename your module or move testable code to another package.</li>
-<li>Reserve <code>main</code> strictly for integration and startup logic.</li>
-</ul>
-<hr>
-<h2 id="conclusion">
-  Conclusion
-  <a class="heading-link" href="#conclusion">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>This issue isn’t a compiler bug — it’s just an edge case that surfaces when your module path collides with Go’s internal naming conventions.</p>
-<p>If you ever see <code>cannot import &quot;main&quot;</code> when testing, remember: rename the module or refactor your code to follow Go’s standard package layout.</p>
-
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2012 -
-    
-    2025
-     Ryan Nemeth 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="/js/coder.js"></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</body>
-
-</html>
+cannot import "main"
+At first glance, this doesn’t make much sense — after all, your code and tests are both in package main. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.'><meta name=keywords content="blog,developer,personal,devops"><meta name=twitter:card content="summary"><meta name=twitter:title content="Understanding Why “module main” Breaks Go Tests"><meta name=twitter:description content='Introduction Link to heading If you’ve ever initialized a new Go project with go mod init main and later tried to write tests for it, you may have seen this cryptic error:
+cannot import "main" At first glance, this doesn’t make much sense — after all, your code and tests are both in package main. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.'><meta property="og:url" content="https://rnemeth90.github.io/posts/2025-11-02-go-mod-breaks-tests/"><meta property="og:site_name" content="GeekyRyan"><meta property="og:title" content="Understanding Why “module main” Breaks Go Tests"><meta property="og:description" content='Introduction Link to heading If you’ve ever initialized a new Go project with go mod init main and later tried to write tests for it, you may have seen this cryptic error:
+cannot import "main" At first glance, this doesn’t make much sense — after all, your code and tests are both in package main. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.'><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-11-02T16:01:00+00:00"><meta property="article:modified_time" content="2025-11-02T16:01:00+00:00"><link rel=canonical href=https://rnemeth90.github.io/posts/2025-11-02-go-mod-breaks-tests/><link rel=preload href=/fonts/fa-brands-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-regular-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-solid-900.woff2 as=font type=font/woff2 crossorigin><link rel=stylesheet href=/css/coder.min.f8ac2fdd0cb7e56145845d949b5c036d40cd5061c013fd446f2f54a63ade62e8.css integrity="sha256-+Kwv3Qy35WFFhF2Um1wDbUDNUGHAE/1Eby9UpjreYug=" crossorigin=anonymous media=screen><link rel=stylesheet href=/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin=anonymous media=screen><link rel=icon type=image/svg+xml href=/images/favicon.svg sizes=any><link rel=icon type=image/png href=/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/images/favicon-16x16.png sizes=16x16><link rel=apple-touch-icon href=/images/apple-touch-icon.png><link rel=apple-touch-icon sizes=180x180 href=/images/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/images/safari-pinned-tab.svg color=#5bbad5></head><body class="preload-transitions colorscheme-auto"><div class=float-container><a id=dark-mode-toggle class=colorscheme-toggle><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></a></div><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=https://rnemeth90.github.io/>GeekyRyan
+</a><input type=checkbox id=menu-toggle>
+<label class="menu-button float-right" for=menu-toggle><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=/about/>About</a></li><li class=navigation-item><a class=navigation-link href=/posts/>Blog</a></li><li class=navigation-item><a class=navigation-link href=/til/>TIL</a></li><li class=navigation-item><a class=navigation-link href=/projects/>Projects</a></li><li class=navigation-item><a class=navigation-link href=/tags/>Tags</a></li></ul></section></nav><div class=content><section class="container post"><article><header><div class=post-title><h1 class=title><a class=title-link href=https://rnemeth90.github.io/posts/2025-11-02-go-mod-breaks-tests/>Understanding Why “module main” Breaks Go Tests</a></h1></div><div class=post-meta><div class=date><span class=posted-on><i class="fa-solid fa-calendar" aria-hidden=true></i>
+<time datetime=2025-11-02T16:01:00Z>2025-11-02
+</time></span><span class=reading-time><i class="fa-solid fa-clock" aria-hidden=true></i>
+3-minute read</span></div><div class=categories><i class="fa-solid fa-folder" aria-hidden=true></i>
+<a href=/categories/golang/>Golang</a>
+<span class=separator>•</span>
+<a href=/categories/programming/>Programming</a></div></div></header><div class=post-content><h2 id=introduction>Introduction
+<a class=heading-link href=#introduction><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h2><p>If you’ve ever initialized a new Go project with <code>go mod init main</code> and later tried to write tests for it, you may have seen this cryptic error:</p><pre tabindex=0><code>cannot import &#34;main&#34;
+</code></pre><p>At first glance, this doesn’t make much sense — after all, your code and tests are both in <code>package main</code>. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.</p><hr><h2 id=setting-up-the-problem>Setting Up the Problem
+<a class=heading-link href=#setting-up-the-problem><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h2><h3 id=the-gomod-file>The <code>go.mod</code> File
+<a class=heading-link href=#the-gomod-file><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h3><p>When you initialize a new Go module for an executable project, it’s common to do something like:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-Golang data-lang=Golang><span class=line><span class=cl><span class=k>go</span><span class=w> </span><span class=nx>mod</span><span class=w> </span><span class=nx>init</span><span class=w> </span><span class=nx>main</span><span class=w>
+</span></span></span></code></pre></div><p>That creates the following <code>go.mod</code> file:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-Golang data-lang=Golang><span class=line><span class=cl><span class=nx>module</span><span class=w> </span><span class=nx>main</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>go</span><span class=w> </span><span class=mf>1.25.3</span><span class=w>
+</span></span></span></code></pre></div><p>Then you might have a simple file like this:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-Golang data-lang=Golang><span class=line><span class=cl><span class=kn>package</span><span class=w> </span><span class=nx>main</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=nf>main</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nf>square</span><span class=p>(</span><span class=mi>4</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=nf>square</span><span class=p>(</span><span class=nx>n</span><span class=w> </span><span class=kt>int</span><span class=p>)</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=k>return</span><span class=w> </span><span class=nx>n</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=nx>n</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><p>Now you decide to write a quick unit test in <code>main_test.go</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-Golang data-lang=Golang><span class=line><span class=cl><span class=kn>package</span><span class=w> </span><span class=nx>main</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kn>import</span><span class=w> </span><span class=s>&#34;testing&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=nf>TestSquare</span><span class=p>(</span><span class=nx>t</span><span class=w> </span><span class=o>*</span><span class=nx>testing</span><span class=p>.</span><span class=nx>T</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nx>t</span><span class=p>.</span><span class=nf>Log</span><span class=p>(</span><span class=s>&#34;Test successful&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><p>At this point, everything looks fine — until you run:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>go <span class=nb>test</span>
+</span></span></code></pre></div><p>and get the following output:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># main.test</span>
+</span></span><span class=line><span class=cl><span class=nv>$WORK</span>/b001/_testmain.go:14:8: could not import main <span class=o>(</span>cannot import <span class=s2>&#34;main&#34;</span><span class=o>)</span>
+</span></span><span class=line><span class=cl>FAIL    main <span class=o>[</span>build failed<span class=o>]</span>
+</span></span><span class=line><span class=cl>FAIL
+</span></span></code></pre></div><hr><h2 id=why-this-happens>Why This Happens
+<a class=heading-link href=#why-this-happens><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h2><p>When you run <code>go test</code>, the Go toolchain generates a temporary test harness (a <code>_testmain.go</code> file). This harness imports the package under test so that it can invoke your test functions. Here’s the catch: the test harness <strong>must import the module</strong> under its module path. When your module path is literally <code>"main"</code>, the compiler refuses — because <code>main</code> is reserved for executables and cannot be imported like a normal package. This only affects <code>go test</code> (and <code>go test .</code>), because those commands rely on the generated import. When you explicitly specify files (e.g., <code>go test *.go</code>), Go skips module resolution and compiles everything together manually, avoiding the import step entirely.</p><hr><h2 id=the-fix>The Fix
+<a class=heading-link href=#the-fix><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h2><h3 id=option-1-rename-the-module>Option 1: Rename the Module
+<a class=heading-link href=#option-1-rename-the-module><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h3><p>Change your <code>go.mod</code> file to use a different name, for example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-Golang data-lang=Golang><span class=line><span class=cl><span class=nx>module</span><span class=w> </span><span class=nx>myapp</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>go</span><span class=w> </span><span class=mf>1.25.3</span><span class=w>
+</span></span></span></code></pre></div><p>Then rerun:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>go <span class=nb>test</span>
+</span></span></code></pre></div><p>You should now see:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>ok   myapp  0.35s
+</span></span></code></pre></div><h3 id=option-2-move-testable-code-out-of-main>Option 2: Move Testable Code Out of <code>main</code>
+<a class=heading-link href=#option-2-move-testable-code-out-of-main><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h3><p>In most cases, your <code>main</code> package should be minimal — it should only wire dependencies together. Any functions that need unit tests should live in a separate package (for example, <code>internal/mathutil</code>), which can then be imported both from your main application and from your test files.</p><hr><h2 id=key-takeaways>Key Takeaways
+<a class=heading-link href=#key-takeaways><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h2><ul><li>The Go test harness always imports the package under test.</li><li>A module named <code>main</code> can’t be imported, which breaks that process.</li><li>Rename your module or move testable code to another package.</li><li>Reserve <code>main</code> strictly for integration and startup logic.</li></ul><hr><h2 id=conclusion>Conclusion
+<a class=heading-link href=#conclusion><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h2><p>This issue isn’t a compiler bug — it’s just an edge case that surfaces when your module path collides with Go’s internal naming conventions. If you ever see <code>cannot import "main"</code> when testing, remember: rename the module or refactor your code to follow Go’s standard package layout.</p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
+2012 -
+2025
+Ryan Nemeth
+·
+Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>

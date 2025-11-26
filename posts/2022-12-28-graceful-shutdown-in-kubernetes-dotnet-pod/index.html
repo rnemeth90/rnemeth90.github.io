@@ -1,416 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
-  <title>
-  Handling Graceful Shutdown in a .NET App Hosted in Kubernetes · GeekyRyan
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
-<meta name="author" content="Ryan Nemeth">
-<meta name="description" content="I was recently involved with troubleshooting some API&rsquo;s hosted in Kubernetes throwing http/502&rsquo;s. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us. It was actually a combination of these blogs (and the resolutions posted) that ended up resolving our issue.">
-<meta name="keywords" content="blog,developer,personal,devops">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Handling Graceful Shutdown in a .NET App Hosted in Kubernetes">
-  <meta name="twitter:description" content="I was recently involved with troubleshooting some API’s hosted in Kubernetes throwing http/502’s. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us. It was actually a combination of these blogs (and the resolutions posted) that ended up resolving our issue.">
-
-<meta property="og:url" content="http://localhost:1313/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/">
-  <meta property="og:site_name" content="GeekyRyan">
-  <meta property="og:title" content="Handling Graceful Shutdown in a .NET App Hosted in Kubernetes">
-  <meta property="og:description" content="I was recently involved with troubleshooting some API’s hosted in Kubernetes throwing http/502’s. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us. It was actually a combination of these blogs (and the resolutions posted) that ended up resolving our issue.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2022-12-28T00:00:00+00:00">
-    <meta property="article:modified_time" content="2022-12-28T00:00:00+00:00">
-    <meta property="article:tag" content="Software Development">
-    <meta property="article:tag" content="Sre">
-    <meta property="article:tag" content="Dotnet">
-    <meta property="article:tag" content="C#">
-    <meta property="article:tag" content="Kubernetes">
-    <meta property="article:tag" content="Devops">
-
-
-
-
-<link rel="canonical" href="http://localhost:1313/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/">
-
-
-<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="/css/coder.css" media="screen">
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-
-<link rel="manifest" href="/site.webmanifest">
-<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
-</head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="http://localhost:1313/">
-      GeekyRyan
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="/about/">About</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="/posts/">Blog</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="/til/">TIL</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="/projects/">Projects</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="/tags/">Tags</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="http://localhost:1313/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/">
-              Handling Graceful Shutdown in a .NET App Hosted in Kubernetes
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2022-12-28T00:00:00Z">
-                2022-12-28
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              5-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="/categories/software-development/">Software Development</a>
-      <span class="separator">•</span>
-    <a href="/categories/sre/">SRE</a>
-      <span class="separator">•</span>
-    <a href="/categories/kubernetes/">Kubernetes</a></div>
-
-          <div class="tags">
-  <i class="fa-solid fa-tag" aria-hidden="true"></i>
-    <span class="tag">
-      <a href="/tags/software-development/">Software Development</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="/tags/sre/">Sre</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="/tags/dotnet/">Dotnet</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="/tags/c%23/">C#</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="/tags/kubernetes/">Kubernetes</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="/tags/devops/">Devops</a>
-    </span></div>
-
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <p>I was recently involved with troubleshooting some API&rsquo;s hosted in Kubernetes throwing http/502&rsquo;s. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us. It was actually a combination of these blogs (and the resolutions posted) that ended up resolving our issue.</p>
-<h3 id="so-what-was-actually-causing-the-502s">
-  So what was actually causing the 502&rsquo;s?
-  <a class="heading-link" href="#so-what-was-actually-causing-the-502s">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>As stated, these APIs are hosted in Kubernetes. They are written primarily in c# (.NET Framework) and hosted in Windows Server Core containers. The pods are load balanced using a service, and we have an Nginx ingress on top of the service. Nothing fancy, just a typical setup that you may have seen or even built yourself. We implement automatic scaling for our replica sets using a standard Kubernetes-native HPA or Keda, depending on the app. We have autoscale rules defined for the pods. Our clusters are hosted in Azure Kubernetes Service, and we autoscale our node pools. So, there are several layers of scaling happening in our clusters at any given time. Occasionally, when a pod was handling a client request, Kubelet or a controller would come along and scale the pod in. We were initially under the belief that the <code>terminationGracePeriodSeconds</code> value within our deployment would allow the pod to continue running for the defined number of seconds. However, we were mistaken. This value tells Kubernetes to allow the application running within the pod some time to clean up. It does <em>not</em> tell the app to continue running for the defined number of seconds after it receives a sigterm signal. This logic actually needs to be implemented within the application itself, or with a prestop hook. The prestop method is <a href="https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/"  class="external-link" target="_blank" rel="noopener">well documented</a>, so I will not cover it here.</p>
-<p>To implement this in a .NET Framework app running in Windows, you need to add this registry key to your container.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-dockerfile" data-lang="dockerfile"><span class="line"><span class="cl"><span class="k">RUN</span> reg add hklm<span class="se">\s</span>ystem<span class="se">\c</span>urrentcontrolset<span class="se">\c</span>ontrol /v WaitToKillServiceTimeout /t REG_SZ /d <span class="m">60000</span> /f</span></span></code></pre></div><p>This value tells Windows to wait a number of milliseconds before shutting down Normally, Windows only waits for 5 seconds (default) before shutting down any &lsquo;background&rsquo; processes. Windows forcibly shuts down processes after this period of time.</p>
-<p>Next, in the startup class, we&rsquo;ll add the following code. I have added inline comments to explain.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">namespace</span> <span class="nn">MyApp.APIConsoleHost</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="kd">public</span> <span class="k">class</span> <span class="nc">Program</span>
-</span></span><span class="line"><span class="cl">	<span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="cm">/*
-</span></span></span><span class="line"><span class="cl"><span class="cm">      Register the SetConsoleCtrlHandler function in kernel32.dll in the
-</span></span></span><span class="line"><span class="cl"><span class="cm">      application to capture CTRL_SHUTDOWN_EVENT events for resource reclamation
-</span></span></span><span class="line"><span class="cl"><span class="cm">    */</span>
-</span></span><span class="line"><span class="cl"><span class="na">		[DllImport(&#34;Kernel32&#34;)]</span>
-</span></span><span class="line"><span class="cl">		<span class="kd">public</span> <span class="kd">static</span> <span class="kd">extern</span> <span class="kt">bool</span> <span class="n">SetConsoleCtrlHandler</span><span class="p">(</span><span class="n">HandlerRoutine</span> <span class="n">handler</span><span class="p">,</span> <span class="kt">bool</span> <span class="k">add</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="c1">// Define a delegate for our handler routine</span>
-</span></span><span class="line"><span class="cl">		<span class="kd">public</span> <span class="k">delegate</span> <span class="kt">bool</span> <span class="n">HandlerRoutine</span><span class="p">(</span><span class="n">CtrlTypes</span> <span class="n">ctrlType</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">		<span class="kd">public</span> <span class="kd">static</span> <span class="kd">volatile</span> <span class="n">ManualResetEvent</span> <span class="n">_exitEvent</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ManualResetEvent</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">		<span class="kd">private</span> <span class="kd">static</span> <span class="n">HandlerRoutine</span> <span class="n">_handler</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="cm">/*
-</span></span></span><span class="line"><span class="cl"><span class="cm">      Define the event types that we want to handle when the application receives a SIGTERM
-</span></span></span><span class="line"><span class="cl"><span class="cm">          CTRL_C_EVENT = 0,
-</span></span></span><span class="line"><span class="cl"><span class="cm">          CTRL_BREAK_EVENT = 1,
-</span></span></span><span class="line"><span class="cl"><span class="cm">          CTRL_CLOSE_EVENT = 2,
-</span></span></span><span class="line"><span class="cl"><span class="cm">          CTRL_LOGOFF_EVENT = 5,
-</span></span></span><span class="line"><span class="cl"><span class="cm">          CTRL_SHUTDOWN_EVENT = 6
-</span></span></span><span class="line"><span class="cl"><span class="cm">    */</span>
-</span></span><span class="line"><span class="cl">		<span class="kd">public</span> <span class="kd">enum</span> <span class="n">CtrlTypes</span>
-</span></span><span class="line"><span class="cl">		<span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="n">CTRL_SHUTDOWN_EVENT</span> <span class="p">=</span> <span class="m">6</span>
-</span></span><span class="line"><span class="cl">		<span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="cm">/*
-</span></span></span><span class="line"><span class="cl"><span class="cm">        Here we are defining how we want to handle the shutdown
-</span></span></span><span class="line"><span class="cl"><span class="cm">        We get a timeout value from an env variable named APP_SHUTDOWN_TIMEOUT
-</span></span></span><span class="line"><span class="cl"><span class="cm">        If that env variable is not found, we default to 60 seconds.
-</span></span></span><span class="line"><span class="cl"><span class="cm">        We then switch on our CtrlTypes enum and handle each value accordingly,
-</span></span></span><span class="line"><span class="cl"><span class="cm">        and then return true.
-</span></span></span><span class="line"><span class="cl"><span class="cm">    */</span>
-</span></span><span class="line"><span class="cl">		<span class="kd">public</span> <span class="kd">static</span> <span class="kt">bool</span> <span class="n">ConsoleCtrlCheck</span><span class="p">(</span><span class="n">CtrlTypes</span> <span class="n">ctrlType</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">		<span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="kt">var</span> <span class="n">timeout</span> <span class="p">=</span> <span class="n">ConfigurationManager</span><span class="p">.</span><span class="n">AppSettings</span><span class="p">[</span><span class="s">&#34;APP_SHUTDOWN_TIMEOUT&#34;</span><span class="p">];</span>
-</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">IsNullOrEmpty</span><span class="p">(</span><span class="n">timeout</span><span class="p">))</span> <span class="p">{</span> <span class="n">timeout</span> <span class="p">=</span> <span class="s">&#34;60&#34;</span><span class="p">;</span> <span class="p">}</span>
-</span></span><span class="line"><span class="cl">			<span class="kt">int</span> <span class="n">counter</span> <span class="p">=</span> <span class="kt">int</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">timeout</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			<span class="k">switch</span> <span class="p">(</span><span class="n">ctrlType</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">			<span class="p">{</span>
-</span></span><span class="line"><span class="cl">				<span class="k">case</span> <span class="n">CtrlTypes</span><span class="p">.</span><span class="n">CTRL_SHUTDOWN_EVENT</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">					<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&#34;[{DateTime.UtcNow}] CTRL_SHUTDOWN received&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">					<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&#34;[{DateTime.UtcNow}] Web Server is stopping in {counter} seconds&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="k">while</span> <span class="p">(</span><span class="n">counter</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">					<span class="p">{</span>
-</span></span><span class="line"><span class="cl">						<span class="n">Thread</span><span class="p">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">));</span>
-</span></span><span class="line"><span class="cl">						<span class="n">counter</span><span class="p">--;</span>
-</span></span><span class="line"><span class="cl">					<span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="n">_exitEvent</span><span class="p">.</span><span class="n">Set</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">					<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">				<span class="k">default</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">					<span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">			<span class="p">}</span>
-</span></span><span class="line"><span class="cl">		<span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="cm">/*
-</span></span></span><span class="line"><span class="cl"><span class="cm">        Our main method is pretty standard. However, we first register a new handler (_handler),
-</span></span></span><span class="line"><span class="cl"><span class="cm">        and then pass it to to the SetConsoleCtrlHandler() method we imported from Kernel32.dll.
-</span></span></span><span class="line"><span class="cl"><span class="cm">        The only other &#39;unique&#39; thing is the _exitEvent.WaitOne(); call defined at the bottom of main().
-</span></span></span><span class="line"><span class="cl"><span class="cm">        This is necessary so that main does not immediately exit, and wait&#39;s for a signal. We defined a
-</span></span></span><span class="line"><span class="cl"><span class="cm">        property for this _exitEvent of type ManualResetEvent at the top of this class file.
-</span></span></span><span class="line"><span class="cl"><span class="cm">    */</span>
-</span></span><span class="line"><span class="cl">		<span class="kd">public</span> <span class="kd">static</span> <span class="k">void</span> <span class="n">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">		<span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="n">_handler</span> <span class="p">+=</span> <span class="k">new</span> <span class="n">HandlerRoutine</span><span class="p">(</span><span class="n">ConsoleCtrlCheck</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">			<span class="n">SetConsoleCtrlHandler</span><span class="p">(</span><span class="n">_handler</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">      <span class="c1">// redacted ....</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			<span class="kt">var</span> <span class="n">startOptions</span> <span class="p">=</span> <span class="n">BuildStartOptions</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">      <span class="c1">// redacted ....</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">      <span class="n">WebApp</span><span class="p">.</span><span class="n">Start</span><span class="p">&lt;</span><span class="n">SelfHostStartup</span><span class="p">&gt;(</span><span class="n">startOptions</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;Press CTRL+C to stop it&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			<span class="n">_exitEvent</span><span class="p">.</span><span class="n">WaitOne</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">		<span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">		<span class="kd">private</span> <span class="kd">static</span> <span class="n">StartOptions</span> <span class="n">BuildStartOptions</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">		<span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="kt">var</span> <span class="n">startOptions</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StartOptions</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">      <span class="c1">// redacted start options</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="n">startOptions</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">		<span class="p">}</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><p>To prevent the HandlerRoutine instance from being recycled by the GC before the program exits, the HandlerRoutine must be static (as seen in the above example). This is important because if the handlerroutine is recycled before the application is finished, it will throw an error, as shown here:</p>
-<pre tabindex="0"><code>A callback was made on a garbage collected delegate of type &#39;Program+HandlerRoutine::Invoke&#39;. This may cause application crashes, corruption and data loss. When passing delegates to unmanaged code, they must be kept alive by the managed application until it is guaranteed that they will never be called.</code></pre>
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2012 -
-    
-    2025
-     Ryan Nemeth 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="/js/coder.js"></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</body>
-
-</html>
+<!doctype html><html lang=en><head><title>Handling Graceful Shutdown in a .NET App Hosted in Kubernetes · GeekyRyan</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><meta name=author content="Ryan Nemeth"><meta name=description content="I was recently involved with troubleshooting some API&rsquo;s hosted in Kubernetes throwing http/502&rsquo;s. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us. It was actually a combination of these blogs (and the resolutions posted) that ended up resolving our issue."><meta name=keywords content="blog,developer,personal,devops"><meta name=twitter:card content="summary"><meta name=twitter:title content="Handling Graceful Shutdown in a .NET App Hosted in Kubernetes"><meta name=twitter:description content="I was recently involved with troubleshooting some API’s hosted in Kubernetes throwing http/502’s. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us. It was actually a combination of these blogs (and the resolutions posted) that ended up resolving our issue."><meta property="og:url" content="https://rnemeth90.github.io/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/"><meta property="og:site_name" content="GeekyRyan"><meta property="og:title" content="Handling Graceful Shutdown in a .NET App Hosted in Kubernetes"><meta property="og:description" content="I was recently involved with troubleshooting some API’s hosted in Kubernetes throwing http/502’s. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us. It was actually a combination of these blogs (and the resolutions posted) that ended up resolving our issue."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-12-28T00:00:00+00:00"><meta property="article:modified_time" content="2022-12-28T00:00:00+00:00"><meta property="article:tag" content="Software Development"><meta property="article:tag" content="Sre"><meta property="article:tag" content="Dotnet"><meta property="article:tag" content="C#"><meta property="article:tag" content="Kubernetes"><meta property="article:tag" content="Devops"><link rel=canonical href=https://rnemeth90.github.io/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/><link rel=preload href=/fonts/fa-brands-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-regular-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-solid-900.woff2 as=font type=font/woff2 crossorigin><link rel=stylesheet href=/css/coder.min.f8ac2fdd0cb7e56145845d949b5c036d40cd5061c013fd446f2f54a63ade62e8.css integrity="sha256-+Kwv3Qy35WFFhF2Um1wDbUDNUGHAE/1Eby9UpjreYug=" crossorigin=anonymous media=screen><link rel=stylesheet href=/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin=anonymous media=screen><link rel=icon type=image/svg+xml href=/images/favicon.svg sizes=any><link rel=icon type=image/png href=/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/images/favicon-16x16.png sizes=16x16><link rel=apple-touch-icon href=/images/apple-touch-icon.png><link rel=apple-touch-icon sizes=180x180 href=/images/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/images/safari-pinned-tab.svg color=#5bbad5></head><body class="preload-transitions colorscheme-auto"><div class=float-container><a id=dark-mode-toggle class=colorscheme-toggle><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></a></div><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=https://rnemeth90.github.io/>GeekyRyan
+</a><input type=checkbox id=menu-toggle>
+<label class="menu-button float-right" for=menu-toggle><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=/about/>About</a></li><li class=navigation-item><a class=navigation-link href=/posts/>Blog</a></li><li class=navigation-item><a class=navigation-link href=/til/>TIL</a></li><li class=navigation-item><a class=navigation-link href=/projects/>Projects</a></li><li class=navigation-item><a class=navigation-link href=/tags/>Tags</a></li></ul></section></nav><div class=content><section class="container post"><article><header><div class=post-title><h1 class=title><a class=title-link href=https://rnemeth90.github.io/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/>Handling Graceful Shutdown in a .NET App Hosted in Kubernetes</a></h1></div><div class=post-meta><div class=date><span class=posted-on><i class="fa-solid fa-calendar" aria-hidden=true></i>
+<time datetime=2022-12-28T00:00:00Z>2022-12-28
+</time></span><span class=reading-time><i class="fa-solid fa-clock" aria-hidden=true></i>
+5-minute read</span></div><div class=categories><i class="fa-solid fa-folder" aria-hidden=true></i>
+<a href=/categories/software-development/>Software Development</a>
+<span class=separator>•</span>
+<a href=/categories/sre/>SRE</a>
+<span class=separator>•</span>
+<a href=/categories/kubernetes/>Kubernetes</a></div><div class=tags><i class="fa-solid fa-tag" aria-hidden=true></i>
+<span class=tag><a href=/tags/software-development/>Software Development</a>
+</span><span class=separator>•</span>
+<span class=tag><a href=/tags/sre/>Sre</a>
+</span><span class=separator>•</span>
+<span class=tag><a href=/tags/dotnet/>Dotnet</a>
+</span><span class=separator>•</span>
+<span class=tag><a href=/tags/c%23/>C#</a>
+</span><span class=separator>•</span>
+<span class=tag><a href=/tags/kubernetes/>Kubernetes</a>
+</span><span class=separator>•</span>
+<span class=tag><a href=/tags/devops/>Devops</a></span></div></div></header><div class=post-content><p>I was recently involved with troubleshooting some API&rsquo;s hosted in Kubernetes throwing http/502&rsquo;s. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us. It was actually a combination of these blogs (and the resolutions posted) that ended up resolving our issue.</p><h3 id=so-what-was-actually-causing-the-502s>So what was actually causing the 502&rsquo;s?
+<a class=heading-link href=#so-what-was-actually-causing-the-502s><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h3><p>As stated, these APIs are hosted in Kubernetes. They are written primarily in c# (.NET Framework) and hosted in Windows Server Core containers. The pods are load balanced using a service, and we have an Nginx ingress on top of the service. Nothing fancy, just a typical setup that you may have seen or even built yourself. We implement automatic scaling for our replica sets using a standard Kubernetes-native HPA or Keda, depending on the app. We have autoscale rules defined for the pods. Our clusters are hosted in Azure Kubernetes Service, and we autoscale our node pools. So, there are several layers of scaling happening in our clusters at any given time. Occasionally, when a pod was handling a client request, Kubelet or a controller would come along and scale the pod in. We were initially under the belief that the <code>terminationGracePeriodSeconds</code> value within our deployment would allow the pod to continue running for the defined number of seconds. However, we were mistaken. This value tells Kubernetes to allow the application running within the pod some time to clean up. It does <em>not</em> tell the app to continue running for the defined number of seconds after it receives a sigterm signal. This logic actually needs to be implemented within the application itself, or with a prestop hook. The prestop method is <a href=https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/ class=external-link target=_blank rel=noopener>well documented</a>, so I will not cover it here.</p><p>To implement this in a .NET Framework app running in Windows, you need to add this registry key to your container.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=line><span class=cl><span class=k>RUN</span> reg add hklm<span class=se>\s</span>ystem<span class=se>\c</span>urrentcontrolset<span class=se>\c</span>ontrol /v WaitToKillServiceTimeout /t REG_SZ /d <span class=m>60000</span> /f<span class=err>
+</span></span></span></code></pre></div><p>This value tells Windows to wait a number of milliseconds before shutting down Normally, Windows only waits for 5 seconds (default) before shutting down any &lsquo;background&rsquo; processes. Windows forcibly shuts down processes after this period of time.</p><p>Next, in the startup class, we&rsquo;ll add the following code. I have added inline comments to explain.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c# data-lang=c#><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>MyApp.APIConsoleHost</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kd>public</span> <span class=k>class</span> <span class=nc>Program</span>
+</span></span><span class=line><span class=cl>	<span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=cm>/*
+</span></span></span><span class=line><span class=cl><span class=cm>      Register the SetConsoleCtrlHandler function in kernel32.dll in the
+</span></span></span><span class=line><span class=cl><span class=cm>      application to capture CTRL_SHUTDOWN_EVENT events for resource reclamation
+</span></span></span><span class=line><span class=cl><span class=cm>    */</span>
+</span></span><span class=line><span class=cl><span class=na>		[DllImport(&#34;Kernel32&#34;)]</span>
+</span></span><span class=line><span class=cl>		<span class=kd>public</span> <span class=kd>static</span> <span class=kd>extern</span> <span class=kt>bool</span> <span class=n>SetConsoleCtrlHandler</span><span class=p>(</span><span class=n>HandlerRoutine</span> <span class=n>handler</span><span class=p>,</span> <span class=kt>bool</span> <span class=k>add</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// Define a delegate for our handler routine</span>
+</span></span><span class=line><span class=cl>		<span class=kd>public</span> <span class=k>delegate</span> <span class=kt>bool</span> <span class=n>HandlerRoutine</span><span class=p>(</span><span class=n>CtrlTypes</span> <span class=n>ctrlType</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>		<span class=kd>public</span> <span class=kd>static</span> <span class=kd>volatile</span> <span class=n>ManualResetEvent</span> <span class=n>_exitEvent</span> <span class=p>=</span> <span class=k>new</span> <span class=n>ManualResetEvent</span><span class=p>(</span><span class=kc>false</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>		<span class=kd>private</span> <span class=kd>static</span> <span class=n>HandlerRoutine</span> <span class=n>_handler</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/*
+</span></span></span><span class=line><span class=cl><span class=cm>      Define the event types that we want to handle when the application receives a SIGTERM
+</span></span></span><span class=line><span class=cl><span class=cm>          CTRL_C_EVENT = 0,
+</span></span></span><span class=line><span class=cl><span class=cm>          CTRL_BREAK_EVENT = 1,
+</span></span></span><span class=line><span class=cl><span class=cm>          CTRL_CLOSE_EVENT = 2,
+</span></span></span><span class=line><span class=cl><span class=cm>          CTRL_LOGOFF_EVENT = 5,
+</span></span></span><span class=line><span class=cl><span class=cm>          CTRL_SHUTDOWN_EVENT = 6
+</span></span></span><span class=line><span class=cl><span class=cm>    */</span>
+</span></span><span class=line><span class=cl>		<span class=kd>public</span> <span class=kd>enum</span> <span class=n>CtrlTypes</span>
+</span></span><span class=line><span class=cl>		<span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=n>CTRL_SHUTDOWN_EVENT</span> <span class=p>=</span> <span class=m>6</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/*
+</span></span></span><span class=line><span class=cl><span class=cm>        Here we are defining how we want to handle the shutdown
+</span></span></span><span class=line><span class=cl><span class=cm>        We get a timeout value from an env variable named APP_SHUTDOWN_TIMEOUT
+</span></span></span><span class=line><span class=cl><span class=cm>        If that env variable is not found, we default to 60 seconds.
+</span></span></span><span class=line><span class=cl><span class=cm>        We then switch on our CtrlTypes enum and handle each value accordingly,
+</span></span></span><span class=line><span class=cl><span class=cm>        and then return true.
+</span></span></span><span class=line><span class=cl><span class=cm>    */</span>
+</span></span><span class=line><span class=cl>		<span class=kd>public</span> <span class=kd>static</span> <span class=kt>bool</span> <span class=n>ConsoleCtrlCheck</span><span class=p>(</span><span class=n>CtrlTypes</span> <span class=n>ctrlType</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>		<span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=kt>var</span> <span class=n>timeout</span> <span class=p>=</span> <span class=n>ConfigurationManager</span><span class=p>.</span><span class=n>AppSettings</span><span class=p>[</span><span class=s>&#34;APP_SHUTDOWN_TIMEOUT&#34;</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>			<span class=k>if</span> <span class=p>(</span><span class=kt>string</span><span class=p>.</span><span class=n>IsNullOrEmpty</span><span class=p>(</span><span class=n>timeout</span><span class=p>))</span> <span class=p>{</span> <span class=n>timeout</span> <span class=p>=</span> <span class=s>&#34;60&#34;</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>			<span class=kt>int</span> <span class=n>counter</span> <span class=p>=</span> <span class=kt>int</span><span class=p>.</span><span class=n>Parse</span><span class=p>(</span><span class=n>timeout</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>			<span class=k>switch</span> <span class=p>(</span><span class=n>ctrlType</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>			<span class=p>{</span>
+</span></span><span class=line><span class=cl>				<span class=k>case</span> <span class=n>CtrlTypes</span><span class=p>.</span><span class=n>CTRL_SHUTDOWN_EVENT</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>					<span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=s>$&#34;[{DateTime.UtcNow}] CTRL_SHUTDOWN received&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>					<span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=s>$&#34;[{DateTime.UtcNow}] Web Server is stopping in {counter} seconds&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>					<span class=k>while</span> <span class=p>(</span><span class=n>counter</span> <span class=p>&gt;</span> <span class=m>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>					<span class=p>{</span>
+</span></span><span class=line><span class=cl>						<span class=n>Thread</span><span class=p>.</span><span class=n>Sleep</span><span class=p>(</span><span class=n>TimeSpan</span><span class=p>.</span><span class=n>FromSeconds</span><span class=p>(</span><span class=m>1</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>						<span class=n>counter</span><span class=p>--;</span>
+</span></span><span class=line><span class=cl>					<span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>					<span class=n>_exitEvent</span><span class=p>.</span><span class=n>Set</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>					<span class=k>return</span> <span class=kc>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>				<span class=k>default</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>					<span class=k>return</span> <span class=kc>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>			<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/*
+</span></span></span><span class=line><span class=cl><span class=cm>        Our main method is pretty standard. However, we first register a new handler (_handler),
+</span></span></span><span class=line><span class=cl><span class=cm>        and then pass it to to the SetConsoleCtrlHandler() method we imported from Kernel32.dll.
+</span></span></span><span class=line><span class=cl><span class=cm>        The only other &#39;unique&#39; thing is the _exitEvent.WaitOne(); call defined at the bottom of main().
+</span></span></span><span class=line><span class=cl><span class=cm>        This is necessary so that main does not immediately exit, and wait&#39;s for a signal. We defined a
+</span></span></span><span class=line><span class=cl><span class=cm>        property for this _exitEvent of type ManualResetEvent at the top of this class file.
+</span></span></span><span class=line><span class=cl><span class=cm>    */</span>
+</span></span><span class=line><span class=cl>		<span class=kd>public</span> <span class=kd>static</span> <span class=k>void</span> <span class=n>Main</span><span class=p>(</span><span class=kt>string</span><span class=p>[]</span> <span class=n>args</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>		<span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=n>_handler</span> <span class=p>+=</span> <span class=k>new</span> <span class=n>HandlerRoutine</span><span class=p>(</span><span class=n>ConsoleCtrlCheck</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>			<span class=n>SetConsoleCtrlHandler</span><span class=p>(</span><span class=n>_handler</span><span class=p>,</span> <span class=kc>true</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      <span class=c1>// redacted ....</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>			<span class=kt>var</span> <span class=n>startOptions</span> <span class=p>=</span> <span class=n>BuildStartOptions</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      <span class=c1>// redacted ....</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      <span class=n>WebApp</span><span class=p>.</span><span class=n>Start</span><span class=p>&lt;</span><span class=n>SelfHostStartup</span><span class=p>&gt;(</span><span class=n>startOptions</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>			<span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=s>&#34;Press CTRL+C to stop it&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>			<span class=n>_exitEvent</span><span class=p>.</span><span class=n>WaitOne</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>		<span class=kd>private</span> <span class=kd>static</span> <span class=n>StartOptions</span> <span class=n>BuildStartOptions</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>		<span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=kt>var</span> <span class=n>startOptions</span> <span class=p>=</span> <span class=k>new</span> <span class=n>StartOptions</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      <span class=c1>// redacted start options</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=n>startOptions</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>To prevent the HandlerRoutine instance from being recycled by the GC before the program exits, the HandlerRoutine must be static (as seen in the above example). This is important because if the handlerroutine is recycled before the application is finished, it will throw an error, as shown here:</p><pre tabindex=0><code>A callback was made on a garbage collected delegate of type &#39;Program+HandlerRoutine::Invoke&#39;. This may cause application crashes, corruption and data loss. When passing delegates to unmanaged code, they must be kept alive by the managed application until it is guaranteed that they will never be called.
+</code></pre></div><footer></footer></article></section></div><footer class=footer><section class=container>©
+2012 -
+2025
+Ryan Nemeth
+·
+Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>
