@@ -1,6 +1,6 @@
 ---
 title: "Modify Machine Code in Executables"
-date: '2025-11-26T16:01:00+00:00'
+date: '2025-11-23T16:01:00+00:00'
 author: Ryan
 layout: post
 draft: false
