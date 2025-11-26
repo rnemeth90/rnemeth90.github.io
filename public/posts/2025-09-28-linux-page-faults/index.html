@@ -186,7 +186,8 @@ Minor Page Faults: These occur when a process attempts to access a memory page t
 <p>Minor Page Faults: These occur when a process attempts to access a memory page that is already present in physical RAM but is not yet mapped into the process&rsquo;s own virtual address space. The operating system handles these faults by simply updating the process&rsquo;s page table to include the mapping to the existing page in RAM. This is a relatively fast operation, as no data needs to be loaded from disk. A high number of minor page faults could be indicative of the process uses many shared objects/libraries.</p>
 <p>Major Page Faults: These occur when the CPU needs a memory page that isn&rsquo;t currently in RAM and must therefore be read from secondary storage such as a hard disk. High numbers of major page faults often indicate RAM pressure, meaning the system doesn&rsquo;t have enough physical memory for the running processes, leading to performance degradation as data is swapped between memory and disk.</p>
 <p>You can view the number of major/minor page faults per process using <code>ps</code>:</p>
-<pre tabindex="0"><code>sudo ps -eo min_flt,maj_flt</code></pre><p>Though, I like to sort by the page fault type (depending on what I&rsquo;m looking for). This example sorts by major page faults:</p>
+<pre tabindex="0"><code>sudo ps -eo min_flt,maj_flt
+</code></pre><p>Though, I like to sort by the page fault type (depending on what I&rsquo;m looking for). This example sorts by major page faults:</p>
 <pre tabindex="0"><code>$ sudo ps -eo maj_flt,min_flt,cmd | sort -k 2 -r |
 
  MAJFL  MINFL CMD
@@ -215,7 +216,8 @@ Minor Page Faults: These occur when a process attempts to access a memory page t
  4   1139 /usr/lib/systemd/systemd-timesyncd
  2   1097 /usr/lib/systemd/systemd-homed
  4   1073 /usr/lib/power-profiles-daemon
- 1  10172 /usr/lib/systemd/systemd-userdbd</code></pre><p>Based on the output, we can determine that <code>systemd-userdbd</code> is using a lot of shared code.</p>
+ 1  10172 /usr/lib/systemd/systemd-userdbd
+</code></pre><p>Based on the output, we can determine that <code>systemd-userdbd</code> is using a lot of shared code.</p>
 
       </div>
 

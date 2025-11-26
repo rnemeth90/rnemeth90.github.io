@@ -196,29 +196,29 @@ To reset the GRUB password, we need to boot into a Cent or Redhat live CD. The I
         <p>In Redhat/Fedora/Cent, GRUB can be protected by running the grub-md5-crypt command and pasting the outputted password hash into the grub.conf file. vSphere 6.0 password protects grub by default. If you change the root password in the VAMI, the GRUB password is changed to match. If you do not change the root password, the GRUB password is “vmware”.</p>
 <p>To reset the GRUB password, we need to boot into a Cent or Redhat live CD. The ISO can be obtained here: <a href="https://www.centos.org/download/"  class="external-link" target="_blank" rel="noopener">https://www.centos.org/download/</a>. Its best to upload the ISO to a datastore that the appliance has access to.</p>
 <p>Stop the appliance and attach the ISO:</p>
-<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image.png" alt="" /></p>
+<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image.png" alt=""></p>
 <p>Be sure to select the “Connect at Power On” option. Boot the VM into the ISO and select the “Troubleshooting” option.</p>
-<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-1.png" alt="" />
+<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-1.png" alt="">
 Next, choose “Rescure a Red hat (or CentOS depending on your ISO) Enterprise Linux System”</p>
-<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-2.png" alt="" /></p>
+<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-2.png" alt=""></p>
 <p>Select “Continue” to mount the VCSA 6.0’s root filesystem in Read/write mode under /mnt/sysimage. RHEL 7.2 is capable to detect the VCSA’s root volume and mounts it.</p>
-<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-3.png" alt="" /></p>
+<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-3.png" alt=""></p>
 <p>The VCSA root filesystem is mounted under /mnt/sysimage and you can now access (and modify) it using the shell. Navigate to /mnt/sysimage/boot and list the contents. You’ll see we now have access to the grub directory:</p>
-<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-4.png" alt="" /></p>
+<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-4.png" alt=""></p>
 <p>cd to the grub directory and list the contents. Look for a file called “menu.lst”. This file holds the grub boot loader password. Open this file with vi by typing “vi menu.lst”. Navigate to the line beginning with “password” using the arrow keys, and then type “dd” to remove the line.</p>
-<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-5.png" alt="" />
+<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-5.png" alt="">
 You can then save the file by pressing “:wq” (without quotes). You can now cat the file and see that the password has been removed.</p>
-<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-6.png" alt="" /></p>
+<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-6.png" alt=""></p>
 <p>Exit the shell (this will reboot the server). Detach the ISO and boot the appliance. Once the system is booted, stop the VCSA in the GRUB menu (by pressing the escape key during boot) to break the OS root password.</p>
 <p><a href="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-7.png"  class="external-link" target="_blank" rel="noopener"></a>
 Press “e” to edit the boot commands for the kernel.</p>
-<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-8.png" alt="" /></p>
+<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-8.png" alt=""></p>
 <p>Append “init=/bin/bash” to the line in this step and press enter.</p>
-<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-9.png" alt="" /></p>
+<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-9.png" alt=""></p>
 <p>Press “b” to boot the system.</p>
-<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-10.png" alt="" /></p>
+<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-10.png" alt=""></p>
 <p>You will now boot into a bash shell where you can set the root password.</p>
-<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-11.png" alt="" /></p>
+<p><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-11.png" alt=""></p>
 <p>Once this is done, exit the shell by typing “exit”. You can now boot the appliance and login with your new root password.</p>
 
       </div>

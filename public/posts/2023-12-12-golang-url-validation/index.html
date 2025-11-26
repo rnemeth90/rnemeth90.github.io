@@ -227,7 +227,8 @@ I often see people (mistakenly) use URL and URI interchangeably. URL is actually
 <p>To validate a URL, we can simply use the <code>url.ParseRequestURI()</code> function. The definition of this function is below (taken from pkg.go.dev)</p>
 <pre tabindex="0"><code>func ParseRequestURI(rawurl string) (*URL, error)
 
-ParseRequestURI parses rawurl into a URL structure. It assumes that rawurl was received in an HTTP request, so the rawurl is interpreted only as an absolute URI or an absolute path. The string rawurl is assumed not to have a #fragment suffix. (Web browsers strip #fragment before sending the URL to a web server.)</code></pre><p>Let&rsquo;s see how we can use <code>url.ParseRequestURI()</code>:</p>
+ParseRequestURI parses rawurl into a URL structure. It assumes that rawurl was received in an HTTP request, so the rawurl is interpreted only as an absolute URI or an absolute path. The string rawurl is assumed not to have a #fragment suffix. (Web browsers strip #fragment before sending the URL to a web server.)
+</code></pre><p>Let&rsquo;s see how we can use <code>url.ParseRequestURI()</code>:</p>
 <pre tabindex="0"><code>package main
 
 import (
@@ -247,11 +248,13 @@ func main() {
 
   u, err = url.ParseRequestURI(&#34;golang.org&#34;)
   log.Printf(&#34;err=%+v url=%+v\n&#34;, err, u)
-}</code></pre><p>Which outputs the following:</p>
+}
+</code></pre><p>Which outputs the following:</p>
 <pre tabindex="0"><code>2023/12/19 19:50:07 err=parse &#34;hello&#34;: invalid URI for request url=&lt;nil&gt;
 2023/12/19 19:50:07 err=&lt;nil&gt; url=http://rnemeth90.github.com/
 2023/12/19 19:50:07 err=&lt;nil&gt; url=http://golang.org/index.html?#page1
-2023/12/19 19:50:07 err=parse &#34;golang.org&#34;: invalid URI for request url=&lt;nil&gt;</code></pre><p>That&rsquo;s it! This is a short article, but it&rsquo;s just that easy to validate URLs in Go. I was learning about this recently and wanted to document what I learned. Until next time!</p>
+2023/12/19 19:50:07 err=parse &#34;golang.org&#34;: invalid URI for request url=&lt;nil&gt;
+</code></pre><p>That&rsquo;s it! This is a short article, but it&rsquo;s just that easy to validate URLs in Go. I was learning about this recently and wanted to document what I learned. Until next time!</p>
 
       </div>
 

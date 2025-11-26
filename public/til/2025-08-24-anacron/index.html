@@ -23,7 +23,8 @@ $ sudo vim /etc/anacrontab
 # These entries replace cron&#39;s job entries.
 1       5       cron.daily      run-parts --report /etc/cron.daily
 7       10      cron.weekly     run-parts --report /etc/cron.weekly
-@monthly 15      cron.monthly    run-parts --report /etc/cron.monthlyThe syntax in the anacrontab file consists of four fields:">
+@monthly 15      cron.monthly    run-parts --report /etc/cron.monthly
+The syntax in the anacrontab file consists of four fields:">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -32,14 +33,14 @@ $ sudo vim /etc/anacrontab
   <meta name="twitter:title" content="Anacron">
   <meta name="twitter:description" content="Anacron is designed for tasks that need to run periodically (daily, weekly, monthly) on systems that are not continuously powered on. If a scheduled cron task is missed because the system is off, anacron will run the task once the system is available.
 On many systems, anacron is pre-installed. If not, install it with:
-$ sudo apt install anacron Anacron&#39;s configuration is in the /etc/anacrontab file, which includes helpful comments and examples. Here’s an excerpt: $ sudo vim /etc/anacrontab # See anacron(8) and anacrontab(5) for details. # These entries replace cron&#39;s job entries. 1 5 cron.daily run-parts --report /etc/cron.daily 7 10 cron.weekly run-parts --report /etc/cron.weekly @monthly 15 cron.monthly run-parts --report /etc/cron.monthlyThe syntax in the anacrontab file consists of four fields:">
+$ sudo apt install anacron Anacron&#39;s configuration is in the /etc/anacrontab file, which includes helpful comments and examples. Here’s an excerpt: $ sudo vim /etc/anacrontab # See anacron(8) and anacrontab(5) for details. # These entries replace cron&#39;s job entries. 1 5 cron.daily run-parts --report /etc/cron.daily 7 10 cron.weekly run-parts --report /etc/cron.weekly @monthly 15 cron.monthly run-parts --report /etc/cron.monthly The syntax in the anacrontab file consists of four fields:">
 
 <meta property="og:url" content="http://localhost:1313/til/2025-08-24-anacron/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Anacron">
   <meta property="og:description" content="Anacron is designed for tasks that need to run periodically (daily, weekly, monthly) on systems that are not continuously powered on. If a scheduled cron task is missed because the system is off, anacron will run the task once the system is available.
 On many systems, anacron is pre-installed. If not, install it with:
-$ sudo apt install anacron Anacron&#39;s configuration is in the /etc/anacrontab file, which includes helpful comments and examples. Here’s an excerpt: $ sudo vim /etc/anacrontab # See anacron(8) and anacrontab(5) for details. # These entries replace cron&#39;s job entries. 1 5 cron.daily run-parts --report /etc/cron.daily 7 10 cron.weekly run-parts --report /etc/cron.weekly @monthly 15 cron.monthly run-parts --report /etc/cron.monthlyThe syntax in the anacrontab file consists of four fields:">
+$ sudo apt install anacron Anacron&#39;s configuration is in the /etc/anacrontab file, which includes helpful comments and examples. Here’s an excerpt: $ sudo vim /etc/anacrontab # See anacron(8) and anacrontab(5) for details. # These entries replace cron&#39;s job entries. 1 5 cron.daily run-parts --report /etc/cron.daily 7 10 cron.weekly run-parts --report /etc/cron.weekly @monthly 15 cron.monthly run-parts --report /etc/cron.monthly The syntax in the anacrontab file consists of four fields:">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="til">
@@ -179,7 +180,8 @@ $ sudo vim /etc/anacrontab
 # These entries replace cron&#39;s job entries.
 1       5       cron.daily      run-parts --report /etc/cron.daily
 7       10      cron.weekly     run-parts --report /etc/cron.weekly
-@monthly 15      cron.monthly    run-parts --report /etc/cron.monthly</code></pre><p>The syntax in the anacrontab file consists of four fields:</p>
+@monthly 15      cron.monthly    run-parts --report /etc/cron.monthly
+</code></pre><p>The syntax in the anacrontab file consists of four fields:</p>
 <ol>
 <li>The period in days (e.g., 1 for daily, 7 for weekly).</li>
 <li>A delay (in minutes) after system startup.</li>
@@ -187,11 +189,14 @@ $ sudo vim /etc/anacrontab
 <li>The command to execute.</li>
 </ol>
 <p>For example, to run a job every three days with a 10-minute delay:</p>
-<pre tabindex="0"><code>3 10 test_job /usr/bin/touch /root/anacron_created_this</code></pre><p>Other examples include:</p>
+<pre tabindex="0"><code>3 10 test_job /usr/bin/touch /root/anacron_created_this
+</code></pre><p>Other examples include:</p>
 <pre tabindex="0"><code>7 10 test_job /usr/bin/touch /root/anacron_created_this
-@monthly 10 test_job /usr/bin/touch /root/anacron_created_this</code></pre><p>After editing, verify your anacrontab syntax with:</p>
+@monthly 10 test_job /usr/bin/touch /root/anacron_created_this
+</code></pre><p>After editing, verify your anacrontab syntax with:</p>
 <pre tabindex="0"><code>$ anacron -T
-anacron: /etc/anacrontab: Unknown named period on line 13, skipping</code></pre><p>If no errors are reported, your anacron entries are correctly formatted.</p>
+anacron: /etc/anacrontab: Unknown named period on line 13, skipping
+</code></pre><p>If no errors are reported, your anacron entries are correctly formatted.</p>
 <p>Consult the anacron man pages for more info.</p>
 
   </article>

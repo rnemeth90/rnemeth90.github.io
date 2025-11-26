@@ -232,7 +232,8 @@ What is Pod Eviction? Link to heading Kubernetes pod eviction is a type of invol
 </h2>
 <p>Kubernetes pod eviction is a type of involuntary service disruption in which a pod is forcefully stopped on a node or fails to be scheduled on a node. Pod eviction can happen for a variety of reasons. The most common of which is resource starvation on a node. This is referred to as “node-pressure eviction.”</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">NAME       READY   STATUS    RESTARTS   AGE
-</span></span><span class="line"><span class="cl">nginx      0/1     Evicted   <span class="m">0</span>          10s</span></span></code></pre></div><h2 id="eviction-process">
+</span></span><span class="line"><span class="cl">nginx      0/1     Evicted   <span class="m">0</span>          10s
+</span></span></code></pre></div><h2 id="eviction-process">
   Eviction Process
   <a class="heading-link" href="#eviction-process">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -277,10 +278,13 @@ What is Pod Eviction? Link to heading Kubernetes pod eviction is a type of invol
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;250m&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">limits</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;128Mi&#34;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;500m&#34;</span></span></span></code></pre></div><p>You will often need to clean up evicted pods manually. If you find that your cluster has a large amount of evicted pods, you can clean them up with the following kubectl commands:</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;500m&#34;</span><span class="w">
+</span></span></span></code></pre></div><p>You will often need to clean up evicted pods manually. If you find that your cluster has a large amount of evicted pods, you can clean them up with the following kubectl commands:</p>
 <p><strong>To see all failed pods in the cluster:</strong></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl get pod --all-namespaces --field-selector<span class="o">=</span>status.phase<span class="o">==</span>Failed</span></span></code></pre></div><p><strong>To remove all failed pods in the cluster:</strong></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl delete pod --all-namespaces --field-selector<span class="o">=</span>status.phase<span class="o">==</span>Failed</span></span></code></pre></div><p>I hope this article has been helpful. Please reach out if you have any questions or comments! Also, if you would like to learn more, take a look at the official Kubernetes docs:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl get pod --all-namespaces --field-selector<span class="o">=</span>status.phase<span class="o">==</span>Failed
+</span></span></code></pre></div><p><strong>To remove all failed pods in the cluster:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl delete pod --all-namespaces --field-selector<span class="o">=</span>status.phase<span class="o">==</span>Failed
+</span></span></code></pre></div><p>I hope this article has been helpful. Please reach out if you have any questions or comments! Also, if you would like to learn more, take a look at the official Kubernetes docs:</p>
 <p><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/"  class="external-link" target="_blank" rel="noopener">https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/</a></p>
 
       </div>

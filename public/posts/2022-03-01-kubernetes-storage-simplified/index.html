@@ -244,12 +244,14 @@ Container images are built-in layers, with the runtime layer being writable. How
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l">In</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">values</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c"># name of the node sharing the volume</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="l">node01</span></span></span></code></pre></div><p>When creating a persistent volume of this type, you must specify a node affinity. This ensures that the Kubernetes scheduler schedules any pods requesting access to this volume on the correct node. For example, any pod requesting access to the persistent volume named ‘example-PV will only be scheduled on the node ‘node01’.</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="l">node01</span><span class="w">
+</span></span></span></code></pre></div><p>When creating a persistent volume of this type, you must specify a node affinity. This ensures that the Kubernetes scheduler schedules any pods requesting access to this volume on the correct node. For example, any pod requesting access to the persistent volume named ‘example-PV will only be scheduled on the node ‘node01’.</p>
 <p>Let’s dive into this persistent volume spec a bit more:</p>
 <p>You can change the capacity of the persistent volume by updating:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">capacity</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">100Gi</span></span></span></code></pre></div><p>The accessModes will be determined by the storage provider being used. There are generally 3 access modes available: ReadWriteOnce, ReadWriteMany, and ReadOnlyMany.</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">100Gi</span><span class="w">
+</span></span></span></code></pre></div><p>The accessModes will be determined by the storage provider being used. There are generally 3 access modes available: ReadWriteOnce, ReadWriteMany, and ReadOnlyMany.</p>
 <ul>
 <li>ReadWriteOnce – The volume can be mounted as read-write by a single node</li>
 <li>ReadWriteMany – The volume can be mounted as read-write by many nodes</li>
@@ -274,7 +276,8 @@ Container images are built-in layers, with the runtime layer being writable. How
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l">In</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">values</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c"># name of the node sharing the volume</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="l">node01</span></span></span></code></pre></div><h2 id="ephemeral-volumes">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="l">node01</span><span class="w">
+</span></span></span></code></pre></div><h2 id="ephemeral-volumes">
   Ephemeral Volumes
   <a class="heading-link" href="#ephemeral-volumes">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -304,7 +307,8 @@ Container images are built-in layers, with the runtime layer being writable. How
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">cache-volume</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">cache-volume</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre></div><p>If the template, you add a volume of type ’emptyDir’ in the ‘volumes’ spec and name it. You can mount this volume in any container in the pod. The volume does not have to be mounted to the same directory in each container.</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span></span></span></code></pre></div><p>If the template, you add a volume of type ’emptyDir’ in the ‘volumes’ spec and name it. You can mount this volume in any container in the pod. The volume does not have to be mounted to the same directory in each container.</p>
 <h2 id="persistent-volume-claims">
   Persistent Volume Claims
   <a class="heading-link" href="#persistent-volume-claims">
@@ -325,7 +329,8 @@ Container images are built-in layers, with the runtime layer being writable. How
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">requests</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">8Gi</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l">fast</span></span></span></code></pre></div><p>Most of the options in the manifest above seem pretty obvious. The volumeMode specifies whether to consume the persistent volume as a FileSystem or block device. The resources section helps specify the amount of storage you require (8Gi in this example). We will cover the storageClassName in the next section. Finally, the accessModes are identical to those described above in the Persistent Volumes section.</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l">fast</span><span class="w">
+</span></span></span></code></pre></div><p>Most of the options in the manifest above seem pretty obvious. The volumeMode specifies whether to consume the persistent volume as a FileSystem or block device. The resources section helps specify the amount of storage you require (8Gi in this example). We will cover the storageClassName in the next section. Finally, the accessModes are identical to those described above in the Persistent Volumes section.</p>
 <p>Pods access a volume by using the persistentVolumeClaim as volume. Claims must exist in the same namespace as the pod using the claim. The controller finds the claim in the pods’ namespace and uses it to find a persistent volume capable of backing the claim. The volume is then mounted on the host and attached to the pod.</p>
 <p>To create a pod that utilizes a PVC, use the following yaml definition:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
@@ -342,7 +347,8 @@ Container images are built-in layers, with the runtime layer being writable. How
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">cache-volume</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">persistentVolumeClaim</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="l">azfileshare</span></span></span></code></pre></div><h2 id="storage-classes">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="l">azfileshare</span><span class="w">
+</span></span></span></code></pre></div><h2 id="storage-classes">
   Storage Classes
   <a class="heading-link" href="#storage-classes">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -368,7 +374,8 @@ Container images are built-in layers, with the runtime layer being writable. How
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">cache=strict</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">actimeo=30</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">parameters</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">skuName</span><span class="p">:</span><span class="w"> </span><span class="l">Standard_LRS</span></span></span></code></pre></div><p>You can see in the above manifest that the provisioner is set to ‘file.csi.azure.com.’ When a pod uses a PVC in its manifest that references this storage class, the provisioner will dynamically manage the underlying storage.</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">skuName</span><span class="p">:</span><span class="w"> </span><span class="l">Standard_LRS</span><span class="w">
+</span></span></span></code></pre></div><p>You can see in the above manifest that the provisioner is set to ‘file.csi.azure.com.’ When a pod uses a PVC in its manifest that references this storage class, the provisioner will dynamically manage the underlying storage.</p>
 <p>The name of the storageClass is referenced in the persistentVolumeClaim:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PersistentVolumeClaim</span><span class="w">
@@ -380,7 +387,8 @@ Container images are built-in layers, with the runtime layer being writable. How
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">requests</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">8Gi</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l">azurefileshare</span></span></span></code></pre></div><p>You could then reference this PVC in a pod:</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l">azurefileshare</span><span class="w">
+</span></span></span></code></pre></div><p>You could then reference this PVC in a pod:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Pod</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
@@ -395,7 +403,8 @@ Container images are built-in layers, with the runtime layer being writable. How
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">cache-volume</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">persistentVolumeClaim</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="l">azfileshare</span></span></span></code></pre></div><p>That concludes this article. I know that is a lot of information! As always, if you have any questions or comments, please reach out.</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="l">azfileshare</span><span class="w">
+</span></span></span></code></pre></div><p>That concludes this article. I know that is a lot of information! As always, if you have any questions or comments, please reach out.</p>
 
       </div>
 

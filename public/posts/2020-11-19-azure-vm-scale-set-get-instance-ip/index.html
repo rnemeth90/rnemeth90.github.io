@@ -208,7 +208,8 @@ There are a few options we have for retrieving information about a VMSS and its 
 <p>You will need to have the AZ module installed. To install this module, simple open PowerShell (as admin) and type in “Install-Module -Name az”. To get the IP address of the instances within a scale set, use the following script:</p>
 <p><a href="https://github.com/rnemeth90/Get-VmssInstanceIpAddress"  class="external-link" target="_blank" rel="noopener">https://github.com/rnemeth90/Get-VmssInstanceIpAddress</a></p>
 <p>You can also use the Azure CLI to obtain individual instance IP addresses. This method is much simpler than PowerShell, and only requires one line of code:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">az vmss nic list –resource-group myResourceGroup –vmss-name myVmss <span class="p">|</span> grep –w “privateIpAddress”</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">az vmss nic list –resource-group myResourceGroup –vmss-name myVmss <span class="p">|</span> grep –w “privateIpAddress”
+</span></span></code></pre></div>
       </div>
 
 

@@ -223,7 +223,8 @@ JSON data within the file into a memory structure.</p>
 </span></span><span class="line"><span class="cl">  <span class="nt">&#34;lastName&#34;</span><span class="p">:</span> <span class="s2">&#34;Rogers&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&#34;alias&#34;</span><span class="p">:</span> <span class="s2">&#34;Captain America&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&#34;Department&#34;</span><span class="p">:</span> <span class="s2">&#34;Avengers&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><p>We need a way of representing this data in memory when decoding it from JSON. For this, we will need to create a struct:</p>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>We need a way of representing this data in memory when decoding it from JSON. For this, we will need to create a struct:</p>
 <p>We will build up our go module as we progress through the article</p>
 <p>Let&rsquo;s start:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// main.go</span><span class="w">
@@ -275,7 +276,8 @@ JSON data within the file into a memory structure.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">heros</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">LastName</span><span class="p">)</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">heros</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">Group</span><span class="p">)</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></div><p>Create a file named employees.json with similar data:</p>
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>Create a file named employees.json with similar data:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">[</span>
 </span></span><span class="line"><span class="cl">  <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="nt">&#34;Id&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -291,7 +293,8 @@ JSON data within the file into a memory structure.</p>
 </span></span><span class="line"><span class="cl">    <span class="nt">&#34;alias&#34;</span><span class="p">:</span> <span class="s2">&#34;Superman&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="nt">&#34;group&#34;</span><span class="p">:</span> <span class="s2">&#34;Justice League&#34;</span>
 </span></span><span class="line"><span class="cl">  <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">]</span></span></span></code></pre></div><p>Now, we can run our main.go file:</p>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span></code></pre></div><p>Now, we can run our main.go file:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">11:40:47 ryan@xerxes json → go run main.go
 </span></span><span class="line"><span class="cl"><span class="m">1</span>
 </span></span><span class="line"><span class="cl">Steve
@@ -301,7 +304,8 @@ JSON data within the file into a memory structure.</p>
 </span></span><span class="line"><span class="cl">Clark
 </span></span><span class="line"><span class="cl">Kent
 </span></span><span class="line"><span class="cl">Justice League
-</span></span><span class="line"><span class="cl">11:40:49 ryan@xerxes json</span></span></code></pre></div><p>Pretty simple! That&rsquo;s why I love go. We accomplished all of this with ~50 lines of code.
+</span></span><span class="line"><span class="cl">11:40:49 ryan@xerxes json
+</span></span></code></pre></div><p>Pretty simple! That&rsquo;s why I love go. We accomplished all of this with ~50 lines of code.
 Doing something similar in asp.net project would easily double that count and involve creating
 multiple files! (nothing against asp.net or c#, I think c# is a great language and use it daily)</p>
 <p>Now, &lsquo;go&rsquo; try this!</p>

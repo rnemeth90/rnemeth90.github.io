@@ -236,7 +236,8 @@ I was writing a little CLI tool in Golang to track todo items. Just a dumb littl
 </span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">t</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;got %v, expected %v\n&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">out</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">expected</span><span class="p">))</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">})</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></div><p>Seems strange, considering the strings appear to be equivalent in the output:</p>
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>Seems strange, considering the strings appear to be equivalent in the output:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">ryan:todo/  <span class="p">|</span>main U:4 ?:1 ✗<span class="p">|</span>$ go <span class="nb">test</span> -v
 </span></span><span class="line"><span class="cl">Building tool...
 </span></span><span class="line"><span class="cl">using /tmp/.testtodo.json
@@ -252,7 +253,8 @@ I was writing a little CLI tool in Golang to track todo items. Just a dumb littl
 </span></span><span class="line"><span class="cl">FAIL
 </span></span><span class="line"><span class="cl">cleaning up...
 </span></span><span class="line"><span class="cl"><span class="nb">exit</span> status <span class="m">1</span>
-</span></span><span class="line"><span class="cl">FAIL    github.com/rnemeth90/todo/cmd/todo      0.105s</span></span></code></pre></div><p>What could be happening? After banging my head on the desk a few times, a revelation came to me&hellip;</p>
+</span></span><span class="line"><span class="cl">FAIL    github.com/rnemeth90/todo/cmd/todo      0.105s
+</span></span></code></pre></div><p>What could be happening? After banging my head on the desk a few times, a revelation came to me&hellip;</p>
 <p>In Go, strings are simply slices of bytes. I decided to print out each string as a byte array:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">ryan:todo/  <span class="p">|</span>main U:4 ?:1 ✗<span class="p">|</span>$ go <span class="nb">test</span> -v
 </span></span><span class="line"><span class="cl">Building tool...
@@ -268,13 +270,15 @@ I was writing a little CLI tool in Golang to track todo items. Just a dumb littl
 </span></span><span class="line"><span class="cl">FAIL
 </span></span><span class="line"><span class="cl">cleaning up...
 </span></span><span class="line"><span class="cl"><span class="nb">exit</span> status <span class="m">1</span>
-</span></span><span class="line"><span class="cl">FAIL    github.com/rnemeth90/todo/cmd/todo      0.144s</span></span></code></pre></div><p>Let&rsquo;s take a closer look at the byte arrays from the test output:</p>
+</span></span><span class="line"><span class="cl">FAIL    github.com/rnemeth90/todo/cmd/todo      0.144s
+</span></span></code></pre></div><p>Let&rsquo;s take a closer look at the byte arrays from the test output:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">got      <span class="o">[</span><span class="m">91</span> <span class="m">32</span> <span class="m">93</span> <span class="m">32</span> <span class="m">49</span> <span class="m">58</span> <span class="m">32</span> <span class="m">116</span> <span class="m">101</span> <span class="m">115</span> <span class="m">116</span> <span class="m">32</span> <span class="m">116</span> <span class="m">97</span> <span class="m">115</span> <span class="m">107</span> <span class="m">32</span> <span class="m">110</span> <span class="m">117</span> <span class="m">109</span> <span class="m">98</span> <span class="m">101</span> <span class="m">114</span> <span class="m">32</span> <span class="m">49</span> <span class="m">32</span> <span class="m">10</span> 10<span class="o">]</span>
-</span></span><span class="line"><span class="cl">expected <span class="o">[</span><span class="m">91</span> <span class="m">32</span> <span class="m">93</span> <span class="m">32</span> <span class="m">49</span> <span class="m">58</span> <span class="m">32</span> <span class="m">116</span> <span class="m">101</span> <span class="m">115</span> <span class="m">116</span> <span class="m">32</span> <span class="m">116</span> <span class="m">97</span> <span class="m">115</span> <span class="m">107</span> <span class="m">32</span> <span class="m">110</span> <span class="m">117</span> <span class="m">109</span> <span class="m">98</span> <span class="m">101</span> <span class="m">114</span> <span class="m">32</span> 49<span class="o">]</span></span></span></code></pre></div><p>We can see the byte array returned from <code>cmd.CombinedOutput()</code> has some additional bytes in it at the end (32,10,10). What exactly are 32, 10, and 10? To figure this out, I went over to the go playground: <a href="https://go.dev/play/"  class="external-link" target="_blank" rel="noopener">https://go.dev/play/</a>.</p>
+</span></span><span class="line"><span class="cl">expected <span class="o">[</span><span class="m">91</span> <span class="m">32</span> <span class="m">93</span> <span class="m">32</span> <span class="m">49</span> <span class="m">58</span> <span class="m">32</span> <span class="m">116</span> <span class="m">101</span> <span class="m">115</span> <span class="m">116</span> <span class="m">32</span> <span class="m">116</span> <span class="m">97</span> <span class="m">115</span> <span class="m">107</span> <span class="m">32</span> <span class="m">110</span> <span class="m">117</span> <span class="m">109</span> <span class="m">98</span> <span class="m">101</span> <span class="m">114</span> <span class="m">32</span> 49<span class="o">]</span>
+</span></span></code></pre></div><p>We can see the byte array returned from <code>cmd.CombinedOutput()</code> has some additional bytes in it at the end (32,10,10). What exactly are 32, 10, and 10? To figure this out, I went over to the go playground: <a href="https://go.dev/play/"  class="external-link" target="_blank" rel="noopener">https://go.dev/play/</a>.</p>
 <p>Let&rsquo;s see what happens when we create a byte array with a single number and print it out as a string to the console:</p>
-<p><a href="https://rnemeth90.github.io/images/golang-strings-not-equal-01.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/images/golang-strings-not-equal-01.png" alt="" /></a></p>
+<p><a href="https://rnemeth90.github.io/images/golang-strings-not-equal-01.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/images/golang-strings-not-equal-01.png" alt=""></a></p>
 <p>Interesting, we can see that <code>m</code> was output to the console. So what do our mysterious additional characters in our test result represent? Let&rsquo;s see:</p>
-<p><a href="https://rnemeth90.github.io/images/golang-strings-not-equal-02.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/images/golang-strings-not-equal-02.png" alt="" /></a></p>
+<p><a href="https://rnemeth90.github.io/images/golang-strings-not-equal-02.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/images/golang-strings-not-equal-02.png" alt=""></a></p>
 <p>It&rsquo;s hard to tell from the output, but if you look in the results pane, you&rsquo;ll see a space and two new lines. So <code>32</code> represents a space, and <code>10</code> represents a new line!</p>
 <p>You can play with this code yourself: <a href="https://go.dev/play/p/fGUIxJM6KnV"  class="external-link" target="_blank" rel="noopener">https://go.dev/play/p/fGUIxJM6KnV</a></p>
 <p>Ok, so let&rsquo;s fix our failing test:</p>
@@ -312,7 +316,8 @@ I was writing a little CLI tool in Golang to track todo items. Just a dumb littl
 </span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">t</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;got %v, expected %v\n&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">out</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">expected</span><span class="p">))</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">})</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></div><p>The <code>strings</code> package has a <code>TrimSuffix</code> function that is useful for trimming bits off the end of a string. In the code above, you can see that we added <code>out = []byte(strings.TrimSuffix(string(out), &quot; \n\n&quot;))</code>, which will trim off the space (character 32) and the two new lines (character 10). Now when we run our integration test, it passes:</p>
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>The <code>strings</code> package has a <code>TrimSuffix</code> function that is useful for trimming bits off the end of a string. In the code above, you can see that we added <code>out = []byte(strings.TrimSuffix(string(out), &quot; \n\n&quot;))</code>, which will trim off the space (character 32) and the two new lines (character 10). Now when we run our integration test, it passes:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">ryan:todo/  <span class="p">|</span>main U:4 ?:1 ✗<span class="p">|</span>$ go <span class="nb">test</span> -v
 </span></span><span class="line"><span class="cl">Building tool...
 </span></span><span class="line"><span class="cl">using /tmp/.testtodo.json
@@ -325,7 +330,8 @@ I was writing a little CLI tool in Golang to track todo items. Just a dumb littl
 </span></span><span class="line"><span class="cl">    --- PASS: TestAddTask/ListTasks <span class="o">(</span>0.00s<span class="o">)</span>
 </span></span><span class="line"><span class="cl">PASS
 </span></span><span class="line"><span class="cl">cleaning up...
-</span></span><span class="line"><span class="cl">ok      github.com/rnemeth90/todo/cmd/todo      0.106s</span></span></code></pre></div>
+</span></span><span class="line"><span class="cl">ok      github.com/rnemeth90/todo/cmd/todo      0.106s
+</span></span></code></pre></div>
       </div>
 
 

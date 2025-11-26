@@ -209,7 +209,8 @@ Having the ability to deallocate, rather than delete, nodes is a major performan
 <p>Having the ability to deallocate, rather than delete, nodes is a major performance benefit, as the time it takes to spin up new nodes will be significantly decreased. You will not be charged when nodes are deallocated. However, you will still need to pay for any storage that the node is using. Having persistent storage also means that any container images that were cached on the node will still be there when the node starts back up. This can be a major performance benefit if you are using Windows containers because the images for these containers are typically very large.</p>
 <p>Scale down mode can be configured in several ways. Here, we will look at configuring it via the Azure CLI and Terraform.</p>
 <p>Azure CLI:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">az aks nodepool update --scale-down-mode Deallocate --name nplinux01 --cluster-name myAKSCluster --resource-group myResourceGroup</span></span></code></pre></div><p>Terraform:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">az aks nodepool update --scale-down-mode Deallocate --name nplinux01 --cluster-name myAKSCluster --resource-group myResourceGroup
+</span></span></code></pre></div><p>Terraform:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hcl" data-lang="hcl"><span class="line"><span class="cl"><span class="k">resource</span> <span class="s2">&#34;azurerm_kubernetes_cluster_node_pool&#34; &#34;nodepool&#34;</span> {
 </span></span><span class="line"><span class="cl"><span class="n">  name</span>                  <span class="o">=</span> <span class="s2">&#34;nplinux01&#34;</span>
 </span></span><span class="line"><span class="cl"><span class="n">  kubernetes_cluster_id</span> <span class="o">=</span> <span class="k">azurerm_kubernetes_cluster</span><span class="p">.</span><span class="k">example</span><span class="p">.</span><span class="k">id</span>
@@ -220,7 +221,8 @@ Having the ability to deallocate, rather than delete, nodes is a major performan
 </span></span><span class="line"><span class="cl"><span class="n">  tags</span> <span class="o">=</span> {
 </span></span><span class="line"><span class="cl"><span class="n">    Environment</span> <span class="o">=</span> <span class="s2">&#34;lab&#34;</span>
 </span></span><span class="line"><span class="cl">  }
-</span></span><span class="line"><span class="cl">}</span></span></code></pre></div><p><em>At the time of this writing, Terraform does not support configuring scale-down mode for the default AKS node pool.</em>
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p><em>At the time of this writing, Terraform does not support configuring scale-down mode for the default AKS node pool.</em>
 <em>Node pools using ephemeral disks do not support &lsquo;deallocate&rsquo; mode</em></p>
 
       </div>

@@ -226,7 +226,8 @@ some infrastructure you want to build, prior to deploying something to that infr
 </span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
 </span></span></span><span class="line"><span class="cl"><span class="sd">    echo Add other tasks to build, test, and deploy your project.
 </span></span></span><span class="line"><span class="cl"><span class="sd">    echo See https://aka.ms/yaml</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;Run a multi-line  script&#39;</span></span></span></code></pre></div><p>Nothing fancy here, just the build in template pipeline that Microsoft gives us for free when we create a &ldquo;Starter Pipeline&rdquo;.</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;Run a multi-line  script&#39;</span><span class="w">
+</span></span></span></code></pre></div><p>Nothing fancy here, just the build in template pipeline that Microsoft gives us for free when we create a &ldquo;Starter Pipeline&rdquo;.</p>
 <p>Now, let&rsquo;s create another pipeline in the same repo that will be triggered when the pipeline above completes:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c"># dependent-pipeline</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
@@ -249,7 +250,8 @@ some infrastructure you want to build, prior to deploying something to that infr
 </span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
 </span></span></span><span class="line"><span class="cl"><span class="sd">    echo Add other tasks to build, test, and deploy your project.
 </span></span></span><span class="line"><span class="cl"><span class="sd">    echo See https://aka.ms/yaml</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;Run a multi-line script&#39;</span></span></span></code></pre></div><p>The resources block above defines our dependency. You want to be sure to configure the trigger of the dependent pipeline appropriately as well.</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;Run a multi-line script&#39;</span><span class="w">
+</span></span></span></code></pre></div><p>The resources block above defines our dependency. You want to be sure to configure the trigger of the dependent pipeline appropriately as well.</p>
 <p>There are several options for fine-tuning this process. See the office Microsoft documentation below:</p>
 <p><a href="https://learn.microsoft.com/en-us/azure/devops/pipelines/process/pipeline-triggers?view=azure-devops"  class="external-link" target="_blank" rel="noopener">Link to the Microsoft Docs</a></p>
 

@@ -222,7 +222,7 @@ Blue/Green Deployments Link to heading Blue/green deployments are a deployment m
 </h2>
 <p>Blue/green deployments are a deployment model where a new application version never gets deployed to the production servers (green) directly. Instead, it gets deployed to another set of servers (blue) first. Since the blue servers are not currently serving any traffic for users, the deployment has no impact. However, once the deployment has been completed successfully and tested, users will be directed to the new deployment (blue). You can control all user traffic or a subset of user traffic if your load balancer supports it (referred to as ‘Progressive Exposure’).</p>
 <p>The next release will then repeat the same process. Blue would be the current production environment, so you would first deploy to the green servers. This model requires two sets of identical hosts and a load balancer or reverse proxy in front of them. If there are any unexpected issues with the new release, it is straightforward to switch back to the previous release. The disadvantage to this type of model is that it requires having redundant environments (and potentially wasted resources). However, this is less of a concern if using container orchestration platforms such as Kubernetes.</p>
-<p><img src="https://rnemeth90.github.io/wp-content/uploads/2022/01/2022-01-19_07h57_58-1024x575.png" alt="Blue Green deployment model" /></p>
+<p><img src="https://rnemeth90.github.io/wp-content/uploads/2022/01/2022-01-19_07h57_58-1024x575.png" alt="Blue Green deployment model"></p>
 <h2 id="immutable-servers">
   Immutable Servers
   <a class="heading-link" href="#immutable-servers">

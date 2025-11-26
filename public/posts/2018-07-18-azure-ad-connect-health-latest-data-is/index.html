@@ -197,18 +197,18 @@
       <div class="post-content">
         
         <p>I recently had to create a new Azure AD Connect server, and found that it was not able to report health status in the Azure Portal. After some troubleshooting/research, I was able to get the health status report working by registering the health agent on the server with Azure AD Health Services. Doing this involves running one PowerShell cmdlet on your AD Connect server and providing global administrator credentials.</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_56.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_56.png" alt="" /></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_56.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_56.png" alt=""></a></p>
 <p>First, let’s test the status of the agent communication:</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_19.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_19.png" alt="" /></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_19.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_19.png" alt=""></a></p>
 <p>If you do not receive any errors, that means the Azure AD Connect Health agent on your server is able to successfully communicate with the cloud service. Now, let’s register the agent:</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_05.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_05.png" alt="" /></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_05.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_05.png" alt=""></a></p>
 <p>You will be prompted for credentials. The credentials you provide need to be a global administrator account in your Azure AD tenant.</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_42.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_42.png" alt="" /></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_42.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h23_42.png" alt=""></a></p>
 <p>You should receive some output stating that the registration is successful (or it failed).</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h25_20.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h25_20.png" alt="" /></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h25_20.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h25_20.png" alt=""></a></p>
 <p>Now, just go back to the Azure Portal and refresh the page. The message stating that the
 “latest data is not available” should be gone.</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h36_42.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h36_42.png" alt="" /></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h36_42.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/07/2018-07-18_12h36_42.png" alt=""></a></p>
 
       </div>
 

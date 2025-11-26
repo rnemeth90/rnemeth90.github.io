@@ -47,7 +47,8 @@ $computers = get-adcomputer -filter * | Select-Object -ExpandProperty Name
 foreach($computer in $computers) {
   $tm_source = w32tm /query /computer:$computer /source
   write-host &#34;The time source for&#34; $computer &#34;is&#34; $tm_source
-}">
+}
+">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -270,7 +271,8 @@ foreach($computer in $computers) {
 </span></span><span class="line"><span class="cl"><span class="k">foreach</span><span class="p">(</span><span class="nv">$computer</span> <span class="k">in</span> <span class="nv">$computers</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">  <span class="nv">$tm_source</span> <span class="p">=</span> <span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">computer</span><span class="err">:</span><span class="nv">$computer</span> <span class="p">/</span><span class="n">source</span>
 </span></span><span class="line"><span class="cl">  <span class="nb">write-host</span> <span class="s2">&#34;The time source for&#34;</span> <span class="nv">$computer</span> <span class="s2">&#34;is&#34;</span> <span class="nv">$tm_source</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><p><img src="https://github.com/rnemeth90/PowerShell/blob/master/NTP/Get-TimeSource.ps1" alt="" /></p>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><img src="https://github.com/rnemeth90/PowerShell/blob/master/NTP/Get-TimeSource.ps1" alt=""></p>
 
       </div>
 
