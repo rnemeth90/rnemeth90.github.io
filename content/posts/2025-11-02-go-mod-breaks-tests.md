@@ -8,8 +8,9 @@ categories:
 - Golang
 - Programming
 ---
+
 ## Introduction
-If you’ve ever initialized a new Go project with `go mod init main` and later tried to write tests for it, you may have seen this cryptic error:
+If you have ever initialized a new Go project with `go mod init main` and later tried to write tests for it, you may have seen this cryptic error:
 ```
 cannot import "main"
 ```
