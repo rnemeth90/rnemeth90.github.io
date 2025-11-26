@@ -1,0 +1,835 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Kubernetes Certified Security Associate (KCSA) Notes - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-9dfbd86b.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-7d51fce4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-848830eb.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="kubernetes-certified-security-associate-kcsa-notes"><a class="header" href="#kubernetes-certified-security-associate-kcsa-notes">Kubernetes Certified Security Associate (KCSA) Notes</a></h1>
+<p align="center"><img width="180" alt="portfolio_view" src="badge.png"></p>
+
+<p align="center"><img width="300" alt="portfolio_view" src="kubernetes.png"></p>
+
+<h4 align="center"><a href="https://www.cncf.io/certification/kcsa/">https://www.cncf.io/certification/kcsa/</a>
+<h1 align="center">Kubernetes Certified Security Associate (KCSA) Notes</h1>
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList= alse} -->
+<h1 id="table-of-contents"><a class="header" href="#table-of-contents">Table of Contents</a></h1>
+<ul>
+<li><a href="#exam">Exam</a>
+<ul>
+<li><a href="#outline">Outline</a></li>
+<li><a href="#changes">Changes</a></li>
+</ul>
+</li>
+<li><a href="#preparation">Preparation</a>
+<ul>
+<li><a href="#study-resources">Study Resources</a></li>
+<li><a href="#practice">Practice</a></li>
+</ul>
+</li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#overview-of-cloud-native-security">Overview of Cloud Native Security</a>
+<ul>
+<li><a href="#4cs-of-cloud-native-security">4Cs of Cloud Native Security</a></li>
+<li><a href="#cluster-security">Cluster Security</a></li>
+<li><a href="#pod-security">Pod Security</a></li>
+<li><a href="#code-security">Code Security</a></li>
+<li><a href="#kubernetes-threat-models">Kubernetes Threat Models</a>
+<ul>
+<li><a href="#attack-vectors">Attack Vectors</a></li>
+<li><a href="#mitigations">Mitigations</a></li>
+</ul>
+</li>
+<li><a href="#platform-security">Platform Security</a>
+<ul>
+<li><a href="#supply-chain-security">Supply Chain Security</a></li>
+<li><a href="#artifact-and-image-security">Artifact and Image Security</a></li>
+<li><a href="#policy-enforcement">Policy Enforcement</a></li>
+</ul>
+</li>
+<li><a href="#compliance-frameworks">Compliance Frameworks</a>
+<ul>
+<li><a href="#gdpr">GDPR</a></li>
+<li><a href="#hipaa">HIPAA</a></li>
+<li><a href="#pci-dss">PCI DSS</a></li>
+<li><a href="#cis-benchmarks">CIS Benchmarks</a></li>
+</ul>
+</li>
+<li><a href="#threat-modeling">Threat Modeling</a>
+<ul>
+<li><a href="#stride-framework">STRIDE Framework</a></li>
+<li><a href="#mitre-attck-framework">MITRE ATT&amp;CK Framework</a></li>
+</ul>
+</li>
+<li><a href="#observability-and-incident-response">Observability and Incident Response</a>
+<ul>
+<li><a href="#monitoring-and-logging">Monitoring and Logging</a></li>
+<li><a href="#incident-investigation-tools">Incident Investigation Tools</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#kubernetes-cluster-component-security">Kubernetes Cluster Component Security</a>
+<ul>
+<li><a href="#kube-api-server">Kube-api Server</a></li>
+</ul>
+</li>
+</ul>
+<!-- /code_chunk_output -->
+<h1 id="exam"><a class="header" href="#exam">Exam</a></h1>
+<h2 id="outline"><a class="header" href="#outline">Outline</a></h2>
+<ul>
+<li><strong>Exam Duration:</strong> 2 hours</li>
+<li><strong>Number of Questions:</strong> 50</li>
+<li><strong>Question Format:</strong> Multiple choice</li>
+<li><strong>Passing Score:</strong> 66%</li>
+<li><strong>Exam Cost:</strong> $300</li>
+</ul>
+<h2 id="changes"><a class="header" href="#changes">Changes</a></h2>
+<ul>
+<li></li>
+</ul>
+<hr>
+<h1 id="preparation"><a class="header" href="#preparation">Preparation</a></h1>
+<h2 id="study-resources"><a class="header" href="#study-resources">Study Resources</a></h2>
+<ul>
+<li><strong>Kubernetes Documentation:</strong> <a href="https://kubernetes.io/docs/">https://kubernetes.io/docs/</a></li>
+</ul>
+<h2 id="practice"><a class="header" href="#practice">Practice</a></h2>
+<ul>
+<li></li>
+</ul>
+<h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>The Kubernetes and Cloud Native Security Associate (KCSA) certification prepares individuals to secure Kubernetes environments and address modern cloud-native security challenges. This document consolidates core concepts, threat models, compliance standards, and best practices.</p>
+<hr>
+<h1 id="overview-of-cloud-native-security"><a class="header" href="#overview-of-cloud-native-security">Overview of Cloud Native Security</a></h1>
+<h2 id="4cs-of-cloud-native-security"><a class="header" href="#4cs-of-cloud-native-security">4Cs of Cloud Native Security</a></h2>
+<ol>
+<li><strong>Code:</strong> Secure development practices (e.g., avoid hardcoding secrets).</li>
+<li><strong>Container:</strong> Prevent privilege escalation, use minimal base images.</li>
+<li><strong>Cluster:</strong> Restrict API server access, encrypt etcd data.</li>
+<li><strong>Cloud:</strong> Use cloud-native tools for monitoring and securing infrastructure.</li>
+</ol>
+<h2 id="cluster-security"><a class="header" href="#cluster-security">Cluster Security</a></h2>
+<ul>
+<li>Harden the Kubernetes API server with role-based access control (RBAC).</li>
+<li>Disable anonymous authentication for kubelet communication.</li>
+</ul>
+<h2 id="pod-security"><a class="header" href="#pod-security">Pod Security</a></h2>
+<ul>
+<li>Use Pod Security Admission (PSA) to enforce best practices (e.g., no root users).</li>
+<li>Isolate sensitive workloads using namespaces and network policies.</li>
+</ul>
+<h2 id="code-security"><a class="header" href="#code-security">Code Security</a></h2>
+<ul>
+<li>Use static code analysis tools like SonarQube or Codacy.</li>
+<li>Store secrets securely using Kubernetes Secrets.</li>
+</ul>
+<h2 id="kubernetes-threat-models"><a class="header" href="#kubernetes-threat-models">Kubernetes Threat Models</a></h2>
+<h3 id="attack-vectors"><a class="header" href="#attack-vectors">Attack Vectors</a></h3>
+<ul>
+<li><strong>Privilege Escalation:</strong> Exploiting weak RBAC configurations.</li>
+<li><strong>Unauthorized Access:</strong> Using misconfigured service accounts.</li>
+<li><strong>Data Theft:</strong> Exploiting unencrypted volumes or exposed secrets.</li>
+</ul>
+<h3 id="mitigations"><a class="header" href="#mitigations">Mitigations</a></h3>
+<ul>
+<li>Apply principle of least privilege with RBAC.</li>
+<li>Use encryption for both data at rest and in transit.</li>
+<li>Regularly scan images for vulnerabilities.</li>
+</ul>
+<h2 id="platform-security"><a class="header" href="#platform-security">Platform Security</a></h2>
+<h3 id="supply-chain-security"><a class="header" href="#supply-chain-security">Supply Chain Security</a></h3>
+<ul>
+<li>Use SBOMs (Software Bill of Materials) to track dependencies.</li>
+<li>Sign container images using tools like Cosign.</li>
+</ul>
+<h3 id="artifact-and-image-security"><a class="header" href="#artifact-and-image-security">Artifact and Image Security</a></h3>
+<ul>
+<li>Enforce vulnerability scanning with tools like Trivy or Clair.</li>
+<li>Ensure images come from trusted registries.</li>
+</ul>
+<h3 id="policy-enforcement"><a class="header" href="#policy-enforcement">Policy Enforcement</a></h3>
+<ul>
+<li>Use tools like Kyverno and OPA Gatekeeper to validate deployments.</li>
+<li>Enforce policies for image signatures, namespace isolation, and resource quotas.</li>
+</ul>
+<h2 id="compliance-frameworks"><a class="header" href="#compliance-frameworks">Compliance Frameworks</a></h2>
+<h3 id="gdpr"><a class="header" href="#gdpr">GDPR</a></h3>
+<ul>
+<li>Encrypt sensitive user data in transit and at rest.</li>
+<li>Implement RBAC to restrict access to personal data.</li>
+</ul>
+<h3 id="hipaa"><a class="header" href="#hipaa">HIPAA</a></h3>
+<ul>
+<li>Ensure secure handling of healthcare information using TLS and encrypted storage.</li>
+<li>Log and monitor access to healthcare data.</li>
+</ul>
+<h3 id="pci-dss"><a class="header" href="#pci-dss">PCI DSS</a></h3>
+<ul>
+<li>Segment payment data workloads with network policies.</li>
+<li>Regularly audit access controls and encryption compliance.</li>
+</ul>
+<h3 id="cis-benchmarks"><a class="header" href="#cis-benchmarks">CIS Benchmarks</a></h3>
+<ul>
+<li>Use kube-bench to check Kubernetes against CIS recommendations.</li>
+<li>Ensure secure API server and etcd configurations.</li>
+</ul>
+<h2 id="threat-modeling"><a class="header" href="#threat-modeling">Threat Modeling</a></h2>
+<h3 id="stride-framework"><a class="header" href="#stride-framework">STRIDE Framework</a></h3>
+<ul>
+<li><strong>Spoofing:</strong> Prevent by enforcing strong authentication (e.g., mTLS).</li>
+<li><strong>Tampering:</strong> Ensure data integrity with digital signatures.</li>
+<li><strong>Information Disclosure:</strong> Encrypt all sensitive data.</li>
+<li><strong>Denial of Service:</strong> Use resource quotas and rate limits.</li>
+</ul>
+<h3 id="mitre-attck-framework"><a class="header" href="#mitre-attck-framework">MITRE ATT&amp;CK Framework</a></h3>
+<ul>
+<li>Focuses on real-world attack scenarios.</li>
+<li>Categories include Initial Access, Persistence, Privilege Escalation, and Defense Evasion.</li>
+</ul>
+<h2 id="observability-and-incident-response"><a class="header" href="#observability-and-incident-response">Observability and Incident Response</a></h2>
+<h3 id="monitoring-and-logging"><a class="header" href="#monitoring-and-logging">Monitoring and Logging</a></h3>
+<ul>
+<li>Use <strong>Prometheus</strong> for metrics collection and alerting.</li>
+<li>Use <strong>Fluentd</strong> or <strong>Elasticsearch</strong> for log aggregation and search.</li>
+</ul>
+<h3 id="incident-investigation-tools"><a class="header" href="#incident-investigation-tools">Incident Investigation Tools</a></h3>
+<ul>
+<li>Use <strong>Falco</strong> for runtime security alerts.</li>
+<li>Use <strong>Zeek</strong> and <strong>Snort</strong> for network intrusion detection.</li>
+</ul>
+<hr>
+<h1 id="kubernetes-cluster-component-security"><a class="header" href="#kubernetes-cluster-component-security">Kubernetes Cluster Component Security</a></h1>
+<ul>
+<li>Use TLS to ensure all traffic between cluster control-plane components is encrypted</li>
+</ul>
+<h2 id="kube-api-server"><a class="header" href="#kube-api-server">Kube-API Server</a></h2>
+<ul>
+<li>Kube-API server is at the center of all operations in a Kubernetes cluster</li>
+<li>In regards to security, we need to make 2 decisions, who can access the cluster, and what can they do?
+<ul>
+<li>Certificates</li>
+<li>LDAP</li>
+<li>Service Accounts</li>
+</ul>
+</li>
+<li>Once they gain access to the cluster, what they can do is defined by authorization mechanisms:
+<ul>
+<li>RBAC</li>
+<li>ABAC</li>
+</ul>
+</li>
+</ul>
+<h2 id="controller-manager-and-scheduler"><a class="header" href="#controller-manager-and-scheduler">Controller Manager and Scheduler</a></h2>
+<ul>
+<li>Controller manager ensures nodes are healthy, manages pods and controllers, etc.</li>
+<li>The scheduler determines where (on which nodes) the pods can run on in a cluster</li>
+<li>To protect either of these components, you need to isolate them.</li>
+</ul>
+<h2 id="kubelet"><a class="header" href="#kubelet">Kubelet</a></h2>
+<ul>
+<li>Kubelet runs on the worker nodes and manages the node</li>
+<li>Kubelet registers the node with the control-plane</li>
+<li>Kubelet listens on 2 ports:
+<ul>
+<li>10250: Serves API that allows full access</li>
+<li>10255: Serves API that allows unauthenticated, read-only access</li>
+</ul>
+</li>
+<li>By default, kubelet allows anonymous access to it’s API.
+<ul>
+<li><code>curl -sk https://nodename:10250/pods/</code></li>
+<li><code>curl -sk https://nodename:10250/logs/syslog/</code></li>
+<li><code>curl -sk https://nodename:10255/metrics/</code></li>
+<li>This can be disabled by setting <code>anonymous-auth=false</code> in the kubelet config</li>
+<li>Kubelet supports 2 types of authentication, bearer token and certificate-based</li>
+</ul>
+</li>
+</ul>
+<h2 id="security-the-container-runtime"><a class="header" href="#security-the-container-runtime">Security the Container Runtime</a></h2>
+<ul>
+<li>The container runtime is responsible for running the containers</li>
+<li>CRI (Container Runtime Interface) allows Kubernetes to use any container runtime that is compliant with CRI</li>
+<li>The most common container runtime is Docker, but others include containerd, cri-o, etc.</li>
+<li>You should configure pods and containers to run with least privileges by configuring the security context</li>
+<li>You should also scan the images for vulnerabilities before deploying them</li>
+</ul>
+<h2 id="securing-kubeproxy"><a class="header" href="#securing-kubeproxy">Securing KubeProxy</a></h2>
+<ul>
+<li>KubeProxy is responsible for managing the network in a Kubernetes cluster</li>
+<li>Ensure that proper permissions are set on the kube-proxy config file
+<pre><code>&gt; px aux |grep -i kube-proxy |grep -i config - This will show the kube-proxy process and the config file it is using
+&gt; ls -l /var/lib/kube-proxy/kube-config.conf - This will show the permissions on the kube-proxy config file
+</code></pre>
+</li>
+</ul>
+<h2 id="pod-security-1"><a class="header" href="#pod-security-1">Pod Security</a></h2>
+<h3 id="pod-security-admission"><a class="header" href="#pod-security-admission">Pod Security Admission</a></h3>
+<ul>
+<li>Pod Security Policies (PSP) are deprecated in Kubernetes 1.21</li>
+<li>Pod Security Admission (PSA) is the new way to enforce security policies on pods</li>
+<li>PSA is a webhook that intercepts pod creation requests and validates them against a set of policies</li>
+</ul>
+<h2 id="securing-etcd"><a class="header" href="#securing-etcd">Securing etcd</a></h2>
+<ul>
+<li>etcd is a distributed key-value store that stores the state of the cluster</li>
+<li>etcd is a critical component of the cluster and should be secured</li>
+<li>etcd should be configured to use TLS for encryption. To encrypt the database, you can create a <code>EncryptionConfiguration</code> object and pass it to the etcd pod</li>
+</ul>
+<h1 id="kubernetes-security-fundamentals"><a class="header" href="#kubernetes-security-fundamentals">Kubernetes Security Fundamentals</a></h1>
+<h2 id="pod-security-admission-1"><a class="header" href="#pod-security-admission-1">Pod Security Admission</a></h2>
+<ul>
+<li>Replaces pod security standards</li>
+<li>Meant to be safe and easy to use.</li>
+<li>Enabled by default. Runs as an admission controller.</li>
+<li>Applied to namespaces. To apply to a namespace, simply add a label:
+<pre><code>kubectl label ns &lt;namespace&gt; pod-security.kubernetes.io/&lt;mode&gt;=&lt;security standard&gt;
+</code></pre>
+<ul>
+<li>
+<p>Modes:</p>
+<ul>
+<li>What action to take if a pod violates the policy</li>
+<li>The modes are: enforce, audit, warn</li>
+</ul>
+</li>
+<li>
+<p>Standards:</p>
+<ul>
+<li>These are built-in policies</li>
+<li>They are: Privileged, baseline, and restricted</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="authentication"><a class="header" href="#authentication">Authentication</a></h2>
+<ul>
+<li>Kubernetes does not manage user accounts itself. It depends on an external service to do that.</li>
+<li>All authentication is managed by the kube-api server</li>
+<li>Kube-api server authenticates users via certificates, tokens, or an external service such as LDAP or Kerberos</li>
+</ul>
+<h2 id="authorization"><a class="header" href="#authorization">Authorization</a></h2>
+<ul>
+<li>Once someone or something is authenticated, what are they able to do? This is authorization.</li>
+<li>There are 6 different authorization modes in Kubernetes:
+<ul>
+<li>Node</li>
+<li>ABAC</li>
+<li>RBAC</li>
+<li>Webhook</li>
+<li>AlwaysAllow (the default)</li>
+<li>AlwaysDeny</li>
+</ul>
+</li>
+<li>Authorization mode can be configured on the kube-api server using the <code>--authorization-mode</code> flag</li>
+</ul>
+<h3 id="rbac"><a class="header" href="#rbac">RBAC</a></h3>
+<ul>
+<li></li>
+<li>Role, ClusterRole, RoleBinding ClusterRoleBinding</li>
+</ul>
+<h2 id="secrets"><a class="header" href="#secrets">Secrets</a></h2>
+<ul>
+<li>Secrets are used to store sensitive information</li>
+<li>They are similar in concept to <code>ConfigMaps</code></li>
+<li>Secrets are not encrypted, they are base64 encoded</li>
+<li>Secrets are only loaded on nodes where they are needed.</li>
+</ul>
+<h2 id="namespaces"><a class="header" href="#namespaces">Namespaces</a></h2>
+<ul>
+<li>Namespaces can be used to isolate or organize resources in a Kubernetes cluster</li>
+<li>RBAC can be applied to namespaces for authorization</li>
+<li></li>
+</ul>
+<h2 id="resource-quotas-and-limits"><a class="header" href="#resource-quotas-and-limits">Resource Quotas and Limits</a></h2>
+<h3 id="resource-requests-and-limits"><a class="header" href="#resource-requests-and-limits">Resource Requests and Limits</a></h3>
+<h3 id="resource-quotas"><a class="header" href="#resource-quotas">Resource Quotas</a></h3>
+<ul>
+<li>Set a hard limit for resource requests and quotas defined on a pod</li>
+</ul>
+<h3 id="limit-ranges"><a class="header" href="#limit-ranges">Limit Ranges</a></h3>
+<h2 id="security-context"><a class="header" href="#security-context">Security Context</a></h2>
+<ul>
+<li>a Security Context gives you the ability to do several things:
+<ul>
+<li>run the container as a different UID/GID</li>
+<li>make the root file system read-only</li>
+<li>etc</li>
+</ul>
+</li>
+<li>Some settings can be applied on the pod, and some can be applied on the container</li>
+</ul>
+<h1 id="kubernetes-threat-model"><a class="header" href="#kubernetes-threat-model">Kubernetes Threat Model</a></h1>
+<ul>
+<li>Threat modeling helps you identify potential threats, understand their impact, and put measures in place to prevent them</li>
+<li>Understand how traffic/data flows in the environment and identity vulnerabilities at each point</li>
+</ul>
+<h2 id="persistence"><a class="header" href="#persistence">Persistence</a></h2>
+<ul>
+<li>Once an attacker accesses the environment, the first goal is typically to establishpersistence.</li>
+<li>Persistence allows attackers to maintain access to a cluster</li>
+</ul>
+<h2 id="denial-of-service"><a class="header" href="#denial-of-service">Denial of Service</a></h2>
+<ul>
+<li>Set resource quotas to prevent excessive resource usage</li>
+<li>Restrict service account permissions</li>
+<li>Use Network Policies and firewalls to control access</li>
+<li>Monitor and alert on unusual activity</li>
+</ul>
+<h1 id="platform-security-1"><a class="header" href="#platform-security-1">Platform Security</a></h1>
+<h2 id="observability"><a class="header" href="#observability">Observability</a></h2>
+<ul>
+<li>Falco is a tool that can be used to monitor actions taken on cluster nodes, such as reading/writing files, etc.</li>
+</ul>
+<h2 id="service-mesh"><a class="header" href="#service-mesh">Service Mesh</a></h2>
+<ul>
+<li>A service mesh is a dedicated infrastructure layer for handling service-to-service communication</li>
+<li>It can handle service discovery, load balancing, encryption, etc.</li>
+<li>Istio is a popular service mesh</li>
+</ul>
+<h3 id="istio"><a class="header" href="#istio">Istio</a></h3>
+<ul>
+<li>Istio is a service mesh that provides a way to control how microservices share data with each other</li>
+<li>Istio works with Kubernetes and traditional workloads</li>
+<li>Istio uses a high-performance proxy service called Envoy to manage traffic between services</li>
+</ul>
+<h2 id="certificates"><a class="header" href="#certificates">Certificates</a></h2>
+<h3 id="openssl"><a class="header" href="#openssl">Openssl</a></h3>
+<ul>
+<li>You can use <code>openssl</code> to generate certificates for the cluster</li>
+<li>Generate keys: <code>openssl genrsa -out my.key 2048</code></li>
+<li>Create a CSR: <code>openssl req -new -key my.key -sub "/CN=KUBERNETES-CA" -out ca.csr</code></li>
+<li>Sign certificates: <code>openss x509 -req -in ca.csr -signkey my.key -out ca.crt</code></li>
+</ul>
+<h1 id="compliance-and-security-frameworks"><a class="header" href="#compliance-and-security-frameworks">Compliance and Security Frameworks</a></h1>
+<h2 id="compliance-frameworks-1"><a class="header" href="#compliance-frameworks-1">Compliance Frameworks</a></h2>
+<ul>
+<li>Examples: GDPR, HIPAA, NIST, PCI DSS, CIS</li>
+</ul>
+<h3 id="gdpr-1"><a class="header" href="#gdpr-1">GDPR</a></h3>
+<ul>
+<li>Introduced by the European Union to protect the data of citizens</li>
+</ul>
+<h3 id="hipaa-1"><a class="header" href="#hipaa-1">HIPAA</a></h3>
+<ul>
+<li>A United States regulation used to control the access to health data</li>
+</ul>
+<h3 id="pci-dss-1"><a class="header" href="#pci-dss-1">PCI DSS</a></h3>
+<ul>
+<li>Used to protect payment data</li>
+</ul>
+<h3 id="nist"><a class="header" href="#nist">NIST</a></h3>
+<ul>
+<li>Created by the United States but recognized globally.</li>
+<li>Used to protect compute environments by doing regular security-related audits (pentests, etc.)</li>
+</ul>
+<h3 id="cis"><a class="header" href="#cis">CIS</a></h3>
+<ul>
+<li>CIS creates benchmarks for various environments such as operating systems and Kubernetes</li>
+</ul>
+<h2 id="threat-modeling-frameworks"><a class="header" href="#threat-modeling-frameworks">Threat-Modeling Frameworks</a></h2>
+<ul>
+<li>Threat-modeling frameworks defined how to achieve the compliance frameworks mentioned above</li>
+<li>Two thread-models of interests are STRIDE and MITRE</li>
+</ul>
+<h3 id="stride"><a class="header" href="#stride">STRIDE</a></h3>
+<ul>
+<li>Created and maintained by Microsoft</li>
+<li>Helps identity 6 categories of threats
+<ul>
+<li>Spoofing</li>
+<li>Tampering</li>
+<li>Repudiation</li>
+<li>Information Disclosure</li>
+<li>Denial of Service</li>
+<li>Elevation of Privilege</li>
+</ul>
+</li>
+</ul>
+<h3 id="mitre"><a class="header" href="#mitre">MITRE</a></h3>
+<ul>
+<li>5 categories
+<ul>
+<li>Initial Access</li>
+<li>Execution</li>
+<li>Persistence</li>
+<li>Privilege Escalation</li>
+<li>Defense Evasion</li>
+</ul>
+</li>
+<li>https://microsoft.github.io/Threat-Matrix-for-Kubernetes/</li>
+</ul>
+<h2 id="supply-chain-compliance"><a class="header" href="#supply-chain-compliance">Supply Chain Compliance</a></h2>
+<ul>
+<li>Verify all the components (libraries, container images, etc.) that make up your application are secure and meet compliance requirements</li>
+<li>Securing the supply chain focuses on 4 main areas:
+<ul>
+<li>artifacts</li>
+<li>metadata</li>
+<li>attestations</li>
+<li>policies</li>
+</ul>
+</li>
+</ul>
+<h3 id="reduce-docker-image-size"><a class="header" href="#reduce-docker-image-size">Reduce docker image size</a></h3>
+<ul>
+<li>
+<p>Smaller images are faster to download and deploy</p>
+</li>
+<li>
+<p>Smaller images are more secure</p>
+</li>
+<li>
+<p>Smaller images are easier to manage</p>
+</li>
+<li>
+<p>To reduce the size of a docker image:</p>
+<ul>
+<li>Use a smaller base image</li>
+<li>Use specific package/image versions</li>
+<li>Make file-system read-only</li>
+<li>Don’t run the container as root</li>
+<li>Use multi-stage builds</li>
+<li>Remove unnecessary files</li>
+<li>Use a <code>.dockerignore</code> file to exclude files and directories from the image</li>
+<li>Use <code>COPY</code> instead of <code>ADD</code></li>
+<li>Use <code>alpine</code> images</li>
+<li>Use <code>scratch</code> images</li>
+<li>Use <code>distroless</code> images</li>
+</ul>
+</li>
+<li>
+<p>Example of a multi-stage build:</p>
+<pre><code># build container stage 1
+  FROM ubuntu
+  ARG DEBIAN_FRONTEND=noninteractive
+  RUN apt-get update &amp;&amp; apt-get install -y golang-go
+  COPY app.go .
+  RUN CGO_ENABLED=0 go build app.go
+
+# app container stage 2
+  FROM alpine:3.12.1 # it is better to use a defined tag, rather than 'latest'
+  RUN addgroup -S appgroup &amp;&amp; adduser -S appuser -G appgroup -h /home/appuser
+  COPY --from=0 /app /home/appuser/app
+  USER appuser # run as a non-root user
+  CMD ["/home/appuser/app"]
+</code></pre>
+</li>
+<li>
+<p>Dockerfile best practices: https://docs.docker.com/build/building/best-practices/</p>
+</li>
+<li>
+<p>Only certain docker directives create new layers in an image</p>
+<ul>
+<li><code>FROM</code></li>
+<li><code>COPY</code></li>
+<li><code>CMD</code></li>
+<li><code>RUN</code></li>
+</ul>
+</li>
+<li>
+<p><code>dive</code> and <code>docker-slim</code> are two tools you can use to explore the individual layers that make up an image</p>
+</li>
+</ul>
+<h3 id="static-analysis"><a class="header" href="#static-analysis">Static Analysis</a></h3>
+<h4 id="sbom"><a class="header" href="#sbom">SBOM</a></h4>
+<ul>
+<li>A SBOM is a list of all the software that makes up a container image (or an application, etc.)</li>
+<li>Formats
+<ul>
+<li>SPDX
+<ul>
+<li>The standard format for sharing SBOM</li>
+<li>Available in JSON, RDF, and tag/value formats</li>
+<li>More complex than CycloneDX due to it’s extensive metadata coverage</li>
+<li>Comprehensive metadata including license information, origin, and file details</li>
+</ul>
+</li>
+<li>CycloneDX
+<ul>
+<li>A lightweight format focused on security and compliance</li>
+<li>Available in JSON and XML formats</li>
+<li>Simpler and more focused on essential SBOM elements</li>
+<li>Focuses on component details, vulnerabilities, and dependencies</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="kubesec"><a class="header" href="#kubesec">Kubesec</a></h4>
+<ul>
+<li>Used for static analysis of manifests</li>
+<li>https://github.com/controlplaneio/kubesec</li>
+</ul>
+<h4 id="syft"><a class="header" href="#syft">Syft</a></h4>
+<ul>
+<li>Syft is a powerful and easy-to-use open-source tool for generating Software Bill of Materials (SBOMs) for container images and filesystems. It provides detailed visibility into the packages and dependencies in your software, helping you manage vulnerabilities, license compliance, and software supply chain security.</li>
+<li>Syft can export results in SPDX, CycloneDX, JSON, etc.</li>
+<li>To scan an image with syft and export the results to a file in SPDX format:
+<pre><code>syft scan docker.io/kodekloud/webapp-color:latest -o spdx --file /root/webapp-spdx.sbom
+</code></pre>
+</li>
+</ul>
+<h4 id="grype"><a class="header" href="#grype">Grype</a></h4>
+<ul>
+<li>Grype is a tool (also from Anchore) that can be used to scan SBOM for vulnerabilities</li>
+<li>To scan a SBOM with Grype:
+<pre><code>grype /root/webapp-sbom.json -o json --file /root/grype-report.json
+</code></pre>
+</li>
+</ul>
+<h4 id="kube-linter"><a class="header" href="#kube-linter">Kube-linter</a></h4>
+<ul>
+<li>Kube-linter can be used to lint Kubernetes manifests and ensure best practices are being followed</li>
+<li>kube-linter is configurable. You can disable/enable checks and even create your own custom checks</li>
+<li>kube-linter includes recommendations for how to fix failed checks</li>
+<li>https://github.com/stackrox/kube-linter</li>
+</ul>
+<h3 id="scanning-images-for-vulnerabilities"><a class="header" href="#scanning-images-for-vulnerabilities">Scanning Images for Vulnerabilities</a></h3>
+<h4 id="trivy"><a class="header" href="#trivy">trivy</a></h4>
+<ul>
+<li>trivy can be used to scan images for vulnerabilities</li>
+<li>https://github.com/aquasecurity/trivy</li>
+<li>Example:
+<pre><code>  sudo docker run --rm  aquasec/trivy:0.17.2 nginx:1.16-alpine
+</code></pre>
+</li>
+</ul>
+</h4>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../kubernetes/kcsa/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../networking/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../kubernetes/kcsa/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../networking/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

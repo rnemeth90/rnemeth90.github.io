@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: apparmor-hostprofile-pod
+  name: apparmor-hostprofile-pod
+  namespace: apparmor-lab
+spec:
+  containers:
+  - args:
+    - /bin/sh
+    - -c
+    - sleep 1h
+    image: busybox:1.28
+    name: busybox-security-context
+    securityContext:
+      appArmorProfile:
+        type: Localhost
+        localhostProfile: runc

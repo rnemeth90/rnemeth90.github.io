@@ -1,0 +1,593 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Algorithms - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-9dfbd86b.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-7d51fce4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-848830eb.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="measuring-algorithm-performance"><a class="header" href="#measuring-algorithm-performance">Measuring algorithm performance</a></h1>
+<p><img src="../images/big-o.png" alt=""></p>
+<h2 id="analyzing-algorithms"><a class="header" href="#analyzing-algorithms">Analyzing Algorithms</a></h2>
+<ul>
+<li>One way to judge an algorithm’s performance is by its runtime (wall-clock time). Another method is CPU time (the time the algorithm actually run on the CPU). Neither of these are good practice, as both will vary with each run of the algorithm. Instead, computer scientists compare algorithms by looking at the number of steps they require.</li>
+<li>You can input the number of steps involved in a n algorithm into a formula that can compare two or more algorithms without considering the programming language or computer.</li>
+<li>Let’s take a look at a simple example:</li>
+</ul>
+<pre><code>package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    arr := []int{1,2,3,4,5}
+    for _, v := range arr {
+        fmt.Println(v)
+    }
+}
+</code></pre>
+<p>The function above takes 5 steps to complete. You can express this with the following formula:</p>
+<pre><code>f(n) = 5
+</code></pre>
+<p>If you make the program more complicated, the formula will change. Let’s say you wanted to keep track of the variables as you printed them:</p>
+<pre><code>package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    var count int = 0
+    arr := []int{1,2,3,4,5}
+    for _, v := range arr {
+        fmt.Println(v)
+        count += v
+    }
+}
+</code></pre>
+<p>The formula for this program would now be:</p>
+<pre><code>f(n) = 11
+</code></pre>
+<p>The program takes 11 steps to complete. It first assigns the count variable the value 0. Then, it prints five numbers and increments five times (1 + 5 + 5 = 11)</p>
+<p>It can be hard to determine how many steps a particular algorithm takes, especially in large programs and in functions/methods with many conditional statements. Luckily, you don’t need to care about how many steps an algorithm has. Instead, you should care about how the algorithm performs as <code>n</code> gets bigger.</p>
+<p>Because the important part of an algorithm is the part that grows the fastest as <code>n</code> gets bigger, computer scientists use ‘Big O’ notation to express an algorithm’s efficiency instead of a T(n) equation. Big O notation is a mathematical notation that describes how an algorithm’s time or space requirements increase as the size of n increases. Computer scientists use Big O Notation to create an order-of-magnitude function from T(n). An order-of-magnitude is a class in a classification system where each class is many times greater or smaller than the one before. In an order-of-magnitude function, you use the part of <code>T(n)</code> that dominates the equation, and ignore everything else. The part of <code>T(n)</code> that dominates the equation is an algorithm’s order of magnitude.</p>
+<p>These are the most commonly used classifications for order of magnitude in Big O Notation, sorted from best (most efficient) to worst (least efficient):</p>
+<ol>
+<li>Constant Time</li>
+<li>Logarithmic time</li>
+<li>Linear time</li>
+<li>Log-Linear time</li>
+<li>Quadratic time</li>
+<li>Cubic time</li>
+<li>Exponential time</li>
+</ol>
+<p>Each order of magnitude describes an algorithm’s time complexity. Time complexity is the maximum number of steps an algorithm takes to complete as <code>n</code> get bigger.</p>
+<h2 id="order-of-magnitude-classifications"><a class="header" href="#order-of-magnitude-classifications">Order of magnitude classifications:</a></h2>
+<h3 id="constant-time"><a class="header" href="#constant-time">Constant Time</a></h3>
+<ul>
+<li>An algorithm runs in constant time when it requires the same number of steps regardless of the problem’s size. The Big O notation for constant time complexity is <code>O(1)</code>. For example, let’s say you own a book store. Each day, you give the first customer of that day a free book. You may track this in a program using the following code:</li>
+</ul>
+<pre><code>free_book = customers_for_day[0]
+</code></pre>
+<p>The <code>T(n)</code> equation for this would be <code>T(n) = 1</code></p>
+<p>Your algorithm requires one step, no matter how many customers you have. When you graph a constant time complexity algorithm on a chart with the number of inputs on the x-axis and number of steps on the y-axis, the graph is a flat line.</p>
+<h3 id="logarithmic-time"><a class="header" href="#logarithmic-time">Logarithmic Time</a></h3>
+<ul>
+<li>The second most efficient time complexity. An algorithm takes logarithmic time when its run time grows in proportion to the logarithm of the input size. You see this in algorithms such as a binary search that can discard many values at each iteration.</li>
+<li>You express a logarithmic function in big O notation <code>O(log n)</code>.</li>
+<li>A logarithm is the power that a number needs to be raised to to get some other number. In computer science, the number that we raise to (the base) is always 2 (unless otherwise specified).</li>
+</ul>
+<h3 id="linear-time"><a class="header" href="#linear-time">Linear Time</a></h3>
+<ul>
+<li>An algorithm that runs in linear time grows at the same rate as the size of the problem.</li>
+<li>You express a linear algorithm in Big O notation <code>O(n)</code>.</li>
+<li>Suppose you modify your free book program so that instead of giving a free book to the first customer of the day, you iterate through your list of customers and give all customers who’s name starts with the letter “B” a free book. The list of customers is not sorted. Now you must iterate through the list one by one to find all the customers who’s names start with the letter “B”. When your customer list contains 5 items, your algorithm will take 5 steps. When it contains 10 items, it will take 10 steps, and so on.</li>
+</ul>
+<h3 id="log-linear-time"><a class="header" href="#log-linear-time">Log-Linear Time</a></h3>
+<ul>
+<li>Log-linear time grows as a combination of logarithmic and linear time complexities. For example, a log-linear algorithm might evaluate an O(log n) operation n times. In Big O Notation, you express a log-linear algorithm as O(n log n). Log-Linear algorithms often divide a data set into smaller parts and process each piece independently.</li>
+</ul>
+<h3 id="quadratic-time"><a class="header" href="#quadratic-time">Quadratic Time</a></h3>
+<ul>
+<li>An algorithm runs in quadratic time when its performance is directly proportional to the problem’s size squared. In big O notation, you express this as O(n^2)</li>
+<li>Example:</li>
+</ul>
+<pre><code>numbers = [1,2,3,4,5]
+for i in numbers:
+    for j in numbers:
+        x = i * j
+        print(x)
+</code></pre>
+<ul>
+<li>As a general rule, if your algorithm contains two nested loops running from 1 to n, it’s time complexity will be at least O(n^2). Many sorting algorithms such as insertion sort use quadratic time.</li>
+</ul>
+<h3 id="cubic-time"><a class="header" href="#cubic-time">Cubic Time</a></h3>
+<ul>
+<li>An algorithm runs in cubic time when its performance is directly proportional to the size of the problem cubed. This is expressed in Big O notation as O(n^3)</li>
+<li>Example:</li>
+</ul>
+<pre><code>numbers = [1,2,3,4,5]
+for i in numbers:
+    for j in numbers:
+        for h in numbers:
+            x = i + j + 
+            print(x)
+</code></pre>
+<h3 id="exponential-time"><a class="header" href="#exponential-time">Exponential Time</a></h3>
+<ul>
+<li>One of the worst time complexities</li>
+<li>An algorithm that runs in exponential time contains a constant that is raised to the size of the problem.</li>
+<li>Big O Notation: O(c^n)</li>
+<li>Example:</li>
+</ul>
+<pre><code>pin = 931
+n = len(pin)
+for i in range(10**n):
+    if i == pin:
+        print(i)
+</code></pre>
+<p>Here we are trying to guess a 3 digit password. When n is 1, the algorithm takes 10 steps. When n is 2, the algorith takes 100 steps. When n is 3, the algorithm takes 1000 steps. It grows quickly.</p>
+<h2 id="search-algorithms"><a class="header" href="#search-algorithms">Search Algorithms</a></h2>
+<h3 id="linear-search"><a class="header" href="#linear-search">Linear Search</a></h3>
+<ul>
+<li>Iterate through every item in a data set and compare it to the test case</li>
+<li>Time complexity is O(n)</li>
+<li>Consider using a Linear search when the data is not sorted</li>
+</ul>
+<pre><code class="language-go">func linearSearch(numbers []int, value int) bool {
+    for _, v := range numbers {
+       if v == value {
+            return true
+       } 
+    }
+    return false
+}
+
+func main() {
+    nums := []int{1,50,34,20,10,54,23,65}
+    fmt.Println(linearSearch(nums, 34))
+}
+</code></pre>
+<h3 id="binary-search"><a class="header" href="#binary-search">Binary Search</a></h3>
+<ul>
+<li>Faster than a linear search</li>
+<li>Only works when the data is sorted</li>
+<li>A binary search searches for elements in a list by dividing the list into two halves. The first step is to locate the middle number. You then determine if the number you are looking for is less than or greater than the middle number. If the number you are looking for is greater, you continue searching numbers to the right of the middle number, repeating the process of splitting this new list into two. If the number you are looking for is less, you search the numbers to the left of the middle number, repeating this process.</li>
+<li>Time complexity is O(log n)</li>
+</ul>
+<pre><code class="language-go">
+func binarySearch(needle int, haystack []int) bool {
+
+	low := 0
+	high := len(haystack) - 1
+
+	for low &lt;= high{
+		median := (low + high) / 2
+
+		if haystack[median] &lt; needle {
+			low = median + 1
+		}else{
+			high = median - 1
+		}
+	}
+
+	if low == len(haystack) || haystack[low] != needle {
+		return false
+	}
+
+	return true
+}
+
+
+func main(){
+	items := []int{1,2, 9, 20, 31, 45, 63, 70, 100}
+	fmt.Println(binarySearch(63, items))
+}
+
+</code></pre>
+<h2 id="sorting-algorithms"><a class="header" href="#sorting-algorithms">Sorting Algorithms</a></h2>
+<h3 id="bubble-sort"><a class="header" href="#bubble-sort">Bubble Sort</a></h3>
+<ul>
+<li><need to="" add="" notes="">
+</need></li>
+</ul>
+<h3 id="insertion-sort"><a class="header" href="#insertion-sort">Insertion sort</a></h3>
+<ul>
+<li>Insertion sort is a sorting algorithm where you sort a list like you sort a deck of cards. Suppose you have the numbers [ 6,5,8,2 ]. You start with the second number in the list and compare it to the first. Since 5 is less than 6, you move 5 to the first position. You now compare the number in the third position (8) to the number in the second position. Because 8 is greater than 6, 8 does not move. Because you already sorted the first half of the list, you do not need to compare 8 to 5. You then compare the 4th number in the list (2), and because 8 is greater than 2, you go one by one through the sorted left half of the list, comparing 2 to each number until it arrives at the front and the entire list is sorted: 2,5,6,8</li>
+<li>Example:</li>
+</ul>
+<pre><code>def insertion_sort(a_list):
+    for i in range(len(a_list) - 1):
+        current_position = i + 1
+
+        while currrent_postition &gt; 0 and a_list[current_position - 1] &gt; a_list[current_position]:
+            # swap
+            a_list[current_position], a_list[current_position - 1] = a_list[current_position - 1], a_list[current_position]
+            current_position -= 1
+    return a_list
+</code></pre>
+<ul>
+<li>Insertion sort is O(n^2), so it is not very efficient</li>
+<li>Insert sort can be efficient on a nearly sorted list</li>
+</ul>
+<h3 id="merge-sort"><a class="header" href="#merge-sort">Merge Sort</a></h3>
+<ul>
+<li>A merge sort is a recursive divide-and-conquer sorting algorithm that continually splits a list in half until there are one or more lists containing one item and then puts them back together in the correct order.
+Steps:
+<ol>
+<li>If the list is of length 1, return the list as it is already sorted by definition of the merge sort algorithm.</li>
+<li>If the list has more than one item, split the list into two halves.</li>
+<li>Recursively call the merge sort function on both halves.</li>
+<li>Merge the two sorted halves back together into one sorted list by comparing the first</li>
+</ol>
+</li>
+</ul>
+<p><img src="../images/algorithms/merge-sort.png" alt="Merge Sort"></p>
+<ul>
+<li>Lists containing only one item are sorted by definition.</li>
+<li>A merge sort is a ‘divide and conquer’ algorithm. You recursively break a problem into two until they are simple enough to solve easily.</li>
+<li>A merge sort’s time complexity is O(n * log n)</li>
+<li>With log linear time complexity, a merge sort is one of the most efficient sorting algorithms</li>
+</ul>
+<pre><code class="language-python">def merge_sort(nums):
+    if len(nums) &lt; 2:
+        return nums
+
+    mid = len(nums) // 2
+    first_half = nums[:mid]
+    second_half = nums[mid:]
+
+    sorted_left_side = merge_sort(first_half)
+    sorted_right_side = merge_sort(second_half)
+    return merge(sorted_left_side, sorted_right_side)
+
+def merge(first, second):
+    final = []
+    i = 0
+    j = 0
+
+    while i &lt; len(first) and j &lt; len(second):
+        if first[i] &lt;= second[j]:
+            final.append(first[i])
+            i += 1
+        else:
+            final.append(second[j])
+            j += 1
+
+    while i &lt; len(first):
+        final.append(first[i])
+        i += 1
+
+    while j &lt; len(second):
+        final.append(second[j])
+        j += 1
+        
+    return final
+</code></pre>
+<h3 id="quick-sort"><a class="header" href="#quick-sort">Quick Sort</a></h3>
+<ul>
+<li>Like merge sort, quick sort is a recursive divide-and-conquer sorting algorithm. However, instead of splitting the list in half, quick sort selects a ‘pivot’ element from the list and partitions the other elements into two sub-arrays according to whether they are less than or greater than the pivot. The sub-arrays are then sorted recursively.</li>
+<li>Quick sort will sort the list in-pace, requiring small additional amounts of memory to perform the sorting.</li>
+<li>If the list has zero or one element, it is already sorted.</li>
+<li>Quick sort will quickly degrade into O(n^2) time complexity if the pivot elements are poorly chosen. i.e. if the smallest or largest element is always chosen as the pivot in an already sorted list. However, with good pivot selection, quicksort can achieve average time complexity of O(n log n). To ensure good pivot selection, you can use techniques such as choosing the median element or using randomization.</li>
+</ul>
+<pre><code class="language-python">def partition(nums, low, high):
+    if low &lt; high:
+        middle = partition(nums, low, high)
+
+        quick_sort(nums, low, middle - 1)
+        quick_sort(nums, middle + 1, high)
+
+def paritition(nums, low, high):
+    pivot = nums[high] # get the last element in the list
+    i = low - 1 # pointer for the smaller element
+
+    for j in range(low, high):
+        if nums[j] &lt;= pivot:
+            i += 1
+            nums[i], nums[j] = nums[j], nums[i] # swap
+
+    nums[i + 1], nums[high] = nums[high], nums[i + 1] # swap pivot element
+    return i + 1
+
+</code></pre>
+<h3 id="selection-sort"><a class="header" href="#selection-sort">Selection Sort</a></h3>
+<ul>
+<li>Selection sort is similar to bubble sort in that it repeatedly swaps items in a list. However, it’s slightly more performant as it only makes one swap per iteration of the outer loop.</li>
+</ul>
+<pre><code class="language-python">def selection_sort(a_list):
+    for i in range(len(a_list)):
+        smallest_index = i
+        for j in range(i + 1, len(a_list)):
+            if a_list[j] &lt; a_list[smallest_index]:
+                smallest_index = j
+        a_list[i], a_list[smallest_index] = a_list[smallest_index], a_list[i] # swap
+
+</code></pre>
+<h1 id="polynomial-vs-exponential-time-complexity"><a class="header" href="#polynomial-vs-exponential-time-complexity">Polynomial vs Exponential Time Complexity</a></h1>
+<ul>
+<li>Broadly speaking, algorithms can be classified into two categories based on their time complexity: polynomial time and exponential time.</li>
+<li>Algorithm runs in Polynomial time if its runtime does not grow faster than n^k, where k is any constant (e.g. n^2, n^3, n^4, etc.) and n is the size of the input. Polynomial time algorithms can be useful if they are not too slow.</li>
+<li>Exponential time algorithms are almost always too slow to be practical.</li>
+<li>The name for the set of Polynomial time algorithms is “P”. Problems that can be solved by polynomial time algorithms are called “tractable” problems. Problems that cannot be solved by polynomial time algorithms are called “intractable” problems.</li>
+</ul>
+<h1 id="examples"><a class="header" href="#examples">Examples</a></h1>
+<pre><code>package main
+
+func main() {
+
+}
+
+// O(1) describes an algorithm that will always execute in the same time (or space) regardless of the size of the input data set.
+func returnFalse() bool {
+        return false
+}
+
+// O(N) describes an algorithm whose performance will grow linearly and in direct proportion to the size of the input data set. The example below also demonstrates how Big O favours the worst-case performance scenario; a matching string could be found during any iteration of the for loop and the function would return early, but Big O notation will always assume the upper limit where the algorithm will perform the maximum number of iterations.
+func containsValue(value int, intSlice []int) bool {
+        for r := range intSlice {
+                if r == value {
+                        return true
+                }
+        }
+        return false
+}
+
+// O(N²) represents an algorithm whose performance is directly proportional to the square of the size of the input data set. This is common with algorithms that involve nested iterations over the data set. Deeper nested iterations will result in O(N³), O(N⁴) etc.
+func containsDuplicates(vals []string) bool {
+        for i := 0; i &lt; len(vals); i++ {
+                for j := 0; j &lt; len(vals); j++ {
+                        if i == j {
+                                continue
+                        }
+                        if vals[i] == vals[j] {
+                                return true
+                        }
+                }
+        }
+        return false
+}
+
+// O(2^N) denotes an algorithm whose growth doubles with each addition to the input data set. The growth curve of an O(2^N) function is exponential — starting off very shallow, then rising meteorically. An example of an O(2^N) function is the recursive calculation of Fibonacci numbers:
+func Fibonacci(number int) int {
+        if number &lt;= 1 {
+                return number
+        }
+
+        return Fibonacci(number-2) + Fibonacci(number-1)
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../compsci/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../compsci/computer_architecture.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../compsci/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../compsci/computer_architecture.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

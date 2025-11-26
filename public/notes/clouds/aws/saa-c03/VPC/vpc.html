@@ -1,0 +1,690 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Introduction to VPC - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../../../css/chrome-9dfbd86b.css">
+        <link rel="stylesheet" href="../../../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../../searchindex-7d51fce4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc-848830eb.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <ul>
+<li><a href="#introduction-to-vpc">Introduction to VPC</a></li>
+<li><a href="#core-components">Core Components</a></li>
+<li><a href="#key-features">Key Features</a></li>
+<li><a href="#default-vpc">Deafult VPC</a></li>
+<li><a href="#vpc-peering">VPC Peering</a></li>
+<li><a href="#route-tables">Route Tables</a></li>
+<li><a href="#internet-gateway-igw">Internet Gateway (IGW)</a></li>
+<li><a href="#bastionjumpbox">Bastion/Jumpbox</a></li>
+<li><a href="#direct-connect">Direct Connect</a></li>
+<li><a href="#vpc-endpoints">VPC Endpoints</a>
+<ul>
+<li><a href="#interface-endpoints">Interface Endpoints</a></li>
+<li><a href="#vpc-gateway-endpoints">VPC Gateway Endpoints</a></li>
+</ul>
+</li>
+<li><a href="#vpc-flow-logs">VPC Flow Logs</a></li>
+<li><a href="#nacls">NACLs</a></li>
+<li><a href="#security-groups">Security Groups</a></li>
+<li><a href="#nacl-vs-security-groups">NACL v/s Security Groups</a></li>
+<li><a href="#site-to-site-vpn--virtual-private-gateway-and-customer-gateway">Site to Site VPN , Virtual Private Gateway and Customer Gateway</a></li>
+<li><a href="#secrets-manager">Secrets Manager</a></li>
+</ul>
+<hr>
+<h2 id="introduction-to-vpc"><a class="header" href="#introduction-to-vpc">Introduction to VPC</a></h2>
+<hr>
+<ul>
+<li>Think of a AWS VPC as your own personal data centre</li>
+<li>Gives you complete control over your virtual networking environment.</li>
+</ul>
+<hr>
+<h2 id="core-components"><a class="header" href="#core-components">Core Components</a></h2>
+<hr>
+<ul>
+<li>Internet Gateway (IGW)</li>
+<li>Virtual Private Gateway (VPN Gateway)</li>
+<li>Routing Tables</li>
+<li>Network Access Control Lists (NACLs) - Stateless</li>
+<li>Security Groups (SG) Stateful</li>
+<li>Public Subnets</li>
+<li>Private Subnets</li>
+<li>Nat Gateway</li>
+<li>Customer Gateway</li>
+<li>VPC Endpoints</li>
+<li>VPC Peering</li>
+</ul>
+<hr>
+<h2 id="key-features"><a class="header" href="#key-features">Key Features</a></h2>
+<hr>
+<ul>
+<li>VPCs are Region Specific they do not span regions</li>
+<li>You can create 5 VPC per region</li>
+<li>Every region comes with a default VPC</li>
+<li>You can have 200 subnets per VPC</li>
+<li>You can use IPv4 Cidr Blocks (the address of the VPC)</li>
+<li>Cost nothing: VPC’s, Route Tables, Nacls, Internet Gateways, Security Groups and Subnets, VPC Peering</li>
+<li>Some things cost money: eg. NAT Gateway, VPC Endpoints, VPN Gateway, Cutomer Gateway</li>
+<li>DNS hostnames (should your instance have domain)</li>
+</ul>
+<hr>
+<h2 id="default-vpc"><a class="header" href="#default-vpc">Default VPC</a></h2>
+<hr>
+<ul>
+<li>Craete a VPC with a szie/16 IPv4 CIDR block (172.31.0.0./16)</li>
+<li>Create a size /20 default subnet in each AZ</li>
+<li>Create an Internet Gateway and connect it to your default VPC</li>
+<li>Create a default security  group and associate it with your default VPC</li>
+<li>Create a default network access control list (NACL) and associate it with your default VPC</li>
+<li>Associate the default DHCP options set for your AWS account with your default VPC</li>
+<li>when you create a VPC, it automatically has a main route table</li>
+</ul>
+<hr>
+<h2 id="vpc-peering"><a class="header" href="#vpc-peering">VPC Peering</a></h2>
+<hr>
+<ul>
+<li>
+<p>VPC  Peering allows to connect one VPC with another over a direct network route using private IP addresses</p>
+</li>
+<li>
+<p>Instances on peered VPCs <b> behave </b> just like they are on the <b>same network</b></p>
+</li>
+<li>
+<p>Connect VPCs across <b>same</b> or <b> different AWS accounts </b> and <b> regions </b></p>
+</li>
+<li>
+<p>Peering uses a <ins> <b> Star Configuration: 1 Central VPC - 4 other VPCs</b></ins></p>
+</li>
+<li>
+<p><b> No Transitive Peering </b> (peering must take place directly between VPCs)</p>
+<ul>
+<li>Needs a one to one connect to immediate VPC</li>
+</ul>
+</li>
+<li>
+<p><b> No Overlapping CIDR Blocks </b></p>
+  <img src="../images/VPC/vpc-peering.jpg" width="40%" height="70%" />
+</li>
+</ul>
+<hr>
+<h2 id="route-tables"><a class="header" href="#route-tables">Route Tables</a></h2>
+<hr>
+<ul>
+<li>
+<p>Route Tables are used to determine where network traffic is directed</p>
+</li>
+<li>
+<p>Each subnet in your VPC must be associated with a route table</p>
+</li>
+<li>
+<p>A subnet can only be associated with one route table at a time, but you can associate multiple subnets with the same route table</p>
+  <img src="../images/VPC/route-table.jpg" width="40%" height="70%" />
+</li>
+</ul>
+<hr>
+<h2 id="internet-gateway-igw"><a class="header" href="#internet-gateway-igw">Internet Gateway (IGW)</a></h2>
+<hr>
+<ul>
+<li>
+<p>The Internet Gateway allows your VPC access to the Internet</p>
+</li>
+<li>
+<p>IGW does two things:</p>
+<ol>
+<li>Provide a target in your VPC route tables for internet-routable traffic</li>
+<li>Perform network address translation (NAT) for instances that have been assigned public IPv4 addresses</li>
+</ol>
+</li>
+<li>
+<p>To route out to the internet you need to add in your route tables you need to add a route</p>
+</li>
+<li>
+<p>To the internet gateway and set the Destination to be 0.0.0.0/0</p>
+  <img src="../images/VPC/internet-gateway.jpg" width="60%" height="70%" />
+</li>
+</ul>
+<hr>
+<h2 id="bastionjumpbox"><a class="header" href="#bastionjumpbox">Bastion/Jumpbox</a></h2>
+<hr>
+<ul>
+<li>
+<p>Bastions are EC2 instances which are security harden.</p>
+</li>
+<li>
+<p>They are designed to help you gain access to your EC2 instances via SSH or RCP that are in a <b> <ins> private subnet</ins> </b></p>
+</li>
+<li>
+<p>They are also known as Jump boxes because you are jumping from one box to access another.</p>
+</li>
+<li>
+<p><i><ins> NAT Gateways/Instances </ins> </i> are only intended for EC2 instances to gain outbound access to the internet for things such as security updates .</p>
+</li>
+<li>
+<p>NATs cannot/should not be used as Bastions</p>
+</li>
+<li>
+<p>System Manager’s <b> Sessions Manager </b> replaces the need for Bastions</p>
+  <img src="../images/VPC/bastion.jpg" width="50%" height="40%" />
+</li>
+</ul>
+<hr>
+<h2 id="direct-connect"><a class="header" href="#direct-connect">Direct Connect</a></h2>
+<hr>
+<ul>
+<li>
+<p>AWS Direct Connect is the AWS Solution for establishing dedicated network connections from on-premises locations to AWS</p>
+</li>
+<li>
+<p>Very fast network lower Bandwidth 50M-500M or Higher bandwidth 1GB or 10GB</p>
+</li>
+<li>
+<p>Helps reduce network costs and increase bandwidth throughput (great for high traffic networks)</p>
+</li>
+<li>
+<p>Provides a more consistent network experience than a typical internet based connection(reliable and secure)</p>
+  <img src="../images/VPC/direct-connect.jpg" width="50%" height="40%" />
+</li>
+</ul>
+<hr>
+<h2 id="vpc-endpoints"><a class="header" href="#vpc-endpoints">VPC Endpoints</a></h2>
+<hr>
+<ul>
+<li>
+<p>{ <b> Think of a secret tunnel where you don’t have tp leave the AWS network</b>}</p>
+</li>
+<li>
+<p>VPC Endpoints allow you to privately connect your VPC to other AWS services, and VPC endpoint services</p>
+</li>
+<li>
+<p>There are two types of VPC Endpoints</p>
+<ol>
+<li>Interface endpoints</li>
+<li>Gateway Endpoints</li>
+</ol>
+</li>
+<li>
+<p>Eliminates the need for an <b> <ins>Internet Gateway, NAT device, VPN connection or AWS Direct Connect </ins></b> connections</p>
+</li>
+<li>
+<p>Instances in the VPC <ins> do not require a public IP address </ins> to communicate with service resources</p>
+</li>
+<li>
+<p>Traffic between your VPC and other services <ins> does not leave the AWS network</ins></p>
+</li>
+<li>
+<p><b> Horizontally scaled,redundant and highly available </b> VPC component</p>
+</li>
+<li>
+<p>Allows secure communication between instances and services <b> without adding availability risks or bandwidth constraints </b> on your traffic</p>
+  <img src="../images/VPC/vpc-endpoints.jpg" width="50%" height="40%" />
+</li>
+</ul>
+<hr>
+<h2 id="interface-endpoints"><a class="header" href="#interface-endpoints">Interface Endpoints</a></h2>
+<hr>
+<ul>
+<li>Interface Endpoints are ELastic Network Interfaces (ENI) with a private IP address. They serve as an entry point for traffic going to a supported service
+<ul>
+<li>Interface Endpoints are powered by AWS PrivateLink</li>
+<li>Access services hosted on AWS easily and securely by keeping your network traffic within the AWS network
+<ul>
+<li>~$7.5/mo
+<ul>
+<li>Pricing per VPC endpoint per AZ ($/hour) 0.01</li>
+<li>Pricing per GB data processed ($) 0.01</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Interface Endpoints support the following AWS services
+<ul>
+<li>API GATeway</li>
+<li>CloudFormation</li>
+<li>CloudWatch</li>
+<li>Kinesis</li>
+<li>SageMaker</li>
+<li>CodeBuild</li>
+<li>AWS COnfig</li>
+<li>EC2 API</li>
+<li>ELB API</li>
+<li>AWS KMS</li>
+<li>Secrets Manager</li>
+<li>Security Token Service</li>
+<li>Service Catalog</li>
+<li>SNS
+-SQS</li>
+<li>Systems Manager</li>
+<li>Marketplace Partner Services</li>
+<li>Endpoint Services in other AWS accounts</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="vpc-gateway-endpoints"><a class="header" href="#vpc-gateway-endpoints">VPC Gateway Endpoints</a></h2>
+<hr>
+<ul>
+<li>A Gateway Endpoint is a gateway that is a target for a specific route in your route table, used for traffic destined for a supported AWS service.</li>
+<li>To create a Gateway Endpoint, you must specify the VPC in which you want to create the endpoint, and the service to which you want to establish the connection</li>
+<li>AWS Gateway Endpoint currently supports 2 services
+<ul>
+<li>Amazon S3</li>
+<li>DynamoDB</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="vpc-flow-logs"><a class="header" href="#vpc-flow-logs">VPC Flow Logs</a></h2>
+<hr>
+<ul>
+<li>
+<p><b> VPC FLow Logs </b> allow you to capture <b> IP Traffic information </b> in-and-out of Network Interfaces withinn your VPC</p>
+</li>
+<li>
+<p>Network Interfaces within your VPC</p>
+</li>
+<li>
+<p>Flow Logs can be created for</p>
+<ol>
+<li>VPC</li>
+<li>Subnets</li>
+<li>Network Interface</li>
+</ol>
+</li>
+<li>
+<p>All log data is stored using Amazon <b> Cloudwatch Logs </b></p>
+</li>
+<li>
+<p>After a Flow Log is created it can be viewed in details within CloudWatch Logs</p>
+</li>
+<li>
+<p>[version][account-id][interface-id][srcaddr][dstaddr][srcport][destport][protocol][packets][bytes][start][end][action][log-status]</p>
+</li>
+<li>
+<p>2 123456789010 eni-abc123de 172.31.16.139 172.31.16.21 20641 22 6 20 4249 1418530010 1418530070 ACCEPT OK</p>
+<ul>
+<li><b> Version </b> The VPC flow logs version</li>
+<li><b> account- id </b> The AWS account ID for the flow log</li>
+<li><b> interface-id </b> The ID of the network interface for which the traffic is recorded</li>
+<li><b> srcaddr </b> The source IPv4 or Ipv6 address. The IPv4 address of the netwrok interface is always its private Ipv4 address</li>
+<li><b> dstaddr </b> The destination IPv4 or Ipv6 address. The IPv4 address of the netwrok interface is always its private IPv4 address</li>
+<li><b> srcport </b> The source port of the traffic</li>
+<li><b> dstport </b> The destination port of the traffic</li>
+<li><b> protocol </b> The IANA protocol number of the traffic. For more information, see assigned Internet  Protocol Numbers.</li>
+<li><b> Packets </b> The number of packets transferred during the capture window</li>
+<li><b> Bytes </b> The number of bytes transferred during the capture window</li>
+<li><b> start </b> The time, in Unix Seconds of the start of the capture window</li>
+<li><b> end </b> The time, in Unix seconds, of the end of the capture window</li>
+<li><b> action </b> The action associated with the traffic
+<ul>
+<li>ACCEPT: The recorded traffic was permitted by the security groups or network ACls</li>
+<li>REJECT: The recorded traffic was not permitted by the security groups or network ACls</li>
+</ul>
+</li>
+<li><b> log-status </b> The logging status of the flow log
+<ul>
+<li>OK: Data is logging normally to the chosen destinations</li>
+<li>NODATA: There was no network traffic to or from the network interface during the capture window</li>
+<li>SKIPDATA: SOme flow log records were skipped during the capture window. This may be because of an internal capacity constraint or an internal error</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="nacls"><a class="header" href="#nacls">NACLs</a></h2>
+<hr>
+<ul>
+<li>
+<p>Network Access Control List (NACLs)</p>
+</li>
+<li>
+<p>An (optional) layer of Security that acts as a  <b><ins>firewall for controlling traffic in and out of subnet(s) </ins></b>.</p>
+</li>
+<li>
+<p>NACLs acts as a virtual firewall at the subnet level</p>
+  <img src="../images/VPC/nacl.jpg" width="50%" height="40%" />
+</li>
+<li>
+<p>VPCs automatically get a default NACL</p>
+</li>
+<li>
+<p>Subnets are associated with NACLs. Subnets can only belong to a single NACL</p>
+</li>
+<li>
+<p>Each NACL contains a set of rules that can allow or deny traffic into (inbound) and out of (outbound)</p>
+</li>
+<li>
+<p>Rule # determines the order of evaluation. From lowest to highest. The highest rule # can be 32766 and its recommended to work in 10 or 100 increments.</p>
+</li>
+<li>
+<p>You can allow or deny traffic. You could block a single IP address (You can’t do this without Security Groups)</p>
+</li>
+<li>
+<p><b> Use Case </b></p>
+<ul>
+<li>
+<p>We determine there is a malicious actor at a specific IP address is trying to access our instances so we block their IP</p>
+</li>
+<li>
+<p>We never need to SSH into instances so we add a DENY for these subnets. This is just an additional measure in case our security groups SSH port was left open .</p>
+  <img src="../images/VPC/nacl-usecase.jpg" width="50%" height="40%" />
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="security-groups"><a class="header" href="#security-groups">Security Groups</a></h2>
+<hr>
+<ul>
+<li>
+<p><b> Security Groups </b></p>
+<ul>
+<li>A virtual <b> firewall </b> that controls the traffic to and from EC2 Instances</li>
+</ul>
+</li>
+<li>
+<p>Security Groups are associated with Ec2 instances</p>
+</li>
+<li>
+<p>Each Security Group contains a set of rules that filter traffic coming into (inbound) and out of (outbound) Ec2 instances.</p>
+</li>
+<li>
+<p>There are no ‘Deny’ rules. All traffic is blocked by default unless a rule specifically allows it.</p>
+</li>
+<li>
+<p>Multiple Instances across multiple subnets can belong to a Security Group.</p>
+  <img src="../images/VPC/security-groups.jpg" width="50%" height="40%" />
+</li>
+<li>
+<p>Use Case:</p>
+<ul>
+<li>You can specify the source to be an IP range or a specific ip (/32 is a specific IP address)</li>
+<li>You can specify the source to be another security group</li>
+<li>An instance can belong to multiple Security Groups, and rules are permissive (instead of restrictive) Meaning if you have one  Security group which has no allow and you add an allow to another than it will allow.</li>
+</ul>
+</li>
+<li>
+<p>Limits:</p>
+<ul>
+<li>You can have upto 10,000 Security Groups in a Region (default is 2,500)</li>
+<li>You can have 60 inbound rules and 60 outbound rules per security Group
+-16 Security Groups per Elastic Network Interface (ENI) (default is 5)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="nacl-vs-security-groups"><a class="header" href="#nacl-vs-security-groups">NACL v/s Security Groups</a></h2>
+<hr><img src="../images/VPC/nacl_security_groups.png" width="77%" height="40%" />
+<img src="../images/VPC/security-groups-vs-nacl.jpg" width="77%" />
+<img src="../images/VPC/nacl-vs-security-groups.jpg" width="77%" height="40%" />
+<hr>
+<h2 id="site-to-site-vpn--virtual-private-gateway-and-customer-gateway"><a class="header" href="#site-to-site-vpn--virtual-private-gateway-and-customer-gateway">Site to Site VPN , Virtual Private Gateway and Customer Gateway</a></h2>
+<hr><img src="../images/VPC/site-to-site-vpn.jpg" width="77%" height="40%" />
+<ul>
+<li><strong> Virtual Private Gateway (VGW) </strong>
+<ul>
+<li>VPN concentrator on the AWS side of the VPN connection</li>
+<li>VGW is created and attached to the VPC from which you want to create Site-to-Site VPN connection</li>
+</ul>
+</li>
+<li><strong> Customer Gateway Device (On-Premises) </strong>
+<ul>
+<li>What IP address to use?
+<ul>
+<li>Public Internet-routable IP address for your Customer Gateway device</li>
+<li>If it’s behind a NAT device that’s enabled for NAT traversal (NAT-T), use the public IP address of the NAT device
+<img src="../images/VPC/customer-gateway-device.jpg" width="77%" /></li>
+<li><strong> Important Step: </strong>
+<ins>enable Route Propagation for the Virtual Private Gateway in the route table </ins> that is associated with your subnets</li>
+<li><ins> If you need to ping your EC2 instances </ins> from on-premises, make sure you add the <strong>ICMP protocol </strong>on the inbound of your security groups</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="secrets-manager"><a class="header" href="#secrets-manager">Secrets Manager</a></h2>
+<hr>
+<ul>
+<li>Helps to <ins> <i> manage, retrieve and rotate database credentials, application credentials, OAuth tokens, API keys and other secrets throughout their lifecycles
+</i></ins></li>
+<li>Helps to <ins> improve security posture </ins>, because you no longer need hard-coded credentials in application source code.
+<ul>
+<li>Storing the credentials in Secrets Manager <ins> helps to avoid possible compromise by anyone who can inspect the application </ins> or the components.</li>
+<li><ins>Replace hard-coded credentials </ins> with a runtime call to the Secrets Manager service to retrieve credentials with a runtime call to the Secrets Manager service to retrieve credentials dynamically when you need them.</li>
+</ul>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../clouds/aws/saa-c03/VPC/vpc-flow-logs-cheatsheet.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../clouds/azure/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../clouds/aws/saa-c03/VPC/vpc-flow-logs-cheatsheet.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../clouds/azure/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../../searcher-c2a407aa.js"></script>
+
+        <script src="../../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../../highlight-abc7f01d.js"></script>
+        <script src="../../../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

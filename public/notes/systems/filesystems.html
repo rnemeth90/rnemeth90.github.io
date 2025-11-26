@@ -1,0 +1,436 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>file systems - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-9dfbd86b.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-7d51fce4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-848830eb.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="file-systems"><a class="header" href="#file-systems">file systems</a></h1>
+<ul>
+<li>A file system is like a database. It defines the structure to transform a simple block device into a sophisticated heirarchy of files and directories that users can understand.</li>
+<li>File Systems are typically implemented in the Kernel. However, 9P from Plan 9 has inspired the development of user-space file systems. The FUSE (File System in User Space) feature allows file systems to be created in user-space.</li>
+<li>The following list shows the most common file systems in use today:
+<ul>
+<li>ext4 (extended file system, v4)
+<ul>
+<li>Supports journaling (a small cache outside of the file system) to provide data integrity and hasten booting (introduced with ext3)</li>
+<li>The ext4 file system is an incremental improvement over ext2/3 and provides support for larger files and a greater number of directories.</li>
+</ul>
+</li>
+<li>btrfs (b-tree filesystem)
+<ul>
+<li>a newer file system native to linux, designed to scale beyond the limitations of ext4</li>
+</ul>
+</li>
+<li>FAT (file allocation table)
+<ul>
+<li>3 types: msdos, vfat, exfat</li>
+<li>Used by most removable flash media</li>
+<li>Supported by Windows, Darwin, and Linux</li>
+</ul>
+</li>
+<li>XFS
+<ul>
+<li>A high performance filesystem used by default on some Linux distros, such as RHEL</li>
+</ul>
+</li>
+<li>HFS+
+<ul>
+<li>An Apple standard filesystem used on Mac systems</li>
+</ul>
+</li>
+<li>ISO 9660
+<ul>
+<li>Used on CD-ROM discs</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="directories"><a class="header" href="#directories">Directories</a></h4>
+<ul>
+<li>Directories in Linux (ext file systems) are just a file with a table. The table has 2 columns. The two columns contain the name and the inode of the files within the directory.</li>
+</ul>
+<h4 id="inodes"><a class="header" href="#inodes">inodes</a></h4>
+<ul>
+<li>A traditional *nix file system has two primary components: a pool of data blocks where you can store data and a database system that manages that data pool. The database system is centered around the inode data structure. An inode is metadata about a file. Inodes are identified by numbers in an inode table. File names and directories are implemented as inodes.</li>
+<li>A directory inode contains a list of filenames and links correspending to other inodes.</li>
+<li>To view the inode numbers for any directory, use <code>ls -i</code> or <code>stat &lt;filename&gt;</code></li>
+<li>3 time stamps:
+<ul>
+<li>atime: last time the file was open()</li>
+<li>mtime: last time the file was modified</li>
+<li>ctime: ctime IS NOT creation time. It is the last time the inode was changed. For example, using chown or chmod will change the ctime.</li>
+</ul>
+</li>
+</ul>
+<h4 id="format-a-partition-with-a-file-system"><a class="header" href="#format-a-partition-with-a-file-system">Format a partition with a file system</a></h4>
+<ul>
+<li>When preparing new storage devices, after partitioning the device, you are ready to create a file system
+<ul>
+<li>You can use <code>mkfs</code> to create partitions. <code>mkfs</code> has several aliases for each partition type. Example: <code>mkfs.ext4</code>, <code>mkfs.xfs</code>, etc.</li>
+<li>mkfs will automatically detect blocks on a device and set some reasonable defaults based on this. Unless you really understand what you are doing, do not change these defaults.</li>
+</ul>
+</li>
+</ul>
+<h4 id="mounting-a-file-system"><a class="header" href="#mounting-a-file-system">Mounting a file system</a></h4>
+<ul>
+<li>After creating a file system on a partition, you can mount it using the <code>mount</code> command
+<ul>
+<li>Usage: <code>mount -t *type* *device* *mountpoint*</code></li>
+<li>Example: <code>mount -t ext4 /dev/sda2 /mnt/mydisk</code></li>
+<li>To unmount a file system, use <code>unmount</code>
+<ul>
+<li>Example: <code>unmount /mnt/mydisk</code></li>
+</ul>
+</li>
+<li>It is recommended to mount a file system with it’s UUID, rather than it’s name. Device names are determined by the order in which the kernel finds the device and can change over time.
+<ul>
+<li>You can use <code>blkid</code> or <code>lsblk -f</code> to identify the UUID of a partition</li>
+<li>You can then mount using the UUID by:
+<ul>
+<li><code>mount UUID=&lt;insert UUID here&gt; /mnt/mydisk</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><em>The number of options available for the mount command is staggering. You should review the man page for more info</em></p>
+<h4 id="bufferingcachecaching"><a class="header" href="#bufferingcachecaching">Buffering/Cache/Caching</a></h4>
+<ul>
+<li>Linux, like other Unix variants, buffer writes to the disk. This means that the kernel doesn’t immediately write changes to the disk. But will instead write the changes to a buffer in RAM and then later write them to the disk when it deems appropriate.</li>
+<li>When you unmount a file system with <code>unmount</code>, it’s changes are automatically written to the disk from the buffer (why is why you should always unmount partitions before removing them from the system, i.e. USB drives). However, you can also force this to happen using the <code>sync</code> command.</li>
+<li>The kernel also uses a cache to store reads from the disk. This way, if a process continually reads the same data from the disk, it doesn’t have to go to the disk every time to fetch the data, rather using the cache to read the data from.</li>
+</ul>
+<h4 id="automatically-mounting-filesystems-at-boot-time"><a class="header" href="#automatically-mounting-filesystems-at-boot-time">Automatically mounting filesystems at boot time</a></h4>
+<ul>
+<li>The <code>/etc/fstab</code> file is used to automatically mount filesystems at boot time</li>
+<li>There are two alternatives to <code>/etc/fstab</code>
+<ul>
+<li><code>/etc/fstab.d/</code> directory. This directory can contain individual filesystem configuration files (one for each filesystem).</li>
+<li>Systemd unit files.</li>
+</ul>
+</li>
+</ul>
+<h4 id="filesystem-utilization"><a class="header" href="#filesystem-utilization">Filesystem Utilization</a></h4>
+<ul>
+<li>To view the utilization of your currently mounted filesytem, you can use the <code>df</code> command.
+<ul>
+<li>Pass the <code>-h</code> flag to view free space in a human readable form
+<ul>
+<li>Example: <code>df -h</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="checking-and-repairing-filesystems"><a class="header" href="#checking-and-repairing-filesystems">Checking and Repairing Filesystems</a></h4>
+<ul>
+<li>Filesystem errors are usually due to a user shutting down a system in a wrong way (like pulling the power cable). Such situations could leave the filesystem cache in memory not matching the data on the disk. This is especially bad if the system is in the process of modifying the filesystem when you give it a kick. Many filesystems support journaling (ext3+ filesystems for example), but you should always shut down a system properly.</li>
+<li>The tool to check a filesystem for errors is <code>fsck</code>. There is a different version of <code>fsck</code> for each filesystem that linux supports. For example, the ext filesystems will use <code>e2fsck</code> to check the filesystem for errors. However, you don’t need to run <code>e2fsck</code> directly. You can just run <code>fsck</code> and it will usually detect the filesystems and run the appropriate repair tool.</li>
+<li>You should <strong>never</strong> run <code>fsck</code> on a mounted filesystem. The kernel may alter data in the filesystem as you run the check, causing runtime mismatches that can crash the system and corrupt files. There is one exception to this rule. If you mount the root partition in read-only, single-user mode, you can run <code>fsck</code> on it.</li>
+<li>When <code>fsck</code> asks you about reconnecting an inode, it has found a file that doesn’t appear to have a name. When reconnecting an inode, <code>fsck</code> will place the file in the lost+found directory with a number as the name. <code>fsck</code> does this by walking through the inode table and directory structure to generate new link counts and a new block allocation map (such as the block bitmap), and then it compares this newly generated data with the filesystem on the disk. If there are mismatches, <code>fsck</code> must fix the link counts and determine what to do with any inodes and/or data that didn’t come up when it traversed the directory structure.</li>
+<li>On a system that has <strong>many</strong> problems, <code>fsck</code> can make things worse. One way to tell if you should cancel the <code>fsck</code> utility is if it asks <strong>a lot</strong> of questions while running the repair process. This is usually indicative of a bigger problem. If you think this is the case, you can run <code>fsck -n</code> to run <code>fsck</code> in dry mode (no changes will be made to the partition).</li>
+<li>If you suspect that a superblock is corrupt, perhaps because someone overwrote the beginning of the disk, you might be able to recover the filesystem with one of the superblock backups that <code>mkfs</code> creates. Use <code>fsck -b &lt;num&gt;</code> to replace the corrupted superblock with an alternate at <em>num</em> and hope for the best. If you don’t know where to find a backup for the superblock, you can run <code>mkfs -n</code> on the device to view a list of superblock backup numbers without destroying your data.</li>
+<li>You normally do not need to check ext3/4 filesystems manually because the journal ensures data integrity.</li>
+<li>The kernel will not mount an ext3/4 filesystems with a non-empty journal. You can flush the journal using <code>e2fsck -fy /dev/&lt;device&gt;</code></li>
+</ul>
+<h4 id="special-purpose-filesystems"><a class="header" href="#special-purpose-filesystems">Special purpose filesystems</a></h4>
+<ul>
+<li>proc - mounted on <code>/proc</code>. Each numbered directory inside <code>/proc</code> refers to the PID of a running process on the system. The directory <code>/proc/self</code> represents the current process.</li>
+<li>sysfs - mounted on <code>/sys</code>. See <code>./devices.md</code> for more info.</li>
+<li>tmpfs - mounted on <code>/run</code> and other locations. Allows you to use physical memory and swap space as temporary storage.</li>
+<li>squashfs - a type of read-only filesystem where content is stored in a compressed format and extracted on-demand through a loopback device.</li>
+<li>overlay - a filesystem that merges directories in a composite directory. Often used by containers.</li>
+</ul>
+<h4 id="swap-space"><a class="header" href="#swap-space">Swap space</a></h4>
+<ul>
+<li>Swap space is used to augment the RAM on a machine with disk space</li>
+<li>If you run out of physical memory, the Linux virtual memory system can move pages of memory to and from disk storage (swap space). This is referred to as paging.</li>
+<li>You can use <code>mkswap</code> to create swap space on a partition. Then use <code>swapon</code> to enable it. You can also use <code>swapoff</code> to disable swap space.</li>
+<li>In addition to using disk space for swap, you can also use a file. You can first create the file with <code>dd</code>. Example: <code>dd if=/dev/zero of=/swapfile bs=1024k count=&lt;size in megabytes&gt;</code></li>
+<li>High performance servers should not have swap space and should avoid disk access if at all possible.</li>
+</ul>
+<h4 id="prefetch"><a class="header" href="#prefetch">Prefetch</a></h4>
+<p>A common file system workload involves reading a large amount of file data sequentially, for example, for a file system backup. This data may be too large to fit in the cache, or it may be read only once, and is therefore unlikely to remain in the cache. Such a workload would perform relatively poorly, as it would have a low cache-hit ratio.</p>
+<p>Prefetch is a common file system feature for solving this problem. It can detect a sequential read workload based on the current and previous file I/O offsets, and then predict and issue disk reads before the application has requested them. This populates the file system cache, so that if the application does perform the expected read, it results in a cache-hit, rather than reading from much slower disk.</p>
+<p>Prefetch can typically be tuned in most systems.</p>
+<h4 id="write-back-caching"><a class="header" href="#write-back-caching">Write-back Caching</a></h4>
+<p>Write-back caching is commonly used by file systems to improve write performance. It works by treating writes as completed after the transfer to main memory, and writing them to disk sometime later, asynchronously. The file system process for writing this ‘dirty’ data to disk is called ‘flushing’. The trade-off of write-back cache is reliability. DRAM-based main memory is volatile, and dirty data can be lost in the event of a power failure. Data could also be written to disk incompletely, leaving the disk in a corrupt state. If file-system metadata becomes corrupted, the file system may no longer load.</p>
+<h4 id="synchronous-writes"><a class="header" href="#synchronous-writes">Synchronous writes</a></h4>
+<p>Synchronous writes are used by some applications such as database log writers, where the risk of data corruption for asynchronous writes is unacceptable.</p>
+<h4 id="vfs-virtual-file-system"><a class="header" href="#vfs-virtual-file-system">VFS (Virtual File System)</a></h4>
+<p>VFS provides a common interface for different file system types. Prior to VFS, different file systems required different system calls for interacting with each. The calls for interacting with a FAT file system were different than those for a EXT file system.</p>
+<h4 id="file-system-caches"><a class="header" href="#file-system-caches">File System Caches</a></h4>
+<p>Unix originally only had the buffer cache to improve performance of block device access. Nowadays, Linux has multiple different cache types.</p>
+<ul>
+<li>Page Cache</li>
+<li>Buffer cache</li>
+<li>Directory Cache</li>
+<li>inode cache</li>
+</ul>
+<h4 id="copy-on-write"><a class="header" href="#copy-on-write">Copy on write</a></h4>
+<p>A Copy on write (COW) file system does not overwrite existing blocks but instead follows these steps:</p>
+<ol>
+<li>Write blocks to a new location (a new copy)</li>
+<li>Update references to new blocks</li>
+<li>Add old blocks to the free list</li>
+</ol>
+<p>This helps maintain file system integrity in the event of a system failure, and also helps improve performance by turning random writes into sequential ones</p>
+<h1 id="troubleshooting-file-systems"><a class="header" href="#troubleshooting-file-systems">Troubleshooting File Systems</a></h1>
+<p>Key metrics for file systems include:</p>
+<ul>
+<li>Operation Rate</li>
+<li>Operation latency</li>
+</ul>
+<p>In Linux, there are typically no readily available metrics for file system operations (the exception being NFS, via <code>nfsstat</code>).</p>
+<h3 id="tools"><a class="header" href="#tools">Tools:</a></h3>
+<ul>
+<li><code>mount</code></li>
+<li><code>free</code></li>
+<li><code>top</code></li>
+<li><code>vmstat</code></li>
+<li><code>sar</code></li>
+<li><code>slabtop</code></li>
+<li><code>filetop</code></li>
+<li><code>cachestat</code></li>
+<li><code>fsck</code></li>
+<li><code>ext4slower</code></li>
+<li><code>e2fsck</code></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../systems/disks.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../systems/groups.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../systems/disks.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../systems/groups.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
