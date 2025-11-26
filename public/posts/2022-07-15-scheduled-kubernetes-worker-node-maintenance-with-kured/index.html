@@ -14,7 +14,7 @@
 
 <meta name="author" content="Ryan Nemeth">
 <meta name="description" content="If you manage Linux nodes, you know how vital performing regular maintenance is. Installing software patches that modify Linux kernel headers requires a reboot. Normally, as in the past, we would cordon and drain the node and then manually reboot, wait for it to come back online, verify its health, and add it back to the cluster. That’s a lot of manual work! How can we automate this?
-Weaveworks created a great tool for simplifying these steps: Kured (the Kubernetes Reboot Daemon).">
+Weaveworks created a great tool for simplifying these steps: Kured (the Kubernetes Reboot Daemon). Let’s start by deploying Kured to our cluster.">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -22,13 +22,13 @@ Weaveworks created a great tool for simplifying these steps: Kured (the Kubernet
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Scheduled Kubernetes Worker Node Maintenance with Kured">
   <meta name="twitter:description" content="If you manage Linux nodes, you know how vital performing regular maintenance is. Installing software patches that modify Linux kernel headers requires a reboot. Normally, as in the past, we would cordon and drain the node and then manually reboot, wait for it to come back online, verify its health, and add it back to the cluster. That’s a lot of manual work! How can we automate this?
-Weaveworks created a great tool for simplifying these steps: Kured (the Kubernetes Reboot Daemon).">
+Weaveworks created a great tool for simplifying these steps: Kured (the Kubernetes Reboot Daemon). Let’s start by deploying Kured to our cluster.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2022-07-15-scheduled-kubernetes-worker-node-maintenance-with-kured/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Scheduled Kubernetes Worker Node Maintenance with Kured">
   <meta property="og:description" content="If you manage Linux nodes, you know how vital performing regular maintenance is. Installing software patches that modify Linux kernel headers requires a reboot. Normally, as in the past, we would cordon and drain the node and then manually reboot, wait for it to come back online, verify its health, and add it back to the cluster. That’s a lot of manual work! How can we automate this?
-Weaveworks created a great tool for simplifying these steps: Kured (the Kubernetes Reboot Daemon).">
+Weaveworks created a great tool for simplifying these steps: Kured (the Kubernetes Reboot Daemon). Let’s start by deploying Kured to our cluster.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -131,6 +131,10 @@ Weaveworks created a great tool for simplifying these steps: Kured (the Kubernet
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -217,20 +221,16 @@ Weaveworks created a great tool for simplifying these steps: Kured (the Kubernet
 </span></span><span class="line"><span class="cl">kubectl create namespace kured
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1"># 4) Install kured in that namespace with Helm 3 (only on Linux nodes)</span>
-</span></span><span class="line"><span class="cl">helm install kured kured/kured --namespace kured --set nodeSelector.<span class="s2">&#34;kubernetes\.io/os&#34;</span><span class="o">=</span>linux
-</span></span></code></pre></div><p>If all went well with the command above, that’s it, you’re done! Have a nice day! 🙂</p>
+</span></span><span class="line"><span class="cl">helm install kured kured/kured --namespace kured --set nodeSelector.<span class="s2">&#34;kubernetes\.io/os&#34;</span><span class="o">=</span>linux</span></span></code></pre></div><p>If all went well with the command above, that’s it, you’re done! Have a nice day! 🙂</p>
 <p>If you want to test Kured, login to one of your Linux nodes, and install some patches with your package manager of choice (any patch that requires a reboot, typically patches that modify kernel headers). Then, check for a file named ‘reboot-required’ in /var/run:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ls -lisa /var/run/reboot-required
-</span></span></code></pre></div><p>If you installed patches, and this file does not exist, none of your patches require a reboot. We can still fake the system into thinking a reboot is required by manually creating the ‘reboot-required’ file:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo touch /var/run/reboot-required
-</span></span></code></pre></div><p><img src="https://rnemeth90.github.io/wp-content/uploads/2022/07/image-1.png"></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ls -lisa /var/run/reboot-required</span></span></code></pre></div><p>If you installed patches, and this file does not exist, none of your patches require a reboot. We can still fake the system into thinking a reboot is required by manually creating the ‘reboot-required’ file:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo touch /var/run/reboot-required</span></span></code></pre></div><p><img src="https://rnemeth90.github.io/wp-content/uploads/2022/07/image-1.png" alt="" /></p>
 <p>Then, we’ll use Kubetail to tail the logs of all our Kured pods:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubetail -label kured --namespace kured
-</span></span></code></pre></div><p><img src="https://rnemeth90.github.io/wp-content/uploads/2022/07/image-1024x749.png"></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubetail -label kured --namespace kured</span></span></code></pre></div><p><img src="https://rnemeth90.github.io/wp-content/uploads/2022/07/image-1024x749.png" alt="" /></p>
 <p>By default, Kured checks for the existence of the sentinel file every 60 minutes. However, this behavior can be changed. See the github repo for more info:</p>
-<p><img alt="weaveworks/kured: Kubernetes Reboot Daemon" src="https://github.com/weaveworks/kured#reboot-sentinel-file--period"></p>
+<p><img src="https://github.com/weaveworks/kured#reboot-sentinel-file--period" alt="weaveworks/kured: Kubernetes Reboot Daemon" /></p>
 <p>Scheduling on the node should be disabled if you are within the Kured schedule</p>
-<p><img src="https://rnemeth90.github.io/wp-content/uploads/2022/07/image-2.png"></p>
+<p><img src="https://rnemeth90.github.io/wp-content/uploads/2022/07/image-2.png" alt="" /></p>
 <p>Now that the node is cordoned off, running pods on the node are drained, and the node is rebooted.</p>
 <p>That’s it for this article. Have a great day!</p>
 
@@ -262,7 +262,7 @@ Weaveworks created a great tool for simplifying these steps: Kured (the Kubernet
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -286,9 +286,6 @@ Weaveworks created a great tool for simplifying these steps: Kured (the Kubernet
 
 
   
-  
-
-
 
   
 

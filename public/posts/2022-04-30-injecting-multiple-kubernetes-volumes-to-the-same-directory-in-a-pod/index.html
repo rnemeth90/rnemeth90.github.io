@@ -14,7 +14,7 @@
 
 <meta name="author" content="Ryan Nemeth">
 <meta name="description" content="We can inject configuration into containers using Kubernetes config maps and secrets. These objects can be consumed by a pod as environment variables, command-line arguments, or as configuration files mounted in a volume. For the subject of this article, we will focus on mounting multiple config maps/secrets into a single directory on a pod.
-Mounting a configmap or secret in a Volume is relatively straightforward (for anyone familiar with Kubernetes primitives).">
+Mounting a configmap or secret in a Volume is relatively straightforward (for anyone familiar with Kubernetes primitives). Take for example the following deployment definition:">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -22,13 +22,13 @@ Mounting a configmap or secret in a Volume is relatively straightforward (for an
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Injecting multiple Kubernetes volumes to the same directory in a pod">
   <meta name="twitter:description" content="We can inject configuration into containers using Kubernetes config maps and secrets. These objects can be consumed by a pod as environment variables, command-line arguments, or as configuration files mounted in a volume. For the subject of this article, we will focus on mounting multiple config maps/secrets into a single directory on a pod.
-Mounting a configmap or secret in a Volume is relatively straightforward (for anyone familiar with Kubernetes primitives).">
+Mounting a configmap or secret in a Volume is relatively straightforward (for anyone familiar with Kubernetes primitives). Take for example the following deployment definition:">
 
 <meta property="og:url" content="http://localhost:1313/posts/2022-04-30-injecting-multiple-kubernetes-volumes-to-the-same-directory-in-a-pod/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Injecting multiple Kubernetes volumes to the same directory in a pod">
   <meta property="og:description" content="We can inject configuration into containers using Kubernetes config maps and secrets. These objects can be consumed by a pod as environment variables, command-line arguments, or as configuration files mounted in a volume. For the subject of this article, we will focus on mounting multiple config maps/secrets into a single directory on a pod.
-Mounting a configmap or secret in a Volume is relatively straightforward (for anyone familiar with Kubernetes primitives).">
+Mounting a configmap or secret in a Volume is relatively straightforward (for anyone familiar with Kubernetes primitives). Take for example the following deployment definition:">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -127,6 +127,10 @@ Mounting a configmap or secret in a Volume is relatively straightforward (for an
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -187,7 +191,7 @@ Mounting a configmap or secret in a Volume is relatively straightforward (for an
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">data</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">application.properties</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
 </span></span></span><span class="line"><span class="cl"><span class="sd">    greeting=Hello
-</span></span></span><span class="line"><span class="cl"><span class="sd">    name=World</span><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="sd">    name=World</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
@@ -235,10 +239,9 @@ Mounting a configmap or secret in a Volume is relatively straightforward (for an
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">hello-world-config</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">hello-world-credentials-volume</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">secret</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l">hello-world-credentials</span><span class="w">
-</span></span></span></code></pre></div><p>When this deployment is created, we see two directories are created in this pod (one for the configMap, and one for the secret). How can we mount these as two <em>files</em> in the ‘config’ directory, rather than two individual directories?</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l">hello-world-credentials</span></span></span></code></pre></div><p>When this deployment is created, we see two directories are created in this pod (one for the configMap, and one for the secret). How can we mount these as two <em>files</em> in the ‘config’ directory, rather than two individual directories?</p>
 <p><a href="https://geekyryan.com/wp-content/uploads/2022/04/image.png"  class="external-link" target="_blank" rel="noopener"></a></p>
-<p>The ~VolumeMounts~ directive within the container spec of the deployment has an optional (less-known) parameter named ‘subPath’. By using this parameter, we can mount a configMap and secret in the same directory within a pod.</p>
+<p>The <del>VolumeMounts</del> directive within the container spec of the deployment has an optional (less-known) parameter named ‘subPath’. By using this parameter, we can mount a configMap and secret in the same directory within a pod.</p>
 <p>Let’s focus on the following deployment spec:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ConfigMap</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
@@ -247,7 +250,7 @@ Mounting a configmap or secret in a Volume is relatively straightforward (for an
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">data</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">application.properties</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
 </span></span></span><span class="line"><span class="cl"><span class="sd">    greeting=Hello
-</span></span></span><span class="line"><span class="cl"><span class="sd">    name=World</span><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="sd">    name=World</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
@@ -297,8 +300,7 @@ Mounting a configmap or secret in a Volume is relatively straightforward (for an
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">hello-world-config</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">hello-world-credentials-volume</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">secret</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l">hello-world-credentials</span><span class="w">
-</span></span></span></code></pre></div><p>Now, if we deploy this, we can see that we have two files in the ‘config’ directory of the pod, rather than a subdirectory for each config/secret:</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l">hello-world-credentials</span></span></span></code></pre></div><p>Now, if we deploy this, we can see that we have two files in the ‘config’ directory of the pod, rather than a subdirectory for each config/secret:</p>
 <p><a href="https://geekyryan.com/wp-content/uploads/2022/04/image-1.png"  class="external-link" target="_blank" rel="noopener"></a></p>
 <p>In this example, the key application.properties from the configuration map will be mounted to a file with the same name under /config/, and the secret value credentials.properties will be mounted to a second file under that directory. Both files will be read-only to the application.</p>
 
@@ -330,7 +332,7 @@ Mounting a configmap or secret in a Volume is relatively straightforward (for an
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -354,9 +356,6 @@ Mounting a configmap or secret in a Volume is relatively straightforward (for an
 
 
   
-  
-
-
 
   
 

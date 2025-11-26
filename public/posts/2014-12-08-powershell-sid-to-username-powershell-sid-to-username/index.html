@@ -14,7 +14,14 @@
 
 <meta name="author" content="Ryan Nemeth">
 <meta name="description" content="This is a simple script to convert a SID to a username
-# Returns a username based on a SID # Author: Ryan Nemeth # Date: 12/2/2014 $SID = read-host “Please enter the SID: ” $object = New-Object System.Security.Principal.SecurityIdentifier($SID) $User = $object.Translate( \[System.Security.Principal.NTAccount\]) write-host “The user is: ” $User.Value ">
+# Returns a username based on a SID
+# Author: Ryan Nemeth
+# Date: 12/2/2014
+
+$SID = read-host “Please enter the SID: ”
+$object = New-Object System.Security.Principal.SecurityIdentifier($SID)
+$User = $object.Translate( \[System.Security.Principal.NTAccount\])
+write-host “The user is: ” $User.Value">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -22,13 +29,13 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Powershell: SID to Username">
   <meta name="twitter:description" content="This is a simple script to convert a SID to a username
-# Returns a username based on a SID # Author: Ryan Nemeth # Date: 12/2/2014 $SID = read-host “Please enter the SID: ” $object = New-Object System.Security.Principal.SecurityIdentifier($SID) $User = $object.Translate( \[System.Security.Principal.NTAccount\]) write-host “The user is: ” $User.Value ">
+# Returns a username based on a SID # Author: Ryan Nemeth # Date: 12/2/2014 $SID = read-host “Please enter the SID: ” $object = New-Object System.Security.Principal.SecurityIdentifier($SID) $User = $object.Translate( \[System.Security.Principal.NTAccount\]) write-host “The user is: ” $User.Value">
 
 <meta property="og:url" content="http://localhost:1313/posts/2014-12-08-powershell-sid-to-username-powershell-sid-to-username/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Powershell: SID to Username">
   <meta property="og:description" content="This is a simple script to convert a SID to a username
-# Returns a username based on a SID # Author: Ryan Nemeth # Date: 12/2/2014 $SID = read-host “Please enter the SID: ” $object = New-Object System.Security.Principal.SecurityIdentifier($SID) $User = $object.Translate( \[System.Security.Principal.NTAccount\]) write-host “The user is: ” $User.Value ">
+# Returns a username based on a SID # Author: Ryan Nemeth # Date: 12/2/2014 $SID = read-host “Please enter the SID: ” $object = New-Object System.Security.Principal.SecurityIdentifier($SID) $User = $object.Translate( \[System.Security.Principal.NTAccount\]) write-host “The user is: ” $User.Value">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -130,6 +137,10 @@
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -202,8 +213,7 @@
 </span></span><span class="line"><span class="cl"><span class="nv">$SID</span> <span class="p">=</span> <span class="nb">read-host</span> <span class="err">“</span><span class="n">Please</span> <span class="n">enter</span> <span class="n">the</span> <span class="n">SID</span><span class="err">:</span> <span class="err">”</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$object</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">Security</span><span class="p">.</span><span class="py">Principal</span><span class="p">.</span><span class="py">SecurityIdentifier</span><span class="p">(</span><span class="nv">$SID</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$User</span> <span class="p">=</span> <span class="nv">$object</span><span class="p">.</span><span class="py">Translate</span><span class="p">(</span> <span class="p">\[</span><span class="n">System</span><span class="p">.</span><span class="py">Security</span><span class="p">.</span><span class="py">Principal</span><span class="p">.</span><span class="n">NTAccount</span><span class="p">\])</span>
-</span></span><span class="line"><span class="cl"><span class="nb">write-host</span> <span class="err">“</span><span class="n">The</span> <span class="n">user</span> <span class="n">is</span><span class="err">:</span> <span class="err">”</span> <span class="nv">$User</span><span class="p">.</span><span class="py">Value</span>
-</span></span></code></pre></div>
+</span></span><span class="line"><span class="cl"><span class="nb">write-host</span> <span class="err">“</span><span class="n">The</span> <span class="n">user</span> <span class="n">is</span><span class="err">:</span> <span class="err">”</span> <span class="nv">$User</span><span class="p">.</span><span class="n">Value</span></span></span></code></pre></div>
       </div>
 
 
@@ -232,7 +242,7 @@
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -256,9 +266,6 @@
 
 
   
-  
-
-
 
   
 

@@ -14,21 +14,21 @@
 
 <meta name="author" content="Ryan Nemeth">
 <meta name="description" content="If you are using VM Scale Sets in Azure, you know how important it can be to quickly obtain an instance IP address. This can of course be done using the Azure Portal. However, I am often working in a shell or VSCode, and I do not want to leave the comfort of my shell to login to the portal.
-There are a few options we have for retrieving information about a VMSS and its instances without using the Azure Portal.">
+There are a few options we have for retrieving information about a VMSS and its instances without using the Azure Portal. We can use PowerShell or the Azure CLI. Being that I am constantly flipping between Windows and Linux, I will detail both here.">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
 
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Azure VM Scale Set &amp;#8211; Get Instance IP Address">
+  <meta name="twitter:title" content="Azure VM Scale Set &#8211; Get Instance IP Address">
   <meta name="twitter:description" content="If you are using VM Scale Sets in Azure, you know how important it can be to quickly obtain an instance IP address. This can of course be done using the Azure Portal. However, I am often working in a shell or VSCode, and I do not want to leave the comfort of my shell to login to the portal.
-There are a few options we have for retrieving information about a VMSS and its instances without using the Azure Portal.">
+There are a few options we have for retrieving information about a VMSS and its instances without using the Azure Portal. We can use PowerShell or the Azure CLI. Being that I am constantly flipping between Windows and Linux, I will detail both here.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2020-11-19-azure-vm-scale-set-get-instance-ip/">
   <meta property="og:site_name" content="GeekyRyan">
-  <meta property="og:title" content="Azure VM Scale Set &amp;#8211; Get Instance IP Address">
+  <meta property="og:title" content="Azure VM Scale Set &#8211; Get Instance IP Address">
   <meta property="og:description" content="If you are using VM Scale Sets in Azure, you know how important it can be to quickly obtain an instance IP address. This can of course be done using the Azure Portal. However, I am often working in a shell or VSCode, and I do not want to leave the comfort of my shell to login to the portal.
-There are a few options we have for retrieving information about a VMSS and its instances without using the Azure Portal.">
+There are a few options we have for retrieving information about a VMSS and its instances without using the Azure Portal. We can use PowerShell or the Azure CLI. Being that I am constantly flipping between Windows and Linux, I will detail both here.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -131,6 +131,10 @@ There are a few options we have for retrieving information about a VMSS and its 
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -204,8 +208,7 @@ There are a few options we have for retrieving information about a VMSS and its 
 <p>You will need to have the AZ module installed. To install this module, simple open PowerShell (as admin) and type in “Install-Module -Name az”. To get the IP address of the instances within a scale set, use the following script:</p>
 <p><a href="https://github.com/rnemeth90/Get-VmssInstanceIpAddress"  class="external-link" target="_blank" rel="noopener">https://github.com/rnemeth90/Get-VmssInstanceIpAddress</a></p>
 <p>You can also use the Azure CLI to obtain individual instance IP addresses. This method is much simpler than PowerShell, and only requires one line of code:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">az vmss nic list –resource-group myResourceGroup –vmss-name myVmss <span class="p">|</span> grep –w “privateIpAddress”
-</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">az vmss nic list –resource-group myResourceGroup –vmss-name myVmss <span class="p">|</span> grep –w “privateIpAddress”</span></span></code></pre></div>
       </div>
 
 
@@ -234,7 +237,7 @@ There are a few options we have for retrieving information about a VMSS and its 
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -258,9 +261,6 @@ There are a few options we have for retrieving information about a VMSS and its 
 
 
   
-  
-
-
 
   
 

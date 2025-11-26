@@ -14,24 +14,25 @@
 
 <meta name="author" content="Ryan Nemeth">
 <meta name="description" content="I ran into this issue this morning when attempting to setup a VPN on a Hyper-V virtual machine. After an hour of searching the Google machine and troubleshooting, I came upon this solution.
+
 Upon installation, AnyConnect pulls down a profile from the ASA containing several settings. This profile is in xml format and is located (on a Windows machine) at %programdata%CiscoCisco AnyConnect Secure Mobility ClientProfileAnyConnectProfile.xsd.
-To resolve this issue and connect to your VPN, open this file with notepad (or any text editor, run as admin), search for the “WindowsVPNEstablishment” tag, and modify the value.">
+To resolve this issue and connect to your VPN, open this file with notepad (or any text editor, run as admin), search for the “WindowsVPNEstablishment” tag, and modify the value. The default value is “LocalUsersOnly”, you will need to change it to “AllowRemoteUsers”. Save and close the file, then restart the machine.">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
 
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Cisco AnyConnect &amp;#8211; VPN Establishment Capability from a Remote Desktop is Disabled">
+  <meta name="twitter:title" content="Cisco AnyConnect &#8211; VPN Establishment Capability from a Remote Desktop is Disabled">
   <meta name="twitter:description" content="I ran into this issue this morning when attempting to setup a VPN on a Hyper-V virtual machine. After an hour of searching the Google machine and troubleshooting, I came upon this solution.
 Upon installation, AnyConnect pulls down a profile from the ASA containing several settings. This profile is in xml format and is located (on a Windows machine) at %programdata%CiscoCisco AnyConnect Secure Mobility ClientProfileAnyConnectProfile.xsd.
-To resolve this issue and connect to your VPN, open this file with notepad (or any text editor, run as admin), search for the “WindowsVPNEstablishment” tag, and modify the value.">
+To resolve this issue and connect to your VPN, open this file with notepad (or any text editor, run as admin), search for the “WindowsVPNEstablishment” tag, and modify the value. The default value is “LocalUsersOnly”, you will need to change it to “AllowRemoteUsers”. Save and close the file, then restart the machine.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2020-10-07-cisco-anyconnect-vpn-establishment/">
   <meta property="og:site_name" content="GeekyRyan">
-  <meta property="og:title" content="Cisco AnyConnect &amp;#8211; VPN Establishment Capability from a Remote Desktop is Disabled">
+  <meta property="og:title" content="Cisco AnyConnect &#8211; VPN Establishment Capability from a Remote Desktop is Disabled">
   <meta property="og:description" content="I ran into this issue this morning when attempting to setup a VPN on a Hyper-V virtual machine. After an hour of searching the Google machine and troubleshooting, I came upon this solution.
 Upon installation, AnyConnect pulls down a profile from the ASA containing several settings. This profile is in xml format and is located (on a Windows machine) at %programdata%CiscoCisco AnyConnect Secure Mobility ClientProfileAnyConnectProfile.xsd.
-To resolve this issue and connect to your VPN, open this file with notepad (or any text editor, run as admin), search for the “WindowsVPNEstablishment” tag, and modify the value.">
+To resolve this issue and connect to your VPN, open this file with notepad (or any text editor, run as admin), search for the “WindowsVPNEstablishment” tag, and modify the value. The default value is “LocalUsersOnly”, you will need to change it to “AllowRemoteUsers”. Save and close the file, then restart the machine.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -134,6 +135,10 @@ To resolve this issue and connect to your VPN, open this file with notepad (or a
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -203,13 +208,13 @@ To resolve this issue and connect to your VPN, open this file with notepad (or a
       <div class="post-content">
         
         <p>I ran into this issue this morning when attempting to setup a VPN on a Hyper-V virtual machine. After an hour of searching the Google machine and troubleshooting, I came upon this solution.</p>
-<p><a href="https://lh3.googleusercontent.com/-BYApW8vZjV8/X33B2Or4D7I/AAAAAAAAxuY/hWQwpE-fqo4xInAsx9vyUvzDJXqxe68QQCLcBGAsYHQ/image.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-16.png"></a></p>
+<p><a href="https://lh3.googleusercontent.com/-BYApW8vZjV8/X33B2Or4D7I/AAAAAAAAxuY/hWQwpE-fqo4xInAsx9vyUvzDJXqxe68QQCLcBGAsYHQ/image.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-16.png" alt="" /></a></p>
 <p>Upon installation, AnyConnect pulls down a profile from the ASA containing several settings. This profile is in xml format and is located (on a Windows machine) at %programdata%CiscoCisco AnyConnect Secure Mobility ClientProfileAnyConnectProfile.xsd.</p>
 <p>To resolve this issue and connect to your VPN, open this file with notepad (or any text editor, run as admin), search for the “WindowsVPNEstablishment” tag, and modify the value. The default value is “LocalUsersOnly”, you will need to change it to “AllowRemoteUsers”. Save and close the file, then restart the machine.</p>
 <p>BEFORE:</p>
-<p><a href="https://lh3.googleusercontent.com/-izGUUyhtWyM/X33Bh8YdqGI/AAAAAAAAxuQ/rBbXsqWhe5wZYoGmjXwyyidGmu1kCNVmgCLcBGAsYHQ/image.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-17.png"></a></p>
+<p><a href="https://lh3.googleusercontent.com/-izGUUyhtWyM/X33Bh8YdqGI/AAAAAAAAxuQ/rBbXsqWhe5wZYoGmjXwyyidGmu1kCNVmgCLcBGAsYHQ/image.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-17.png" alt="" /></a></p>
 <p>AFTER:</p>
-<p><a href="https://lh3.googleusercontent.com/-wFFu1JOXymQ/X33CVp0cImI/AAAAAAAAxug/fibXC6JHmkkilFtWv8641x20flapCibYACLcBGAsYHQ/image.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-18.png"></a></p>
+<p><a href="https://lh3.googleusercontent.com/-wFFu1JOXymQ/X33CVp0cImI/AAAAAAAAxug/fibXC6JHmkkilFtWv8641x20flapCibYACLcBGAsYHQ/image.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2020/10/image-18.png" alt="" /></a></p>
 
       </div>
 
@@ -239,7 +244,7 @@ To resolve this issue and connect to your VPN, open this file with notepad (or a
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -263,9 +268,6 @@ To resolve this issue and connect to your VPN, open this file with notepad (or a
 
 
   
-  
-
-
 
   
 

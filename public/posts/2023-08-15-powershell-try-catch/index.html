@@ -13,19 +13,19 @@
 
 
 <meta name="author" content="Ryan Nemeth">
-<meta name="description" content="Despite being a great language, PowerShell is not impervious to errors. Errors that occur within your code can stop it&rsquo;s execution or even cause unexpected changes in the resources that your script is managing. Learning to handle these errors gracefully is the foundation of defensive coding. Today, we&rsquo;ll take a quick look at how PowerShell handles errors with Try-Catch-Finally blocks. They allow you to gracefully handle errors and perform cleanup operations, ensuring that your script doesn&rsquo;t crash when the unexpected occurs.">
+<meta name="description" content="Despite being a great language, PowerShell is not impervious to errors. Errors that occur within your code can stop it&rsquo;s execution or even cause unexpected changes in the resources that your script is managing. Learning to handle these errors gracefully is the foundation of defensive coding. Today, we&rsquo;ll take a quick look at how PowerShell handles errors with Try-Catch-Finally blocks. They allow you to gracefully handle errors and perform cleanup operations, ensuring that your script doesn&rsquo;t crash when the unexpected occurs. We&rsquo;ll then cover the differences in terminating and non-terminating errors and why you should take these into consideration when implementing error handling.">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Using try/catch/finally Blocks in PowerShell">
-  <meta name="twitter:description" content="Despite being a great language, PowerShell is not impervious to errors. Errors that occur within your code can stop it’s execution or even cause unexpected changes in the resources that your script is managing. Learning to handle these errors gracefully is the foundation of defensive coding. Today, we’ll take a quick look at how PowerShell handles errors with Try-Catch-Finally blocks. They allow you to gracefully handle errors and perform cleanup operations, ensuring that your script doesn’t crash when the unexpected occurs.">
+  <meta name="twitter:description" content="Despite being a great language, PowerShell is not impervious to errors. Errors that occur within your code can stop it’s execution or even cause unexpected changes in the resources that your script is managing. Learning to handle these errors gracefully is the foundation of defensive coding. Today, we’ll take a quick look at how PowerShell handles errors with Try-Catch-Finally blocks. They allow you to gracefully handle errors and perform cleanup operations, ensuring that your script doesn’t crash when the unexpected occurs. We’ll then cover the differences in terminating and non-terminating errors and why you should take these into consideration when implementing error handling.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2023-08-15-powershell-try-catch/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Using try/catch/finally Blocks in PowerShell">
-  <meta property="og:description" content="Despite being a great language, PowerShell is not impervious to errors. Errors that occur within your code can stop it’s execution or even cause unexpected changes in the resources that your script is managing. Learning to handle these errors gracefully is the foundation of defensive coding. Today, we’ll take a quick look at how PowerShell handles errors with Try-Catch-Finally blocks. They allow you to gracefully handle errors and perform cleanup operations, ensuring that your script doesn’t crash when the unexpected occurs.">
+  <meta property="og:description" content="Despite being a great language, PowerShell is not impervious to errors. Errors that occur within your code can stop it’s execution or even cause unexpected changes in the resources that your script is managing. Learning to handle these errors gracefully is the foundation of defensive coding. Today, we’ll take a quick look at how PowerShell handles errors with Try-Catch-Finally blocks. They allow you to gracefully handle errors and perform cleanup operations, ensuring that your script doesn’t crash when the unexpected occurs. We’ll then cover the differences in terminating and non-terminating errors and why you should take these into consideration when implementing error handling.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -127,6 +127,10 @@
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -212,8 +216,7 @@
 catch {
     # Code to handle the error
     Write-Host &#34;An error occurred: $_&#34;
-}
-</code></pre><h2 id="the-catch-block">
+}</code></pre><h2 id="the-catch-block">
   The Catch Block
   <a class="heading-link" href="#the-catch-block">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -242,8 +245,7 @@ catch {
 finally {
     # Cleanup code here
     # ...
-}
-</code></pre><h2 id="terminatingnon-terminating-errors">
+}</code></pre><h2 id="terminatingnon-terminating-errors">
   Terminating/non-terminating Errors
   <a class="heading-link" href="#terminatingnon-terminating-errors">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -252,8 +254,7 @@ finally {
 </h2>
 <p>non-terminating errors are any error that will not stop the execution of your script. Most cmdlets in PowerShell are non-terminating. They may output an error, but your script will continue to run. These kinds of errors cannot be caught with a catch block by default. The reason for this is the default <code>ErrorAction</code> in your PowerShell profile, which is set to <code>Continue</code>.</p>
 <pre tabindex="0"><code># To show your default error action type
-$ErrorActionPreference
-</code></pre><p>Let&rsquo;s go back and look at our first example:</p>
+$ErrorActionPreference</code></pre><p>Let&rsquo;s go back and look at our first example:</p>
 <pre tabindex="0"><code>try {
     # Code that might generate an error
     Get-Item -Path &#34;NonexistentFile.txt&#34;
@@ -261,8 +262,7 @@ $ErrorActionPreference
 catch {
     # Code to handle the error
     Write-Host &#34;An error occurred: $_&#34;
-}
-</code></pre><p>If you took the time to run this code, you may have noticed that the <code>Write-Host</code> cmdlet in the <code>catch</code> block was never ran. Why did we get a red error message in our PowerShell console, rather than the text <code>An error occurred: ...</code>? The reason is that the non-existing path isn&rsquo;t a terminating error, and the default <code>ErrorAction</code> is <code>Continue</code>. To catch the error, you will need to change the <code>ErrorAction</code> in your PowerShell console to <code>Stop</code>. This can be done in multiple ways. You can add <code>-ErrorAction Stop</code> to the cmdlet, like this:</p>
+}</code></pre><p>If you took the time to run this code, you may have noticed that the <code>Write-Host</code> cmdlet in the <code>catch</code> block was never ran. Why did we get a red error message in our PowerShell console, rather than the text <code>An error occurred: ...</code>? The reason is that the non-existing path isn&rsquo;t a terminating error, and the default <code>ErrorAction</code> is <code>Continue</code>. To catch the error, you will need to change the <code>ErrorAction</code> in your PowerShell console to <code>Stop</code>. This can be done in multiple ways. You can add <code>-ErrorAction Stop</code> to the cmdlet, like this:</p>
 <pre tabindex="0"><code>try {
     # Code that might generate an error
     Get-Item -Path &#34;NonexistentFile.txt&#34; -ErrorAction Stop
@@ -270,10 +270,8 @@ catch {
 catch {
     # Code to handle the error
     Write-Host &#34;An error occurred: $_&#34;
-}
-</code></pre><p>Or you can change the <code>ErrorActionPreference</code> for the entire script, by adding this to the top of the script:</p>
-<pre tabindex="0"><code>$ErrorActionPreference = &#34;Stop&#34;
-</code></pre><h2 id="exceptions">
+}</code></pre><p>Or you can change the <code>ErrorActionPreference</code> for the entire script, by adding this to the top of the script:</p>
+<pre tabindex="0"><code>$ErrorActionPreference = &#34;Stop&#34;</code></pre><h2 id="exceptions">
   Exceptions
   <a class="heading-link" href="#exceptions">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -291,8 +289,7 @@ catch [System.IO.FileNotFoundException] {
 }
 catch {
     Write-Host &#34;Caught an exception: $_&#34;
-}
-</code></pre><p>We now have two <code>catch</code> blocks. If we encounter an exception of type <code>System.IO.FileNotFoundException</code>, the first <code>catch</code> block will catch the exception and handle it accordingly. The second <code>catch</code> block will handle any other generic error.</p>
+}</code></pre><p>We now have two <code>catch</code> blocks. If we encounter an exception of type <code>System.IO.FileNotFoundException</code>, the first <code>catch</code> block will catch the exception and handle it accordingly. The second <code>catch</code> block will handle any other generic error.</p>
 <h2 id="conclusion">
   Conclusion
   <a class="heading-link" href="#conclusion">
@@ -333,7 +330,7 @@ catch {
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -357,9 +354,6 @@ catch {
 
 
   
-  
-
-
 
   
 

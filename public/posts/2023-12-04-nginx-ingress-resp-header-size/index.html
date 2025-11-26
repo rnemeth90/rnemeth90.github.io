@@ -133,6 +133,10 @@ After some investigation and the common finger-pointing, I found this entry in t
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -202,13 +206,11 @@ After some investigation and the common finger-pointing, I found this entry in t
 <p>After some investigation and the common finger-pointing, I found this entry in the logs of our ingress controllers:</p>
 <p><em>note</em> this log entry is truncated</p>
 <pre tabindex="0"><code>[error] 193#193: 
-    *25 upstream sent too big header while reading response header from upstream
-</code></pre><p>This error message pointed towards a limitation in Nginx&rsquo;s default configuration - it struggles with large headers. This is a known quirk of Nginx, contrasting with some other web servers that can handle larger headers by default.</p>
+    *25 upstream sent too big header while reading response header from upstream</code></pre><p>This error message pointed towards a limitation in Nginx&rsquo;s default configuration - it struggles with large headers. This is a known quirk of Nginx, contrasting with some other web servers that can handle larger headers by default.</p>
 <p>We later found that this client&rsquo;s large HTTP headers were due to a large content security policy header.</p>
 <p>The solution seemed straightforward: increase the buffer size in Nginx to accommodate larger headers. For a typical Nginx setup, this could be achieved by tweaking the configuration file:</p>
 <pre tabindex="0"><code>proxy_buffers 8 16k;  # 8 buffers of 16k each
-proxy_buffer_size 16k; # 16k for headers
-</code></pre><p>However, the situation gets a bit more complex when dealing with Nginx as an ingress controller in a Kubernetes environment.</p>
+proxy_buffer_size 16k; # 16k for headers</code></pre><p>However, the situation gets a bit more complex when dealing with Nginx as an ingress controller in a Kubernetes environment.</p>
 <h3 id="configuring-nginx-ingress-controller">
   Configuring Nginx Ingress controller
   <a class="heading-link" href="#configuring-nginx-ingress-controller">
@@ -226,12 +228,10 @@ metadata:
   name: nginx-configuration
   namespace: kube-system
 data:
-  proxy-buffer-size: &#34;16k&#34;
-</code></pre><p>If creating a new ConfigMap, you will need to tell Nginx pods to read it. This involves passing the name of your ConfigMap as an argument in your deployment configuration:</p>
+  proxy-buffer-size: &#34;16k&#34;</code></pre><p>If creating a new ConfigMap, you will need to tell Nginx pods to read it. This involves passing the name of your ConfigMap as an argument in your deployment configuration:</p>
 <pre tabindex="0"><code>args:
   - /nginx-ingress-controller
-  - --configmap=$(POD_NAMESPACE)/nginx-configuration
-</code></pre><p>Once the ConfigMap is in place, the Nginx pods will pickup and apply the new settings</p>
+  - --configmap=$(POD_NAMESPACE)/nginx-configuration</code></pre><p>Once the ConfigMap is in place, the Nginx pods will pickup and apply the new settings</p>
 
       </div>
 
@@ -261,7 +261,7 @@ data:
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -285,9 +285,6 @@ data:
 
 
   
-  
-
-
 
   
 

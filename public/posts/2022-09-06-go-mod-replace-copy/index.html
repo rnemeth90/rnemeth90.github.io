@@ -15,8 +15,14 @@
 <meta name="author" content="Ryan Nemeth">
 <meta name="description" content="If you want to the local version of a dependency in Go rather than one in a remote repository, use the replace keyword.
 The replace line goes above your require statements, like so:
-module github.com/rnemeth90/foo replace github.com/rnemeth90/bar =&gt; /Users/rnemeth90/Projects/bar require ( github.com/rnemeth90/bar v1.0.0 ) Now when you compile this module go build or go install, it will use your local code rather than the remote dependency.
-According to the docs, you do need to make sure that the code you’re pointing to also has a go.">
+
+    module github.com/rnemeth90/foo
+
+    replace github.com/rnemeth90/bar =&gt; /Users/rnemeth90/Projects/bar
+
+    require (
+    	github.com/rnemeth90/bar v1.0.0
+    )Now when you compile this module go build or go install, it will use your local code rather than the remote dependency.">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -25,16 +31,14 @@ According to the docs, you do need to make sure that the code you’re pointing 
   <meta name="twitter:title" content="Use “replace” in go.mod to Point to a Local Module">
   <meta name="twitter:description" content="If you want to the local version of a dependency in Go rather than one in a remote repository, use the replace keyword.
 The replace line goes above your require statements, like so:
-module github.com/rnemeth90/foo replace github.com/rnemeth90/bar =&gt; /Users/rnemeth90/Projects/bar require ( github.com/rnemeth90/bar v1.0.0 ) Now when you compile this module go build or go install, it will use your local code rather than the remote dependency.
-According to the docs, you do need to make sure that the code you’re pointing to also has a go.">
+module github.com/rnemeth90/foo replace github.com/rnemeth90/bar =&gt; /Users/rnemeth90/Projects/bar require ( github.com/rnemeth90/bar v1.0.0 )Now when you compile this module go build or go install, it will use your local code rather than the remote dependency.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2022-09-06-go-mod-replace-copy/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Use “replace” in go.mod to Point to a Local Module">
   <meta property="og:description" content="If you want to the local version of a dependency in Go rather than one in a remote repository, use the replace keyword.
 The replace line goes above your require statements, like so:
-module github.com/rnemeth90/foo replace github.com/rnemeth90/bar =&gt; /Users/rnemeth90/Projects/bar require ( github.com/rnemeth90/bar v1.0.0 ) Now when you compile this module go build or go install, it will use your local code rather than the remote dependency.
-According to the docs, you do need to make sure that the code you’re pointing to also has a go.">
+module github.com/rnemeth90/foo replace github.com/rnemeth90/bar =&gt; /Users/rnemeth90/Projects/bar require ( github.com/rnemeth90/bar v1.0.0 )Now when you compile this module go build or go install, it will use your local code rather than the remote dependency.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -137,6 +141,10 @@ According to the docs, you do need to make sure that the code you’re pointing 
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -216,14 +224,12 @@ According to the docs, you do need to make sure that the code you’re pointing 
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    require <span class="o">(</span>
 </span></span><span class="line"><span class="cl">    	github.com/rnemeth90/bar v1.0.0
-</span></span><span class="line"><span class="cl">    <span class="o">)</span>
-</span></span></code></pre></div><p>Now when you compile this module <em>go build</em> or <em>go install</em>, it will use your local code rather than the remote dependency.</p>
+</span></span><span class="line"><span class="cl">    <span class="o">)</span></span></span></code></pre></div><p>Now when you compile this module <em>go build</em> or <em>go install</em>, it will use your local code rather than the remote dependency.</p>
 <p>According to the docs, you do need to make sure that the code you’re pointing to also has a <strong>go.mod</strong> file:</p>
-<blockquote>
+<blockquote class='book-hint '>
 <p><strong>Note</strong>: if the right-hand side of a <code>replace</code> directive is a filesystem path, then the target must have a <code>go.mod</code> file at that location. If the <code>go.mod</code> file is not present, you can create one with <code>go mod init</code>.</p>
 <p><a href="https://github.com/golang/go/wiki/Modules#when-should-i-use-the-replace-directive"  class="external-link" target="_blank" rel="noopener">https://github.com/golang/go/wiki/Modules#when-should-i-use-the-replace-directive</a></p>
-</blockquote>
-<p>You can also create this line from the command line using the <strong>go mod edit</strong> command.</p>
+</blockquote><p>You can also create this line from the command line using the <strong>go mod edit</strong> command.</p>
 <pre><code>$ go mod edit -replace github.com/rnemeth90/bar=/Users/rnemeth90/Projects/bar
 </code></pre>
 <p>Following the <strong>-replace</strong> is first what you want to replace, then an equals sign, then what you’re replacing it with.</p>
@@ -257,7 +263,7 @@ According to the docs, you do need to make sure that the code you’re pointing 
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -281,9 +287,6 @@ According to the docs, you do need to make sure that the code you’re pointing 
 
 
   
-  
-
-
 
   
 

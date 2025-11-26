@@ -129,6 +129,10 @@ I restored the database that the users’ mailbox was on from a backup then copi
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -192,17 +196,17 @@ I restored the database that the users’ mailbox was on from a backup then copi
         <p>Recently, one of my users’ came to me and said he was missing two months worth of email. This was just after migrating to Exchange Online. We were using Exchange 2010 with System Center DPM for backups.</p>
 <p>I restored the database that the users’ mailbox was on from a backup then copied it over to the Exchange server from the network share I restored it to. All was going well, until I tried to mount the darn thing.</p>
 <p>I was getting this error and could not for the life of me decry-pt the meaning of it. There is obviously some type of IO issue/file not found. But what could it be?</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/1-1.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/1-1.png"></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/1-1.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/1-1.png" alt="" /></a></p>
 <p>I figured I’d better kick this one off with some basic troubleshooting. First, I checked the health of the database and made sure it was clean. Passed that test…</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/2-1.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/2-1.png"></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/2-1.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/2-1.png" alt="" /></a></p>
 <p>Then ran a repair on the database, to no avail.</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/3-1.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/3-1.png"></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/3-1.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/3-1.png" alt="" /></a></p>
 <p>After racking my brain for a good thirty minutes, and a few failed Google searches, I found the solution. It was so simple! I created the log file directory in the folder with the database, and voila, the database mounted without a single error!</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/7.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/7.png"></a></p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/4-1.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/4-1.png"></a><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/5-1.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/5-1.png"></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/7.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/7.png" alt="" /></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/4-1.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/4-1.png" alt="" /></a><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/5-1.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/5-1.png" alt="" /></a></p>
 <p>I was able to see the ‘supposed’ location of the log file by opening the Exchange Management Shell and running the ‘Get-MailboxDatabase’ cmdlet, like so:</p>
 <p><em>Get-MailBoxDatabase –Identity <Recovery DB Name> | FL Name, ServerName, EDBFilePath, LogFolderPath</em></p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/6.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/6.png"></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/08/6.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/08/6.png" alt="" /></a></p>
 <p>I’m not sure why the database mounting process isn’t capable of creating the log file directory… I think Microsoft would have thought and planned for a situation like this. Hope this helps!</p>
 
       </div>
@@ -233,7 +237,7 @@ I restored the database that the users’ mailbox was on from a backup then copi
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -257,9 +261,6 @@ I restored the database that the users’ mailbox was on from a backup then copi
 
 
   
-  
-
-
 
   
 

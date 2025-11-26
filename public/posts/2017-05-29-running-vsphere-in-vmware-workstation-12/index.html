@@ -14,7 +14,7 @@
 
 <meta name="author" content="Ryan Nemeth">
 <meta name="description" content="In this post I’ll be walking through how to run a vSphere lab in VMware Workstation. I recently decided to obtain VCP6-DCV. Rather than driving up my electric bill like I’ve done in the past using physical servers, I’m attempting to run the entire lab on my workstation and a Synology NAS.
-If you’ve ever installed ESXi, installing it in Workstation will be a familiar process for you. VMware tools is included in the installation disc, which makes installing ESXi in Workstation dramatically easier than it used to be.">
+If you’ve ever installed ESXi, installing it in Workstation will be a familiar process for you. VMware tools is included in the installation disc, which makes installing ESXi in Workstation dramatically easier than it used to be. . The process is very simple, so I won’t be going through those steps here unless someone asks me to in the comments. I also will not be going through the process of installing Windows Server or configuring a domain controller/DNS/DHCP, as I am sure you have done so in the past if you are reading this.">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -22,13 +22,13 @@ If you’ve ever installed ESXi, installing it in Workstation will be a familiar
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Running vSphere in VMware Workstation 12">
   <meta name="twitter:description" content="In this post I’ll be walking through how to run a vSphere lab in VMware Workstation. I recently decided to obtain VCP6-DCV. Rather than driving up my electric bill like I’ve done in the past using physical servers, I’m attempting to run the entire lab on my workstation and a Synology NAS.
-If you’ve ever installed ESXi, installing it in Workstation will be a familiar process for you. VMware tools is included in the installation disc, which makes installing ESXi in Workstation dramatically easier than it used to be.">
+If you’ve ever installed ESXi, installing it in Workstation will be a familiar process for you. VMware tools is included in the installation disc, which makes installing ESXi in Workstation dramatically easier than it used to be. . The process is very simple, so I won’t be going through those steps here unless someone asks me to in the comments. I also will not be going through the process of installing Windows Server or configuring a domain controller/DNS/DHCP, as I am sure you have done so in the past if you are reading this.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2017-05-29-running-vsphere-in-vmware-workstation-12/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Running vSphere in VMware Workstation 12">
   <meta property="og:description" content="In this post I’ll be walking through how to run a vSphere lab in VMware Workstation. I recently decided to obtain VCP6-DCV. Rather than driving up my electric bill like I’ve done in the past using physical servers, I’m attempting to run the entire lab on my workstation and a Synology NAS.
-If you’ve ever installed ESXi, installing it in Workstation will be a familiar process for you. VMware tools is included in the installation disc, which makes installing ESXi in Workstation dramatically easier than it used to be.">
+If you’ve ever installed ESXi, installing it in Workstation will be a familiar process for you. VMware tools is included in the installation disc, which makes installing ESXi in Workstation dramatically easier than it used to be. . The process is very simple, so I won’t be going through those steps here unless someone asks me to in the comments. I also will not be going through the process of installing Windows Server or configuring a domain controller/DNS/DHCP, as I am sure you have done so in the past if you are reading this.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -128,6 +128,10 @@ If you’ve ever installed ESXi, installing it in Workstation will be a familiar
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -191,7 +195,7 @@ If you’ve ever installed ESXi, installing it in Workstation will be a familiar
 <p>Once the download has completed, click File &gt; Open in Workstation. Browse to the OVA, then give your new VM a name and location if necessary. Accept the EULA when prompted.</p>
 <p>Be sure to read it! 😎</p>
 <p>Once the OVA finishes importing, do not power on the VM! There is some customization we need to do first. Close Workstation if it is open. Browse to the location on your PC that you imported the VM to. I’m using a Windows OS, so I will use File Explorer. Open the .VMX file (use Notepad or another text editor):</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-28_21h00_04.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-28_21h00_04.png"></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-28_21h00_04.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-28_21h00_04.png" alt="" /></a></p>
 <p>This is the configuration file for your virtual machine. We can use it to customize the name, IPv4/6 details, DNS domain, etc. Scroll down to the last line of text, and paste this in:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">guestinfo.cis.vmdir.password <span class="o">=</span> “vmware!”
 </span></span><span class="line"><span class="cl">guestinfo.cis.appliance.net.addr.family <span class="o">=</span> “ipv4”
@@ -200,13 +204,12 @@ If you’ve ever installed ESXi, installing it in Workstation will be a familiar
 </span></span><span class="line"><span class="cl">guestinfo.cis.appliance.net.mode <span class="o">=</span> “static”
 </span></span><span class="line"><span class="cl">guestinfo.cis.appliance.net.dns.servers <span class="o">=</span> “10.0.0.10”
 </span></span><span class="line"><span class="cl">guestinfo.cis.appliance.net.gateway <span class="o">=</span> “10.0.0.1”
-</span></span><span class="line"><span class="cl">guestinfo.cis.appliance.root.passwd <span class="o">=</span> “vmware!”
-</span></span></code></pre></div><p>Customize the above code to your needs. You will likely need to change the IPv4 details. Save the .VMX file and close your text editor. Now you can power on the virtual machine, and vCenter will run through the installation process. The installation can take around 10-15 minute in my experience. You may see generic login screens during the installation of Photon, do not login or interrupt the installation. Once it is complete, you should see the DCUI below:</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h11_00.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h11_00.png"></a></p>
+</span></span><span class="line"><span class="cl">guestinfo.cis.appliance.root.passwd <span class="o">=</span> “vmware!”</span></span></code></pre></div><p>Customize the above code to your needs. You will likely need to change the IPv4 details. Save the .VMX file and close your text editor. Now you can power on the virtual machine, and vCenter will run through the installation process. The installation can take around 10-15 minute in my experience. You may see generic login screens during the installation of Photon, do not login or interrupt the installation. Once it is complete, you should see the DCUI below:</p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h11_00.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h11_00.png" alt="" /></a></p>
 <p>You should now be able to browse to the IP address or DNS name of your vCenter server. Once you complete the configuration, you can login and see the page below:
-<a href="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h10_39.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h10_39.png"></a></p>
+<a href="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h10_39.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h10_39.png" alt="" /></a></p>
 <p>In my lab I am running 3 ESXi hosts, 1 Windows Server, and one vCenter server. Plenty to study for the VCP lab.</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h11_31.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h11_31.png"></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h11_31.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2017/05/2017-05-24_10h11_31.png" alt="" /></a></p>
 <p>Good luck and be sure to leave a comment if you have any questions!</p>
 
       </div>
@@ -237,7 +240,7 @@ If you’ve ever installed ESXi, installing it in Workstation will be a familiar
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -261,9 +264,6 @@ If you’ve ever installed ESXi, installing it in Workstation will be a familiar
 
 
   
-  
-
-
 
   
 

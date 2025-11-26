@@ -14,7 +14,7 @@
 
 <meta name="author" content="Ryan Nemeth">
 <meta name="description" content="I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.
-Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work.">
+Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work. I receive this nice message:">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -22,13 +22,13 @@ Because of this, I’m required to continue using WSL v1. Though, with WSL v1, D
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Running Docker in WSL v1">
   <meta name="twitter:description" content="I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.
-Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work.">
+Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work. I receive this nice message:">
 
 <meta property="og:url" content="http://localhost:1313/posts/2022-06-26-running-docker-in-wsl-v1/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Running Docker in WSL v1">
   <meta property="og:description" content="I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.
-Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work.">
+Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work. I receive this nice message:">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -133,6 +133,10 @@ Because of this, I’m required to continue using WSL v1. Though, with WSL v1, D
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -223,8 +227,7 @@ Because of this, I’m required to continue using WSL v1. Though, with WSL v1, D
 </span></span><span class="line"><span class="cl">We recommend to convert this distro to WSL <span class="m">2</span> and activate
 </span></span><span class="line"><span class="cl">the WSL integration in Docker Desktop settings.
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">See https://docs.docker.com/docker-for-windows/wsl/ <span class="k">for</span> details.
-</span></span></code></pre></div><p>So I’m in somewhat of a catch-22 here…</p>
+</span></span><span class="line"><span class="cl">See https://docs.docker.com/docker-for-windows/wsl/ <span class="k">for</span> details.</span></span></code></pre></div><p>So I’m in somewhat of a catch-22 here…</p>
 <p>To work around this problem until a proper solution is found, I was able to get Docker working with WSL v1.</p>
 <p>If you happen to be having a similar issue (and it seems like quite a few people are, considering the number of Github posts I found), just follow these steps:</p>
 <ul>
@@ -234,12 +237,9 @@ Because of this, I’m required to continue using WSL v1. Though, with WSL v1, D
 <p>Install the stand-alone Docker client in WSL v1:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.5.tgz
 </span></span><span class="line"><span class="cl">$ tar zxvf docker-20.10.5.tgz
-</span></span><span class="line"><span class="cl">$ <span class="nb">cd</span> docker
-</span></span></code></pre></div><p>Set the default Docker daemon in WSL v1:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">DOCKER_HOST</span><span class="o">=</span>tcp://localhost:2375
-</span></span></code></pre></div><p>Verify you can connect to Docker running on Windows from within WSL:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">./docker info
-</span></span></code></pre></div><p>This is also beneficial in that you only have one Docker host to manage your containers, network, etc., rather than two.</p>
+</span></span><span class="line"><span class="cl">$ <span class="nb">cd</span> docker</span></span></code></pre></div><p>Set the default Docker daemon in WSL v1:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">DOCKER_HOST</span><span class="o">=</span>tcp://localhost:2375</span></span></code></pre></div><p>Verify you can connect to Docker running on Windows from within WSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">./docker info</span></span></code></pre></div><p>This is also beneficial in that you only have one Docker host to manage your containers, network, etc., rather than two.</p>
 
       </div>
 
@@ -269,7 +269,7 @@ Because of this, I’m required to continue using WSL v1. Though, with WSL v1, D
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -293,9 +293,6 @@ Because of this, I’m required to continue using WSL v1. Though, with WSL v1, D
 
 
   
-  
-
-
 
   
 

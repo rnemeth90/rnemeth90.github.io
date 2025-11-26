@@ -13,8 +13,15 @@
 
 
 <meta name="author" content="Ryan Nemeth">
-<meta name="description" content="Introduction Link to heading In this post, we&rsquo;ll take a quick look at URL validation using Golang. It&rsquo;s common to implement URL validation as a task within a HTTP request pipeline, typically as middleware. There are many different definitions of &ldquo;validation&rdquo;. For the purpose of this article, we will simply validate that a URL conforms to a particular text pattern.
-I often see people (mistakenly) use URL and URI interchangeably.">
+<meta name="description" content="
+  Introduction
+  
+    
+    Link to heading
+  
+
+In this post, we&rsquo;ll take a quick look at URL validation using Golang. It&rsquo;s common to implement URL validation as a task within a HTTP request pipeline, typically as middleware. There are many different definitions of &ldquo;validation&rdquo;. For the purpose of this article, we will simply validate that a URL conforms to a particular text pattern.
+I often see people (mistakenly) use URL and URI interchangeably. URL is actually is a sub-type of URI. A URL is a reference to a web resource, typically seen as a web address (e.g. https://golang.org/project/). A URI, on the other hand, can be used to identify any type of resource, not just those on the internet.">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -22,13 +29,13 @@ I often see people (mistakenly) use URL and URI interchangeably.">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Validating URLs with Go">
   <meta name="twitter:description" content="Introduction Link to heading In this post, we’ll take a quick look at URL validation using Golang. It’s common to implement URL validation as a task within a HTTP request pipeline, typically as middleware. There are many different definitions of “validation”. For the purpose of this article, we will simply validate that a URL conforms to a particular text pattern.
-I often see people (mistakenly) use URL and URI interchangeably.">
+I often see people (mistakenly) use URL and URI interchangeably. URL is actually is a sub-type of URI. A URL is a reference to a web resource, typically seen as a web address (e.g. https://golang.org/project/). A URI, on the other hand, can be used to identify any type of resource, not just those on the internet.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2023-12-12-golang-url-validation/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Validating URLs with Go">
   <meta property="og:description" content="Introduction Link to heading In this post, we’ll take a quick look at URL validation using Golang. It’s common to implement URL validation as a task within a HTTP request pipeline, typically as middleware. There are many different definitions of “validation”. For the purpose of this article, we will simply validate that a URL conforms to a particular text pattern.
-I often see people (mistakenly) use URL and URI interchangeably.">
+I often see people (mistakenly) use URL and URI interchangeably. URL is actually is a sub-type of URI. A URL is a reference to a web resource, typically seen as a web address (e.g. https://golang.org/project/). A URI, on the other hand, can be used to identify any type of resource, not just those on the internet.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -131,6 +138,10 @@ I often see people (mistakenly) use URL and URI interchangeably.">
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -216,8 +227,7 @@ I often see people (mistakenly) use URL and URI interchangeably.">
 <p>To validate a URL, we can simply use the <code>url.ParseRequestURI()</code> function. The definition of this function is below (taken from pkg.go.dev)</p>
 <pre tabindex="0"><code>func ParseRequestURI(rawurl string) (*URL, error)
 
-ParseRequestURI parses rawurl into a URL structure. It assumes that rawurl was received in an HTTP request, so the rawurl is interpreted only as an absolute URI or an absolute path. The string rawurl is assumed not to have a #fragment suffix. (Web browsers strip #fragment before sending the URL to a web server.)
-</code></pre><p>Let&rsquo;s see how we can use <code>url.ParseRequestURI()</code>:</p>
+ParseRequestURI parses rawurl into a URL structure. It assumes that rawurl was received in an HTTP request, so the rawurl is interpreted only as an absolute URI or an absolute path. The string rawurl is assumed not to have a #fragment suffix. (Web browsers strip #fragment before sending the URL to a web server.)</code></pre><p>Let&rsquo;s see how we can use <code>url.ParseRequestURI()</code>:</p>
 <pre tabindex="0"><code>package main
 
 import (
@@ -237,13 +247,11 @@ func main() {
 
   u, err = url.ParseRequestURI(&#34;golang.org&#34;)
   log.Printf(&#34;err=%+v url=%+v\n&#34;, err, u)
-}
-</code></pre><p>Which outputs the following:</p>
+}</code></pre><p>Which outputs the following:</p>
 <pre tabindex="0"><code>2023/12/19 19:50:07 err=parse &#34;hello&#34;: invalid URI for request url=&lt;nil&gt;
 2023/12/19 19:50:07 err=&lt;nil&gt; url=http://rnemeth90.github.com/
 2023/12/19 19:50:07 err=&lt;nil&gt; url=http://golang.org/index.html?#page1
-2023/12/19 19:50:07 err=parse &#34;golang.org&#34;: invalid URI for request url=&lt;nil&gt;
-</code></pre><p>That&rsquo;s it! This is a short article, but it&rsquo;s just that easy to validate URLs in Go. I was learning about this recently and wanted to document what I learned. Until next time!</p>
+2023/12/19 19:50:07 err=parse &#34;golang.org&#34;: invalid URI for request url=&lt;nil&gt;</code></pre><p>That&rsquo;s it! This is a short article, but it&rsquo;s just that easy to validate URLs in Go. I was learning about this recently and wanted to document what I learned. Until next time!</p>
 
       </div>
 
@@ -273,7 +281,7 @@ func main() {
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -297,9 +305,6 @@ func main() {
 
 
   
-  
-
-
 
   
 

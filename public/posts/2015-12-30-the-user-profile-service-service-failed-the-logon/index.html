@@ -15,7 +15,8 @@
 <meta name="author" content="Ryan Nemeth">
 <meta name="description" content="One of my clients had a really strange issue the other day. He has a domain admin account in his domain and was not able to login to a server that I recently built. The server was an Exchange 2013 box, and was used in Coexistence mode to migrate his company from an Exchange 2007 box.
 He was getting this error message when attempting to login:
-This is a classic error message that I’m sure most technicians have seen before.">
+
+This is a classic error message that I’m sure most technicians have seen before. Usually the resolution is to go into the registry and rename the user profile key to have a “.bak” extension and then do some other magic. However, this time, that was not the case. I looked in the registry and didn’t even see a reg key for his profile. I then looked in the c:users folder and didn’t see a folder for his profile. Strange…">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -24,14 +25,14 @@ This is a classic error message that I’m sure most technicians have seen befor
   <meta name="twitter:title" content="The User Profile Service service failed the logon">
   <meta name="twitter:description" content="One of my clients had a really strange issue the other day. He has a domain admin account in his domain and was not able to login to a server that I recently built. The server was an Exchange 2013 box, and was used in Coexistence mode to migrate his company from an Exchange 2007 box.
 He was getting this error message when attempting to login:
-This is a classic error message that I’m sure most technicians have seen before.">
+This is a classic error message that I’m sure most technicians have seen before. Usually the resolution is to go into the registry and rename the user profile key to have a “.bak” extension and then do some other magic. However, this time, that was not the case. I looked in the registry and didn’t even see a reg key for his profile. I then looked in the c:users folder and didn’t see a folder for his profile. Strange…">
 
 <meta property="og:url" content="http://localhost:1313/posts/2015-12-30-the-user-profile-service-service-failed-the-logon/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="The User Profile Service service failed the logon">
   <meta property="og:description" content="One of my clients had a really strange issue the other day. He has a domain admin account in his domain and was not able to login to a server that I recently built. The server was an Exchange 2013 box, and was used in Coexistence mode to migrate his company from an Exchange 2007 box.
 He was getting this error message when attempting to login:
-This is a classic error message that I’m sure most technicians have seen before.">
+This is a classic error message that I’m sure most technicians have seen before. Usually the resolution is to go into the registry and rename the user profile key to have a “.bak” extension and then do some other magic. However, this time, that was not the case. I looked in the registry and didn’t even see a reg key for his profile. I then looked in the c:users folder and didn’t see a folder for his profile. Strange…">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -132,6 +133,10 @@ This is a classic error message that I’m sure most technicians have seen befor
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -194,10 +199,10 @@ This is a classic error message that I’m sure most technicians have seen befor
         
         <p>One of my clients had a really strange issue the other day. He has a domain admin account in his domain and was not able to login to a server that I recently built. The server was an Exchange 2013 box, and was used in Coexistence mode to migrate his company from an Exchange 2007 box.</p>
 <p>He was getting this error message when attempting to login:</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/12/2015-12-30_09h38_53.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/12/2015-12-30_09h38_53.png"></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/12/2015-12-30_09h38_53.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/12/2015-12-30_09h38_53.png" alt="" /></a></p>
 <p>This is a classic error message that I’m sure most technicians have seen before. Usually the resolution is to go into the registry and rename the user profile key to have a “.bak” extension and then do some other magic. However, this time, that was not the case. I looked in the registry and didn’t even see a reg key for his profile. I then looked in the c:users folder and didn’t see a folder for his profile. Strange…</p>
 <p>So what exactly was happening? Well, I took a look at the Event Viewer and found this error message:</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/12/2015-12-30_09h34_06.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/12/2015-12-30_09h34_06.png"></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/12/2015-12-30_09h34_06.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/12/2015-12-30_09h34_06.png" alt="" /></a></p>
 <p>I browsed to the file referenced in the error message and deleted it. Walla! He was able to login with his admin account. I’m not sure why this file was in the default user profile. It has something to do with Customer Experience Improvement Program:</p>
 <p><a href="http://www.nextofwindows.com/what-is-sqmdata-and-sqm-file-in-windows-7-and-how-to-delete-them"  class="external-link" target="_blank" rel="noopener">http://www.nextofwindows.com/what-is-sqmdata-and-sqm-file-in-windows-7-and-how-to-delete-them</a></p>
 
@@ -229,7 +234,7 @@ This is a classic error message that I’m sure most technicians have seen befor
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -253,9 +258,6 @@ This is a classic error message that I’m sure most technicians have seen befor
 
 
   
-  
-
-
 
   
 

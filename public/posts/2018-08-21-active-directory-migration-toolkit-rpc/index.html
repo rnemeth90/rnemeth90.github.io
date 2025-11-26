@@ -14,24 +14,26 @@
 
 <meta name="author" content="Ryan Nemeth">
 <meta name="description" content="When migrating computer objects using the Active Directory Migration Tool, you may encounter the following error:
+
 In addition, the Migration Log may show the following error:
-This is typically caused by a host-side firewall. To resolve this, deploy a GPO to disable the Windows firewall prior to migrating the computer account. I like to create a special OU for computers (I typically name it “PreMigration”) that I will move computer objects to prior to migrating them.">
+
+This is typically caused by a host-side firewall. To resolve this, deploy a GPO to disable the Windows firewall prior to migrating the computer account. I like to create a special OU for computers (I typically name it “PreMigration”) that I will move computer objects to prior to migrating them. This OU will have two policies applied. One to disable the Windows Firewall and another to start the Remote Registry service. Both are required for the computer object to successfully migrate.">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
 
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Active Directory Migration Toolkit &amp;#8211; The RPC Server is Unavailable (hr=0x800706ba)">
+  <meta name="twitter:title" content="Active Directory Migration Toolkit &#8211; The RPC Server is Unavailable (hr=0x800706ba)">
   <meta name="twitter:description" content="When migrating computer objects using the Active Directory Migration Tool, you may encounter the following error:
 In addition, the Migration Log may show the following error:
-This is typically caused by a host-side firewall. To resolve this, deploy a GPO to disable the Windows firewall prior to migrating the computer account. I like to create a special OU for computers (I typically name it “PreMigration”) that I will move computer objects to prior to migrating them.">
+This is typically caused by a host-side firewall. To resolve this, deploy a GPO to disable the Windows firewall prior to migrating the computer account. I like to create a special OU for computers (I typically name it “PreMigration”) that I will move computer objects to prior to migrating them. This OU will have two policies applied. One to disable the Windows Firewall and another to start the Remote Registry service. Both are required for the computer object to successfully migrate.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2018-08-21-active-directory-migration-toolkit-rpc/">
   <meta property="og:site_name" content="GeekyRyan">
-  <meta property="og:title" content="Active Directory Migration Toolkit &amp;#8211; The RPC Server is Unavailable (hr=0x800706ba)">
+  <meta property="og:title" content="Active Directory Migration Toolkit &#8211; The RPC Server is Unavailable (hr=0x800706ba)">
   <meta property="og:description" content="When migrating computer objects using the Active Directory Migration Tool, you may encounter the following error:
 In addition, the Migration Log may show the following error:
-This is typically caused by a host-side firewall. To resolve this, deploy a GPO to disable the Windows firewall prior to migrating the computer account. I like to create a special OU for computers (I typically name it “PreMigration”) that I will move computer objects to prior to migrating them.">
+This is typically caused by a host-side firewall. To resolve this, deploy a GPO to disable the Windows firewall prior to migrating the computer account. I like to create a special OU for computers (I typically name it “PreMigration”) that I will move computer objects to prior to migrating them. This OU will have two policies applied. One to disable the Windows Firewall and another to start the Remote Registry service. Both are required for the computer object to successfully migrate.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -131,6 +133,10 @@ This is typically caused by a host-side firewall. To resolve this, deploy a GPO 
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -188,9 +194,9 @@ This is typically caused by a host-side firewall. To resolve this, deploy a GPO 
       <div class="post-content">
         
         <p>When migrating computer objects using the Active Directory Migration Tool, you may encounter the following error:</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/08/2018-08-03_11h20_09.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/08/2018-08-03_11h20_09.png"></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/08/2018-08-03_11h20_09.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/08/2018-08-03_11h20_09.png" alt="" /></a></p>
 <p>In addition, the Migration Log may show the following error:</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/08/2018-08-03_11h20_20.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/08/2018-08-03_11h20_20.png"></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2018/08/2018-08-03_11h20_20.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2018/08/2018-08-03_11h20_20.png" alt="" /></a></p>
 <p>This is typically caused by a host-side firewall. To resolve this, deploy a GPO to disable the Windows firewall prior to migrating the computer account. I like to create a special OU for computers (I typically name it “PreMigration”) that I will move computer objects to prior to migrating them. This OU will have two policies applied. One to disable the Windows Firewall and another to start the Remote Registry service. Both are required for the computer object to successfully migrate.</p>
 
       </div>
@@ -221,7 +227,7 @@ This is typically caused by a host-side firewall. To resolve this, deploy a GPO 
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -245,9 +251,6 @@ This is typically caused by a host-side firewall. To resolve this, deploy a GPO 
 
 
   
-  
-
-
 
   
 

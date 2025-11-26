@@ -13,19 +13,26 @@
 
 
 <meta name="author" content="Ryan Nemeth">
-<meta name="description" content="Introduction Link to heading Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the &ldquo;network swiss-army knife&rdquo;. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar.">
+<meta name="description" content="
+  Introduction
+  
+    
+    Link to heading
+  
+
+Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the &ldquo;network swiss-army knife&rdquo;. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed.">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Exploring Netcat">
-  <meta name="twitter:description" content="Introduction Link to heading Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the “network swiss-army knife”. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar.">
+  <meta name="twitter:description" content="Introduction Link to heading Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the “network swiss-army knife”. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2023-11-27-netcat/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Exploring Netcat">
-  <meta property="og:description" content="Introduction Link to heading Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the “network swiss-army knife”. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar.">
+  <meta property="og:description" content="Introduction Link to heading Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the “network swiss-army knife”. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -124,6 +131,10 @@
           
             <li class="navigation-item">
               <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
             </li>
           
             <li class="navigation-item">
@@ -231,21 +242,17 @@
 <ol>
 <li>Launch a shell and type the following command. This will tell netcat to listen (<code>-l</code>) on UDP (<code>-u</code>) port (<code>-p</code>) 5555.</li>
 </ol>
-<pre tabindex="0"><code>nc -l -u -p 5555
-</code></pre><ol start="2">
+<pre tabindex="0"><code>nc -l -u -p 5555</code></pre><ol start="2">
 <li>Launch another shell and type the following. This will connect to the server we created above.</li>
 </ol>
-<pre tabindex="0"><code>nc -u 127.0.0.1 5555
-</code></pre><ol start="3">
+<pre tabindex="0"><code>nc -u 127.0.0.1 5555</code></pre><ol start="3">
 <li>You can now send messages to the server, like so:</li>
 </ol>
 <p>Client:</p>
 <pre tabindex="0"><code>$ nc -u 127.0.0.1 5555
-hello
-</code></pre><p>Server:</p>
+hello</code></pre><p>Server:</p>
 <pre tabindex="0"><code>$ nc -l -u -p 5555
-hello
-</code></pre><p>You can do the same thing with TCP, just leave out the <code>-u</code> in each command above.</p>
+hello</code></pre><p>You can do the same thing with TCP, just leave out the <code>-u</code> in each command above.</p>
 <h2 id="transfer-a-file">
   Transfer a File
   <a class="heading-link" href="#transfer-a-file">
@@ -254,18 +261,15 @@ hello
   </a>
 </h2>
 <p>On the receiving end:</p>
-<pre tabindex="0"><code>nc -l -p 5555 &gt; outputfile
-</code></pre><p>On the sending end:</p>
-<pre tabindex="0"><code>nc [hostname or IP address of server] 5555 &lt; inputfile
-</code></pre><h2 id="port-scanning">
+<pre tabindex="0"><code>nc -l -p 5555 &gt; outputfile</code></pre><p>On the sending end:</p>
+<pre tabindex="0"><code>nc [hostname or IP address of server] 5555 &lt; inputfile</code></pre><h2 id="port-scanning">
   Port Scanning:
   <a class="heading-link" href="#port-scanning">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<pre tabindex="0"><code>netcat -v -z -n -w 1 v.txvip1 1-1023
-</code></pre><h2 id="serve-a-web-page">
+<pre tabindex="0"><code>netcat -v -z -n -w 1 v.txvip1 1-1023</code></pre><h2 id="serve-a-web-page">
   Serve a web page:
   <a class="heading-link" href="#serve-a-web-page">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -273,8 +277,7 @@ hello
   </a>
 </h2>
 <p>If you have an html file, you can create a simple web server for it. Here we tell netcat to listen on port 8080 and redirect the contents of index.html to any &rsquo;thing&rsquo; that connects:</p>
-<pre tabindex="0"><code>nc -l -p 8080 &lt; index.html
-</code></pre><p><strong>Note</strong>: In the examples above, I always use port 5555. You can technically use just about any port you want. However, attempting to use any port below 1024 will require root privileges. The port you choose cannot be in use by another process.</p>
+<pre tabindex="0"><code>nc -l -p 8080 &lt; index.html</code></pre><p><strong>Note</strong>: In the examples above, I always use port 5555. You can technically use just about any port you want. However, attempting to use any port below 1024 will require root privileges. The port you choose cannot be in use by another process.</p>
 <h2 id="other-practical-examples">
   Other Practical Examples
   <a class="heading-link" href="#other-practical-examples">
@@ -317,8 +320,7 @@ hello
 <p>Netcat&rsquo;s ability to handle UDP connections makes it an invaluable tool for various network-related tasks. Whether you are testing a UDP server, interacting with networked devices, or exploring your network&rsquo;s services, netcat provides a convenient and straightforward approach.</p>
 <p>In this blog post, we walked through the process of creating a UDP connection using netcat, discussed the fundamentals of UDP, and explored practical examples where netcat can prove useful. By mastering netcat&rsquo;s capabilities, you can enhance your network troubleshooting and debugging skills, and gain a deeper understanding of UDP communication.</p>
 <p>You can read more about netcat in the man pages:</p>
-<pre tabindex="0"><code>man nc
-</code></pre><p>The OpenBSD repository contains the original source written by Hobbit decades ago:
+<pre tabindex="0"><code>man nc</code></pre><p>The OpenBSD repository contains the original source written by Hobbit decades ago:
 <a href="https://github.com/openbsd/src/blob/master/usr.bin/nc/netcat.c"  class="external-link" target="_blank" rel="noopener">netcat.c</a></p>
 
       </div>
@@ -349,7 +351,7 @@ hello
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -373,9 +375,6 @@ hello
 
 
   
-  
-
-
 
   
 

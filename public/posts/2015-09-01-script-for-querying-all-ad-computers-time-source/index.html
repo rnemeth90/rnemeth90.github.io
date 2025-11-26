@@ -14,7 +14,40 @@
 
 <meta name="author" content="Ryan Nemeth">
 <meta name="description" content="This script will iterate through all computers in Active Directory and return the configured time server for each computer.
-&lt;# .SYNOPSIS Get time source for all computers in domain .EXAMPLE Get-TimeSource .NOTES Author: Ryan Nemeth - RyanNemeth@live.com Site: http://www.geekyryan.com .LINK http://www.geekyryan.com .DESCRIPTION This function will iterate through all computers/servers in a domain and return the time source for each. #&gt; Write-Host -foregroundcolor Red -BackgroundColor black &#34;This script must be run on a domain controller and requires that the AD Powershell module be installed&#34; $module = Get-Module -ListAvailable | Select-Object -ExpandProperty Name if($module -notcontains &#34;ActiveDirectory&#34;) { Write-Host -foregroundcolor red -backgroundcolor black &#34;***Active Directory Powershell Module Not Found***&#34; } else { Write-Host -foregroundcolor yellow &#34;Found Active Directory Powershell Module.">
+&lt;#
+    .SYNOPSIS
+     Get time source for all computers in domain
+    .EXAMPLE
+     Get-TimeSource
+    .NOTES
+     Author: Ryan Nemeth - RyanNemeth@live.com
+     Site: http://www.geekyryan.com
+    .LINK
+     http://www.geekyryan.com
+    .DESCRIPTION
+     This function will iterate through all computers/servers in a domain and return the time source
+     for each.
+#&gt;
+
+Write-Host -foregroundcolor Red -BackgroundColor black &#34;This script must be run on a domain controller and requires that the AD Powershell module be installed&#34;
+
+$module = Get-Module -ListAvailable | Select-Object -ExpandProperty Name
+
+if($module -notcontains &#34;ActiveDirectory&#34;) {
+    Write-Host -foregroundcolor red -backgroundcolor black &#34;***Active Directory Powershell Module Not Found***&#34;
+}
+else {
+    Write-Host -foregroundcolor yellow &#34;Found Active Directory Powershell Module. Importing...&#34;
+}
+
+Import-Module ActiveDirectory
+
+$computers = get-adcomputer -filter * | Select-Object -ExpandProperty Name
+
+foreach($computer in $computers) {
+  $tm_source = w32tm /query /computer:$computer /source
+  write-host &#34;The time source for&#34; $computer &#34;is&#34; $tm_source
+}">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -22,13 +55,13 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Script for Querying All AD Computers Time Source">
   <meta name="twitter:description" content="This script will iterate through all computers in Active Directory and return the configured time server for each computer.
-&lt;# .SYNOPSIS Get time source for all computers in domain .EXAMPLE Get-TimeSource .NOTES Author: Ryan Nemeth - RyanNemeth@live.com Site: http://www.geekyryan.com .LINK http://www.geekyryan.com .DESCRIPTION This function will iterate through all computers/servers in a domain and return the time source for each. #&gt; Write-Host -foregroundcolor Red -BackgroundColor black &#34;This script must be run on a domain controller and requires that the AD Powershell module be installed&#34; $module = Get-Module -ListAvailable | Select-Object -ExpandProperty Name if($module -notcontains &#34;ActiveDirectory&#34;) { Write-Host -foregroundcolor red -backgroundcolor black &#34;***Active Directory Powershell Module Not Found***&#34; } else { Write-Host -foregroundcolor yellow &#34;Found Active Directory Powershell Module.">
+&lt;# .SYNOPSIS Get time source for all computers in domain .EXAMPLE Get-TimeSource .NOTES Author: Ryan Nemeth - RyanNemeth@live.com Site: http://www.geekyryan.com .LINK http://www.geekyryan.com .DESCRIPTION This function will iterate through all computers/servers in a domain and return the time source for each. #&gt; Write-Host -foregroundcolor Red -BackgroundColor black &#34;This script must be run on a domain controller and requires that the AD Powershell module be installed&#34; $module = Get-Module -ListAvailable | Select-Object -ExpandProperty Name if($module -notcontains &#34;ActiveDirectory&#34;) { Write-Host -foregroundcolor red -backgroundcolor black &#34;***Active Directory Powershell Module Not Found***&#34; } else { Write-Host -foregroundcolor yellow &#34;Found Active Directory Powershell Module. Importing...&#34; } Import-Module ActiveDirectory $computers = get-adcomputer -filter * | Select-Object -ExpandProperty Name foreach($computer in $computers) { $tm_source = w32tm /query /computer:$computer /source write-host &#34;The time source for&#34; $computer &#34;is&#34; $tm_source }">
 
 <meta property="og:url" content="http://localhost:1313/posts/2015-09-01-script-for-querying-all-ad-computers-time-source/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Script for Querying All AD Computers Time Source">
   <meta property="og:description" content="This script will iterate through all computers in Active Directory and return the configured time server for each computer.
-&lt;# .SYNOPSIS Get time source for all computers in domain .EXAMPLE Get-TimeSource .NOTES Author: Ryan Nemeth - RyanNemeth@live.com Site: http://www.geekyryan.com .LINK http://www.geekyryan.com .DESCRIPTION This function will iterate through all computers/servers in a domain and return the time source for each. #&gt; Write-Host -foregroundcolor Red -BackgroundColor black &#34;This script must be run on a domain controller and requires that the AD Powershell module be installed&#34; $module = Get-Module -ListAvailable | Select-Object -ExpandProperty Name if($module -notcontains &#34;ActiveDirectory&#34;) { Write-Host -foregroundcolor red -backgroundcolor black &#34;***Active Directory Powershell Module Not Found***&#34; } else { Write-Host -foregroundcolor yellow &#34;Found Active Directory Powershell Module.">
+&lt;# .SYNOPSIS Get time source for all computers in domain .EXAMPLE Get-TimeSource .NOTES Author: Ryan Nemeth - RyanNemeth@live.com Site: http://www.geekyryan.com .LINK http://www.geekyryan.com .DESCRIPTION This function will iterate through all computers/servers in a domain and return the time source for each. #&gt; Write-Host -foregroundcolor Red -BackgroundColor black &#34;This script must be run on a domain controller and requires that the AD Powershell module be installed&#34; $module = Get-Module -ListAvailable | Select-Object -ExpandProperty Name if($module -notcontains &#34;ActiveDirectory&#34;) { Write-Host -foregroundcolor red -backgroundcolor black &#34;***Active Directory Powershell Module Not Found***&#34; } else { Write-Host -foregroundcolor yellow &#34;Found Active Directory Powershell Module. Importing...&#34; } Import-Module ActiveDirectory $computers = get-adcomputer -filter * | Select-Object -ExpandProperty Name foreach($computer in $computers) { $tm_source = w32tm /query /computer:$computer /source write-host &#34;The time source for&#34; $computer &#34;is&#34; $tm_source }">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -128,6 +161,10 @@
           
             <li class="navigation-item">
               <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
             </li>
           
             <li class="navigation-item">
@@ -233,8 +270,7 @@
 </span></span><span class="line"><span class="cl"><span class="k">foreach</span><span class="p">(</span><span class="nv">$computer</span> <span class="k">in</span> <span class="nv">$computers</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">  <span class="nv">$tm_source</span> <span class="p">=</span> <span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">computer</span><span class="err">:</span><span class="nv">$computer</span> <span class="p">/</span><span class="n">source</span>
 </span></span><span class="line"><span class="cl">  <span class="nb">write-host</span> <span class="s2">&#34;The time source for&#34;</span> <span class="nv">$computer</span> <span class="s2">&#34;is&#34;</span> <span class="nv">$tm_source</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p><img src="https://github.com/rnemeth90/PowerShell/blob/master/NTP/Get-TimeSource.ps1"></p>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><p><img src="https://github.com/rnemeth90/PowerShell/blob/master/NTP/Get-TimeSource.ps1" alt="" /></p>
 
       </div>
 
@@ -264,7 +300,7 @@
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -288,9 +324,6 @@
 
 
   
-  
-
-
 
   
 

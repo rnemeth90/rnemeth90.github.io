@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  Linux Major/Minor Page Faults · GeekyRyan
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Ryan Nemeth">
+<meta name="description" content="In this article we&rsquo;ll take a quick look at major/minor page faults in Linux.
+Minor Page Faults: These occur when a process attempts to access a memory page that is already present in physical RAM but is not yet mapped into the process&rsquo;s own virtual address space. The operating system handles these faults by simply updating the process&rsquo;s page table to include the mapping to the existing page in RAM. This is a relatively fast operation, as no data needs to be loaded from disk. A high number of minor page faults could be indicative of the process uses many shared objects/libraries.">
+<meta name="keywords" content="blog,developer,personal,devops">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Linux Major/Minor Page Faults">
+  <meta name="twitter:description" content="In this article we’ll take a quick look at major/minor page faults in Linux.
+Minor Page Faults: These occur when a process attempts to access a memory page that is already present in physical RAM but is not yet mapped into the process’s own virtual address space. The operating system handles these faults by simply updating the process’s page table to include the mapping to the existing page in RAM. This is a relatively fast operation, as no data needs to be loaded from disk. A high number of minor page faults could be indicative of the process uses many shared objects/libraries.">
+
+<meta property="og:url" content="http://localhost:1313/posts/2025-09-28-linux-page-faults/">
+  <meta property="og:site_name" content="GeekyRyan">
+  <meta property="og:title" content="Linux Major/Minor Page Faults">
+  <meta property="og:description" content="In this article we’ll take a quick look at major/minor page faults in Linux.
+Minor Page Faults: These occur when a process attempts to access a memory page that is already present in physical RAM but is not yet mapped into the process’s own virtual address space. The operating system handles these faults by simply updating the process’s page table to include the mapping to the existing page in RAM. This is a relatively fast operation, as no data needs to be loaded from disk. A high number of minor page faults could be indicative of the process uses many shared objects/libraries.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-28T16:01:00+00:00">
+    <meta property="article:modified_time" content="2025-09-28T16:01:00+00:00">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/2025-09-28-linux-page-faults/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/2025-09-28-linux-page-faults/">
+              Linux Major/Minor Page Faults
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-09-28T16:01:00Z">
+                2025-09-28
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/linux/">Linux</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>In this article we&rsquo;ll take a quick look at major/minor page faults in Linux.</p>
+<p>Minor Page Faults: These occur when a process attempts to access a memory page that is already present in physical RAM but is not yet mapped into the process&rsquo;s own virtual address space. The operating system handles these faults by simply updating the process&rsquo;s page table to include the mapping to the existing page in RAM. This is a relatively fast operation, as no data needs to be loaded from disk. A high number of minor page faults could be indicative of the process uses many shared objects/libraries.</p>
+<p>Major Page Faults: These occur when the CPU needs a memory page that isn&rsquo;t currently in RAM and must therefore be read from secondary storage such as a hard disk. High numbers of major page faults often indicate RAM pressure, meaning the system doesn&rsquo;t have enough physical memory for the running processes, leading to performance degradation as data is swapped between memory and disk.</p>
+<p>You can view the number of major/minor page faults per process using <code>ps</code>:</p>
+<pre tabindex="0"><code>sudo ps -eo min_flt,maj_flt</code></pre><p>Though, I like to sort by the page fault type (depending on what I&rsquo;m looking for). This example sorts by major page faults:</p>
+<pre tabindex="0"><code>$ sudo ps -eo maj_flt,min_flt,cmd | sort -k 2 -r |
+
+ MAJFL  MINFL CMD
+ 5    878 /usr/lib/at-spi-bus-launcher
+ 2    824 /usr/lib/at-spi2-registryd --use-gnome-session
+15    776 /usr/lib/bluetooth/bluetoothd
+ 1    769 /usr/lib/gvfsd-trash --spawner :1.8 /org/gtk/gvfs/exec_spaw/0
+ 1    747 /usr/lib/gvfsd-network --spawner :1.8 /org/gtk/gvfs/exec_spaw/1
+ 1    727 /usr/lib/dconf-service
+ 1    649 /usr/lib/rtkit-daemon
+746 6493645 /usr/lib/Xorg -nolisten tcp :0 vt1 -keeptty -auth /tmp/serverauth.hfXw7uuabb
+20   6299 /usr/lib/iwd/iwd
+ 0    489 /usr/lib/pulse/gsettings-helper
+ 1  47023 /usr/lib/systemd/systemd-udevd
+163 431960 /usr/lib/systemd/systemd-journald
+ 4    367 /usr/lib/gvfsd-fuse /run/user/1000/gvfs -f
+45   2526 /usr/lib/systemd/systemd-resolved
+ 9   1834 /usr/lib/upowerd
+ 0    173 grep --color=auto -i /usr/lib
+ 2   1656 /usr/lib/systemd/systemd-logind
+ 0   1654 /usr/lib/systemd/systemd --user
+ 4   1617 /usr/lib/polkit-1/polkitd --no-debug --log-level=notice
+33   1407 /usr/lib/udisks2/udisksd
+ 3   1343 /usr/lib/gvfsd
+ 6   1339 /usr/lib/gvfs-udisks2-volume-monitor
+ 4   1139 /usr/lib/systemd/systemd-timesyncd
+ 2   1097 /usr/lib/systemd/systemd-homed
+ 4   1073 /usr/lib/power-profiles-daemon
+ 1  10172 /usr/lib/systemd/systemd-userdbd</code></pre><p>Based on the output, we can determine that <code>systemd-userdbd</code> is using a lot of shared code.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2012 -
+    
+    2025
+     Ryan Nemeth 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

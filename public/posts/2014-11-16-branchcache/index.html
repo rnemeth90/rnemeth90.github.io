@@ -13,19 +13,19 @@
 
 
 <meta name="author" content="Ryan Nemeth">
-<meta name="description" content="Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request.">
+<meta name="description" content="Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request. That way, all future client requests will not have to go across the wide area network, rather opting to access the local caching server until the data changes.">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="BranchCache">
-  <meta name="twitter:description" content="Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request.">
+  <meta name="twitter:description" content="Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request. That way, all future client requests will not have to go across the wide area network, rather opting to access the local caching server until the data changes.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2014-11-16-branchcache/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="BranchCache">
-  <meta property="og:description" content="Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request.">
+  <meta property="og:description" content="Branchcache is a technology unique to Windows 7 and Windows Server 2008 R2. It provides faster connection to shared files across wide area networks. Branchcache works by caching content hosted on remote servers on a local caching server in the LAN. When a client queries for data on a remote server, it first looks in the local caching server. If the data is not found there, the remote server is accessed and transfer’s the data to the local caching server, where it is then accessed by the client who originally made the request. That way, all future client requests will not have to go across the wide area network, rather opting to access the local caching server until the data changes.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -125,6 +125,10 @@
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -194,8 +198,7 @@
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">Netsh Branchcache show status
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Netsh Branchcache <span class="nb">set</span> cachesize
-</span></span></code></pre></div><p>*Configuring Branchcache must be done from an administrative command prompt.</p>
+</span></span><span class="line"><span class="cl">Netsh Branchcache <span class="nb">set</span> cachesize</span></span></code></pre></div><p>*Configuring Branchcache must be done from an administrative command prompt.</p>
 
       </div>
 
@@ -225,7 +228,7 @@
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -249,9 +252,6 @@
 
 
   
-  
-
-
 
   
 

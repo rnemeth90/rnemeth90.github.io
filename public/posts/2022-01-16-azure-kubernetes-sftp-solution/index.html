@@ -138,6 +138,10 @@ We will work through the following steps in this article:">
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -225,14 +229,11 @@ We will work through the following steps in this article:">
 </ol>
 <p>First, you will need to deploy the Azure Files CSI driver to your AKS cluster. AKS uses this daemon set to dynamically provision/destroy Azure NFSv4 File Shares. The Azure Files CSI driver creates a storage account in the node pool resource group, in which it will then provision the file share.</p>
 <p>Deploying the Azure Files CSI driver is a simple task. You will need to run this script:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">curl -skSL https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/deploy/install-driver.sh <span class="p">|</span> bash -s master --
-</span></span></code></pre></div><p>You can use the following commands to verify that the daemon set has exists:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">curl -skSL https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/deploy/install-driver.sh <span class="p">|</span> bash -s master --</span></span></code></pre></div><p>You can use the following commands to verify that the daemon set has exists:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl -n kube-system get pod -o wide --watch -l <span class="nv">app</span><span class="o">=</span>csi-azurefile-controller
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">kubectl -n kube-system get pod -o wide --watch -l <span class="nv">app</span><span class="o">=</span>csi-azurefile-node
-</span></span></code></pre></div><figure class="wp-block-coblocks-gallery-masonry masonry-grid has-border-radius-10 has-medium-gutter"><figure class="wp-block-image size-large masonry-brick">[![Image gallery image](https://rnemeth90.github.io/wp-content/uploads/2022/01/image-1-1024x434.png)](https://rnemeth90.github.io/wp-content/uploads/2022/01/image-1.png)</figure></figure>Next, you need to create a storage class by deploying this yaml file:
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl create -f https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/deploy/example/storageclass-azurefile-nfs.yaml
-</span></span></code></pre></div><p>Read more about the AzureFiles CSI driver at the following Github link:</p>
+</span></span><span class="line"><span class="cl">kubectl -n kube-system get pod -o wide --watch -l <span class="nv">app</span><span class="o">=</span>csi-azurefile-node</span></span></code></pre></div><figure class="wp-block-coblocks-gallery-masonry masonry-grid has-border-radius-10 has-medium-gutter"><figure class="wp-block-image size-large masonry-brick">[![Image gallery image](https://rnemeth90.github.io/wp-content/uploads/2022/01/image-1-1024x434.png)](https://rnemeth90.github.io/wp-content/uploads/2022/01/image-1.png)</figure></figure>Next, you need to create a storage class by deploying this yaml file:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl create -f https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/deploy/example/storageclass-azurefile-nfs.yaml</span></span></code></pre></div><p>Read more about the AzureFiles CSI driver at the following Github link:</p>
 <p><a href="https://github.com/kubernetes-sigs/azurefile-csi-driver/blob/master/docs/install-driver-on-aks.md"  class="external-link" target="_blank" rel="noopener">https://github.com/kubernetes-sigs/azurefile-csi-driver/blob/master/docs/install-driver-on-aks.md</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ConfigMap</span><span class="w">
@@ -274,18 +275,15 @@ We will work through the following steps in this article:">
 </span></span></span><span class="line"><span class="cl"><span class="sd">    if [[ ! -s $CONF_FILE ]]; then
 </span></span></span><span class="line"><span class="cl"><span class="sd">        echo &#34;** ERROR: user.conf is empty&#34; 1&gt;&amp;2
 </span></span></span><span class="line"><span class="cl"><span class="sd">        exit 1
-</span></span></span><span class="line"><span class="cl"><span class="sd">    fi</span><span class="w">    
-</span></span></span></code></pre></div><p>The initContainer will use this configMap to read secrets from an Azure Key Vault and then write the secrets to the users.conf file. The users.conf file contains user account information. In the Key Vault, the secret name should be the username and the secret value should be the password. This Key Vault must exist and contain the secrets prior to deploying this solution.</p>
+</span></span></span><span class="line"><span class="cl"><span class="sd">    fi</span></span></span></code></pre></div><p>The initContainer will use this configMap to read secrets from an Azure Key Vault and then write the secrets to the users.conf file. The users.conf file contains user account information. In the Key Vault, the secret name should be the username and the secret value should be the password. This Key Vault must exist and contain the secrets prior to deploying this solution.</p>
 <p>When I deployed this solution in my environment, I used an Azure DevOps pipeline to create/manage the Key Vault with Terraform and then deploy the secrets using an inline Powershell script. However, this is beyond the scope of this article, and I will not be covering it here. You will also need to create a Service Principal in your AAD tenant and grant it access to the Key Vault. The Service Principal needs to have at least read access to the Key Vault.</p>
 <p>Before deploying the configMap, you need to fill in values for these variables:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">    <span class="nv">KEYVAULT</span><span class="o">=</span><span class="s2">&#34;Insert name of Key Vault&#34;</span>
 </span></span><span class="line"><span class="cl">    <span class="nv">AZ_SPN_ID</span><span class="o">=</span><span class="s2">&#34;Insert service principal Id&#34;</span>
 </span></span><span class="line"><span class="cl">    <span class="nv">AZ_SPN_PASSWORD</span><span class="o">=</span><span class="s2">&#34;Insert service principal password&#34;</span>
 </span></span><span class="line"><span class="cl">    <span class="nv">AZ_SPN_TENANT_ID</span><span class="o">=</span><span class="s2">&#34;Insert Az AAD Tenant Id&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">AZ_SUBSCRIPTION_ID</span><span class="o">=</span><span class="s2">&#34;Insert Az Subscription Id&#34;</span>
-</span></span></code></pre></div><p>These values pertain to the service principal with read access to the Key Vault. After filling out these variables, you can deploy the configMap using kubectl.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl create -f configmap.yaml
-</span></span></code></pre></div><p>You can deploy the PVC using this yaml file:</p>
+</span></span><span class="line"><span class="cl">    <span class="nv">AZ_SUBSCRIPTION_ID</span><span class="o">=</span><span class="s2">&#34;Insert Az Subscription Id&#34;</span></span></span></code></pre></div><p>These values pertain to the service principal with read access to the Key Vault. After filling out these variables, you can deploy the configMap using kubectl.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl create -f configmap.yaml</span></span></code></pre></div><p>You can deploy the PVC using this yaml file:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PersistentVolumeClaim</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
@@ -296,11 +294,9 @@ We will work through the following steps in this article:">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">requests</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l">100Gi</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l">azurefile-csi-nfs</span><span class="w">
-</span></span></span></code></pre></div><p>When creating the persistent volume claim for the deployment, you specify azurefile-csi-nfs as the StorageClass. This will create an NFSv4 share in a premium storage account. The reclaim policy of the storage class ensures that the file share is deleted when the associated Persistent Volume is deleted. Change the reclaim policy to “Retain” if you want the file shares to persist after deleting the PV. Furthermore, the storage class enables the file share to be expandable by modifying the storage request size on the PVC.</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l">azurefile-csi-nfs</span></span></span></code></pre></div><p>When creating the persistent volume claim for the deployment, you specify azurefile-csi-nfs as the StorageClass. This will create an NFSv4 share in a premium storage account. The reclaim policy of the storage class ensures that the file share is deleted when the associated Persistent Volume is deleted. Change the reclaim policy to “Retain” if you want the file shares to persist after deleting the PV. Furthermore, the storage class enables the file share to be expandable by modifying the storage request size on the PVC.</p>
 <p>After deploying the PVC, you can verify its existence by running:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl get pvc
-</span></span></code></pre></div><p>You should see output similar to the following (the manifest for the replicaSet is by far the most complicated of all the code referenced here):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl get pvc</span></span></code></pre></div><p>You should see output similar to the following (the manifest for the replicaSet is by far the most complicated of all the code referenced here):</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">apps/v1</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Deployment</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
@@ -369,8 +365,7 @@ We will work through the following steps in this article:">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">configMap</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">init-shell-script</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">sftp</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span>{}<span class="w">
-</span></span></span></code></pre></div><p>You may need to change the CPU/memory requests and limits. These values worked for me, but your results may vary. You can also add/change the labels as you see fit.</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span>{}</span></span></code></pre></div><p>You may need to change the CPU/memory requests and limits. These values worked for me, but your results may vary. You can also add/change the labels as you see fit.</p>
 <p>This will handle routing traffic to our pods.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-YAML" data-lang="YAML"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Service</span><span class="w">
@@ -383,8 +378,7 @@ We will work through the following steps in this article:">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ports</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l">TCP</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">22</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="m">22</span><span class="w">
-</span></span></span></code></pre></div><p>Users will be connected in a round-robin fashion to the pods. This manifest will create a service of type LoadBalancer. Which will in turn create a new public Azure Load Balancer in the resource group that contains your Azure Kubernetes Service cluster if one does not already exist. If you already have a public load balancer, a new frontend IP address will be added.</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="m">22</span></span></span></code></pre></div><p>Users will be connected in a round-robin fashion to the pods. This manifest will create a service of type LoadBalancer. Which will in turn create a new public Azure Load Balancer in the resource group that contains your Azure Kubernetes Service cluster if one does not already exist. If you already have a public load balancer, a new frontend IP address will be added.</p>
 <p>That’s all for now. Please feel free to contact me if you have any questions.</p>
 
       </div>
@@ -415,7 +409,7 @@ We will work through the following steps in this article:">
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -439,9 +433,6 @@ We will work through the following steps in this article:">
 
 
   
-  
-
-
 
   
 

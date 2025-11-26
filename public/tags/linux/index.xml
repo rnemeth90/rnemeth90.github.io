@@ -13,56 +13,56 @@
       <link>http://localhost:1313/posts/2023-12-04-nginx-ingress-resp-header-size/</link>
       <pubDate>Mon, 11 Dec 2023 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/2023-12-04-nginx-ingress-resp-header-size/</guid>
-      <description>This will be a short post about a recent issue I encountered when using Nginx as a Kubernetes ingress. Though, this could also be encountered when using Nginx as a reverse proxy as well. The two definitions are functionally similar.&#xA;We recently had a client call in complaining of our application returning random 502s (Bad Gateway).&#xA;After some investigation and the common finger-pointing, I found this entry in the logs of our ingress controllers:</description>
+      <description>&lt;p&gt;This will be a short post about a recent issue I encountered when using Nginx as a Kubernetes ingress. Though, this could also be encountered when using Nginx as a reverse proxy as well. The two definitions are functionally similar.&lt;/p&gt;&#xA;&lt;p&gt;We recently had a client call in complaining of our application returning random 502s (Bad Gateway).&lt;/p&gt;&#xA;&lt;p&gt;After some investigation and the common finger-pointing, I found this entry in the logs of our ingress controllers:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Exploring Netcat</title>
       <link>http://localhost:1313/posts/2023-11-27-netcat/</link>
       <pubDate>Mon, 27 Nov 2023 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/2023-11-27-netcat/</guid>
-      <description>Introduction Link to heading Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the &amp;ldquo;network swiss-army knife&amp;rdquo;. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar.</description>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Netcat is a versatile networking utility that can be used for a wide range of tasks. It has often been referred to as the &amp;ldquo;network swiss-army knife&amp;rdquo;. Netcat was first released in the mid-90s, and I personally find it ironic to be blogging about it in 2023! But I feel like it is a somewhat cryptic tool, and new engineers or college graduates may not be familiar. This article is meant for those people who are not familiar with it, or have only briefly been exposed.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Scheduled Kubernetes Worker Node Maintenance with Kured</title>
       <link>http://localhost:1313/posts/2022-07-15-scheduled-kubernetes-worker-node-maintenance-with-kured/</link>
       <pubDate>Fri, 15 Jul 2022 18:18:50 +0000</pubDate>
       <guid>http://localhost:1313/posts/2022-07-15-scheduled-kubernetes-worker-node-maintenance-with-kured/</guid>
-      <description>If you manage Linux nodes, you know how vital performing regular maintenance is. Installing software patches that modify Linux kernel headers requires a reboot. Normally, as in the past, we would cordon and drain the node and then manually reboot, wait for it to come back online, verify its health, and add it back to the cluster. That’s a lot of manual work! How can we automate this?&#xA;Weaveworks created a great tool for simplifying these steps: Kured (the Kubernetes Reboot Daemon).</description>
+      <description>&lt;p&gt;If you manage Linux nodes, you know how vital performing regular maintenance is. Installing software patches that modify Linux kernel headers requires a reboot. Normally, as in the past, we would cordon and drain the node and then manually reboot, wait for it to come back online, verify its health, and add it back to the cluster. That’s a lot of manual work! How can we automate this?&lt;/p&gt;&#xA;&lt;p&gt;Weaveworks created a great tool for simplifying these steps: Kured (the &lt;em&gt;&lt;strong&gt;Ku&lt;/strong&gt;bernetes &lt;strong&gt;Re&lt;/strong&gt;boot &lt;strong&gt;D&lt;/strong&gt;aemon&lt;/em&gt;). Let’s start by deploying Kured to our cluster.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Running Docker in WSL v1</title>
       <link>http://localhost:1313/posts/2022-06-26-running-docker-in-wsl-v1/</link>
       <pubDate>Sun, 26 Jun 2022 15:00:28 +0000</pubDate>
       <guid>http://localhost:1313/posts/2022-06-26-running-docker-in-wsl-v1/</guid>
-      <description>I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.&#xA;Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work.</description>
+      <description>&lt;p&gt;I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.&lt;/p&gt;&#xA;&lt;p&gt;Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work. I receive this nice message:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Remove Kubernetes Namespace Stuck in the Terminating State</title>
       <link>http://localhost:1313/posts/2022-06-04-remove-kubernetes-namespace-stuck-in-the-terminating-state/</link>
       <pubDate>Sat, 04 Jun 2022 18:29:41 +0000</pubDate>
       <guid>http://localhost:1313/posts/2022-06-04-remove-kubernetes-namespace-stuck-in-the-terminating-state/</guid>
-      <description>In this post, we will discuss how to remove a Kubernetes namespace that is stuck in the ‘terminating’ state.&#xA;A namespace is like a container. You can use it to store related objects in a Kubernetes environment. Maybe you are hosting a blog in Kubernetes. This blog will likely have a database, a frontend website, a load balancer (service) to spread the incoming traffic among ‘x’ number of frontend containers (pods), and maybe some middle-tier or utility applications.</description>
+      <description>&lt;p&gt;In this post, we will discuss how to remove a Kubernetes namespace that is stuck in the ‘terminating’ state.&lt;/p&gt;&#xA;&lt;p&gt;A namespace is like a container. You can use it to store related objects in a Kubernetes environment. Maybe you are hosting a blog in Kubernetes. This blog will likely have a database, a frontend website, a load balancer (service) to spread the incoming traffic among ‘x’ number of frontend containers (pods), and maybe some middle-tier or utility applications. One day, you decide you no longer want this blog, so you plan to delete it. Rather than tediously deleting all of the various entities associated with this blog, you can delete the namespace that contains these entities. This will essentially ‘cascade delete’ the resources within the namespace as well.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Azure VM Scale Set &amp;#8211; Get Instance IP Address</title>
       <link>http://localhost:1313/posts/2020-11-19-azure-vm-scale-set-get-instance-ip/</link>
       <pubDate>Thu, 19 Nov 2020 18:07:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/2020-11-19-azure-vm-scale-set-get-instance-ip/</guid>
-      <description>If you are using VM Scale Sets in Azure, you know how important it can be to quickly obtain an instance IP address. This can of course be done using the Azure Portal. However, I am often working in a shell or VSCode, and I do not want to leave the comfort of my shell to login to the portal.&#xA;There are a few options we have for retrieving information about a VMSS and its instances without using the Azure Portal.</description>
+      <description>&lt;p&gt;If you are using VM Scale Sets in Azure, you know how important it can be to quickly obtain an instance IP address. This can of course be done using the Azure Portal. However, I am often working in a shell or VSCode, and I do not want to leave the comfort of my shell to login to the portal.&lt;/p&gt;&#xA;&lt;p&gt;There are a few options we have for retrieving information about a VMSS and its instances without using the Azure Portal. We can use PowerShell or the Azure CLI. Being that I am constantly flipping between Windows and Linux, I will detail both here.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Reset GRUB/root Password for vCenter/PSC Appliance</title>
       <link>http://localhost:1313/posts/2020-10-31-reset-grubroot-password-for-vcenterpsc/</link>
       <pubDate>Sat, 31 Oct 2020 01:22:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/2020-10-31-reset-grubroot-password-for-vcenterpsc/</guid>
-      <description>In Redhat/Fedora/Cent, GRUB can be protected by running the grub-md5-crypt command and pasting the outputted password hash into the grub.conf file. vSphere 6.0 password protects grub by default. If you change the root password in the VAMI, the GRUB password is changed to match. If you do not change the root password, the GRUB password is “vmware”.&#xA;To reset the GRUB password, we need to boot into a Cent or Redhat live CD.</description>
+      <description>&lt;p&gt;In Redhat/Fedora/Cent, GRUB can be protected by running the grub-md5-crypt command and pasting the outputted password hash into the grub.conf file. vSphere 6.0 password protects grub by default. If you change the root password in the VAMI, the GRUB password is changed to match. If you do not change the root password, the GRUB password is “vmware”.&lt;/p&gt;&#xA;&lt;p&gt;To reset the GRUB password, we need to boot into a Cent or Redhat live CD. The ISO can be obtained here: &lt;a href=&#34;https://www.centos.org/download/&#34;&gt;https://www.centos.org/download/&lt;/a&gt;. Its best to upload the ISO to a datastore that the appliance has access to.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Ping Sweeping with FPing</title>
       <link>http://localhost:1313/posts/2015-03-09-ping-sweeping-with-fping/</link>
       <pubDate>Mon, 09 Mar 2015 01:08:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/2015-03-09-ping-sweeping-with-fping/</guid>
-      <description>I generally use NMAP for any type of host discovery, but recently started experimenting with FPing. One thing I found is that, when performing a ping sweep, not only do I see the hosts that replied to the ping, but FPing also sends any unreachable IP addresses to stdout (which is super annoying and ugly if you ask me…).&#xA;Anyway, after a bit of research, I found a nifty way to suppress these messages.</description>
+      <description>&lt;p&gt;I generally use NMAP for any type of host discovery, but recently started experimenting with FPing. One thing I found is that, when performing a ping sweep, not only do I see the hosts that replied to the ping, but FPing also sends any unreachable IP addresses to stdout (which is super annoying and ugly if you ask me…).&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/03/2015-03-08_21h04_50.png&#34;&gt;&lt;img src=&#34;https://rnemeth90.github.io/wp-content/uploads/2015/03/2015-03-08_21h04_50.png&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;Anyway, after a bit of research, I found a nifty way to suppress these messages. Linux allows us to redirect all error messages to /dev/null. So instead of just running the vanilla fping -a -g…. you would run the program and output all error messages /dev/null, like so:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

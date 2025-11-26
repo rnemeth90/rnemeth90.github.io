@@ -14,7 +14,8 @@
 
 <meta name="author" content="Ryan Nemeth">
 <meta name="description" content="I generally use NMAP for any type of host discovery, but recently started experimenting with FPing. One thing I found is that, when performing a ping sweep, not only do I see the hosts that replied to the ping, but FPing also sends any unreachable IP addresses to stdout (which is super annoying and ugly if you ask me…).
-Anyway, after a bit of research, I found a nifty way to suppress these messages.">
+
+Anyway, after a bit of research, I found a nifty way to suppress these messages. Linux allows us to redirect all error messages to /dev/null. So instead of just running the vanilla fping -a -g…. you would run the program and output all error messages /dev/null, like so:">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -22,13 +23,13 @@ Anyway, after a bit of research, I found a nifty way to suppress these messages.
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Ping Sweeping with FPing">
   <meta name="twitter:description" content="I generally use NMAP for any type of host discovery, but recently started experimenting with FPing. One thing I found is that, when performing a ping sweep, not only do I see the hosts that replied to the ping, but FPing also sends any unreachable IP addresses to stdout (which is super annoying and ugly if you ask me…).
-Anyway, after a bit of research, I found a nifty way to suppress these messages.">
+Anyway, after a bit of research, I found a nifty way to suppress these messages. Linux allows us to redirect all error messages to /dev/null. So instead of just running the vanilla fping -a -g…. you would run the program and output all error messages /dev/null, like so:">
 
 <meta property="og:url" content="http://localhost:1313/posts/2015-03-09-ping-sweeping-with-fping/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Ping Sweeping with FPing">
   <meta property="og:description" content="I generally use NMAP for any type of host discovery, but recently started experimenting with FPing. One thing I found is that, when performing a ping sweep, not only do I see the hosts that replied to the ping, but FPing also sends any unreachable IP addresses to stdout (which is super annoying and ugly if you ask me…).
-Anyway, after a bit of research, I found a nifty way to suppress these messages.">
+Anyway, after a bit of research, I found a nifty way to suppress these messages. Linux allows us to redirect all error messages to /dev/null. So instead of just running the vanilla fping -a -g…. you would run the program and output all error messages /dev/null, like so:">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -131,6 +132,10 @@ Anyway, after a bit of research, I found a nifty way to suppress these messages.
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -200,9 +205,9 @@ Anyway, after a bit of research, I found a nifty way to suppress these messages.
       <div class="post-content">
         
         <p>I generally use NMAP for any type of host discovery, but recently started experimenting with FPing. One thing I found is that, when performing a ping sweep, not only do I see the hosts that replied to the ping, but FPing also sends any unreachable IP addresses to stdout (which is super annoying and ugly if you ask me…).</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/03/2015-03-08_21h04_50.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/03/2015-03-08_21h04_50.png"></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/03/2015-03-08_21h04_50.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/03/2015-03-08_21h04_50.png" alt="" /></a></p>
 <p>Anyway, after a bit of research, I found a nifty way to suppress these messages. Linux allows us to redirect all error messages to /dev/null. So instead of just running the vanilla fping -a -g…. you would run the program and output all error messages /dev/null, like so:</p>
-<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/03/2015-03-08_21h07_14.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/03/2015-03-08_21h07_14.png"></a></p>
+<p><a href="https://rnemeth90.github.io/wp-content/uploads/2015/03/2015-03-08_21h07_14.png"  class="external-link" target="_blank" rel="noopener"><img src="https://rnemeth90.github.io/wp-content/uploads/2015/03/2015-03-08_21h07_14.png" alt="" /></a></p>
 
       </div>
 
@@ -232,7 +237,7 @@ Anyway, after a bit of research, I found a nifty way to suppress these messages.
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -256,9 +261,6 @@ Anyway, after a bit of research, I found a nifty way to suppress these messages.
 
 
   
-  
-
-
 
   
 

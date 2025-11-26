@@ -13,9 +13,24 @@
 
 
 <meta name="author" content="Ryan Nemeth">
-<meta name="description" content="Introduction Link to heading Combining multiple Kubernetes secrets into a single directory can streamline secret management in your applications. This guide walks you through the process of achieving this in Kubernetes, ensuring efficient and organized secret management.
-Creating Secrets Link to heading First, create your secrets using the kubectl create secret command:
-kubectl create secret generic secret-one --from-literal=key1=value1 kubectl create secret generic secret-two --from-literal=key2=value2 Each secret can contain multiple key-value pairs, and you can add more secrets as needed.">
+<meta name="description" content="
+  Introduction
+  
+    
+    Link to heading
+  
+
+Combining multiple Kubernetes secrets into a single directory can streamline secret management in your applications. This guide walks you through the process of achieving this in Kubernetes, ensuring efficient and organized secret management.
+
+  Creating Secrets
+  
+    
+    Link to heading
+  
+
+First, create your secrets using the kubectl create secret command:
+kubectl create secret generic secret-one --from-literal=key1=value1
+kubectl create secret generic secret-two --from-literal=key2=value2Each secret can contain multiple key-value pairs, and you can add more secrets as needed.">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -24,14 +39,14 @@ kubectl create secret generic secret-one --from-literal=key1=value1 kubectl crea
   <meta name="twitter:title" content="Mounting Multiple Kubernetes Secrets into One Directory">
   <meta name="twitter:description" content="Introduction Link to heading Combining multiple Kubernetes secrets into a single directory can streamline secret management in your applications. This guide walks you through the process of achieving this in Kubernetes, ensuring efficient and organized secret management.
 Creating Secrets Link to heading First, create your secrets using the kubectl create secret command:
-kubectl create secret generic secret-one --from-literal=key1=value1 kubectl create secret generic secret-two --from-literal=key2=value2 Each secret can contain multiple key-value pairs, and you can add more secrets as needed.">
+kubectl create secret generic secret-one --from-literal=key1=value1 kubectl create secret generic secret-two --from-literal=key2=value2Each secret can contain multiple key-value pairs, and you can add more secrets as needed.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Mounting Multiple Kubernetes Secrets into One Directory">
   <meta property="og:description" content="Introduction Link to heading Combining multiple Kubernetes secrets into a single directory can streamline secret management in your applications. This guide walks you through the process of achieving this in Kubernetes, ensuring efficient and organized secret management.
 Creating Secrets Link to heading First, create your secrets using the kubectl create secret command:
-kubectl create secret generic secret-one --from-literal=key1=value1 kubectl create secret generic secret-two --from-literal=key2=value2 Each secret can contain multiple key-value pairs, and you can add more secrets as needed.">
+kubectl create secret generic secret-one --from-literal=key1=value1 kubectl create secret generic secret-two --from-literal=key2=value2Each secret can contain multiple key-value pairs, and you can add more secrets as needed.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -133,6 +148,10 @@ kubectl create secret generic secret-one --from-literal=key1=value1 kubectl crea
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -214,8 +233,7 @@ kubectl create secret generic secret-one --from-literal=key1=value1 kubectl crea
 </h1>
 <p>First, create your secrets using the <code>kubectl create secret</code> command:</p>
 <pre tabindex="0"><code>kubectl create secret generic secret-one --from-literal=key1=value1
-kubectl create secret generic secret-two --from-literal=key2=value2
-</code></pre><p>Each secret can contain multiple key-value pairs, and you can add more secrets as needed.</p>
+kubectl create secret generic secret-two --from-literal=key2=value2</code></pre><p>Each secret can contain multiple key-value pairs, and you can add more secrets as needed.</p>
 <h1 id="configuring-the-pod">
   Configuring the Pod
   <a class="heading-link" href="#configuring-the-pod">
@@ -245,8 +263,7 @@ spec:
       secretName: secret-one
   - name: secret-volume2
     secret:
-      secretName: secret-two
-</code></pre><h1 id="detailed-explanation">
+      secretName: secret-two</code></pre><h1 id="detailed-explanation">
   Detailed Explanation
   <a class="heading-link" href="#detailed-explanation">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -295,7 +312,7 @@ spec:
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -319,9 +336,6 @@ spec:
 
 
   
-  
-
-
 
   
 

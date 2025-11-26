@@ -14,7 +14,7 @@
 
 <meta name="author" content="Ryan Nemeth">
 <meta name="description" content="Error: A server-side database availability group administrative operation failed. Error Failed to add or remove the Failover-Clustering feature. Error: The request to add or remove features on the specified server failed. A DISM session could not be opened. An error occurred accessing the temporary folder C:WindowsTEMP57ACE2DE-4CD2-4F5F-B7A0-93D867A89A12. Ensure that the path to the temporary folder exists and that you have Read/Write permissions on the folder. Error: 0x80070070
-Solution: I was attempting to remotely add the DAG member from the ECP on my workstation.">
+Solution: I was attempting to remotely add the DAG member from the ECP on my workstation. I logged into the server and found that the system drive was nearly full (~100MB free). Luckily this mailbox server was a virtual machine, and I was able to quickly expand the drive using VMM. After doing this I was able to successfully add the mailbox server to the DAG.">
 <meta name="keywords" content="blog,developer,personal,devops">
 
 
@@ -22,13 +22,13 @@ Solution: I was attempting to remotely add the DAG member from the ECP on my wor
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Exchange 2013: Error 0x80070070 While Adding DAG Member">
   <meta name="twitter:description" content="Error: A server-side database availability group administrative operation failed. Error Failed to add or remove the Failover-Clustering feature. Error: The request to add or remove features on the specified server failed. A DISM session could not be opened. An error occurred accessing the temporary folder C:WindowsTEMP57ACE2DE-4CD2-4F5F-B7A0-93D867A89A12. Ensure that the path to the temporary folder exists and that you have Read/Write permissions on the folder. Error: 0x80070070
-Solution: I was attempting to remotely add the DAG member from the ECP on my workstation.">
+Solution: I was attempting to remotely add the DAG member from the ECP on my workstation. I logged into the server and found that the system drive was nearly full (~100MB free). Luckily this mailbox server was a virtual machine, and I was able to quickly expand the drive using VMM. After doing this I was able to successfully add the mailbox server to the DAG.">
 
 <meta property="og:url" content="http://localhost:1313/posts/2016-10-04-exchange-2013-error-0x80070070-while/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Exchange 2013: Error 0x80070070 While Adding DAG Member">
   <meta property="og:description" content="Error: A server-side database availability group administrative operation failed. Error Failed to add or remove the Failover-Clustering feature. Error: The request to add or remove features on the specified server failed. A DISM session could not be opened. An error occurred accessing the temporary folder C:WindowsTEMP57ACE2DE-4CD2-4F5F-B7A0-93D867A89A12. Ensure that the path to the temporary folder exists and that you have Read/Write permissions on the folder. Error: 0x80070070
-Solution: I was attempting to remotely add the DAG member from the ECP on my workstation.">
+Solution: I was attempting to remotely add the DAG member from the ECP on my workstation. I logged into the server and found that the system drive was nearly full (~100MB free). Luckily this mailbox server was a virtual machine, and I was able to quickly expand the drive using VMM. After doing this I was able to successfully add the mailbox server to the DAG.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -128,6 +128,10 @@ Solution: I was attempting to remotely add the DAG member from the ECP on my wor
             </li>
           
             <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
               <a class="navigation-link " href="/projects/">Projects</a>
             </li>
           
@@ -215,7 +219,7 @@ Solution: I was attempting to remotely add the DAG member from the ECP on my wor
     
       2012 -
     
-    2024
+    2025
      Ryan Nemeth 
     ·
     
@@ -239,9 +243,6 @@ Solution: I was attempting to remotely add the DAG member from the ECP on my wor
 
 
   
-  
-
-
 
   
 
