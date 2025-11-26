@@ -38,7 +38,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-5a6387b2.js";
+            window.path_to_searchindex_js = "../searchindex-34baac43.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-a0b263b7.js"></script>
@@ -209,20 +209,6 @@
 <li>Iterating through an array is likely to be much faster than any other data structure because of fewer cache misses.</li>
 <li>Arrays are often homogeneous (homo = one kind, geneous/genous = producing) and static. A homogeneous data structure can only hold data of one type.</li>
 </ul>
-<h2 id="linked-lists"><a class="header" href="#linked-lists">Linked Lists</a></h2>
-<ul>
-<li>Similar to arrays, but elements in a linked list do not have indexes because your computer does not store the items in a linked list in sequential memory. Instead, a linked list contains a chain of nodes, with each node holding a piece of data and the next node’s location in the chain. The data in each node that stores the next node’s location in the linked list is called a pointer. The first node in a linked list is called a head. The last element in a linked list points to None.
-<code>head &gt; a &gt; b &gt; c &gt; none</code></li>
-<li>The only way to access an item in a linked list is to do a linear search for it, which is O(n). Adding and removing a node from a linked list is O(1), whereas inserting and deleting items from an array is O(n).</li>
-<li>Memory management systems in operating systems use linked lists extensively, as do databases</li>
-<li>There are many types of linked lists:
-<ul>
-<li>singly linked list: a type of linked list with pointers that point only to the next element. You can move through a singly linked list only by starting at the head and moving to the end.</li>
-<li>doubly linked list: each node contains two pointers, one pointing to the next node and one pointing to the previous node. This allows you to move through a doubly linked list in either direction.</li>
-<li>circular linked list: the last node points back to the first node</li>
-</ul>
-</li>
-</ul>
 <h2 id="stacks"><a class="header" href="#stacks">Stacks</a></h2>
 <ul>
 <li>A stack is an abstract data type and a linear data structure that allows you to remove only the most recently added element.</li>
@@ -333,8 +319,36 @@ func main() {
 <li>Enqueueing means adding an item to the queue, dequeueing means removing an item from the queue</li>
 <li>Queues work like the checkout lines at a grocery store.</li>
 <li>A bounded queue limits how many items you can add to it.</li>
-<li>Enqueueing and dequeueing are both O(1) regardless of the queues size</li>
+<li>Enqueueing and dequeueing, peeking, and getting the length of the queue are all O(1) regardless of the queues size</li>
 </ul>
+<h2 id="linked-lists"><a class="header" href="#linked-lists">Linked Lists</a></h2>
+<ul>
+<li>Similar to arrays, but elements in a linked list do not have indexes because your computer does not store the items in a linked list in sequential memory. Instead, a linked list contains a chain of nodes, with each node holding a piece of data and the next node’s location in the chain. The data in each node that stores the next node’s location in the linked list is called a pointer. The first node in a linked list is called a head. The last element in a linked list points to None.
+<code>head &gt; a &gt; b &gt; c &gt; none</code></li>
+<li>The only way to access an item in a linked list is to do a linear search for it, which is O(n). Adding and removing a node from a linked list is O(1), whereas inserting and deleting items from an array is O(n).</li>
+<li>Memory management systems in operating systems use linked lists extensively, as do databases</li>
+<li>There are many types of linked lists:
+<ul>
+<li>singly linked list: a type of linked list with pointers that point only to the next element. You can move through a singly linked list only by starting at the head and moving to the end.</li>
+<li>doubly linked list: each node contains two pointers, one pointing to the next node and one pointing to the previous node. This allows you to move through a doubly linked list in either direction.</li>
+<li>circular linked list: the last node points back to the first node</li>
+</ul>
+</li>
+<li>Unlike normal lists, linked lists are not stored sequentially in memory, so they can grow and shrink dynamically without needing to reallocate or reorganize memory.</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-python">class Node(self):
+    def __init__(self, val):
+        self.val = val
+        self.next = None
+        
+    def set_next(self, next_node):
+        self.next = next_node
+
+    def __repr__(self):
+        return self.val
+
+</code></pre>
 <h2 id="hash-tables"><a class="header" href="#hash-tables">Hash Tables</a></h2>
 <ul>
 <li>Hash tables are associative arrays</li>
