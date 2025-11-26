@@ -1,0 +1,768 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Kubernetes Certified Native Associate (KCNA) Notes - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-9dfbd86b.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-7d51fce4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-848830eb.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="kubernetes-certified-native-associate-kcna-notes"><a class="header" href="#kubernetes-certified-native-associate-kcna-notes">Kubernetes Certified Native Associate (KCNA) Notes</a></h1>
+<p align="center"><img width="180" alt="portfolio_view" src="badge.png"></p>
+
+<p align="center"><img width="300" alt="portfolio_view" src="kubernetes.png"></p>
+
+<h4 align="center"><a href="https://www.cncf.io/certification/kcna/">https://www.cncf.io/certification/kcna/</a></h4>
+
+<h1 align="center">Kubernetes Certified Native Associate (KCNA) Notes</h1>
+
+<h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of Contents</a></h2>
+<ul>
+<li><a href="#exam">Exam</a>
+<ul>
+<li><a href="#outline">Outline</a></li>
+<li><a href="#changes">Changes</a></li>
+</ul>
+</li>
+<li><a href="#preparation">Preparation</a>
+<ul>
+<li><a href="#study-resources">Study Resources</a></li>
+<li><a href="#practice">Practice</a></li>
+</ul>
+</li>
+<li><a href="#kubernetes-fundamentals">Kubernetes Fundamentals</a>
+<ul>
+<li><a href="#pods">Pods</a></li>
+<li><a href="#replicasets">ReplicaSets</a></li>
+<li><a href="#deployments">Deployments</a></li>
+<li><a href="#replicaset-vs-deployment">ReplicaSet vs Deployment</a></li>
+<li><a href="#kubernetes-namespaces">Kubernetes Namespaces</a></li>
+<li><a href="#imperative-vs-declarative">Imperative vs Declarative</a></li>
+<li><a href="#scheduling">Scheduling</a></li>
+<li><a href="#labels-and-selectors">Labels and Selectors</a></li>
+<li><a href="#taints-and-tolerations">Taints and Tolerations</a></li>
+<li><a href="#node-selectors">Node Selectors</a></li>
+<li><a href="#node-affinity">Node Affinity</a></li>
+<li><a href="#requests-and-limits">Requests and Limits</a></li>
+<li><a href="#daemonsets">DaemonSets</a></li>
+<li><a href="#static-pods">Static Pods</a></li>
+<li><a href="#multiple-schedulers">Multiple Schedulers</a></li>
+<li><a href="#authentication">Authentication</a></li>
+<li><a href="#authorization">Authorization</a></li>
+<li><a href="#api-groups">API Groups</a></li>
+<li><a href="#role-based-access-control-rbac">Role-Based Access Control (RBAC)</a></li>
+<li><a href="#service-accounts">Service Accounts</a></li>
+</ul>
+</li>
+<li><a href="#container-orchestration">Container Orchestration</a>
+<ul>
+<li><a href="#cluster-networking">Cluster Networking</a></li>
+<li><a href="#pod-networking">Pod Networking</a></li>
+<li><a href="#cni">CNI</a></li>
+<li><a href="#dns">DNS</a></li>
+<li><a href="#ingress">Ingress</a></li>
+<li><a href="#services">Services</a></li>
+<li><a href="#sidecars">Sidecars</a></li>
+<li><a href="#envoy">Envoy</a></li>
+<li><a href="#storage">Storage</a></li>
+</ul>
+</li>
+<li><a href="#cloud-native-architecture">Cloud Native Architecture</a>
+<ul>
+<li><a href="#autoscaling">Autoscaling</a></li>
+<li><a href="#kubernetes-keps-and-sigs">Kubernetes KEPs and SIGs</a></li>
+</ul>
+</li>
+<li><a href="#cloud-native-application-delivery">Cloud Native Application Delivery</a>
+<ul>
+<li><a href="#gitops">GitOps</a>
+<ul>
+<li><a href="#gitops-principles">GitOps Principles</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- /code_chunk_output -->
+<h1 id="exam"><a class="header" href="#exam">Exam</a></h1>
+<h2 id="outline"><a class="header" href="#outline">Outline</a></h2>
+<p>https://github.com/cncf/curriculum/blob/master/KCNA_Curriculum.pdf</p>
+<h2 id="changes"><a class="header" href="#changes">Changes</a></h2>
+<h1 id="preparation"><a class="header" href="#preparation">Preparation</a></h1>
+<h2 id="study-resources"><a class="header" href="#study-resources">Study Resources</a></h2>
+<p>https://learn.kodekloud.com/user/courses/kubernetes-and-cloud-native-associate-kcna
+https://amazon.com/KCNA-Book-Kubernetes-Native-Associate/dp/1916585035</p>
+<h2 id="practice"><a class="header" href="#practice">Practice</a></h2>
+<p>https://learn.kodekloud.com/user/courses/kubernetes-and-cloud-native-associate-kcna
+https://tutorialsdojo.com/kubernetes-and-cloud-native-associate-kcna-sample-exam-questions/</p>
+<h1 id="kubernetes-fundamentals"><a class="header" href="#kubernetes-fundamentals">Kubernetes Fundamentals</a></h1>
+<h2 id="pods"><a class="header" href="#pods">Pods</a></h2>
+<ul>
+<li>A pod is the smallest deployable unit in Kubernetes. A Pod represents a single instance of a running process in your cluster.</li>
+<li>Pods deploy a container image on a Kubernetes cluster as a running instance of an application.</li>
+<li>A pod can contain more than one container.
+<ul>
+<li>An example use case would be a pod that contains a web server and a sidecar container that collects logs for the web server container.</li>
+</ul>
+</li>
+<li>A pod can be deployed by using kubectl or by creating a YAML manifest:
+<ul>
+<li>Kubectl example:</li>
+</ul>
+<pre><code>kubectl run my-pod --image=my-image
+</code></pre>
+<ul>
+<li>YAML manifest example:</li>
+</ul>
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+- containers:
+  - name: my-container
+    image: my-image
+</code></pre>
+</li>
+<li>You can view pods running in a cluster by using the following command:
+<pre><code>kubectl get pods
+</code></pre>
+<ul>
+<li>You can view detailed information about a pod by using the following command:</li>
+</ul>
+<pre><code>kubectl describe pod my-pod
+</code></pre>
+</li>
+</ul>
+<h2 id="replicasets"><a class="header" href="#replicasets">ReplicaSets</a></h2>
+<ul>
+<li>A ReplicaSet ensures that a specified number of pod replicas are running at any given time.</li>
+<li>A ReplicaSet is defined by a YAML manifest that specifies the number of replicas to maintain.</li>
+<li>A ReplicaSet can be deployed by creating a YAML manifest:
+<ul>
+<li>Kubectl example:</li>
+</ul>
+<pre><code>kubectl create -f my-replicaset.yaml
+</code></pre>
+</li>
+<li>Replication Controllers are an older version of ReplicaSets and are being replaced.</li>
+<li>You can view ReplicaSets running in a cluster by using the following command:
+<pre><code>kubectl get replicaset
+</code></pre>
+<ul>
+<li>You can view detailed information about a ReplicaSet by using the following command:</li>
+</ul>
+<pre><code>kubectl describe replicaset my-replicaset
+</code></pre>
+</li>
+</ul>
+<h2 id="deployments"><a class="header" href="#deployments">Deployments:</a></h2>
+<ul>
+<li>A Deployment is a higher-level concept that manages ReplicaSets and provides declarative updates to Pods along with a lot of other useful features.</li>
+<li>A Deployment is defined by a YAML manifest that specifies the desired state of the deployment.</li>
+<li>A Deployment can be deployed by creating a YAML manifest or imperatively using kubectl:
+<ul>
+<li>YAML example:</li>
+</ul>
+<pre><code>kubectl create -f my-deployment.yaml
+</code></pre>
+</li>
+<li>You can view Deployments running in a cluster by using the following command:
+<pre><code>kubectl get deployments
+</code></pre>
+</li>
+<li>You can view detailed information about a Deployment by using the following command:
+<pre><code>kubectl describe deployment my-deployment
+</code></pre>
+</li>
+<li>Rolling updates can be performed on a Deployment by updating the Deployment’s YAML manifest and applying the changes:</li>
+</ul>
+<h2 id="replicaset-vs-deployment"><a class="header" href="#replicaset-vs-deployment">ReplicaSet vs Deployment:</a></h2>
+<ul>
+<li>ReplicaSets are a lower-level concept that manages Pods and ensures a specified number of pod replicas are running at any given time.</li>
+<li>Deployments are a higher-level concept that manage ReplicaSets and provide declarative updates to Pods along with a lot of other useful features.</li>
+</ul>
+<h2 id="kubernetes-namespaces"><a class="header" href="#kubernetes-namespaces">Kubernetes Namespaces</a></h2>
+<ul>
+<li>Namespaces are a way to divide cluster resources between multiple users.</li>
+<li>Namespaces can be used to organize resources and provide a way to scope resources.</li>
+<li>Namespaces can be used to create resource quotas and limit the amount of resources a user can consume.</li>
+<li>Namespaces can be used to create network policies and limit the network traffic between pods.</li>
+<li>Namespaces can be used to create role-based access control (RBAC) policies and limit the permissions of users.</li>
+</ul>
+<h2 id="imperative-vs-declarative"><a class="header" href="#imperative-vs-declarative">Imperative vs Declarative</a></h2>
+<ul>
+<li>Imperative:
+<ul>
+<li>Imperative commands are used to perform a specific task.</li>
+<li>An example of an imperative command would be to create a pod using kubectl run.</li>
+<li>Imperative commands are useful for quick tasks and testing.</li>
+</ul>
+</li>
+<li>Declarative:
+<ul>
+<li>Declarative commands are used to define the desired state of a resource.</li>
+<li>An example of a declarative command would be to create a pod using a YAML manifest.</li>
+<li>Declarative commands are useful for managing resources in a production environment.</li>
+</ul>
+</li>
+</ul>
+<h1 id="scheduling"><a class="header" href="#scheduling">Scheduling</a></h1>
+<ul>
+<li>Scheduling is the process of assigning pods to nodes in a Kubernetes cluster.</li>
+<li>The Kubernetes scheduler is responsible for scheduling pods to nodes based on resource requirements and constraints.</li>
+<li>The scheduler uses a set of policies to determine where to place pods in the cluster.</li>
+<li>The scheduler can be configured to use different scheduling algorithms and policies.</li>
+<li>The scheduler can be extended with custom scheduling plugins.</li>
+<li>To schedule a pod, the scheduler evaluates the pod’s resource requirements, affinity and anti-affinity rules, taints and tolerations, and other constraints. It then selects a node that meets the requirements and assigns the pod to that node by updating the <code>spec.nodeName</code> field in the pod’s manifest.</li>
+</ul>
+<h2 id="labels-and-selectors"><a class="header" href="#labels-and-selectors">Labels and Selectors</a></h2>
+<ul>
+<li>Labels are key-value pairs that are attached to objects in Kubernetes.</li>
+<li>Labels can be used to organize and select objects in Kubernetes.</li>
+<li>Labels can be used to filter and group objects in Kubernetes.</li>
+<li>Labels can be used to create selectors that match objects based on their labels.</li>
+<li>Selectors are used to select objects in Kubernetes based on their labels.</li>
+<li>Selectors can be used to filter objects based on their labels.</li>
+<li>Selectors can be used to group objects based on their labels.</li>
+<li>Selectors can be used to create sets of objects that match a specific label query.</li>
+</ul>
+<h2 id="taints-and-tolerations"><a class="header" href="#taints-and-tolerations">Taints and Tolerations</a></h2>
+<ul>
+<li>Taints are used to repel pods from nodes in a Kubernetes cluster.</li>
+<li>We apply a taint to a node (as a key-value pair). Any pods that do not have a toleration for that taint will not be scheduled on that node.</li>
+</ul>
+<h2 id="node-selectors"><a class="header" href="#node-selectors">Node Selectors</a></h2>
+<ul>
+<li>Node selectors are used to constrain which nodes a pod is eligible to be scheduled based on labels on the node.</li>
+<li>Node selectors are used to filter nodes based on their labels.</li>
+<li>To use a node selector, you add a <code>nodeSelector</code> field to the pod’s spec that specifies a set of key-value pairs that must match the labels on the node.</li>
+<li>Example:</li>
+</ul>
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: my-container
+    image: my-image
+  nodeSelector:
+    disktype: ssd
+</code></pre>
+<h2 id="node-affinity"><a class="header" href="#node-affinity">Node Affinity</a></h2>
+<ul>
+<li>Node affinity is a way to constrain which nodes a pod is eligible to be scheduled based on labels on the node.</li>
+<li>Node affinity is similar to node selectors but provides more control over how pods are scheduled.</li>
+<li>Node affinity can be used to specify required and preferred rules for node selection.</li>
+<li>Node affinity can be used to specify rules that match or do not match nodes based on their labels.</li>
+<li>Node affinity can be used to specify rules that match or do not match nodes based on their topology.</li>
+<li>Example:</li>
+</ul>
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: my-container
+    image: my-image
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: In
+            values:
+            - ssd
+</code></pre>
+<h2 id="requests-and-limits"><a class="header" href="#requests-and-limits">Requests and Limits</a></h2>
+<ul>
+<li>Requests and limits are used to specify the amount of resources a pod requires and the maximum amount of resources a pod can consume.</li>
+<li>Requests are used to specify the amount of resources a pod requires to run.</li>
+<li>Limits are used to specify the maximum amount of resources a pod can consume.</li>
+<li>Requests and limits can be specified for CPU and memory resources.</li>
+<li>Requests and limits can be specified in the pod’s spec.</li>
+<li>Example:</li>
+</ul>
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: my-container
+    image: my-image
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+</code></pre>
+<h2 id="daemonsets"><a class="header" href="#daemonsets">DaemonSets</a></h2>
+<ul>
+<li>DaemonSets are used to run a copy of a pod on all nodes in a Kubernetes cluster.</li>
+<li>DaemonSets are used to run system daemons and other background tasks on all nodes.</li>
+<li>DaemonSets are defined by a YAML manifest that specifies the pod template to use.</li>
+<li>DaemonSets can be deployed by creating a YAML manifest:</li>
+</ul>
+<pre><code>apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: my-daemonset
+spec:
+  selector:
+    matchLabels:
+      app: my-daemonset
+  template:
+    metadata:
+      labels:
+        app: my-daemonset
+    spec:
+      containers:
+      - name: my-container
+        image: my-image
+</code></pre>
+<h2 id="static-pods"><a class="header" href="#static-pods">Static Pods</a></h2>
+<ul>
+<li>Static Pods are pods that are managed by the kubelet on a node.</li>
+<li>Static Pods are defined by a file on the node’s filesystem.</li>
+<li>Static Pods are not managed by the Kubernetes API server.</li>
+<li>Static Pods are useful for running system daemons and other background tasks on a node.</li>
+<li>Static Pods are defined by a file in the <code>/etc/kubernetes/manifests</code> directory on the node.</li>
+<li>Static Pods are created and managed by the kubelet on the node.</li>
+</ul>
+<h2 id="multiple-schedulers"><a class="header" href="#multiple-schedulers">Multiple Schedulers</a></h2>
+<ul>
+<li>Kubernetes supports multiple schedulers that can be used to schedule pods in a cluster.</li>
+<li>You can even create your own schedule and use it to schedule pods in a cluster.</li>
+</ul>
+<h2 id="authentication"><a class="header" href="#authentication">Authentication</a></h2>
+<ul>
+<li>Authentication is the process of verifying the identity of a user or system.</li>
+<li>Kubernetes supports multiple authentication methods, including:
+<ul>
+<li>X.509 client certificates</li>
+<li>Static tokens</li>
+<li>Service accounts</li>
+<li>OpenID Connect tokens</li>
+<li>Webhook tokens</li>
+</ul>
+</li>
+</ul>
+<h2 id="authorization"><a class="header" href="#authorization">authorization</a></h2>
+<ul>
+<li>Authorization is the process of determining what actions a user or system is allowed to perform.</li>
+<li>Kubernetes supports multiple authorization methods, including:
+<ul>
+<li>Role-based access control (RBAC)</li>
+<li>Attribute-based access control (ABAC)</li>
+</ul>
+</li>
+</ul>
+<h2 id="api-groups"><a class="header" href="#api-groups">API Groups</a></h2>
+<ul>
+<li>API groups are used to organize resources in Kubernetes.</li>
+<li>API groups are used to group related resources together.</li>
+<li>API groups that you will commonly use:
+<ul>
+<li>core: Contains core resources like pods, services, and namespaces.</li>
+<li>apps: Contains higher-level resources like deployments, replica sets, and stateful sets.</li>
+<li>batch: Contains resources like jobs and cron jobs.</li>
+<li>extensions: Contains deprecated resources like replica sets and daemon sets.</li>
+<li>networking.k8s.io: Contains resources like network policies and ingresses.</li>
+<li>storage.k8s.io: Contains resources like storage classes and persistent volume claims.</li>
+<li>rbac.authorization.k8s.io: Contains resources like roles and role bindings.</li>
+<li>metrics.k8s.io: Contains resources like pod metrics.</li>
+<li>autoscaling: Contains resources like horizontal pod autoscalers.</li>
+<li>admissionregistration.k8s.io: Contains resources like mutating webhooks and validating webhooks.</li>
+</ul>
+</li>
+<li>Example:</li>
+</ul>
+<pre><code>curl -k https://&lt;master-ip&gt;:6443/apis/apps/v1
+</code></pre>
+<h2 id="role-based-access-control-rbac"><a class="header" href="#role-based-access-control-rbac">Role Based Access Control (RBAC)</a></h2>
+<ul>
+<li>Role-based access control (RBAC) is a method of restricting access to resources based on the roles of users or systems.</li>
+</ul>
+<h2 id="service-accounts"><a class="header" href="#service-accounts">Service Accounts</a></h2>
+<ul>
+<li>Service Accounts are created and managed by the Kubernetes API and can be used for machine authentication</li>
+<li>To create a service account: <code>kubectl create serviceaccount &lt;account name&gt;</code></li>
+<li>Service accounts are namespaced</li>
+<li>When a service account is created, it has a token created automatically. The token is stored as a secret object.</li>
+<li>You can also use the base64 encoded token to communicate with the Kube API Server:
+<code>curl https://172.16.0.1:6443/api -insecure --header "Authorization: Bearer &lt;token value&gt;"</code></li>
+<li>You can grant service accounts permission to the cluster itself by binding it to a role with a rolebinding. If a pod needs access to the cluster where it is hosted, you you configure the automountServiceAccountToken boolean parameter on the pod and assign it a service account that has the appropriate permissions to the cluster. The token will be mounted to the pods file system, where the value can then be accessed by the pod. The secret is mounted at <code>/var/run/secrets/kubernetes.io/serviceaccount/token</code>.</li>
+<li>A service account named ‘default’ is automatically created in every namespace</li>
+<li>As of kubernetes 1.22, tokens are automatically mounted to pods by an admission controller as a projected volume.
+<ul>
+<li>https://github.com/kubernetes/enhancements/blob/master/keps/sig-auth/1205-bound-service-account-tokens/README.md</li>
+</ul>
+</li>
+<li>As of Kubernetes 1.24, when you create a service account, a secret is no longer created automatically for the token. Now you must run <code>kubectl create token &lt;service account name&gt;</code> to create the token.
+<ul>
+<li>https://github.com/kubernetes/enhancements/issues/2799</li>
+</ul>
+</li>
+</ul>
+<h1 id="container-orchestration"><a class="header" href="#container-orchestration">Container Orchestration</a></h1>
+<h2 id="cluster-networking"><a class="header" href="#cluster-networking">Cluster Networking</a></h2>
+<ul>
+<li>A kubernetes cluster consists of master and worker nodes. Each node must have a network interface with a valid IP address configured. Each host must be connected to a network.</li>
+<li>Certain TCP/UDP ports are required to be open:
+<ul>
+<li>6443/tcp</li>
+<li>10250/tcp</li>
+<li>10251/tcp</li>
+<li>10252/tcp</li>
+<li>2379/tcp</li>
+<li>2380/tcp</li>
+<li>30000-32767/tcp</li>
+</ul>
+</li>
+</ul>
+<h2 id="pod-networking"><a class="header" href="#pod-networking">Pod Networking</a></h2>
+<ul>
+<li>Every requires an IP address</li>
+<li>Every pod in the cluster should be able to reach every other pod without using NAT</li>
+</ul>
+<h2 id="cni"><a class="header" href="#cni">CNI</a></h2>
+<ul>
+<li>Container Network Interface</li>
+<li>Container Network Interface (CNI) is a framework for dynamically configuring networking resources. It uses a group of libraries and specifications written in Go. The plugin specification defines an interface for configuring the network, provisioning IP addresses, and maintaining connectivity with multiple hosts.</li>
+</ul>
+<h2 id="dns"><a class="header" href="#dns">DNS</a></h2>
+<ul>
+<li>Domain Name Service</li>
+<li>Used to resolve names to IP addresses</li>
+<li>CoreDNS is the default DNS service used in Kubernetes</li>
+</ul>
+<h2 id="ingress"><a class="header" href="#ingress">Ingress</a></h2>
+<ul>
+<li></li>
+</ul>
+<h2 id="services"><a class="header" href="#services">Services</a></h2>
+<ul>
+<li>Services are like a load balancer. They load balance traffic to backend pods (referred to as endpoints)</li>
+<li>There are 3 types of services in Kubernetes
+<ul>
+<li>ClusterIP
+<ul>
+<li>the default</li>
+<li>The service IP address is only available inside the cluster</li>
+</ul>
+</li>
+<li>NodePort
+<ul>
+<li>Makes the service accessible on a predefined port on all nodes in the cluster</li>
+</ul>
+</li>
+<li>LoadBalancer
+<ul>
+<li>Provisions a load balancer in a cloud environment to make the service accessible</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="sidecars"><a class="header" href="#sidecars">Sidecars</a></h2>
+<ul>
+<li>Sidecars are a secondary container running inside our pod that provide a service for the primary pod</li>
+<li>An example is a container in our pod that ships logs to an external service for the business-logic container</li>
+</ul>
+<h2 id="envoy"><a class="header" href="#envoy">Envoy</a></h2>
+<ul>
+<li></li>
+</ul>
+<h2 id="storage"><a class="header" href="#storage">Storage</a></h2>
+<ul>
+<li></li>
+</ul>
+<h1 id="cloud-native-architecture"><a class="header" href="#cloud-native-architecture">Cloud Native Architecture</a></h1>
+<h2 id="autoscaling"><a class="header" href="#autoscaling">Autoscaling</a></h2>
+<ul>
+<li>Horizontal Pod Autoscaler (HPA)
+<ul>
+<li>Automatically scales the number of pods in a deployment based on CPU utilization or custom metrics</li>
+</ul>
+</li>
+<li>Vertical Pod Autoscaler (VPA)
+<ul>
+<li>Automatically adjusts the CPU and memory requests and limits for a pod based on its usage</li>
+</ul>
+</li>
+<li>Cluster Autoscaler
+<ul>
+<li>Automatically adjusts the number of nodes in a cluster based on resource demands</li>
+</ul>
+</li>
+</ul>
+<h2 id="kubernetes-keps-and-sigs"><a class="header" href="#kubernetes-keps-and-sigs">Kubernetes KEPs and SIGs</a></h2>
+<ul>
+<li>Kubernetes Enhancement Proposals (KEPs) are used to propose and track major changes to Kubernetes</li>
+<li>Special Interest Groups (SIGs) are used to organize contributors around specific areas of the project</li>
+</ul>
+<h1 id="cloud-native-application-delivery"><a class="header" href="#cloud-native-application-delivery">Cloud Native Application Delivery</a></h1>
+<h2 id="gitops"><a class="header" href="#gitops">GitOps</a></h2>
+<ul>
+<li>
+<h2 id="what-is-gitops"><a class="header" href="#what-is-gitops">What is GitOps</a></h2>
+</li>
+<li>GitOps Principles
+<ul>
+<li>Declarative - The entire system must be described desclaritively</li>
+<li>Versioned/Immutable -</li>
+<li>Pulled Automatically - Changes must be applied automatically</li>
+<li>Continuously Reconciled - Monitor desired state vs. actual state and reconcile if needed</li>
+</ul>
+</li>
+</ul>
+<h1 id="observability"><a class="header" href="#observability">Observability</a></h1>
+<h2 id="prometheus"><a class="header" href="#prometheus">Prometheus</a></h2>
+<ul>
+<li>Prometheus is an open-source monitoring and alerting system</li>
+<li>Prometheus scrapes metrics from instrumented jobs and stores them in a time-series database</li>
+<li>Prometheus provides a query language (PromQL) to query and visualize the collected metrics</li>
+<li>Prometheus can be integrated with Grafana for visualization</li>
+<li>Prometheus can be used to monitor Kubernetes clusters and applications running on Kubernetes</li>
+<li>Prometheus is designed to collect numeric database, not logs.</li>
+<li>Exporters run on the nodes and expose metrics to Prometheus</li>
+<li>Prometheus scrapes the metrics from the exporters</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../kubernetes/kcna/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../kubernetes/kcsa/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../kubernetes/kcna/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../kubernetes/kcsa/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: example4
+spec:
+  podSelector:
+    matchLabels:
+      role: database
+  policyTypes:
+  - Ingress
+  ingress: 
+  - from:
+    - podSelector:
+        matchLabels:
+          role: frontend

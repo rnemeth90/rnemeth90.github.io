@@ -1,0 +1,803 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Table of Contents - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../../css/chrome-9dfbd86b.css">
+        <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex-7d51fce4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc-848830eb.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of Contents</a></h2>
+<ul>
+<li><a href="#amazon-ebs">Amazon EBS</a></li>
+<li><a href="#cloudwatch">Cloudwatch</a></li>
+<li><a href="#aws-identity-and-access-management">AWS Identity and Access Management</a></li>
+<li><a href="#rds">RDS</a></li>
+<li><a href="#athena">Athena</a></li>
+<li><a href="#kinesis">Kinesis</a></li>
+<li><a href="#dynamodb">DynamoDB</a></li>
+<li><a href="#storage-gateway">Storage Gateway</a></li>
+<li><a href="#elastic-load-balancer">Elastic Load Balancer</a></li>
+<li><a href="#security-group">Security Group</a></li>
+<li><a href="#route-53">Route 53</a></li>
+<li><a href="#aws-transit-gateway">AWS Transit Gateway</a></li>
+<li><a href="#amazon-emr">Amazon EMR</a></li>
+<li><a href="#auto-scaling">Auto Scaling</a></li>
+<li><a href="#s3">S3</a></li>
+<li><a href="#cloudfront">Cloudfront</a></li>
+<li><a href="#secrets-manager">Secrets Manager</a></li>
+<li><a href="#textract">Textract</a></li>
+<li><a href="#rpo-and-rto">RPO and RTO</a></li>
+<li><a href="#ec2">EC2</a></li>
+<li><a href="#network-firewall">Network Firewall</a></li>
+<li><a href="#security">Security</a></li>
+</ul>
+<h2 id="amazon-ebs"><a class="header" href="#amazon-ebs">Amazon EBS</a></h2>
+<hr>
+<ul>
+<li>
+<p><b> Amazon EBS </b> provides three volume types to best meet the needs of your workloads:</p>
+<ul>
+<li><b> General Purpose (SSD) </b>
+<ul>
+<li>General Purpose (SSD) volumes are suitable for a <ins>broad range of workloads, including small to medium-sized databases, development and test environments, and boot volumes.</ins></li>
+</ul>
+</li>
+<li><b> Provisioned IOPS (SSD) </b>
+<ul>
+<li>These volumes offer storage with consistent and low-latency performance and are designed for I/O intensive applications such as <ins>large relational or NoSQL databases. </ins></li>
+</ul>
+</li>
+<li><b>Magnetic</b>
+<ul>
+<li>for workloads where <ins>data are accessed infrequently, and applications where the <i>lowest storage cost</i> is important. </ins></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Here is a list of important information about EBS Volumes:</p>
+<ul>
+<li>
+<p>When you create an EBS volume in an Availability Zone, it is automatically replicated within that zone to prevent data loss due to a failure of any single hardware component.</p>
+</li>
+<li>
+<p>An EBS volume can only be attached to one EC2 instance at a time.</p>
+</li>
+<li>
+<p>After you create a volume, you can attach it to any EC2 instance in the same Availability Zone</p>
+</li>
+<li>
+<p>An EBS volume is off-instance storage that can persist independently from the life of an instance. You can specify not to terminate the EBS volume when you terminate the EC2 instance during instance creation.</p>
+</li>
+<li>
+<p>EBS volumes support live configuration changes while in production which means that you can modify the volume type, volume size, and IOPS capacity without service interruptions.</p>
+</li>
+<li>
+<p>Amazon EBS encryption uses 256-bit Advanced Encryption Standard algorithms (AES-256)</p>
+</li>
+<li>
+<p>EBS Volumes offer 99.999% SLA. This</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="cloudwatch"><a class="header" href="#cloudwatch">Cloudwatch</a></h2>
+<hr>
+<ul>
+<li>Monitoring tool for your AWS resources and applications.</li>
+<li><ins> Display metrics and create alarms </ins> that watch the metrics and send notifications or automatically make changes to the resources you are monitoring when a threshold is breached.</li>
+</ul>
+<h2 id="aws-identity-and-access-management"><a class="header" href="#aws-identity-and-access-management">AWS Identity and Access Management</a></h2>
+<hr>
+<ul>
+<li>
+<p>You should <ins> <i><strong>always associate IAM role to EC2 instances not IAM user for the purpose of accessing other AWS services  </strong></i></ins></p>
+</li>
+<li>
+<p><strong> IAM roles </strong> are designed so that your <ins>application can <i>securely make API requests</i> from your instances,</ins> without requiring you to manage the security credentials that the application use.</p>
+<ul>
+<li>Instead of creating and distributing your AWS credentials, you can <ins>delegate permission to make API requests using <strong>IAM roles</strong></ins></li>
+</ul>
+</li>
+<li>
+<p><strong>AWS Organization</strong> is a service that allows you to manage multiple AWS accounts easily.</p>
+</li>
+<li>
+<p><strong>AWS IAM Identity Center </strong> can be integrated with your corporate directory service for centralized authentication.</p>
+<ul>
+<li>This means you can <ins>sign in to multiple AWS accounts with just one set of credentials.</ins></li>
+<li>This integration helps to streamline the authentication process and makes it <ins>easier for companies to switch between accounts.</ins></li>
+</ul>
+</li>
+<li>
+<p><strong>SCP</strong> you can also configure a <ins>service control policy (SCP) </ins>to manage your AWS accounts.</p>
+<ul>
+<li>SCPs help you <ins> enforce policies across your organization and control the services </ins> and features accessible to your other account.</li>
+<li>prevents unauthorized access</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Token Service (STS)</strong> is the service that you can use to <ins>create and provide trusted users with temporary security credentials</ins> that can control access to your AWS resources.</p>
+<ul>
+<li><ins>Temporary security credentials work almost identically to the long-term access key credentials</ins> that your IAM users can use.</li>
+</ul>
+</li>
+<li>
+<p><strong> AWS Control Tower </strong> provides a single location to easily <ins> set up your new well-architected multi-account environment </ins> and govern your AWS workloads with rules for security,operations, and internal compliance.</p>
+<ul>
+<li>You can automate the setup of your AWS environment with best-practices <ins>blueprints for multi-account structure, identity, access management, and account provisioning workflow. </ins></li>
+<li><ins> offers “guardrails” </ins> for ongoing governance of your AWS environment.</li>
+</ul>
+</li>
+<li>
+<p>You can use an <i><ins>IAM role to specify permissions for users </ins></i> whose identity is federated from your organization or a third-party identity provider (IdP).</p>
+<ul>
+<li><b>Federating users with SAML 2.0</b>
+<ul>
+<li>If your organization already uses an identity provider <ins>software package that supports SAML 2.0 (Security Assertion Markup Language 2.0)</ins>, you can create trust between your organization as an identity provider (IdP) and AWS as the service provider.</li>
+<li>You can then use SAML to provide your users with <ins>federated single-sign on (SSO) </ins>to the AWS Management Console or federated access to call AWS API operations.</li>
+<li><b>For example</b>: if your company uses Microsoft Active Directory and Active Directory Federation Services, then you can federate using SAML 2.0</li>
+</ul>
+</li>
+<li><b>Federating users by creating a custom identity <ins>broker application</ins></b>
+<ul>
+<li>
+<p>If your <ins>identity store is not compatible with SAML 2.0,</ins> then you can <i>build a custom <b>identity broker application </b> to perform a similar function. </i></p>
+</li>
+<li>
+<p>The broker application <ins>authenticates users, requests temporary credentials for users from AWS,</ins> and then provides them to the user to access AWS resources.</p>
+</li>
+<li>
+<p>The application verifies that employees are signed into the existing corporate network’s identity and authentication system, which might use LDAP, Active Directory, or another system. The identity broker application then obtains temporary security credentials for the employees.</p>
+</li>
+<li>
+<p>To <i>get temporary security credentials, </i>the identity broker application calls either <code>AssumeRole</code> or <code>GetFederationToken</code> to obtain temporary security credentials, depending on how you want to manage the policies for users and when the temporary credentials should expire.</p>
+</li>
+<li>
+<p>The <ins>call returns temporary security credentials consisting of an AWS access key ID, a secret access key, and a session token.</ins> The identity broker application makes these temporary security credentials available to the internal company application.</p>
+  <img src="./images/Overview/broker-application.jpg" width="47%" height="40%" />
+</li>
+<li>
+<p>This scenario has the following attributes:</p>
+<ul>
+<li>
+<p>The identity broker application has permissions to access IAM’s token service (STS) API to create temporary security credentials.</p>
+</li>
+<li>
+<p>The identity broker application is able to verify that employees are authenticated within the existing authentication system.</p>
+</li>
+<li>
+<p>Users are able to get a temporary URL that gives them access to the AWS Management Console (which is referred to as single sign-on).</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="rds"><a class="header" href="#rds">RDS</a></h2>
+<hr>
+<ul>
+<li>Supports <b>Aurora, MySQL, MariaDB, PostgreSQL, Oracle, Microsoft SQL Server.</b></li>
+<li><b>DB Instance </b>
+<ul>
+<li>For production OLTP use cases, use <b>Multi-AZ deployments </b> for <ins>enhanced fault tolerance with Provisioned <i>IOPS </i>storage for fast and predictable performance.
+<ul>
+<li>You can use PIOPS storage with Read Replicas for MySQL, MariaDB or PostgreSQL.</li>
+</ul>
+</ins></li>
+<li><b> Magnetic </b>
+<ul>
+<li>Doesn’t allow you to scale storage when using the SQL Server database engine.
+<ul>
+<li>Doesn’t support elastic volumes.</li>
+<li>Limited to a maximum size of 3 TiB.</li>
+<li>Limited to a maximum of 1,000 IOPS.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>RDS automatically performs a failover in the event of any of the following:
+<ol>
+<li>Loss of availability in primary Availability Zone.</li>
+<li>Loss of network connectivity to primary.</li>
+<li>Compute unit failure on primary.</li>
+<li>Storage failure on primary.</li>
+</ol>
+</li>
+</ul>
+<h2 id="athena"><a class="header" href="#athena">Athena</a></h2>
+<hr>
+<ul>
+<li>An interactive query service that makes it easy to analyze data directly in Amazon S3 and other data sources using SQL.</li>
+<li><i>Serverless</i></li>
+<li>Has a <ins>built-in query editor.</ins></li>
+<li>highly available and durable</li>
+<li><ins>integrates with <b>Amazon QuickSight </b></ins> for easy data visualization.</li>
+<li>retains query history for 45 days.</li>
+<li>You pay only for the queries that you run. You are charged based on the amount of data scanned by each query.</li>
+<li>There are 2 types of cost controls:
+<ul>
+<li><b> Per-query limit </b>
+<ul>
+<li>specifies a threshold for the total amount of data scanned per query.</li>
+<li>Any query running in a workgroup is <ins>canceled once it exceeds the specified limit</ins>.</li>
+<li>Only one per-query limit can be created</li>
+</ul>
+</li>
+<li><b>Per-workgroup limit</b>
+<ul>
+<li>this limits the total amount of data scanned by all queries running within a specific time frame.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="kinesis"><a class="header" href="#kinesis">Kinesis</a></h2>
+<hr>
+<ul>
+<li>A fully managed AWS service that you can use to stream <ins> live video from devices to the AWS Cloud</ins>, or build applications for <strong> real-time video processing or batch-oriented video analytics.</strong></li>
+<li>Amazon Kinesis Data Streams enables real-time processing of streaming big data. It provides ordering of records, as well as the ability to read and/or replay records in the same order to multiple Amazon Kinesis Applications</li>
+<li>A Kinesis data stream is a set of <ins>shards that has a sequence of data records </ins>, and each data record has a <strong>sequence number </strong>that is assigned by Kinesis Data Streams.
+<ul>
+<li>Kinesis <ins>can also easily handle the high volume of messages</ins> being sent to the service.</li>
+<li>durable</li>
+<li>no missing of messages</li>
+</ul>
+</li>
+</ul>
+<h2 id="dynamodb"><a class="header" href="#dynamodb">DynamoDB</a></h2>
+<ul>
+<li>
+<h3 id="how-to-choose-the-right-partition-key-"><a class="header" href="#how-to-choose-the-right-partition-key-">How to choose the right partition key ?</a></h3>
+<ul>
+<li>What is partition key ?
+<ul>
+<li>DynamoDB supports 2 types of primary keys
+<ul>
+<li>Partition key: <ins> A simple primary key,</ins> composed of one attribute known as the partition key.</li>
+<li>Partition key and Sort key: Referred to as Composite Primary Key, this type of key is composed of two attributes. 1st one is partition key and 2nd one is sort key
+<img src="./images/Overview/DynamoDB.png" width="87%" /></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Why do I need a partition key?
+<ul>
+<li>DynamoDb stores data as groups of attributes, - Items</li>
+<li>Items are similar to rows or records in other database systems.</li>
+<li>DynamoDB stores and retrieves each item based on the primary key value which must be unique</li>
+<li><ins><strong><i>DynamoDb uses the partition key’s value as an input to an internal hash function. </i></strong> The output from the hash function determines the partition in which the item is stored. Each item’s location is determined by the hash value of its partition key.
+<img src="./images/Overview/dynamodb-partition.png" width="87%" /></ins></li>
+</ul>
+</li>
+<li>DynamoDB automatically supports access patterns using the throughput you have provisioned, or upto your account limits in the on-demand mode</li>
+<li>Regardless of the capacity mode you choose <ins><strong><i> if your access pattern exceeds 3000 RCU and 1000 WCU for a single partition key value, your requests might be throttled with a  <code>ProvisionedThroughputExceededException</code> error </i></strong></ins></li>
+<li>Recommended for Partition keys :
+<ul>
+<li><ins> Use high-cardinality attributes. </ins> These are attributes that have distinct values for each item, like <code>emailid</code>, <code>employee_no</code>, <code>customerid</code>, <code>sessionid</code>, <code>orderid</code></li>
+<li><ins><strong>Use composite attributes </strong> Try to combine more tha one attribute to form a unique key, if that meets your access pattern</ins></li>
+<li><strong><ins>Cache the popular items</ins></strong> when there is high volume of read traffic using DAX (DynamoDB Accelerator)</li>
+<li>DAX is fully managed, in-memory cache for DynamoDB that doesn’t require developers to manage cache invalidation, data population or cluster management.</li>
+<li>DAX also is compatible with DynamoDB API calls, so developer can incorporate it more easily into existing applications</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="storage-gateway"><a class="header" href="#storage-gateway">Storage Gateway</a></h2>
+<hr>
+<ul>
+<li>
+<p>Connects an on-premise software appliance with cloud-based storage to <ins>provide seamless integration with data security features between your <b>on-premises IT environment and the AWS storage infrastructure.</b></ins></p>
+</li>
+<li>
+<p>You can use the service to store data in the AWS cloud for scalable and cost-effective storage that helps maintain</p>
+</li>
+<li>
+<p>It stores files as native S3 objects, archives virtual tapes in Amazon Glacier and stores EBS snapshots generated by the Volume Gateway with Amazon EBS.</p>
+  <img src="./images/Overview/storage-gateway.jpg" width="87%" />
+</li>
+</ul>
+<h2 id="elastic-load-balancer"><a class="header" href="#elastic-load-balancer">Elastic Load Balancer</a></h2>
+<hr>
+<ul>
+<li>Distributes incoming application or network traffic across multiple targets, such as EC2 instances containers (ECS), Lambda functions and IP addresses in multiple Availability zones</li>
+</ul>
+<h2 id="security-group"><a class="header" href="#security-group">Security Group</a></h2>
+<hr>
+<ul>
+<li>
+<p>A security group acts as a virtual firewall for your instance to control inbound and outbound traffic.</p>
+   <img src="./images/Overview/security-group.jpg" width="87%" />
+</li>
+</ul>
+<h2 id="route-53"><a class="header" href="#route-53">Route 53</a></h2>
+<hr>
+<ul>
+<li>A highly available and scalable Domain Name System (DNS) web service used for domain registration, DNS routing and health checking</li>
+</ul>
+<h2 id="aws-transit-gateway"><a class="header" href="#aws-transit-gateway">AWS Transit Gateway</a></h2>
+<hr>
+<ul>
+<li>A networking service that uses a hub and spoke model to connect the on-premises data centers and Amazon VPCs to a <ins><em>Single Gateway.</em></ins></li>
+<li>With this service, customers only have to create and manage  <ins><em><strong>a single connection from the central gateway into each on-premises data center</strong></em></ins></li>
+<li><strong>Features</strong>:
+<ul>
+<li><strong>Inter-region peering </strong>
+<ul>
+<li>allows customers to route traffic</li>
+<li>easy and cost-effective way</li>
+</ul>
+</li>
+<li><strong> Multicast </strong>
+<ul>
+<li>allows customers to have fine-grain control on who can consume and produce multicast traffic</li>
+</ul>
+</li>
+<li><strong>Automated provisioning </strong>
+<ul>
+<li>customers can automatically identify the Site-to-site VPN connections and on-premises resources with which they are associated using AWS Transit Gateway</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="amazon-emr"><a class="header" href="#amazon-emr">Amazon EMR</a></h2>
+<hr>
+<ul>
+<li>
+<p>EMR (Elastic MapReduce)</p>
+</li>
+<li>
+<p>A managed cluster that <ins>simplifies running big data frameworks </ins>like Apache Hadoop and Apache Spark on AWS to process and analyze vast amounts of data.</p>
+</li>
+<li>
+<p>You can process data for analytics purposes and <ins>business intelligence workloads </ins>using EMR together with Apache Hive and Apache Pig</p>
+</li>
+<li>
+<p>You can <ins><em>use EMR to move large amounts of data in and out of other AWS data stores </em></ins> and databases like S3 and DynamoDB</p>
+  <img src="./images/Overview/emr.jpg" width="87%" />
+</li>
+<li>
+<p>Purchasing options:</p>
+<ul>
+<li>On-Demand:reliable, predictable, won’t be terminated</li>
+<li>Reserved (min 1 year): cost savings (EMR will automatically use if available)</li>
+</ul>
+</li>
+</ul>
+<h2 id="auto-scaling"><a class="header" href="#auto-scaling">Auto Scaling</a></h2>
+<hr>
+<ul>
+<li>Configure automatic scaling for the AWS resources quickly through a scaling plan that uses <strong> Dynamic Scaling </strong>and <strong>Predictive scaling </strong>.</li>
+<li><strong><em>Useful for </em></strong>:
+<ul>
+<li>Cyclical traffic such as high use of resources during regular business hours and low use of resources</li>
+<li>On and Off traffic such as <ins>batch processing, testing and periodic analysis </ins></li>
+<li>Variable traffic patterns, such as software for <ins>marketing growth with periods of spiky growth </ins></li>
+</ul>
+</li>
+<li><strong>Dynamic Scaling</strong>
+<ul>
+<li>To add and remove capacity for resources to maintain resource at target value</li>
+</ul>
+</li>
+<li><strong>Predictive Scaling</strong>
+<ul>
+<li>To forecast the future load demands by analyzing your historical records for a metric</li>
+<li><ins>Allows schedule scaling </ins> by adding or removing capacity and controls maximum capacity</li>
+<li><ins><em> <strong>Only available for EC2 scaling groups </strong></em></ins></li>
+</ul>
+</li>
+<li>In Auto Scaling, the following statements are correct regarding the cooldown period:
+<ul>
+<li>It ensures that the Auto Scaling group does not launch or terminate additional EC2 instances before the previous scaling activity takes effect.</li>
+<li>Its default value is 300 seconds.</li>
+<li>It is a configurable setting for your Auto Scaling group.</li>
+</ul>
+</li>
+</ul>
+<h2 id="s3"><a class="header" href="#s3">S3</a></h2>
+<hr>
+<ul>
+<li><strong>Server-side encryption (SSE)</strong> is about data encryption at rest-that is, Amazon S3 encrypts your data at the object level as it writes it to disks in its data centers and decrypts it for you when you access it.
+<img src="./images/Overview/server-side-encryption.jpg" width="87%" />
+<ul>
+<li>
+<p>You have three mutually exclusive options depending on how you choose to manage the encryption keys:</p>
+<p>1.<strong>Amazon S3-Managed Keys (SSE-S3) </strong></p>
+<ol start="2">
+<li>
+<p><strong>AWS KMS-Managed Keys (SSE-KMS)</strong></p>
+</li>
+<li>
+<p><strong>Customer-Provided Keys (SSE-C)</strong></p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong> S3-Managed Encryption Keys (SSE-S3)</strong></p>
+<ul>
+<li>Amazon S3 will <ins>encrypt each object with a unique key</ins> and as an additional safeguard,<ins> it encrypts the key itself with a master key that it<strong> rotates regularly. </strong></ins></li>
+</ul>
+</li>
+<li>
+<p><strong> SSE-AES </strong> S3 handles the key, uses AES-256 algorithm</p>
+<ul>
+<li>one of the strongest block ciphers available, 256-bit Advanced Encryption Standard (AES-256), to encrypt your data.
+<img src="./images/Overview/aes-256.jpg" width="57%" /></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Client-side Encryption </strong>using
+<ol>
+<li>AWS KMS-managed customer master key</li>
+<li>client-side master key</li>
+</ol>
+</li>
+<li><strong>Cross-Account Access</strong>
+You can provide another AWS account access to an object that is stored in an S3 bucket.
+<ul>
+<li>
+<p>These are the methods on how to grant cross-account access to objects that are stored in your own Amazon S3 bucket:</p>
+<ul>
+<li><strong>Resource-based policies and IAM policies </strong></li>
+<li><strong>Resource-based Access Control List (ACL) and IAM policies </strong></li>
+</ul>
+</li>
+<li>
+<p>Cross-account IAM roles for programmatic and console access to S3 bucket objects</p>
+</li>
+<li>
+<p><ins> Supports failover controls for S3 Multi-Region access points.</ins></p>
+</li>
+</ul>
+</li>
+<li><strong>Requester Pays Buckets </strong>
+<ul>
+<li>Bucket owners pay for all of the Amazon S3 storage and data transfer costs associated with their bucket.</li>
+</ul>
+</li>
+</ul>
+<h2 id="cloudfront"><a class="header" href="#cloudfront">CloudFront</a></h2>
+<hr>
+<h2 id="secrets-manager"><a class="header" href="#secrets-manager">Secrets Manager</a></h2>
+<hr>
+<ul>
+<li>Helps to <ins> <i> manage, retrieve and <strong>rotate database credentials,</strong> application credentials, OAuth tokens, API keys and other secrets throughout their lifecycles
+</i></ins></li>
+<li>Helps to <ins> improve security posture </ins>, because you <ins><strong>no longer need hard-coded credentials</strong> </ins> in application source code.
+<ul>
+<li>Storing the credentials in Secrets Manager helps avoid possible compromise by anyone who can inspect the application or the components.</li>
+<li>Replace hard-coded credentials with a runtime call to the Secrets Manager service to retrieve credentials with a runtime call to the Secrets Manager service to retrieve credentials dynamically when you need them.</li>
+</ul>
+</li>
+</ul>
+<h2 id="textract"><a class="header" href="#textract">Textract</a></h2>
+<hr>
+<ul>
+<li>A fully managed document analysis service for detecting and extracting information from scanned documents</li>
+<li>Return extracted data as key-value pairs (e.g. Name: John Doe)</li>
+<li>Supports virtually any type of documents</li>
+<li>Pricing
+<ul>
+<li>Pay for what you use</li>
+<li>Charges vary for Detect Document Text API and Analyze Document API with the later being more expensive</li>
+</ul>
+</li>
+</ul>
+<h2 id="rpo-and-rto"><a class="header" href="#rpo-and-rto">RPO and RTO</a></h2>
+<hr>
+<ul>
+<li>RTO (Recovery Time Object)
+<ul>
+<li>measures how quickly the application should be available after an outage</li>
+</ul>
+</li>
+<li>RPO (Recovery Point Object)
+<ul>
+<li>refers to how much data loss can the application can tolerate</li>
+</ul>
+</li>
+</ul>
+<img src="./images/Overview/rto-rpo.jpg" width="87%" />
+<pre><code>- Data loss is measured from most recent backup to the point of disaster. Downtime is measured from the point of disaster until fully recovered and available for service.
+</code></pre>
+<h2 id="ec2"><a class="header" href="#ec2">EC2</a></h2>
+<hr>
+<hr>
+<h2 id="network-firewall"><a class="header" href="#network-firewall">Network Firewall</a></h2>
+<hr>
+<ul>
+<li>AWS Network Firewall supports domain name stateful network traffic inspection</li>
+<li>Can create <ins>allow lists and deny lists </ins> with domain names that the stateful rules engine looks for in network traffic</li>
+<li>AWS Network Firewall is a <ins>stateful, managed network firewall and intrusion detection and prevention service for your virtual private cloud (VPC)</ins> that you created in Amazon Virtual Private Cloud (Amazon VPC).
+<ul>
+<li>With Network Firewall, <ins>you can filter traffic at the perimeter of your VPC. </ins></li>
+<li>This includes filtering traffic going to and coming from an internet gateway, NAT gateway, or over VPN or AWS Direct Connect.</li>
+</ul>
+</li>
+<li>Network Firewall uses the open source intrusion prevention system (IPS), Suricata, for stateful inspection. Network Firewall supports Suricata compatible rules.</li>
+</ul>
+<hr>
+<h2 id="security"><a class="header" href="#security">Security</a></h2>
+<hr>
+<ul>
+<li>
+<p>The security pillar includes the ability to protect data, systems, and assets to take advantage of cloud technologies to improve security</p>
+</li>
+<li>
+<p><strong>Zero Trust</strong> security is a model where application <ins>components or microservices are considered discrete from each other </ins> and no component or microservice trusts any other.</p>
+<h3 id="design-principles"><a class="header" href="#design-principles">Design Principles</a></h3>
+<ol>
+<li>
+<p><strong> Implement a strong identity foundation </strong></p>
+</li>
+<li>
+<p><strong>Enable traceability</strong></p>
+</li>
+<li>
+<p><strong>Apply security at all layers:</strong></p>
+<ul>
+<li>
+<p>Apply a <strong>defense in depth approach </strong>  with multiple security controls</p>
+</li>
+<li>
+<p><ins>Implementing security to multiple layers </ins>(for example, edge of network, VPC, load balancing, every instance and compute service, operating system, application, and code).</p>
+  <img src="./images/Overview/defense-in-depth.jpg" width="57%" />
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Automate security best practices:</strong></p>
+</li>
+<li>
+<p><strong>Protect data in transit and at rest:</strong></p>
+</li>
+<li>
+<p><strong>Keep people away from data:</strong></p>
+</li>
+<li>
+<p><strong>Prepare for security events:</strong></p>
+</li>
+</ol>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../clouds/aws/saa-c03/notes_ttd_tests.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../clouds/aws/saa-c03/study-more.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../clouds/aws/saa-c03/notes_ttd_tests.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../clouds/aws/saa-c03/study-more.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../searcher-c2a407aa.js"></script>
+
+        <script src="../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../highlight-abc7f01d.js"></script>
+        <script src="../../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

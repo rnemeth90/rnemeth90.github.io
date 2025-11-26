@@ -1,0 +1,3095 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Certified Kubernetes Security Specialist (CKS) Notes - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-9dfbd86b.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-7d51fce4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-848830eb.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="certified-kubernetes-security-specialist-cks-notes"><a class="header" href="#certified-kubernetes-security-specialist-cks-notes">Certified Kubernetes Security Specialist (CKS) Notes</a></h1>
+<p align="center"><img width="180" alt="portfolio_view" src="badge.png"></p>
+
+<p align="center"><img width="300" alt="portfolio_view" src="kubernetes.png"></p>
+
+<h4 align="center"><a href="https://www.cncf.io/certification/cks/">https://www.cncf.io/certification/cks/</a>
+<h1 align="center">Certified Kubernetes Security Specialist (CKS) Notes</h1>
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList= alse} -->
+<h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of Contents</a></h2>
+<ul>
+<li>
+<p><a href="#exam">Exam</a></p>
+<ul>
+<li><a href="#outline">Outline</a></li>
+<li><a href="#cirriculum">Cirriculum</a></li>
+<li><a href="#changes">Changes</a></li>
+<li><a href="#software--environment">Software / Environment</a></li>
+<li><a href="#exam-environment-setup">Exam Environment Setup</a>
+<ul>
+<li><a href="#terminal-shortcutsaliases">Terminal Shortcuts/Aliases</a></li>
+<li><a href="#terminal-command-completion">Terminal Command Completion</a></li>
+<li><a href="#vim">VIM</a>
+<ul>
+<li><a href="#pasting-text-into-vim">Pasting Text Into VIM</a></li>
+</ul>
+</li>
+<li><a href="#tmux">tmux</a>
+<ul>
+<li><a href="#mouse-support">Mouse Support</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="#preparation">Preparation</a></p>
+<ul>
+<li><a href="#study-resources">Study Resources</a></li>
+<li><a href="#practice">Practice</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#fundamentals">Fundamentals</a></p>
+</li>
+<li>
+<p><a href="#1-cluster-setup">Cluster Setup</a></p>
+<ul>
+<li><a href="#cis-benchmark">CIS Benchmark</a>
+<ul>
+<li><a href="#what-is-a-security-benchmark">What is a security benchmark?</a></li>
+<li><a href="#kubebench">KubeBench</a></li>
+</ul>
+</li>
+<li><a href="#cluster-upgrades">Cluster Upgrades</a>
+<ul>
+<li><a href="#upgrade-process">Upgrade Process</a></li>
+<li><a href="#upgrading-with-kubeadm">Upgrading with Kubeadm</a></li>
+</ul>
+</li>
+<li><a href="#network-policies">Network Policies</a>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#key-concepts">Key Concepts</a></li>
+<li><a href="#common-fields-in-a-network-policy">Common Fields in a Network Policy</a></li>
+<li><a href="#example-network-policies">Example Network Policies</a>
+<ul>
+<li><a href="#allow-all-ingress-traffic">Allow All Ingress Traffic</a></li>
+<li><a href="#deny-all-ingress-and-egress-traffic">Deny All Ingress and Egress Traffic</a></li>
+<li><a href="#allow-specific-ingress-from-a-namespace">Allow Specific Ingress from a Namespace</a></li>
+<li><a href="#allow-egress-to-a-specific-ip">Allow Egress to a Specific IP</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#cilium-network-policy">Cilium Network Policy</a>
+<ul>
+<li><a href="#cilium-network-policy-structure">Cilium Network Policy Structure</a></li>
+<li><a href="#layer-3-rules">Layer 3 Rules</a></li>
+<li><a href="#examples">Examples</a>
+<ul>
+<li><a href="#default-deny-all">Default Deny All</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#kubernetes-ingress">Kubernetes Ingress</a>
+<ul>
+<li><a href="#what-is-ingress">What is Ingress?</a></li>
+<li><a href="#why-use-ingress">Why Use Ingress?</a></li>
+<li><a href="#key-components-of-ingress">Key Components of Ingress</a></li>
+<li><a href="#ingress-resource-configuration">Ingress Resource Configuration</a></li>
+<li><a href="#basic-structure">Basic Structure</a></li>
+<li><a href="#ingress-with-tls">Ingress with TLS</a></li>
+<li><a href="#annotations">Annotations</a></li>
+</ul>
+</li>
+<li><a href="#protecting-node-metadata-and-endpoints">Protecting Node Metadata and Endpoints</a>
+<ul>
+<li><a href="#protecting-endpoints">Protecting Endpoints</a></li>
+<li><a href="#protecting-node-metadata">Protecting Node Metadata</a></li>
+</ul>
+</li>
+<li><a href="#verify-kubernetes-binaries">Verify Kubernetes Binaries</a></li>
+<li><a href="#securing-etcd">Securing etcd</a>
+<ul>
+<li><a href="#play-with-etcd">Play with etcd</a></li>
+<li><a href="#encrypting-data-in-transit-in-etcd">Encrypting data in transit in etcd</a></li>
+<li><a href="#encrypting-data-at-rest-in-etcd">Encrypting data at rest in etcd</a></li>
+</ul>
+</li>
+<li><a href="#securing-kube-apiserver">Securing kube-apiserver</a>
+<ul>
+<li><a href="#access-controls">Access Controls</a></li>
+<li><a href="#authentication">Authentication</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="#2-cluster-hardening">Cluster Hardening</a></p>
+<ul>
+<li><a href="#securing-access-to-the-kubeapi-server">Securing Access to the KubeAPI Server</a></li>
+<li><a href="#authentication">Authentication</a>
+<ul>
+<li><a href="#user-accounts">User accounts</a></li>
+<li><a href="#service-accounts">Service Accounts</a></li>
+</ul>
+</li>
+<li><a href="#tls-certificates">TLS Certificates</a></li>
+<li><a href="#kubelet-security">kubelet Security</a></li>
+<li><a href="#authorization">Authorization</a>
+<ul>
+<li><a href="#roles-and-clusterroles">Roles and ClusterRoles</a></li>
+<li><a href="#role-bindings-and-cluster-role-bindings">Role Bindings and Cluster Role Bindings</a></li>
+</ul>
+</li>
+<li><a href="#securing-node-metadata">Securing Node Metadata</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#3-system-hardening">System Hardening</a></p>
+<ul>
+<li><a href="#principle-of-least-privilege">Principle of Least Privilege</a></li>
+<li><a href="#limit-access-to-nodes">Limit access to nodes</a>
+<ul>
+<li><a href="#managing-local-users-and-groups">Managing Local Users and Groups</a></li>
+<li><a href="#securing-ssh">Securing SSH</a></li>
+<li><a href="#using-sudo">Using sudo</a></li>
+<li><a href="#remove-packages-packages">Remove Packages Packages</a></li>
+<li><a href="#restrict-kernel-modules">Restrict Kernel Modules</a></li>
+<li><a href="#disable-open-ports">Disable Open Ports</a></li>
+</ul>
+</li>
+<li><a href="#tracing-syscalls">Tracing Syscalls</a>
+<ul>
+<li><a href="#strace">strace</a></li>
+<li><a href="#aquasec-tracee">AquaSec Tracee</a></li>
+<li><a href="#restricting-access-to-syscalls-with-seccomp">Restricting Access to syscalls with seccomp</a></li>
+</ul>
+</li>
+<li><a href="#restrict-access-to-file-systems">Restrict access to file systems</a>
+<ul>
+<li><a href="#apparmor">AppArmor</a></li>
+</ul>
+</li>
+<li><a href="#linux-capabilities-in-pods">Linux Capabilities in Pods</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#4-minimize-microservice-vulnerabilities">Minimize Microservice Vulnerabilities</a></p>
+<ul>
+<li><a href="#pod-security-admission">Pod Security Admission</a></li>
+<li><a href="#security-contexts">Security Contexts</a></li>
+<li><a href="#admission-controllers">Admission Controllers</a></li>
+<li><a href="#open-policy-agent">Open Policy Agent</a>
+<ul>
+<li><a href="#opa-in-kubernetes">OPA in Kubernetes</a>
+<ul>
+<li><a href="#gatekeeper">GateKeeper</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#kubernetes-secrets">Kubernetes Secrets</a></li>
+<li><a href="#container-sandboxing">Container Sandboxing</a>
+<ul>
+<li><a href="#gvisor">gVisor</a></li>
+<li><a href="#kata-containers">Kata Containers</a></li>
+</ul>
+</li>
+<li><a href="#runtimeclass">RuntimeClass</a>
+<ul>
+<li><a href="#to-use-a-runtime-class">To use a runtime class</a></li>
+</ul>
+</li>
+<li><a href="#resource-quotas">Resource Quotas</a></li>
+<li><a href="#api-priority-and-fairness">API Priority and Fairness</a></li>
+<li><a href="#pod-priority-and-preemption">Pod Priority and Preemption</a></li>
+<li><a href="#pod-to-pod-encryption">Pod to Pod Encryption</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#5-supply-chain-security">Supply Chain Security</a></p>
+<ul>
+<li><a href="#sbom">SBOM</a></li>
+<li><a href="#reduce-docker-image-size">Reduce docker image size</a></li>
+<li><a href="#static-analysis">Static Analysis</a>
+<ul>
+<li><a href="#sbom-1">SBOM</a></li>
+<li><a href="#kubesec">Kubesec</a></li>
+<li><a href="#syft">Syft</a></li>
+<li><a href="#grype">Grype</a></li>
+<li><a href="#kube-linter">Kube-linter</a></li>
+</ul>
+</li>
+<li><a href="#scanning-images-for-vulnerabilities">Scanning Images for Vulnerabilities</a>
+<ul>
+<li><a href="#trivy">trivy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="#6-monitoring-logging-and-runtime-security">Monitoring, Logging, and Runtime Security</a></p>
+<ul>
+<li><a href="#falco">falco</a></li>
+<li><a href="#ensuring-container-immutability">Ensuring Container Immutability</a></li>
+<li><a href="#audit-logs">Audit Logs</a>
+<ul>
+<li><a href="#sample-audit-policy">Sample Audit Policy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- /code_chunk_output -->
+<h1 id="exam"><a class="header" href="#exam">Exam</a></h1>
+<h3 id="outline"><a class="header" href="#outline">Outline</a></h3>
+<ul>
+<li>https://github.com/cncf/curriculum/blob/master/CKS_Curriculum%20v1.31.pdf</li>
+</ul>
+<h3 id="cirriculum"><a class="header" href="#cirriculum">Cirriculum</a></h3>
+<p>Exam objectives that outline the knowledge, skills, and abilities that a Certified Kubernetes Security Specialist (CKS) can be expected to demonstrate.</p>
+<h3 id="cluster-setup-10"><a class="header" href="#cluster-setup-10">Cluster Setup (10%)</a></h3>
+<ul>
+<li>
+<p>Use Network security policies to restrict cluster level access</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/">Kubernetes Documentation &gt; Concepts &gt; Services, Load Balancing, and Networking &gt; Network Policies</a></li>
+</ul>
+</li>
+<li>
+<p>Use CIS benchmark to review the security configuration of Kubernetes components (etcd, kubelet, kubedns, kubeapi)</p>
+<ul>
+<li><a href="https://www.cisecurity.org/benchmark/kubernetes">CIS Security &gt; Securing Kubernetes</a></li>
+<li><a href="https://www.aquasec.com/cloud-native-academy/kubernetes-in-production/kubernetes-cis-benchmark-best-practices-in-brief/">Cloud Native Wiki - CIS Benchmark Best Practices</a></li>
+<li><a href="https://github.com/aquasecurity/kube-bench">GitHub &gt; Aqua Security &gt; kube-bench</a></li>
+</ul>
+</li>
+<li>
+<p>Properly set up Ingress objects with security control</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/services-networking/ingress/#tls">Kubernetes Documentation &gt; Concepts &gt; Services, Load Balancing, and Networking &gt; Ingress &gt; TLS</a></li>
+</ul>
+</li>
+<li>
+<p>Protect node metadata and endpoints</p>
+<ul>
+<li>
+<p><a href="https://kubernetes.io/docs/tasks/administer-cluster/securing-a-cluster/#restricting-cloud-metadata-api-access">Kubernetes Documentation &gt; Tasks &gt; Administer a Cluster &gt; Securing a Cluster</a></p>
+<pre><code class="language-yaml"># all pods in namespace cannot access metadata endpoint
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+name: cloud-metadata-deny
+namespace: default
+spec:
+podSelector: {}
+policyTypes:
+- Egress
+egress:
+- to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 169.254.169.254/32
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>Minimize use of, and access to, GUI elements</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui">Kubernetes Documentation &gt; Tasks &gt; Access Applications in a Cluster &gt; Deploy and Access the Kubernetes Dashboard</a></li>
+</ul>
+</li>
+<li>
+<p>Verify platform binaries before deploying</p>
+<ul>
+<li>
+<p><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/">Kubernetes Documentation &gt; Tasks &gt; Install Tools &gt; Install and Set Up kubectl on Linux</a></p>
+<blockquote>
+<p>Note: Check the step 2 - validate binary</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="cluster-hardening-15"><a class="header" href="#cluster-hardening-15">Cluster Hardening (15%)</a></h3>
+<ul>
+<li>
+<p>Restrict access to Kubernetes API</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/security/controlling-access/">Kubernetes Documentation &gt; Concepts &gt; Security &gt; Controlling Access to the Kubernetes API</a></li>
+</ul>
+</li>
+<li>
+<p>Use Role Based Access Controls to minimize exposure</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">Kubernetes Documentation &gt; Reference &gt; API Access Control &gt; Using RBAC Authorization</a></li>
+</ul>
+</li>
+<li>
+<p>Exercise caution in using service accounts e.g. disable defaults, minimize permissions on newly created ones</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/">Kubernetes Documentation &gt; Reference &gt; API Access Control &gt; Managing Service Accounts</a></li>
+</ul>
+</li>
+<li>
+<p>Update Kubernetes frequently</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/tasks/administer-cluster/cluster-upgrade/">Kubernetes Documentation &gt; Tasks &gt; Administer a Cluster &gt; Upgrade A Cluster</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="system-hardening-15"><a class="header" href="#system-hardening-15">System Hardening (15%)</a></h3>
+<ul>
+<li>
+<p>Minimize host OS footprint (reduce attack surface)</p>
+<ul>
+<li>Remove unnecessary packages</li>
+<li>Identify and address open ports</li>
+<li>Shut down any unnecessary services</li>
+</ul>
+</li>
+<li>
+<p>Minimize IAM roles</p>
+<ul>
+<li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html">AWS &gt; Security best practices in IAM</a></li>
+<li><a href="https://cloud.google.com/iam/docs/using-iam-securely">GCP - Using IAM securely</a></li>
+<li><a href="https://docs.microsoft.com/en-us/azure/role-based-access-control/best-practices">Azure &gt; Best practices for Azure RBAC</a></li>
+</ul>
+</li>
+<li>
+<p>Minimize external access to the network</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/">Kubernetes Documentation &gt; Concepts &gt; Services, Load Balancing, and Networking &gt; Network Policies</a></li>
+</ul>
+</li>
+<li>
+<p>Appropriately use kernel hardening tools such as AppArmor, seccomp</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/tutorials/security/apparmor/">Kubernetes Documentation &gt; Tutorials &gt; Security &gt; Restrict a Container’s Access to Resources with AppArmor</a></li>
+<li><a href="https://kubernetes.io/docs/tutorials/security/seccomp/">Kubernetes Documentation &gt; Tutorials &gt; Security &gt; Restrict a Container’s Syscalls with seccomp</a></li>
+<li><a href="https://gitlab.com/apparmor/apparmor/-/wikis/Documentation">AppArmor Documentation</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="minimize-microservice-vulnerabilities-20"><a class="header" href="#minimize-microservice-vulnerabilities-20">Minimize Microservice Vulnerabilities (20%)</a></h3>
+<ul>
+<li>
+<p>Setup appropriate OS level security domains e.g. using PSP, OPA, security contexts</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/security/pod-security-policy/#what-is-a-pod-security-policy">Kubernetes Documentation &gt; Concepts &gt; Security &gt; Pod Security Policies</a></li>
+<li><a href="https://kubernetes.io/blog/2019/08/06/opa-gatekeeper-policy-and-governance-for-kubernetes/">Kubernetes Blog &gt; OPA Gatekeeper: Policy and Governance for Kubernetes</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/">Kubernetes Documentation &gt; Tasks &gt; Configure Pods and &gt; Containers &gt; Configure a Security Context for a Pod or Container</a></li>
+</ul>
+</li>
+<li>
+<p>Manage kubernetes secrets</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/configuration/secret/">Kubernetes Documentation &gt; Concepts &gt; Configuration &gt; Secrets</a></li>
+</ul>
+</li>
+<li>
+<p>Use container runtime sandboxes in multi-tenant environments (e.g. gvisor, kata containers</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/security/pod-security-standards/#what-about-sandboxed-pods">Kubernetes Documentation &gt; Concepts &gt; Security &gt; Pod Security Standards</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/containers/runtime-class/">Kubernetes Documentation &gt; Concepts &gt; Containers &gt; Runtime Class</a></li>
+<li><a href="https://gvisor.dev/docs/user_guide/quick_start/kubernetes/">gvisor</a></li>
+<li><a href="https://katacontainers.io/">kata containers</a></li>
+</ul>
+</li>
+<li>
+<p>Implement pod to pod encryption by use of mTLS</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/services-networking/ingress/#tls">Kubernetes Documentation &gt; Concepts &gt; Services, Load Balancing, and Networking &gt; Ingress &gt; TLS</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="supply-chain-security-20"><a class="header" href="#supply-chain-security-20">Supply Chain Security (20%)</a></h3>
+<ul>
+<li>
+<p>Minimize base image footprint</p>
+<ul>
+<li>Remove exploitable and non-sssential software</li>
+<li>Use multi-stage Dockerfiles to keep software compilation out of runtime images</li>
+<li>Never bake any secrets into your images</li>
+<li>Image scanning</li>
+</ul>
+</li>
+<li>
+<p>Secure your supply chain: whitelist allowed image registries, sign and validate images</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#imagepolicywebhook">Kubernetes Documentation &gt; Reference &gt; API Access Control &gt; Using Admission Controllers &gt; ImagePolicyWebhook</a></li>
+</ul>
+</li>
+<li>
+<p>Use static analysis of user workloads (e.g. kubernetes resources, docker files)</p>
+<ul>
+<li>Secure base images</li>
+<li>Remove unnecessary packages</li>
+<li>Stop containers from using elevated privileges</li>
+</ul>
+</li>
+<li>
+<p>Scan images for known vulnerabilities</p>
+<ul>
+<li><a href="https://github.com/aquasecurity/trivy">Trivy</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="monitoring-logging-and-runtime-security-20"><a class="header" href="#monitoring-logging-and-runtime-security-20">Monitoring, Logging and Runtime Security (20%)</a></h3>
+<ul>
+<li>
+<p>Perform behavioral analytics of syscall process and file activities at the host and container level to detect malicious activities</p>
+<ul>
+<li><a href="https://falco.org/docs/">Falco</a></li>
+</ul>
+</li>
+<li>
+<p>Detect threats within physical infrastructure, apps, networks, data, users and workloads</p>
+</li>
+<li>
+<p>Detect all phases of attack regardless where it occurs and how it spreads</p>
+<ul>
+<li><a href="https://cloud.redhat.com/blog/protecting-kubernetes-against-mitre-attck-initial-access">Protecting Kubernetes Against MITRE ATT&amp;CK</a></li>
+</ul>
+</li>
+<li>
+<p>Perform deep analytical investigation and identification of bad actors within environment</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/tasks/debug-application-cluster/audit/">Kubernetes Documentation &gt; Tasks &gt; Monitoring, Logging, and Debugging &gt;Auditing</a></li>
+</ul>
+</li>
+<li>
+<p>Ensure immutability of containers at runtime</p>
+<ul>
+<li>
+<p><a href="https://kubernetes.io/docs/concepts/containers/">Kubernetes Documentation &gt; Concepts &gt; Containers</a></p>
+</li>
+<li>
+<p><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/">Kubernetes Documentation &gt; Tasks &gt; Configure Pods and &gt; Containers &gt; Configure a Security Context for a Pod or Container</a></p>
+<blockquote>
+<p><code>readOnlyRootFilesystem</code>: Mounts the container’s root filesystem as read-only</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>
+<p>Use Audit Logs to monitor access</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/tasks/debug-application-cluster/audit/">Kubernetes Documentation &gt; Tasks &gt; Monitoring, Logging, and Debugging &gt;Auditing</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="changes"><a class="header" href="#changes">Changes</a></h3>
+<ul>
+<li>https://kodekloud.com/blog/cks-exam-updates-2024-your-complete-guide-to-certification-with-kodekloud/</li>
+<li>https://training.linuxfoundation.org/cks-program-changes/</li>
+</ul>
+<h3 id="software--environment"><a class="header" href="#software--environment">Software / Environment</a></h3>
+<blockquote>
+<p>As of 11/2024</p>
+</blockquote>
+<ul>
+<li>Kubernetes version: 1.31</li>
+<li>Ubuntu 20.04</li>
+<li>Terminal
+<ul>
+<li>Bash</li>
+</ul>
+</li>
+<li>Tools available
+<ul>
+<li><code>vim</code> - Text/Code editor</li>
+<li><code>tmux</code> - Terminal multiplexor</li>
+<li><code>jq</code> - Working with JSON format</li>
+<li><code>yq</code> - Working with YAML format</li>
+<li><code>firefox</code> - Web Browser for accessing K8s docs</li>
+<li><code>base64</code> - Tool to convert to and from base 64</li>
+<li><code>kubectl</code> - Kubernetes CLI Client</li>
+<li>more typical linux tools like <code>grep</code>, <code>wc</code> …</li>
+</ul>
+</li>
+<li>3rd Party Tools to know
+<ul>
+<li><code>tracee</code></li>
+<li><code>OPA Gatekeeper</code></li>
+<li><code>kubebench</code></li>
+<li><code>syft</code></li>
+<li><code>grype</code></li>
+<li><code>kube-linter</code></li>
+<li><code>kubesec</code></li>
+<li><code>trivy</code></li>
+<li><code>falco</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="exam-environment-setup"><a class="header" href="#exam-environment-setup">Exam Environment Setup</a></h3>
+<h4 id="terminal-shortcutsaliases"><a class="header" href="#terminal-shortcutsaliases">Terminal Shortcuts/Aliases</a></h4>
+<p>The following are useful terminal shortcut aliases/shortcuts to use during the exam.</p>
+<p>Add the following to the end of <code>~/.bashrc</code> file:</p>
+<pre><code>alias k='kubectl # &lt;-- Most general and useful shortcut!
+
+alias kd='kubectl delete --force --grace-period=0 # &lt;-- Fast deletion of resources
+
+alias kc="kubectl create" # &lt;-- Create a resource
+alias kc-dry='kubectl create --dry-run=client -o yaml # &lt;-- Create a YAML template of resource
+
+alias kr='kubectl run' # &lt;-- Run/Create a resource (typically pod)
+alias kr-dry='kubectl run --dry-run=client -o yaml # &lt;-- Create a YAML template of resource
+
+# If kc-dry and kr-dry do not autocomplete, add the following
+
+export do="dry-run=client -o yaml" # &lt;-- Create the YAML tamplate (usage: $do)
+</code></pre>
+<p>The following are some example usages:</p>
+<pre><code>k get nodes -o wide
+kc deploymentmy my-dep --image=nginx --replicas=3
+kr-dry my-pod --image=nginx --command sleep 36000
+kr-dry --image=busybox -- "/bin/sh" "-c" "sleep 36000"
+kr --image=busybox -- "/bin/sh" "-c" "sleep 36000" $do
+</code></pre>
+<h4 id="terminal-command-completion"><a class="header" href="#terminal-command-completion">Terminal Command Completion</a></h4>
+<p>The following is useful so that you can use the TAB key to auto-complete a command, allowing you to
+not always have to remember the exact keyword or spelling.</p>
+<p>Type the following into the terminal:</p>
+<pre><code>- kubectl completion bash &gt;&gt; ~/.bashrc`-`kubectl` command completion
+- kubeadm completion bash &gt;&gt; ~/.bashrc`-`kubeadm` command completion
+- exec $SHELL` - Reload shell to enable all added completion
+</code></pre>
+<h4 id="vim"><a class="header" href="#vim">VIM</a></h4>
+<p>The exam will have VIM or nano terminal text editor tools available. If you are using
+VIM ensure that you create a <code>~/.vimrc</code> file and add the following:</p>
+<pre><code>set ts=2 " &lt;-- tabstop - how many spaces is \t worth
+set sw=2 " &lt;-- shiftwidth - how many spaces is indentation
+set et " &lt;-- expandtab - Use spaces, never \t values
+set mouse=a " &lt;-- Enable mouse support
+</code></pre>
+<p>Or simply:</p>
+<pre><code>set ts=2 sw=2 et mouse=a
+</code></pre>
+<p>Also know VIM basics are as follows. Maybe a good idea to take a quick VIM course.</p>
+<ul>
+<li><code>vim my-file.yaml</code> - If file exists, open it, else create it for editing</li>
+<li><code>:w</code> - Save</li>
+<li><code>:x</code> - Save and exit</li>
+<li><code>:q</code> - Exit</li>
+<li><code>:q!</code> - Exit without saving</li>
+<li><code>i</code> - Insert mode, regular text editor mode</li>
+<li><code>v</code> - Visual mode for selection</li>
+<li><code>ESC</code> - Normal mode</li>
+</ul>
+<h4 id="pasting-text-into-vim"><a class="header" href="#pasting-text-into-vim">Pasting Text Into VIM</a></h4>
+<p>Often times you will want to paste text or code from the Kubernetes documentation into
+into a VIM terminal. If you simply do that, the tabs will do funky things.</p>
+<p>Do the following inside VIM before pasting your copied text:</p>
+<ol>
+<li>In NORMAL mode, type <code>:set paste</code></li>
+<li>Now enter <code>INSERT</code> mode</li>
+</ol>
+<ul>
+<li>You should see – <code>INSERT (paste) --</code> at the bottom of the screen</li>
+</ul>
+<ol start="3">
+<li>Paste the text</li>
+</ol>
+<ul>
+<li>You can right click with mouse and select Paste or <code>CTRL + SHIFT + v</code></li>
+</ul>
+<h4 id="tmux"><a class="header" href="#tmux">tmux</a></h4>
+<p><code>tmux</code> will allow you to use multiple terminal windows in one (aka terminal multiplexing).
+Make sure you know the basics for tmux usage:</p>
+<ul>
+<li><code>tmux</code>- Turn and enter<code>tmux</code></li>
+<li><code>CTRL + b "</code> - Split the window vertically (line is horizontal)</li>
+<li><code>CTRL + b %</code> - Split the window horizontally (line is vertical)</li>
+<li><code>CTRL + b &lt;ARROW KEY&gt;</code> - Switch between window panes</li>
+<li><code>CTRL + b (hold) &lt;ARROW KEY&gt;</code> - Resize current window pane</li>
+<li><code>CTRL + b z</code> - Toggle full terminal/screen a pane (good for looking at a full document)</li>
+<li><code>CTRL + d</code>or<code>exit</code> - Close a window pane</li>
+</ul>
+<h4 id="mouse-support"><a class="header" href="#mouse-support">Mouse Support</a></h4>
+<p>If you want to be able to click and select within tmux and tmux panes, you can also enable
+mouse support. This can be useful.</p>
+<p>These steps must be done outside of tmux`</p>
+<ol>
+<li>
+<p>Create a <code>.tmux.conf</code> file and edit it</p>
+<ul>
+<li><code>vim ~/.tmux.conf</code></li>
+</ul>
+</li>
+<li>
+<p>Add the configuration, save, and exit file</p>
+<ul>
+<li><code>set -g mouse on</code></li>
+</ul>
+</li>
+<li>
+<p>Reload tmux configuration</p>
+<ul>
+<li><code>tmux source .tmux.conf</code></li>
+</ul>
+</li>
+</ol>
+<h1 id="preparation"><a class="header" href="#preparation">Preparation</a></h1>
+<h3 id="study-resources"><a class="header" href="#study-resources">Study Resources</a></h3>
+<ul>
+<li><a href="https://kubernetes.io/docs/home/">Official Kubernetes Documentation</a></li>
+<li><a href="https://learn.kodekloud.com/user/courses/certified-kubernetes-security-specialist-cks">KodeKloud CKS Course</a></li>
+<li><a href="https://www.amazon.com/Kubernetes-Book-Nigel-Poulton/dp/1521823634">The Kubernetes Book - Nigel Poulton</a></li>
+<li><a href="https://www.amazon.com/Certified-Kubernetes-Security-Specialist-Depth/dp/1098132971">CKS Study Guide</a></li>
+<li><a href="https://killer.sh/">killer.sh</a> labs</li>
+</ul>
+<h3 id="practice"><a class="header" href="#practice">Practice</a></h3>
+<ul>
+<li><a href="https://labs.play-with-k8s.com/">Play with Kubernetes</a></li>
+<li><a href="https://killer.sh/cks">killer.sh Practice questions and environment</a></li>
+</ul>
+<h1 id="fundamentals"><a class="header" href="#fundamentals">Fundamentals</a></h1>
+<ul>
+<li>You should already have CKA level knowledge</li>
+<li>Linux Kernel Namespaces isolate containers
+<ul>
+<li>PID Namespace: Isolates processes</li>
+<li>Mount Namespace: Restricts access to mounts or root filesystem</li>
+<li>Network Namespace: Only access certain network devices. Firewall and routing rules</li>
+<li>User Namespace: Different set of UIDs are used. Example: User (UID 0) inside one namespace can be different from user(UID 0) inside another namespace</li>
+</ul>
+</li>
+<li>cgroups restrict resource usage of processes
+<ul>
+<li>RAM/Disk/CPU</li>
+</ul>
+</li>
+<li>Using cgroups and linux kernel namespaces, we can create containers</li>
+</ul>
+<h1 id="understand-the-kubernetes-attack-surface"><a class="header" href="#understand-the-kubernetes-attack-surface">Understand the Kubernetes Attack Surface</a></h1>
+<ul>
+<li>Kubernetes is a complex system with many components. Each component has its own vulnerabilities and attack vectors.</li>
+<li>The attack surface can be reduced by:
+<ul>
+<li>Using network policies to restrict traffic between pods</li>
+<li>Using RBAC to restrict access to the kube-api server</li>
+<li>Using admission controllers to enforce security policies</li>
+<li>Using pod security standards to enforce security policies</li>
+<li>Using best practices to secure the underlying infrastructure</li>
+<li>Using securityContext to enforce security policies for pods</li>
+</ul>
+</li>
+</ul>
+<h1 id="the-4-cs-of-cloud-native-security"><a class="header" href="#the-4-cs-of-cloud-native-security">The 4 C’s of Cloud-Native Security</a></h1>
+<ul>
+<li>Cloud: Security of the cloud infrastructure</li>
+<li>Cluster: Security of the cluster itself</li>
+<li>Container: Security of the containers themselves</li>
+<li>Code: Security of the code itself</li>
+</ul>
+<h1 id="1-cluster-setup"><a class="header" href="#1-cluster-setup">1 Cluster Setup</a></h1>
+<h2 id="cis-benchmark"><a class="header" href="#cis-benchmark">CIS Benchmark</a></h2>
+<h3 id="what-is-a-security-benchmark"><a class="header" href="#what-is-a-security-benchmark">What is a security benchmark?</a></h3>
+<ul>
+<li>A security benchmark is a set of standard benchmarks that define a state of optimized security for a given system (servers, network devices, etc.)</li>
+<li>CIS (Center for Internet Security) provides standardized benchmarks (in the form of downloadable files) that one can use to implement security on their system.</li>
+<li>CIS provides benchmarks for public clouds (Azure, AWS, GCP, etc.), operating systems (Linux, Windows, MacOS), network devices (Cisco, Juniper, HP, etc.), mobile devices (Android and Apple), desktop and server software (such as Kubernetes)</li>
+<li>View more info <a href="https://www.cisecurity.org/cis-benchmarks">here</a></li>
+<li>You must register at the CIS website to download benchmarks</li>
+<li>Each benchmark provides a description of a vulnerability, as well as a path to resolution.</li>
+<li>CIS-CAT is a tool you can run on a system to generate recommendations for a given system. There are two versions available for download, CIS-CAT Lite and CIS-CAT Pro. The Lite version only includes benchmarks for Windows 10, MacOS, Ubuntu, and desktop software (Google Chrome, etc.). The Pro version includes all benchmarks.</li>
+<li>CIS Benchmarks for Kubernetes
+<ul>
+<li>Register at the CIS website and download the CIS Benchmarks for <a href="https://www.cisecurity.org/benchmark/kubernetes">kubernetes</a></li>
+<li>Includes security benchmarks for master and worker nodes</li>
+</ul>
+</li>
+</ul>
+<h3 id="kubebench"><a class="header" href="#kubebench">KubeBench</a></h3>
+<ul>
+<li>KubeBench is an alternative to CIS-CAT Pro to run benchmarks against a Kubernetes cluster.</li>
+<li>KubeBench is open source and maintained by Aqua Security</li>
+<li>KubeBench can be deployed as a Docker container or a pod. It can also be invoked directly from the binaries or compiled from source.</li>
+<li>Once run, kube-bench will scan the cluster to identify if best-practices have been implemented. If will output a report specifying which benchmarks have passed/failed. It will tell you how to fix any failed benchmarks.</li>
+<li>You can view the report by tailing the pod logs of the kube-bench pod.</li>
+</ul>
+<h2 id="cluster-upgrades"><a class="header" href="#cluster-upgrades">Cluster Upgrades</a></h2>
+<ul>
+<li>The controller-manager and kube-scheduler can be one minor revision behind the API server.
+<ul>
+<li>For example, if the API server is at version 1.10, controller-manager and kube-scheduler can be at 1.9 or 1.10</li>
+</ul>
+</li>
+<li>The kubelet and kube-proxy can be up to 2 minor revisions behind the API server</li>
+<li>kubectl can be x+1 or x-1 minor revisions from the kube API server</li>
+<li>You can upgrade the cluster one minor version at a time</li>
+</ul>
+<h3 id="upgrade-process"><a class="header" href="#upgrade-process">Upgrade Process</a></h3>
+<ul>
+<li>Drain and cordon the node before upgrading it
+<ul>
+<li><code>kubectl drain &lt;node name&gt; --ignore-daemonsets</code></li>
+</ul>
+</li>
+<li>Upgrade the master node first.</li>
+<li>Upgrade worker nodes after the master node.</li>
+</ul>
+<h3 id="upgrading-with-kubeadm"><a class="header" href="#upgrading-with-kubeadm">Upgrading with Kubeadm</a></h3>
+<ul>
+<li>If the cluster was created with kubeadm, you can use kubeadm to upgrade it.</li>
+<li>The upgrade process with kubeadm:
+<pre><code># Increase the minor version in the apt repository file for kubernetes:
+  sudo vi /etc/apt/sources.list.d/kubernetes.list
+
+# Determine which version to upgrade to
+  sudo apt update
+  sudo apt-cache madison kubeadm
+
+# Upgrade kubeadm first
+  sudo apt-mark unhold kubeadm &amp;&amp; \
+  sudo apt-get update &amp;&amp; sudo apt-get install -y kubeadm='1.31.x-*' &amp;&amp; \
+  sudo apt-mark hold kubeadm
+
+# Verify the version of kubeadm
+  kubeadm version
+
+# Check the kubeadm upgrade plan
+  sudo kubeadm upgrade plan
+
+# Apply the upgrade plan
+  sudo kubeadm upgrade apply v1.31.x
+
+# Upgrade the nodes
+  sudo kubeadm upgrade node
+
+# Upgrade kubelet and kubectl
+  sudo apt-mark unhold kubelet kubectl &amp;&amp; \
+  sudo apt-get update &amp;&amp; sudo apt-get install -y kubelet='1.31.x-*' kubectl='1.31.x-*' &amp;&amp; \
+  sudo apt-mark hold kubelet kubectl
+
+# Restart the kubelet
+  sudo systemctl daemon-reload
+  sudo systemctl restart kubelet
+</code></pre>
+</li>
+</ul>
+<h2 id="network-policies"><a class="header" href="#network-policies">Network Policies</a></h2>
+<h3 id="overview"><a class="header" href="#overview">Overview</a></h3>
+<ul>
+<li>
+<p>Kubernetes Network Policies allow you to control the flow of traffic to and from pods. They define rules that specify:</p>
+<ul>
+<li>What traffic is allowed to reach a set of pods.</li>
+<li>What traffic a set of pods can send out.</li>
+</ul>
+</li>
+<li>
+<p>Pods can communicate with each other by default. Network Policies allow you to restrict this communication.</p>
+</li>
+<li>
+<p>Network Policies operate at Layer 3 and Layer 4 (IP and TCP/UDP). They do not cover Layer 7 (application layer).</p>
+</li>
+<li>
+<p>Network Policies are additive. Meaning, to grant more permissions for network communication, simply create another network policy with more fine-grained rules.</p>
+</li>
+<li>
+<p>Network Policies are implemented by the network plugin. The network plugin must support NetworkPolicy for the policies to take effect.</p>
+</li>
+<li>
+<p>Network Policies are namespace-scoped. They apply to pods in the same namespace.</p>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: 
+  name: default-deny-all
+  namespace: secure-namespace
+spec:
+    podSelector: {}
+    policyTypes
+    - Ingress
+</code></pre>
+</li>
+<li>
+<p>Say we now want to grant the ‘frontend’ pods with label ‘teir: frontend’ in the ‘app’ namespace access to the ‘backend’ pods in ‘secure-namespace’. We can do that by creating another Network Policy like this:</p>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-app-pods
+  namespace: secure-namespace
+spec:
+    podSelector:
+      matchLabels:
+        tier: backend
+    policyTypes:
+    - Ingress
+    ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            name: app
+        podSelector:
+          matchLabels:
+            teir: frontend
+      ports:
+      - protocol: TCP
+        port: 3000
+
+</code></pre>
+</li>
+</ul>
+<h3 id="key-concepts"><a class="header" href="#key-concepts">Key Concepts</a></h3>
+<ol>
+<li><strong>Namespace Scope</strong>: Network policies are applied at the namespace level.</li>
+<li><strong>Selector-Based Rules</strong>:
+<ul>
+<li><strong>Pod Selector</strong>: Select pods the policy applies to.</li>
+<li><strong>Namespace Selector</strong>: Select pods based on their namespace.</li>
+</ul>
+</li>
+<li><strong>Traffic Direction</strong>:
+<ul>
+<li><strong>Ingress</strong>: Traffic coming into the pod.</li>
+<li><strong>Egress</strong>: Traffic leaving the pod.</li>
+</ul>
+</li>
+<li><strong>Default Behavior</strong>:
+<ul>
+<li>Pods are non-isolated by default (accept all traffic).</li>
+<li>A pod becomes isolated when a network policy matches it.</li>
+</ul>
+</li>
+</ol>
+<h3 id="common-fields-in-a-network-policy"><a class="header" href="#common-fields-in-a-network-policy">Common Fields in a Network Policy</a></h3>
+<ul>
+<li><strong><code>podSelector</code></strong>: Specifies the pods the policy applies to.</li>
+<li><strong><code>ingress</code>/<code>egress</code></strong>: Lists rules for ingress or egress traffic.</li>
+<li><strong><code>from</code>/<code>to</code></strong>: Specifies allowed sources/destinations (can use IP blocks, pod selectors, or namespace selectors).</li>
+<li><strong><code>ports</code></strong>: Specifies allowed ports and protocols.</li>
+</ul>
+<h3 id="example-network-policies"><a class="header" href="#example-network-policies">Example Network Policies</a></h3>
+<h4 id="allow-all-ingress-traffic"><a class="header" href="#allow-all-ingress-traffic">Allow All Ingress Traffic</a></h4>
+<pre><code>````
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all-ingress
+  namespace: default
+spec:
+  podSelector: {}
+  ingress:
+  - {}
+```
+</code></pre>
+<h4 id="deny-all-ingress-and-egress-traffic"><a class="header" href="#deny-all-ingress-and-egress-traffic">Deny All Ingress and Egress Traffic</a></h4>
+<pre><code>````
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+    name: deny-all
+    namespace: defaulT
+spec:
+    podSelector: {}
+    ingress: []
+    egress: []
+
+```
+</code></pre>
+<h4 id="allow-specific-ingress-from-a-namespace"><a class="header" href="#allow-specific-ingress-from-a-namespace">Allow Specific Ingress from a Namespace</a></h4>
+<pre><code>```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+    name: allow-namespace-ingress
+    namespace: default
+spec:
+    podSelector:
+        matchLabels:
+            app: my-app
+    ingress:
+    - from:
+      - namespaceSelector:
+        matchLabels:
+        team: frontend
+```
+</code></pre>
+<h4 id="allow-egress-to-a-specific-ip"><a class="header" href="#allow-egress-to-a-specific-ip">Allow Egress to a Specific IP</a></h4>
+<pre><code>```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+    name: allow-egress-specific-ip
+    namespace: default
+spec:
+    podSelector:
+        matchLabels:
+            app: my-app
+    egress:
+    - to:
+      - ipBlock:
+        cidr: 192.168.1.0/24
+        ports:
+      - protocol: TCP
+        port: 8080
+```
+</code></pre>
+<h2 id="cilium-network-policy"><a class="header" href="#cilium-network-policy">Cilium Network Policy</a></h2>
+<ul>
+<li>Cilium Network Policies provide more granularity, flexibility, and features than traditional Kubernetes Network Policies</li>
+<li>Cilium Network Policies operate up to layer 7 of the OSI model. Traditional Network Policies only operate up to layer 4.</li>
+<li>Cilium Network Policies perform well due to the fact that they use eBPF</li>
+<li>Hubble allows you to watch traffic going to and from pods</li>
+<li>You can add Cilium to the cluster by:
+<ul>
+<li>Deploying with helm</li>
+<li>Running <code>cilium install</code> after you install the cilium CLI tool</li>
+</ul>
+</li>
+</ul>
+<h3 id="cilium-network-policy-structure"><a class="header" href="#cilium-network-policy-structure">Cilium Network Policy Structure</a></h3>
+<ul>
+<li>Cilium Network Policies are defined in YAML files</li>
+<li>The structure is similar to Kubernetes Network Policies</li>
+</ul>
+<h3 id="layer-3-rules"><a class="header" href="#layer-3-rules">Layer 3 Rules</a></h3>
+<ul>
+<li>Endpoints Based - Apply the policy to pods based on Kubernetes label selectors</li>
+<li>Services Based - Apply the policy based on kubernetes services, controlling traffic based on service names rather than individual pods</li>
+<li>Entities Based - Cilium has pre-defined entities like cluster, host, and world. This type of policy uses these entities to determine what traffic the policy is applied to.
+<ul>
+<li>Cluster - Represents all kubernetes endpoints
+<ul>
+<li>Example:
+<pre><code>apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-egress-to-cluster-resources
+spec:
+  endpointSelector: {}
+  egress:
+  - toEntities:
+    - cluster
+</code></pre>
+</li>
+</ul>
+</li>
+<li>World - Represents any external traffic, but not cluster traffic
+<pre><code>apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-egress-to-external-resources
+spec:
+  endpointSelector: {}
+  egress:
+  - toEntities:
+    - world
+</code></pre>
+</li>
+<li>Host - Represents the local kubernetes node</li>
+<li>Remote-node - Represents traffic from a remote node</li>
+<li>All - Represents all endpoints both internal and external to the cluster
+<pre><code>apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-egress-to-external-resources
+spec:
+  endpointSelector: {}
+  egress:
+  - toEntities:
+    - all
+</code></pre>
+</li>
+</ul>
+</li>
+<li>Node Based - Apply the policy based on nodes in the cluster</li>
+<li>IP/CIDR Based - Apply the policy based on IP addresses or CIDR blocks</li>
+</ul>
+<h3 id="layer-4-rules"><a class="header" href="#layer-4-rules">Layer 4 Rules</a></h3>
+<ul>
+<li>If no layer 4 rules are defined, all traffic is allowed for layer 4</li>
+<li>Example:
+<pre><code>  apiVersion: "cilium.io/v2"
+  kind: CiliumNetworkPolicy
+  metadata:
+    name: allow-external-80
+  spec:
+    endpointSelector:
+      matchLabels:
+        run: curl
+    egress:
+      - toPorts:
+        - ports:
+          - port: "80"
+            protocol: TCP
+</code></pre>
+</li>
+</ul>
+<h3 id="layer-7-rules"><a class="header" href="#layer-7-rules">Layer 7 Rules</a></h3>
+<h3 id="deny-policies"><a class="header" href="#deny-policies">Deny Policies</a></h3>
+<ul>
+<li>You can create deny policies to explicitly block traffic</li>
+<li>Deny policies take higher precedence over allow policies</li>
+<li>ingressDeny Example:
+<pre><code>apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: deny-ingress-80-for-backend
+spec:
+  endpointSelector:
+    matchLabels:
+      app: backend
+  ingressDeny:
+  - fromEntities:
+    - all
+  - toPorts:
+    - ports:
+      - port: "80"
+        protocol: TCP
+</code></pre>
+</li>
+<li>egressDeny Example:
+<pre><code>apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "deny-egress"
+spec:
+  endpointSelector:
+    matchLabels:
+      app: random-pod
+  egress:
+  - toEntities:
+    - all
+  egressDeny:
+  - toEndpoints:
+    - matchLabels:
+        app: server
+</code></pre>
+</li>
+</ul>
+<h3 id="examples"><a class="header" href="#examples">Examples</a></h3>
+<h4 id="default-deny-all"><a class="header" href="#default-deny-all">Default Deny All</a></h4>
+<pre><code>apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: default-deny-all
+spec:
+  endpointSelector: {}
+  ingress:
+  - fromEntities:
+    - world
+</code></pre>
+<h2 id="kubernetes-ingress"><a class="header" href="#kubernetes-ingress">Kubernetes Ingress</a></h2>
+<h3 id="what-is-ingress"><a class="header" href="#what-is-ingress">What is Ingress?</a></h3>
+<ul>
+<li><strong>Ingress</strong> is an API object that manages external access to services in a Kubernetes cluster, typically HTTP and HTTPS.</li>
+<li>Provides:
+<ul>
+<li><strong>Load balancing</strong></li>
+<li><strong>SSL termination</strong></li>
+<li><strong>Name-based virtual hosting</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="why-use-ingress"><a class="header" href="#why-use-ingress">Why Use Ingress?</a></h3>
+<ul>
+<li>To consolidate multiple service endpoints behind a single, externally accessible URL.</li>
+<li>Reduce the need for creating individual LoadBalancers or NodePort services.</li>
+</ul>
+<h3 id="key-components-of-ingress"><a class="header" href="#key-components-of-ingress">Key Components of Ingress</a></h3>
+<ol>
+<li>
+<p><strong>Ingress Controller</strong></p>
+<ul>
+<li>Software that watches for Ingress resources and implements the rules.</li>
+<li>Popular Ingress controllers:
+<ul>
+<li><code>ingress-nginx</code></li>
+<li><code>Traefik</code></li>
+<li><code>HAProxy</code></li>
+<li><code>Istio Gateway</code></li>
+</ul>
+</li>
+<li>Must be installed separately in the cluster.</li>
+</ul>
+</li>
+<li>
+<p><strong>Ingress Resource</strong></p>
+<ul>
+<li>The Kubernetes object that defines how requests should be routed to services.</li>
+</ul>
+</li>
+</ol>
+<h3 id="ingress-resource-configuration"><a class="header" href="#ingress-resource-configuration">Ingress Resource Configuration</a></h3>
+<ul>
+<li>As of Kubernetes 1.20, you can create an ingress using kubectl:
+<pre><code>kubectl create ingress  --rule="host/path=service:port"
+</code></pre>
+</li>
+</ul>
+<h3 id="basic-structure"><a class="header" href="#basic-structure">Basic Structure</a></h3>
+<pre><code>```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+spec:
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: example-service
+                port:
+                  number: 80
+```
+</code></pre>
+<h3 id="ingress-with-tls"><a class="header" href="#ingress-with-tls">Ingress with TLS</a></h3>
+<ul>
+<li>
+<p>Kubernetes automatically creates a self-signed certificate for HTTPS. To view it, first determine the HTTPS port of the ingress controller service:</p>
+<pre><code>kubeadmin@kube-controlplane:~$ k get svc -n ingress-nginx
+NAME                                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+ingress-nginx-controller             NodePort    10.103.169.156   &lt;none&gt;        80:31818/TCP,443:30506/TCP   38m
+ingress-nginx-controller-admission   ClusterIP   10.103.26.228    &lt;none&gt;        443/TCP                      38m
+kubeadmin@kube-controlplane:~$
+</code></pre>
+</li>
+<li>
+<p>The HTTPS port is 30506 in this case. To view the self-signed certificate, we can use curl:</p>
+<pre><code> λ notes $ curl https://13.68.211.113:30506/service1 -k -v
+* (304) (OUT), TLS handshake, Finished (20):
+} [52 bytes data]
+* SSL connection using TLSv1.3 / AEAD-AES256-GCM-SHA384 / [blank] / UNDEF
+* ALPN: server accepted h2
+* Server certificate:
+*  subject: O=Acme Co; CN=Kubernetes Ingress Controller Fake Certificate             &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+*  start date: Dec 20 14:23:08 2024 GMT
+*  expire date: Dec 20 14:23:08 2025 GMT
+*  issuer: O=Acme Co; CN=Kubernetes Ingress Controller Fake Certificate
+*  SSL certificate verify result: unable to get local issuer certificate (20), continuing anyway.
+* using HTTP/2
+* [HTTP/2] [1] OPENED stream for https://13.68.211.113:30506/service1
+* [HTTP/2] [1] [:method: GET]
+* [HTTP/2] [1] [:scheme: https]
+* [HTTP/2] [1] [:authority: 13.68.211.113:30506]
+* [HTTP/2] [1] [:path: /service1]
+* [HTTP/2] [1] [user-agent: Mozilla/5.0 Gecko]
+* [HTTP/2] [1] [accept: */*]
+&gt; GET /service1 HTTP/2
+&gt; Host: 13.68.211.113:30506
+&gt; User-Agent: Mozilla/5.0 Gecko
+&gt; Accept: */*
+</code></pre>
+</li>
+<li>
+<p>To configure a ingress resource to use TLS (HTTPS), we first need to create a certificate:</p>
+<pre><code># create a new 2048-bit RSA private key and associated cert
+openssl req -nodes -new -x509 -keyout my.key -out my.crt -subj "/CN=mysite.com"
+</code></pre>
+</li>
+<li>
+<p>Next, create a secret for the tls cert:</p>
+<pre><code>kubectl create secret tls mycert --cert=my.crt --key=my.key -n my-namespace
+</code></pre>
+</li>
+<li>
+<p>Create the ingress:</p>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: secure-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+    - hosts:
+        - example.com
+      secretName: mycert
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: secure-service
+                port:
+                  number: 80
+</code></pre>
+</li>
+</ul>
+<h3 id="annotations"><a class="header" href="#annotations">Annotations</a></h3>
+<ul>
+<li>Extend the functionality of Ingress controllers.</li>
+<li>Common examples (specific to nginx):
+<ul>
+<li>nginx.ingress.kubernetes.io/rewrite-target: Rewrite request paths.</li>
+<li>nginx.ingress.kubernetes.io/ssl-redirect: Force SSL.</li>
+<li>nginx.ingress.kubernetes.io/proxy-body-size: Limit request size.</li>
+</ul>
+</li>
+</ul>
+<h2 id="protecting-node-metadata-and-endpoints"><a class="header" href="#protecting-node-metadata-and-endpoints">Protecting Node Metadata and Endpoints</a></h2>
+<h3 id="protecting-endpoints"><a class="header" href="#protecting-endpoints">Protecting Endpoints</a></h3>
+<pre><code>- Kubernetes clusters expose information on various ports:
+
+    | Port Range | Purpose  |
+    | ---------- | -------  | 
+    | 6443       | kube-api |
+    | 2379 - 2380 | etcd    |
+    | 10250       | kubelet api |
+    | 10259       | kube-scheduler |
+    | 10257       | kube-controller-manager |
+
+- Many of these ports are configurable. For example, to change the port that kube-api listens on, just modify `--secure-port` in the kube-api manifest.
+- Setup firewall rules to minimize the attack surface
+</code></pre>
+<h3 id="securing-node-metadata"><a class="header" href="#securing-node-metadata">Securing Node Metadata</a></h3>
+<ul>
+<li>
+<p>A lot of information can be obtained from node metadata</p>
+<ul>
+<li>Node name</li>
+<li>Node state</li>
+<li>annotations</li>
+<li>System Info</li>
+<li>etc.</li>
+</ul>
+</li>
+<li>
+<p>Why secure node metadata?</p>
+<ul>
+<li>If node metadata is tampered with, pods may be assigned to the wrong nodes, which has security implications to considers</li>
+<li>You can determine the version of kubelet and other kubernetes components from node metadata</li>
+<li>If an attacker can modify node metadata, they could taint all the nodes, making all nodes unscheduleable</li>
+</ul>
+</li>
+<li>
+<p>Protection Strategies</p>
+<ul>
+<li>Use RBAC to control who has access to modify node metadata</li>
+<li>Node isolation using labels and node selectors</li>
+<li>Audit logs to determine who is accessing the cluster and respond accordingly</li>
+<li>Update node operating systems regularly</li>
+<li>Update cluster components regularly</li>
+</ul>
+</li>
+<li>
+<p>Cloud providers such as Amazon and Azure often expose node information via metadata endpoints on the node. These endpoints are important to protect.</p>
+</li>
+<li>
+<p>This endpoint can be accessed at 169.254.169.254 on nodes in both Azure and AWS. An example for Azure:</p>
+<pre><code>curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | jq
+</code></pre>
+</li>
+<li>
+<p>Node metadata endpoints can be prevented from being accessed by pods by creating network policies.</p>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress-metadata-server
+  namespace: a12
+spec:
+  policyTypes:
+  - Egress
+  podSelector: {}
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 169.254.169.254/32
+</code></pre>
+</li>
+</ul>
+<h2 id="verify-kubernetes-binaries"><a class="header" href="#verify-kubernetes-binaries">Verify Kubernetes Binaries</a></h2>
+<ul>
+<li>The SHA sum of a file changes if the content within the file is changed</li>
+<li>You can download the binaries from github using wget.
+Example: <code>wget -O /opt/kubernetes.tar.gz https://dl.k8s.io/v1.31.1/kubernetes.tar.gz</code></li>
+<li>To validate that a binary downloaded from the internet has not been modified, check the hash code:
+<pre><code>echo $(cat kubectl.sha256) kubectl | sha256sum --check
+</code></pre>
+</li>
+</ul>
+<h2 id="securing-etcd"><a class="header" href="#securing-etcd">Securing etcd</a></h2>
+<ul>
+<li>etcd is a distributed key-value store that Kubernetes uses to store configuration data</li>
+<li>etcd by default listens on port 2379/tcp</li>
+</ul>
+<h3 id="play-with-etcd"><a class="header" href="#play-with-etcd">Play with etcd</a></h3>
+<h4 id="step-1-create-the-base-binaries-directory"><a class="header" href="#step-1-create-the-base-binaries-directory">Step 1: Create the Base Binaries Directory</a></h4>
+<pre><code>```sh
+    mkdir /root/binaries
+    cd /root/binaries
+```
+</code></pre>
+<h4 id="step-2-download-and-copy-the-etcd-binaries-to-path"><a class="header" href="#step-2-download-and-copy-the-etcd-binaries-to-path">Step 2: Download and Copy the ETCD Binaries to Path</a></h4>
+<pre><code>```sh
+    wget https://github.com/etcd-io/etcd/releases/download/v3.5.18/etcd-v3.5.18-linux-amd64.tar.gz
+
+    tar -xzvf etcd-v3.5.18-linux-amd64.tar.gz
+
+    cd /root/binaries/etcd-v3.5.18-linux-amd64/
+
+    cp etcd etcdctl /usr/local/bin/
+```
+</code></pre>
+<h4 id="step-3-start-etcd"><a class="header" href="#step-3-start-etcd">Step 3: Start etcd</a></h4>
+<pre><code>```sh
+    cd /tmp
+    etcd
+```
+</code></pre>
+<h4 id="step-4-verification---store-and-fetch-data-from-etcd"><a class="header" href="#step-4-verification---store-and-fetch-data-from-etcd">Step 4: Verification - Store and Fetch Data from etcd</a></h4>
+<pre><code>```sh
+    etcdctl put key1 "value1"
+```
+
+```sh
+    etcdctl get key1
+```
+</code></pre>
+<h3 id="encrypting-data-in-transit-in-etcd"><a class="header" href="#encrypting-data-in-transit-in-etcd">Encrypting data in transit in etcd</a></h3>
+<ul>
+<li>etcd supports TLS encryption for data in transit</li>
+<li>By default, etcd packaged with kubeadm is configured to use TLS encryption</li>
+<li>One can capture packets from etcd using tcpdump:
+<pre><code>      root@controlplane00:/var/lib/etcd/member# tcpdump -i lo -X port 2379
+
+      tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+      listening on lo, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+      16:10:01.691453 IP localhost.2379 &gt; localhost.42040: Flags [P.], seq 235868994:235869033, ack 3277609642, win 640, options [nop,nop,TS val 1280288044 ecr 1280288042], length 39
+              0x0000:  4500 005b 35e4 4000 4006 06b7 7f00 0001  E..[5.@.@.......
+              0x0010:  7f00 0001 094b a438 0e0f 1342 c35c 5aaa  .....K.8...B.\Z.
+              0x0020:  8018 0280 fe4f 0000 0101 080a 4c4f a52c  .....O......LO.,
+              0x0030:  4c4f a52a 1703 0300 2289 00d8 5dcc 7b88  LO.*...."...].{.
+              0x0040:  6f7a 290f 536b 0fd0 f7d9 1fb4 f83f 4aab  oz).Sk.......?J.
+              0x0050:  a6e7 0af8 0835 e597 a93d 4d              .....5...=M
+      16:10:01.691479 IP localhost.42040 &gt; localhost.2379: Flags [.], ack 39, win 14819, options [nop,nop,TS val 1280288044 ecr 1280288044], length 0
+              0x0000:  4500 0034 7174 4000 4006 cb4d 7f00 0001  E..4qt@.@..M....
+              0x0010:  7f00 0001 a438 094b c35c 5aaa 0e0f 1369  .....8.K.\Z....i
+              0x0020:  8010 39e3 fe28 0000 0101 080a 4c4f a52c  ..9..(......LO.,
+              0x0030:  4c4f a52c                                LO.,
+      16:10:01.691611 IP localhost.2379 &gt; localhost.42040: Flags [P.], seq 39:1222, ack 1, win 640, options [nop,nop,TS val 1280288044 ecr 1280288044], length 1183
+              0x0000:  4500 04d3 35e5 4000 4006 023e 7f00 0001  E...5.@.@..&gt;....
+              0x0010:  7f00 0001 094b a438 0e0f 1369 c35c 5aaa  .....K.8...i.\Z.
+              0x0020:  8018 0280 02c8 0000 0101 080a 4c4f a52c  ............LO.,
+              0x0030:  4c4f a52c 1703 0304 9ac0 c579 d4ed 808c  LO.,.......y....
+
+              ..... redacted
+</code></pre>
+</li>
+<li>The traffic captured in the output above is encrypted.</li>
+</ul>
+<h3 id="encrypting-data-at-rest-in-etcd"><a class="header" href="#encrypting-data-at-rest-in-etcd">Encrypting data at rest in etcd</a></h3>
+<ul>
+<li>
+<p>By default, the API server stores plain-text representations of resources into etcd, with no at-rest encryption.</p>
+</li>
+<li>
+<p>etcd stores data in the <code>/var/lib/etcd/member</code> directory. When the database is not encrypted, one can easily grep the contents of this directory, looking for secrets:</p>
+<pre><code>root@controlplane00:/var/lib/etcd/member# ls -lisa
+total 16
+639000 4 drwx------ 4 root root 4096 Mar 21 10:53 .
+385187 4 drwx------ 3 root root 4096 Mar 21 10:52 ..
+639002 4 drwx------ 2 root root 4096 Mar 21 14:43 snap
+638820 4 drwx------ 2 root root 4096 Mar 21 11:59 wal
+
+root@controlplane00:/var/lib/etcd/member# grep -R test-secret .
+grep: ./wal/00000000000000ac-0000000000a9340b.wal: binary file matches
+grep: ./wal/00000000000000a8-0000000000a721c1.wal: binary file matches
+grep: ./wal/00000000000000aa-0000000000a83f1e.wal: binary file matches
+grep: ./wal/00000000000000a9-0000000000a7b97e.wal: binary file matches
+grep: ./wal/00000000000000ab-0000000000a8d8a7.wal: binary file matches
+grep: ./snap/db: binary file matches
+</code></pre>
+</li>
+<li>
+<p>The kube-apiserver process accepts an argument –encryption-provider-config that specifies a path to a configuration file. The contents of that file, if you specify one, control how Kubernetes API data is encrypted in etcd.</p>
+</li>
+<li>
+<p>If you are running the kube-apiserver without the –encryption-provider-config command line argument, you do not have encryption at rest enabled. If you are running the kube-apiserver with the –encryption-provider-config command line argument, and the file that it references specifies the <code>identity</code> provider as the first encryption provider in the list, then you do not have at-rest encryption enabled (the default identity provider does not provide any confidentiality protection.)</p>
+</li>
+<li>
+<p>If you are running the kube-apiserver with the –encryption-provider-config command line argument, and the file that it references specifies a provider other than <code>identity</code> as the first encryption provider in the list, then you already have at-rest encryption enabled. However, that check does not tell you whether a previous migration to encrypted storage has succeeded.</p>
+</li>
+<li>
+<p>Example EncryptionConfiguration:</p>
+<pre><code>  apiVersion: apiserver.config.k8s.io/v1
+  kind: EncryptionConfiguration
+  resources:
+    - resources:
+        - secrets
+        - configmaps
+        - pandas.awesome.bears.example # a custom resource API
+      providers:
+        # This configuration does not provide data confidentiality. The first
+        # configured provider is specifying the "identity" mechanism, which
+        # stores resources as plain text.
+        #
+        - identity: {} # plain text, in other words NO encryption
+        - aesgcm:
+            keys:
+              - name: key1
+                secret: c2VjcmV0IGlzIHNlY3VyZQ==
+              - name: key2
+                secret: dGhpcyBpcyBwYXNzd29yZA==
+        - aescbc:
+            keys:
+              - name: key1
+                secret: c2VjcmV0IGlzIHNlY3VyZQ==
+              - name: key2
+                secret: dGhpcyBpcyBwYXNzd29yZA==
+        - secretbox:
+            keys:
+              - name: key1
+                secret: YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY=
+    - resources:
+        - events
+      providers:
+        - identity: {} # do not encrypt Events even though *.* is specified below
+    - resources:
+        - '*.apps' # wildcard match requires Kubernetes 1.27 or later
+      providers:
+        - aescbc:
+            keys:
+            - name: key2
+              secret: c2VjcmV0IGlzIHNlY3VyZSwgb3IgaXMgaXQ/Cg==
+    - resources:
+        - '*.*' # wildcard match requires Kubernetes 1.27 or later
+      providers:
+        - aescbc:
+            keys:
+            - name: key3
+              secret: c2VjcmV0IGlzIHNlY3VyZSwgSSB0aGluaw==
+</code></pre>
+</li>
+<li>
+<p>Each resources array item is a separate config and contains a complete configuration. The resources.resources field is an array of Kubernetes resource names (resource or resource.group) that should be encrypted like Secrets, ConfigMaps, or other resources.</p>
+</li>
+<li>
+<p>https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/</p>
+</li>
+<li>
+<p>After enabling encryption in etcd, any resources that you created prior to enabling encryption will not be encrypted. For example, you can encrypt secrets by running:</p>
+</li>
+</ul>
+<pre><code>kubectl get secrets -A -o yaml | kubectl replace -f -
+</code></pre>
+<ul>
+<li>Example of getting a secret in etcd:</li>
+</ul>
+<pre><code>root@controlplane00:/etc/kubernetes/pki# ETCDCTL_API=3 etcdctl --cacert=./etcd/ca.crt --cert=./apiserver-etcd-client.crt --key=./apiserver-etcd-client.key get /registry/secrets/default/mysecret
+
+/registry/secrets/default/mysecret
+k8s:enc:aescbc:v1:key1:ܨt&gt;;8ܑ%TUIodEs*lsHGwjeF8S!Aqaj\Pq;9Ⱥ7dJe{B2=|p4#'BuCxUY,*IuFM
+                                                                                   wxx@
+2Q0e5UzH^^)rX_H%GUɈ-XqC.˽pC `kBW&gt;K12 n
+
+</code></pre>
+<p>The path to the resource in the etcd database is ‘/registry/<resource type="">/<namespace>/<resource name="">’</resource></namespace></resource></p>
+<h2 id="securing-kube-apiserver"><a class="header" href="#securing-kube-apiserver">Securing kube-apiserver</a></h2>
+<ul>
+<li>Kube-apiserver acts as the gateway for all resources in kubernetes. Kube-apiserver is the only component in kubernetes that communicates with etcd</li>
+<li>kube-apiserver authenticates to etcd using TLS client certificates.</li>
+<li>Kube-apiserver should encrypt data before it is stored in etcd</li>
+<li>kube-apiserver should only listen on an HTTPS endpoint. There was an option to host kube-apiserver on an HTTP endpoint, but this option has been deprecated as of 1.10 and removed in 1.22</li>
+<li>kube-apiserver should have auditing enabled</li>
+</ul>
+<h3 id="authentication"><a class="header" href="#authentication">Authentication</a></h3>
+<ul>
+<li>One can authentication to the KubeAPI server using certificates or a kubeconfig file</li>
+</ul>
+<h3 id="access-controls"><a class="header" href="#access-controls">Access Controls</a></h3>
+<ul>
+<li>After a request is authenticated, it is authorized. Authorization is the process of determining what actions a user can perform.</li>
+<li>Multiple authorization modules are supported:
+<ul>
+<li>AlwaysAllow - Allows all requests</li>
+<li>AlwaysDeny - Blocks all requests</li>
+<li>RBAC - Role-based access control for requests. This is the default authorization module in kubernetes</li>
+<li>Node - Authorizes kubelets to access the kube-api server</li>
+</ul>
+</li>
+</ul>
+<h1 id="2-cluster-hardening"><a class="header" href="#2-cluster-hardening">2 Cluster Hardening</a></h1>
+<h2 id="securing-access-to-the-kubeapi-server"><a class="header" href="#securing-access-to-the-kubeapi-server">Securing Access to the KubeAPI Server</a></h2>
+<ul>
+<li>A request to the KubeAPI server goes through 4 stages before it is processed by KubeAPI:
+<ul>
+<li>Authentication
+<ul>
+<li>Validates the identity of the caller by inspecting client certificates or tokens</li>
+</ul>
+</li>
+<li>Authorization
+<ul>
+<li>The authorization stage verifies that the identity found in the first stage can access the verb and resource in the request</li>
+</ul>
+</li>
+<li>Admission Controllers
+<ul>
+<li>Admission Control verifies that the requst is well-formed and/or potentially needs to be modified before proceeding</li>
+</ul>
+</li>
+<li>Validation
+<ul>
+<li>This stage ensures that the request is valid.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>You can determine the endpoint for the kubeapi server by running: <code>kubectl cluster-info</code></li>
+<li>KubeAPI is also exposed via a service named ‘kubernetes’ in the default namespace
+<pre><code>kubeadmin@kube-controlplane:~$ k get svc kubernetes -n default -o yaml
+  apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2024-11-11T10:57:42Z"
+    labels:
+      component: apiserver
+      provider: kubernetes
+    name: kubernetes
+    namespace: default
+    resourceVersion: "234"
+    uid: 768d1a22-91ff-4ab3-8cd7-b86340fc319a
+  spec:
+    clusterIP: 10.96.0.1
+    clusterIPs:
+    - 10.96.0.1
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 6443
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+</code></pre>
+<ul>
+<li>The endpoint of the kube-api server is also exposed to pods via environment variables:</li>
+</ul>
+<pre><code>kubeadmin@kube-controlplane:~$ k exec -it other -- /bin/sh -c 'env | grep -i kube'
+ KUBERNETES_SERVICE_PORT=443
+ KUBERNETES_PORT=tcp://10.96.0.1:443
+ KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+ KUBERNETES_PORT_443_TCP_PORT=443
+ KUBERNETES_PORT_443_TCP_PROTO=tcp
+ KUBERNETES_SERVICE_PORT_HTTPS=443
+ KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+ KUBERNETES_SERVICE_HOST=10.96.0.1
+    ``` 
+
+</code></pre>
+</li>
+</ul>
+<h2 id="authentication-1"><a class="header" href="#authentication-1">Authentication</a></h2>
+<ul>
+<li>There are two types of accounts that would need access to a cluster: Humans and Machines. There is no such thing as a ‘user account’ primitive in Kubernetes.</li>
+</ul>
+<h3 id="user-accounts"><a class="header" href="#user-accounts">User accounts</a></h3>
+<ul>
+<li>Developers, cluster admins, etc.</li>
+</ul>
+<h3 id="service-accounts"><a class="header" href="#service-accounts">Service Accounts</a></h3>
+<ul>
+<li>Service Accounts are created and managed by the Kubernetes API and can be used for machine authentication</li>
+<li>To create a service account: <code>kubectl create serviceaccount &lt;account name&gt;</code></li>
+<li>Service accounts are namespaced</li>
+<li>When a service account is created, it has a token created automatically. The token is stored as a secret object.</li>
+<li>You can also use the base64 encoded token to communicate with the Kube API Server:
+<code>curl https://172.16.0.1:6443/api -insecure --header "Authorization: Bearer &lt;token value&gt;"</code></li>
+<li>You can grant service accounts permission to the cluster itself by binding it to a role with a rolebinding. If a pod needs access to the cluster where it is hosted, you you configure the automountServiceAccountToken boolean parameter on the pod and assign it a service account that has the appropriate permissions to the cluster. The token will be mounted to the pods file system, where the value can then be accessed by the pod. The secret is mounted at <code>/var/run/secrets/kubernetes.io/serviceaccount/token</code>.</li>
+<li>A service account named ‘default’ is automatically created in every namespace</li>
+<li>As of kubernetes 1.22, tokens are automatically mounted to pods by an admission controller as a projected volume.
+<ul>
+<li>https://github.com/kubernetes/enhancements/blob/master/keps/sig-auth/1205-bound-service-account-tokens/README.md</li>
+</ul>
+</li>
+<li>As of Kubernetes 1.24, when you create a service account, a secret is no longer created automatically for the token. Now you must run <code>kubectl create token &lt;service account name&gt;</code> to create the token.
+<ul>
+<li>https://github.com/kubernetes/enhancements/issues/2799</li>
+</ul>
+</li>
+<li>One can also manually create a token for a service account:</li>
+</ul>
+<pre><code>kubectl create token &lt;service-account-name&gt; --duration=100h
+</code></pre>
+<h2 id="tls-certificates"><a class="header" href="#tls-certificates">TLS Certificates</a></h2>
+<ul>
+<li>Server certificates are used to communicate with clients</li>
+<li>Client certificates are used to communicate with servers</li>
+<li>Server components used in Kubernetes and their certificates:
+<ul>
+<li>kube-api server: apiserver.crt, apiserver.key</li>
+<li>etcd-server: etcdserver.crt, etcdserver.key</li>
+<li>kubelet: kubelet.crt, kubelet.key</li>
+</ul>
+</li>
+<li>Client components used in kubernetes and their certificates:
+<ul>
+<li>user certificates</li>
+<li>kube-scheduler: scheduler.crt, scheduler.key</li>
+<li>kube-controller-manager: controller-manager.crt, controller-manager.key</li>
+<li>kube-proxy: kubeproxy.crt, kubeproxy.key</li>
+</ul>
+</li>
+<li>To generate a self-signed certificate:
+<code>openssl req -nodes -x509 -keyout my.key -out my.crt --subj="/CN=mysite.com"</code></li>
+<li>To generate certificates, you can use openssl:
+<ul>
+<li>Create a new private key:
+<code>openssl genrsa -out my.key 2048</code></li>
+<li>Create a new certificate signing request:
+<code>openssl req -new -key my.key -out my.csr -subj "/CN=ryan"</code></li>
+<li>Sign the csr and generate the certificate or create a signing request with kube-api:
+<ul>
+<li>Sign and generate:
+<code>openssl x509 -req -in my.csr -out my.crt</code></li>
+<li>Create a <code>CertificateSigningRequest</code> with kube-api:
+<pre><code># extract the base64 encoded values of the CSR:
+cat my.csr | base64 | tr -d '\n'
+
+# create a CertificateSigningRequest object with kube-api, provide the base64 encoded value
+.... see the docs
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>kubeadm will automatically generate certificates for clusters that it creates
+<ul>
+<li>kubeadm generates certificates in the <code>/etc/kubernetes/pki/</code> directory</li>
+</ul>
+</li>
+<li>To view the details of a certificate, use openssl:
+<code>openssl x509 -in &lt;path to crt&gt; -text -noout</code></li>
+<li>Once you have a private key, you can sign it using the <a href="https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/#create-certificatessigningrequest">CertificateSigningRequest</a> object. The controller manager is responsible for signing these requests. You can then use the signed certificate values to authenticate to the Kube API server by placing the signed key, certificate, and ca in a kube config file (~/.kube/config)</li>
+</ul>
+<h2 id="kubelet-security"><a class="header" href="#kubelet-security">kubelet Security</a></h2>
+<ul>
+<li>By default, requests to the kubelet API are not authenticated. These requests are bound to an ‘unauthenticated users’ group. This behavior can be changed by setting the <code>--anonymous-auth</code> flag to <code>false</code> in the kubelet config</li>
+<li>kubelet ports
+<ul>
+<li>port 10250 on the machine running a kubelet process serves an API that allows full access</li>
+<li>port 10255 on the machine running a kubelet process serves an unauthenticated, read-only API</li>
+</ul>
+</li>
+<li>kubelet supports 2 authentication mechanisms: bearer token and certificated-based authentication</li>
+<li>You can find the location of the kubelet config file by looking at the process: <code>ps aux |grep -i kubelet</code></li>
+</ul>
+<h2 id="authorization"><a class="header" href="#authorization">Authorization</a></h2>
+<h3 id="roles-and-clusterroles"><a class="header" href="#roles-and-clusterroles">Roles and ClusterRoles</a></h3>
+<ul>
+<li>Roles and clusteroles define what a user or service account can do within a cluster</li>
+<li>The kubernetes primitive <code>role</code> is namespaced, <code>clusterrole</code> is not</li>
+</ul>
+<h3 id="role-bindings-and-cluster-role-bindings"><a class="header" href="#role-bindings-and-cluster-role-bindings">Role Bindings and Cluster Role Bindings</a></h3>
+<ul>
+<li><code>rolebinding</code> and <code>clusterrolebinding</code> link a user or service account to a role</li>
+</ul>
+<h1 id="3-system-hardening"><a class="header" href="#3-system-hardening">3 System Hardening</a></h1>
+<h2 id="principle-of-least-privilege"><a class="header" href="#principle-of-least-privilege">Principle of Least Privilege</a></h2>
+<ul>
+<li>Ensure that people or bots only have access to what is needed, and nothing else.</li>
+</ul>
+<h2 id="limit-access-to-nodes"><a class="header" href="#limit-access-to-nodes">Limit access to nodes</a></h2>
+<h3 id="managing-local-users-and-groups"><a class="header" href="#managing-local-users-and-groups">Managing Local Users and Groups</a></h3>
+<ul>
+<li>Commands to be aware of:
+<code>id</code>
+<code>who</code>
+<code>last</code>
+<code>groups</code>
+<code>useradd</code>
+<code>userdel</code>
+<code>usermod</code>
+<code>groupdel</code></li>
+<li>Files to be aware of:
+<code>/etc/passwd</code>
+<code>/etc/shadow</code>
+<code>/etc/group</code></li>
+<li>Disable logins for users and set their login shell to <code>/bin/nologin</code></li>
+<li>Remove users from groups they do not need to belong to</li>
+</ul>
+<h3 id="securing-ssh"><a class="header" href="#securing-ssh">Securing SSH</a></h3>
+<ul>
+<li>Set the following in <code>sshd_config</code></li>
+</ul>
+<pre><code>PermitRootLogin no
+PasswordAuthentication no
+</code></pre>
+<h3 id="using-sudo"><a class="header" href="#using-sudo">Using sudo</a></h3>
+<ul>
+<li>The <code>/etc/sudoers</code> file controls and configures the behavior of the <code>sudo</code> command. Each entry follows a structured syntax. Below is a breakdown of the fields and their meanings:</li>
+</ul>
+<pre><code># Example Lines
+# ----------------------------------
+# User/Group       Host=Command(s)
+admin             ALL=(ALL) NOPASSWD: ALL
+%developers       ALL=(ALL) ALL
+john              ALL=(ALL:ALL) /usr/bin/apt-get
+
+# Field Breakdown
+
+admin             ALL=(ALL) NOPASSWD: ALL
+|                 |   |       |         |
+|                 |   |       |         +---&gt; Command(s): Commands the user/group can execute.
+|                 |   |       +------------&gt; Options: Modifiers like `NOPASSWD` (no password required).
+|                 |   +--------------------&gt; Runas: User/Group the command can be run as.
+|                 +------------------------&gt; Host: On which machine this rule applies (`ALL` for any).
++-----------------------------------------&gt; User/Group: The user or group this rule applies to.
+
+# Examples Explained
+
+1. Allow `admin` to execute any command without a password:
+   admin ALL=(ALL) NOPASSWD: ALL
+</code></pre>
+<h3 id="remove-packages-packages"><a class="header" href="#remove-packages-packages">Remove Packages Packages</a></h3>
+<ul>
+<li>This one is self-explanatory. Don’t have unnecessary software installed on your nodes.</li>
+</ul>
+<h3 id="restrict-kernel-modules"><a class="header" href="#restrict-kernel-modules">Restrict Kernel Modules</a></h3>
+<ul>
+<li>Kernel modules are ways of extending the kernel to enable it to understand new hardware. They are like device drivers.</li>
+<li><code>modprobe</code> allows you to load a kernel module</li>
+<li><code>lsmod</code> allows you to view all loaded modules</li>
+<li>You can blacklist modules by adding a new entry to <code>/etc/modprobe.d/blacklist.conf</code>
+<ul>
+<li>The entry should be in the format <code>blacklist &lt;module name&gt;</code></li>
+<li>Example: <code>echo "blacklist sctp" &gt;&gt; /etc/modprobe.d/blacklist.conf</code></li>
+</ul>
+</li>
+<li>You may need to reboot the system after disabling kernel modules or blacklisting them</li>
+</ul>
+<h3 id="disable-open-ports"><a class="header" href="#disable-open-ports">Disable Open Ports</a></h3>
+<ul>
+<li>Use <code>netstat -tunlp</code> or to list listening ports on a system</li>
+<li>Stop the service associated with the open port or disable access with a firewall
+<ul>
+<li>Common firewalls you can use are <code>iptables</code> or <code>ufw</code>
+<ul>
+<li>Run <code>ufw status</code> to list the current status of the UFW firewall</li>
+<li>Allow all traffic outbound: <code>ufw default allow outgoing</code></li>
+<li>Deny all incoming: <code>ufw default deny incoming</code></li>
+<li>Allow SSH from 172.16.154.24: <code>ufw allow from 172.16.154.24 to any port 22 proto tcp</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="tracing-syscalls"><a class="header" href="#tracing-syscalls">Tracing Syscalls</a></h2>
+<ul>
+<li>There are several ways to trace syscalls in Linux.</li>
+</ul>
+<h3 id="strace"><a class="header" href="#strace">strace</a></h3>
+<ul>
+<li><code>strace</code> is included with most Linux distributions.</li>
+<li>To use <code>strace</code>, simply add it before the binary that you are running:
+<pre><code>strace touch /tmp/test
+</code></pre>
+</li>
+<li>You can also attach <code>strace</code> to a running process like this:
+<pre><code>strace -p &lt;PID&gt;
+</code></pre>
+</li>
+</ul>
+<h3 id="aquasec-tracee"><a class="header" href="#aquasec-tracee">AquaSec Tracee</a></h3>
+<ul>
+<li><code>tracee</code> is an open source tool created by AquaSec</li>
+<li>Uses eBPF (extended Berkely Packet Filter) to trace syscalls on a system. eBPF runs programs directly within the kernel space without loading any kernel modules. As a result, tools that use eBPF are more efficient and typically use less resources.</li>
+<li><code>tracee</code> can be run by using the binaries or as a container</li>
+</ul>
+<h3 id="restricting-access-to-syscalls-with-seccomp"><a class="header" href="#restricting-access-to-syscalls-with-seccomp">Restricting Access to syscalls with seccomp</a></h3>
+<ul>
+<li>
+<p><code>seccomp</code> can be used to restrict a process’ access to syscalls. It allows access to the most commonly used syscalls, while restricting access to syscalls that can be considered dangerous.</p>
+</li>
+<li>
+<p>To see if <code>seccomp</code> is enabled:</p>
+<pre><code>grep -i seccomp /boot/config-$(uname -r)
+</code></pre>
+</li>
+<li>
+<p><code>seccomp</code> can operate in 1 of 3 modes:</p>
+<ul>
+<li><code>mode 0</code>: disabled</li>
+<li><code>mode 1</code>: strict (blocks nearly all syscalls, except for 4)</li>
+<li><code>mode 2</code>: selectively filters syscalls</li>
+<li>To see which mode the process is currently running in:
+<code>grep -i seccomp /proc/1/status</code> where ‘1’ is the PID of the process</li>
+</ul>
+</li>
+<li>
+<p><code>seccomp</code> profiles</p>
+<ul>
+<li>Kubernetes provides a default <code>seccomp</code> profile, that can be either restrictive or permissive, depending on your configuration</li>
+<li>You can create custom profiles to fine-tune <code>seccomp</code> and which syscalls it blocks or allows within a containers</li>
+<li>Example <code>seccomp</code> profile for <code>mode 1</code>:
+<pre><code>{
+  "defaultAction": "SCMP_ACT_ERRNO",
+  "archMap": [
+    { "architecture": "SCMP_ARCH_X86_64", "subArchitectures": [] }
+  ],
+  "syscalls": [
+    {
+      "names": ["read", "write", "exit", "sigreturn"],
+      "action": "SCMP_ACT_ALLOW"
+    }
+  ]
+}
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>To apply a <code>seccomp</code> profile to a pod:</p>
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: audit-pod
+  labels:
+    app: audit-pod
+spec:
+  securityContext:
+    seccompProfile:
+      type: Localhost
+      localhostProfile: profiles/audit.json #this path is relative to default seccomp profile location (/var/lib/kubelet/seccomp)
+  containers:
+  - name: test-container
+    image: hashicorp/http-echo:1.0
+    args:
+    - "-text=just made some syscalls!"
+    securityContext:
+      allowPrivilegeEscalation: false
+</code></pre>
+</li>
+</ul>
+<h2 id="restrict-access-to-file-systems"><a class="header" href="#restrict-access-to-file-systems">Restrict access to file systems</a></h2>
+<h3 id="apparmor"><a class="header" href="#apparmor">AppArmor</a></h3>
+<ul>
+<li>
+<p>AppArmor can be used to limit a containers’ access to resources on the host. Why do we need apparmor if we have traditional discretionary access controls (file system permissions, etc.)? With discretionary access control, a running process will inherit the permissions of the user who started it. Likely more permissions than the process needs. AppArmor is a mandatory access control implementation that allows one to implement fine-grained controls over what a process can access or do on a system.</p>
+</li>
+<li>
+<p>AppArmor runs as a daemon on Linux systems. You can check it’s status using <code>systemctl</code>:
+<code>systemctl status apparmor</code></p>
+<ul>
+<li>If <code>apparmor-utils</code> is installed, you can also use <code>aa-status</code></li>
+</ul>
+</li>
+<li>
+<p>To use AppArmor, the kernel module must also be loaded. The check status:
+<code>cat /sys/module/apparmor/parameters/enabled</code>
+Y = loaded</p>
+</li>
+<li>
+<p>AppArmor profiles define what a process can and cannot do and are stored in <code>/etc/apparmor.d/</code>. Profiles need to be copied to every worker node and loaded.</p>
+</li>
+<li>
+<p>Every profile needs to be loaded into AppArmor before it can take effect</p>
+<ul>
+<li>To view loaded profiles, run <code>aa-status</code></li>
+</ul>
+</li>
+<li>
+<p>To load a profile:
+<code>apparmor_parser -r -W /path/to/profile</code></p>
+<ul>
+<li>If <code>apparmor-utils</code> is installed, you can also use <code>aa-enforce</code> to load a profile</li>
+</ul>
+</li>
+<li>
+<p>Profiles are loaded in ‘enforce’ mode by default. To change the mode to ‘complain’:
+<code>apparmor_parser -C /path/to/profile</code></p>
+<ul>
+<li>If <code>apparmor-utils</code> is installed, you can also use <code>aa-complain</code> to change the mode</li>
+</ul>
+</li>
+<li>
+<p>To view loaded apparmor profiles:</p>
+<pre><code>  kubeadmin@kube-controlplane:~$ sudo cat /sys/kernel/security/apparmor/profiles
+  cri-containerd.apparmor.d (enforce)
+  wpcom (unconfined)
+  wike (unconfined)
+  vpnns (unconfined)
+  vivaldi-bin (unconfined)
+  virtiofsd (unconfined)
+  rsyslogd (enforce)
+  vdens (unconfined)
+  uwsgi-core (unconfined)
+  /usr/sbin/chronyd (enforce)
+  /usr/lib/snapd/snap-confine (enforce)
+  /usr/lib/snapd/snap-confine//mount-namespace-capture-helper (enforce)
+  tcpdump (enforce)
+  man_groff (enforce)
+  man_filter (enforce)
+  ....
+</code></pre>
+<p>or:</p>
+<pre><code>  root@controlplane00:/etc/apparmor.d# aa-status
+  apparmor module is loaded.
+  33 profiles are loaded.
+  12 profiles are in enforce mode.
+     /home/rtn/tools/test.sh
+     /usr/bin/man
+     /usr/lib/NetworkManager/nm-dhcp-client.action
+     /usr/lib/NetworkManager/nm-dhcp-helper
+     /usr/lib/connman/scripts/dhclient-script
+     /usr/sbin/chronyd
+     /{,usr/}sbin/dhclient
+     lsb_release
+     man_filter
+     man_groff
+     nvidia_modprobe
+     nvidia_modprobe//kmod
+  21 profiles are in complain mode.
+     avahi-daemon
+     dnsmasq
+     dnsmasq//libvirt_leaseshelper
+     identd
+     klogd
+     mdnsd
+     nmbd
+     nscd
+     php-fpm
+     ping
+     samba-bgqd
+     samba-dcerpcd
+     samba-rpcd
+     samba-rpcd-classic
+     samba-rpcd-spoolss
+     smbd
+     smbldap-useradd
+     smbldap-useradd///etc/init.d/nscd
+     syslog-ng
+     syslogd
+     traceroute
+  0 profiles are in kill mode.
+  0 profiles are in unconfined mode.
+  4 processes have profiles defined.
+  2 processes are in enforce mode.
+     /usr/sbin/chronyd (704)
+     /usr/sbin/chronyd (708)
+  2 processes are in complain mode.
+     /usr/sbin/avahi-daemon (587) avahi-daemon
+     /usr/sbin/avahi-daemon (613) avahi-daemon
+  0 processes are unconfined but have a profile defined.
+  0 processes are in mixed mode.
+  0 processes are in kill mode.
+</code></pre>
+</li>
+<li>
+<p>AppArmor defines profile modes that determine how the profile behaves:</p>
+<ul>
+<li>Modes:
+<ul>
+<li>Enforced: Action is taken and the application is allowed/blocked from performing defined actions. Events are logged in syslog.</li>
+<li>Complain: Events are logged but no action is taken</li>
+<li>Unconfined: application can perform any task and no event is logged</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>AppArmor Tools</p>
+<ul>
+<li>Can be used to generate apparmor profiles</li>
+<li>To install: <code>apt install -y apparmor-utils</code></li>
+<li>Run <code>aa-genprof</code> to generate a profile:
+<code>aa-genprof ./my-application</code></li>
+</ul>
+</li>
+<li>
+<p>Before applying an AppArmor profile to a pod, you must ensure the container runtime supports AppArmor. You must also ensure AppArmor is installed on the worker node and that all necessary profiles are loaded.</p>
+</li>
+<li>
+<p>To apply an AppArmor profile to a pod, you must add the following security profile (K8s 1.30+):</p>
+<pre><code>securityContext:
+  appArmorProfile:
+    type: &lt;profile_type&gt;
+    localhostProfile: &lt;profile_name&gt;
+</code></pre>
+<ul>
+<li>&lt;profile_type&gt; can be one of 3 values: <code>Unconfined</code>, <code>RuntimeDefault</code>, or <code>Localhost</code>
+<ul>
+<li><code>Unconfined</code> means the container is not restricted by AppArmor</li>
+<li><code>RuntimeDefault</code> means the container will use the default AppArmor profile</li>
+<li><code>Localhost</code> means the container will use a custom profile</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="deep-dive-into-apparmor-profiles"><a class="header" href="#deep-dive-into-apparmor-profiles">Deep Dive into AppArmor Profiles</a></h4>
+<p>AppArmor profiles define security rules for specific applications, specifying what they can and cannot do. These profiles reside in <code>/etc/apparmor.d/</code> and are loaded into the kernel to enforce security policies.</p>
+<ul>
+<li>Each profile follows these structure:</li>
+</ul>
+<pre><code>profile &lt;profile_name&gt; &lt;executable_path&gt; {
+    &lt;rules&gt;
+}
+</code></pre>
+<ul>
+<li>Example profile, a profile for nano:</li>
+</ul>
+<pre><code>profile nano /usr/bin/nano {
+    # Allow reading any file
+    file,
+
+    # Deny writing to system directories
+    deny /etc/* rw,
+}
+</code></pre>
+<ul>
+<li>Types of AppArmor rules:
+<ul>
+<li>File Access Rules:
+<pre><code>    /home/user/data.txt r       # Read-only access
+    /etc/passwd rw              # Read &amp; write access
+    /tmp/ rw                    # Full access to /tmp
+</code></pre>
+</li>
+<li>Network Access Rules:
+<pre><code>    network inet tcp,           # Allow TCP connections
+    network inet udp,           # Allow UDP connections
+    network inet dgram,         # Allow datagram connections
+</code></pre>
+</li>
+<li>Capability Rules:</li>
+</ul>
+<pre><code>deny capability sys_admin,       # Deny sys_admin capability
+deny capability sys_ptrace,      # Deny sys_ptrace capability
+</code></pre>
+</li>
+</ul>
+<h2 id="linux-capabilities-in-pods"><a class="header" href="#linux-capabilities-in-pods">Linux Capabilities in Pods</a></h2>
+<ul>
+<li>For the purpose of performing permission checks, traditional UNIX implementations distinguish two categories of processes: privileged processes (whose effective user ID is 0, referred to as superuser or root), and unprivileged processes (whose effective UID is nonzero). Privileged processes bypass all kernel permission checks, while unprivileged processes are subject to full permission checking based on the process’s credentials (usually: effective UID, effective GID, and supplementary group list).</li>
+<li>Starting with Linux 2.2, Linux divides the privileges traditionally associated with superuser into distinct units, known as capabilities, which can be independently enabled and disabled.  Capabilities are a per-thread attribute.</li>
+<li>Capabilities control what a process can do</li>
+<li>Some common capabilities
+<ul>
+<li><code>CAP_SYS_ADMIN</code></li>
+<li><code>CAP_NET_ADMIN</code></li>
+<li><code>CAP_NET_RAW</code></li>
+</ul>
+</li>
+<li>To view the capabilities of a process:
+<ul>
+<li><code>getcap</code> - Check the capabilities of a binary - <code>getcap &lt;path to bin&gt;</code></li>
+<li><code>getpcaps</code> - Check the capabilities of a process - <code>getpcaps &lt;pid&gt;</code></li>
+</ul>
+</li>
+</ul>
+<h1 id="4-minimize-microservice-vulnerabilities"><a class="header" href="#4-minimize-microservice-vulnerabilities">4 Minimize Microservice Vulnerabilities</a></h1>
+<h2 id="pod-security-admission"><a class="header" href="#pod-security-admission">Pod Security Admission</a></h2>
+<ul>
+<li>Replaced Pod Security Policies</li>
+<li>Pod Security Admission controller enforces pod security standards on pods</li>
+<li>All you need to do to opt into the PSA feature is to add a label with a specific format to a namespace. All pods in that namespace will have to follow the standards declared.
+<ul>
+<li>The label consists of three parts: a prefix, a mode, and a level</li>
+<li>Example: <code>pod-security.kubernetes.io/restricted=privileged</code></li>
+<li>Prefix: <code>pod-security.kubernetes.io</code></li>
+<li>Mode: <code>enforce</code>, <code>audit</code>, or <code>warn</code>
+<ul>
+<li>Enforce: blocks pods that do not meet the PSS</li>
+<li>Audit: logs violations to the audit log but does not block pod creation</li>
+<li>Warn: logs violations on the console but does not block pod created</li>
+</ul>
+</li>
+<li>Level: <code>privileged</code>, <code>baseline</code>, or <code>restricted</code>
+<ul>
+<li>Privileged: fully unrestricted
+<ul>
+<li>Allowed: everything</li>
+</ul>
+</li>
+<li>Baseline: some restrictions
+<ul>
+<li>Allowed: most things, except sharing host namespaces, hostPath volumes and hostPorts, and privileged pods</li>
+</ul>
+</li>
+<li>Restricted: most restrictions
+<ul>
+<li>Allowed: very few things, like running as root, using host networking, hostPath volumes, hostPorts, and privileged pods. The pod must be configured with a seccomp profile.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="security-contexts"><a class="header" href="#security-contexts">Security Contexts</a></h2>
+<ul>
+<li>Security contexts are used to control the security settings of a pod or container</li>
+<li>Security contexts can be defined at the pod level or the container level. Settings defined at the container level will override identical settings defined at the pod level</li>
+<li>Security contexts can be used to:
+<ul>
+<li>Run a pod as a specific user</li>
+<li>Run a pod as a specific group</li>
+<li>Run a pod with specific Linux capabilities</li>
+<li>Run a pod with a read-only root filesystem</li>
+<li>Run a pod with a specific SELinux context</li>
+<li>Run a pod with a specific AppArmor profile</li>
+</ul>
+</li>
+<li>You can view the capabilities of a process by viewing the status file of the process and grepping for capabilities:
+<pre><code>rtn@worker02:~$ cat /proc/self/status |grep -i cap
+CapInh: 0000000000000000
+CapPrm: 0000000000000000
+CapEff: 0000000000000000
+CapBnd: 000001ffffffffff
+CapAmb: 0000000000000000
+</code></pre>
+</li>
+</ul>
+<p>These values are encoded in hexadecimal. To decode them, use the <code>capsh</code> command:
+<code>    rtn@worker02:~$ sudo capsh --decode=000001ffffffffff     0x000001ffffffffff=cap_chown,cap_dac_override,cap_dac_read_search,cap_fowner,cap_fsetid,cap_kill,cap_setgid,cap_setuid,cap_setpcap,cap_linux_immutable,cap_net_bind_service,cap_net_broadcast,cap_net_admin,cap_net_raw,cap_ipc_lock,cap_ipc_owner,cap_sys_module,cap_sys_rawio,cap_sys_chroot,cap_sys_ptrace,cap_sys_pacct,cap_sys_admin,cap_sys_boot,cap_sys_nice,cap_sys_resource,cap_sys_time,cap_sys_tty_config,cap_mknod,cap_lease,cap_audit_write,cap_audit_control,cap_setfcap,cap_mac_override,cap_mac_admin,cap_syslog,cap_wake_alarm,cap_block_suspend,cap_audit_read,cap_perfmon,cap_bpf,cap_checkpoint_restore    </code></p>
+<h2 id="admission-controllers"><a class="header" href="#admission-controllers">Admission Controllers</a></h2>
+<ul>
+<li>Admission Controllers are used for automation within a cluster</li>
+<li>Once a request to the KubeAPI server has been authenticated and then authorized, it is intercepted and handled by any applicable Admission Controllers</li>
+<li>Example Admission Controllers:
+<ul>
+<li>ImagePolicyWebook
+<ul>
+<li>You may see this one on the exam.</li>
+<li>When enabled, the ImagePolicyWebook admission controller contacts an external service (that you or someone else wrote in whatever language you want, it just needs to accept and respond to HTTP requests).</li>
+<li>To enable, add ‘ImagePolicyWebook’ to the ‘–enable-admission-plugins’ flag of the kube-api server</li>
+<li>You must also supply an AdmissionControlFileFile file, which is a kubeconfig formatted file. Then pass the path to this config to the kube-api server with the <code>--admission-control-config-file=&lt;path to config file&gt;</code>. Note that this path is the path inside the kube-api container, so you must mount this path on the host to the pod as a <code>hostPath</code> mount.</li>
+</ul>
+</li>
+<li>AlwaysPullImages</li>
+<li>DefaultStorageClass</li>
+<li>EventRateLimit</li>
+<li>NamespaceExists</li>
+<li>… and many more</li>
+</ul>
+</li>
+<li>Admission Controllers help make Kubernetes modular</li>
+<li>To see which Admission Controllers are enabled:
+<ul>
+<li>you can either grep the kubeapi process:
+<code>ps aux |grep -i kube-api | grep -i admission</code></li>
+<li>or you can look at the manifest for the KubeAPI server (if the cluster was provisioned with KubeADM)
+<code>grep admission -A10 /etc/kubernetes/manifests/kube-apiserver.yaml</code></li>
+<li>or if the cluster was provisioned manually you can look at the systemd unit file for the kube-api server daemon</li>
+</ul>
+</li>
+<li>There are two types of admission controllers:
+<ul>
+<li>Mutating - can make changes to ‘autocorrect’</li>
+<li>Validating - only validates configuration</li>
+<li>Mutating are invoked first. Validating second.</li>
+</ul>
+</li>
+<li>The admission controller runs as a webhook server. It can run inside the cluster as a pod or outside the cluster on another server.</li>
+<li>Some admission-controllers required a configuration file to be passed to the kube-api server. This file is passed using the <code>--admission-control-config-file</code> flag.</li>
+</ul>
+<h2 id="open-policy-agent"><a class="header" href="#open-policy-agent">Open Policy Agent</a></h2>
+<ul>
+<li>OPA can be used for authorization. However, it is more likely to be used in the admission control phase.</li>
+<li>OPA can be deployed as a daemonset on a node or as a pod</li>
+<li>OPA policies use a language called rego</li>
+</ul>
+<h3 id="opa-in-kubernetes"><a class="header" href="#opa-in-kubernetes">OPA in Kubernetes</a></h3>
+<h4 id="gatekeeper"><a class="header" href="#gatekeeper">GateKeeper</a></h4>
+<ul>
+<li>
+<p>Gatekeeper Constraint Framework</p>
+<ul>
+<li>Gatekeeper is a validating and mutating webhook that enforces CRD-based policies executed by Open Policy Agent, a policy engine for Cloud Native environments hosted by CNCF as a graduated project.</li>
+<li>The framework that helps us implement what, where, and how we want to do something in Kubernetes
+<ul>
+<li>Example:
+<ul>
+<li>What: Add labels, etc.</li>
+<li>Where: kube-system namespace</li>
+<li>How: When a pod is created</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>To run Gatekeeper in Kubernetes, simply apply the manifests provided by OPA</p>
+</li>
+<li>
+<p>The pods and other resources are created in the gatekeeper-system namespace</p>
+</li>
+<li>
+<p>Constraint Templates</p>
+<ul>
+<li>
+<p>Before you can define a constraint, you must first define a ConstraintTemplate, which describes both the Rego that enforces the constraint and the schema of the constraint. The schema of the constraint allows an admin to fine-tune the behavior of a constraint, much like arguments to a function.</p>
+</li>
+<li>
+<p>Here is an example constraint template that requires all labels described by the constraint to be present:</p>
+<pre><code>```
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequiredlabels
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredLabels
+      validation:
+        # Schema for the `parameters` field
+        openAPIV3Schema:
+          type: object
+          properties:
+            labels:
+              type: array
+              items:
+                type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8srequiredlabels
+
+        violation[{"msg": msg, "details": {"missing_labels": missing}}] {
+          provided := {label | input.review.object.metadata.labels[label]}
+          required := {label | label := input.parameters.labels[_]}
+          missing := required - provided
+          count(missing) &gt; 0
+          msg := sprintf("you must provide labels: %v", [missing])
+        }
+```
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>Constraints</p>
+<ul>
+<li>Constraints are then used to inform Gatekeeper that the admin wants a ConstraintTemplate to be enforced, and how. This constraint uses the K8sRequiredLabels constraint template above to make sure the gatekeeper label is defined on all namespaces:
+<pre><code>  apiVersion: constraints.gatekeeper.sh/v1beta1
+  kind: K8sRequiredLabels
+  metadata:
+    name: ns-must-have-gk
+  spec:
+    match:
+      kinds:
+        - apiGroups: [""]
+          kinds: ["Namespace"]
+    parameters:
+      labels: ["gatekeeper"]
+</code></pre>
+</li>
+<li>The <code>match</code> field supports multiple options: https://open-policy-agent.github.io/gatekeeper/website/docs/howto#the-match-field</li>
+</ul>
+</li>
+<li>
+<p>After creating the constraint from the constrainttemplate, you can view all violations by describing the constraint:</p>
+<ul>
+<li>Example:
+<code>kubectl describe k8srequiredlabels ns-must-have-gk</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="kubernetes-secrets"><a class="header" href="#kubernetes-secrets">Kubernetes Secrets</a></h2>
+<ul>
+<li>Secrets are used to store sensitive information in Kubernetes</li>
+<li>base64 encoded when stored in etcd</li>
+<li>Can be injected into a pod as an env or mounted as a volume</li>
+</ul>
+<h2 id="encrypting-etcd"><a class="header" href="#encrypting-etcd">Encrypting etcd</a></h2>
+<ul>
+<li>
+<p>By default, the API server stores plain-text representations of resources into etcd, with no at-rest encryption.</p>
+</li>
+<li>
+<p>The kube-apiserver process accepts an argument –encryption-provider-config that specifies a path to a configuration file. The contents of that file, if you specify one, control how Kubernetes API data is encrypted in etcd.</p>
+</li>
+<li>
+<p>If you are running the kube-apiserver without the –encryption-provider-config command line argument, you do not have encryption at rest enabled. If you are running the kube-apiserver with the –encryption-provider-config command line argument, and the file that it references specifies the identity provider as the first encryption provider in the list, then you do not have at-rest encryption enabled (the default identity provider does not provide any confidentiality protection.)</p>
+</li>
+<li>
+<p>If you are running the kube-apiserver with the –encryption-provider-config command line argument, and the file that it references specifies a provider other than identity as the first encryption provider in the list, then you already have at-rest encryption enabled. However, that check does not tell you whether a previous migration to encrypted storage has succeeded.</p>
+</li>
+<li>
+<p>Example EncryptionConfiguration:</p>
+<pre><code>  apiVersion: apiserver.config.k8s.io/v1
+  kind: EncryptionConfiguration
+  resources:
+    - resources:
+        - secrets
+        - configmaps
+        - pandas.awesome.bears.example # a custom resource API
+      providers:
+        # This configuration does not provide data confidentiality. The first
+        # configured provider is specifying the "identity" mechanism, which
+        # stores resources as plain text.
+        #
+        - identity: {} # plain text, in other words NO encryption
+        - aesgcm:
+            keys:
+              - name: key1
+                secret: c2VjcmV0IGlzIHNlY3VyZQ==
+              - name: key2
+                secret: dGhpcyBpcyBwYXNzd29yZA==
+        - aescbc:
+            keys:
+              - name: key1
+                secret: c2VjcmV0IGlzIHNlY3VyZQ==
+              - name: key2
+                secret: dGhpcyBpcyBwYXNzd29yZA==
+        - secretbox:
+            keys:
+              - name: key1
+                secret: YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY=
+    - resources:
+        - events
+      providers:
+        - identity: {} # do not encrypt Events even though *.* is specified below
+    - resources:
+        - '*.apps' # wildcard match requires Kubernetes 1.27 or later
+      providers:
+        - aescbc:
+            keys:
+            - name: key2
+              secret: c2VjcmV0IGlzIHNlY3VyZSwgb3IgaXMgaXQ/Cg==
+    - resources:
+        - '*.*' # wildcard match requires Kubernetes 1.27 or later
+      providers:
+        - aescbc:
+            keys:
+            - name: key3
+              secret: c2VjcmV0IGlzIHNlY3VyZSwgSSB0aGluaw==
+</code></pre>
+</li>
+<li>
+<p>Each resources array item is a separate config and contains a complete configuration. The resources.resources field is an array of Kubernetes resource names (resource or resource.group) that should be encrypted like Secrets, ConfigMaps, or other resources.</p>
+</li>
+<li>
+<p>https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/</p>
+</li>
+<li>
+<p>After enabling encryption in etcd, any secrets that you created prior to enabling encryption will not be encrypted. You can encrypt them by running:</p>
+</li>
+</ul>
+<pre><code>kubectl get secrets -A -o yaml | kubectl replace -f -
+</code></pre>
+<ul>
+<li>Example of getting a secret in etcd:</li>
+</ul>
+<pre><code>ETCDCTL_API=3 etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/apiserver-etcd-client.crt --key=/etc/kubernetes/pki/apiserver-etcd-client.key get /registry/secrets/three/con1
+</code></pre>
+<p>The path to the resource in the etcd database is ‘/registry/<resource type="">/<namespace>/<resource name="">’</resource></namespace></resource></p>
+<h2 id="container-sandboxing"><a class="header" href="#container-sandboxing">Container Sandboxing</a></h2>
+<ul>
+<li>Containers are not contained!</li>
+<li>A container sandbox is a mechanism that provides an additional layer of isolation between the container and the host</li>
+<li>Container sandboxing is implemented via Runtime Class objects in Kubernetes.</li>
+<li>The default container runtime is <code>runc</code>. However, we can change this to use <code>runsc</code> (gvisor) or Kata</li>
+<li>Sandboxing prevents the dirty cow exploit, which allows a user to gain root access to the host
+<ul>
+<li>Dirty COW works by exploiting a race condition in the Linux kernel</li>
+</ul>
+</li>
+</ul>
+<h3 id="gvisor"><a class="header" href="#gvisor">gVisor</a></h3>
+<ul>
+<li>gVisor is a kernel written in Golang that intercepts system calls made by a container</li>
+<li>gVisor is like a ‘syscall proxy’ that sits between the container and the kernel
+<ul>
+<li>components
+<ul>
+<li>sentry -</li>
+<li>gofer -</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Not all apps will work with gVisor</li>
+<li>gVisor will cause performance degradation in your app due to the additional time taken</li>
+<li>gVisor uses runsc as the runtime handler</li>
+</ul>
+<h3 id="kata-containers"><a class="header" href="#kata-containers">Kata Containers</a></h3>
+<ul>
+<li>Kata inserts each container into it’s own virtual machine, giving each it’s own kernel</li>
+<li>Kata containers require nested virtualisation support, so it may not work with all cloud providers</li>
+</ul>
+<h3 id="runtimeclass"><a class="header" href="#runtimeclass">RuntimeClass</a></h3>
+<ul>
+<li>RuntimeClass is a new feature in Kubernetes that allows you to specify which runtime to use for a pod</li>
+</ul>
+<h4 id="to-use-a-runtime-class"><a class="header" href="#to-use-a-runtime-class">To use a runtime class</a></h4>
+<ul>
+<li>
+<p>Create a new <code>runtimeclass</code> object:</p>
+<pre><code>apiVersion: node.k8s.io/v1
+handler: runsc
+kind: RuntimeClass
+metadata:
+  name: secure-runtime
+</code></pre>
+</li>
+<li>
+<p>Specify the <code>runtimeClassName</code> in the pod definition:</p>
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+    name: simple-webapp-1
+    labels:
+        name: simple-webapp
+spec:
+    runtimeClassName: secure-runtime
+    containers:
+    - name: simple-webapp
+      image: kodekloud/webapp-delayed-start
+      ports:
+      - containerPort: 8080
+
+</code></pre>
+</li>
+</ul>
+<h2 id="resource-quotas"><a class="header" href="#resource-quotas">Resource Quotas</a></h2>
+<ul>
+<li>Control requests and limits for CPU and memory within a namespace</li>
+</ul>
+<pre><code>apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: team-a-resource-quota
+  namespace: team-a
+spec:
+  hard:
+    pods: "5"
+    requests.cpu: "0.5"
+    requests.memory: 500Mi
+    limits.cpu: "1"
+    limits.memory: 1Gi
+</code></pre>
+<pre><code>apiVersion: v1
+kind: ResourceQuota
+metadata:
+name: pods-medium
+spec:
+    hard:
+      cpu: "10"
+      memory: 20Gi
+      pods: "10"
+scopeSelector:
+  matchExpressions:
+  - operator : In
+    scopeName: PriorityClass
+    values: ["medium"]
+</code></pre>
+<h2 id="api-priority-and-fairness"><a class="header" href="#api-priority-and-fairness">API Priority and Fairness</a></h2>
+<ul>
+<li>https://kubernetes.io/docs/concepts/cluster-administration/flow-control/</li>
+<li>With API Priority and Fairness, you can define which resources need to be prioritized over others in regards to requests to the KubeAPI server</li>
+<li>To configure API Priority and Fairness, you create a <code>PriorityLevelConfiguration</code> object:
+<pre><code>  ? Is this still supported? Is it an exam topic? I cannot find the manifest spec.
+</code></pre>
+</li>
+</ul>
+<h2 id="pod-priority-and-preemption"><a class="header" href="#pod-priority-and-preemption">Pod Priority and Preemption</a></h2>
+<ul>
+<li>With Pod Priority and Preemption, you can ensure that critical pods are running while the cluster is under resource contention by killing lower priority pods</li>
+<li>To implement Pod Priority and Preemption:
+<ul>
+<li>Create a <code>priorityClass object</code> (or several):
+<pre><code>apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000000
+globalDefault: false
+description: "This priority class should be used for XYZ service pods only."
+---
+    apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: low-priority
+value: 100
+globalDefault: false
+description: "This priority class should be used for XYZ service pods only."
+</code></pre>
+</li>
+<li>Assign the <code>priorityClass</code> to a pod:
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    env: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+  priorityClassName: high-priority
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="pod-to-pod-encryption"><a class="header" href="#pod-to-pod-encryption">Pod to Pod Encryption</a></h2>
+<ul>
+<li>mTLS can be used to encrypt traffic between pods</li>
+<li>Methods of p2p encryption
+<ul>
+<li>Service Mesh
+<ul>
+<li>Service Mesh can offload the encryption and decryption of traffic between pods by using a sidecar proxy</li>
+<li>Examples:
+<ul>
+<li>Istio
+<ul>
+<li>Istio uses Envoy as a sidecar proxy</li>
+<li>Istio uses a sidecar proxy to encrypt traffic between pods</li>
+</ul>
+</li>
+<li>Linkerd</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Wireguard
+<ul>
+<li>Cilium
+<ul>
+<li>uses eBPF for network security</li>
+<li>Encrytion is transparent to the application</li>
+<li>Provides flexible encryption options</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>IPSec
+<ul>
+<li>Calico</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="5-supply-chain-security"><a class="header" href="#5-supply-chain-security">5 Supply Chain Security</a></h1>
+<h2 id="sbom"><a class="header" href="#sbom">SBOM</a></h2>
+<ul>
+<li>Supply chain security is the practice of ensuring that the software and hardware that you use in your environment is secure</li>
+<li>In the context of the CKS exam, supply chain security refers to the security of the software that you use in your Kubernetes environment</li>
+</ul>
+<h2 id="reduce-docker-image-size"><a class="header" href="#reduce-docker-image-size">Reduce docker image size</a></h2>
+<ul>
+<li>
+<p>Smaller images are faster to download and deploy</p>
+</li>
+<li>
+<p>Smaller images are more secure</p>
+</li>
+<li>
+<p>Smaller images are easier to manage</p>
+</li>
+<li>
+<p>To reduce the size of a docker image:</p>
+<ul>
+<li>Use a smaller base image</li>
+<li>Use specific package/image versions</li>
+<li>Make file-system read-only</li>
+<li>Don’t run the container as root</li>
+<li>Use multi-stage builds</li>
+<li>Remove unnecessary files</li>
+<li>Use a <code>.dockerignore</code> file to exclude files and directories from the image</li>
+<li>Use <code>COPY</code> instead of <code>ADD</code></li>
+<li>Use <code>alpine</code> images</li>
+<li>Use <code>scratch</code> images</li>
+<li>Use <code>distroless</code> images</li>
+</ul>
+</li>
+<li>
+<p>Example of a multi-stage build:</p>
+<pre><code># build container stage 1
+  FROM ubuntu
+  ARG DEBIAN_FRONTEND=noninteractive
+  RUN apt-get update &amp;&amp; apt-get install -y golang-go
+  COPY app.go .
+  RUN CGO_ENABLED=0 go build app.go
+
+# app container stage 2
+  FROM alpine:3.12.1 # it is better to use a defined tag, rather than 'latest'
+  RUN addgroup -S appgroup &amp;&amp; adduser -S appuser -G appgroup -h /home/appuser
+  COPY --from=0 /app /home/appuser/app
+  USER appuser # run as a non-root user
+  CMD ["/home/appuser/app"]
+</code></pre>
+</li>
+<li>
+<p>Dockerfile best practices: https://docs.docker.com/build/building/best-practices/</p>
+</li>
+<li>
+<p>Only certain docker directives create new layers in an image</p>
+<ul>
+<li><code>FROM</code></li>
+<li><code>COPY</code></li>
+<li><code>CMD</code></li>
+<li><code>RUN</code></li>
+</ul>
+</li>
+<li>
+<p><code>dive</code> and <code>docker-slim</code> are two tools you can use to explore the individual layers that make up an image</p>
+</li>
+</ul>
+<h2 id="static-analysis"><a class="header" href="#static-analysis">Static Analysis</a></h2>
+<h3 id="sbom-1"><a class="header" href="#sbom-1">SBOM</a></h3>
+<ul>
+<li>A SBOM is a list of all the software that makes up a container image (or an application, etc.)</li>
+<li>Formats
+<ul>
+<li>SPDX
+<ul>
+<li>The standard format for sharing SBOM</li>
+<li>Available in JSON, RDF, and tag/value formats</li>
+<li>More complex than CycloneDX due to it’s extensive metadata coverage</li>
+<li>Comprehensive metadata including license information, origin, and file details</li>
+</ul>
+</li>
+<li>CycloneDX
+<ul>
+<li>A lightweight format focused on security and compliance</li>
+<li>Available in JSON and XML formats</li>
+<li>Simpler and more focused on essential SBOM elements</li>
+<li>Focuses on component details, vulnerabilities, and dependencies</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="kubesec"><a class="header" href="#kubesec">Kubesec</a></h3>
+<ul>
+<li>Used for static analysis of manifests</li>
+<li>https://github.com/controlplaneio/kubesec</li>
+</ul>
+<h3 id="syft"><a class="header" href="#syft">Syft</a></h3>
+<ul>
+<li>Syft is a powerful and easy-to-use open-source tool for generating Software Bill of Materials (SBOMs) for container images and filesystems. It provides detailed visibility into the packages and dependencies in your software, helping you manage vulnerabilities, license compliance, and software supply chain security.</li>
+<li>Syft can export results in SPDX, CycloneDX, JSON, etc.</li>
+<li>To scan an image with syft and export the results to a file in SPDX format:
+<pre><code>syft scan docker.io/kodekloud/webapp-color:latest -o spdx --file /root/webapp-spdx.sbom
+</code></pre>
+</li>
+</ul>
+<h3 id="grype"><a class="header" href="#grype">Grype</a></h3>
+<ul>
+<li>Grype is a tool (also from Anchore) that can be used to scan SBOM for vulnerabilities</li>
+<li>To scan a SBOM with Grype:
+<pre><code>grype /root/webapp-sbom.json -o json --file /root/grype-report.json
+</code></pre>
+</li>
+</ul>
+<h3 id="kube-linter"><a class="header" href="#kube-linter">Kube-linter</a></h3>
+<ul>
+<li>Kube-linter can be used to lint Kubernetes manifests and ensure best practices are being followed</li>
+<li>kube-linter is configurable. You can disable/enable checks and even create your own custom checks</li>
+<li>kube-linter includes recommendations for how to fix failed checks</li>
+<li>https://github.com/stackrox/kube-linter</li>
+</ul>
+<h2 id="scanning-images-for-vulnerabilities"><a class="header" href="#scanning-images-for-vulnerabilities">Scanning Images for Vulnerabilities</a></h2>
+<h3 id="trivy"><a class="header" href="#trivy">trivy</a></h3>
+<ul>
+<li>trivy can be used to scan images, git repos, and filesystems for vulnerabilities</li>
+<li>https://github.com/aquasecurity/trivy</li>
+<li>Example:
+<pre><code>  sudo docker run --rm  aquasec/trivy:0.17.2 nginx:1.16-alpine
+</code></pre>
+</li>
+</ul>
+<h1 id="6-monitoring-logging-and-runtime-security"><a class="header" href="#6-monitoring-logging-and-runtime-security">6 Monitoring, Logging, and Runtime Security</a></h1>
+<h2 id="falco"><a class="header" href="#falco">falco</a></h2>
+<ul>
+<li>Falco is an IDS for Kubernetes workloads</li>
+<li>falco is a cloud native security tool. It provides near real-time threat detection for cloud, container, and Kubernetes workloads by leveraging runtime insights. Falco can monitor events defined via customizable rules from various sources, including the Linux kernel, and enrich them with metadata from the Kubernetes API server, container runtime, and more. Falco supports a wide range of kernel versions, x86_64 and ARM64 architectures, and many different output channels.</li>
+<li>falco uses sydig filters to extract information about an event. They are configured in the falco rules.yaml or configmap. They can also be passed via helm values.
+<ul>
+<li><code>/etc/falco/falco.yaml</code> - the main configuration file for falco</li>
+<li><code>/etc/falco/falco_rules.yaml</code> - the main rules file for falco</li>
+</ul>
+</li>
+<li>falco rule files consist of 3 elements defined in YAML:
+<ul>
+<li>rules - a rule is a condition under which an alert should be generated</li>
+<li>macros - a macro is a reusable rule condition. These help keep the rules file clean and easy to read</li>
+<li>lists - a collection of items that can be used in rules and macros</li>
+</ul>
+</li>
+<li>Some examples of events that falco watches for:
+<ul>
+<li>Reading or writing files at a specific location in the filesystem</li>
+<li>Opening a shell binary for a container, such as /bin/bash</li>
+<li>Sending/receives traffic from undesired URLs</li>
+</ul>
+</li>
+<li>Falco deploys a set of sensors that listen for configured events and conditions
+<ul>
+<li>Each sensor contains a set of rules that map an event to a data source.</li>
+<li>An alert is produced when a rule matches a specific event</li>
+<li>Alerts are then sent to an output channel to record the event</li>
+</ul>
+</li>
+</ul>
+<h2 id="ensuring-container-immutability"><a class="header" href="#ensuring-container-immutability">Ensuring Container Immutability</a></h2>
+<ul>
+<li>Containers should be immutable. This means that once a container is created, it should not be changed. If changes are needed, a new container should be created.</li>
+<li>Containers are mutable (changeable) by default. This can lead to security vulnerabilities.</li>
+<li>To ensure container immutability:
+<ul>
+<li>Use a ‘distroless’ container image. These images are minimal and contain only the necessary components to run an application. They do not include a shell.</li>
+<li>Use a ‘read-only’ file system. This prevents changes to the file system. To configure a read-only file system, add the following to the pod spec:
+<pre><code>spec:
+  containers:
+  - name: my-container
+    image: my-image
+    securityContext:
+      readOnlyRootFilesystem: true
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="audit-logs"><a class="header" href="#audit-logs">Audit Logs</a></h2>
+<ul>
+<li>Auditing involves recording and tracking all events and actions within the cluster</li>
+<li>Who made a change, when was it changed, and what exactly was changed</li>
+<li>Audit logs provide a chronological record of activities within a cluster</li>
+<li>Entries in the audit log exist in ‘JSON Lines’ format. Note that this is not the same as JSON. Each line in the log is a separate JSON object.</li>
+<li>Types of Audit Policies:
+<ul>
+<li>None - no logging</li>
+<li>Metadata - Logs request metadata, but not request or response body</li>
+<li>Request - Logs request metadata and request body, but no response body</li>
+<li>Request/Response - Logs the metadata, request body, and response body</li>
+</ul>
+</li>
+</ul>
+<h3 id="sample-audit-policy"><a class="header" href="#sample-audit-policy">Sample Audit Policy</a></h3>
+<pre><code>```
+apiVersion: audit.k8s.io/v1 # This is required.
+kind: Policy
+omitStages:
+  - "RequestReceived"
+rules:
+  # Log pod changes at RequestResponse level
+  - level: RequestResponse
+    resources:
+    - group: ""
+      # Resource "pods" doesn't match requests to any subresource of pods,
+      # which is consistent with the RBAC policy.
+      resources: ["pods"]
+  # Log "pods/log", "pods/status" at Metadata level
+  - level: Metadata
+    resources:
+    - group: ""
+      resources: ["pods/log", "pods/status"]
+
+  # Don't log requests to a configmap called "controller-leader"
+  - level: None
+    resources:
+    - group: ""
+      resources: ["configmaps"]
+      resourceNames: ["controller-leader"]
+
+  # Don't log watch requests by the "system:kube-proxy" on endpoints or services
+  - level: None
+    users: ["system:kube-proxy"]
+    verbs: ["watch"]
+    resources:
+    - group: "" # core API group
+      resources: ["endpoints", "services"]
+
+  # Don't log authenticated requests to certain non-resource URL paths.
+  - level: None
+    userGroups: ["system:authenticated"]
+    nonResourceURLs:
+    - "/api*" # Wildcard matching.
+    - "/version"
+
+  # Log the request body of configmap changes in kube-system.
+  - level: Request
+    resources:
+    - group: "" # core API group
+      resources: ["configmaps"]
+    # This rule only applies to resources in the "kube-system" namespace.
+    # The empty string "" can be used to select non-namespaced resources.
+    namespaces: ["kube-system"]
+
+  # Log configmap and secret changes in all other namespaces at the Metadata level.
+  - level: Metadata
+    resources:
+    - group: "" # core API group
+      resources: ["secrets", "configmaps"]
+
+  # Log all other resources in core and extensions at the Request level.
+  - level: Request
+    resources:
+    - group: "" # core API group
+    - group: "extensions" # Version of group should NOT be included.
+
+  # A catch-all rule to log all other requests at the Metadata level.
+  - level: Metadata
+    # Long-running requests like watches that fall under this rule will not
+    # generate an audit event in RequestReceived.
+    omitStages:
+      - "RequestReceived"
+```
+</code></pre>
+<ul>
+<li>Once the audit policy has been defined, you can apply it to the cluster by passing the <code>--audit-policy-file</code> flag to the kube-apiserver</li>
+<li>To use a file-based log backend, you need to pass 3 configurations to the kube-apiserver:
+<ul>
+<li><code>--audit-policy-file</code> - this is the path to the audit policy file</li>
+<li><code>--audit-log-path</code> - this is the path to the audit log file</li>
+<li>both of these paths needs to be mounted in the kube-apiserver. The kube-apiserver cannot read these files on the node without a proper <code>volumeMount</code></li>
+</ul>
+</li>
+</ul>
+</h4>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../kubernetes/cks/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../kubernetes/cks/questions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../kubernetes/cks/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../kubernetes/cks/questions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,18 @@
+# Scenario 2: Restrict Traffic to a Specific Namespace (CiliumNetworkPolicy)
+#
+# Problem:
+# Only allow app=backend in backend-namespace to talk to app=database in db-namespace.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: "restrict-backend-to-db"
+  namespace: "db-namespace"
+spec:
+  endpointSelector:
+    matchLabels:
+      app: database
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: backend-namespace
+        app: backend

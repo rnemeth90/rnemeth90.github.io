@@ -1,0 +1,21 @@
+# Scenario 4: Allow Only Specific Ports
+# Problem:
+# The payments service in finance-namespace should only accept incoming traffic on port 443 (HTTPS). All other ports should be denied.
+#
+# Tasks:
+# Apply a NetworkPolicy that enforces only HTTPS traffic to the payments pod.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-specific-ports
+  namespace: finance-namespace
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: payments
+  policyTypes:
+  - Ingress
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 443

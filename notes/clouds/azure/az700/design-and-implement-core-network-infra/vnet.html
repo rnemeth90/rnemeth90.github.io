@@ -1,0 +1,497 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Azure Virtual Network (VNet) - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../../../css/chrome-9dfbd86b.css">
+        <link rel="stylesheet" href="../../../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../../searchindex-7d51fce4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc-848830eb.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="azure-virtual-network-vnet"><a class="header" href="#azure-virtual-network-vnet">Azure Virtual Network (VNet)</a></h1>
+<p>TOC</p>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p><strong>Definition:</strong></p>
+<ul>
+<li>Azure Virtual Network (VNet) is a fundamental component of Microsoft Azure, allowing you to create private networks within the Azure cloud. These networks can be isolated or connected to on-premises data centers, providing a flexible and secure environment for deploying and managing resources. Azure Virtual Network provides the flexibility, security, and scalability needed to build robust cloud-based network infrastructures, supporting a wide range of applications and services.</li>
+</ul>
+<h2 id="key-features"><a class="header" href="#key-features">Key Features:</a></h2>
+<ol>
+<li>
+<p><strong>Isolation and Segmentation:</strong></p>
+<ul>
+<li>Create isolated networks for your resources.</li>
+<li>Use subnets to segment the VNet into smaller address spaces for organization and security.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security:</strong></p>
+<ul>
+<li>Implement Network Security Groups (NSGs) to control inbound and outbound traffic.</li>
+<li>Use Azure Firewall for advanced network security.</li>
+</ul>
+</li>
+<li>
+<p><strong>Connectivity:</strong></p>
+<ul>
+<li>Connect VNets to each other using VNet peering.</li>
+<li>Link your VNet to on-premises networks using VPN Gateway or ExpressRoute.</li>
+<li>Enable secure connections to the internet or other Azure services.</li>
+</ul>
+</li>
+<li>
+<p><strong>Scalability and Availability:</strong></p>
+<ul>
+<li>Scale your network by adding or resizing subnets.</li>
+<li>Ensure high availability with Azure’s global infrastructure.</li>
+</ul>
+</li>
+<li>
+<p><strong>Integration with Azure Services:</strong></p>
+<ul>
+<li>Seamlessly integrate with Azure services like Azure Kubernetes Service (AKS), Azure App Service, and Azure Storage.</li>
+<li>Use service endpoints to secure your Azure services within your VNet.</li>
+</ul>
+</li>
+<li>
+<p><strong>DNS and Customization:</strong></p>
+<ul>
+<li>Customize DNS settings for your VNet.</li>
+<li>Use Azure-provided DNS or bring your own DNS servers.</li>
+</ul>
+</li>
+<li>
+<p><strong>Monitoring and Troubleshooting:</strong></p>
+<ul>
+<li>Monitor network performance and security with Azure Monitor and Network Watcher.</li>
+<li>Diagnose and troubleshoot network issues efficiently.</li>
+</ul>
+</li>
+</ol>
+<h2 id="use-cases"><a class="header" href="#use-cases">Use Cases:</a></h2>
+<ul>
+<li>Deploying multi-tier applications with web, application, and database layers.</li>
+<li>Extending on-premises networks to the cloud.</li>
+<li>Isolating development, testing, and production environments.</li>
+<li>Ensuring secure access to Azure services.</li>
+<li>In addition to virtual machines, we can deploy more than 32 other services in a VNet.</li>
+<li>Native internal TCP/UDP load balancing and proxy systems for internal HTTP/s load balancing.</li>
+<li>Connect to on-premises networks to form hybrid network architectures.</li>
+</ul>
+<h2 id="differences-between-vnet-and-on-premises-network"><a class="header" href="#differences-between-vnet-and-on-premises-network">Difference’s between vNet and On-premises network:</a></h2>
+<ul>
+<li>
+<p>Azure vNets do not support layer 2 semantics (only layer-3 and layer-4). This means that concepts such as vLANs and layer-2 broadcast/multicast are not supported. Running <code>arp -a</code> on a VM in Azure will show that MAC address resolution for VMs in the same subnet results in th esame <code>12:34:56:78:9a:bc</code> value. This is because we are on a shared platoform and the vNet is a layer-3 construct.
+<img src="../images/arp.png" alt=""></p>
+</li>
+<li>
+<p>Some protocols and communication types are restricted from being used in Azure vNets. Protocols such as multicast, broadcast, DHCP Unicast, UDP source port 65330, IP-in-IP encapsulated packets, and GRE are not supported.</p>
+</li>
+</ul>
+<h2 id="vnet-naming"><a class="header" href="#vnet-naming">vNet Naming</a></h2>
+<ul>
+<li>You can have two vNets in an Azure subscription with the same name as long as they are in different resource groups.</li>
+</ul>
+<h2 id="address-spaces"><a class="header" href="#address-spaces">Address Spaces</a></h2>
+<ul>
+<li>When creating a VNet, you must specify an address space. This address space is a range of IP addresses that can be used by the resources in the VNet.</li>
+<li>The address space can be either IPv4 or IPv6. However, a vNet cannot be IPv6 only.</li>
+<li>You can create multiple address spaces in a vNet.</li>
+<li>Though, you can use any address space, it is recommended to use a private address space as defined in RFC 1918. (10.0.0.0/8, 172.16.0.0/12, or 192.168.0.0/16)</li>
+<li>You cannot peer vNets with overlapping address spaces.</li>
+</ul>
+<h2 id="peering"><a class="header" href="#peering">Peering</a></h2>
+<ul>
+<li>vNET peering allows us to transfer data between vNETs within and across Azure Subscriptions.</li>
+<li>Connect VNETs together using the Azure backbone network so that resources within the subnets can ‘talk’ to each other</li>
+<li>VNETs with overlapping address spaces cannot be peered</li>
+<li>vNET peering is easy to implement, no additional infrastructure is required. Peering can be setup between vNETs within minutes.</li>
+<li>To implement the peering connection, the Network Contributor role or a custom role with the following permissions is required for both the source and destination vNETs:
+<ul>
+<li>Microsoft.Network/virtualNetworks/peer/action</li>
+<li>Microsoft.Network/virtualNetworks/virtualNetworkPeerings/write</li>
+<li>Microsoft.Network/virtualNetworks/virtualNetworkPeerings/read</li>
+</ul>
+</li>
+<li>vNET peering is not transitive. If vNET A is peered with vNET B and vNET B is peered with vNET C, vNET A and vNET C are not peered.</li>
+</ul>
+<h2 id="connection-vnets-using-a-vpn-gateway"><a class="header" href="#connection-vnets-using-a-vpn-gateway">Connection vNETs using a VPN Gateway</a></h2>
+<ul>
+<li>In addition to peering, another option for connecting vNETs is to use a VPN Gateway connection.</li>
+<li>This option uses an Azure VPN Gateway to create a secure IPSec/IKE tunnel to the target network.</li>
+<li>Unlike peering, traffic is routed over the public internet and not the Azure backbone network.</li>
+<li>Deploying the VPN Gateway takes around 40 minutes.</li>
+<li>When implementing the VPN Gateway to connect two vNETs, there are two connection types that we can use:
+<ul>
+<li>vNET-to-vNET: Connects two vNETs in the same Azure Subscription.</li>
+<li>Site-to-Site: Connects two vNETs in different Azure Subscriptions</li>
+</ul>
+</li>
+<li>You can use this option to connect vNETs with overlapping address spaces by configuring NAT rules on the VPN Gateway</li>
+</ul>
+<h2 id="vwan-hub"><a class="header" href="#vwan-hub">vWAN Hub</a></h2>
+<p><a href="../design-implement-and-manage-hybrid-networking/vwan.html">vWAN Notes</a></p>
+<h3 id="comparing-vnet-peering-vs-vpn-gateway-vs-vwan-hub"><a class="header" href="#comparing-vnet-peering-vs-vpn-gateway-vs-vwan-hub">Comparing vNET Peering vs. VPN Gateway vs. vWAN Hub</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Feature</th><th>Peering</th><th>VNET Gateway</th><th>vWAN Hub</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Definition</strong></td><td>Direct connection between VNets</td><td>Connection using a VPN gateway</td><td>Connection via Virtual WAN Hub</td></tr>
+<tr><td><strong>Use Case</strong></td><td>Low latency, high-speed connection within the same region</td><td>Secure cross-region or hybrid connectivity</td><td>Scalable, centralized management of large-scale network architecture</td></tr>
+<tr><td><strong>Bandwidth</strong></td><td>Up to 10 Gbps</td><td>Dependent on gateway SKU</td><td>Up to 20 Gbps (depending on the hub scale)</td></tr>
+<tr><td><strong>Latency</strong></td><td>Low</td><td>Higher due to encryption</td><td>Variable, generally higher than peering</td></tr>
+<tr><td><strong>Encryption</strong></td><td>Not supported</td><td>Supported</td><td>Supported</td></tr>
+<tr><td><strong>Routing</strong></td><td>Manual configuration</td><td>Supports BGP, more complex routing</td><td>Simplified with centralized control</td></tr>
+<tr><td><strong>Cost</strong></td><td>Lower, based on data transfer</td><td>Higher, based on gateway and data transfer</td><td>Variable, based on hub and data transfer</td></tr>
+<tr><td><strong>Scalability</strong></td><td>Limited to same region</td><td>Cross-region, but limited by gateway scale</td><td>Highly scalable for global networks</td></tr>
+<tr><td><strong>Security</strong></td><td>Less secure, no encryption</td><td>More secure with encryption</td><td>High security with built-in features</td></tr>
+<tr><td><strong>Complexity</strong></td><td>Simple to configure</td><td>Moderate complexity</td><td>High complexity, but with centralized management tools</td></tr>
+<tr><td><strong>Cross-Subscription</strong></td><td>Supported</td><td>Supported</td><td>Supported</td></tr>
+<tr><td><strong>Cross-Tenant</strong></td><td>Not supported</td><td>Not supported</td><td>Supported</td></tr>
+<tr><td><strong>Redundancy</strong></td><td>Depends on setup</td><td>High availability supported</td><td>High availability and redundancy supported</td></tr>
+<tr><td><strong>Additional Features</strong></td><td>Supports private endpoints and service chaining</td><td>Supports VPN, ExpressRoute</td><td>Integrated with Azure Firewall, Application Gateway, etc.</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h1 id="azure-subnets"><a class="header" href="#azure-subnets">Azure Subnets</a></h1>
+<h2 id="definition"><a class="header" href="#definition">Definition</a></h2>
+<p>Azure subnets are subdivisions of an Azure Virtual Network (VNet). They help organize and secure your Azure resources by segmenting the VNet into smaller, manageable sections.</p>
+<h2 id="key-features-1"><a class="header" href="#key-features-1">Key Features</a></h2>
+<ol>
+<li>
+<p><strong>IP Address Range:</strong></p>
+<ul>
+<li>Each subnet must have a unique IP address range within the VNet.</li>
+<li>The address range is defined in CIDR notation (e.g., 10.0.0.0/24).</li>
+</ul>
+</li>
+<li>
+<p><strong>Network Security:</strong></p>
+<ul>
+<li>Use Network Security Groups (NSGs) to control inbound and outbound traffic at the subnet level.</li>
+<li>NSGs can be associated with one or more subnets, defining security rules for the subnet.</li>
+</ul>
+</li>
+<li>
+<p><strong>Routing:</strong></p>
+<ul>
+<li>Subnets can have custom route tables associated with them.</li>
+<li>Custom routes can direct traffic to specific network appliances or on-premises networks.</li>
+</ul>
+</li>
+<li>
+<p><strong>Service Endpoints:</strong></p>
+<ul>
+<li>Enable service endpoints to secure Azure service resources (like Azure Storage or Azure SQL Database) to your VNet.</li>
+<li>Traffic to these services can remain within the Azure backbone network.</li>
+</ul>
+</li>
+<li>
+<p><strong>Integration with Azure Services:</strong></p>
+<ul>
+<li>Subnets can host various Azure resources, such as Virtual Machines (VMs), Azure Kubernetes Service (AKS), and App Service Environments (ASE).</li>
+<li>Subnets can be part of an Azure Availability Zone, enhancing resilience and availability.</li>
+<li>A full list of services that support vNet integration can be found here: 
+<a href="https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview#services-that-support-virtual-network-service-endpoints">Azure Services that support vNet Integration</a></li>
+</ul>
+</li>
+<li>
+<p><strong>Subnet Delegation:</strong></p>
+<ul>
+<li>Delegate a subnet to specific Azure services to simplify network configuration and management.</li>
+<li>Examples of delegatable services include Azure Container Instances and Azure App Service.</li>
+</ul>
+</li>
+<li>
+<p><strong>Subnet Peering:</strong></p>
+<ul>
+<li>Use VNet peering to connect subnets across different VNets, allowing resources to communicate securely.</li>
+<li>Peered VNets can be within the same region or across different Azure regions (Global VNet Peering).</li>
+</ul>
+</li>
+</ol>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h2>
+<ol>
+<li>
+<p><strong>Designing Subnets:</strong></p>
+<ul>
+<li>Plan subnets based on application tiers (e.g., web, application, database) to improve security and manageability.</li>
+<li>Ensure enough IP addresses in each subnet to accommodate future growth.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security:</strong></p>
+<ul>
+<li>Apply NSGs at both the subnet and network interface level for layered security.</li>
+<li>Regularly review and update NSG rules to maintain optimal security.</li>
+</ul>
+</li>
+<li>
+<p><strong>Monitoring and Management:</strong></p>
+<ul>
+<li>Use Azure Monitor and Network Watcher to monitor subnet performance and diagnose network issues.</li>
+<li>Implement logging for NSGs to track and analyze network traffic.</li>
+</ul>
+</li>
+<li>
+<p><strong>IP Address Management:</strong></p>
+<ul>
+<li>Avoid overlapping IP address ranges when peering VNets.</li>
+<li>Use private IP ranges for subnets to ensure secure and efficient routing within Azure.</li>
+</ul>
+</li>
+</ol>
+<h2 id="use-cases-1"><a class="header" href="#use-cases-1">Use Cases</a></h2>
+<ul>
+<li><strong>Isolating Resources:</strong> Segregate different types of workloads or environments (development, testing, production) within a VNet using NSGs.</li>
+<li><strong>Enhanced Security:</strong> Apply NSGs to subnets for controlling traffic flow and securing resources.</li>
+<li><strong>Network Organization:</strong> Organize resources logically within a VNet for better management and scalability.</li>
+<li><strong>Service Integration:</strong> Securely connect Azure services to your VNet using service endpoints or private link.</li>
+</ul>
+<h2 id="facts"><a class="header" href="#facts">Facts</a></h2>
+<ul>
+<li>A vNet can have up to 3000 subnets</li>
+<li>Azure reserves 5 IP addreses within each subnet for system use. These addresses cannot be used. The first four and the last IP address cannot be allocated to a resource.
+<ul>
+<li>The first IP address is the network address.</li>
+<li>The last IP address is the broadcast address.</li>
+<li>The next three IP addresses are reserved for Azure services. (Default Gateway and 2 DNS Servers)</li>
+</ul>
+</li>
+<li>If you need to modify the address space of a subnet that already has resources in it, you must first remove all resources from the subnet.</li>
+</ul>
+<p>Azure subnets are essential for structuring your VNet, ensuring security, and managing resources efficiently within your Azure environment.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../clouds/azure/az700/design-and-implement-core-network-infra/vmss.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../clouds/azure/az700/design-and-implement-private-access/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../clouds/azure/az700/design-and-implement-core-network-infra/vmss.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../clouds/azure/az700/design-and-implement-private-access/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../../searcher-c2a407aa.js"></script>
+
+        <script src="../../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../../highlight-abc7f01d.js"></script>
+        <script src="../../../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
