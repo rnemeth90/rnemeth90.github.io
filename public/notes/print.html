@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-7d51fce4.js";
+            window.path_to_searchindex_js = "searchindex-5a6387b2.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-848830eb.js"></script>
+        <script src="toc-a0b263b7.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -515,17 +515,16 @@
 <li><a href="#general-troubleshootingnotes">General troubleshooting/notes</a></li>
 </ul>
 </li>
-<li><a href="#what-happens-when-a-cpu-starts">What happens when a CPU starts?</a></li>
 </ul>
 </li>
 <li><a href="what-happens-when/README.html">What Happens When…</a>
 <ul>
-<li><a href="#what-happens-when-a-cpu-starts-1">What happens when a CPU starts?</a></li>
+<li><a href="#what-happens-when-a-cpu-starts">What happens when a CPU starts?</a></li>
 </ul>
 </li>
 <li><a href="fun/README.html">Fun</a>
 <ul>
-<li><a href="#modify-machine-code">Modify Machine Code</a></li>
+<li><a href="#modifying-machine-code-in-executables">Modify Machine Code</a></li>
 </ul>
 </li>
 </ul>
@@ -20011,15 +20010,13 @@ KubePodInventory
 | render timechart;
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="what-happens-when-a-cpu-starts"><a class="header" href="#what-happens-when-a-cpu-starts">What happens when a CPU starts?</a></h1>
-<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="what-happens-when"><a class="header" href="#what-happens-when">What Happens When…</a></h1>
 <h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
 <ul>
-<li><a href="#what-happens-when-a-cpu-starts-1">a-cpu-starts</a></li>
+<li><a href="#what-happens-when-a-cpu-starts">a-cpu-starts</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="what-happens-when-a-cpu-starts-1"><a class="header" href="#what-happens-when-a-cpu-starts-1">What happens when a CPU starts?</a></h1>
+<h1 id="what-happens-when-a-cpu-starts"><a class="header" href="#what-happens-when-a-cpu-starts">What happens when a CPU starts?</a></h1>
 <ul>
 <li>
 <p>When a CPU receives power, it resets by receiving a pulse on its <code>RESET</code> (or RST) pin. This is because when the power supply is first powering up, even if it only takes a second or two, the CPU has already received “dirty” power, because the power supply was building up a steady stream of electricity while powering up. Digital logic chips like CPUs require precise voltages, and they get confused if they receive something outside their intended voltage range. This is why the CPU must be reset immediately after powering up. The reset pin must be activated for a certain number of clock cycles to fully reset the CPU.</p>
@@ -20043,10 +20040,223 @@ KubePodInventory
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="fun-stuff"><a class="header" href="#fun-stuff">Fun Stuff</a></h1>
 <ul>
-<li><a href="#modify-machine-code">modify machine code</a></li>
+<li><a href="#modifying-machine-code-in-executables">modify machine code</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="modify-machine-code"><a class="header" href="#modify-machine-code">Modify Machine Code</a></h1>
+<h1 id="modifying-machine-code-in-executables"><a class="header" href="#modifying-machine-code-in-executables">Modifying Machine Code in Executables</a></h1>
+<p><strong>requires xxd and objdump</strong></p>
+<p>We have a very simple program written in C that prints “ab” followed by a newline:</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+  putchar('a');
+  putchar('b');
+  putchar('\n');
+}
+</code></pre>
+<p>Compile it:</p>
+<pre><code class="language-bash">gcc -o main main.c
+</code></pre>
+<p>Now, let’s look at the machine code of the compiled executable using <code>objdump</code>:</p>
+<pre><code class="language-bash">λ workspace $ objdump -d main
+
+main:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+0000000000001000 &lt;_init&gt;:
+    1000:       f3 0f 1e fa             endbr64
+    1004:       48 83 ec 08             sub    $0x8,%rsp
+    1008:       48 8b 05 c1 2f 00 00    mov    0x2fc1(%rip),%rax        # 3fd0 &lt;__gmon_start__@Base&gt;
+    100f:       48 85 c0                test   %rax,%rax
+    1012:       74 02                   je     1016 &lt;_init+0x16&gt;
+    1014:       ff d0                   call   *%rax
+    1016:       48 83 c4 08             add    $0x8,%rsp
+    101a:       c3                      ret
+
+Disassembly of section .plt:
+
+0000000000001020 &lt;putchar@plt-0x10&gt;:
+    1020:       ff 35 ca 2f 00 00       push   0x2fca(%rip)        # 3ff0 &lt;_GLOBAL_OFFSET_TABLE_+0x8&gt;
+    1026:       ff 25 cc 2f 00 00       jmp    *0x2fcc(%rip)        # 3ff8 &lt;_GLOBAL_OFFSET_TABLE_+0x10&gt;
+    102c:       0f 1f 40 00             nopl   0x0(%rax)
+
+0000000000001030 &lt;putchar@plt&gt;:
+    1030:       ff 25 ca 2f 00 00       jmp    *0x2fca(%rip)        # 4000 &lt;putchar@GLIBC_2.2.5&gt;
+    1036:       68 00 00 00 00          push   $0x0
+    103b:       e9 e0 ff ff ff          jmp    1020 &lt;_init+0x20&gt;
+
+Disassembly of section .text:
+
+0000000000001040 &lt;_start&gt;:
+    1040:       f3 0f 1e fa             endbr64
+    1044:       31 ed                   xor    %ebp,%ebp
+    1046:       49 89 d1                mov    %rdx,%r9
+    1049:       5e                      pop    %rsi
+    104a:       48 89 e2                mov    %rsp,%rdx
+    104d:       48 83 e4 f0             and    $0xfffffffffffffff0,%rsp
+    1051:       50                      push   %rax
+    1052:       54                      push   %rsp
+    1053:       45 31 c0                xor    %r8d,%r8d
+    1056:       31 c9                   xor    %ecx,%ecx
+    1058:       48 8d 3d da 00 00 00    lea    0xda(%rip),%rdi        # 1139 &lt;main&gt;
+    105f:       ff 15 5b 2f 00 00       call   *0x2f5b(%rip)        # 3fc0 &lt;__libc_start_main@GLIBC_2.34&gt;
+    1065:       f4                      hlt
+    1066:       66 2e 0f 1f 84 00 00    cs nopw 0x0(%rax,%rax,1)
+    106d:       00 00 00
+    1070:       48 8d 3d a1 2f 00 00    lea    0x2fa1(%rip),%rdi        # 4018 &lt;__TMC_END__&gt;
+    1077:       48 8d 05 9a 2f 00 00    lea    0x2f9a(%rip),%rax        # 4018 &lt;__TMC_END__&gt;
+    107e:       48 39 f8                cmp    %rdi,%rax
+    1081:       74 15                   je     1098 &lt;_start+0x58&gt;
+    1083:       48 8b 05 3e 2f 00 00    mov    0x2f3e(%rip),%rax        # 3fc8 &lt;_ITM_deregisterTMCloneTable@Base&gt;
+    108a:       48 85 c0                test   %rax,%rax
+    108d:       74 09                   je     1098 &lt;_start+0x58&gt;
+    108f:       ff e0                   jmp    *%rax
+    1091:       0f 1f 80 00 00 00 00    nopl   0x0(%rax)
+    1098:       c3                      ret
+    1099:       0f 1f 80 00 00 00 00    nopl   0x0(%rax)
+    10a0:       48 8d 3d 71 2f 00 00    lea    0x2f71(%rip),%rdi        # 4018 &lt;__TMC_END__&gt;
+    10a7:       48 8d 35 6a 2f 00 00    lea    0x2f6a(%rip),%rsi        # 4018 &lt;__TMC_END__&gt;
+    10ae:       48 29 fe                sub    %rdi,%rsi
+    10b1:       48 89 f0                mov    %rsi,%rax
+    10b4:       48 c1 ee 3f             shr    $0x3f,%rsi
+    10b8:       48 c1 f8 03             sar    $0x3,%rax
+    10bc:       48 01 c6                add    %rax,%rsi
+    10bf:       48 d1 fe                sar    $1,%rsi
+    10c2:       74 14                   je     10d8 &lt;_start+0x98&gt;
+    10c4:       48 8b 05 0d 2f 00 00    mov    0x2f0d(%rip),%rax        # 3fd8 &lt;_ITM_registerTMCloneTable@Base&gt;
+    10cb:       48 85 c0                test   %rax,%rax
+    10ce:       74 08                   je     10d8 &lt;_start+0x98&gt;
+    10d0:       ff e0                   jmp    *%rax
+    10d2:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+    10d8:       c3                      ret
+    10d9:       0f 1f 80 00 00 00 00    nopl   0x0(%rax)
+    10e0:       f3 0f 1e fa             endbr64
+    10e4:       80 3d 2d 2f 00 00 00    cmpb   $0x0,0x2f2d(%rip)        # 4018 &lt;__TMC_END__&gt;
+    10eb:       75 33                   jne    1120 &lt;_start+0xe0&gt;
+    10ed:       55                      push   %rbp
+    10ee:       48 83 3d ea 2e 00 00    cmpq   $0x0,0x2eea(%rip)        # 3fe0 &lt;__cxa_finalize@GLIBC_2.2.5&gt;
+    10f5:       00
+    10f6:       48 89 e5                mov    %rsp,%rbp
+    10f9:       74 0d                   je     1108 &lt;_start+0xc8&gt;
+    10fb:       48 8b 3d 0e 2f 00 00    mov    0x2f0e(%rip),%rdi        # 4010 &lt;__dso_handle&gt;
+    1102:       ff 15 d8 2e 00 00       call   *0x2ed8(%rip)        # 3fe0 &lt;__cxa_finalize@GLIBC_2.2.5&gt;
+    1108:       e8 63 ff ff ff          call   1070 &lt;_start+0x30&gt;
+    110d:       c6 05 04 2f 00 00 01    movb   $0x1,0x2f04(%rip)        # 4018 &lt;__TMC_END__&gt;
+    1114:       5d                      pop    %rbp
+    1115:       c3                      ret
+    1116:       66 2e 0f 1f 84 00 00    cs nopw 0x0(%rax,%rax,1)
+    111d:       00 00 00
+    1120:       c3                      ret
+    1121:       0f 1f 40 00             nopl   0x0(%rax)
+    1125:       66 66 2e 0f 1f 84 00    data16 cs nopw 0x0(%rax,%rax,1)
+    112c:       00 00 00 00
+    1130:       f3 0f 1e fa             endbr64
+    1134:       e9 67 ff ff ff          jmp    10a0 &lt;_start+0x60&gt;
+
+0000000000001139 &lt;main&gt;:
+    1139:       55                      push   %rbp
+    113a:       48 89 e5                mov    %rsp,%rbp
+    113d:       bf 61 00 00 00          mov    $0x61,%edi
+    1142:       e8 e9 fe ff ff          call   1030 &lt;putchar@plt&gt;
+    1147:       bf 62 00 00 00          mov    $0x62,%edi
+    114c:       e8 df fe ff ff          call   1030 &lt;putchar@plt&gt;
+    1151:       bf 0a 00 00 00          mov    $0xa,%edi
+    1156:       e8 d5 fe ff ff          call   1030 &lt;putchar@plt&gt;
+    115b:       b8 00 00 00 00          mov    $0x0,%eax
+    1160:       5d                      pop    %rbp
+    1161:       c3                      ret
+
+Disassembly of section .fini:
+
+0000000000001164 &lt;_fini&gt;:
+    1164:       f3 0f 1e fa             endbr64
+    1168:       48 83 ec 08             sub    $0x8,%rsp
+    116c:       48 83 c4 08             add    $0x8,%rsp
+    1170:       c3                      ret
+</code></pre>
+<p>That’s a lot of code! The part we’re interested in is the <code>main</code> function starting at address <code>0x1139</code>. We can focus this a bit by telling objdump to only dump the specific symbol we’re interested in (main). We also pass the <code>-f</code> flag to get some additional information about the file:</p>
+<pre><code>λ workspace $ objdump --disassemble=main -f main
+
+main:     file format elf64-x86-64
+architecture: i386:x86-64, flags 0x00000150:
+HAS_SYMS, DYNAMIC, D_PAGED
+start address 0x0000000000001040
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .text:
+
+0000000000001139 &lt;main&gt;:
+    1139:       55                      push   %rbp
+    113a:       48 89 e5                mov    %rsp,%rbp
+    113d:       bf 61 00 00 00          mov    $0x61,%edi
+    1142:       e8 e9 fe ff ff          call   1030 &lt;putchar@plt&gt;
+    1147:       bf 62 00 00 00          mov    $0x62,%edi
+    114c:       e8 df fe ff ff          call   1030 &lt;putchar@plt&gt;
+    1151:       bf 0a 00 00 00          mov    $0xa,%edi
+    1156:       e8 d5 fe ff ff          call   1030 &lt;putchar@plt&gt;
+    115b:       b8 00 00 00 00          mov    $0x0,%eax
+    1160:       5d                      pop    %rbp
+    1161:       c3                      ret
+
+Disassembly of section .fini:
+</code></pre>
+<p>The instruction at address <code>0x1142</code> is responsible for printing the character ‘a’ (ASCII 0x61). The instruction prior to that puts the value <code>0x61</code> (hex for ‘a’) into the <code>edi</code> register, which is used as an argument to the <code>putchar</code> function. So, we first load the character ‘a’ into <code>edi</code>, then call <code>putchar</code>. <code>putchar</code> looks at <code>edi</code>, sees the value <code>0x61</code>, and prints ‘a’.</p>
+<p>The same can be said for the following two lines. However, at address <code>0x1147</code>, we load <code>0x62</code> (hex for ‘b’) into <code>edi</code>, and at address <code>0x1151</code>, we load <code>0x0a</code> (hex for newline) into <code>edi</code>.</p>
+<p>So, if we wanted to change the program to print “ac” instead of “ab”, we would need to change the instruction at address <code>0x1147</code> to load <code>0x63</code> (hex for ‘c’) into <code>edi</code> instead of <code>0x62</code>. Simple.</p>
+<p>To disassemble this into a hex dump, we can use <code>xxd</code>:</p>
+<pre><code class="language-bash">
+λ workspace $ xxd main &gt; main.asm
+λ workspace $ cat main.asm
+
+The dump is rather lengthy, so I'll only print out the relevant portion
+.... redacted ....
+
+00001050: f050 5445 31c0 31c9 488d 3dda 0000 00ff  .PTE1.1.H.=.....
+00001060: 155b 2f00 00f4 662e 0f1f 8400 0000 0000  .[/...f.........
+00001070: 488d 3da1 2f00 0048 8d05 9a2f 0000 4839  H.=./..H.../..H9
+00001080: f874 1548 8b05 3e2f 0000 4885 c074 09ff  .t.H..&gt;/..H..t..
+00001090: e00f 1f80 0000 0000 c30f 1f80 0000 0000  ................
+000010a0: 488d 3d71 2f00 0048 8d35 6a2f 0000 4829  H.=q/..H.5j/..H)
+000010b0: fe48 89f0 48c1 ee3f 48c1 f803 4801 c648  .H..H..?H...H..H
+000010c0: d1fe 7414 488b 050d 2f00 0048 85c0 7408  ..t.H.../..H..t.
+000010d0: ffe0 660f 1f44 0000 c30f 1f80 0000 0000  ..f..D..........
+000010e0: f30f 1efa 803d 2d2f 0000 0075 3355 4883  .....=-/...u3UH.
+000010f0: 3dea 2e00 0000 4889 e574 0d48 8b3d 0e2f  =.....H..t.H.=./
+00001100: 0000 ff15 d82e 0000 e863 ffff ffc6 0504  .........c......
+00001110: 2f00 0001 5dc3 662e 0f1f 8400 0000 0000  /...].f.........
+00001120: c30f 1f40 0066 662e 0f1f 8400 0000 0000  ...@.ff.........
+00001130: f30f 1efa e967 ffff ff55 4889 e5bf 6100  .....g...UH...a.
+00001140: 0000 e8e9 feff ffbf 6200 0000 e8df feff  ........b....... &lt; HERE
+00001150: ffbf 0a00 0000 e8d5 feff ffb8 0000 0000  ................
+00001160: 5dc3 0000 f30f 1efa 4883 ec08 4883 c408  ].......H...H...
+00001170: c300 0000 0000 0000 0000 0000 0000 0000  ................
+00001180: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+00001190: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+
+.... redacted ....
+
+</code></pre>
+<p>In the above hex dump, each line starts with an offset (e.g., <code>00001050</code>), followed by the hex representation of the bytes, and finally the ASCII representation on the right. To find the instruction at address <code>0x1147</code>, we need to calculate its offset in the file. The <code>main</code> function starts at <code>0x1139</code>, so the offset of <code>0x1147</code> is <code>0x1147 - 0x1139 = 0xE</code> (14 in decimal). Specifically, we need to look at he line starting with offset <code>00001140</code> and find the 14th byte in that line. I have marked it with <code>&lt; HERE</code> in the above dump. To change this to load <code>0x63</code> instead of <code>0x62</code>, we need to change the byte <code>62</code> to <code>63</code>.</p>
+<p>This is the line we’re interested in:</p>
+<pre><code>00001140: 0000 e8e9 feff ffbf 6200 0000 e8df feff  ........b....... &lt; HERE
+</code></pre>
+<p>And this is what we want to change it to:</p>
+<pre><code>00001140: 0000 e8e9 feff ffbf 6300 0000 e8df feff  ........b....... &lt; Notice the 63 (0x63, i.e. 'c')
+</code></pre>
+<p>To do this, we can open the hex dump in a text editor, make the change, and then write it back to a binary file using <code>xxd</code>:</p>
+<pre><code class="language-bash">λ workspace $ xxd -r main.asm modified_main
+</code></pre>
+<p>We can then run the modified executable to see the results:</p>
+<pre><code class="language-bash">λ workspace $ ./modified_main
+ac
+</code></pre>
+<p>As you can see, the program now prints “ac” instead of “ab”. By modifying the machine code directly, we were able to change the behavior of the program without recompiling the source code.</p>
 
                     </main>
 
