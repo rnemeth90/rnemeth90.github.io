@@ -1,0 +1,318 @@
+# Data Structures
+
+*I’m a huge proponent of designing your code around the data, rather than the other way around, and I think it’s one of the reasons git has been fairly successful… I will, in fact, claim that the difference between a bad programmer and a good one is whether he considers his code or his data structures more important. Bad programmers worry about the code. Good programmers worry about data structures and their relationships.* - Linus Torvalds
+
+- A data structure is a way of organizing data in a computer so programmers can effectively use it in their programs.
+- An abstract data type is a description of a data structure, whereas a data structure is an actual implementation.
+- Computer scientists classify data structures based on different properties. For example, whether they are linear or non-linear.
+  - Linear  data structures arrange elements in a sequence. 
+  - Non-linear data structures link data non-sequentially
+- Traversing a data structure means to walk through the data structure one element at a time without backtracking. In a non-linear data structure, you often need to backtrack.
+- Computer scientists also classify data structure by whether they are static or dynamic:
+  - static: fixed size
+  - dynamic: can grow or shrink
+
+## Arrays
+- An array is a data structure that stores elements with indexes in a contiguous block of memory
+- Arrays are indexed by a key, with a key taking the form of an offset from the starting location in memory. The first element of an array is 0 elements away from the start, the next is 1 element from the start, and so on. "One element away" could be a byte, a word, etc., depending on the size of the data.
+- Retrieving or storing any element takes constant time (o(1)), and the entire array takes O(n) space. Inserting and deleting elements in an array is also O(n), which is slow, as every element may need to be moved.
+- When the number of elements is known when first creating the array, there is no wasted space.
+- Iterating through an array is likely to be much faster than any other data structure because of fewer cache misses.
+- Arrays are often homogeneous (homo = one kind, geneous/genous = producing) and static. A homogeneous data structure can only hold data of one type.
+
+
+## Stacks
+- A stack is an abstract data type and a linear data structure that allows you to remove only the most recently added element.
+- You can imagine a stack as a pile of books. You can add or remove only the top book.
+- Last in, first out (LIFO) data structure
+- You can push items onto the stack and pop items off of the stack
+- Stacks can be bounded (limited in size) or unbounded
+- You can create a stack with a class that internally uses an array or linked list to keep track of items
+- Pushing and popping items from a stack are all O(1)
+- Programs typically use stacks internally to track function calls
+
+#### Examples
+```python
+class Stack:
+    def __init__(self):
+        self.items = []
+
+    def push(self, item):
+        self.items.append(item)
+
+    def size(self):
+        return len(self.items)
+
+    def peek(self):
+        if len(self.items) == 0:
+            return None
+        return self.items[-1]
+
+    def pop(self):
+        if len(self.items) == 0:
+            return None
+        item = self.items[-1]
+        del self.items[-1]
+        return item
+
+#------------
+from stack import Stack
+
+def is_balanced(input_str):
+    s = Stack()
+    for i in input_str:
+        if i == "(":
+            s.push(i)
+        elif i == ")":
+            result = s.pop()
+            if result == None:
+                return False
+
+    if s.size() != 0:
+        return False
+    return True
+```
+
+```go
+// a stack implementation
+
+package main
+
+import (
+        "fmt"
+)
+
+type stack []string
+
+func (s *stack) push(val string) {
+        *s = append(*s, val)
+}
+
+func (s *stack) pop() (string, bool) {
+        if s.isEmpty() {
+                return "", false
+        }
+        index := len(*s) - 1
+        element := (*s)[index]
+        *s = (*s)[:index]
+        return element, true
+}
+
+func (s *stack) isEmpty() bool {
+        return len(*s) == 0
+}
+
+func main() {
+        var s stack
+
+        fmt.Println("empty: ", s.isEmpty())
+
+        s.push("hello")
+        s.push("world")
+
+        fmt.Println("length: ", len(s))
+        fmt.Println("empty: ", s.isEmpty())
+
+        fmt.Println("popping")
+        val, _ := s.pop()
+        fmt.Println("popped:", val)
+}
+```
+
+## Heap
+- a heap is a data structure which satisfies the heap ordering property, either min-heap (the value of each node is no smaller than the value of it's parent) or max-heap (the value of each node is no larger than the value of it's parent). A heap is a rooted, nearly complete binary tree, where the key of the root is greater than the key of either of its children, and this is recursively true for the subtree rooted at each child.
+- a max-heap supports the operations find-max, extract-max (pop), insert (push), and increase-key (change a node's key and then move the node to it's new position in the graph)
+- heaps, like stacks, tend to be implemented with arrays
+- only one element can be removed at a time (also similar to stacks), but rather than the most recent element, it will be the maximum element (for max-heap) or the minimum element (for min-heap)
+- heaps are partially ordered based on the key of each element, such that the highest (or lowest) priority element is always stored at the root
+
+
+## Queues
+- A queue is an abstract data type and a linear data structure which you can add items only to the rear and remove them from the front.
+- First in, first out (FIFO) data structure
+- Enqueueing means adding an item to the queue, dequeueing means removing an item from the queue
+- Queues work like the checkout lines at a grocery store.
+- A bounded queue limits how many items you can add to it.
+- Enqueueing and dequeueing, peeking, and getting the length of the queue are all O(1) regardless of the queues size
+
+## Linked Lists
+- Similar to arrays, but elements in a linked list do not have indexes because your computer does not store the items in a linked list in sequential memory. Instead, a linked list contains a chain of nodes, with each node holding a piece of data and the next node's location in the chain. The data in each node that stores the next node's location in the linked list is called a pointer. The first node in a linked list is called a head. The last element in a linked list points to None.
+  `head > a > b > c > none`
+- The only way to access an item in a linked list is to do a linear search for it, which is O(n). Adding and removing a node from a linked list is O(1), whereas inserting and deleting items from an array is O(n).
+- Memory management systems in operating systems use linked lists extensively, as do databases
+- There are many types of linked lists:
+  - singly linked list: a type of linked list with pointers that point only to the next element. You can move through a singly linked list only by starting at the head and moving to the end.
+  - doubly linked list: each node contains two pointers, one pointing to the next node and one pointing to the previous node. This allows you to move through a doubly linked list in either direction. 
+  - circular linked list: the last node points back to the first node
+- Unlike normal lists, linked lists are not stored sequentially in memory, so they can grow and shrink dynamically without needing to reallocate or reorganize memory.
+
+Example:
+```python
+class Node(self):
+    def __init__(self, val):
+        self.val = val
+        self.next = None
+        
+    def set_next(self, next_node):
+        self.next = next_node
+
+    def __repr__(self):
+        return self.val
+
+```
+
+## Hash Tables 
+- Hash tables are associative arrays that map keys to values
+- Dictionaries are one implementation of hash tables commonly found in programming languages
+- Hash tables use a hash function to convert a key into an index in an array where the corresponding value is stored
+- The hash function should:
+  - Take a key and return an integer
+  - Always return the same integer for the same key
+  - Always return a valid index in the array
+- A hash collision can occur when two keys hash to the same index. 
+- To determine the index where a value is stored in a hash table, a hash function is used. One common hash function is to modulo the number you are storing in the hash table by the number of values the hash table can store. For example, you have a hash table that can store 7 values. You want to store the number 90. 90%7=6, so you would store the number 90 at index 6. This method can result in collisions if you have two values whose modulo results in the same index number.
+- a collision occurs when you have multiple values that map to the same spot.
+- The lookup, insertion, and deletion operations of a hash table are all o(1) on average.
+
+## Trees
+- Trees are a hierarchical data structure made up of nodes connected by edges. A tree starts with a root node at the top. Each node can have child nodes connected underneath it. Nodes with child nodes are called parent nodes. Nodes that share the same parent are called sibling nodes. The connection between two nodes is called an edge. Nodes without child nodes are called leaf nodes, while nodes with child nodes are called branch nodes.
+- Trees are like linked lists in the sense that a root node holds references to its child nodes. However, tree nodes can have multiple children instead of just one. 
+- A tree structure must abide by the following rules:
+    - A tree node can have a value and a list of references to child nodes.
+    - Children can only have a single parent
+
+## Binary Search Trees (BST)
+![Binary Search Tree](../images/algorithms/binary_search_tree.png)
+![Binary Search Tree in O(n)](../images/algorithms/binary_search_tree_2.png)
+- Trees are not particularly useful unless they are ordered in some way. One of the most common types of trees is a binary search tree.
+- In addition to the constraints of a tree structure, a BST adds the following constraints:
+  - Instead of an unbounded list of children, a parent node can only have two children
+  - The left child's value must be less than its parent's value
+  - The right child's value must be more than its parent's value.
+  - No two nodes in the tree can have identical values
+- Because of the constraints listed above, binary trees are ordered 'by default', making them very performant.
+
+#### Example:
+```python
+import random
+
+class User:
+    def __init__(self, id):
+        self.id = id
+        user_names = [
+            "Blake",
+            "Ricky",
+            "Shelley",
+            "Dave",
+            "George",
+            "John",
+            "James",
+            "Mitch",
+            "Williamson",
+            "Burry",
+            "Vennett",
+            "Shipley",
+            "Geller",
+            "Rickert",
+            "Carrell",
+            "Baum",
+            "Brownfield",
+            "Lippmann",
+            "Moses",
+        ]
+        self.user_name = f"{user_names[id % len(user_names)]}#{id}"
+
+    def __eq__(self, other):
+        return isinstance(other, User) and self.id == other.id
+
+    def __lt__(self, other):
+        return isinstance(other, User) and self.id < other.id
+
+    def __gt__(self, other):
+        return isinstance(other, User) and self.id > other.id
+
+    def __repr__(self):
+        return "".join(self.user_name)
+
+
+def get_users(num):
+    random.seed(1)
+    users = []
+    ids = []
+    for i in range(num * 3):
+        ids.append(i)
+    random.shuffle(ids)
+    ids = ids[:num]
+    for id in ids:
+        user = User(id)
+        users.append(user)
+    return users
+
+# The Binary Search Tree Node class
+class BSTNode:
+    def __init__(self, val=None):
+        self.left = None
+        self.right = None
+        self.val = val
+
+    def insert(self, val):
+        if not self.val:
+            self.val = val
+            return
+
+        if self.val == val:
+            return
+
+        if val < self.val:
+            if not self.left:
+                self.left = BSTNode(val=val)
+            else:
+                self.left.insert(val)
+        else:
+            if not self.right:
+                self.right = BSTNode(val=val)
+            else:
+                self.right.insert(val)
+```
+
+- Inserting into a BST is O(log n) on average, but O(n) in the worst case (when each node has a single child, essentially creating a linked list.)
+- While it's true that on average a BST has a time complexity of O(log n) for lookups, deletions, and insertions. This rule can quickly break down if the data is mostly or completely sorted. If mostly or completely sorted data is inserted into a binary tree, the tree will become deeper than it is wide. The BST's time complexity depends on it being balanced, meaning that the left and right subtrees of any node differ in height by no more than one. If the tree becomes unbalanced, the time complexity for lookups, deletions, and insertions can degrade to O(n) in the worst case.
+
+## Red Black Trees
+- A red-black tree is a self-balancing binary search tree where each node has an extra bit for denoting the color of the node, either red or black. By constraining the node colors on any path from the root to a leaf, red-black trees ensure that no such path is more than twice as long as any other, thus the tree remains approximately balanced.
+- red/black = true/false
+- Properties of red-black trees:
+    - Each node is either red or black
+    - The root is always black
+    - All null leaf nodes are black
+    - If a node is red, both its children must be black (no two reds in a row)
+    - All paths from a single node go through the same number of black nodes
+- When a branch starts to get too long, the tree rotates and recolors nodes to maintain balance
+....
+
+## Tries
+- A trie, is simply a nested tree of dictionaries, where each key is a character that maps to the next character in a string. The end of a string is often marked with a special terminating character, such as an asterisk (*).
+- Example:
+    ```json
+    {
+        "h": {
+            "e": {
+                "l": {
+                    "l": {
+                        "o": {
+                            "*": True
+                        }
+                    },
+                    "p": {
+                        "*": True
+                    }
+                }
+            },
+            "i": {
+                "*": True
+            }
+        }
+    }
+    ``` 
+- Tries are often used in autocomplete systems, spell checkers, and IP routing algorithms.
+....

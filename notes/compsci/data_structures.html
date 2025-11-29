@@ -38,7 +38,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-b7c1d148.js";
+            window.path_to_searchindex_js = "../searchindex-17f69207.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-c4321bb1.js"></script>
@@ -351,29 +351,203 @@ func main() {
 </code></pre>
 <h2 id="hash-tables"><a class="header" href="#hash-tables">Hash Tables</a></h2>
 <ul>
-<li>Hash tables are associative arrays</li>
-<li>Hash tables are linear data structures that store key-value pairs with unique keys</li>
+<li>Hash tables are associative arrays that map keys to values</li>
 <li>Dictionaries are one implementation of hash tables commonly found in programming languages</li>
+<li>Hash tables use a hash function to convert a key into an index in an array where the corresponding value is stored</li>
+<li>The hash function should:
+<ul>
+<li>Take a key and return an integer</li>
+<li>Always return the same integer for the same key</li>
+<li>Always return a valid index in the array</li>
+</ul>
+</li>
+<li>A hash collision can occur when two keys hash to the same index.</li>
 <li>To determine the index where a value is stored in a hash table, a hash function is used. One common hash function is to modulo the number you are storing in the hash table by the number of values the hash table can store. For example, you have a hash table that can store 7 values. You want to store the number 90. 90%7=6, so you would store the number 90 at index 6. This method can result in collisions if you have two values whose modulo results in the same index number.</li>
 <li>a collision occurs when you have multiple values that map to the same spot.</li>
-<li>Searching for data in a hash table is O(1) on average. So is inserting and deleting values.</li>
+<li>The lookup, insertion, and deletion operations of a hash table are all o(1) on average.</li>
 </ul>
-<h2 id="binary-trees"><a class="header" href="#binary-trees">Binary Trees</a></h2>
+<h2 id="trees"><a class="header" href="#trees">Trees</a></h2>
 <ul>
-<li>non-linear</li>
-<li>Common tree operations include sorting, searching, and deleting. These operations are all O(n)</li>
-<li>a general tree is a data structure that starts with a node at the top. This is the root node. Each node connected underneath the root node is a child node. A node with one or more child nodes is called a parent node. Sibling nodes share the same parent. The connection between two nodes in a tree is called an edge. A node without child nodes is called a leaf node, and a node with child nodes is called a branch node.</li>
-<li>You can move from one node to another as long as they share an edge.</li>
-<li>a binary tree is a tree data structure where each nodes can have only two child nodes.</li>
+<li>Trees are a hierarchical data structure made up of nodes connected by edges. A tree starts with a root node at the top. Each node can have child nodes connected underneath it. Nodes with child nodes are called parent nodes. Nodes that share the same parent are called sibling nodes. The connection between two nodes is called an edge. Nodes without child nodes are called leaf nodes, while nodes with child nodes are called branch nodes.</li>
+<li>Trees are like linked lists in the sense that a root node holds references to its child nodes. However, tree nodes can have multiple children instead of just one.</li>
+<li>A tree structure must abide by the following rules:
+<ul>
+<li>A tree node can have a value and a list of references to child nodes.</li>
+<li>Children can only have a single parent</li>
 </ul>
-<h1 id="binary-search-trees"><a class="header" href="#binary-search-trees">Binary Search Trees</a></h1>
+</li>
+</ul>
+<h2 id="binary-search-trees-bst"><a class="header" href="#binary-search-trees-bst">Binary Search Trees (BST)</a></h2>
+<p><img src="../images/algorithms/binary_search_tree.png" alt="Binary Search Tree">
+<img src="../images/algorithms/binary_search_tree_2.png" alt="Binary Search Tree in O(n)"></p>
 <ul>
-<li>A binary search tree is a rooted binary tree defined recursively as follows: the key of the root is greater than or equal to the key of its left child and less than or equal to the key of its right child. This is also true for the subtree rooted at every other node.
-<img src="../images/algorithms/binary_search_tree.png" alt="Binary Search Tree"></li>
-<li>Operations on a binary search tree take time proportional to the size of the tree, which is the length of the longest chain from the root. This is O(log n) but O(n) in the worst case (when each node has a single child, essentially creating a linked list.)
-<img src="../images/algorithms/binary_search_tree_2.png" alt="Binary Search Tree in O(n)"></li>
-<li>Searching a BST is simple, given a pointer to the root and a key we’re searching for, we first check to see if the root has our desired key. If the root’s key is higher than the key we are searching for, we traverse to the left. If the root’s key is lower than the key we are searching for, we traverse the tree to the right. We stop when either the key matches or the subtree we’re attempting to recurse on is null.</li>
-<li>To find the minimum element of a tree, we simply recurse to the left. To find the max element, we recurse to the right.</li>
+<li>Trees are not particularly useful unless they are ordered in some way. One of the most common types of trees is a binary search tree.</li>
+<li>In addition to the constraints of a tree structure, a BST adds the following constraints:
+<ul>
+<li>Instead of an unbounded list of children, a parent node can only have two children</li>
+<li>The left child’s value must be less than its parent’s value</li>
+<li>The right child’s value must be more than its parent’s value.</li>
+<li>No two nodes in the tree can have identical values</li>
+</ul>
+</li>
+<li>Because of the constraints listed above, binary trees are ordered ‘by default’, making them very performant.</li>
+</ul>
+<h4 id="example"><a class="header" href="#example">Example:</a></h4>
+<pre><code class="language-python">import random
+
+class User:
+    def __init__(self, id):
+        self.id = id
+        user_names = [
+            "Blake",
+            "Ricky",
+            "Shelley",
+            "Dave",
+            "George",
+            "John",
+            "James",
+            "Mitch",
+            "Williamson",
+            "Burry",
+            "Vennett",
+            "Shipley",
+            "Geller",
+            "Rickert",
+            "Carrell",
+            "Baum",
+            "Brownfield",
+            "Lippmann",
+            "Moses",
+        ]
+        self.user_name = f"{user_names[id % len(user_names)]}#{id}"
+
+    def __eq__(self, other):
+        return isinstance(other, User) and self.id == other.id
+
+    def __lt__(self, other):
+        return isinstance(other, User) and self.id &lt; other.id
+
+    def __gt__(self, other):
+        return isinstance(other, User) and self.id &gt; other.id
+
+    def __repr__(self):
+        return "".join(self.user_name)
+
+
+def get_users(num):
+    random.seed(1)
+    users = []
+    ids = []
+    for i in range(num * 3):
+        ids.append(i)
+    random.shuffle(ids)
+    ids = ids[:num]
+    for id in ids:
+        user = User(id)
+        users.append(user)
+    return users
+
+# The Binary Search Tree Node class
+class BSTNode:
+    def __init__(self, val=None):
+        self.left = None
+        self.right = None
+        self.val = val
+
+    def insert(self, val):
+        if not self.val:
+            self.val = val
+            return
+
+        if self.val == val:
+            return
+
+        if val &lt; self.val:
+            if not self.left:
+                self.left = BSTNode(val=val)
+            else:
+                self.left.insert(val)
+        else:
+            if not self.right:
+                self.right = BSTNode(val=val)
+            else:
+                self.right.insert(val)
+</code></pre>
+<ul>
+<li>Inserting into a BST is O(log n) on average, but O(n) in the worst case (when each node has a single child, essentially creating a linked list.)</li>
+<li>While it’s true that on average a BST has a time complexity of O(log n) for lookups, deletions, and insertions. This rule can quickly break down if the data is mostly or completely sorted. If mostly or completely sorted data is inserted into a binary tree, the tree will become deeper than it is wide. The BST’s time complexity depends on it being balanced, meaning that the left and right subtrees of any node differ in height by no more than one. If the tree becomes unbalanced, the time complexity for lookups, deletions, and insertions can degrade to O(n) in the worst case.</li>
+</ul>
+<h2 id="red-black-trees"><a class="header" href="#red-black-trees">Red Black Trees</a></h2>
+<ul>
+<li>A red-black tree is a self-balancing binary search tree where each node has an extra bit for denoting the color of the node, either red or black. By constraining the node colors on any path from the root to a leaf, red-black trees ensure that no such path is more than twice as long as any other, thus the tree remains approximately balanced.</li>
+<li>red/black = true/false</li>
+<li>Properties of red-black trees:
+<ul>
+<li>Each node is either red or black</li>
+<li>The root is always black</li>
+<li>All null leaf nodes are black</li>
+<li>If a node is red, both its children must be black (no two reds in a row)</li>
+<li>All paths from a single node go through the same number of black nodes</li>
+</ul>
+</li>
+<li>When a branch starts to get too long, the tree rotates and recolors nodes to maintain balance
+….</li>
+</ul>
+<h2 id="tries"><a class="header" href="#tries">Tries</a></h2>
+<ul>
+<li>A trie, is simply a nested tree of dictionaries, where each key is a character that maps to the next character in a string. The end of a string is often marked with a special terminating character, such as an asterisk (*).</li>
+<li>Example:
+<pre><code class="language-json">{
+    "h": {
+        "e": {
+            "l": {
+                "l": {
+                    "o": {
+                        "*": True
+                    }
+                },
+                "p": {
+                    "*": True
+                }
+            }
+        },
+        "i": {
+            "*": True
+        }
+    }
+}
+</code></pre>
+</li>
+<li>Tries are often used in autocomplete systems, spell checkers, and IP routing algorithms.
+….</li>
+</ul>
+<h2 id="graphs"><a class="header" href="#graphs">Graphs</a></h2>
+<ul>
+<li>A graph is a non-linear data structure made up of vertices (nodes) and edges that connect them.</li>
+<li>A graph can be represented as a matrix</li>
+<li>Example:</li>
+</ul>
+<pre><code class="language-python">[
+  [False, True, False, False, True],
+  [True, False, True, True, True],
+  [False, True, False, True, False],
+  [False, True, True, False, True],
+  [True, True, False, True, False]
+]
+</code></pre>
+<ul>
+<li>An undirected graph can have up to n(n-1)/2 edges, where n is the number of vertices
+….</li>
+</ul>
+<h2 id="breadth-first-search-bfs"><a class="header" href="#breadth-first-search-bfs">Breadth-First Search (BFS)</a></h2>
+<ul>
+<li>BFS is an algorithm for traversing tree or graph data structures</li>
+<li>It starts at the root (or an arbitrary node in the case of a graph) and explores all of the neighbor nodes at the present depth prior to moving on to the nodes at the next depth level.</li>
+</ul>
+<h2 id="depth-first-search-dfs"><a class="header" href="#depth-first-search-dfs">Depth-First Search (DFS)</a></h2>
+<ul>
+<li>DFS is an algorithm for traversing tree or graph data structures</li>
+<li>It starts at the root (or an arbitrary node in the case of a graph) and explores as far as possible along each branch before backtracking.</li>
 </ul>
 
                     </main>
