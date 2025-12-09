@@ -3,7 +3,7 @@ title: "What actually happens when a program is compiled?"
 date: '2025-12-06'
 author: Ryan
 layout: post
-draft: false
+draft: true
 categories:
 - Programming
 - Systems
