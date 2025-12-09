@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-660845b7.js";
+            window.path_to_searchindex_js = "searchindex-2fd91b51.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-c4321bb1.js"></script>
+        <script src="toc-ff38ee7f.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -194,6 +194,7 @@
 <li><a href="#latency-numbers-every-sre-should-know">Latency Numbers Every SRE Should Know</a></li>
 <li><a href="#make-files">Make Files</a></li>
 <li><a href="#neovim-cheatsheet">Neovim Cheatsheet</a></li>
+<li><a href="#nmap-cheatsheet">nmap</a></li>
 <li><a href="#ranger-cheatsheet">Ranger Cheatsheet</a></li>
 <li><a href="#regex-cheatsheet">Regex Cheatsheet</a></li>
 <li><a href="#sql-cheat-sheet">SQL Cheat Sheet</a></li>
@@ -496,6 +497,7 @@
 <ul>
 <li><a href="#need-to-addrefine">Need to add/refine:</a></li>
 <li><a href="#instructions-for-using-dnspinger">instructions for using dnspinger</a></li>
+<li><a href="#nmap">nmap</a></li>
 </ul>
 </li>
 <li><a href="troubleshooting/README.html">Troubleshooting</a>
@@ -538,6 +540,7 @@
 <li><a href="#latency-numbers-every-sre-should-know">latency_numbers</a></li>
 <li><a href="#make-files">make_files</a></li>
 <li><a href="#neovim-cheatsheet">neovim</a></li>
+<li><a href="#nmap-cheatsheet">nmap</a></li>
 <li><a href="#ranger-cheatsheet">ranger</a></li>
 <li><a href="#regex-cheatsheet">regex</a></li>
 <li><a href="#sql-cheat-sheet">sql</a></li>
@@ -977,6 +980,90 @@ endif
 </li>
 <li>&lt;&lt;: Dedent line</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="nmap-cheatsheet"><a class="header" href="#nmap-cheatsheet">Nmap Cheatsheet</a></h1>
+<h2 id="basic-scan-types"><a class="header" href="#basic-scan-types">Basic Scan Types</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scan</th><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Ping Scan</strong></td><td><code>nmap -sn &lt;target&gt;</code></td><td>Check if host is up.</td></tr>
+<tr><td><strong>SYN Scan</strong></td><td><code>nmap -sS &lt;target&gt;</code></td><td>Stealthy fast TCP scan.</td></tr>
+<tr><td><strong>Connect Scan</strong></td><td><code>nmap -sT &lt;target&gt;</code></td><td>Full TCP handshake; accurate but noisy.</td></tr>
+<tr><td><strong>UDP Scan</strong></td><td><code>nmap -sU &lt;target&gt;</code></td><td>Scan UDP ports (slow).</td></tr>
+<tr><td><strong>Version Scan</strong></td><td><code>nmap -sV &lt;target&gt;</code></td><td>Identify service versions.</td></tr>
+<tr><td><strong>OS Detection</strong></td><td><code>nmap -O &lt;target&gt;</code></td><td>Guess OS.</td></tr>
+<tr><td><strong>Aggressive Scan</strong></td><td><code>nmap -A &lt;target&gt;</code></td><td>OS, version, scripts, traceroute.</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="port-selection"><a class="header" href="#port-selection">Port Selection</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-p 22</code></td><td>Scan one port</td></tr>
+<tr><td><code>-p 22,80,443</code></td><td>Scan list</td></tr>
+<tr><td><code>-p 1-65535</code></td><td>Scan range</td></tr>
+<tr><td><code>-p-</code></td><td>Scan all ports</td></tr>
+<tr><td><code>--top-ports=10</code></td><td>Scan most common ports</td></tr>
+<tr><td><code>-F</code></td><td>Fast scan (top 100)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="important-flags"><a class="header" href="#important-flags">Important Flags</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-Pn</code></td><td>No host discovery; treat host as up</td></tr>
+<tr><td><code>-n</code></td><td>No DNS resolution</td></tr>
+<tr><td><code>--disable-arp-ping</code></td><td>Disable ARP ping</td></tr>
+<tr><td><code>--packet-trace</code></td><td>Show all sent/received packets</td></tr>
+<tr><td><code>--reason</code></td><td>Explain port states</td></tr>
+<tr><td><code>-T4</code></td><td>Faster timing template</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="port-states"><a class="header" href="#port-states">Port States</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>State</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>open</strong></td><td>Accepts connections</td></tr>
+<tr><td><strong>closed</strong></td><td>Responds with RST</td></tr>
+<tr><td><strong>filtered</strong></td><td>Blocked by firewall</td></tr>
+<tr><td><strong>unfiltered</strong></td><td>Reachable, state unknown</td></tr>
+<tr><td><strong>open|filtered</strong></td><td>No response</td></tr>
+<tr><td><strong>closed|filtered</strong></td><td>Idle scan ambiguity</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="useful-examples"><a class="header" href="#useful-examples">Useful Examples</a></h2>
+<h3 id="scan-top-10-tcp-ports"><a class="header" href="#scan-top-10-tcp-ports">Scan Top 10 TCP Ports</a></h3>
+<pre><code>nmap --top-ports=10 &lt;target&gt;
+</code></pre>
+<h3 id="full-tcp--udp--version--os"><a class="header" href="#full-tcp--udp--version--os">Full TCP + UDP + Version + OS</a></h3>
+<pre><code>nmap -sS -sU -sV -O &lt;target&gt;
+</code></pre>
+<h3 id="packet-trace-example"><a class="header" href="#packet-trace-example">Packet Trace Example</a></h3>
+<pre><code>nmap -p 21 --packet-trace -Pn -n --disable-arp-ping &lt;target&gt;
+</code></pre>
+<h3 id="service-enumeration"><a class="header" href="#service-enumeration">Service Enumeration</a></h3>
+<pre><code>nmap -sV -p &lt;port&gt; &lt;target&gt;
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="ranger-cheatsheet"><a class="header" href="#ranger-cheatsheet">Ranger Cheatsheet</a></h1>
 <h2 id="general"><a class="header" href="#general">General</a></h2>
@@ -19863,6 +19950,7 @@ PID        TTY     STAT   TIME          CMD
 <ul>
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
+<li><a href="#nmap">nmap</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="need-to-addrefine"><a class="header" href="#need-to-addrefine">Need to add/refine:</a></h1>
@@ -19976,6 +20064,122 @@ customEvents
 | where customDimensions.Resolver == "azure"
 
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="nmap"><a class="header" href="#nmap">Nmap</a></h1>
+<p>Understanding how Nmap works is critical for interpreting scan results. After confirming a host is alive, scanning helps identify:</p>
+<ul>
+<li>Open ports &amp; services</li>
+<li>Service versions</li>
+<li>Service information</li>
+<li>Operating system details</li>
+</ul>
+<h2 id="port-states-6-total"><a class="header" href="#port-states-6-total">Port States (6 Total)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>State</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>open</strong></td><td>Target accepts connections (TCP/UDP/SCTP).</td></tr>
+<tr><td><strong>closed</strong></td><td>Replies with <strong>RST</strong>; port reachable but no service.</td></tr>
+<tr><td><strong>filtered</strong></td><td>No response or error; filtering prevents state determination.</td></tr>
+<tr><td><strong>unfiltered</strong></td><td>Only in ACK scans; port reachable, state unknown.</td></tr>
+<tr><td><strong>open|filtered</strong></td><td>No response; likely filtered or silently dropped.</td></tr>
+<tr><td><strong>closed|filtered</strong></td><td>Only in idle scans; cannot determine closed vs filtered.</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h1 id="tcp-scanning"><a class="header" href="#tcp-scanning">TCP Scanning</a></h1>
+<h2 id="syn-scan--ss"><a class="header" href="#syn-scan--ss">SYN Scan (-sS)</a></h2>
+<ul>
+<li>Default when running as root.</li>
+<li>Fast &amp; stealthy (half‑open).</li>
+<li>Interprets SYN‑ACK -&gt; open, RST -&gt; closed.</li>
+</ul>
+<h3 id="port-selection-examples"><a class="header" href="#port-selection-examples">Port selection examples</a></h3>
+<ul>
+<li><code>-p 22,80,445</code></li>
+<li><code>-p 22-445</code></li>
+<li><code>--top-ports=10</code></li>
+<li><code>-p-</code></li>
+<li><code>-F</code> (top 100)</li>
+</ul>
+<hr>
+<h2 id="packet-tracing-packet-trace"><a class="header" href="#packet-tracing-packet-trace">Packet Tracing (–packet-trace)</a></h2>
+<p>Shows packets sent/received.<br>Example for closed port:</p>
+<ul>
+<li>SENT: SYN</li>
+<li>RCVD: RST/ACK -&gt; closed</li>
+</ul>
+<hr>
+<h1 id="tcp-connect-scan--st"><a class="header" href="#tcp-connect-scan--st">TCP Connect Scan (-sT)</a></h1>
+<ul>
+<li>Used when not root.</li>
+<li>Completes full handshake.</li>
+<li><strong>Most accurate, least stealthy</strong>.</li>
+<li>Logged by services/IDS.</li>
+<li>Useful when outbound connections allowed but inbound blocked.</li>
+</ul>
+<hr>
+<h1 id="filtered-ports"><a class="header" href="#filtered-ports">Filtered Ports</a></h1>
+<h3 id="dropped-packets"><a class="header" href="#dropped-packets">Dropped packets:</a></h3>
+<ul>
+<li>No reply -&gt; Nmap retries (default 10).</li>
+<li>Slow scan.</li>
+</ul>
+<h3 id="rejected-packets"><a class="header" href="#rejected-packets">Rejected packets:</a></h3>
+<ul>
+<li>ICMP type 3 code 3 -&gt; port unreachable -&gt; likely firewall rejection.</li>
+</ul>
+<hr>
+<h1 id="udp-scanning--su"><a class="header" href="#udp-scanning--su">UDP Scanning (-sU)</a></h1>
+<ul>
+<li>Slow due to long timeouts.</li>
+<li>Many ports show <strong>open|filtered</strong> due to lack of responses.</li>
+<li>Determining states:
+<ul>
+<li>UDP response -&gt; <strong>open</strong></li>
+<li>ICMP type 3 code 3 -&gt; <strong>closed</strong></li>
+<li>No response -&gt; <strong>open|filtered</strong></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="version-detection--sv"><a class="header" href="#version-detection--sv">Version Detection (-sV)</a></h1>
+<p>Probes services to identify:</p>
+<ul>
+<li>Service name</li>
+<li>Version</li>
+<li>Extra metadata (workgroup, hostnames, OS hints)</li>
+</ul>
+<p>Example:<br>Identifies Samba <code>3.x–4.x</code> on port 445, workgroup WORKGROUP, OS Ubuntu.</p>
+<hr>
+<h1 id="key-option-summary"><a class="header" href="#key-option-summary">Key Option Summary</a></h1>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-Pn</code></td><td>Skip host discovery.</td></tr>
+<tr><td><code>-n</code></td><td>Disable DNS resolution.</td></tr>
+<tr><td><code>--disable-arp-ping</code></td><td>Skip ARP ping.</td></tr>
+<tr><td><code>--packet-trace</code></td><td>Show packets sent/received.</td></tr>
+<tr><td><code>--reason</code></td><td>Explain port state classification.</td></tr>
+<tr><td><code>-F</code></td><td>Fast scan (top 100).</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h1 id="core-takeaways"><a class="header" href="#core-takeaways">Core Takeaways</a></h1>
+<ul>
+<li>Nmap uses 6 port states to categorize behavior.</li>
+<li>SYN scans are fast &amp; stealthy; connect scans are accurate but noisy.</li>
+<li>Filtered ports behave differently when dropped vs rejected.</li>
+<li>UDP scanning is slow and ambiguous.</li>
+<li>Version detection is essential for deeper enumeration.</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
 <h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>

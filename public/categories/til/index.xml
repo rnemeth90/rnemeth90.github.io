@@ -6,8 +6,22 @@
     <description>Recent content in TIL on GeekyRyan</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 31 Oct 2025 16:01:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 08 Dec 2025 16:01:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/til/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2s Complement</title>
+      <link>http://localhost:1313/til/2025-12-08-twoscomplement/</link>
+      <pubDate>Mon, 08 Dec 2025 16:01:00 +0000</pubDate>
+      <guid>http://localhost:1313/til/2025-12-08-twoscomplement/</guid>
+      <description>&lt;p&gt;Two&amp;rsquo;s Complement is required for representing signed integers. If the high bit is 1 (i.e. if the binary number is 128 or greater in an 8-bit system), then the number is negative. To find the negative value, invert all bits and add 1.&lt;/p&gt;&#xA;&lt;p&gt;Example:&lt;/p&gt;&#xA;&lt;p&gt;To convert the binary number &lt;code&gt;11111010&lt;/code&gt; to decimal:&lt;/p&gt;&#xA;&lt;p&gt;First, invert all the bits: &lt;code&gt;00000101&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;Then, add 1: &lt;code&gt;00000101 + 1 = 00000110&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;Finally, convert to decimal: &lt;code&gt;6&lt;/code&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Integer Overflow</title>
+      <link>http://localhost:1313/til/2015-12-08-integer-overflow/</link>
+      <pubDate>Mon, 08 Dec 2025 16:01:00 +0000</pubDate>
+      <guid>http://localhost:1313/til/2015-12-08-integer-overflow/</guid>
+      <description>&lt;p&gt;Consider an 8-bit system. What happens when you add &lt;code&gt;1&lt;/code&gt; to the maximum value of &lt;code&gt;255&lt;/code&gt; (&lt;code&gt;11111111&lt;/code&gt; in binary)? An integer overflow occurs. The 8 bit result becomes &lt;code&gt;00000000&lt;/code&gt; because only 8 bits are kept.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;11111111&#xA;+00000001&#xA;---------&#xA;1 00000000   &amp;lt; 9th bit carry-out&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The carry bit is then set in the CPUs eflags register, indicating that an overflow has occurred. Decisions can then be made by the CPU based on this flag.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Linux initramfs</title>
       <link>http://localhost:1313/til/2025-10-31-initramfs/</link>
