@@ -38,7 +38,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-34c7ef29.js";
+            window.path_to_searchindex_js = "../searchindex-5c964573.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-ff38ee7f.js"></script>
@@ -289,6 +289,16 @@
 </table>
 </div>
 <hr>
+<h1 id="timing"><a class="header" href="#timing">Timing</a></h1>
+<p>Because such settings cannot always be optimized manually, as in a black-box penetration test, Nmap offers six different timing templates (-T &lt;0-5&gt;) for us to use. These values (0-5) determine the aggressiveness of our scans. This can also have negative effects if the scan is too aggressive, and security systems may block us due to the produced network traffic. The default timing template used when we have defined nothing else is the normal (-T 3).</p>
+<pre><code class="language-sh">-T 0 / -T paranoid
+-T 1 / -T sneaky
+-T 2 / -T polite
+-T 3 / -T normal
+-T 4 / -T aggressive
+-T 5 / -T insane
+</code></pre>
+<p>These templates contain options that we can also set manually, and have seen some of them already. The developers determined the values set for these templates according to their best results, making it easier for us to adapt our scans to the corresponding network environment. The exact used options with their values we can find here: https://nmap.org/book/performance-timing-templates.html</p>
 <h1 id="core-takeaways"><a class="header" href="#core-takeaways">Core Takeaways</a></h1>
 <ul>
 <li>Nmap uses 6 port states to categorize behavior.</li>
