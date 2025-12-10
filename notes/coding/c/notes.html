@@ -38,7 +38,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-2fd91b51.js";
+            window.path_to_searchindex_js = "../../searchindex-34c7ef29.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-ff38ee7f.js"></script>
@@ -352,6 +352,25 @@ int main() {
     scanf("%d", &amp;x);
     printf("You entered: %d\n", x);
     return 0;
+}
+</code></pre>
+<h2 id="unions"><a class="header" href="#unions">Unions</a></h2>
+<ul>
+<li>A union is a user-defined data type that allows storing different data types in the same memory location.</li>
+<li>The size of a union is determined by the size of its largest member.</li>
+<li>A union can only store one member at a time.</li>
+<li>To declare a union:</li>
+</ul>
+<pre><code class="language-c">union Data {
+    int i;
+    float f;
+    char str[20];
+};
+
+int main() {}
+    union Data data;
+    data.i = 10;
+    printf("data.i: %d\n", data.i);
 }
 </code></pre>
 
