@@ -1,5 +1,5 @@
 ---
-title: 'HTB - Login Brute Forcing Module - Lesson  '
+title: 'HTB - Login Brute Forcing Module - Brute Force Attacks'
 date: '2025-12-11T16:01:00+00:00'
 author: Ryan
 layout: post
@@ -8,10 +8,9 @@ categories:
     - penetration-testing
     - infosec
     - hackthebox
-
 ---
 
-# HackTheBox Login Brute Force
+# HackTheBox Login Brute Force - Brute Force Attacks
 
 This is part of a multi-part series documenting my process for completing the HackTheBox modules. This first post covers capturing a flag from a web API by brute-forcing a 4-digit PIN.
 
