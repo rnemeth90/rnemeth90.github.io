@@ -1,0 +1,147 @@
+# Nmap
+
+Understanding how Nmap works is critical for interpreting scan results. After confirming a host is alive, scanning helps identify:
+
+- Open ports & services
+- Service versions
+- Service information
+- Operating system details
+
+## Port States (6 Total)
+
+| State           | Meaning |
+|----------------|---------|
+| **open** | Target accepts connections (TCP/UDP/SCTP). |
+| **closed** | Replies with **RST**; port reachable but no service. |
+| **filtered** | No response or error; filtering prevents state determination. |
+| **unfiltered** | Only in ACK scans; port reachable, state unknown. |
+| **open\|filtered** | No response; likely filtered or silently dropped. |
+| **closed\|filtered** | Only in idle scans; cannot determine closed vs filtered. |
+
+---
+
+# TCP Scanning
+
+## ACK Scan (-sA)
+- Difficult for firewalls to detect. 
+- TCP packet only has the ACK flag set, forcing a RST response from unfiltered ports.
+- Packets with the ACK flag set are usually used to acknowledge received data, so firewalls may not log them as suspicious or block them.
+
+## SYN Scan (-sS)
+- Default when running as root.
+- Fast & stealthy (half‑open).
+- Interprets SYN‑ACK -> open, RST -> closed.
+
+### Port selection examples
+- `-p 22,80,445`
+- `-p 22-445`
+- `--top-ports=10`
+- `-p-`
+- `-F` (top 100)
+
+---
+
+## Packet Tracing (--packet-trace)
+Shows packets sent/received.  
+Example for closed port:
+- SENT: SYN  
+- RCVD: RST/ACK -> closed
+
+---
+
+# TCP Connect Scan (-sT)
+- Used when not root.
+- Completes full handshake.
+- **Most accurate, least stealthy**.
+- Logged by services/IDS.
+- Useful when outbound connections allowed but inbound blocked.
+
+---
+
+# Filtered Ports
+
+### Dropped packets:
+- No reply -> Nmap retries (default 10).
+- Slow scan.
+
+### Rejected packets:
+- ICMP type 3 code 3 -> port unreachable -> likely firewall rejection.
+
+---
+
+# UDP Scanning (-sU)
+
+- Slow due to long timeouts.
+- Many ports show **open\|filtered** due to lack of responses.
+- Determining states:
+  - UDP response -> **open**
+  - ICMP type 3 code 3 -> **closed**
+  - No response -> **open\|filtered**
+
+---
+
+# Version Detection (-sV)
+Probes services to identify:
+- Service name
+- Version
+- Extra metadata (workgroup, hostnames, OS hints)
+
+Example:  
+Identifies Samba `3.x–4.x` on port 445, workgroup WORKGROUP, OS Ubuntu.
+
+nmap looks at the banners of the scanned services and prints them out and uses that to determine the version of the service. If it cannot identify the version through the banner, it will try to identify the service using a signature, but this is extremely noisy. 
+
+---
+
+# Key Option Summary
+
+| Option | Description |
+|--------|-------------|
+| `-Pn` | Skip host discovery. |
+| `-n` | Disable DNS resolution. |
+| `--disable-arp-ping` | Skip ARP ping. |
+| `--packet-trace` | Show packets sent/received. |
+| `--reason` | Explain port state classification. |
+| `-F` | Fast scan (top 100). |
+
+---
+
+# Timing
+Because such settings cannot always be optimized manually, as in a black-box penetration test, Nmap offers six different timing templates (-T <0-5>) for us to use. These values (0-5) determine the aggressiveness of our scans. This can also have negative effects if the scan is too aggressive, and security systems may block us due to the produced network traffic. The default timing template used when we have defined nothing else is the normal (-T 3).
+
+```sh
+-T 0 / -T paranoid
+-T 1 / -T sneaky
+-T 2 / -T polite
+-T 3 / -T normal
+-T 4 / -T aggressive
+-T 5 / -T insane
+```
+These templates contain options that we can also set manually, and have seen some of them already. The developers determined the values set for these templates according to their best results, making it easier for us to adapt our scans to the corresponding network environment. The exact used options with their values we can find here: https://nmap.org/book/performance-timing-templates.html
+
+# Decoys (-D)
+- Use decoy IP addresses to obfuscate the true source of the scan.
+- Example: `nmap -D RND:10 <target>` uses 10 random decoys along with the real IP.
+- The decoys must be routable and online from the target's perspective.
+- Helps evade simple logging and detection mechanisms.
+- Decoys can be used with SYN, ACK, ICMP, and OS Detection scans.
+
+# Source Port Specification (--source-port)
+- Specify a different source port for the scan.
+- Example: `nmap -sS -Pn -p- --source-port 53 <target>` uses port 53 (
+
+# Firewall/IDS Evasion
+- nmap provides a number of ways to evade firewalls and IDS systems. Including:
+- Fragmentation of packets
+- Decoy IP addresses
+- Using different source ports
+- Randomizing the order of port scans
+- Timing options to slow down scans
+- Using different scan techniques (e.g., Xmas scan, NULL scan)
+
+# Core Takeaways
+- Nmap uses 6 port states to categorize behavior.
+- SYN scans are fast & stealthy; connect scans are accurate but noisy.
+- Filtered ports behave differently when dropped vs rejected.
+- UDP scanning is slow and ambiguous.
+- Version detection is essential for deeper enumeration.

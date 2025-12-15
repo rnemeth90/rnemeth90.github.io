@@ -1,6 +1,6 @@
 ---
 title: 'HTB - Login Brute Forcing Module - Dictionary Attacks'
-date: '2025-12-11T16:01:00+00:00'
+date: '2025-12-12T16:01:00+00:00'
 author: Ryan
 layout: post
 draft: false
@@ -12,7 +12,9 @@ categories:
 
 # HackTheBox Login Brute Force - Dictionary Attacks
 
-This is part of a multi-part series documenting my process for completing the HackTheBox modules. This post covers capturing a flag from a web API using dictionary attacks. Dictionary attacks are more efficient than brute-force attacks when the target's credentials are likely to be based on common words or phrases. This type of attack leverages precompiled lists of potential passwords, known as wordlists, to attempt authentication. The success of a dictionary attack relies on people's tendency to use easily guessable passwords, despite best security practices.
+This is part of a multi-part series documenting my process for completing the HackTheBox modules.
+
+This post covers capturing a flag from a web API using dictionary attacks. Dictionary attacks are more efficient than brute-force attacks when the target's credentials are likely to be based on common words or phrases. This type of attack leverages precompiled lists of potential passwords, known as wordlists, to attempt authentication. The success of a dictionary attack relies on people's tendency to use easily guessable passwords, despite best security practices.
 
 ## Overview
 HTB provides a python script that uses a dictionary from Github to run a dictionary attack against the API. 
