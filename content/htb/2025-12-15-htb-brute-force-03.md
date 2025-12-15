@@ -61,7 +61,7 @@ ACCOUNT FOUND: [ftp] Host: 127.0.0.1 User: ftpuser Password: ********** [SUCCESS
 
 Now that we have the FTP credentials, we can connect to the FTP server and retrieve the flag:
 ```bash
-sshuser@ng-2320105-loginbfservice-w29z2-549ffc55c4-wfpjm:~$ ftp ftp://ftpuser:qqww1122@localhost
+sshuser@ng-2320105-loginbfservice-w29z2-549ffc55c4-wfpjm:~$ ftp ftp://ftpuser:*******@localhost
 Trying [::1]:21 ...
 Connected to localhost.
 220 (vsFTPd 3.0.5)
