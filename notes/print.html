@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-2f244372.js";
+            window.path_to_searchindex_js = "searchindex-b69d29d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-c29b082f.js"></script>
+        <script src="toc-d458309f.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -195,6 +195,7 @@
 <li><a href="#make-files">Make Files</a></li>
 <li><a href="#neovim-cheatsheet">Neovim Cheatsheet</a></li>
 <li><a href="#nmap-cheatsheet">nmap</a></li>
+<li><a href="#medusa-cheatsheet">medusa</a></li>
 <li><a href="#ranger-cheatsheet">Ranger Cheatsheet</a></li>
 <li><a href="#regex-cheatsheet">Regex Cheatsheet</a></li>
 <li><a href="#sql-cheat-sheet">SQL Cheat Sheet</a></li>
@@ -498,6 +499,7 @@
 <li><a href="#need-to-addrefine">Need to add/refine:</a></li>
 <li><a href="#instructions-for-using-dnspinger">instructions for using dnspinger</a></li>
 <li><a href="#nmap">nmap</a></li>
+<li><a href="#medusa">medusa</a></li>
 </ul>
 </li>
 <li><a href="troubleshooting/README.html">Troubleshooting</a>
@@ -539,6 +541,7 @@
 <li><a href="#standard-http-headers">http_headers</a></li>
 <li><a href="#latency-numbers-every-sre-should-know">latency_numbers</a></li>
 <li><a href="#make-files">make_files</a></li>
+<li><a href="#medusa-cheatsheet">medusa</a></li>
 <li><a href="#neovim-cheatsheet">neovim</a></li>
 <li><a href="#nmap-cheatsheet">nmap</a></li>
 <li><a href="#ranger-cheatsheet">ranger</a></li>
@@ -1065,6 +1068,86 @@ endif
 </code></pre>
 <h3 id="service-enumeration"><a class="header" href="#service-enumeration">Service Enumeration</a></h3>
 <pre><code>nmap -sV -p &lt;port&gt; &lt;target&gt;
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="medusa-cheatsheet"><a class="header" href="#medusa-cheatsheet">Medusa Cheatsheet</a></h1>
+<p>Medusa is a fast, massively parallel, and modular login brute-forcer designed to support a wide array of services that allow remote authentication.</p>
+<h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
+<pre><code class="language-bash">sudo apt-get -y update
+sudo apt-get -y install medusa
+</code></pre>
+<h2 id="command-syntax"><a class="header" href="#command-syntax">Command Syntax</a></h2>
+<pre><code class="language-bash">medusa [target_options] [credential_options] -M module [module_options]
+</code></pre>
+<h2 id="parameters"><a class="header" href="#parameters">Parameters</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Parameter</th><th>Explanation</th><th>Usage Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-h HOST</code></td><td>Target: Single hostname or IP address</td><td><code>medusa -h 192.168.1.10 ...</code></td></tr>
+<tr><td><code>-H FILE</code></td><td>Target: File containing list of targets</td><td><code>medusa -H targets.txt ...</code></td></tr>
+<tr><td><code>-u USERNAME</code></td><td>Username: Single username</td><td><code>medusa -u admin ...</code></td></tr>
+<tr><td><code>-U FILE</code></td><td>Username: File containing usernames</td><td><code>medusa -U usernames.txt ...</code></td></tr>
+<tr><td><code>-p PASSWORD</code></td><td>Password: Single password</td><td><code>medusa -p password123 ...</code></td></tr>
+<tr><td><code>-P FILE</code></td><td>Password: File containing passwords</td><td><code>medusa -P passwords.txt ...</code></td></tr>
+<tr><td><code>-M MODULE</code></td><td>Module: Specific module to use</td><td><code>medusa -M ssh ...</code></td></tr>
+<tr><td><code>-m "OPTION"</code></td><td>Module options: Additional parameters for module</td><td><code>medusa -M http -m "POST /login.php..."</code></td></tr>
+<tr><td><code>-t TASKS</code></td><td>Tasks: Number of parallel login attempts</td><td><code>medusa -t 4 ...</code></td></tr>
+<tr><td><code>-f</code></td><td>Fast mode: Stop after first success on current host</td><td><code>medusa -f ...</code></td></tr>
+<tr><td><code>-F</code></td><td>Fast mode: Stop after first success on any host</td><td><code>medusa -F ...</code></td></tr>
+<tr><td><code>-n PORT</code></td><td>Port: Specify non-default port</td><td><code>medusa -n 2222 ...</code></td></tr>
+<tr><td><code>-v LEVEL</code></td><td>Verbose: Detailed output (0-6)</td><td><code>medusa -v 4 ...</code></td></tr>
+<tr><td><code>-e ns</code></td><td>Empty/Default: Check empty (n) and same as username (s)</td><td><code>medusa -e ns ...</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="modules"><a class="header" href="#modules">Modules</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Module</th><th>Service/Protocol</th><th>Description</th><th>Usage Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ftp</code></td><td>File Transfer Protocol</td><td>Brute-force FTP login credentials</td><td><code>medusa -M ftp -h 192.168.1.100 -u admin -P passwords.txt</code></td></tr>
+<tr><td><code>http</code></td><td>Hypertext Transfer Protocol</td><td>Brute-force HTTP login forms (GET/POST)</td><td><code>medusa -M http -h www.example.com -U users.txt -P passwords.txt -m DIR:/login.php -m FORM:username=^USER^&amp;password=^PASS^</code></td></tr>
+<tr><td><code>imap</code></td><td>Internet Message Access Protocol</td><td>Brute-force IMAP logins for email servers</td><td><code>medusa -M imap -h mail.example.com -U users.txt -P passwords.txt</code></td></tr>
+<tr><td><code>mysql</code></td><td>MySQL Database</td><td>Brute-force MySQL database credentials</td><td><code>medusa -M mysql -h 192.168.1.100 -u root -P passwords.txt</code></td></tr>
+<tr><td><code>pop3</code></td><td>Post Office Protocol 3</td><td>Brute-force POP3 logins for email retrieval</td><td><code>medusa -M pop3 -h mail.example.com -U users.txt -P passwords.txt</code></td></tr>
+<tr><td><code>rdp</code></td><td>Remote Desktop Protocol</td><td>Brute-force RDP logins for Windows remote desktop</td><td><code>medusa -M rdp -h 192.168.1.100 -u admin -P passwords.txt</code></td></tr>
+<tr><td><code>ssh</code></td><td>Secure Shell (SSH)</td><td>Brute-force SSH logins for secure remote access</td><td><code>medusa -M ssh -h 192.168.1.100 -u root -P passwords.txt</code></td></tr>
+<tr><td><code>svn</code></td><td>Subversion (SVN)</td><td>Brute-force Subversion repositories</td><td><code>medusa -M svn -h 192.168.1.100 -u admin -P passwords.txt</code></td></tr>
+<tr><td><code>telnet</code></td><td>Telnet Protocol</td><td>Brute-force Telnet services</td><td><code>medusa -M telnet -h 192.168.1.100 -u admin -P passwords.txt</code></td></tr>
+<tr><td><code>vnc</code></td><td>Virtual Network Computing</td><td>Brute-force VNC login credentials</td><td><code>medusa -M vnc -h 192.168.1.100 -P passwords.txt</code></td></tr>
+<tr><td><code>web-form</code></td><td>Web Login Forms</td><td>Brute-force login forms using HTTP POST</td><td><code>medusa -M web-form -h www.example.com -U users.txt -P passwords.txt -m FORM:"username=^USER^&amp;password=^PASS^:F=Invalid"</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="useful-examples-1"><a class="header" href="#useful-examples-1">Useful Examples</a></h2>
+<h3 id="ssh-brute-force-attack"><a class="header" href="#ssh-brute-force-attack">SSH Brute-Force Attack</a></h3>
+<pre><code class="language-bash">medusa -h 192.168.0.100 -U usernames.txt -P passwords.txt -M ssh
+</code></pre>
+<h3 id="multiple-web-servers-with-basic-http-authentication"><a class="header" href="#multiple-web-servers-with-basic-http-authentication">Multiple Web Servers with Basic HTTP Authentication</a></h3>
+<pre><code class="language-bash">medusa -H web_servers.txt -U usernames.txt -P passwords.txt -M http -m GET
+</code></pre>
+<h3 id="test-for-empty-or-default-passwords"><a class="header" href="#test-for-empty-or-default-passwords">Test for Empty or Default Passwords</a></h3>
+<pre><code class="language-bash">medusa -h 10.0.0.5 -U usernames.txt -e ns -M ssh
+</code></pre>
+<h3 id="http-post-form-attack"><a class="header" href="#http-post-form-attack">HTTP POST Form Attack</a></h3>
+<pre><code class="language-bash">medusa -M http -h www.example.com -U users.txt -P passwords.txt -m "POST /login.php HTTP/1.1\r\nContent-Length: 30\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\nusername=^USER^&amp;password=^PASS^"
+</code></pre>
+<h3 id="fast-mode-stop-on-first-success"><a class="header" href="#fast-mode-stop-on-first-success">Fast Mode (Stop on First Success)</a></h3>
+<pre><code class="language-bash">medusa -h 192.168.1.100 -U usernames.txt -P passwords.txt -M ssh -f
+</code></pre>
+<h3 id="custom-port-ssh-attack"><a class="header" href="#custom-port-ssh-attack">Custom Port SSH Attack</a></h3>
+<pre><code class="language-bash">medusa -h 192.168.1.100 -n 2222 -U usernames.txt -P passwords.txt -M ssh
+</code></pre>
+<h3 id="verbose-output"><a class="header" href="#verbose-output">Verbose Output</a></h3>
+<pre><code class="language-bash">medusa -h 192.168.1.100 -U usernames.txt -P passwords.txt -M ssh -v 4
+</code></pre>
+<h3 id="parallel-tasks"><a class="header" href="#parallel-tasks">Parallel Tasks</a></h3>
+<pre><code class="language-bash">medusa -h 192.168.1.100 -U usernames.txt -P passwords.txt -M ssh -t 8
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="ranger-cheatsheet"><a class="header" href="#ranger-cheatsheet">Ranger Cheatsheet</a></h1>
@@ -19973,6 +20056,7 @@ PID        TTY     STAT   TIME          CMD
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
 <li><a href="tools/hydra.html">hydra</a></li>
 <li><a href="#nmap">nmap</a></li>
+<li><a href="#medusa">medusa</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="need-to-addrefine"><a class="header" href="#need-to-addrefine">Need to add/refine:</a></h1>
@@ -20241,6 +20325,176 @@ customEvents
 <li>Filtered ports behave differently when dropped vs rejected.</li>
 <li>UDP scanning is slow and ambiguous.</li>
 <li>Version detection is essential for deeper enumeration.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="medusa"><a class="header" href="#medusa">Medusa</a></h1>
+<p>Medusa is a fast, massively parallel, and modular login brute-forcer designed to support a wide array of services that allow remote authentication. Its primary objective is to enable penetration testers and security professionals to assess the resilience of login systems against brute-force attacks.</p>
+<p>Medusa’s key features include:</p>
+<ul>
+<li><strong>Speed and Parallelism</strong>: Utilizes multiple parallel connections to perform brute-force attacks efficiently</li>
+<li><strong>Modularity</strong>: Supports numerous authentication protocols through dedicated modules</li>
+<li><strong>Flexibility</strong>: Can target single hosts or multiple hosts from a file</li>
+<li><strong>Ease of Use</strong>: Straightforward command-line interface with clear syntax</li>
+</ul>
+<hr>
+<h2 id="installation-1"><a class="header" href="#installation-1">Installation</a></h2>
+<p>Medusa often comes pre-installed on popular penetration testing distributions. You can verify its presence by running:</p>
+<pre><code class="language-sh">medusa -h
+</code></pre>
+<p>Installing Medusa on a Linux system is straightforward:</p>
+<pre><code class="language-sh">sudo apt-get -y update
+sudo apt-get -y install medusa
+</code></pre>
+<hr>
+<h2 id="command-syntax-1"><a class="header" href="#command-syntax-1">Command Syntax</a></h2>
+<p>Medusa’s command-line interface follows this general structure:</p>
+<pre><code class="language-sh">medusa [target_options] [credential_options] -M module [module_options]
+</code></pre>
+<hr>
+<h2 id="target-options"><a class="header" href="#target-options">Target Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-h HOST</code></td><td>Specify a single target hostname or IP address</td><td><code>medusa -h 192.168.1.10 ...</code></td></tr>
+<tr><td><code>-H FILE</code></td><td>Specify a file containing a list of targets</td><td><code>medusa -H targets.txt ...</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="credential-options"><a class="header" href="#credential-options">Credential Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-u USERNAME</code></td><td>Provide a single username</td><td><code>medusa -u admin ...</code></td></tr>
+<tr><td><code>-U FILE</code></td><td>Provide a file containing a list of usernames</td><td><code>medusa -U usernames.txt ...</code></td></tr>
+<tr><td><code>-p PASSWORD</code></td><td>Specify a single password</td><td><code>medusa -p password123 ...</code></td></tr>
+<tr><td><code>-P FILE</code></td><td>Specify a file containing a list of passwords</td><td><code>medusa -P passwords.txt ...</code></td></tr>
+<tr><td><code>-e ns</code></td><td>Check for empty passwords (n) and passwords matching username (s)</td><td><code>medusa -e ns ...</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>The <code>-e</code> option is useful for testing weak configurations:</p>
+<ul>
+<li><code>-e n</code>: Try empty passwords</li>
+<li><code>-e s</code>: Try passwords matching the username</li>
+<li><code>-e ns</code>: Try both empty and same-as-username passwords</li>
+</ul>
+<hr>
+<h2 id="attack-options"><a class="header" href="#attack-options">Attack Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-M MODULE</code></td><td>Define the specific module to use for the attack</td><td><code>medusa -M ssh ...</code></td></tr>
+<tr><td><code>-m "OPTION"</code></td><td>Provide additional parameters required by the chosen module</td><td><code>medusa -M http -m "POST /login.php..."</code></td></tr>
+<tr><td><code>-t TASKS</code></td><td>Define the number of parallel login attempts to run</td><td><code>medusa -t 4 ...</code></td></tr>
+<tr><td><code>-f</code></td><td>Fast mode: Stop the attack after the first successful login on current host</td><td><code>medusa -f ...</code></td></tr>
+<tr><td><code>-F</code></td><td>Fast mode: Stop the attack after the first successful login on any host</td><td><code>medusa -F ...</code></td></tr>
+<tr><td><code>-n PORT</code></td><td>Specify a non-default port for the target service</td><td><code>medusa -n 2222 ...</code></td></tr>
+<tr><td><code>-v LEVEL</code></td><td>Verbose output: Display detailed information (0-6, higher = more verbose)</td><td><code>medusa -v 4 ...</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="modules-1"><a class="header" href="#modules-1">Modules</a></h2>
+<p>Each module in Medusa is tailored to interact with specific authentication mechanisms, allowing it to send the appropriate requests and interpret responses for successful attacks.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Module</th><th>Service/Protocol</th><th>Description</th><th>Example Command</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ftp</code></td><td>File Transfer Protocol</td><td>Brute-forcing FTP login credentials, used for file transfers over a network</td><td><code>medusa -M ftp -h 192.168.1.100 -u admin -P passwords.txt</code></td></tr>
+<tr><td><code>http</code></td><td>Hypertext Transfer Protocol</td><td>Brute-forcing login forms on web applications over HTTP (GET/POST)</td><td><code>medusa -M http -h www.example.com -U users.txt -P passwords.txt -m DIR:/login.php -m FORM:username=^USER^&amp;password=^PASS^</code></td></tr>
+<tr><td><code>imap</code></td><td>Internet Message Access Protocol</td><td>Brute-forcing IMAP logins, often used to access email servers</td><td><code>medusa -M imap -h mail.example.com -U users.txt -P passwords.txt</code></td></tr>
+<tr><td><code>mysql</code></td><td>MySQL Database</td><td>Brute-forcing MySQL database credentials, commonly used for web applications and databases</td><td><code>medusa -M mysql -h 192.168.1.100 -u root -P passwords.txt</code></td></tr>
+<tr><td><code>pop3</code></td><td>Post Office Protocol 3</td><td>Brute-forcing POP3 logins, typically used to retrieve emails from a mail server</td><td><code>medusa -M pop3 -h mail.example.com -U users.txt -P passwords.txt</code></td></tr>
+<tr><td><code>rdp</code></td><td>Remote Desktop Protocol</td><td>Brute-forcing RDP logins, commonly used for remote desktop access to Windows systems</td><td><code>medusa -M rdp -h 192.168.1.100 -u admin -P passwords.txt</code></td></tr>
+<tr><td><code>ssh</code></td><td>Secure Shell (SSH)</td><td>Brute-forcing SSH logins, commonly used for secure remote access</td><td><code>medusa -M ssh -h 192.168.1.100 -u root -P passwords.txt</code></td></tr>
+<tr><td><code>svn</code></td><td>Subversion (SVN)</td><td>Brute-forcing Subversion (SVN) repositories for version control</td><td><code>medusa -M svn -h 192.168.1.100 -u admin -P passwords.txt</code></td></tr>
+<tr><td><code>telnet</code></td><td>Telnet Protocol</td><td>Brute-forcing Telnet services for remote command execution on older systems</td><td><code>medusa -M telnet -h 192.168.1.100 -u admin -P passwords.txt</code></td></tr>
+<tr><td><code>vnc</code></td><td>Virtual Network Computing</td><td>Brute-forcing VNC login credentials for remote desktop access</td><td><code>medusa -M vnc -h 192.168.1.100 -P passwords.txt</code></td></tr>
+<tr><td><code>web-form</code></td><td>Web Login Forms</td><td>Brute-forcing login forms on websites using HTTP POST requests</td><td><code>medusa -M web-form -h www.example.com -U users.txt -P passwords.txt -m FORM:"username=^USER^&amp;password=^PASS^:F=Invalid"</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="common-usage-examples"><a class="header" href="#common-usage-examples">Common Usage Examples</a></h2>
+<h3 id="ssh-brute-force-attack-1"><a class="header" href="#ssh-brute-force-attack-1">SSH Brute-Force Attack</a></h3>
+<p>Target a single SSH server with username and password lists:</p>
+<pre><code class="language-sh">medusa -h 192.168.0.100 -U usernames.txt -P passwords.txt -M ssh
+</code></pre>
+<p>This command instructs Medusa to:</p>
+<ul>
+<li>Target the host at 192.168.0.100</li>
+<li>Use the usernames from the usernames.txt file</li>
+<li>Test the passwords listed in the passwords.txt file</li>
+<li>Employ the ssh module for the attack</li>
+</ul>
+<h3 id="multiple-web-servers-with-basic-http-authentication-1"><a class="header" href="#multiple-web-servers-with-basic-http-authentication-1">Multiple Web Servers with Basic HTTP Authentication</a></h3>
+<p>Test multiple web servers concurrently:</p>
+<pre><code class="language-sh">medusa -H web_servers.txt -U usernames.txt -P passwords.txt -M http -m GET
+</code></pre>
+<p>In this case, Medusa will:</p>
+<ul>
+<li>Iterate through the list of web servers in web_servers.txt</li>
+<li>Use the usernames and passwords provided</li>
+<li>Employ the http module with the GET method to attempt logins</li>
+<li>Run multiple threads efficiently checking each server for weak credentials</li>
+</ul>
+<h3 id="testing-for-empty-or-default-passwords"><a class="header" href="#testing-for-empty-or-default-passwords">Testing for Empty or Default Passwords</a></h3>
+<p>Assess whether any accounts have empty or default passwords:</p>
+<pre><code class="language-sh">medusa -h 10.0.0.5 -U usernames.txt -e ns -M ssh
+</code></pre>
+<p>This command instructs Medusa to:</p>
+<ul>
+<li>Target the host at 10.0.0.5</li>
+<li>Use the usernames from usernames.txt</li>
+<li>Perform additional checks for empty passwords (<code>-e n</code>) and passwords matching the username (<code>-e s</code>)</li>
+<li>Use the appropriate service module</li>
+</ul>
+<p>Medusa will try each username with an empty password and then with the password matching the username, potentially revealing accounts with weak or default configurations.</p>
+<h3 id="http-post-form-attack-1"><a class="header" href="#http-post-form-attack-1">HTTP POST Form Attack</a></h3>
+<p>Attack a web login form using POST requests:</p>
+<pre><code class="language-sh">medusa -M http -h www.example.com -U users.txt -P passwords.txt -m "POST /login.php HTTP/1.1\r\nContent-Length: 30\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\nusername=^USER^&amp;password=^PASS^"
+</code></pre>
+<h3 id="custom-port-ssh-attack-1"><a class="header" href="#custom-port-ssh-attack-1">Custom Port SSH Attack</a></h3>
+<p>Target SSH on a non-standard port:</p>
+<pre><code class="language-sh">medusa -h 192.168.1.100 -n 2222 -U usernames.txt -P passwords.txt -M ssh
+</code></pre>
+<h3 id="fast-mode-stop-on-first-success-1"><a class="header" href="#fast-mode-stop-on-first-success-1">Fast Mode (Stop on First Success)</a></h3>
+<p>Stop immediately after finding valid credentials:</p>
+<pre><code class="language-sh">medusa -h 192.168.1.100 -U usernames.txt -P passwords.txt -M ssh -f
+</code></pre>
+<p>Use <code>-F</code> to stop after first success on any host when targeting multiple hosts.</p>
+<h3 id="verbose-output-1"><a class="header" href="#verbose-output-1">Verbose Output</a></h3>
+<p>Get detailed information about the attack progress:</p>
+<pre><code class="language-sh">medusa -h 192.168.1.100 -U usernames.txt -P passwords.txt -M ssh -v 4
+</code></pre>
+<p>Higher verbosity levels (up to 6) provide more detailed output.</p>
+<h3 id="parallel-tasks-1"><a class="header" href="#parallel-tasks-1">Parallel Tasks</a></h3>
+<p>Control the number of parallel login attempts:</p>
+<pre><code class="language-sh">medusa -h 192.168.1.100 -U usernames.txt -P passwords.txt -M ssh -t 8
+</code></pre>
+<p>Increasing the number of tasks can speed up the attack but may also increase the risk of detection or overwhelming the target service.</p>
+<hr>
+<h2 id="core-takeaways-1"><a class="header" href="#core-takeaways-1">Core Takeaways</a></h2>
+<ul>
+<li>Medusa uses parallel connections to efficiently brute-force login credentials across multiple protocols</li>
+<li>Target options (<code>-h</code> or <code>-H</code>) specify hosts, while credential options (<code>-u</code>/<code>-U</code> and <code>-p</code>/<code>-P</code>) specify usernames and passwords</li>
+<li>The <code>-e</code> option allows testing for weak configurations like empty passwords or passwords matching usernames</li>
+<li>Module selection (<code>-M</code>) determines which authentication protocol to target</li>
+<li>Use <code>-f</code> or <code>-F</code> to stop after the first successful login, saving time when valid credentials are found</li>
+<li>Adjust <code>-t</code> to control parallel threads, balancing speed against detection risk</li>
+<li>Module options (<code>-m</code>) may be required for complex scenarios like HTTP form attacks</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
