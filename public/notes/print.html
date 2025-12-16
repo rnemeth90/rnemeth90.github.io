@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-b69d29d9.js";
+            window.path_to_searchindex_js = "searchindex-a72c78d5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-d458309f.js"></script>
+        <script src="toc-a214d7af.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -196,6 +196,7 @@
 <li><a href="#neovim-cheatsheet">Neovim Cheatsheet</a></li>
 <li><a href="#nmap-cheatsheet">nmap</a></li>
 <li><a href="#medusa-cheatsheet">medusa</a></li>
+<li><a href="#hydra-cheatsheet">hydra</a></li>
 <li><a href="#ranger-cheatsheet">Ranger Cheatsheet</a></li>
 <li><a href="#regex-cheatsheet">Regex Cheatsheet</a></li>
 <li><a href="#sql-cheat-sheet">SQL Cheat Sheet</a></li>
@@ -500,6 +501,7 @@
 <li><a href="#instructions-for-using-dnspinger">instructions for using dnspinger</a></li>
 <li><a href="#nmap">nmap</a></li>
 <li><a href="#medusa">medusa</a></li>
+<li><a href="#hydra">hydra</a></li>
 </ul>
 </li>
 <li><a href="troubleshooting/README.html">Troubleshooting</a>
@@ -548,6 +550,7 @@
 <li><a href="#regex-cheatsheet">regex</a></li>
 <li><a href="#sql-cheat-sheet">sql</a></li>
 <li><a href="#multi-line-strings">yaml</a></li>
+<li><a href="#hydra-cheatsheet">hydra</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="api-architectural-styles"><a class="header" href="#api-architectural-styles">API Architectural Styles</a></h1>
@@ -1148,6 +1151,102 @@ sudo apt-get -y install medusa
 </code></pre>
 <h3 id="parallel-tasks"><a class="header" href="#parallel-tasks">Parallel Tasks</a></h3>
 <pre><code class="language-bash">medusa -h 192.168.1.100 -U usernames.txt -P passwords.txt -M ssh -t 8
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="hydra-cheatsheet"><a class="header" href="#hydra-cheatsheet">Hydra Cheatsheet</a></h1>
+<h2 id="basic-syntax"><a class="header" href="#basic-syntax">Basic Syntax</a></h2>
+<pre><code>hydra [login_options] [password_options] [attack_options] [service_options] service://server
+</code></pre>
+<hr>
+<h2 id="login-options"><a class="header" href="#login-options">Login Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-l LOGIN</code></td><td>Single username</td><td><code>hydra -l admin ...</code></td></tr>
+<tr><td><code>-L FILE</code></td><td>Username list file</td><td><code>hydra -L usernames.txt ...</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="password-options"><a class="header" href="#password-options">Password Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-p PASS</code></td><td>Single password</td><td><code>hydra -p password123 ...</code></td></tr>
+<tr><td><code>-P FILE</code></td><td>Password list file</td><td><code>hydra -P passwords.txt ...</code></td></tr>
+<tr><td><code>-x MIN:MAX:CHARSET</code></td><td>Generate passwords</td><td><code>hydra -x 6:8:aA1 ...</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="attack-options"><a class="header" href="#attack-options">Attack Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-t TASKS</code></td><td>Number of parallel tasks (threads)</td><td><code>hydra -t 4 ...</code></td></tr>
+<tr><td><code>-f</code></td><td>Stop after first successful login</td><td><code>hydra -f ...</code></td></tr>
+<tr><td><code>-s PORT</code></td><td>Specify non-default port</td><td><code>hydra -s 2222 ...</code></td></tr>
+<tr><td><code>-v</code></td><td>Verbose output</td><td><code>hydra -v ...</code></td></tr>
+<tr><td><code>-V</code></td><td>Very verbose output</td><td><code>hydra -V ...</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="common-services"><a class="header" href="#common-services">Common Services</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Service</th><th>Protocol</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ftp</code></td><td>FTP</td><td>File Transfer Protocol</td><td><code>hydra -l admin -P passwords.txt ftp://192.168.1.100</code></td></tr>
+<tr><td><code>ssh</code></td><td>SSH</td><td>Secure Shell</td><td><code>hydra -l root -P passwords.txt ssh://192.168.1.100</code></td></tr>
+<tr><td><code>http-get</code></td><td>HTTP GET</td><td>Web login (GET)</td><td><code>hydra -l admin -P passwords.txt http-get://example.com/login</code></td></tr>
+<tr><td><code>http-post</code></td><td>HTTP POST</td><td>Web login (POST)</td><td><code>hydra -l admin -P passwords.txt http-post-form "/login.php:user=^USER^&amp;pass=^PASS^:F=incorrect"</code></td></tr>
+<tr><td><code>smtp</code></td><td>SMTP</td><td>Email sending</td><td><code>hydra -l admin -P passwords.txt smtp://mail.server.com</code></td></tr>
+<tr><td><code>pop3</code></td><td>POP3</td><td>Email retrieval</td><td><code>hydra -l user@example.com -P passwords.txt pop3://mail.server.com</code></td></tr>
+<tr><td><code>imap</code></td><td>IMAP</td><td>Remote email access</td><td><code>hydra -l user@example.com -P passwords.txt imap://mail.server.com</code></td></tr>
+<tr><td><code>rdp</code></td><td>RDP</td><td>Remote Desktop Protocol</td><td><code>hydra -l administrator -P passwords.txt rdp://192.168.1.100</code></td></tr>
+<tr><td><code>telnet</code></td><td>Telnet</td><td>Remote terminal</td><td><code>hydra -l admin -P passwords.txt telnet://192.168.1.100</code></td></tr>
+<tr><td><code>mysql</code></td><td>MySQL</td><td>Database</td><td><code>hydra -l root -P passwords.txt mysql://192.168.1.100</code></td></tr>
+<tr><td><code>postgres</code></td><td>PostgreSQL</td><td>Database</td><td><code>hydra -l postgres -P passwords.txt postgres://192.168.1.100</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="useful-examples-2"><a class="header" href="#useful-examples-2">Useful Examples</a></h2>
+<h3 id="ssh-brute-force"><a class="header" href="#ssh-brute-force">SSH Brute Force</a></h3>
+<pre><code>hydra -l root -P /path/to/passwords.txt -t 4 ssh://192.168.1.100
+</code></pre>
+<h3 id="ftp-brute-force"><a class="header" href="#ftp-brute-force">FTP Brute Force</a></h3>
+<pre><code>hydra -L usernames.txt -P passwords.txt ftp://192.168.1.100
+</code></pre>
+<h3 id="http-post-form-attack-1"><a class="header" href="#http-post-form-attack-1">HTTP POST Form Attack</a></h3>
+<pre><code>hydra -l admin -P passwords.txt http-post-form "/login.php:user=^USER^&amp;pass=^PASS^:F=incorrect" 192.168.1.100
+</code></pre>
+<h3 id="rdp-with-password-generation"><a class="header" href="#rdp-with-password-generation">RDP with Password Generation</a></h3>
+<pre><code>hydra -l administrator -x 6:8:aA1 rdp://192.168.1.100
+</code></pre>
+<h3 id="ssh-on-non-default-port"><a class="header" href="#ssh-on-non-default-port">SSH on Non-Default Port</a></h3>
+<pre><code>hydra -l admin -P passwords.txt -s 2222 ssh://192.168.1.100
+</code></pre>
+<h3 id="stop-after-first-success"><a class="header" href="#stop-after-first-success">Stop After First Success</a></h3>
+<pre><code>hydra -l admin -P passwords.txt -f ssh://192.168.1.100
+</code></pre>
+<h3 id="verbose-output-1"><a class="header" href="#verbose-output-1">Verbose Output</a></h3>
+<pre><code>hydra -l admin -P passwords.txt -v ssh://192.168.1.100
+</code></pre>
+<h3 id="rdp-with-custom-character-set"><a class="header" href="#rdp-with-custom-character-set">RDP with Custom Character Set</a></h3>
+<pre><code>hydra -l administrator -x 6:8:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 rdp://192.168.1.100
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="ranger-cheatsheet"><a class="header" href="#ranger-cheatsheet">Ranger Cheatsheet</a></h1>
@@ -20054,7 +20153,7 @@ PID        TTY     STAT   TIME          CMD
 <ul>
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
-<li><a href="tools/hydra.html">hydra</a></li>
+<li><a href="#hydra">hydra</a></li>
 <li><a href="#nmap">nmap</a></li>
 <li><a href="#medusa">medusa</a></li>
 </ul>
@@ -20386,7 +20485,7 @@ sudo apt-get -y install medusa
 <li><code>-e ns</code>: Try both empty and same-as-username passwords</li>
 </ul>
 <hr>
-<h2 id="attack-options"><a class="header" href="#attack-options">Attack Options</a></h2>
+<h2 id="attack-options-1"><a class="header" href="#attack-options-1">Attack Options</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -20462,7 +20561,7 @@ sudo apt-get -y install medusa
 <li>Use the appropriate service module</li>
 </ul>
 <p>Medusa will try each username with an empty password and then with the password matching the username, potentially revealing accounts with weak or default configurations.</p>
-<h3 id="http-post-form-attack-1"><a class="header" href="#http-post-form-attack-1">HTTP POST Form Attack</a></h3>
+<h3 id="http-post-form-attack-2"><a class="header" href="#http-post-form-attack-2">HTTP POST Form Attack</a></h3>
 <p>Attack a web login form using POST requests:</p>
 <pre><code class="language-sh">medusa -M http -h www.example.com -U users.txt -P passwords.txt -m "POST /login.php HTTP/1.1\r\nContent-Length: 30\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\nusername=^USER^&amp;password=^PASS^"
 </code></pre>
@@ -20475,7 +20574,7 @@ sudo apt-get -y install medusa
 <pre><code class="language-sh">medusa -h 192.168.1.100 -U usernames.txt -P passwords.txt -M ssh -f
 </code></pre>
 <p>Use <code>-F</code> to stop after first success on any host when targeting multiple hosts.</p>
-<h3 id="verbose-output-1"><a class="header" href="#verbose-output-1">Verbose Output</a></h3>
+<h3 id="verbose-output-2"><a class="header" href="#verbose-output-2">Verbose Output</a></h3>
 <p>Get detailed information about the attack progress:</p>
 <pre><code class="language-sh">medusa -h 192.168.1.100 -U usernames.txt -P passwords.txt -M ssh -v 4
 </code></pre>
@@ -20495,6 +20594,173 @@ sudo apt-get -y install medusa
 <li>Use <code>-f</code> or <code>-F</code> to stop after the first successful login, saving time when valid credentials are found</li>
 <li>Adjust <code>-t</code> to control parallel threads, balancing speed against detection risk</li>
 <li>Module options (<code>-m</code>) may be required for complex scenarios like HTTP form attacks</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="hydra"><a class="header" href="#hydra">Hydra</a></h1>
+<p>Hydra is a fast network login cracker that supports numerous attack protocols. It is a versatile tool that can brute-force a wide range of services, including web applications, remote login services like SSH and FTP, and even databases.</p>
+<p>Hydra’s popularity stems from its:</p>
+<ul>
+<li><strong>Speed and Efficiency</strong>: Hydra utilizes parallel connections to perform multiple login attempts simultaneously, significantly speeding up the cracking process.</li>
+<li><strong>Flexibility</strong>: Hydra supports many protocols and services, making it adaptable to various attack scenarios.</li>
+<li><strong>Ease of Use</strong>: Hydra is relatively easy to use despite its power, with a straightforward command-line interface and clear syntax.</li>
+</ul>
+<hr>
+<h2 id="installation-2"><a class="header" href="#installation-2">Installation</a></h2>
+<p>Hydra often comes pre-installed on popular penetration testing distributions. You can verify its presence by running:</p>
+<pre><code class="language-sh">hydra -h
+</code></pre>
+<p>If Hydra is not installed or you are using a different Linux distribution, you can install it from the package repository:</p>
+<pre><code class="language-sh">sudo apt-get -y update
+sudo apt-get -y install hydra
+</code></pre>
+<hr>
+<h2 id="basic-syntax-1"><a class="header" href="#basic-syntax-1">Basic Syntax</a></h2>
+<p>Hydra’s basic syntax is:</p>
+<pre><code class="language-sh">hydra [login_options] [password_options] [attack_options] [service_options] service://server
+</code></pre>
+<hr>
+<h2 id="login-options-1"><a class="header" href="#login-options-1">Login Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-l LOGIN</code></td><td>Specify a single username</td><td><code>hydra -l admin ...</code></td></tr>
+<tr><td><code>-L FILE</code></td><td>Specify a file containing a list of usernames</td><td><code>hydra -L usernames.txt ...</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="password-options-1"><a class="header" href="#password-options-1">Password Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-p PASS</code></td><td>Provide a single password</td><td><code>hydra -p password123 ...</code></td></tr>
+<tr><td><code>-P FILE</code></td><td>Provide a file containing a list of passwords</td><td><code>hydra -P passwords.txt ...</code></td></tr>
+<tr><td><code>-x MIN:MAX:CHARSET</code></td><td>Generate passwords dynamically</td><td><code>hydra -x 6:8:aA1 ...</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>The <code>-x</code> option generates passwords on-the-fly:</p>
+<ul>
+<li><code>MIN:MAX</code> specifies the password length range</li>
+<li><code>CHARSET</code> defines the character set to use (e.g., <code>a</code> for lowercase, <code>A</code> for uppercase, <code>1</code> for numbers)</li>
+</ul>
+<hr>
+<h2 id="attack-options-2"><a class="header" href="#attack-options-2">Attack Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-t TASKS</code></td><td>Define the number of parallel tasks (threads) to run, potentially speeding up the attack</td><td><code>hydra -t 4 ...</code></td></tr>
+<tr><td><code>-f</code></td><td>Fast mode: Stop the attack after the first successful login is found</td><td><code>hydra -f ...</code></td></tr>
+<tr><td><code>-s PORT</code></td><td>Specify a non-default port for the target service</td><td><code>hydra -s 2222 ...</code></td></tr>
+<tr><td><code>-v</code></td><td>Verbose output: Display detailed information about the attack’s progress</td><td><code>hydra -v ...</code></td></tr>
+<tr><td><code>-V</code></td><td>Very verbose output: Display even more detailed information</td><td><code>hydra -V ...</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="hydra-services"><a class="header" href="#hydra-services">Hydra Services</a></h2>
+<p>Hydra services essentially define the specific protocols or services that Hydra can target. They enable Hydra to interact with different authentication mechanisms used by various systems, applications, and network services. Each module is designed to understand a particular protocol’s communication patterns and authentication requirements, allowing Hydra to send appropriate login requests and interpret the responses.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Service</th><th>Protocol</th><th>Description</th><th>Example Command</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ftp</code></td><td>File Transfer Protocol (FTP)</td><td>Used to brute-force login credentials for FTP services, commonly used to transfer files over a network</td><td><code>hydra -l admin -P /path/to/password_list.txt ftp://192.168.1.100</code></td></tr>
+<tr><td><code>ssh</code></td><td>Secure Shell (SSH)</td><td>Targets SSH services to brute-force credentials, commonly used for secure remote login to systems</td><td><code>hydra -l root -P /path/to/password_list.txt ssh://192.168.1.100</code></td></tr>
+<tr><td><code>http-get</code></td><td>HTTP GET</td><td>Used to brute-force login credentials for HTTP web login forms using GET requests</td><td><code>hydra -l admin -P /path/to/password_list.txt http-get://example.com/login</code></td></tr>
+<tr><td><code>http-post</code></td><td>HTTP POST</td><td>Used to brute-force login credentials for HTTP web login forms using POST requests</td><td><code>hydra -l admin -P /path/to/password_list.txt http-post-form "/login.php:user=^USER^&amp;pass=^PASS^:F=incorrect"</code></td></tr>
+<tr><td><code>smtp</code></td><td>Simple Mail Transfer Protocol</td><td>Attacks email servers by brute-forcing login credentials for SMTP, commonly used to send emails</td><td><code>hydra -l admin -P /path/to/password_list.txt smtp://mail.server.com</code></td></tr>
+<tr><td><code>pop3</code></td><td>Post Office Protocol (POP3)</td><td>Targets email retrieval services to brute-force credentials for POP3 login</td><td><code>hydra -l user@example.com -P /path/to/password_list.txt pop3://mail.server.com</code></td></tr>
+<tr><td><code>imap</code></td><td>Internet Message Access Protocol</td><td>Used to brute-force credentials for IMAP services, which allow users to access their email remotely</td><td><code>hydra -l user@example.com -P /path/to/password_list.txt imap://mail.server.com</code></td></tr>
+<tr><td><code>rdp</code></td><td>Remote Desktop Protocol</td><td>Targets RDP services to brute-force credentials for remote desktop connections</td><td><code>hydra -l administrator -P /path/to/password_list.txt rdp://192.168.1.100</code></td></tr>
+<tr><td><code>telnet</code></td><td>Telnet</td><td>Targets Telnet services for remote terminal access</td><td><code>hydra -l admin -P /path/to/password_list.txt telnet://192.168.1.100</code></td></tr>
+<tr><td><code>mysql</code></td><td>MySQL</td><td>Targets MySQL database servers</td><td><code>hydra -l root -P /path/to/password_list.txt mysql://192.168.1.100</code></td></tr>
+<tr><td><code>postgres</code></td><td>PostgreSQL</td><td>Targets PostgreSQL database servers</td><td><code>hydra -l postgres -P /path/to/password_list.txt postgres://192.168.1.100</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="http-form-based-authentication"><a class="header" href="#http-form-based-authentication">HTTP Form-Based Authentication</a></h2>
+<p>For HTTP form-based authentication, Hydra uses a specific syntax:</p>
+<pre><code>http-post-form "/path/to/login.php:field1=^USER^&amp;field2=^PASS^:failure_string"
+</code></pre>
+<ul>
+<li><code>^USER^</code> and <code>^PASS^</code> are placeholders that Hydra replaces with actual credentials</li>
+<li>The failure string (after the second <code>:</code>) helps Hydra identify failed login attempts</li>
+<li>Use <code>F=</code> prefix for failure strings (e.g., <code>F=incorrect</code>)</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-sh">hydra -l admin -P passwords.txt http-post-form "/login.php:user=^USER^&amp;pass=^PASS^:F=incorrect" 192.168.1.100
+</code></pre>
+<hr>
+<h2 id="password-generation--x"><a class="header" href="#password-generation--x">Password Generation (-x)</a></h2>
+<p>The <code>-x</code> option allows Hydra to generate passwords dynamically instead of using a wordlist. This is useful when you have information about password requirements.</p>
+<p>Format: <code>-x MIN:MAX:CHARSET</code></p>
+<ul>
+<li><code>MIN</code>: Minimum password length</li>
+<li><code>MAX</code>: Maximum password length</li>
+<li><code>CHARSET</code>: Character set to use
+<ul>
+<li><code>a</code> = lowercase letters</li>
+<li><code>A</code> = uppercase letters</li>
+<li><code>1</code> = numbers</li>
+<li>Custom character sets can be specified directly</li>
+</ul>
+</li>
+</ul>
+<p>Example: If you know the password is 6-8 characters with lowercase, uppercase, and numbers:</p>
+<pre><code class="language-sh">hydra -l administrator -x 6:8:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 rdp://192.168.1.100
+</code></pre>
+<p>This command instructs Hydra to:</p>
+<ul>
+<li>Use the username “administrator”</li>
+<li>Generate and test passwords ranging from 6 to 8 characters</li>
+<li>Use the specified character set (lowercase, uppercase, numbers)</li>
+<li>Target the RDP service on 192.168.1.100</li>
+</ul>
+<p>Hydra will generate and test all possible password combinations within the specified parameters.</p>
+<hr>
+<h2 id="common-usage-examples-1"><a class="header" href="#common-usage-examples-1">Common Usage Examples</a></h2>
+<h3 id="ssh-brute-force-1"><a class="header" href="#ssh-brute-force-1">SSH Brute Force</a></h3>
+<pre><code class="language-sh">hydra -l root -P /path/to/passwords.txt -t 4 ssh://192.168.1.100
+</code></pre>
+<h3 id="ftp-brute-force-with-username-list"><a class="header" href="#ftp-brute-force-with-username-list">FTP Brute Force with Username List</a></h3>
+<pre><code class="language-sh">hydra -L usernames.txt -P passwords.txt ftp://192.168.1.100
+</code></pre>
+<h3 id="http-post-form-attack-3"><a class="header" href="#http-post-form-attack-3">HTTP POST Form Attack</a></h3>
+<pre><code class="language-sh">hydra -l admin -P passwords.txt http-post-form "/login.php:user=^USER^&amp;pass=^PASS^:F=incorrect" 192.168.1.100
+</code></pre>
+<h3 id="rdp-with-password-generation-1"><a class="header" href="#rdp-with-password-generation-1">RDP with Password Generation</a></h3>
+<pre><code class="language-sh">hydra -l administrator -x 6:8:aA1 rdp://192.168.1.100
+</code></pre>
+<h3 id="ssh-on-non-default-port-1"><a class="header" href="#ssh-on-non-default-port-1">SSH on Non-Default Port</a></h3>
+<pre><code class="language-sh">hydra -l admin -P passwords.txt -s 2222 ssh://192.168.1.100
+</code></pre>
+<h3 id="stop-after-first-success-1"><a class="header" href="#stop-after-first-success-1">Stop After First Success</a></h3>
+<pre><code class="language-sh">hydra -l admin -P passwords.txt -f ssh://192.168.1.100
+</code></pre>
+<h3 id="verbose-output-for-debugging"><a class="header" href="#verbose-output-for-debugging">Verbose Output for Debugging</a></h3>
+<pre><code class="language-sh">hydra -l admin -P passwords.txt -v ssh://192.168.1.100
+</code></pre>
+<hr>
+<h2 id="core-takeaways-2"><a class="header" href="#core-takeaways-2">Core Takeaways</a></h2>
+<ul>
+<li>Hydra uses parallel connections to speed up brute-force attacks significantly.</li>
+<li>Login options (<code>-l</code> or <code>-L</code>) specify usernames, while password options (<code>-p</code>, <code>-P</code>, or <code>-x</code>) specify passwords.</li>
+<li>The <code>-x</code> option allows dynamic password generation based on length and character set requirements.</li>
+<li>HTTP form attacks require specific syntax with <code>^USER^</code> and <code>^PASS^</code> placeholders.</li>
+<li>Use <code>-f</code> to stop after the first successful login, and <code>-v</code>/<code>-V</code> for detailed output.</li>
+<li>Adjust <code>-t</code> to control parallel threads, balancing speed against detection risk.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
