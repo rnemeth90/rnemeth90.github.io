@@ -1,6 +1,6 @@
 ---
 title: 'HTB - Web Application Fuzzing Module - Value Fuzzing'
-date: '2025-12-20T16:01:00+00:00'
+date: '2025-12-17T16:01:00+00:00'
 author: Ryan
 layout: post
 draft: false
