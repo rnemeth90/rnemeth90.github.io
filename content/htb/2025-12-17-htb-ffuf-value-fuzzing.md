@@ -49,10 +49,10 @@ ffuf -w ids.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d
 We see that we get a hit right away. We can finally send another POST request using `curl`, use the `id` value we just found, and collect the flag:
 
 ```bash
-curl -X POST http://admin.academy.htb:PORT/admin/admin.php -d 'id=73' -H 'Content-Type: application/x-www-form-urlencoded'
+curl -X POST http://admin.academy.htb:PORT/admin/admin.php -d 'id=**' -H 'Content-Type: application/x-www-form-urlencoded'
 ```
 
-The response contains the flag: `HTB{p4r4m373r_fuzz1n6_15_****}`.
+The response contains the flag: `HTB{*********************}`.
 
 ## Summary
 
