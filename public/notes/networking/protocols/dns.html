@@ -38,7 +38,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-9a77f6da.js";
+            window.path_to_searchindex_js = "../../searchindex-c2c7bc86.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-77190df2.js"></script>
@@ -182,6 +182,151 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="dns"><a class="header" href="#dns">DNS</a></h1>
+<p>Domain Name System (DNS) is an integral part of the Internet that resolves computer names into IP addresses. DNS is a distributed system without a central database, functioning like a library with many different phone books. The information is distributed over many thousands of name servers globally. DNS servers translate domain names into IP addresses and control which server a user can reach via a particular domain. DNS also stores additional information about services associated with a domain, such as mail servers and name servers.</p>
+<h2 id="dns-server-types"><a class="header" href="#dns-server-types">DNS Server Types</a></h2>
+<ul>
+<li><strong>DNS Root Server</strong>: Responsible for top-level domains (TLD). There are 13 root servers globally, coordinated by ICANN. They serve as the central interface between users and content on the Internet.</li>
+<li><strong>Authoritative Nameserver</strong>: Holds authority for a particular zone and only answers queries from their area of responsibility. Their information is binding.</li>
+<li><strong>Non-authoritative Nameserver</strong>: Not responsible for a particular DNS zone. They collect information on specific DNS zones using recursive or iterative DNS querying.</li>
+<li><strong>Caching DNS Server</strong>: Caches information from other name servers for a specified period determined by the authoritative name server.</li>
+<li><strong>Forwarding Server</strong>: Performs only one function: forwards DNS queries to another DNS server.</li>
+<li><strong>Resolver</strong>: Not an authoritative DNS server but performs name resolution locally in the computer or router.</li>
+</ul>
+<h2 id="dns-encryption"><a class="header" href="#dns-encryption">DNS Encryption</a></h2>
+<p>DNS is mainly unencrypted, which means devices on the local WLAN and Internet providers can intercept and spy on DNS queries. This poses a privacy risk. Solutions for DNS encryption include:</p>
+<ul>
+<li><strong>DNS over TLS (DoT)</strong>: Encrypts DNS traffic using TLS</li>
+<li><strong>DNS over HTTPS (DoH)</strong>: Encrypts DNS traffic using HTTPS</li>
+<li><strong>DNSCrypt</strong>: A network protocol that encrypts traffic between the computer and the name server</li>
+</ul>
+<h2 id="dns-records"><a class="header" href="#dns-records">DNS Records</a></h2>
+<p>Different DNS records are used for DNS queries, each serving various tasks:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Record</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>A</td><td>Returns an IPv4 address of the requested domain</td></tr>
+<tr><td>AAAA</td><td>Returns an IPv6 address of the requested domain</td></tr>
+<tr><td>MX</td><td>Returns the responsible mail servers</td></tr>
+<tr><td>NS</td><td>Returns the DNS servers (nameservers) of the domain</td></tr>
+<tr><td>TXT</td><td>Contains various information (e.g., Google Search Console validation, SSL certificate validation, SPF and DMARC entries for mail traffic)</td></tr>
+<tr><td>PTR</td><td>Used for reverse translation of IP addresses into names</td></tr>
+<tr><td>CNAME</td><td>Creates an alias from one domain name to another</td></tr>
+<tr><td>SOA</td><td>Start of Authority record containing administrative information about the zone</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="domain-hierarchy"><a class="header" href="#domain-hierarchy">Domain Hierarchy</a></h2>
+<p>The DNS hierarchy consists of:</p>
+<ul>
+<li><strong>Root</strong>: The top level of the DNS hierarchy</li>
+<li><strong>Top Level Domains (TLD)</strong>: Examples include <code>.net</code>, <code>.org</code>, <code>.com</code>, <code>.dev</code>, <code>.io</code></li>
+<li><strong>Second Level Domain</strong>: Example: <code>inlanefreight.com</code></li>
+<li><strong>Sub-Domains</strong>: Examples: <code>dev.inlanefreight.com</code>, <code>www.inlanefreight.com</code>, <code>mail.inlanefreight.com</code></li>
+<li><strong>Host</strong>: Example: <code>WS01.dev.inlanefreight.com</code></li>
+</ul>
+<h2 id="zone-files"><a class="header" href="#zone-files">Zone Files</a></h2>
+<p>Zone files contain forward records in BIND format, allowing the DNS server to identify which domain, hostname, and role IP addresses belong to. This is essentially the phone book where the DNS server looks up addresses for domains.</p>
+<p>Example forward zone file:</p>
+<pre><code class="language-bash">root@bind9:~# cat /etc/bind/db.domain.com
+
+;
+; BIND reverse data file for local loopback interface
+;
+$ORIGIN domain.com
+$TTL 86400
+@     IN     SOA    dns1.domain.com.     hostmaster.domain.com. (
+                    2001062501 ; serial
+                    21600      ; refresh after 6 hours
+                    3600       ; retry after 1 hour
+                    604800     ; expire after 1 week
+                    86400 )    ; minimum TTL of 1 day
+
+      IN     NS     ns1.domain.com.
+      IN     NS     ns2.domain.com.
+
+      IN     MX     10     mx.domain.com.
+      IN     MX     20     mx2.domain.com.
+
+             IN     A       10.129.14.5
+
+server1      IN     A       10.129.14.5
+server2      IN     A       10.129.14.7
+ns1          IN     A       10.129.14.2
+ns2          IN     A       10.129.14.3
+
+ftp          IN     CNAME   server1
+mx           IN     CNAME   server1
+mx2          IN     CNAME   server2
+www          IN     CNAME   server2
+</code></pre>
+<h2 id="reverse-name-resolution"><a class="header" href="#reverse-name-resolution">Reverse Name Resolution</a></h2>
+<p>For Fully Qualified Domain Name (FQDN) to be resolved from an IP address, the DNS server must have a reverse lookup file. PTR records are responsible for the reverse translation of IP addresses into names. In this file, the computer name (FQDN) is assigned to the last octet of an IP address using a PTR record.</p>
+<p>Example reverse zone file:</p>
+<pre><code class="language-bash">root@bind9:~# cat /etc/bind/db.10.129.14
+
+;
+; BIND reverse data file for local loopback interface
+;
+$ORIGIN 14.129.10.in-addr.arpa
+$TTL 86400
+@     IN     SOA    dns1.domain.com.     hostmaster.domain.com. (
+                    2001062501 ; serial
+                    21600      ; refresh after 6 hours
+                    3600       ; retry after 1 hour
+                    604800     ; expire after 1 week
+                    86400 )    ; minimum TTL of 1 day
+
+      IN     NS     ns1.domain.com.
+      IN     NS     ns2.domain.com.
+
+5    IN     PTR    server1.domain.com.
+7    IN     MX     mx.domain.com.
+</code></pre>
+<h2 id="zone-transfers"><a class="header" href="#zone-transfers">Zone Transfers</a></h2>
+<p>In practice, additional servers called secondary name servers are installed for redundancy. For some Top-Level Domains (TLDs), making zone files accessible on at least two servers is mandatory. DNS entries are generally only created, modified, or deleted on the primary server. A DNS server that serves as a direct source for synchronizing a zone file is called a master. A DNS server that obtains zone data from a master is called a slave. The slave fetches the SOA record of the relevant zone from the master at certain intervals (refresh time, usually one hour) and compares serial numbers.</p>
+<h2 id="dangerous-settings"><a class="header" href="#dangerous-settings">Dangerous Settings</a></h2>
+<p>DNS servers can be vulnerable to attacks. Some dangerous settings that can lead to vulnerabilities include:</p>
+<ul>
+<li><strong>allow-query</strong>: Defines which hosts are allowed to send requests to the DNS server</li>
+<li><strong>allow-recursion</strong>: Defines which hosts are allowed to send recursive requests to the DNS server</li>
+<li><strong>allow-transfer</strong>: Defines which hosts are allowed to receive zone transfers from the DNS server. If set to <code>any</code> or a broad subnet, anyone can query the entire zone file, potentially exposing internal IP addresses and hostnames</li>
+<li><strong>zone-statistics</strong>: Collects statistical data of zones</li>
+</ul>
+<h2 id="footprinting-dns-services"><a class="header" href="#footprinting-dns-services">Footprinting DNS Services</a></h2>
+<h3 id="querying-name-servers"><a class="header" href="#querying-name-servers">Querying Name Servers</a></h3>
+<p>DNS servers can be queried to discover which other name servers are known using the NS record:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ dig ns inlanefreight.htb @10.129.14.128
+</code></pre>
+<h3 id="zone-transfer-axfr"><a class="header" href="#zone-transfer-axfr">Zone Transfer (AXFR)</a></h3>
+<p>Zone transfers can reveal all DNS records for a domain. If <code>allow-transfer</code> is misconfigured, an attacker can retrieve the entire zone file:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ dig axfr inlanefreight.htb @10.129.14.128
+
+; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; axfr inlanefreight.htb @10.129.14.128
+;; global options: +cmd
+inlanefreight.htb.      604800  IN      SOA     inlanefreight.htb. root.inlanefreight.htb. 2 604800 86400 2419200 604800
+inlanefreight.htb.      604800  IN      TXT     "MS=ms97310371"
+inlanefreight.htb.      604800  IN      TXT     "atlassian-domain-verification=t1rKCy68JFszSdCKVpw64A1QksWdXuYFUeSXKU"
+inlanefreight.htb.      604800  IN      TXT     "v=spf1 include:mailgun.org include:_spf.google.com include:spf.protection.outlook.com include:_spf.atlassian.net ip4:10.129.124.8 ip4:10.129.127.2 ip4:10.129.42.106 ~all"
+inlanefreight.htb.      604800  IN      NS      ns.inlanefreight.htb.
+app.inlanefreight.htb.  604800  IN      A       10.129.18.15
+internal.inlanefreight.htb. 604800 IN   A       10.129.1.6
+mail1.inlanefreight.htb. 604800 IN      A       10.129.18.201
+ns.inlanefreight.htb.   604800  IN      A       10.129.34.136
+</code></pre>
+<h3 id="subdomain-brute-forcing"><a class="header" href="#subdomain-brute-forcing">Subdomain Brute Forcing</a></h3>
+<p>Individual A records with hostnames can be discovered through brute-force attacks using wordlists (such as those from SecLists):</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ for sub in $(cat /opt/useful/seclists/Discovery/DNS/subdomains-top1million-110000.txt);do dig $sub.inlanefreight.htb @10.129.14.128 | grep -v ';\|SOA' | sed -r '/^\s*$/d' | grep $sub | tee -a subdomains.txt;done
+
+ns.inlanefreight.htb.   604800  IN      A       10.129.34.136
+mail1.inlanefreight.htb. 604800 IN      A       10.129.18.201
+app.inlanefreight.htb.  604800  IN      A       10.129.18.15
+</code></pre>
+<p>Tools like <code>dnsenum</code> can automate this process:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ dnsenum --dnsserver 10.129.14.128 --enum -p 0 -s 0 -o subdomains.txt -f /opt/useful/seclists/Discovery/DNS/subdomains-top1million-110000.txt inlanefreight.htb
+</code></pre>
 
                     </main>
 
