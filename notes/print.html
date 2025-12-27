@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-c2c7bc86.js";
+            window.path_to_searchindex_js = "searchindex-4d96fbd6.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-77190df2.js"></script>
+        <script src="toc-36c9dcb5.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -193,14 +193,16 @@
 <li><a href="#standard-http-headers">standard http headers</a></li>
 <li><a href="#latency-numbers-every-sre-should-know">Latency Numbers Every SRE Should Know</a></li>
 <li><a href="#make-files">Make Files</a></li>
-<li><a href="#neovim-cheatsheet">Neovim Cheatsheet</a></li>
+<li><a href="#neovim-cheatsheet">Neovim</a></li>
 <li><a href="#nmap-cheatsheet">nmap</a></li>
 <li><a href="#medusa-cheatsheet">medusa</a></li>
 <li><a href="#hydra-cheatsheet">hydra</a></li>
-<li><a href="#ranger-cheatsheet">Ranger Cheatsheet</a></li>
-<li><a href="#regex-cheatsheet">Regex Cheatsheet</a></li>
-<li><a href="#sql-cheat-sheet">SQL Cheat Sheet</a></li>
+<li><a href="#ranger-cheatsheet">Ranger</a></li>
+<li><a href="#regex-cheatsheet">Regex</a></li>
+<li><a href="#sql-cheat-sheet">SQL</a></li>
 <li><a href="#multi-line-strings">yaml</a></li>
+<li><a href="#ffuf-cheatsheet">ffuf</a></li>
+<li><a href="#hashcat">hashcat</a></li>
 </ul>
 </li>
 <li><a href="clouds/README.html">Clouds</a>
@@ -419,10 +421,16 @@
 <li><a href="#dns-2">DNS</a></li>
 <li><a href="#ftp">FTP</a></li>
 <li><a href="#icmp">ICMP</a></li>
+<li><a href="#imap--pop3">IMAP/POP3</a></li>
 <li><a href="#mqtt">MQTT</a></li>
+<li><a href="#nfs-network-file-system">NFS</a></li>
+<li><a href="#ntp">NTP</a></li>
 <li><a href="#quic">QUIC</a></li>
+<li><a href="#server-message-block-smb">SMB</a></li>
+<li><a href="#smtp-simple-mail-transfer-protocol">SMTP</a></li>
+<li><a href="#snmp">SNMP</a></li>
 <li><a href="#ssh">SSH</a></li>
-<li><a href="#tls-handshake">TLS Handshake</a></li>
+<li><a href="#tls">TLS</a></li>
 <li><a href="#udp-1">UDP</a></li>
 <li><a href="#websockets">WebSockets</a></li>
 </ul>
@@ -512,7 +520,7 @@
 <ul>
 <li><a href="#need-to-addrefine">Need to add/refine:</a></li>
 <li><a href="#instructions-for-using-dnspinger">instructions for using dnspinger</a></li>
-<li><a href="#nmap">nmap</a></li>
+<li><a href="#nmap-1">nmap</a></li>
 <li><a href="#medusa">medusa</a></li>
 <li><a href="#hydra">hydra</a></li>
 </ul>
@@ -564,6 +572,8 @@
 <li><a href="#sql-cheat-sheet">sql</a></li>
 <li><a href="#multi-line-strings">yaml</a></li>
 <li><a href="#hydra-cheatsheet">hydra</a></li>
+<li><a href="#ffuf-cheatsheet">ffuf</a></li>
+<li><a href="#hashcat">hashcat</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="api-architectural-styles"><a class="header" href="#api-architectural-styles">API Architectural Styles</a></h1>
@@ -1497,6 +1507,76 @@ SELECT name, sid FROM sys.sql_logins
 </code></pre>
 </li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ffuf-cheatsheet"><a class="header" href="#ffuf-cheatsheet">FFuf Cheatsheet</a></h1>
+<h2 id="basic-commands"><a class="header" href="#basic-commands">Basic Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ffuf -h</code></td><td>Show ffuf help</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="fuzzing-types"><a class="header" href="#fuzzing-types">Fuzzing Types</a></h2>
+<h3 id="directory-fuzzing"><a class="header" href="#directory-fuzzing">Directory Fuzzing</a></h3>
+<pre><code>ffuf -w wordlist.txt:FUZZ -u http://SERVER_IP:PORT/FUZZ
+</code></pre>
+<h3 id="extension-fuzzing"><a class="header" href="#extension-fuzzing">Extension Fuzzing</a></h3>
+<pre><code>ffuf -w wordlist.txt:FUZZ -u http://SERVER_IP:PORT/indexFUZZ
+</code></pre>
+<h3 id="page-fuzzing"><a class="header" href="#page-fuzzing">Page Fuzzing</a></h3>
+<pre><code>ffuf -w wordlist.txt:FUZZ -u http://SERVER_IP:PORT/blog/FUZZ.php
+</code></pre>
+<h3 id="recursive-fuzzing"><a class="header" href="#recursive-fuzzing">Recursive Fuzzing</a></h3>
+<pre><code>ffuf -w wordlist.txt:FUZZ -u http://SERVER_IP:PORT/FUZZ -recursion -recursion-depth 1 -e .php -v
+</code></pre>
+<h3 id="sub-domain-fuzzing"><a class="header" href="#sub-domain-fuzzing">Sub-domain Fuzzing</a></h3>
+<pre><code>ffuf -w wordlist.txt:FUZZ -u https://FUZZ.hackthebox.eu/
+</code></pre>
+<h3 id="vhost-fuzzing"><a class="header" href="#vhost-fuzzing">VHost Fuzzing</a></h3>
+<pre><code>ffuf -w wordlist.txt:FUZZ -u http://academy.htb:PORT/ -H 'Host: FUZZ.academy.htb' -fs xxx
+</code></pre>
+<h3 id="parameter-fuzzing---get"><a class="header" href="#parameter-fuzzing---get">Parameter Fuzzing - GET</a></h3>
+<pre><code>ffuf -w wordlist.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php?FUZZ=key -fs xxx
+</code></pre>
+<h3 id="parameter-fuzzing---post"><a class="header" href="#parameter-fuzzing---post">Parameter Fuzzing - POST</a></h3>
+<pre><code>ffuf -w wordlist.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'FUZZ=key' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx
+</code></pre>
+<h3 id="value-fuzzing"><a class="header" href="#value-fuzzing">Value Fuzzing</a></h3>
+<pre><code>ffuf -w ids.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=FUZZ' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx
+</code></pre>
+<hr>
+<h2 id="wordlists"><a class="header" href="#wordlists">Wordlists</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Path</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Directory/Page</strong></td><td><code>/opt/useful/seclists/Discovery/Web-Content/directory-list-2.3-small.txt</code></td></tr>
+<tr><td><strong>Extensions</strong></td><td><code>/opt/useful/seclists/Discovery/Web-Content/web-extensions.txt</code></td></tr>
+<tr><td><strong>Domain</strong></td><td><code>/opt/useful/seclists/Discovery/DNS/subdomains-top1million-5000.txt</code></td></tr>
+<tr><td><strong>Parameters</strong></td><td><code>/opt/useful/seclists/Discovery/Web-Content/burp-parameter-names.txt</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="misc"><a class="header" href="#misc">Misc</a></h2>
+<h3 id="add-dns-entry"><a class="header" href="#add-dns-entry">Add DNS Entry</a></h3>
+<pre><code>sudo sh -c 'echo "SERVER_IP academy.htb" &gt;&gt; /etc/hosts'
+</code></pre>
+<h3 id="create-sequence-wordlist"><a class="header" href="#create-sequence-wordlist">Create Sequence Wordlist</a></h3>
+<pre><code>for i in $(seq 1 1000); do echo $i &gt;&gt; ids.txt; done
+</code></pre>
+<h3 id="curl-with-post"><a class="header" href="#curl-with-post">curl with POST</a></h3>
+<pre><code>curl http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=key' -H 'Content-Type: application/x-www-form-urlencoded'
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="hashcat"><a href="#hashcat" class="header">hashcat</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="clouds"><a class="header" href="#clouds">Clouds</a></h1>
 <p>Notes related to various cloud service providers.</p>
@@ -16867,6 +16947,21 @@ spec:
 <h2 id="protocols"><a class="header" href="#protocols">Protocols</a></h2>
 <ul>
 <li><a href="#ftp">FTP</a></li>
+<li><a href="#dns-2">dns</a></li>
+<li><a href="#ftp">ftp</a></li>
+<li><a href="#icmp">icmp</a></li>
+<li><a href="#imap--pop3">imap/pop3</a></li>
+<li><a href="#mqtt">mqtt</a></li>
+<li><a href="#nfs-network-file-system">nfs</a></li>
+<li><a href="#ntp">ntp</a></li>
+<li><a href="#quic">quic</a></li>
+<li><a href="#server-message-block-smb">smb</a></li>
+<li><a href="#smtp-simple-mail-transfer-protocol">smtp</a></li>
+<li><a href="#snmp">snmp</a></li>
+<li><a href="#ssh">ssh</a></li>
+<li><a href="#tls">tls</a></li>
+<li><a href="#udp-1">udp</a></li>
+<li><a href="networking/protocols/websocket.html">websocket</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="browser-networking"><a class="header" href="#browser-networking">Browser Networking</a></h1>
@@ -17450,6 +17545,24 @@ func main() {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="protocols-1"><a class="header" href="#protocols-1">Protocols</a></h1>
+<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
+<ul>
+<li><a href="#dns-2">dns</a></li>
+<li><a href="#ftp">ftp</a></li>
+<li><a href="#icmp">icmp</a></li>
+<li><a href="#imap--pop3">imap/pop3</a></li>
+<li><a href="#mqtt">mqtt</a></li>
+<li><a href="#nfs-network-file-system">nfs</a></li>
+<li><a href="#ntp">ntp</a></li>
+<li><a href="#quic">quic</a></li>
+<li><a href="#server-message-block-smb">smb</a></li>
+<li><a href="#smtp-simple-mail-transfer-protocol">smtp</a></li>
+<li><a href="#snmp">snmp</a></li>
+<li><a href="#ssh">ssh</a></li>
+<li><a href="#tls">tls</a></li>
+<li><a href="#udp-1">udp</a></li>
+<li><a href="networking/protocols/websocket.html">websocket</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="dns-2"><a class="header" href="#dns-2">DNS</a></h1>
 <p>Domain Name System (DNS) is an integral part of the Internet that resolves computer names into IP addresses. DNS is a distributed system without a central database, functioning like a library with many different phone books. The information is distributed over many thousands of name servers globally. DNS servers translate domain names into IP addresses and control which server a user can reach via a particular domain. DNS also stores additional information about services associated with a domain, such as mail servers and name servers.</p>
@@ -17705,20 +17818,660 @@ PORT   STATE SERVICE VERSION
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="icmp"><a class="header" href="#icmp">ICMP</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="imap--pop3"><a class="header" href="#imap--pop3">IMAP / POP3</a></h1>
+<p>With the help of the Internet Message Access Protocol (IMAP), access to emails from a mail server is possible. Unlike the Post Office Protocol (POP3), IMAP allows online management of emails directly on the server and supports folder structures. Thus, it is a network protocol for the online management of emails on a remote server. The protocol is client-server-based and allows synchronization of a local email client with the mailbox on the server, providing a kind of network file system for emails, allowing problem-free synchronization across several independent clients. POP3, on the other hand, does not have the same functionality as IMAP, and it only provides listing, retrieving, and deleting emails as functions at the email server. Therefore, protocols such as IMAP must be used for additional functionalities such as hierarchical mailboxes directly at the mail server, access to multiple mailboxes during a session, and preselection of emails.</p>
+<h2 id="how-imap-works"><a class="header" href="#how-imap-works">How IMAP Works</a></h2>
+<ul>
+<li>Clients access these structures online and can create local copies. Even across several clients, this results in a uniform database. Emails remain on the server until they are deleted.</li>
+<li>IMAP is text-based and has extended functions, such as browsing emails directly on the server. It is also possible for several users to access the email server simultaneously.</li>
+<li>Without an active connection to the server, managing emails is impossible. However, some clients offer an offline mode with a local copy of the mailbox. The client synchronizes all offline local changes when a connection is reestablished.</li>
+<li>The client establishes the connection to the server via port 143. For communication, it uses text-based commands in ASCII format. Several commands can be sent in succession without waiting for confirmation from the server. Later confirmations from the server can be assigned to the individual commands using the identifiers sent along with the commands.</li>
+<li>Immediately after the connection is established, the user is authenticated by user name and password to the server. Access to the desired mailbox is only possible after successful authentication.</li>
+<li>SMTP is usually used to send emails. By copying sent emails into an IMAP folder, all clients have access to all sent mails, regardless of the computer from which they were sent.</li>
+<li>Another advantage of the Internet Message Access Protocol is creating personal folders and folder structures in the mailbox. This feature makes the mailbox clearer and easier to manage. However, the storage space requirement on the email server increases.</li>
+</ul>
+<h2 id="security-1"><a class="header" href="#security-1">Security</a></h2>
+<ul>
+<li>Without further measures, IMAP works unencrypted and transmits commands, emails, or usernames and passwords in plain text. Many email servers require establishing an encrypted IMAP session to ensure greater security in email traffic and prevent unauthorized access to mailboxes.</li>
+<li>SSL/TLS is usually used for this purpose. Depending on the method and implementation used, the encrypted connection uses the standard port 143 or an alternative port such as 993.</li>
+</ul>
+<h2 id="default-configuration"><a class="header" href="#default-configuration">Default Configuration</a></h2>
+<p>Both IMAP and POP3 have a large number of configuration options, making it difficult to deep dive into each component in more detail. If you wish to examine these protocol configurations deeper, we recommend creating a VM locally and install the two packages <code>dovecot-imapd</code>, and <code>dovecot-pop3d</code> using apt and play around with the configurations and experiment.</p>
+<p>In the documentation of Dovecot, we can find the individual core settings and service configuration options that can be utilized for our experiments. However, let us look at the list of commands and see how we can directly interact and communicate with IMAP and POP3 using the command line.</p>
+<h2 id="imap-commands"><a class="header" href="#imap-commands">IMAP Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>LOGIN username password</td><td>User’s login.</td></tr>
+<tr><td>LIST “” *</td><td>Lists all directories.</td></tr>
+<tr><td>CREATE “INBOX”</td><td>Creates a mailbox with a specified name.</td></tr>
+<tr><td>DELETE “INBOX”</td><td>Deletes a mailbox.</td></tr>
+<tr><td>RENAME “ToRead” “Important”</td><td>Renames a mailbox.</td></tr>
+<tr><td>LSUB “” *</td><td>Returns a subset of names from the set of names that the User has declared as being active or subscribed.</td></tr>
+<tr><td>SELECT INBOX</td><td>Selects a mailbox so that messages in the mailbox can be accessed.</td></tr>
+<tr><td>UNSELECT INBOX</td><td>Exits the selected mailbox.</td></tr>
+<tr><td>FETCH <id> all</id></td><td>Retrieves data associated with a message in the mailbox.</td></tr>
+<tr><td>CLOSE</td><td>Removes all messages with the Deleted flag set.</td></tr>
+<tr><td>LOGOUT</td><td>Closes the connection with the IMAP server.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="pop3-commands"><a class="header" href="#pop3-commands">POP3 Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>USER username</td><td>Identifies the user.</td></tr>
+<tr><td>PASS password</td><td>Authentication of the user using its password.</td></tr>
+<tr><td>STAT</td><td>Requests the number of saved emails from the server.</td></tr>
+<tr><td>LIST</td><td>Requests from the server the number and size of all emails.</td></tr>
+<tr><td>RETR id</td><td>Requests the server to deliver the requested email by ID.</td></tr>
+<tr><td>DELE id</td><td>Requests the server to delete the requested email by ID.</td></tr>
+<tr><td>CAPA</td><td>Requests the server to display the server capabilities.</td></tr>
+<tr><td>RSET</td><td>Requests the server to reset the transmitted information.</td></tr>
+<tr><td>QUIT</td><td>Closes the connection with the POP3 server.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="dangerous-settings-1"><a class="header" href="#dangerous-settings-1">Dangerous Settings</a></h2>
+<p>Nevertheless, configuration options that were improperly configured could allow us to obtain more information, such as debugging the executed commands on the service or logging in as anonymous, similar to the FTP service. Most companies use third-party email providers such as Google, Microsoft, and many others. However, some companies still use their own mail servers for many different reasons. One of these reasons is to maintain the privacy that they want to keep in their own hands. Many configuration mistakes can be made by administrators, which in the worst cases will allow us to read all the emails sent and received, which may even contain confidential or sensitive information. Some of these configuration options include:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Setting</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>auth_debug</td><td>Enables all authentication debug logging.</td></tr>
+<tr><td>auth_debug_passwords</td><td>This setting adjusts log verbosity, the submitted passwords, and the scheme gets logged.</td></tr>
+<tr><td>auth_verbose</td><td>Logs unsuccessful authentication attempts and their reasons.</td></tr>
+<tr><td>auth_verbose_passwords</td><td>Passwords used for authentication are logged and can also be truncated.</td></tr>
+<tr><td>auth_anonymous_username</td><td>This specifies the username to be used when logging in with the ANONYMOUS SASL mechanism.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="footprinting-the-service"><a class="header" href="#footprinting-the-service">Footprinting the Service</a></h2>
+<p>By default, ports 110 and 995 are used for POP3, and ports 143 and 993 are used for IMAP. The higher ports (993 and 995) use TLS/SSL to encrypt the communication between the client and server. Using Nmap, we can scan the server for these ports. The scan will return the corresponding information (as seen below) if the server uses an embedded certificate.</p>
+<h3 id="nmap"><a class="header" href="#nmap">Nmap</a></h3>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ sudo nmap 10.129.14.128 -sV -p110,143,993,995 -sC
+
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-09-19 22:09 CEST
+Nmap scan report for 10.129.14.128
+Host is up (0.00026s latency).
+
+PORT    STATE SERVICE  VERSION
+110/tcp open  pop3     Dovecot pop3d
+|_pop3-capabilities: AUTH-RESP-CODE SASL STLS TOP UIDL RESP-CODES CAPA PIPELINING
+| ssl-cert: Subject: commonName=mail1.inlanefreight.htb/organizationName=Inlanefreight/stateOrProvinceName=California/countryName=US
+| Not valid before: 2021-09-19T19:44:58
+|_Not valid after:  2295-07-04T19:44:58
+143/tcp open  imap     Dovecot imapd
+|_imap-capabilities: more have post-login STARTTLS Pre-login capabilities LITERAL+ LOGIN-REFERRALS OK LOGINDISABLEDA0001 SASL-IR ENABLE listed IDLE ID IMAP4rev1
+| ssl-cert: Subject: commonName=mail1.inlanefreight.htb/organizationName=Inlanefreight/stateOrProvinceName=California/countryName=US
+| Not valid before: 2021-09-19T19:44:58
+|_Not valid after:  2295-07-04T19:44:58
+993/tcp open  ssl/imap Dovecot imapd
+|_imap-capabilities: more have post-login OK capabilities LITERAL+ LOGIN-REFERRALS Pre-login AUTH=PLAINA0001 SASL-IR ENABLE listed IDLE ID IMAP4rev1
+| ssl-cert: Subject: commonName=mail1.inlanefreight.htb/organizationName=Inlanefreight/stateOrProvinceName=California/countryName=US
+| Not valid before: 2021-09-19T19:44:58
+|_Not valid after:  2295-07-04T19:44:58
+995/tcp open  ssl/pop3 Dovecot pop3d
+|_pop3-capabilities: AUTH-RESP-CODE USER SASL(PLAIN) TOP UIDL RESP-CODES CAPA PIPELINING
+| ssl-cert: Subject: commonName=mail1.inlanefreight.htb/organizationName=Inlanefreight/stateOrProvinceName=California/countryName=US
+| Not valid before: 2021-09-19T19:44:58
+|_Not valid after:  2295-07-04T19:44:58
+MAC Address: 00:00:00:00:00:00 (VMware)
+
+Service detection performed. Please report any incorrect results to https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 12.74 seconds
+</code></pre>
+<p>For example, from the output, we can see that the common name is <code>mail1.inlanefreight.htb</code>, and the email server belongs to the organization Inlanefreight, which is located in California. The displayed capabilities show us the commands available on the server and for the service on the corresponding port.</p>
+<p>If we successfully figure out the access credentials for one of the employees, an attacker could log in to the mail server and read or even send the individual messages.</p>
+<h3 id="curl"><a class="header" href="#curl">cURL</a></h3>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ curl -k 'imaps://10.129.14.128' --user user:p4ssw0rd
+
+* LIST (\HasNoChildren) "." Important
+* LIST (\HasNoChildren) "." INBOX
+</code></pre>
+<p>If we also use the verbose (<code>-v</code>) option, we will see how the connection is made. From this, we can see the version of TLS used for encryption, further details of the SSL certificate, and even the banner, which will often contain the version of the mail server.</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ curl -k 'imaps://10.129.14.128' --user cry0l1t3:1234 -v
+
+*   Trying 10.129.14.128:993...
+* TCP_NODELAY set
+* Connected to 10.129.14.128 (10.129.14.128) port 993 (#0)
+* successfully set certificate verify locations:
+*   CAfile: /etc/ssl/certs/ca-certificates.crt
+  CApath: /etc/ssl/certs
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+* TLSv1.3 (IN), TLS handshake, Certificate (11):
+* TLSv1.3 (IN), TLS handshake, CERT verify (15):
+* TLSv1.3 (IN), TLS handshake, Finished (20):
+* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+* TLSv1.3 (OUT), TLS handshake, Finished (20):
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+* Server certificate:
+*  subject: C=US; ST=California; L=Sacramento; O=Inlanefreight; OU=Customer Support; CN=mail1.inlanefreight.htb; emailAddress=cry0l1t3@inlanefreight.htb
+*  start date: Sep 19 19:44:58 2021 GMT
+*  expire date: Jul  4 19:44:58 2295 GMT
+*  issuer: C=US; ST=California; L=Sacramento; O=Inlanefreight; OU=Customer Support; CN=mail1.inlanefreight.htb; emailAddress=cry0l1t3@inlanefreight.htb
+*  SSL certificate verify result: self signed certificate (18), continuing anyway.
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* old SSL session ID is stale, removing
+&lt; * OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN] HTB-Academy IMAP4 v.0.21.4
+&gt; A001 CAPABILITY
+&lt; * CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN
+&lt; A001 OK Pre-login capabilities listed, post-login capabilities have more.
+&gt; A002 AUTHENTICATE PLAIN AGNyeTBsMXQzADEyMzQ=
+&lt; * CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS BINARY MOVE SNIPPET=FUZZY PREVIEW=FUZZY LITERAL+ NOTIFY SPECIAL-USE
+&lt; A002 OK Logged in
+&gt; A003 LIST "" *
+&lt; * LIST (\HasNoChildren) "." Important
+* LIST (\HasNoChildren) "." Important
+&lt; * LIST (\HasNoChildren) "." INBOX
+* LIST (\HasNoChildren) "." INBOX
+&lt; A003 OK List completed (0.001 + 0.000 secs).
+* Connection #0 to host 10.129.14.128 left intact
+</code></pre>
+<h3 id="openssl---tls-encrypted-interaction"><a class="header" href="#openssl---tls-encrypted-interaction">OpenSSL - TLS Encrypted Interaction</a></h3>
+<p>To interact with the IMAP or POP3 server over SSL, we can use <code>openssl</code>, as well as <code>ncat</code>. The commands for this would look like this:</p>
+<h4 id="pop3"><a class="header" href="#pop3">POP3</a></h4>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ openssl s_client -connect 10.129.14.128:pop3s
+
+CONNECTED(00000003)
+Can't use SSL_get_servername
+depth=0 C = US, ST = California, L = Sacramento, O = Inlanefreight, OU = Customer Support, CN = mail1.inlanefreight.htb, emailAddress = cry0l1t3@inlanefreight.htb
+verify error:num=18:self signed certificate
+verify return:1
+depth=0 C = US, ST = California, L = Sacramento, O = Inlanefreight, OU = Customer Support, CN = mail1.inlanefreight.htb, emailAddress = cry0l1t3@inlanefreight.htb
+verify return:1
+---
+Certificate chain
+ 0 s:C = US, ST = California, L = Sacramento, O = Inlanefreight, OU = Customer Support, CN = mail1.inlanefreight.htb, emailAddress = cry0l1t3@inlanefreight.htb
+
+...SNIP...
+
+---
+read R BLOCK
+---
+Post-Handshake New Session Ticket arrived:
+SSL-Session:
+    Protocol  : TLSv1.3
+    Cipher    : TLS_AES_256_GCM_SHA384
+    Session-ID: 3CC39A7F2928B252EF2FFA5462140B1A0A74B29D4708AA8DE1515BB4033D92C2
+    Session-ID-ctx:
+    Resumption PSK: 68419D933B5FEBD878FF1BA399A926813BEA3652555E05F0EC75D65819A263AA25FA672F8974C37F6446446BB7EA83F9
+    PSK identity: None
+    PSK identity hint: None
+    SRP username: None
+    TLS session ticket lifetime hint: 7200 (seconds)
+    TLS session ticket:
+    0000 - d7 86 ac 7e f3 f4 95 35-88 40 a5 b5 d6 a6 41 e4   ...~...5.@....A.
+    0010 - 96 6c e6 12 4f 50 ce 72-36 25 df e1 72 d9 23 94   .l..OP.r6%..r.#.
+    0020 - cc 29 90 08 58 1b 57 ab-db a8 6b f7 8f 31 5b ad   .)..X.W...k..1[.
+    0030 - 47 94 f4 67 58 1f 96 d9-ca ca 56 f9 7a 12 f6 6d   G..gX.....V.z..m
+    0040 - 43 b9 b6 68 de db b2 47-4f 9f 48 14 40 45 8f 89   C..h...GO.H.@E..
+    0050 - fa 19 35 9c 6d 3c a1 46-5c a2 65 ab 87 a4 fd 5e   ..5.m&lt;.F\.e....^
+    0060 - a2 95 25 d4 43 b8 71 70-40 6c fe 6f 0e d1 a0 38   ..%.C.qp@l.o...8
+    0070 - 6e bd 73 91 ed 05 89 83-f5 3e d9 2a e0 2e 96 f8   n.s......&gt;.*....
+    0080 - 99 f0 50 15 e0 1b 66 db-7c 9f 10 80 4a a1 8b 24   ..P...f.|...J..$
+    0090 - bb 00 03 d4 93 2b d9 95-64 44 5b c2 6b 2e 01 b5   .....+..dD[.k...
+    00a0 - e8 1b f4 a4 98 a7 7a 7d-0a 80 cc 0a ad fe 6e b3   ......z}......n.
+    00b0 - 0a d6 50 5d fd 9a b4 5c-28 a4 c9 36 e4 7d 2a 1e   ..P]...\(..6.}*.
+
+    Start Time: 1632081313
+    Timeout   : 7200 (sec)
+    Verify return code: 18 (self signed certificate)
+    Extended master secret: no
+    Max Early Data: 0
+---
+read R BLOCK
++OK HTB-Academy POP3 Server
+</code></pre>
+<h4 id="imap"><a class="header" href="#imap">IMAP</a></h4>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ openssl s_client -connect 10.129.14.128:imaps
+
+CONNECTED(00000003)
+Can't use SSL_get_servername
+depth=0 C = US, ST = California, L = Sacramento, O = Inlanefreight, OU = Customer Support, CN = mail1.inlanefreight.htb, emailAddress = cry0l1t3@inlanefreight.htb
+verify error:num=18:self signed certificate
+verify return:1
+depth=0 C = US, ST = California, L = Sacramento, O = Inlanefreight, OU = Customer Support, CN = mail1.inlanefreight.htb, emailAddress = cry0l1t3@inlanefreight.htb
+verify return:1
+---
+Certificate chain
+ 0 s:C = US, ST = California, L = Sacramento, O = Inlanefreight, OU = Customer Support, CN = mail1.inlanefreight.htb, emailAddress = cry0l1t3@inlanefreight.htb
+
+...SNIP...
+
+---
+read R BLOCK
+---
+Post-Handshake New Session Ticket arrived:
+SSL-Session:
+    Protocol  : TLSv1.3
+    Cipher    : TLS_AES_256_GCM_SHA384
+    Session-ID: 2B7148CD1B7B92BA123E06E22831FCD3B365A5EA06B2CDEF1A5F397177130699
+    Session-ID-ctx:
+    Resumption PSK: 4D9F082C6660646C39135F9996DDA2C199C4F7E75D65FA5303F4A0B274D78CC5BD3416C8AF50B31A34EC022B619CC633
+    PSK identity: None
+    PSK identity hint: None
+    SRP username: None
+    TLS session ticket lifetime hint: 7200 (seconds)
+    TLS session ticket:
+    0000 - 68 3b b6 68 ff 85 95 7c-8a 8a 16 b2 97 1c 72 24   h;.h...|......r$
+    0010 - 62 a7 84 ff c3 24 ab 99-de 45 60 26 e7 04 4a 7d   b....$...E`&amp;..J}
+    0020 - bc 6e 06 a0 ff f7 d7 41-b5 1b 49 9c 9f 36 40 8d   .n.....A..I..6@.
+    0030 - 93 35 ed d9 eb 1f 14 d7-a5 f6 3f c8 52 fb 9f 29   .5........?.R..)
+    0040 - 89 8d de e6 46 95 b3 32-48 80 19 bc 46 36 cb eb   ....F..2H...F6..
+    0050 - 35 79 54 4c 57 f8 ee 55-06 e3 59 7f 5e 64 85 b0   5yTLW..U..Y.^d..
+    0060 - f3 a4 8c a6 b6 47 e4 59-ee c9 ab 54 a4 ab 8c 01   .....G.Y...T....
+    0070 - 56 bb b9 bb 3b f6 96 74-16 c9 66 e2 6c 28 c6 12   V...;..t..f.l(..
+    0080 - 34 c7 63 6b ff 71 16 7f-91 69 dc 38 7a 47 46 ec   4.ck.q...i.8zGF.
+    0090 - 67 b7 a2 90 8b 31 58 a0-4f 57 30 6a b6 2e 3a 21   g....1X.OW0j..:!
+    00a0 - 54 c7 ba f0 a9 74 13 11-d5 d1 ec cc ea f9 54 7d   T....t........T}
+    00b0 - 46 a6 33 ed 5d 24 ed b0-20 63 43 d8 8f 14 4d 62   F.3.]$.. cC...Mb
+
+    Start Time: 1632081604
+    Timeout   : 7200 (sec)
+    Verify return code: 18 (self signed certificate)
+    Extended master secret: no
+    Max Early Data: 0
+---
+read R BLOCK
+* OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN] HTB-Academy IMAP4 v.0.21.4
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="mqtt"><a class="header" href="#mqtt">MQTT</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="nfs-network-file-system"><a class="header" href="#nfs-network-file-system">NFS (Network File System)</a></h1>
+<p>NFS is a distributed file system protocol that allows a user on a client computer to access files over a network in a manner similar to how local storage is accessed. It was originally developed by Sun Microsystems in the 1980s and has since become a widely adopted standard for file sharing in Unix and Linux environments.</p>
+<p>NFS is based on the Open Network Compute Remote Procedure Call (ONC-RPC/SUNRPC) protocol: https://en.wikipedia.org/wiki/Sun_RPC</p>
+<h2 id="nfs-versions"><a class="header" href="#nfs-versions">NFS Versions</a></h2>
+<ul>
+<li><strong>NFSv2</strong>: The original version, introduced in 1984, supports basic file operations but has limitations such as a maximum file size of 2GB.</li>
+<li><strong>NFSv3</strong>: Introduced in 1995, it added support for larger file sizes (up to 64-bit), improved performance, and better error handling.</li>
+<li><strong>NFSv4</strong>: Released in 2000, it introduced significant enhancements, including stateful protocol, improved security features (like Kerberos authentication), and support for file locking and delegation.</li>
+<li><strong>NFSv4.1 and NFSv4.2</strong>: These are incremental updates to NFSv4, adding features like parallel NFS (pNFS) for improved performance and additional security enhancements.</li>
+</ul>
+<h2 id="configuration"><a class="header" href="#configuration">Configuration</a></h2>
+<ul>
+<li>NFS is generally simple to configure. The <code>/etc/exports</code> file on the server specifies which directories are shared and the permissions for each client.
+<pre><code class="language-bash">rnemeth@htb[/htb]$ cat /etc/exports 
+
+# /etc/exports: the access control list for filesystems which may be exported
+#               to NFS clients.  See exports(5).
+#
+# Example for NFSv2 and NFSv3:
+# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
+#
+# Example for NFSv4:
+# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
+# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
+</code></pre>
+</li>
+<li>On the client side, the <code>mount</code> command is used to mount NFS shares to local directories.</li>
+</ul>
+<h2 id="footprinting-and-enumeration"><a class="header" href="#footprinting-and-enumeration">Footprinting and Enumeration</a></h2>
+<ul>
+<li>When footprinting NFS, the ports 111 and 2049 are commonly associated with NFS services. Port 111 is used by the portmapper service, which helps clients locate the NFS service on the server. Port 2049 is the default port for NFS itself.</li>
+<li>Tools like <code>showmount</code>, <code>nmap</code>, and <code>rpcinfo</code> can be used to enumerate NFS shares and gather information about the NFS service.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ntp"><a href="#ntp" class="header">NTP</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="quic"><a class="header" href="#quic">QUIC</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="server-message-block-smb"><a class="header" href="#server-message-block-smb">Server Message Block (SMB)</a></h1>
+<p>The SMB protocol is a client-server protocol that regulates access to shared network resources such as files, printers, and other devices. It is primarily used in Windows-based networks but is also supported by other operating systems through implementations like <code>samba</code>. SMB uses TCP port 445 for direct hosting and TCP port 139 for NetBIOS over TCP/IP.SMB supports access control for file shares via ACLs on the server.</p>
+<h2 id="samba"><a class="header" href="#samba">Samba</a></h2>
+<ul>
+<li>Samba is an open-source implementation of the SMB protocol that allows non-Windows systems to share files and printers with Windows clients.</li>
+<li>Samba uses the CIFS (Common Internet File System) protocol, which is a dialect of SMB.</li>
+<li>Samba can act as both a file server and a domain controller in a Windows network.</li>
+</ul>
+<h3 id="samba-configuration"><a class="header" href="#samba-configuration">Samba Configuration</a></h3>
+<ul>
+<li>The main configuration file for Samba is typically stored at <code>/etc/samba/smb.conf</code>.</li>
+<li>Key sections in the <code>smb.conf</code> file include:</li>
+</ul>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ cat /etc/samba/smb.conf | grep -v "#\|\;" 
+
+[global]
+   workgroup = DEV.INFREIGHT.HTB
+   server string = DEVSMB
+   log file = /var/log/samba/log.%m
+   max log size = 1000
+   logging = file
+   panic action = /usr/share/samba/panic-action %d
+
+   server role = standalone server
+   obey pam restrictions = yes
+   unix password sync = yes
+
+   passwd program = /usr/bin/passwd %u
+   passwd chat = *Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .
+
+   pam password change = yes
+   map to guest = bad user
+   usershare allow guests = yes
+
+[printers]
+   comment = All Printers
+   browseable = no
+   path = /var/spool/samba
+   printable = yes
+   guest ok = no
+   read only = yes
+   create mask = 0700
+
+[print$]
+   comment = Printer Drivers
+   path = /var/lib/samba/printers
+   browseable = yes
+   read only = yes
+   guest ok = no
+</code></pre>
+<ul>
+<li>In the configuration above, we see global settings and two shares: <code>[printers]</code> and <code>[print$]</code>. Global settings are applied to the entire Samba server, while share definitions specify settings for individual shared resources and can override global settings.</li>
+</ul>
+<h2 id="smb-versions"><a class="header" href="#smb-versions">SMB Versions</a></h2>
+<ul>
+<li><strong>SMB1</strong>: The original version of SMB, now considered obsolete and insecure.</li>
+<li><strong>SMB2</strong>: Introduced in Windows Vista and Windows Server 2008, SMB2 brought significant performance improvements and security enhancements.</li>
+<li><strong>SMB3</strong>: Introduced in Windows 8 and Windows Server 2012, SMB3 added features like encryption, improved performance, and better support for virtualized environments.</li>
+</ul>
+<h2 id="smb-security"><a class="header" href="#smb-security">SMB Security</a></h2>
+<ul>
+<li>SMB supports various authentication methods, including NTLM and Kerberos.</li>
+<li>SMB3 introduced encryption to protect data in transit.</li>
+<li>It is recommended to disable SMB1 due to its vulnerabilities and use SMB2 or SMB3 for better security.</li>
+<li>Firewalls should be configured to restrict access to SMB ports (139 and 445) to trusted networks only.</li>
+</ul>
+<h2 id="common-smb-commands"><a class="header" href="#common-smb-commands">Common SMB Commands</a></h2>
+<ul>
+<li>
+<p><code>smbclient</code>: A command-line tool to access SMB/CIFS resources on servers.</p>
+<pre><code class="language-bash">  rnemeth@htb[/htb]$ smbclient -N -L //10.129.14.128
+
+          Sharename       Type      Comment
+          ---------       ----      -------
+          print$          Disk      Printer Drivers
+          home            Disk      INFREIGHT Samba
+          dev             Disk      DEVenv
+          notes           Disk      CheckIT
+          IPC$            IPC       IPC Service (DEVSM)
+  SMB1 disabled -- no workgroup available
+</code></pre>
+<ul>
+<li>Once we have discovered interesting files or folders, we can download them using the get command. Smbclient also allows us to execute local system commands using an exclamation mark at the beginning (!<cmd>) without interrupting the connection.</cmd></li>
+</ul>
+</li>
+<li>
+<p><code>smbstatus</code>: Displays current Samba connections and open files.</p>
+</li>
+<li>
+<p><code>smbpasswd</code>: Used to manage Samba user passwords.</p>
+</li>
+<li>
+<p><code>testparm</code>: Checks the Samba configuration file for syntax errors.</p>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="smtp-simple-mail-transfer-protocol"><a class="header" href="#smtp-simple-mail-transfer-protocol">SMTP (Simple Mail Transfer Protocol)</a></h1>
+<h2 id="overview-11"><a class="header" href="#overview-11">Overview</a></h2>
+<p>SMTP (Simple Mail Transfer Protocol) is a protocol used for sending and receiving email messages over the internet. It is a text-based protocol that operates on the application layer of the OSI model and is primarily used for sending emails from a client to a mail server or between mail servers.</p>
+<p>SMTP is often combined with IMAP or POP3 protocols, which are used for retrieving and storing emails on a mail server.</p>
+<h2 id="smtp-definitions"><a class="header" href="#smtp-definitions">SMTP Definitions</a></h2>
+<ul>
+<li><strong>MTA (Mail Transfer Agent)</strong>: A software application that transfers email messages from one computer to another using SMTP.</li>
+<li><strong>MUA (Mail User Agent)</strong>: A software application that allows users to read and</li>
+<li><strong>MSA (Mail Submission Agent)</strong>: A software application that accepts email messages from MUAs and forwards them to MTAs for delivery.</li>
+<li><strong>MDA (Mail Delivery Agent)</strong>: A software application that delivers email messages to the recipient’s mailbox.</li>
+</ul>
+<pre><code class="language-bash">MUA -&gt; MSA -&gt; MTA -&gt; MDA -&gt; Recipient's Mailbox (POP3/IMAP for retrieval)
+</code></pre>
+<h2 id="how-smtp-works"><a class="header" href="#how-smtp-works">How SMTP Works</a></h2>
+<ul>
+<li>SMTP uses a client-server architecture, where the email client (sender) communicates with the mail server (receiver) to send email messages.</li>
+<li>The client establishes a connection to the mail server using TCP (Transmission Control Protocol) on port 25 (or port 587 for secure connections).</li>
+<li>The client sends a series of commands to the server, including the sender’s email address, recipient’s email address, and the message content.
+<ul>
+<li>The commands are:
+<ul>
+<li>HELO/EHLO: Initiates the conversation between the client and server.</li>
+<li>MAIL FROM: Specifies the sender’s email address.</li>
+<li>RCPT TO: Specifies the recipient’s email address.</li>
+<li>DATA: Indicates that the message content will follow.</li>
+<li>QUIT: Ends the session.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="esmtp-extensions"><a class="header" href="#esmtp-extensions">ESMTP Extensions</a></h2>
+<ul>
+<li>Most modern servers support Extended SMTP (ESMTP), which adds additional features and capabilities to the standard SMTP protocol.</li>
+<li>ESMTP introduces new commands such as:
+<ul>
+<li>AUTH: Used for authentication of the client.</li>
+<li>STARTTLS: Used to initiate a secure connection using TLS (Transport Layer Security).</li>
+<li>SIZE: Allows the client to specify the size of the message being sent.</li>
+<li>8BITMIME: Allows the transmission of 8-bit data.</li>
+<li>DSN: Provides delivery status notifications.</li>
+<li>etc…</li>
+</ul>
+</li>
+</ul>
+<h2 id="default-configuration-postfix"><a class="header" href="#default-configuration-postfix">Default Configuration (Postfix)</a></h2>
+<ul>
+<li>Postfix is a popular open-source mail transfer agent (MTA) that implements the SMTP protocol.</li>
+<li>Default configuration settings can typically be found at <code>/etc/postfix/main.cf</code>:
+<pre><code class="language-bash">[!bash!]$ cat /etc/postfix/main.cf | grep -v "#" | sed -r "/^\s*$/d"
+
+smtpd_banner = ESMTP Server 
+biff = no
+append_dot_mydomain = no
+readme_directory = no
+compatibility_level = 2
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+myhostname = mail1.inlanefreight.htb
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+smtp_generic_maps = hash:/etc/postfix/generic
+mydestination = $myhostname, localhost 
+masquerade_domains = $myhostname
+mynetworks = 127.0.0.0/8 10.129.0.0/16
+mailbox_size_limit = 0
+recipient_delimiter = +
+smtp_bind_address = 0.0.0.0
+inet_protocols = ipv4
+smtpd_helo_restrictions = reject_invalid_hostname
+home_mailbox = /home/postfix
+</code></pre>
+</li>
+</ul>
+<h2 id="esmtp-commands"><a class="header" href="#esmtp-commands">(E)SMTP Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>AUTH PLAIN</td><td>AUTH is a service extension used to authenticate the client.</td></tr>
+<tr><td>HELO</td><td>The client logs in with its computer name and thus starts the session.</td></tr>
+<tr><td>MAIL FROM</td><td>The client names the email sender.</td></tr>
+<tr><td>RCPT TO</td><td>The client names the email recipient.</td></tr>
+<tr><td>DATA</td><td>The client initiates the transmission of the email.</td></tr>
+<tr><td>RSET</td><td>The client aborts the initiated transmission but keeps the connection.</td></tr>
+<tr><td>VRFY</td><td>The client checks if a mailbox is available for message transfer.</td></tr>
+<tr><td>EXPN</td><td>The client also checks if a mailbox is available for messaging.</td></tr>
+<tr><td>NOOP</td><td>The client requests a response to prevent disconnection due to time-out.</td></tr>
+<tr><td>QUIT</td><td>The client terminates the session.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="interacting-with-smtp-servers"><a class="header" href="#interacting-with-smtp-servers">Interacting with SMTP Servers</a></h2>
+<ul>
+<li>Tools like <code>telnet</code> or <code>netcat</code> can be used to manually interact with SMTP servers for testing and debugging purposes.
+<pre><code class="language-bash">[!bash!]$ telnet 10.129.14.128 25
+
+Trying 10.129.14.128...
+Connected to 10.129.14.128.
+Escape character is '^]'.
+220 ESMTP Server 
+
+
+HELO mail1.inlanefreight.htb
+
+250 mail1.inlanefreight.htb
+
+
+EHLO mail1
+
+250-mail1.inlanefreight.htb
+250-PIPELINING
+250-SIZE 10240000
+250-ETRN
+250-ENHANCEDSTATUSCODES
+250-8BITMIME
+250-DSN
+250-SMTPUTF8
+250 CHUNKING
+</code></pre>
+</li>
+<li>A list of all SMTP response codes can be found here: https://serversmtp.com/smtp-error/</li>
+</ul>
+<h2 id="security-considerations"><a class="header" href="#security-considerations">Security Considerations</a></h2>
+<ul>
+<li>The sender of an email can easily spoof the “From” address, making it appear as if the email is coming from a different source. This is because SMTP does not have built-in mechanisms for verifying the authenticity of the sender. However, DKIM and SPF are two widely used methods to help mitigate this issue. ESMTP with STARTTLS can also help secure the transmission of emails.</li>
+</ul>
+<h3 id="dkim-domainkeys-identified-mail"><a class="header" href="#dkim-domainkeys-identified-mail">DKIM (DomainKeys Identified Mail)</a></h3>
+<ul>
+<li>DKIM is an email authentication method that allows the receiver to check that an email was indeed sent and authorized by the owner of that domain.</li>
+<li>It uses a digital signature, which is added to the email header, to verify the authenticity of the message.</li>
+</ul>
+<h3 id="spf-sender-policy-framework"><a class="header" href="#spf-sender-policy-framework">SPF (Sender Policy Framework)</a></h3>
+<ul>
+<li>SPF is an email authentication method that allows the owner of a domain to specify which mail servers are authorized to send email on behalf of that domain.</li>
+<li>It helps to prevent email spoofing by allowing the receiver to check the SPF record of the sender’s domain.</li>
+<li>SPF records are published in the DNS (Domain Name System) as TXT records.</li>
+</ul>
+<h3 id="open-relay-attack"><a class="header" href="#open-relay-attack">Open Relay Attack</a></h3>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="snmp"><a class="header" href="#snmp">SNMP</a></h1>
+<p>Simple Network Management Protocol (SNMP) was created to monitor network devices. In addition, this protocol can also be used to handle configuration tasks and change settings remotely. SNMP-enabled hardware includes routers, switches, servers, IoT devices, and many other devices that can also be queried and controlled using this standard protocol. Thus, it is a protocol for monitoring and managing network devices. In addition, configuration tasks can be handled, and settings can be made remotely using this standard. The current version is SNMPv3, which increases the security of SNMP in particular, but also the complexity of using this protocol.</p>
+<h2 id="communication"><a class="header" href="#communication">Communication</a></h2>
+<p>In addition to the pure exchange of information, SNMP also transmits control commands using agents over UDP port 161. The client can set specific values in the device and change options and settings with these commands. While in classical communication, it is always the client who actively requests information from the server, SNMP also enables the use of so-called traps over UDP port 162. These are data packets sent from the SNMP server to the client without being explicitly requested. If a device is configured accordingly, an SNMP trap is sent to the client once a specific event occurs on the server-side.</p>
+<p>For the SNMP client and server to exchange the respective values, the available SNMP objects must have unique addresses known on both sides. This addressing mechanism is an absolute prerequisite for successfully transmitting data and network monitoring using SNMP.</p>
+<h2 id="mib-management-information-base"><a class="header" href="#mib-management-information-base">MIB (Management Information Base)</a></h2>
+<p>To ensure that SNMP access works across manufacturers and with different client-server combinations, the Management Information Base (MIB) was created. MIB is an independent format for storing device information. A MIB is a text file in which all queryable SNMP objects of a device are listed in a standardized tree hierarchy. It contains at least one Object Identifier (OID), which, in addition to the necessary unique address and a name, also provides information about the type, access rights, and a description of the respective object. MIB files are written in the Abstract Syntax Notation One (ASN.1) based ASCII text format. The MIBs do not contain data, but they explain where to find which information and what it looks like, which returns values for the specific OID, or which data type is used.</p>
+<h2 id="oid-object-identifier"><a class="header" href="#oid-object-identifier">OID (Object Identifier)</a></h2>
+<p>An OID represents a node in a hierarchical namespace. A sequence of numbers uniquely identifies each node, allowing the node’s position in the tree to be determined. The longer the chain, the more specific the information. Many nodes in the OID tree contain nothing except references to those below them. The OIDs consist of integers and are usually concatenated by dot notation. We can look up many MIBs for the associated OIDs in the Object Identifier Registry.</p>
+<h2 id="snmp-versions"><a class="header" href="#snmp-versions">SNMP Versions</a></h2>
+<h3 id="snmpv1"><a class="header" href="#snmpv1">SNMPv1</a></h3>
+<p>SNMP version 1 (SNMPv1) is used for network management and monitoring. SNMPv1 is the first version of the protocol and is still in use in many small networks. It supports the retrieval of information from network devices, allows for the configuration of devices, and provides traps, which are notifications of events. However, SNMPv1 has no built-in authentication mechanism, meaning anyone accessing the network can read and modify network data. Another main flaw of SNMPv1 is that it does not support encryption, meaning that all data is sent in plain text and can be easily intercepted.</p>
+<h3 id="snmpv2"><a class="header" href="#snmpv2">SNMPv2</a></h3>
+<p>SNMPv2 existed in different versions. The version still exists today is v2c, and the extension c means community-based SNMP. Regarding security, SNMPv2 is on par with SNMPv1 and has been extended with additional functions from the party-based SNMP no longer in use. However, a significant problem with the initial execution of the SNMP protocol is that the community string that provides security is only transmitted in plain text, meaning it has no built-in encryption.</p>
+<h3 id="snmpv3"><a class="header" href="#snmpv3">SNMPv3</a></h3>
+<p>The security has been increased enormously for SNMPv3 by security features such as authentication using username and password and transmission encryption (via pre-shared key) of the data.</p>
+<h2 id="security-considerations-1"><a class="header" href="#security-considerations-1">Security Considerations</a></h2>
+<p>In the case of a misconfiguration, we would get approximately the same results from <code>snmpwalk</code> as just shown above. Once we know the community string and the SNMP service that does not require authentication (versions 1, 2c), we can query internal system information like in the previous example.</p>
+<p>Here we recognize some Python packages that have been installed on the system. If we do not know the community string, we can use onesixtyone and SecLists wordlists to identify these community strings.</p>
+<p>Often, when certain community strings are bound to specific IP addresses, they are named with the hostname of the host, and sometimes even symbols are added to these names to make them more challenging to identify. However, if we imagine an extensive network with over 100 different servers managed using SNMP, the labels, in that case, will have some pattern to them. Therefore, we can use different rules to guess them. We can use the tool crunch to create custom wordlists. Creating custom wordlists is not an essential part of this module, but more details can be found in the module Cracking Passwords With Hashcat.</p>
+<p>Once we know a community string, we can use it with braa to brute-force the individual OIDs and enumerate the information behind them.</p>
+<p>Once again, we would like to point out that the independent configuration of the SNMP service will bring us a great variety of different experiences that no tutorial can replace. Therefore, we highly recommend setting up a VM with SNMP, experimenting with it, and trying different configurations. SNMP can be a boon for an I.T. systems administrator as well as a curse for Security analysts and managers alike.</p>
+<h2 id="tools-1"><a class="header" href="#tools-1">Tools</a></h2>
+<h3 id="onesixtyone"><a class="header" href="#onesixtyone">OneSixtyOne</a></h3>
+<p>OneSixtyOne is a tool used to brute-force SNMP community strings:</p>
+<pre><code class="language-bash">[!bash!]$ sudo apt install onesixtyone
+[!bash!]$ onesixtyone -c /opt/useful/seclists/Discovery/SNMP/snmp.txt 10.129.14.128
+
+Scanning 1 hosts, 3220 communities
+10.129.14.128 [public] Linux htb 5.11.0-37-generic #41~20.04.2-Ubuntu SMP Fri Sep 24 09:06:38 UTC 2021 x86_64
+</code></pre>
+<h3 id="braa"><a class="header" href="#braa">Braa</a></h3>
+<p>Braa is a tool used to brute-force SNMP OIDs once a community string is known:</p>
+<pre><code class="language-bash">[!bash!]$ sudo apt install braa
+[!bash!]$ braa &lt;community string&gt;@&lt;IP&gt;:.1.3.6.*   # Syntax
+[!bash!]$ braa public@10.129.14.128:.1.3.6.*
+
+10.129.14.128:20ms:.1.3.6.1.2.1.1.1.0:Linux htb 5.11.0-34-generic #36~20.04.1-Ubuntu SMP Fri Aug 27 08:06:32 UTC 2021 x86_64
+10.129.14.128:20ms:.1.3.6.1.2.1.1.2.0:.1.3.6.1.4.1.8072.3.2.10
+10.129.14.128:20ms:.1.3.6.1.2.1.1.3.0:548
+10.129.14.128:20ms:.1.3.6.1.2.1.1.4.0:mrb3n@inlanefreight.htb
+10.129.14.128:20ms:.1.3.6.1.2.1.1.5.0:htb
+10.129.14.128:20ms:.1.3.6.1.2.1.1.6.0:US
+10.129.14.128:20ms:.1.3.6.1.2.1.1.7.0:78
+</code></pre>
+<h2 id="example-snmp-walk-output"><a class="header" href="#example-snmp-walk-output">Example SNMP Walk Output</a></h2>
+<p>Example output from <code>snmpwalk</code> showing various OIDs and their values:</p>
+<pre><code>iso.3.6.1.2.1.1.9.1.3.1 = STRING: "The MIB module for SNMPv2 entities"
+iso.3.6.1.2.1.1.9.1.3.2 = STRING: "The MIB module for managing IP and ICMP implementations"
+iso.3.6.1.2.1.1.9.1.3.3 = STRING: "The MIB module for managing TCP implementations"
+iso.3.6.1.2.1.1.9.1.3.4 = STRING: "The MIB module for managing UDP implementations"
+iso.3.6.1.2.1.1.9.1.3.5 = STRING: "The MIB modules for managing SNMP Notification, plus filtering."
+iso.3.6.1.2.1.1.9.1.3.6 = STRING: "The MIB module for managing TCP implementations"
+iso.3.6.1.2.1.1.9.1.3.7 = STRING: "The MIB module for managing IP and ICMP implementations"
+iso.3.6.1.2.1.1.9.1.3.8 = STRING: "The MIB module for managing UDP implementations"
+iso.3.6.1.2.1.1.9.1.3.9 = STRING: "The MIB modules for managing SNMP Notification, plus filtering."
+iso.3.6.1.2.1.1.9.1.3.10 = STRING: "The MIB module for logging SNMP Notifications."
+iso.3.6.1.2.1.1.9.1.4.1 = Timeticks: (0) 0:00:00.00
+iso.3.6.1.2.1.1.9.1.4.2 = Timeticks: (0) 0:00:00.00
+iso.3.6.1.2.1.1.9.1.4.3 = Timeticks: (0) 0:00:00.00
+iso.3.6.1.2.1.1.9.1.4.4 = Timeticks: (0) 0:00:00.00
+iso.3.6.1.2.1.1.9.1.4.5 = Timeticks: (0) 0:00:00.00
+iso.3.6.1.2.1.1.9.1.4.6 = Timeticks: (0) 0:00:00.00
+iso.3.6.1.2.1.1.9.1.4.7 = Timeticks: (0) 0:00:00.00
+iso.3.6.1.2.1.1.9.1.4.8 = Timeticks: (0) 0:00:00.00
+iso.3.6.1.2.1.1.9.1.4.9 = Timeticks: (0) 0:00:00.00
+iso.3.6.1.2.1.1.9.1.4.10 = Timeticks: (0) 0:00:00.00
+iso.3.6.1.2.1.25.1.1.0 = Timeticks: (3676678) 10:12:46.78
+iso.3.6.1.2.1.25.1.2.0 = Hex-STRING: 07 E5 09 14 0E 2B 2D 00 2B 02 00 
+iso.3.6.1.2.1.25.1.3.0 = INTEGER: 393216
+iso.3.6.1.2.1.25.1.4.0 = STRING: "BOOT_IMAGE=/boot/vmlinuz-5.11.0-34-generic root=UUID=9a6a5c52-f92a-42ea-8ddf-940d7e0f4223 ro quiet splash"
+iso.3.6.1.2.1.25.1.5.0 = Gauge32: 3
+iso.3.6.1.2.1.25.1.6.0 = Gauge32: 411
+iso.3.6.1.2.1.25.1.7.0 = INTEGER: 0
+iso.3.6.1.2.1.25.1.7.0 = No more variables left in this MIB View (It is past the end of the MIB tree)
+
+...SNIP...
+
+iso.3.6.1.2.1.25.6.3.1.2.1232 = STRING: "printer-driver-sag-gdi_0.1-7_all"
+iso.3.6.1.2.1.25.6.3.1.2.1233 = STRING: "printer-driver-splix_2.0.0+svn315-7fakesync1build1_amd64"
+iso.3.6.1.2.1.25.6.3.1.2.1234 = STRING: "procps_2:3.3.16-1ubuntu2.3_amd64"
+iso.3.6.1.2.1.25.6.3.1.2.1235 = STRING: "proftpd-basic_1.3.6c-2_amd64"
+iso.3.6.1.2.1.25.6.3.1.2.1236 = STRING: "proftpd-doc_1.3.6c-2_all"
+iso.3.6.1.2.1.25.6.3.1.2.1237 = STRING: "psmisc_23.3-1_amd64"
+iso.3.6.1.2.1.25.6.3.1.2.1238 = STRING: "publicsuffix_20200303.0012-1_all"
+iso.3.6.1.2.1.25.6.3.1.2.1239 = STRING: "pulseaudio_1:13.99.1-1ubuntu3.12_amd64"
+iso.3.6.1.2.1.25.6.3.1.2.1240 = STRING: "pulseaudio-module-bluetooth_1:13.99.1-1ubuntu3.12_amd64"
+iso.3.6.1.2.1.25.6.3.1.2.1241 = STRING: "pulseaudio-utils_1:13.99.1-1ubuntu3.12_amd64"
+iso.3.6.1.2.1.25.6.3.1.2.1242 = STRING: "python-apt-common_2.0.0ubuntu0.20.04.6_all"
+iso.3.6.1.2.1.25.6.3.1.2.1243 = STRING: "python3_3.8.2-0ubuntu2_amd64"
+iso.3.6.1.2.1.25.6.3.1.2.1244 = STRING: "python3-acme_1.1.0-1_all"
+iso.3.6.1.2.1.25.6.3.1.2.1245 = STRING: "python3-apport_2.20.11-0ubuntu27.21_all"
+iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64" 
+
+...SNIP...
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="ssh"><a class="header" href="#ssh">SSH</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="tls-handshake"><a class="header" href="#tls-handshake">TLS Handshake</a></h1>
+<h1 id="tls"><a class="header" href="#tls">TLS</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="udp-1"><a class="header" href="#udp-1">UDP</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="websockets"><a class="header" href="#websockets">WebSockets</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="redis-1"><a class="header" href="#redis-1">Redis</a></h1>
-<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
+<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
 <ul>
 <li><a href="#redis-2">redis</a></li>
 </ul>
@@ -18323,7 +19076,7 @@ https://www.kernel.org/doc/Documentation/filesystems/sysfs.txt</p>
 <li>Operation latency</li>
 </ul>
 <p>In Linux, there are typically no readily available metrics for file system operations (the exception being NFS, via <code>nfsstat</code>).</p>
-<h3 id="tools-1"><a class="header" href="#tools-1">Tools:</a></h3>
+<h3 id="tools-2"><a class="header" href="#tools-2">Tools:</a></h3>
 <ul>
 <li><code>mount</code></li>
 <li><code>free</code></li>
@@ -18974,7 +19727,7 @@ Node 0, zone   Normal   3170   7694  10543   8113   5011   1761    552    182   
 <p>The length of these queues can be tuned independently. The LISTEN queue can also be set by the application as the backlog argument to the LISTEN syscall</p>
 <h3 id="segmentation-offload"><a class="header" href="#segmentation-offload">Segmentation Offload</a></h3>
 <p>Network devicesa and networks accept packet sizes up to a maximum segment size (MSS) that may be as small as 1500 bytes. To avoid the network stack overheads of sending many small packets, Linux also uses Generic Segmentation Offload to send packets up to 64 kbytes in size (super packets), which are split into MSS-sized segments just before delivery to the network device. If the NIC and driver support TCP segmentation offload (TSO), GSO leaves splitting to the device, improving network stack throughput.</p>
-<h1 id="tools-2"><a class="header" href="#tools-2">Tools:</a></h1>
+<h1 id="tools-3"><a class="header" href="#tools-3">Tools:</a></h1>
 <p><code>netstat</code>
 <code>ping</code>
 <code>ip</code>
@@ -19699,7 +20452,7 @@ As stated above, most processes have the same EUID and RUID. As a result, the de
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="bash-1"><a class="header" href="#bash-1">Bash</a></h1>
-<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
+<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
 <ul>
 <li><a href="#bash-notes">bash_notes</a></li>
 <li><a href="#moving-the-cursor-1">keyboard_shortcuts</a></li>
@@ -19974,7 +20727,7 @@ similarly Ctrl+v ENTER will display the escape sequence for the Enter key: ^M
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="commands-3"><a class="header" href="#commands-3">Commands</a></h1>
-<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
+<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
 <ul>
 <li><a href="#chgrp">chgrp</a></li>
 <li><a href="#chmod">chmod</a></li>
@@ -20166,7 +20919,7 @@ PID        TTY     STAT   TIME          CMD
 <p>See page 37</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="greybeard-qualification-1"><a class="header" href="#greybeard-qualification-1">Greybeard Qualification</a></h1>
-<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
+<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
 <ul>
 <li><a href="#block-devices-and-file-systems">block_dev_and_file_systems</a></li>
 <li><a href="#memory-management-1">memory_management</a></li>
@@ -20434,13 +21187,13 @@ PID        TTY     STAT   TIME          CMD
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kernel-modules"><a class="header" href="#kernel-modules">Kernel Modules</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="tools-3"><a class="header" href="#tools-3">Tools</a></h1>
-<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
+<h1 id="tools-4"><a class="header" href="#tools-4">Tools</a></h1>
+<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
 <ul>
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
 <li><a href="#hydra">hydra</a></li>
-<li><a href="#nmap">nmap</a></li>
+<li><a href="#nmap-1">nmap</a></li>
 <li><a href="#medusa">medusa</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -20556,7 +21309,7 @@ customEvents
 
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="nmap"><a class="header" href="#nmap">Nmap</a></h1>
+<h1 id="nmap-1"><a class="header" href="#nmap-1">Nmap</a></h1>
 <p>Understanding how Nmap works is critical for interpreting scan results. After confirming a host is alive, scanning helps identify:</p>
 <ul>
 <li>Open ports &amp; services</li>
@@ -21050,7 +21803,7 @@ sudo apt-get -y install hydra
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
-<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
+<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
 <ul>
 <li><a href="troubleshooting/linux">linux</a></li>
 <li><a href="troubleshooting/troubleshooting_playbook">troubleshooting_playbook</a></li>
@@ -21105,7 +21858,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux"><a class="header" href="#linux">Linux</a></h1>
-<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
+<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-memory">memory</a></li>
 </ul>
@@ -21147,7 +21900,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 <ul>
 <li>The TLB is used by the MMU as the first level of address translation cache, followed by the page table in main memory.</li>
 </ul>
-<h3 id="tools-4"><a class="header" href="#tools-4">Tools</a></h3>
+<h3 id="tools-5"><a class="header" href="#tools-5">Tools</a></h3>
 <ul>
 <li><code>vmstat</code></li>
 <li><code>swapon</code></li>
@@ -21161,7 +21914,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-playbook"><a class="header" href="#troubleshooting-playbook">Troubleshooting Playbook</a></h1>
-<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
+<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-503s-for-apps-in-kubernetes">kubernetes-containerized-app-503s</a></li>
 <li><a href="#general-troubleshootingnotes">kubernetes-general</a></li>
@@ -21275,7 +22028,7 @@ KubePodInventory
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="what-happens-when"><a class="header" href="#what-happens-when">What Happens When…</a></h1>
-<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
+<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
 <ul>
 <li><a href="#what-happens-when-a-cpu-starts">a-cpu-starts</a></li>
 </ul>

@@ -20,7 +20,7 @@ This post shows a quick and dirty way to run a live packet capture from inside a
 <span class=separator>•</span>
 <a href=/categories/troubleshooting/>Troubleshooting</a>
 <span class=separator>•</span>
-<a href=/categories/devops/>DevOps</a></div></div></header><div class=post-content><h1 id=capturing-live-network-traffic-from-a-kubernetes-pod>Capturing Live Network Traffic from a Kubernetes Pod
+<a href=/categories/devops/>Devops</a></div></div></header><div class=post-content><h1 id=capturing-live-network-traffic-from-a-kubernetes-pod>Capturing Live Network Traffic from a Kubernetes Pod
 <a class=heading-link href=#capturing-live-network-traffic-from-a-kubernetes-pod><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
 <span class=sr-only>Link to heading</span></a></h1><p>Occasionally, you need to troubleshoot network behavior <em>inside</em> a Kubernetes pod — maybe you&rsquo;re chasing a DNS issue, testing service connectivity, or inspecting strange application traffic. <code>tcpdump</code> is still one of the best tools for this, but pods are intentionally minimal, and most containers won&rsquo;t have it installed.</p><p>This post shows a quick and dirty way to run a live packet capture <strong>from inside a pod</strong>, without modifying your application container image.</p><hr><h2 id=running-an-ephemeral-container-with-tcpdump>Running an Ephemeral Container with <code>tcpdump</code>
 <a class=heading-link href=#running-an-ephemeral-container-with-tcpdump><i class="fa-solid fa-link" aria-hidden=true title="Link to heading"></i>
