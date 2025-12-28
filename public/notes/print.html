@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4d96fbd6.js";
+            window.path_to_searchindex_js = "searchindex-ee1c9ec2.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-36c9dcb5.js"></script>
+        <script src="toc-5dcfcacf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -345,6 +345,12 @@
 <li><a href="#graph-theory">Graph Theory</a></li>
 <li><a href="#hashing">Hashing</a></li>
 <li><a href="#string-algorithms">string algorithms</a></li>
+</ul>
+</li>
+<li><a href="databases/README.html">Databases</a>
+<ul>
+<li><a href="#mysql">MySQL</a></li>
+<li><a href="#mssql">MSSQL</a></li>
 </ul>
 </li>
 <li><a href="devops/README.html">DevOps</a>
@@ -12654,8 +12660,348 @@ func main() {
 <li>A simple way to see if a string is a palindrome is to copy it and compare the copy to the original. If they are equal, the string is a palindrome.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="devops"><a class="header" href="#devops">DevOps</a></h1>
+<h1 id="databases"><a class="header" href="#databases">Databases</a></h1>
 <h2 id="directory-map-11"><a class="header" href="#directory-map-11">Directory Map</a></h2>
+<ul>
+<li><a href="#mysql">mysql</a></li>
+<li><a href="#mssql">mssql</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="mysql"><a class="header" href="#mysql">MySQL</a></h1>
+<p>MySQL is an open-source SQL relational database management system developed and supported by Oracle. A database is a structured collection of data organized for easy use and retrieval. MySQL can quickly process large amounts of data with high performance and stores data efficiently to minimize space usage. The database is controlled using the SQL database language.</p>
+<p>MySQL works according to the client-server principle and consists of a MySQL server and one or more MySQL clients. The MySQL server is the actual database management system that handles data storage and distribution. Data is stored in tables with different columns, rows, and data types. Databases are often stored in a single file with the <code>.sql</code> extension (e.g., <code>wordpress.sql</code>).</p>
+<h2 id="mysql-clients"><a class="header" href="#mysql-clients">MySQL Clients</a></h2>
+<p>MySQL clients can retrieve and edit data using structured queries to the database engine. Inserting, deleting, modifying, and retrieving data is done using the SQL database language. MySQL is suitable for managing many different databases to which clients can send multiple queries simultaneously. Access is possible via an internal network or the public Internet, depending on the database configuration.</p>
+<h2 id="mysql-databases"><a class="header" href="#mysql-databases">MySQL Databases</a></h2>
+<p>MySQL is ideally suited for applications such as dynamic websites, where efficient syntax and high response speed are essential. It is often combined with a Linux OS, PHP, and an Apache web server in the LAMP stack (Linux, Apache, MySQL, PHP), or with Nginx as LEMP. In web hosting with MySQL database, this serves as a central instance in which content required by PHP scripts is stored, including:</p>
+<ul>
+<li><strong>Content</strong>: Headers, texts, meta tags, forms</li>
+<li><strong>Users</strong>: Customers, usernames, administrators, moderators</li>
+<li><strong>Credentials</strong>: Email addresses, user information, permissions, passwords</li>
+<li><strong>References</strong>: External/internal links, links to files, specific contents, values</li>
+</ul>
+<p>Sensitive data such as passwords can be stored in plain-text form by MySQL; however, they are generally encrypted beforehand by PHP scripts using secure methods such as one-way encryption.</p>
+<h2 id="mysql-commands"><a class="header" href="#mysql-commands">MySQL Commands</a></h2>
+<p>A MySQL database translates commands internally into executable code and performs the requested actions. The web application informs the user if an error occurs during processing, which various SQL injections can provoke. Often, these error descriptions contain important information and confirm that the web application interacts with the database differently than developers intended.</p>
+<p>SQL commands can display, modify, add, or delete rows in tables. In addition, SQL can also change the structure of tables, create or delete relationships and indexes, and manage users.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>mysql -u &lt;user&gt; -p&lt;password&gt; -h &lt;IP address&gt;</code></td><td>Connect to the MySQL server. There should not be a space between the <code>-p</code> flag and the password.</td></tr>
+<tr><td><code>show databases;</code></td><td>Show all databases.</td></tr>
+<tr><td><code>use &lt;database&gt;;</code></td><td>Select one of the existing databases.</td></tr>
+<tr><td><code>show tables;</code></td><td>Show all available tables in the selected database.</td></tr>
+<tr><td><code>show columns from &lt;table&gt;;</code></td><td>Show all columns in the selected table.</td></tr>
+<tr><td><code>select * from &lt;table&gt;;</code></td><td>Show everything in the desired table.</td></tr>
+<tr><td><code>select * from &lt;table&gt; where &lt;column&gt; = "&lt;string&gt;";</code></td><td>Search for needed string in the desired table.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="mariadb"><a class="header" href="#mariadb">MariaDB</a></h2>
+<p>MariaDB is a fork of the original MySQL code. The chief developer of MySQL left MySQL AB after it was acquired by Oracle and developed another open-source SQL database management system based on the MySQL source code, calling it MariaDB.</p>
+<h2 id="default-configuration"><a class="header" href="#default-configuration">Default Configuration</a></h2>
+<p>The management of SQL databases and their configurations is a vast topic. Database administration is a core competency for software developers and information security analysts. The default configuration of MySQL can be found at <code>/etc/mysql/mysql.conf.d/mysqld.cnf</code>:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ cat /etc/mysql/mysql.conf.d/mysqld.cnf | grep -v "#" | sed -r '/^\s*$/d'
+
+[client]
+port= 3306
+socket= /var/run/mysqld/mysqld.sock
+
+[mysqld_safe]
+pid-file= /var/run/mysqld/mysqld.pid
+socket= /var/run/mysqld/mysqld.sock
+nice= 0
+
+[mysqld]
+skip-host-cache
+skip-name-resolve
+user= mysql
+pid-file= /var/run/mysqld/mysqld.pid
+socket= /var/run/mysqld/mysqld.sock
+port= 3306
+basedir= /usr
+datadir= /var/lib/mysql
+tmpdir= /tmp
+lc-messages-dir= /usr/share/mysql
+explicit_defaults_for_timestamp
+symbolic-links=0
+
+!includedir /etc/mysql/conf.d/
+</code></pre>
+<h2 id="dangerous-settings"><a class="header" href="#dangerous-settings">Dangerous Settings</a></h2>
+<p>Many things can be misconfigured with MySQL. The main options that are security-relevant are:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Setting</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>user</code></td><td>Sets which user the MySQL service will run as.</td></tr>
+<tr><td><code>password</code></td><td>Sets the password for the MySQL user.</td></tr>
+<tr><td><code>admin_address</code></td><td>The IP address on which to listen for TCP/IP connections on the administrative network interface.</td></tr>
+<tr><td><code>debug</code></td><td>This variable indicates the current debugging settings.</td></tr>
+<tr><td><code>sql_warnings</code></td><td>This variable controls whether single-row INSERT statements produce an information string if warnings occur.</td></tr>
+<tr><td><code>secure_file_priv</code></td><td>This variable is used to limit the effect of data import and export operations.</td></tr>
+</tbody>
+</table>
+</div>
+<p>The settings <code>user</code>, <code>password</code>, and <code>admin_address</code> are security-relevant because the entries are made in plain text. Often, the rights for the configuration file of the MySQL server are not assigned correctly. If an attacker gains file read access or a shell, they can see the file and the username and password for the MySQL server. Without other security measures to prevent unauthorized access, the entire database and all existing customer information, email addresses, passwords, and personal data can be viewed and even edited.</p>
+<p>The <code>debug</code> and <code>sql_warnings</code> settings provide verbose information output in case of errors, which are essential for the administrator but should not be seen by others. This information often contains sensitive content, which could be detected by trial and error to identify further attack possibilities. These error messages are often displayed directly on web applications. SQL injections could be manipulated to have the MySQL server execute system commands.</p>
+<h2 id="system-databases"><a class="header" href="#system-databases">System Databases</a></h2>
+<p>MySQL includes several system databases that are important for management:</p>
+<h3 id="information-schema"><a class="header" href="#information-schema">Information Schema</a></h3>
+<p>The <code>information_schema</code> database contains metadata retrieved from the system schema database. It exists to comply with the ANSI/ISO standard and provides information about databases, tables, columns, and other database objects.</p>
+<h3 id="system-schema-sys"><a class="header" href="#system-schema-sys">System Schema (sys)</a></h3>
+<p>The <code>sys</code> database contains tables, information, and metadata necessary for management. It provides a set of objects that help interpret performance schema data more easily. The system schema contains more information than the information schema.</p>
+<p>Example system schema tables:</p>
+<pre><code class="language-bash">mysql&gt; use sys;
+mysql&gt; show tables;
+
++-----------------------------------------------+
+| Tables_in_sys                                 |
++-----------------------------------------------+
+| host_summary                                  |
+| host_summary_by_file_io                       |
+| host_summary_by_file_io_type                  |
+| host_summary_by_stages                        |
+| host_summary_by_statement_latency             |
+| host_summary_by_statement_type                |
+| innodb_buffer_stats_by_schema                 |
+| innodb_buffer_stats_by_table                  |
+| innodb_lock_waits                             |
+| io_by_thread_by_latency                       |
+...SNIP...
+| x$waits_global_by_latency                     |
++-----------------------------------------------+
+</code></pre>
+<p>Example query:</p>
+<pre><code class="language-bash">mysql&gt; select host, unique_users from host_summary;
+
++-------------+--------------+
+| host        | unique_users |
++-------------+--------------+
+| 10.129.14.1 |            1 |
+| localhost   |            2 |
++-------------+--------------+
+2 rows in set (0,01 sec)
+</code></pre>
+<h2 id="footprinting-mysql-services"><a class="header" href="#footprinting-mysql-services">Footprinting MySQL Services</a></h2>
+<p>There are many reasons why a MySQL server could be accessed from an external network. Nevertheless, it is far from being a best practice, and databases that can be reached externally are often found. Usually, the MySQL server runs on TCP port 3306.</p>
+<h3 id="scanning-mysql-server"><a class="header" href="#scanning-mysql-server">Scanning MySQL Server</a></h3>
+<p><code>nmap</code> can be used to scan and enumerate MySQL servers:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ sudo nmap 10.129.14.128 -sV -sC -p3306 --script mysql*
+
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-09-21 00:53 CEST
+Nmap scan report for 10.129.14.128
+Host is up (0.00021s latency).
+
+PORT     STATE SERVICE     VERSION
+3306/tcp open  nagios-nsca Nagios NSCA
+| mysql-brute: 
+|   Accounts: 
+|     root:&lt;empty&gt; - Valid credentials
+|_  Statistics: Performed 45010 guesses in 5 seconds, average tps: 9002.0
+|_mysql-databases: ERROR: Script execution failed (use -d to debug)
+|_mysql-dump-hashes: ERROR: Script execution failed (use -d to debug)
+| mysql-empty-password: 
+|_  root account has empty password
+| mysql-enum: 
+|   Valid usernames: 
+|     root:&lt;empty&gt; - Valid credentials
+</code></pre>
+<h3 id="enumerating-databases"><a class="header" href="#enumerating-databases">Enumerating Databases</a></h3>
+<p>Once connected to a MySQL server, you can enumerate databases and tables:</p>
+<pre><code class="language-bash">mysql&gt; show databases;
+
++------------------------------------------------------+
+| Database                                             |
++------------------------------------------------------+
+| information_schema                                   |
+| mysql                                                |
+| performance_schema                                   |
+| sys                                                  |
+...SNIP...
+| wordpress                                            |
++------------------------------------------------------+
+37 rows in set (0.002 sec)
+</code></pre>
+<h2 id="security-best-practices"><a class="header" href="#security-best-practices">Security Best Practices</a></h2>
+<p>When setting up a MySQL server, it is important to follow security best practices:</p>
+<ul>
+<li><strong>Secure file permissions</strong>: Ensure configuration files have proper permissions to prevent unauthorized access</li>
+<li><strong>Strong passwords</strong>: Use strong passwords for MySQL users, especially the root account</li>
+<li><strong>Network access</strong>: Restrict network access to MySQL servers; avoid exposing them to public networks unless necessary</li>
+<li><strong>Error messages</strong>: Disable verbose error messages in production environments</li>
+<li><strong>File operations</strong>: Use <code>secure_file_priv</code> to limit data import and export operations</li>
+<li><strong>User privileges</strong>: Follow the principle of least privilege when granting user permissions</li>
+<li><strong>Encryption</strong>: Encrypt sensitive data before storing it in the database</li>
+</ul>
+<p>The MySQL reference manual contains a widely covered security issues section that covers best practices for securing MySQL servers. This should be consulted when setting up a MySQL server to understand better why certain configurations might not work.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="mssql"><a class="header" href="#mssql">MSSQL</a></h1>
+<p>Microsoft SQL (MSSQL) is Microsoft’s SQL-based relational database management system. Unlike MySQL, which we discussed in the last section, MSSQL is closed source and was initially written to run on Windows operating systems. It is popular among database administrators and developers when building applications that run on Microsoft’s .NET framework due to its strong native support for .NET. There are versions of MSSQL that will run on Linux and MacOS, but we will more likely come across MSSQL instances on targets running Windows.</p>
+<h2 id="mssql-clients"><a class="header" href="#mssql-clients">MSSQL Clients</a></h2>
+<p>SQL Server Management Studio (SSMS) comes as a feature that can be installed with the MSSQL install package or can be downloaded &amp; installed separately. It is commonly installed on the server for initial configuration and long-term management of databases by admins. Keep in mind that since SSMS is a client-side application, it can be installed and used on any system an admin or developer is planning to manage the database from. It doesn’t only exist on the server hosting the database. This means we could come across a vulnerable system with SSMS with saved credentials that allow us to connect to the database.</p>
+<p>Many other clients can be used to access a database running on MSSQL. Including but not limited to:</p>
+<ul>
+<li><strong>mssql-cli</strong>: Command-line interface for MSSQL</li>
+<li><strong>SQL Server PowerShell</strong>: PowerShell module for managing SQL Server</li>
+<li><strong>HeidiSQL</strong>: Cross-platform database management tool</li>
+<li><strong>SQLPro</strong>: Database management tool for MacOS</li>
+<li><strong>Impacket’s mssqlclient.py</strong>: Python-based MSSQL client</li>
+</ul>
+<p>Of the MSSQL clients listed above, pentesters may find Impacket’s mssqlclient.py to be the most useful due to SecureAuthCorp’s Impacket project being present on many pentesting distributions at install. To find if and where the client is located on our host, we can use the following command:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ locate mssqlclient
+
+/usr/bin/impacket-mssqlclient
+/usr/share/doc/python3-impacket/examples/mssqlclient.py
+</code></pre>
+<h2 id="mssql-databases"><a class="header" href="#mssql-databases">MSSQL Databases</a></h2>
+<p>MSSQL has default system databases that can help us understand the structure of all the databases that may be hosted on a target server. Here are the default databases and a brief description of each:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Default System Database</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>master</code></td><td>Tracks all system information for an SQL server instance</td></tr>
+<tr><td><code>model</code></td><td>Template database that acts as a structure for every new database created. Any setting changed in the model database will be reflected in any new database created after changes to the model database</td></tr>
+<tr><td><code>msdb</code></td><td>The SQL Server Agent uses this database to schedule jobs &amp; alerts</td></tr>
+<tr><td><code>tempdb</code></td><td>Stores temporary objects</td></tr>
+<tr><td><code>resource</code></td><td>Read-only database containing system objects included with SQL server</td></tr>
+</tbody>
+</table>
+</div>
+<p><em>Table source: System Databases Microsoft Doc</em></p>
+<h2 id="default-configuration-1"><a class="header" href="#default-configuration-1">Default Configuration</a></h2>
+<p>When an admin initially installs and configures MSSQL to be network accessible, the SQL service will likely run as <code>NT SERVICE\MSSQLSERVER</code>. Connecting from the client-side is possible through Windows Authentication, and by default, encryption is not enforced when attempting to connect.</p>
+<p>Authentication being set to Windows Authentication means that the underlying Windows OS will process the login request and use either the local SAM database or the domain controller (hosting Active Directory) before allowing connectivity to the database management system. Using Active Directory can be ideal for auditing activity and controlling access in a Windows environment, but if an account is compromised, it could lead to privilege escalation and lateral movement across a Windows domain environment. Like with any OS, service, server role, or application, it can be beneficial to set it up in a VM from installation to configuration to understand all the default configurations and potential mistakes that the administrator could make.</p>
+<h2 id="dangerous-settings-1"><a class="header" href="#dangerous-settings-1">Dangerous Settings</a></h2>
+<p>It can be beneficial to place ourselves in the perspective of an IT administrator when we are on an engagement. This mindset can help us remember to look for various settings that may have been misconfigured or configured in a dangerous manner by an admin. A workday in IT can be rather busy, with lots of different projects happening simultaneously and the pressure to perform with speed &amp; accuracy being a reality in many organizations, mistakes can be easily made. It only takes one tiny misconfiguration that could compromise a critical server or service on the network. This applies to just about every network service and server role that can be configured, including MSSQL.</p>
+<p>This is not an extensive list because there are countless ways MSSQL databases can be configured by admins based on the needs of their respective organizations. We may benefit from looking into the following:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Setting</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Unencrypted connections</strong></td><td>MSSQL clients not using encryption to connect to the MSSQL server</td></tr>
+<tr><td><strong>Self-signed certificates</strong></td><td>The use of self-signed certificates when encryption is being used. It is possible to spoof self-signed certificates</td></tr>
+<tr><td><strong>Named pipes</strong></td><td>The use of named pipes</td></tr>
+<tr><td><strong>Weak credentials</strong></td><td>Weak &amp; default <code>sa</code> credentials. Admins may forget to disable this account</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="footprinting-the-service"><a class="header" href="#footprinting-the-service">Footprinting the Service</a></h2>
+<p>There are many ways we can approach footprinting the MSSQL service, the more specific we can get with our scans, the more useful information we will be able to gather. NMAP has default mssql scripts that can be used to target the default tcp port 1433 that MSSQL listens on.</p>
+<h3 id="nmap-mssql-script-scan"><a class="header" href="#nmap-mssql-script-scan">NMAP MSSQL Script Scan</a></h3>
+<p>The scripted NMAP scan below provides us with helpful information. We can see the hostname, database instance name, software version of MSSQL and named pipes are enabled. We will benefit from adding these discoveries to our notes.</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ sudo nmap --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p 1433 10.129.201.248
+
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-11-08 09:40 EST
+Nmap scan report for 10.129.201.248
+Host is up (0.15s latency).
+
+PORT     STATE SERVICE  VERSION
+1433/tcp open  ms-sql-s Microsoft SQL Server 2019 15.00.2000.00; RTM
+| ms-sql-ntlm-info: 
+|   Target_Name: SQL-01
+|   NetBIOS_Domain_Name: SQL-01
+|   NetBIOS_Computer_Name: SQL-01
+|   DNS_Domain_Name: SQL-01
+|   DNS_Computer_Name: SQL-01
+|_  Product_Version: 10.0.17763
+
+Host script results:
+| ms-sql-dac: 
+|_  Instance: MSSQLSERVER; DAC port: 1434 (connection failed)
+| ms-sql-info: 
+|   Windows server name: SQL-01
+|   10.129.201.248\MSSQLSERVER: 
+|     Instance name: MSSQLSERVER
+|     Version: 
+|       name: Microsoft SQL Server 2019 RTM
+|       number: 15.00.2000.00
+|       Product: Microsoft SQL Server 2019
+|       Service pack level: RTM
+|       Post-SP patches applied: false
+|     TCP port: 1433
+|     Named pipe: \\10.129.201.248\pipe\sql\query
+|_    Clustered: false
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 8.52 seconds
+</code></pre>
+<h3 id="mssql-ping-in-metasploit"><a class="header" href="#mssql-ping-in-metasploit">MSSQL Ping in Metasploit</a></h3>
+<p>We can also use Metasploit to run an auxiliary scanner called <code>mssql_ping</code> that will scan the MSSQL service and provide helpful information in our footprinting process.</p>
+<pre><code class="language-bash">msf6 auxiliary(scanner/mssql/mssql_ping) &gt; set rhosts 10.129.201.248
+
+rhosts =&gt; 10.129.201.248
+
+
+msf6 auxiliary(scanner/mssql/mssql_ping) &gt; run
+
+[*] 10.129.201.248:       - SQL Server information for 10.129.201.248:
+[+] 10.129.201.248:       -    ServerName      = SQL-01
+[+] 10.129.201.248:       -    InstanceName    = MSSQLSERVER
+[+] 10.129.201.248:       -    IsClustered     = No
+[+] 10.129.201.248:       -    Version         = 15.0.2000.5
+[+] 10.129.201.248:       -    tcp             = 1433
+[+] 10.129.201.248:       -    np              = \\SQL-01\pipe\sql\query
+[*] 10.129.201.248:       - Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+</code></pre>
+<h2 id="connecting-with-mssqlclientpy"><a class="header" href="#connecting-with-mssqlclientpy">Connecting with mssqlclient.py</a></h2>
+<p>If we can guess or gain access to credentials, this allows us to remotely connect to the MSSQL server and start interacting with databases using T-SQL (Transact-SQL). Authenticating with MSSQL will enable us to interact directly with databases through the SQL Database Engine. From Pwnbox or a personal attack host, we can use Impacket’s mssqlclient.py to connect as seen in the output below. Once connected to the server, it may be good to get a lay of the land and list the databases present on the system.</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ python3 mssqlclient.py Administrator@10.129.201.248 -windows-auth
+
+Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
+
+Password:
+[*] Encryption required, switching to TLS
+[*] ENVCHANGE(DATABASE): Old Value: master, New Value: master
+[*] ENVCHANGE(LANGUAGE): Old Value: , New Value: us_english
+[*] ENVCHANGE(PACKETSIZE): Old Value: 4096, New Value: 16192
+[*] INFO(SQL-01): Line 1: Changed database context to 'master'.
+[*] INFO(SQL-01): Line 1: Changed language setting to us_english.
+[*] ACK: Result: 1 - Microsoft SQL Server (150 7208) 
+[!] Press help for extra shell commands
+
+SQL&gt; select name from sys.databases
+
+name                                                                                                                               
+
+--------------------------------------------------------------------------------------
+
+master                                                                                                                             
+
+tempdb                                                                                                                             
+
+model                                                                                                                              
+
+msdb                                                                                                                               
+
+Transactions    
+</code></pre>
+<h2 id="security-best-practices-1"><a class="header" href="#security-best-practices-1">Security Best Practices</a></h2>
+<p>When setting up an MSSQL server, it is important to follow security best practices:</p>
+<ul>
+<li><strong>Strong credentials</strong>: Use strong passwords for MSSQL users, especially the <code>sa</code> account. Consider disabling the <code>sa</code> account if not needed</li>
+<li><strong>Encryption</strong>: Enable encryption for connections to prevent data interception</li>
+<li><strong>Certificate management</strong>: Use properly signed certificates instead of self-signed certificates</li>
+<li><strong>Windows Authentication</strong>: Leverage Windows Authentication for better integration with Active Directory and centralized access control</li>
+<li><strong>Network access</strong>: Restrict network access to MSSQL servers; avoid exposing them to public networks unless necessary</li>
+<li><strong>Named pipes</strong>: Disable named pipes if not required for your environment</li>
+<li><strong>Principle of least privilege</strong>: Follow the principle of least privilege when granting user permissions</li>
+<li><strong>Regular updates</strong>: Keep MSSQL server updated with the latest security patches</li>
+<li><strong>Audit logging</strong>: Enable audit logging to track database access and changes</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="devops"><a class="header" href="#devops">DevOps</a></h1>
+<h2 id="directory-map-12"><a class="header" href="#directory-map-12">Directory Map</a></h2>
 <ul>
 <li><a href="#devops-principles">principles</a></li>
 </ul>
@@ -12678,7 +13024,7 @@ func main() {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
-<h2 id="directory-map-12"><a class="header" href="#directory-map-12">Directory Map</a></h2>
+<h2 id="directory-map-13"><a class="header" href="#directory-map-13">Directory Map</a></h2>
 <ul>
 <li><a href="kubernetes/cks">cks</a></li>
 <li><a href="kubernetes/kcna">kcna</a></li>
@@ -12686,7 +13032,7 @@ func main() {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cks"><a class="header" href="#cks">CKS</a></h1>
-<h2 id="directory-map-13"><a class="header" href="#directory-map-13">Directory Map</a></h2>
+<h2 id="directory-map-14"><a class="header" href="#directory-map-14">Directory Map</a></h2>
 <ul>
 <li><a href="#certified-kubernetes-security-specialist-cks-notes">notes</a></li>
 <li><a href="#kubernetes-security-specialist-cks-practice-scenarios">questions</a></li>
@@ -15801,7 +16147,7 @@ EOF
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcna"><a class="header" href="#kcna">KCNA</a></h1>
-<h2 id="directory-map-14"><a class="header" href="#directory-map-14">Directory Map</a></h2>
+<h2 id="directory-map-15"><a class="header" href="#directory-map-15">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-native-associate-kcna-notes">notes</a></li>
 </ul>
@@ -16335,7 +16681,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcsa"><a class="header" href="#kcsa">KCSA</a></h1>
-<h2 id="directory-map-15"><a class="header" href="#directory-map-15">Directory Map</a></h2>
+<h2 id="directory-map-16"><a class="header" href="#directory-map-16">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-security-associate-kcsa-notes">notes</a></li>
 </ul>
@@ -16936,7 +17282,7 @@ spec:
 </h4>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="networking"><a class="header" href="#networking">Networking</a></h1>
-<h2 id="directory-map-16"><a class="header" href="#directory-map-16">Directory Map</a></h2>
+<h2 id="directory-map-17"><a class="header" href="#directory-map-17">Directory Map</a></h2>
 <ul>
 <li><a href="networking/browser-networking">browser-networking</a></li>
 <li><a href="networking/http">http</a></li>
@@ -16965,7 +17311,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="browser-networking"><a class="header" href="#browser-networking">Browser Networking</a></h1>
-<h2 id="directory-map-17"><a class="header" href="#directory-map-17">Directory Map</a></h2>
+<h2 id="directory-map-18"><a class="header" href="#directory-map-18">Directory Map</a></h2>
 <ul>
 <li><a href="#chapter-1">chapter01</a></li>
 <li><a href="#chapter-2">chapter02</a></li>
@@ -17238,7 +17584,7 @@ Message: Frame[&lt;Header&gt;] Frame[&lt;Payload&gt;]                           
 <p>WebSockets can transfer test or binary data.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http"><a class="header" href="#http">HTTP</a></h1>
-<h2 id="directory-map-18"><a class="header" href="#directory-map-18">Directory Map</a></h2>
+<h2 id="directory-map-19"><a class="header" href="#directory-map-19">Directory Map</a></h2>
 <ul>
 <li><a href="#clean-urls">clean_urls</a></li>
 <li><a href="#http-persistent-connection">persistent_connections</a></li>
@@ -17339,7 +17685,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="load-balancing"><a class="header" href="#load-balancing">Load Balancing</a></h1>
-<h2 id="directory-map-19"><a class="header" href="#directory-map-19">Directory Map</a></h2>
+<h2 id="directory-map-20"><a class="header" href="#directory-map-20">Directory Map</a></h2>
 <ul>
 <li><a href="#load-balancing-1">load-balancing</a></li>
 </ul>
@@ -17374,7 +17720,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nginx"><a class="header" href="#nginx">Nginx</a></h1>
-<h2 id="directory-map-20"><a class="header" href="#directory-map-20">Directory Map</a></h2>
+<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory Map</a></h2>
 <ul>
 <li><a href="#set-header">custom-header-response</a></li>
 </ul>
@@ -17388,7 +17734,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="rate-limiting-algorithms"><a class="header" href="#rate-limiting-algorithms">Rate Limiting Algorithms</a></h1>
-<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory Map</a></h2>
+<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
 <ul>
 <li><a href="#fixed-window-counter-algorithm">fixed-window-counter</a></li>
 <li><a href="#leaking-bucket-algorithm">leaking-bucket</a></li>
@@ -17545,7 +17891,7 @@ func main() {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="protocols-1"><a class="header" href="#protocols-1">Protocols</a></h1>
-<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
+<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
 <ul>
 <li><a href="#dns-2">dns</a></li>
 <li><a href="#ftp">ftp</a></li>
@@ -17670,7 +18016,7 @@ $TTL 86400
 </code></pre>
 <h2 id="zone-transfers"><a class="header" href="#zone-transfers">Zone Transfers</a></h2>
 <p>In practice, additional servers called secondary name servers are installed for redundancy. For some Top-Level Domains (TLDs), making zone files accessible on at least two servers is mandatory. DNS entries are generally only created, modified, or deleted on the primary server. A DNS server that serves as a direct source for synchronizing a zone file is called a master. A DNS server that obtains zone data from a master is called a slave. The slave fetches the SOA record of the relevant zone from the master at certain intervals (refresh time, usually one hour) and compares serial numbers.</p>
-<h2 id="dangerous-settings"><a class="header" href="#dangerous-settings">Dangerous Settings</a></h2>
+<h2 id="dangerous-settings-2"><a class="header" href="#dangerous-settings-2">Dangerous Settings</a></h2>
 <p>DNS servers can be vulnerable to attacks. Some dangerous settings that can lead to vulnerabilities include:</p>
 <ul>
 <li><strong>allow-query</strong>: Defines which hosts are allowed to send requests to the DNS server</li>
@@ -17835,7 +18181,7 @@ PORT   STATE SERVICE VERSION
 <li>Without further measures, IMAP works unencrypted and transmits commands, emails, or usernames and passwords in plain text. Many email servers require establishing an encrypted IMAP session to ensure greater security in email traffic and prevent unauthorized access to mailboxes.</li>
 <li>SSL/TLS is usually used for this purpose. Depending on the method and implementation used, the encrypted connection uses the standard port 143 or an alternative port such as 993.</li>
 </ul>
-<h2 id="default-configuration"><a class="header" href="#default-configuration">Default Configuration</a></h2>
+<h2 id="default-configuration-2"><a class="header" href="#default-configuration-2">Default Configuration</a></h2>
 <p>Both IMAP and POP3 have a large number of configuration options, making it difficult to deep dive into each component in more detail. If you wish to examine these protocol configurations deeper, we recommend creating a VM locally and install the two packages <code>dovecot-imapd</code>, and <code>dovecot-pop3d</code> using apt and play around with the configurations and experiment.</p>
 <p>In the documentation of Dovecot, we can find the individual core settings and service configuration options that can be utilized for our experiments. However, let us look at the list of commands and see how we can directly interact and communicate with IMAP and POP3 using the command line.</p>
 <h2 id="imap-commands"><a class="header" href="#imap-commands">IMAP Commands</a></h2>
@@ -17878,7 +18224,7 @@ PORT   STATE SERVICE VERSION
 </tbody>
 </table>
 </div>
-<h2 id="dangerous-settings-1"><a class="header" href="#dangerous-settings-1">Dangerous Settings</a></h2>
+<h2 id="dangerous-settings-3"><a class="header" href="#dangerous-settings-3">Dangerous Settings</a></h2>
 <p>Nevertheless, configuration options that were improperly configured could allow us to obtain more information, such as debugging the executed commands on the service or logging in as anonymous, similar to the FTP service. Most companies use third-party email providers such as Google, Microsoft, and many others. However, some companies still use their own mail servers for many different reasons. One of these reasons is to maintain the privacy that they want to keep in their own hands. Many configuration mistakes can be made by administrators, which in the worst cases will allow us to read all the emails sent and received, which may even contain confidential or sensitive information. Some of these configuration options include:</p>
 <div class="table-wrapper">
 <table>
@@ -17894,7 +18240,7 @@ PORT   STATE SERVICE VERSION
 </tbody>
 </table>
 </div>
-<h2 id="footprinting-the-service"><a class="header" href="#footprinting-the-service">Footprinting the Service</a></h2>
+<h2 id="footprinting-the-service-1"><a class="header" href="#footprinting-the-service-1">Footprinting the Service</a></h2>
 <p>By default, ports 110 and 995 are used for POP3, and ports 143 and 993 are used for IMAP. The higher ports (993 and 995) use TLS/SSL to encrypt the communication between the client and server. Using Nmap, we can scan the server for these ports. The scan will return the corresponding information (as seen below) if the server uses an embedded certificate.</p>
 <h3 id="nmap"><a class="header" href="#nmap">Nmap</a></h3>
 <pre><code class="language-bash">rnemeth@htb[/htb]$ sudo nmap 10.129.14.128 -sV -p110,143,993,995 -sC
@@ -18471,7 +18817,7 @@ iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64"
 <h1 id="websockets"><a class="header" href="#websockets">WebSockets</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="redis-1"><a class="header" href="#redis-1">Redis</a></h1>
-<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
+<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
 <ul>
 <li><a href="#redis-2">redis</a></li>
 </ul>
@@ -20452,7 +20798,7 @@ As stated above, most processes have the same EUID and RUID. As a result, the de
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="bash-1"><a class="header" href="#bash-1">Bash</a></h1>
-<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
+<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
 <ul>
 <li><a href="#bash-notes">bash_notes</a></li>
 <li><a href="#moving-the-cursor-1">keyboard_shortcuts</a></li>
@@ -20727,7 +21073,7 @@ similarly Ctrl+v ENTER will display the escape sequence for the Enter key: ^M
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="commands-3"><a class="header" href="#commands-3">Commands</a></h1>
-<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
+<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
 <ul>
 <li><a href="#chgrp">chgrp</a></li>
 <li><a href="#chmod">chmod</a></li>
@@ -20919,7 +21265,7 @@ PID        TTY     STAT   TIME          CMD
 <p>See page 37</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="greybeard-qualification-1"><a class="header" href="#greybeard-qualification-1">Greybeard Qualification</a></h1>
-<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
+<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
 <ul>
 <li><a href="#block-devices-and-file-systems">block_dev_and_file_systems</a></li>
 <li><a href="#memory-management-1">memory_management</a></li>
@@ -21188,7 +21534,7 @@ PID        TTY     STAT   TIME          CMD
 <h1 id="kernel-modules"><a class="header" href="#kernel-modules">Kernel Modules</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="tools-4"><a class="header" href="#tools-4">Tools</a></h1>
-<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
+<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
 <ul>
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
@@ -21803,7 +22149,7 @@ sudo apt-get -y install hydra
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
-<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
+<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
 <ul>
 <li><a href="troubleshooting/linux">linux</a></li>
 <li><a href="troubleshooting/troubleshooting_playbook">troubleshooting_playbook</a></li>
@@ -21858,7 +22204,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux"><a class="header" href="#linux">Linux</a></h1>
-<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
+<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-memory">memory</a></li>
 </ul>
@@ -21914,7 +22260,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-playbook"><a class="header" href="#troubleshooting-playbook">Troubleshooting Playbook</a></h1>
-<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
+<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-503s-for-apps-in-kubernetes">kubernetes-containerized-app-503s</a></li>
 <li><a href="#general-troubleshootingnotes">kubernetes-general</a></li>
@@ -22028,7 +22374,7 @@ KubePodInventory
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="what-happens-when"><a class="header" href="#what-happens-when">What Happens When…</a></h1>
-<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
+<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
 <ul>
 <li><a href="#what-happens-when-a-cpu-starts">a-cpu-starts</a></li>
 </ul>
