@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-377555a4.js";
+            window.path_to_searchindex_js = "searchindex-4dc336a4.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-112671d8.js"></script>
+        <script src="toc-a641b52b.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -564,7 +564,7 @@
 </li>
 <li><a href="infosec/README.html">InfoSec</a>
 <ul>
-<li><a href="infosec/enumeration/README.html">Enumeration</a></li>
+<li><a href="#enumeration">Enumeration</a></li>
 <li><a href="#footprinting-9">footprinting</a></li>
 <li><a href="#hydra-1">Brute-Forcing</a></li>
 </ul>
@@ -23021,7 +23021,7 @@ ac
 <h1 id="infosec"><a class="header" href="#infosec">InfoSec</a></h1>
 <h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
 <ul>
-<li><a href="infosec/enumeration">enumeration</a></li>
+<li><a href="#enumeration">enumeration</a></li>
 </ul>
 <h3 id="htb"><a class="header" href="#htb">HTB</a></h3>
 <ul>
@@ -23030,6 +23030,65 @@ ac
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="enumeration"><a class="header" href="#enumeration">Enumeration</a></h1>
+<h2 id="principles-of-enumeration"><a class="header" href="#principles-of-enumeration">Principles of Enumeration</a></h2>
+<ul>
+<li>Enumeration is the systematic process of gathering information about a target system or network to identify potential vulnerabilities and entry points. There are two methods of enumeration: active and passive.</li>
+<li>Enumeration is a critical phase in penetration testing and ethical hacking, as it helps security professionals understand the target environment and plan their attack strategies accordingly. It should be considered naive to assume that any system is completely secure without thorough enumeration and analysis. It is equally important to recognize that enumeration can be used for both defensive and offensive purposes in cybersecurity.</li>
+<li>Enumeration is a long process that requires patience, attention to detail, and thorough documentation. It is a mistake to immediately try brute-forcing your way into a target system after the initial reconnaissance phase. Instead, take the time to gather as much information as possible about the target, including network topology, operating systems, services, and user accounts. This information can be used to identify potential vulnerabilities and plan a more effective attack strategy.</li>
+<li>When attacking a target, it is more important to consider what you do not see, rather than what you do. There is always more than meets the eye, and a skilled attacker will look for hidden vulnerabilities and entry points that may not be immediately apparent. This is why enumeration is such a critical phase in the penetration testing process.</li>
+</ul>
+<h3 id="active-enumeration"><a class="header" href="#active-enumeration">Active Enumeration</a></h3>
+<ul>
+<li>Active enumeration involves directly interacting with the target system to gather information. This can include techniques such as port scanning, banner grabbing, and service identification. Active enumeration can provide detailed information about the target but may also be more easily detected by security systems.</li>
+</ul>
+<h3 id="passive-enumeration"><a class="header" href="#passive-enumeration">Passive Enumeration</a></h3>
+<ul>
+<li>Passive enumeration involves gathering information without directly interacting with the target system. This can include techniques such as network sniffing, DNS queries, and social engineering. Passive enumeration is less likely to be detected but may provide less detailed information.</li>
+<li>OSINT (Open Source Intelligence) is a key component of passive enumeration, involving the collection of publicly available information from sources such as websites, social media, and public databases.</li>
+</ul>
+<h2 id="layers-of-enumeration"><a class="header" href="#layers-of-enumeration">Layers of Enumeration</a></h2>
+<ol>
+<li>Internet Presence</li>
+</ol>
+<ul>
+<li>The first layer of enumeration involves gathering information about the target’s internet presence. This can include identifying domain names, IP addresses, and web servers associated with the target. Tools such as WHOIS, DNS enumeration tools, and web scraping tools can be used to gather this information.</li>
+<li>The goal of this layer is to identify all possible target systems and interfaces that can be tested.</li>
+</ul>
+<ol start="2">
+<li>Gateway</li>
+</ol>
+<ul>
+<li>In this layer, we try to understand the interface to the reachable target. This includes identifying firewalls, routers, and other network devices that may be in place to protect the target system. Tools such as Nmap and traceroute can be used to gather this information.</li>
+<li>The goal is to understand what we are dealing with and what we have to watch out for.</li>
+</ul>
+<ol start="3">
+<li>Accessible Services</li>
+</ol>
+<ul>
+<li>Here we examine the accessible services of each destination found in the previous layers.</li>
+<li>This layer aims to understand the reason and functionality of the target system and gain the necessary knowledge to communicate with it and exploit it for our purposes effectively.</li>
+</ul>
+<ol start="4">
+<li>Processes</li>
+</ol>
+<ul>
+<li>In this layer, we try to understand the processes running on the target system. This includes identifying running services, open ports, and active user sessions. Tools such as Netstat, PsExec, and tasklist can be used to gather this information.</li>
+<li>The goal is to identify potential vulnerabilities and entry points that can be exploited.</li>
+</ul>
+<ol start="5">
+<li>Privileges</li>
+</ol>
+<ul>
+<li>This layer focuses on understanding the privileges and permissions of users on the target system. This includes identifying user accounts, group memberships, and access control lists. Tools such as PowerView, BloodHound, and Mimikatz can be used to gather this information. We should also work to identity permissions of running processes identified in the previous layer.</li>
+<li>The goal is to identify potential privilege escalation opportunities and plan an effective attack strategy.</li>
+</ul>
+<ol start="6">
+<li>OS Setup</li>
+</ol>
+<ul>
+<li>Here we collect information about the operating system setup of the target system. This includes identifying installed software, patches, and configurations. Tools such as Belarc Advisor, WinAudit, and Lynis can be used to gather this information.</li>
+<li>The goal here is to see how the administrators manage the systems and what sensitive internal information we can glean from them.</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="footprinting-9"><a href="#footprinting-9" class="header">footprinting</a></h1>
 <p><mark class="hltr-red">Our goal is not to get at the systems but to find all the ways to get there.</mark>
