@@ -1,0 +1,848 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>footprinting - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-9dfbd86b.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-377555a4.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-112671d8.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <p><mark class="hltr-red">Our goal is not to get at the systems but to find all the ways to get there.</mark>
+![[Pasted image 20240721100121.png]]</p>
+<hr>
+<h2 id="enumeration-methodology"><a class="header" href="#enumeration-methodology"><mark class="hltr-pink">Enumeration Methodology</mark></a></h2>
+<p>The whole enumeration process is divided into three different levels</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Infrastructure-based enumeration</th><th>Host-based enumeration</th><th>OS-based enumeration</th></tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+<p>![[Pasted image 20240721101051.png]]Enumaration should be done methodically rather than intuitively</p>
+<hr>
+<h3 id="host-based-enumeration"><a class="header" href="#host-based-enumeration"><mark class="hltr-pink">Host Based Enumeration</mark></a></h3>
+<h4 id="ftp"><a class="header" href="#ftp"><mark class="hltr-cyan">FTP</mark></a></h4>
+<h5 id="ftp-1"><a class="header" href="#ftp-1"><mark class="hltr-orange">FTP</mark></a></h5>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Port</th><th>Role</th></tr>
+</thead>
+<tbody>
+<tr><td>TCP/21</td><td>the client and server establish a control channel through <code>TCP port 21</code>. The client sends commands to the server, and the server returns status codes</td></tr>
+<tr><td>TCP/20</td><td>data channel (transmission / reception)</td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>FTP is a clear-text protocol</li>
+<li>anonymous FTP allows any user to upload or download files via FTP without using a password</li>
+</ul>
+<h5 id="tftp"><a class="header" href="#tftp"><mark class="hltr-orange">TFTP</mark></a></h5>
+<ul>
+<li>Trivial File Transfer Protocol (<code>TFTP</code>) is simpler than FTP</li>
+<li>TFTP does not provide user authentication</li>
+<li>TFTP uses UDP</li>
+<li>file access is solely reliant on the r/w permissions in the OS</li>
+</ul>
+<h5 id="default-configuration"><a class="header" href="#default-configuration"><mark class="hltr-orange">Default Configuration</mark></a></h5>
+<p>The default configuration of vsFTPd can be found in <code>/etc/vsftpd.conf</code></p>
+<p>In addition, there is a file called <code>/etc/ftpusers</code> that serves as a blacklist (any user found in that file cannot login to the ftp service)</p>
+<h5 id="dangerous-settings"><a class="header" href="#dangerous-settings"><mark class="hltr-orange">Dangerous Settings</mark></a></h5>
+<p>![[Pasted image 20240721110916.png]]</p>
+<h5 id="downloading-all-files"><a class="header" href="#downloading-all-files"><mark class="hltr-orange">Downloading all files</mark></a></h5>
+<pre><code>wget -m --no-passive ftp://anonymous:anonymous@10.129.14.136
+
+</code></pre>
+<h5 id="interacting-with-an-ftp-server-that-runs-tlsssl-encryption"><a class="header" href="#interacting-with-an-ftp-server-that-runs-tlsssl-encryption"><mark class="hltr-orange">Interacting with an FTP server that runs TLS/SSL encryption</mark></a></h5>
+<pre><code>openssl s_client -connect 10.129.14.136:21 -starttls ftp
+</code></pre>
+<h4 id="smb"><a class="header" href="#smb"><mark class="hltr-cyan">SMB</mark></a></h4>
+<h5 id="connecting-to-a-share-anonymously"><a class="header" href="#connecting-to-a-share-anonymously"><mark class="hltr-orange">Connecting to a share (anonymously)</mark></a></h5>
+<ul>
+<li>listing shares</li>
+</ul>
+<pre><code>smbclient -N -L //10.129.14.128
+</code></pre>
+<ul>
+<li>connecting to a share</li>
+</ul>
+<pre><code>smbclient //10.129.14.128/notes
+</code></pre>
+<h5 id="footprinting-the-service"><a class="header" href="#footprinting-the-service"><mark class="hltr-orange">Footprinting the service</mark></a></h5>
+<ul>
+<li>Nmap</li>
+</ul>
+<pre><code>sudo nmap 10.129.14.128 -sV -sC -p139,445
+</code></pre>
+<ul>
+<li>RPCclient</li>
+</ul>
+<pre><code>rpcclient -U "" 10.129.14.128
+</code></pre>
+<p>![[Pasted image 20240725043117.png]]</p>
+<ul>
+<li>RPCclient user enumeration
+![[Pasted image 20240725043422.png]]</li>
+<li>Brute Forcing User RIDs</li>
+</ul>
+<pre><code>for i in $(seq 500 1100);do rpcclient -N -U "" 10.129.14.128 -c "queryuser 0x$(printf '%x\n' $i)" | grep "User Name\|user_rid\|group_rid" &amp;&amp; echo "";done
+</code></pre>
+<ul>
+<li>Impacket - Samrdump.py
+<a href="https://github.com/SecureAuthCorp/impacket/blob/master/examples/samrdump.py">samrdumpy.py</a></li>
+</ul>
+<pre><code>samrdump.py 10.129.14.128
+</code></pre>
+<ul>
+<li>Enum4Linux-ng - Enumeration</li>
+</ul>
+<pre><code>enum4linux-ng.py 10.129.14.128 -A
+</code></pre>
+<h4 id="nfs"><a class="header" href="#nfs"><mark class="hltr-cyan">NFS</mark></a></h4>
+<p>Port 111 and 2049
+default config is found in <code>/etc/exports</code></p>
+<h5 id="dangerous-settings-1"><a class="header" href="#dangerous-settings-1"><mark class="hltr-orange">Dangerous settings</mark></a></h5>
+<p>![[Pasted image 20240725055046.png]]</p>
+<h5 id="footprinting-the-service-1"><a class="header" href="#footprinting-the-service-1"><mark class="hltr-orange">Footprinting the service</mark></a></h5>
+<ul>
+<li>Nmap</li>
+</ul>
+<pre><code>sudo nmap --script nfs* 10.129.14.128 -sV -p111,2049
+</code></pre>
+<p>The <code>rpcinfo</code> NSE script retrieves a list of all currently running RPC services, their names and descriptions, and the ports they use.</p>
+<ul>
+<li>Show Available NFS Shares</li>
+</ul>
+<pre><code>showmount -e 10.129.14.128
+</code></pre>
+<ul>
+<li>Mounting NFS Share</li>
+</ul>
+<pre><code>mkdir target-NFS
+sudo mount -t nfs 10.129.14.128:/ ./target-NFS/ -o nolock
+</code></pre>
+<h4 id="dns"><a class="header" href="#dns"><mark class="hltr-cyan">DNS</mark></a></h4>
+<p>![[Pasted image 20240725164542.png]]
+Reference: <a href="https://www.youtube.com/watch?v=HnUDtycXSNE">DNS Explained in details</a></p>
+<p>An entry in a DNS nameserver, also known as a DNS record, contains specific information about a domain and its associated services. Each entry in a DNS nameserver is formatted in a way that helps DNS resolvers understand how to handle requests for that domain. Here’s a breakdown of what an entry typically looks like:</p>
+<pre><code>&lt;NAME&gt; &lt;TTL&gt; &lt;CLASS&gt; &lt;TYPE&gt; &lt;DATA&gt;
+</code></pre>
+<p>examples:</p>
+<ul>
+<li><code>example.com. 3600 IN A 192.0.2.1</code></li>
+<li><code>example.com. 3600 IN AAAA 2001:db8::1</code></li>
+<li><code>www.example.com. 3600 IN CNAME example.com.</code></li>
+<li><code>example.com. 3600 IN MX 10 mail.example.com.</code></li>
+<li><code>example.com. 3600 IN NS ns1.example.com.</code></li>
+</ul>
+<p>![[Pasted image 20240725170035.png]]</p>
+<h5 id="footprinting-the-service-2"><a class="header" href="#footprinting-the-service-2"><mark class="hltr-orange">Footprinting the service</mark></a></h5>
+<ul>
+<li>DIG - NS Query
+the DNS server can be queried as to which other name servers are known.</li>
+</ul>
+<pre><code>dig ns inlanefreight.htb @10.129.14.128
+</code></pre>
+<ul>
+<li>DIG - ANY Query
+We can use the option <code>ANY</code> to view all available records. This will cause the server to show us all available entries that it is willing to disclose. It is important to note that <mark class="hltr-red">not all entries from the zones will be shown</mark>.</li>
+</ul>
+<pre><code>dig any inlanefreight.htb @10.129.14.128
+</code></pre>
+<ul>
+<li>DIG - AXFR Zone Transfer
+Zone transfer refers to the transfer of zones to another server in DNS, which generally happens over TCP port 53. This procedure is abbreviated <code>Asynchronous Full Transfer Zone</code> (<code>AXFR</code>).</li>
+</ul>
+<pre><code>dig axfr inlanefreight.htb @10.129.14.128
+</code></pre>
+<ul>
+<li>DIG - AXFR Zone Transfer - Internal</li>
+</ul>
+<pre><code>dig axfr internal.inlanefreight.htb @10.129.14.128
+</code></pre>
+<ul>
+<li>Subdomain Brute Forcing</li>
+</ul>
+<pre><code>for sub in $(cat /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-110000.txt);do dig $sub.inlanefreight.htb @10.129.14.128 | grep -v ';\|SOA' | sed -r '/^\s*$/d' | grep $sub | tee -a subdomains.txt;done
+</code></pre>
+<p>or using a tool like <a href="https://github.com/fwaeytens/dnsenum">DNSEnum</a></p>
+<pre><code>dnsenum --dnsserver 10.129.11.220  --enum -p 0 -s 0 -o subdomains.txt -f /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt inlanefreight.htb
+</code></pre>
+<p>(You might also use <code>/usr/share/wordlists/seclists/Discovery/DNS/fierce-hostlist.txt</code>)</p>
+<h4 id="smtp"><a class="header" href="#smtp"><mark class="hltr-cyan">SMTP</mark></a></h4>
+<p>SMTP runs on port 25 (TCP)</p>
+<h5 id="smtp-commands"><a class="header" href="#smtp-commands"><mark class="hltr-orange">SMTP commands</mark></a></h5>
+<p>![[Pasted image 20240725204115.png]]</p>
+<ul>
+<li>connecting to the smtp server</li>
+</ul>
+<pre><code>telnet 10.129.14.128 25
+</code></pre>
+<p>❗: Sometimes we may have to work through a web proxy. We can also make this web proxy connect to the SMTP server. The command that we would send would then look something like this: <code>CONNECT 10.129.14.128:25 HTTP/1.0</code></p>
+<h5 id="footprinting"><a class="header" href="#footprinting"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<ul>
+<li>Nmap - Open Relay</li>
+</ul>
+<pre><code>sudo nmap 10.129.14.128 -p25 --script smtp-open-relay -v
+</code></pre>
+<ul>
+<li>Enumerating users
+There is a metasploit module for this</li>
+</ul>
+<pre><code>search scanner/smtp/smtp_enum
+</code></pre>
+<h4 id="imap--pop3"><a class="header" href="#imap--pop3"><mark class="hltr-cyan">IMAP / POP3</mark></a></h4>
+<p>IMAP (TCP 143)
+POP3 (TCP 110)</p>
+<h5 id="imap-commands"><a class="header" href="#imap-commands"><mark class="hltr-orange">IMAP Commands</mark></a></h5>
+<p>![[Pasted image 20240727033900.png]]
+<mark class="hltr-red">(Chatgpt is really helpful for writing imap commands)</mark></p>
+<h5 id="pop3-commands"><a class="header" href="#pop3-commands"><mark class="hltr-orange">POP3 Commands</mark></a></h5>
+<p>![[Pasted image 20240727034005.png]]</p>
+<h5 id="footprinting-the-service-3"><a class="header" href="#footprinting-the-service-3"><mark class="hltr-orange">Footprinting the service</mark></a></h5>
+<ul>
+<li>Nmap</li>
+</ul>
+<pre><code>sudo nmap 10.129.14.128 -sV -p110,143,993,995 -sC
+</code></pre>
+<ul>
+<li>curl</li>
+</ul>
+<pre><code>curl -k 'imaps://10.129.14.128' --user user:p4ssw0rd
+</code></pre>
+<ul>
+<li>OpenSSL - TLS Encrypted Interaction POP3</li>
+</ul>
+<pre><code>openssl s_client -connect 10.129.14.128:pop3s
+</code></pre>
+<ul>
+<li>OpenSSL - TLS Encrypted Interaction IMAP</li>
+</ul>
+<pre><code>openssl s_client -connect 10.129.14.128:imaps
+</code></pre>
+<h4 id="snmp"><a class="header" href="#snmp"><mark class="hltr-cyan">SNMP</mark></a></h4>
+<p>SNMP (UDP 161)</p>
+<h5 id="snmp-versions"><a class="header" href="#snmp-versions"><mark class="hltr-orange">SNMP Versions</mark></a></h5>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Version</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>SNMPv1</td><td>- no built-in authentication<br>- does not support encryption</td></tr>
+<tr><td>SNMPv2c</td><td>- does not use passwords, it uses community<br>strings as an authentication method<br>- does not support encryption</td></tr>
+<tr><td>SNMPv3</td><td>- authentication using username and password<br>- supports encryption<br>- complex compared to the previous versions</td></tr>
+</tbody>
+</table>
+</div>
+<h5 id="footprinting-1"><a class="header" href="#footprinting-1"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<p>Tools:</p>
+<ul>
+<li>snmpwalk -&gt; query the OIDs with their information (once we know the snmp version that is running on the server)</li>
+</ul>
+<pre><code>snmpwalk -v2c -c public 10.129.14.128
+</code></pre>
+<ul>
+<li>onesixtyone -&gt; brute-force the names of the community strings</li>
+</ul>
+<pre><code>onesixtyone -c /usr/share/seclists/Discovery/SNMP/snmp.txt 10.129.14.128
+</code></pre>
+<p>![[Pasted image 20240729121808.png]]
+In this case <code>backup</code> is the community string</p>
+<ul>
+<li>braa
+Once we know a community string, we can use it with <a href="https://github.com/mteg/braa">braa</a> to brute-force the individual OIDs and enumerate the information behind them.</li>
+</ul>
+<h4 id="mysql"><a class="header" href="#mysql"><mark class="hltr-cyan">mysql</mark></a></h4>
+<h5 id="footprinting-2"><a class="header" href="#footprinting-2"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<ul>
+<li>scanning</li>
+</ul>
+<pre><code>sudo nmap 10.129.14.128 -sV -sC -p3306 --script mysql*
+</code></pre>
+<ul>
+<li>interacting with the database
+![[Pasted image 20240727103213.png]]</li>
+</ul>
+<p>The most important databases for the MySQL server are the <code>system schema</code> (<mark class="hltr-green">sys</mark>) and <code>information schema</code> (<mark class="hltr-green">information_schema</mark>).
+The system schema contains tables, information, and metadata necessary for management.</p>
+<pre><code>use sys;
+show tables;
+select host, unique_users from host_summary;
+</code></pre>
+<h4 id="mssql"><a class="header" href="#mssql"><mark class="hltr-cyan">MSSQL</mark></a></h4>
+<p>mssql (TCP 1433)</p>
+<h5 id="mssql-databases"><a class="header" href="#mssql-databases"><mark class="hltr-orange">MSSQL Databases</mark></a></h5>
+<p>![[Pasted image 20240727113837.png]]</p>
+<h5 id="footprinting-3"><a class="header" href="#footprinting-3"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<ul>
+<li>Nmap</li>
+</ul>
+<pre><code>sudo nmap --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p 1433 10.129.201.248
+</code></pre>
+<ul>
+<li>MSSQL Ping in Metasploit</li>
+</ul>
+<pre><code>use auxiliary/scanner/mssql/mssql_ping
+set RHOSTS 10.129.201.248
+run
+</code></pre>
+<ul>
+<li>Connecting with Mssqlclient.py</li>
+</ul>
+<pre><code>python3 mssqlclient.py Administrator@10.129.201.248 -windows-auth
+</code></pre>
+<ul>
+<li>Connecting with sqsh</li>
+</ul>
+<pre><code class="language-shell-session">sqsh -S 10.129.20.13 -U username -P Password123
+</code></pre>
+<ul>
+<li>Connecting from windows host</li>
+</ul>
+<pre><code class="language-cmd-session">C:&gt; sqlcmd -S 10.129.20.13 -U username -P Password123
+</code></pre>
+<p>MSSQL uses <mark class="hltr-red">T-SQL</mark> so the syntax is different from mysql
+here’s how to list all available databases (you should compare the results with the default databases list shown above)</p>
+<pre><code>select name from sys.databases
+</code></pre>
+<h4 id="oracle-tns"><a class="header" href="#oracle-tns"><mark class="hltr-cyan">Oracle TNS</mark></a></h4>
+<p>The <code>Oracle Transparent Network Substrate</code> (<code>TNS</code>) server is a communication protocol that facilitates communication between Oracle databases and applications over networks</p>
+<p>By default, the listener listens for incoming connections on the <code>TCP/1521</code> port</p>
+<h5 id="footprinting-4"><a class="header" href="#footprinting-4"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<ul>
+<li>Nmap</li>
+</ul>
+<pre><code>sudo nmap -p1521 -sV 10.129.204.235 --open
+</code></pre>
+<p>A System Identifier (<code>SID</code>) is a unique name that identifies a particular database instance</p>
+<ul>
+<li>Nmap - SID Bruteforcing</li>
+</ul>
+<pre><code>sudo nmap -p1521 -sV 10.129.204.235 --open --script oracle-sid-brute
+</code></pre>
+<ul>
+<li>ODAT</li>
+</ul>
+<pre><code>odat all -s 10.129.204.235
+</code></pre>
+<ul>
+<li>SQLplus - Log In</li>
+</ul>
+<pre><code>sqlplus scott/tiger@10.129.204.235/XE
+</code></pre>
+<ul>
+<li>Oracle RDBMS - Interaction</li>
+</ul>
+<pre><code>select table_name from all_tables;
+select * from user_role_privs;
+</code></pre>
+<ul>
+<li>Oracle RDBMS - Database Enumeration
+This is possible if the user has sysdba privilege</li>
+</ul>
+<pre><code class="language-shell-session">sqlplus scott/tiger@10.129.204.235/XE as sysdba
+select * from user_role_privs;
+</code></pre>
+<ul>
+<li>Oracle RDBMS - Extract Password Hashes</li>
+</ul>
+<pre><code>select name, password from sys.user$;
+</code></pre>
+<ul>
+<li>Oracle RDBMS - File Upload (WEB)
+On Windows:</li>
+</ul>
+<pre><code>echo "Oracle File Upload Test" &gt; testing.txt
+./odat.py utlfile -s 10.129.204.235 -d XE -U scott -P tiger --sysdba --putFile C:\\inetpub\\wwwroot testing.txt ./testing.txt
+</code></pre>
+<p>On Linux:</p>
+<pre><code>echo "Oracle File Upload Test" &gt; testing.txt
+./odat.py utlfile -s 10.129.204.235 -d XE -U scott -P tiger --sysdba --putFile /var/www/html testing.txt ./testing.txt
+</code></pre>
+<p>Finally, we can test if the file upload approach worked with <code>curl</code>. Therefore, we will use a <code>GET http://&lt;IP&gt;</code> request, or we can visit via browser.</p>
+<pre><code class="language-shell-session">curl -X GET http://10.129.204.235/testing.txt
+</code></pre>
+<p>if this worked then we can upload a web shell to the target</p>
+<h4 id="ipmi"><a class="header" href="#ipmi"><mark class="hltr-cyan">IPMI</mark></a></h4>
+<p><a href="https://www.thomas-krenn.com/en/wiki/IPMI_Basics">Intelligent Platform Management Interface</a> IPMI (UDP 623)
+IPMI provides sysadmins with the ability to manage and monitor systems even if they are powered off or in an unresponsive state. It operates using a direct network connection to the system’s hardware and does not require access to the operating system via a login shell</p>
+<h5 id="baseboard-management-controller-bmc"><a class="header" href="#baseboard-management-controller-bmc"><mark class="hltr-orange">Baseboard Management Controller (BMC)</mark></a></h5>
+<ul>
+<li>A micro-controller and essential component of an IPMI.</li>
+<li>The most common BMCs we often see during internal penetration tests are HP iLO, Dell DRAC, and Supermicro IPMI.</li>
+<li>If we can access a BMC during an assessment, we would gain full access to the host motherboard and be able to monitor, reboot, power off, or even reinstall the host operating system.</li>
+<li>Gaining access to a BMC is nearly equivalent to physical access to a system.</li>
+<li>Many BMCs expose a web-based management console.</li>
+</ul>
+<h5 id="footprinting-5"><a class="header" href="#footprinting-5"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<ul>
+<li>Nmap</li>
+</ul>
+<pre><code>sudo nmap -sU --script ipmi-version -p 623 ilo.inlanfreight.local
+</code></pre>
+<ul>
+<li>Metasploit Version Scan</li>
+</ul>
+<pre><code>use auxiliary/scanner/ipmi/ipmi_version
+set rhosts 10.129.42.195
+run
+</code></pre>
+<ul>
+<li>
+<p>Default passwords
+![[Pasted image 20240728184032.png]]
+When dealing with BMCs, these default passwords may gain us access to the web console or even command line access via SSH or Telnet.</p>
+</li>
+<li>
+<p>Dangerous settings
+If default credentials do not work to access a BMC, we can turn to a <a href="http://fish2.com/ipmi/remote-pw-cracking.html">flaw</a> in the RAKP protocol in <mark class="hltr-red">IPMI 2.0</mark>. During the authentication process, the server sends a salted SHA1 or MD5 hash of the user’s password to the client before authentication takes place. This can be leveraged to obtain the password hash for ANY valid user account on the BMC.</p>
+</li>
+</ul>
+<p>These password hashes can then be cracked offline using a dictionary attack using <code>Hashcat</code> mode <code>7300</code>. In the event of an HP iLO using a factory default password, we can use this Hashcat mask attack command <code>hashcat -m 7300 ipmi.txt -a 3 ?1?1?1?1?1?1?1?1 -1 ?d?u</code> which tries all combinations of upper case letters and numbers for an eight-character password.</p>
+<ul>
+<li>Metasploit Dumping Hashes</li>
+</ul>
+<pre><code class="language-shell-session">use auxiliary/scanner/ipmi/ipmi_dumphashes
+set OUTPUT_JOHN_FILE hashes.john
+set rhosts 10.129.42.195
+run
+</code></pre>
+<ul>
+<li>cracking hashes
+once we retrieve the hashes returned by metasploit we can crack those using john</li>
+</ul>
+<pre><code>/usr/sbin/john \  john \
+    --fork=15 \
+    --wordlist=/usr/share/wordlists/rockyou.txt \
+    --format=rakp \
+    --session=ipmi \
+    hashes.john
+</code></pre>
+<h4 id="ssh"><a class="header" href="#ssh"><mark class="hltr-cyan">SSH</mark></a></h4>
+<p>ssh (TCP 22)</p>
+<h5 id="footprinting-6"><a class="header" href="#footprinting-6"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<pre><code>ssh-audit.py 10.129.14.132
+</code></pre>
+<p>Allowing password authentication allows us to brute-force a known username for possible passwords</p>
+<h4 id="rsync"><a class="header" href="#rsync"><mark class="hltr-cyan">Rsync</mark></a></h4>
+<p><a href="https://linux.die.net/man/1/rsync">Rsync</a> is a fast and efficient tool for locally and remotely copying files. (By default, it uses port TCP <code>873</code>)</p>
+<p>Rsync can be abused, most notably by listing the contents of a shared folder on a target server and retrieving files. This can sometimes be done without authentication. Other times we will need credentials. If you find credentials during a pentest and run into Rsync on an internal (or external) host, it is always worth checking for password re-use as you may be able to pull down some sensitive files that could be used to gain remote access to the target.</p>
+<h5 id="probing-for-accessible-shares"><a class="header" href="#probing-for-accessible-shares"><mark class="hltr-orange">Probing for Accessible Shares</mark></a></h5>
+<pre><code>nc -nv 127.0.0.1 873
+</code></pre>
+<p>then</p>
+<pre><code>#list
+</code></pre>
+<p>We do this to list shares</p>
+<h5 id="enumerating-an-open-share"><a class="header" href="#enumerating-an-open-share"><mark class="hltr-orange">Enumerating an Open Share</mark></a></h5>
+<pre><code>rsync -av --list-only rsync://127.0.0.1/dev
+</code></pre>
+<p>If Rsync is configured to use SSH to transfer files, we could modify our commands to include the <code>-e ssh</code> flag, or <code>-e "ssh -p2222"</code> if a non-standard port is in use for SSH</p>
+<h4 id="r-services"><a class="header" href="#r-services"><mark class="hltr-cyan">R-Services</mark></a></h4>
+<ul>
+<li>R-Services are a suite of services hosted to enable remote access or issue commands between Unix hosts over TCP/IP.</li>
+<li><code>r-services</code> were the de facto standard for remote access between Unix operating systems until they were replaced by the Secure Shell (<code>SSH</code>) protocols and commands due to inherent security flaws built into them</li>
+<li>Much like <code>telnet</code>, r-services transmit information from client to server(and vice versa.) over the network in an unencrypted format, making it possible for attackers to intercept network traffic (passwords, login information, etc.) by performing man-in-the-middle (<code>MITM</code>) attacks.</li>
+</ul>
+<p><code>R-services</code> span across the ports <code>512</code>, <code>513</code>, and <code>514</code> and are only accessible through a suite of programs known as <code>r-commands</code>.</p>
+<ul>
+<li>
+<p>R-Services Commands
+![[Pasted image 20240728193938.png]]</p>
+</li>
+<li>
+<p>Scanning for R-Services</p>
+</li>
+</ul>
+<pre><code class="language-shell-session">sudo nmap -sV -p 512,513,514 10.0.17.2
+</code></pre>
+<ul>
+<li>Logging in Using Rlogin</li>
+</ul>
+<pre><code class="language-shell-session">rlogin 10.0.17.2 -l htb-student
+</code></pre>
+<ul>
+<li>Listing Authenticated Users Using Rwho</li>
+</ul>
+<pre><code>rwho
+</code></pre>
+<ul>
+<li>Listing Authenticated Users Using Rusers
+This will give us more information</li>
+</ul>
+<pre><code>rusers -al 10.0.17.5
+</code></pre>
+<h4 id="rdp"><a class="header" href="#rdp"><mark class="hltr-cyan">RDP</mark></a></h4>
+<p>The <a href="https://docs.microsoft.com/en-us/troubleshoot/windows-server/remote/understanding-remote-desktop-protocol">Remote Desktop Protocol</a> (<code>RDP</code>) is a protocol developed by Microsoft.</p>
+<p>typically utilizing TCP port 3389 as the transport protocol. However, the connectionless UDP protocol can use port 3389 also for remote administration.</p>
+<h5 id="footprinting-7"><a class="header" href="#footprinting-7"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<ul>
+<li>Nmap</li>
+</ul>
+<pre><code>nmap -sV -sC 10.129.201.248 -p3389 --script rdp*
+</code></pre>
+<ul>
+<li>Initiate an RDP Session</li>
+</ul>
+<pre><code>xfreerdp /u:cry0l1t3 /p:"P455w0rd!" /v:10.129.201.248
+</code></pre>
+<h4 id="winrm"><a class="header" href="#winrm"><mark class="hltr-cyan">WinRM</mark></a></h4>
+<p>The Windows Remote Management (<code>WinRM</code>) is a simple Windows integrated remote management protocol based on the command line.
+WinRM uses the Simple Object Access Protocol (<code>SOAP</code>) to establish connections to remote hosts and their applications.</p>
+<p>WinRM relies on <code>TCP</code> ports <code>5985</code> and <code>5986</code> for communication, with the last port <code>5986 using HTTPS</code></p>
+<h5 id="footprinting-8"><a class="header" href="#footprinting-8"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<ul>
+<li>Nmap</li>
+</ul>
+<pre><code>nmap -sV -sC 10.129.201.248 -p5985,5986 --disable-arp-ping -n
+</code></pre>
+<ul>
+<li>Interacting with WinRM</li>
+</ul>
+<pre><code>evil-winrm -i 10.129.201.248 -u Cry0l1t3 -p P455w0rD!
+</code></pre>
+<h4 id="wmi"><a class="header" href="#wmi"><mark class="hltr-cyan">WMI</mark></a></h4>
+<ul>
+<li>Windows Management Instrumentation (<code>WMI</code>) allows read and write access to almost all settings on Windows systems. Understandably, this makes it the most critical interface in the Windows environment.</li>
+<li>WMI is typically accessed via PowerShell, VBScript, or the Windows Management Instrumentation Console (<code>WMIC</code>). WMI is not a single program but consists of several programs and various databases, also known as repositories.</li>
+</ul>
+<h5 id="footprinting-the-service-4"><a class="header" href="#footprinting-the-service-4"><mark class="hltr-orange">Footprinting the Service</mark></a></h5>
+<p>The initialization of the WMI communication always takes place on <code>TCP</code> port <code>135</code>, and after the successful establishment of the connection, the communication is moved to a random port. For example, the program <a href="https://github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py">wmiexec.py</a> from the Impacket toolkit can be used for this.</p>
+<pre><code>wmiexec.py Cry0l1t3:"P455w0rD!"@10.129.201.248 "hostname"
+</code></pre>
+<h2 id="introduction-to-nmap"><a class="header" href="#introduction-to-nmap"><mark class="hltr-pink">Introduction to Nmap</mark></a></h2>
+<p>There are many scanning types that can be done with nmap</p>
+<pre><code>SCAN TECHNIQUES:
+  -sS/sT/sA/sW/sM: TCP SYN/Connect()/ACK/Window/Maimon scans
+  -sU: UDP Scan
+  -sN/sF/sX: TCP Null, FIN, and Xmas scans
+  --scanflags &lt;flags&gt;: Customize TCP scan flags
+  -sI &lt;zombie host[:probeport]&gt;: Idle scan
+  -sY/sZ: SCTP INIT/COOKIE-ECHO scans
+  -sO: IP protocol scan
+  -b &lt;FTP relay host&gt;: FTP bounce scan
+</code></pre>
+<p>The TCP SYN scan is the default:
+<em><mark class="hltr-yellow">Quick overview</mark></em>
+Our machine first sends a TCP SYN segment</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Response</th><th>Explanation</th></tr>
+</thead>
+<tbody>
+<tr><td>SYN-ACK</td><td>If our target sends an <code>SYN-ACK</code> flagged packet back to the scanned port, Nmap detects that the port is open</td></tr>
+<tr><td>RST</td><td>If the packet receives an <code>RST</code> flag, it is an indicator that the port is <code>closed</code></td></tr>
+<tr><td>nothing</td><td>If Nmap does not receive a packet back, it will display it as <code>filtered</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="host-discovery"><a class="header" href="#host-discovery"><mark class="hltr-pink">Host Discovery</mark></a></h2>
+<h3 id="scan-network-range"><a class="header" href="#scan-network-range"><mark class="hltr-cyan">Scan network range</mark></a></h3>
+<p>Discovering online systems (ping sweep)</p>
+<pre><code>sudo nmap 10.129.2.0/24 -sn -oA tnet | grep for | cut -d" " -f5
+</code></pre>
+<h3 id="scan-a-list-of-ips"><a class="header" href="#scan-a-list-of-ips"><mark class="hltr-cyan">Scan a list of IPs</mark></a></h3>
+<p>In case we have a list of IP addresses in a file we can scan those by giving the file to nmap</p>
+<pre><code>sudo nmap -sn -oA tnet -iL hosts.lst | grep for | cut -d" " -f5
+</code></pre>
+<hr>
+<h2 id="host-and-port-scanning"><a class="header" href="#host-and-port-scanning"><mark class="hltr-pink">Host and Port Scanning</mark></a></h2>
+<h3 id="port-states"><a class="header" href="#port-states"><mark class="hltr-cyan">Port states</mark></a></h3>
+<p>![[Pasted image 20240721030658.png]]</p>
+<h3 id="scanning-the-top-100-ports"><a class="header" href="#scanning-the-top-100-ports"><mark class="hltr-cyan">scanning the top 100 ports</mark></a></h3>
+<pre><code>sudo nmap 10.129.2.28 --top-ports=100
+</code></pre>
+<p>or</p>
+<pre><code>sudo nmap -F 10.129.2.28
+</code></pre>
+<h3 id="scanning-all-ports"><a class="header" href="#scanning-all-ports"><mark class="hltr-cyan">scanning all ports</mark></a></h3>
+<pre><code>sudo nmap 10.129.2.28 -p-
+</code></pre>
+<h3 id="scanning-a-port-range"><a class="header" href="#scanning-a-port-range"><mark class="hltr-cyan">scanning a port range</mark></a></h3>
+<pre><code>sudo nmap 10.129.2.28 -p22-445
+</code></pre>
+<h3 id="udp-scan"><a class="header" href="#udp-scan"><mark class="hltr-cyan">UDP scan</mark></a></h3>
+<pre><code>sudo nmap -F -sU 10.129.2.28
+</code></pre>
+<hr>
+<h2 id="service-enumeration"><a class="header" href="#service-enumeration"><mark class="hltr-pink">Service enumeration</mark></a></h2>
+<h3 id="banner-grabbing"><a class="header" href="#banner-grabbing">Banner grabbing</a></h3>
+<pre><code>nc -nv 10.129.2.28 25
+</code></pre>
+<hr>
+<h2 id="scripting-engine"><a class="header" href="#scripting-engine"><mark class="hltr-pink">Scripting engine</mark></a></h2>
+<p>![[Pasted image 20240721041835.png]]</p>
+<hr>
+<h2 id="firewall-and-idsips-evasion"><a class="header" href="#firewall-and-idsips-evasion"><mark class="hltr-pink">Firewall and IDS/IPS Evasion</mark></a></h2>
+<p>When a port is shown as filtered, it can have several reasons. In most cases, firewalls have certain rules set to handle specific connections.</p>
+<h3 id="determine-firewalls-and-their-rules-ack-scan"><a class="header" href="#determine-firewalls-and-their-rules-ack-scan"><mark class="hltr-cyan">Determine Firewalls and Their Rules ACK scan</mark></a></h3>
+<p>Firewalls and IDS/IPS systems typically block incoming SYN packets making the usual SYN (-sS) and connect (-sT) scans ineffective.
+Thus using an <strong>ACK scan</strong> (-sA) might be a good idea because the firewall cannot determine whether the connection was first established from the external network or the internal network.</p>
+<p>(You should also enable the –packet-trace option, read the SA R S or A in that section)</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>R</th><th>RESET</th></tr>
+</thead>
+<tbody>
+<tr><td>SA</td><td>SYN-ACK</td></tr>
+<tr><td>S</td><td>SYN</td></tr>
+<tr><td>A</td><td>ACK</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="scan-by-using-different-source-ip"><a class="header" href="#scan-by-using-different-source-ip"><mark class="hltr-cyan">Scan by using different source ip</mark></a></h3>
+<pre><code>sudo nmap 10.129.2.28 -n -Pn -p445 -S 10.129.2.200 -e tun0
+</code></pre>
+<h3 id="dns-proxying"><a class="header" href="#dns-proxying"><mark class="hltr-cyan">DNS Proxying</mark></a></h3>
+<h4 id="syn-scan-from-dns-port"><a class="header" href="#syn-scan-from-dns-port">SYN-Scan from DNS port</a></h4>
+<p>If a port comes up as <code>filtered</code>, you can try to scan it using 53 (DNS) as a source port number</p>
+<pre><code>sudo nmap 10.129.2.28 -p50000 -sS -Pn -n --disable-arp-ping --packet-trace --source-port 53
+</code></pre>
+<p>If it’s now shown as open then you can connect (once again using 53 as a source port number)</p>
+<pre><code>nc -nv --source-port 53 10.129.2.28 50000
+</code></pre>
+<hr>
+<h2 id="references"><a class="header" href="#references"><mark class="hltr-pink">References</mark></a></h2>
+<ul>
+<li><a href="https://nmap.org/book/man-port-scanning-techniques.html">Nmap scan types</a></li>
+<li><a href="https://www.nmap.org">nmap docs</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../infosec/enumeration/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../infosec/htb/brute-forcing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../infosec/enumeration/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../infosec/htb/brute-forcing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
