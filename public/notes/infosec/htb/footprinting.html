@@ -38,7 +38,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-4dc336a4.js";
+            window.path_to_searchindex_js = "../../searchindex-0286f5da.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-a641b52b.js"></script>
@@ -181,10 +181,9 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <p><mark class="hltr-red">Our goal is not to get at the systems but to find all the ways to get there.</mark>
-![[Pasted image 20240721100121.png]]</p>
+                        <p>Our goal is not to get at the systems but to find all the ways to get there.</p>
 <hr>
-<h2 id="enumeration-methodology"><a class="header" href="#enumeration-methodology"><mark class="hltr-pink">Enumeration Methodology</mark></a></h2>
+<h2 id="enumeration-methodology"><a class="header" href="#enumeration-methodology">Enumeration Methodology</a></h2>
 <p>The whole enumeration process is divided into three different levels</p>
 <div class="table-wrapper">
 <table>
@@ -194,11 +193,10 @@
 <tbody></tbody>
 </table>
 </div>
-<p>![[Pasted image 20240721101051.png]]Enumaration should be done methodically rather than intuitively</p>
 <hr>
-<h3 id="host-based-enumeration"><a class="header" href="#host-based-enumeration"><mark class="hltr-pink">Host Based Enumeration</mark></a></h3>
-<h4 id="ftp"><a class="header" href="#ftp"><mark class="hltr-cyan">FTP</mark></a></h4>
-<h5 id="ftp-1"><a class="header" href="#ftp-1"><mark class="hltr-orange">FTP</mark></a></h5>
+<h3 id="host-based-enumeration"><a class="header" href="#host-based-enumeration">Host Based Enumeration</a></h3>
+<h4 id="ftp"><a class="header" href="#ftp">FTP</a></h4>
+<h5 id="ftp-1"><a class="header" href="#ftp-1">FTP</a></h5>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -214,27 +212,25 @@
 <li>FTP is a clear-text protocol</li>
 <li>anonymous FTP allows any user to upload or download files via FTP without using a password</li>
 </ul>
-<h5 id="tftp"><a class="header" href="#tftp"><mark class="hltr-orange">TFTP</mark></a></h5>
+<h5 id="tftp"><a class="header" href="#tftp">TFTP</a></h5>
 <ul>
 <li>Trivial File Transfer Protocol (<code>TFTP</code>) is simpler than FTP</li>
 <li>TFTP does not provide user authentication</li>
 <li>TFTP uses UDP</li>
 <li>file access is solely reliant on the r/w permissions in the OS</li>
 </ul>
-<h5 id="default-configuration"><a class="header" href="#default-configuration"><mark class="hltr-orange">Default Configuration</mark></a></h5>
+<h5 id="default-configuration"><a class="header" href="#default-configuration">Default Configuration</a></h5>
 <p>The default configuration of vsFTPd can be found in <code>/etc/vsftpd.conf</code></p>
 <p>In addition, there is a file called <code>/etc/ftpusers</code> that serves as a blacklist (any user found in that file cannot login to the ftp service)</p>
-<h5 id="dangerous-settings"><a class="header" href="#dangerous-settings"><mark class="hltr-orange">Dangerous Settings</mark></a></h5>
-<p>![[Pasted image 20240721110916.png]]</p>
-<h5 id="downloading-all-files"><a class="header" href="#downloading-all-files"><mark class="hltr-orange">Downloading all files</mark></a></h5>
+<h5 id="downloading-all-files"><a class="header" href="#downloading-all-files">Downloading all files</a></h5>
 <pre><code>wget -m --no-passive ftp://anonymous:anonymous@10.129.14.136
 
 </code></pre>
-<h5 id="interacting-with-an-ftp-server-that-runs-tlsssl-encryption"><a class="header" href="#interacting-with-an-ftp-server-that-runs-tlsssl-encryption"><mark class="hltr-orange">Interacting with an FTP server that runs TLS/SSL encryption</mark></a></h5>
+<h5 id="interacting-with-an-ftp-server-that-runs-tlsssl-encryption"><a class="header" href="#interacting-with-an-ftp-server-that-runs-tlsssl-encryption">Interacting with an FTP server that runs TLS/SSL encryption</a></h5>
 <pre><code>openssl s_client -connect 10.129.14.136:21 -starttls ftp
 </code></pre>
-<h4 id="smb"><a class="header" href="#smb"><mark class="hltr-cyan">SMB</mark></a></h4>
-<h5 id="connecting-to-a-share-anonymously"><a class="header" href="#connecting-to-a-share-anonymously"><mark class="hltr-orange">Connecting to a share (anonymously)</mark></a></h5>
+<h4 id="smb"><a class="header" href="#smb">SMB</a></h4>
+<h5 id="connecting-to-a-share-anonymously"><a class="header" href="#connecting-to-a-share-anonymously">Connecting to a share (anonymously)</a></h5>
 <ul>
 <li>listing shares</li>
 </ul>
@@ -245,7 +241,7 @@
 </ul>
 <pre><code>smbclient //10.129.14.128/notes
 </code></pre>
-<h5 id="footprinting-the-service"><a class="header" href="#footprinting-the-service"><mark class="hltr-orange">Footprinting the service</mark></a></h5>
+<h5 id="footprinting-the-service"><a class="header" href="#footprinting-the-service">Footprinting the service</a></h5>
 <ul>
 <li>Nmap</li>
 </ul>
@@ -256,11 +252,13 @@
 </ul>
 <pre><code>rpcclient -U "" 10.129.14.128
 </code></pre>
-<p>![[Pasted image 20240725043117.png]]</p>
 <ul>
-<li>RPCclient user enumeration
-![[Pasted image 20240725043422.png]]</li>
-<li>Brute Forcing User RIDs</li>
+<li>
+<p>RPCclient user enumeration</p>
+</li>
+<li>
+<p>Brute Forcing User RIDs</p>
+</li>
 </ul>
 <pre><code>for i in $(seq 500 1100);do rpcclient -N -U "" 10.129.14.128 -c "queryuser 0x$(printf '%x\n' $i)" | grep "User Name\|user_rid\|group_rid" &amp;&amp; echo "";done
 </code></pre>
@@ -275,12 +273,10 @@
 </ul>
 <pre><code>enum4linux-ng.py 10.129.14.128 -A
 </code></pre>
-<h4 id="nfs"><a class="header" href="#nfs"><mark class="hltr-cyan">NFS</mark></a></h4>
+<h4 id="nfs"><a class="header" href="#nfs">NFS</a></h4>
 <p>Port 111 and 2049
 default config is found in <code>/etc/exports</code></p>
-<h5 id="dangerous-settings-1"><a class="header" href="#dangerous-settings-1"><mark class="hltr-orange">Dangerous settings</mark></a></h5>
-<p>![[Pasted image 20240725055046.png]]</p>
-<h5 id="footprinting-the-service-1"><a class="header" href="#footprinting-the-service-1"><mark class="hltr-orange">Footprinting the service</mark></a></h5>
+<h5 id="footprinting-the-service-1"><a class="header" href="#footprinting-the-service-1">Footprinting the service</a></h5>
 <ul>
 <li>Nmap</li>
 </ul>
@@ -298,9 +294,8 @@ default config is found in <code>/etc/exports</code></p>
 <pre><code>mkdir target-NFS
 sudo mount -t nfs 10.129.14.128:/ ./target-NFS/ -o nolock
 </code></pre>
-<h4 id="dns"><a class="header" href="#dns"><mark class="hltr-cyan">DNS</mark></a></h4>
-<p>![[Pasted image 20240725164542.png]]
-Reference: <a href="https://www.youtube.com/watch?v=HnUDtycXSNE">DNS Explained in details</a></p>
+<h4 id="dns"><a class="header" href="#dns">DNS</a></h4>
+<p>Reference: <a href="https://www.youtube.com/watch?v=HnUDtycXSNE">DNS Explained in details</a></p>
 <p>An entry in a DNS nameserver, also known as a DNS record, contains specific information about a domain and its associated services. Each entry in a DNS nameserver is formatted in a way that helps DNS resolvers understand how to handle requests for that domain. Here’s a breakdown of what an entry typically looks like:</p>
 <pre><code>&lt;NAME&gt; &lt;TTL&gt; &lt;CLASS&gt; &lt;TYPE&gt; &lt;DATA&gt;
 </code></pre>
@@ -312,8 +307,7 @@ Reference: <a href="https://www.youtube.com/watch?v=HnUDtycXSNE">DNS Explained i
 <li><code>example.com. 3600 IN MX 10 mail.example.com.</code></li>
 <li><code>example.com. 3600 IN NS ns1.example.com.</code></li>
 </ul>
-<p>![[Pasted image 20240725170035.png]]</p>
-<h5 id="footprinting-the-service-2"><a class="header" href="#footprinting-the-service-2"><mark class="hltr-orange">Footprinting the service</mark></a></h5>
+<h5 id="footprinting-the-service-2"><a class="header" href="#footprinting-the-service-2">Footprinting the service</a></h5>
 <ul>
 <li>DIG - NS Query
 the DNS server can be queried as to which other name servers are known.</li>
@@ -322,7 +316,7 @@ the DNS server can be queried as to which other name servers are known.</li>
 </code></pre>
 <ul>
 <li>DIG - ANY Query
-We can use the option <code>ANY</code> to view all available records. This will cause the server to show us all available entries that it is willing to disclose. It is important to note that <mark class="hltr-red">not all entries from the zones will be shown</mark>.</li>
+We can use the option <code>ANY</code> to view all available records. This will cause the server to show us all available entries that it is willing to disclose. It is important to note that not all entries from the zones will be shown.</li>
 </ul>
 <pre><code>dig any inlanefreight.htb @10.129.14.128
 </code></pre>
@@ -346,17 +340,16 @@ Zone transfer refers to the transfer of zones to another server in DNS, which ge
 <pre><code>dnsenum --dnsserver 10.129.11.220  --enum -p 0 -s 0 -o subdomains.txt -f /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt inlanefreight.htb
 </code></pre>
 <p>(You might also use <code>/usr/share/wordlists/seclists/Discovery/DNS/fierce-hostlist.txt</code>)</p>
-<h4 id="smtp"><a class="header" href="#smtp"><mark class="hltr-cyan">SMTP</mark></a></h4>
+<h4 id="smtp"><a class="header" href="#smtp">SMTP</a></h4>
 <p>SMTP runs on port 25 (TCP)</p>
-<h5 id="smtp-commands"><a class="header" href="#smtp-commands"><mark class="hltr-orange">SMTP commands</mark></a></h5>
-<p>![[Pasted image 20240725204115.png]]</p>
+<h5 id="smtp-commands"><a class="header" href="#smtp-commands">SMTP commands</a></h5>
 <ul>
 <li>connecting to the smtp server</li>
 </ul>
 <pre><code>telnet 10.129.14.128 25
 </code></pre>
 <p>❗: Sometimes we may have to work through a web proxy. We can also make this web proxy connect to the SMTP server. The command that we would send would then look something like this: <code>CONNECT 10.129.14.128:25 HTTP/1.0</code></p>
-<h5 id="footprinting"><a class="header" href="#footprinting"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<h5 id="footprinting"><a class="header" href="#footprinting">Footprinting</a></h5>
 <ul>
 <li>Nmap - Open Relay</li>
 </ul>
@@ -368,15 +361,12 @@ There is a metasploit module for this</li>
 </ul>
 <pre><code>search scanner/smtp/smtp_enum
 </code></pre>
-<h4 id="imap--pop3"><a class="header" href="#imap--pop3"><mark class="hltr-cyan">IMAP / POP3</mark></a></h4>
+<h4 id="imap--pop3"><a class="header" href="#imap--pop3">IMAP / POP3</a></h4>
 <p>IMAP (TCP 143)
 POP3 (TCP 110)</p>
-<h5 id="imap-commands"><a class="header" href="#imap-commands"><mark class="hltr-orange">IMAP Commands</mark></a></h5>
-<p>![[Pasted image 20240727033900.png]]
-<mark class="hltr-red">(Chatgpt is really helpful for writing imap commands)</mark></p>
-<h5 id="pop3-commands"><a class="header" href="#pop3-commands"><mark class="hltr-orange">POP3 Commands</mark></a></h5>
-<p>![[Pasted image 20240727034005.png]]</p>
-<h5 id="footprinting-the-service-3"><a class="header" href="#footprinting-the-service-3"><mark class="hltr-orange">Footprinting the service</mark></a></h5>
+<h5 id="imap-commands"><a class="header" href="#imap-commands">IMAP Commands</a></h5>
+<p>(Chatgpt is really helpful for writing imap commands)</p>
+<h5 id="footprinting-the-service-3"><a class="header" href="#footprinting-the-service-3">Footprinting the service</a></h5>
 <ul>
 <li>Nmap</li>
 </ul>
@@ -397,9 +387,9 @@ POP3 (TCP 110)</p>
 </ul>
 <pre><code>openssl s_client -connect 10.129.14.128:imaps
 </code></pre>
-<h4 id="snmp"><a class="header" href="#snmp"><mark class="hltr-cyan">SNMP</mark></a></h4>
+<h4 id="snmp"><a class="header" href="#snmp">SNMP</a></h4>
 <p>SNMP (UDP 161)</p>
-<h5 id="snmp-versions"><a class="header" href="#snmp-versions"><mark class="hltr-orange">SNMP Versions</mark></a></h5>
+<h5 id="snmp-versions"><a class="header" href="#snmp-versions">SNMP Versions</a></h5>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -412,7 +402,7 @@ POP3 (TCP 110)</p>
 </tbody>
 </table>
 </div>
-<h5 id="footprinting-1"><a class="header" href="#footprinting-1"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<h5 id="footprinting-1"><a class="header" href="#footprinting-1">Footprinting</a></h5>
 <p>Tools:</p>
 <ul>
 <li>snmpwalk -&gt; query the OIDs with their information (once we know the snmp version that is running on the server)</li>
@@ -424,34 +414,30 @@ POP3 (TCP 110)</p>
 </ul>
 <pre><code>onesixtyone -c /usr/share/seclists/Discovery/SNMP/snmp.txt 10.129.14.128
 </code></pre>
-<p>![[Pasted image 20240729121808.png]]
-In this case <code>backup</code> is the community string</p>
+<p>In this case <code>backup</code> is the community string</p>
 <ul>
 <li>braa
 Once we know a community string, we can use it with <a href="https://github.com/mteg/braa">braa</a> to brute-force the individual OIDs and enumerate the information behind them.</li>
 </ul>
-<h4 id="mysql"><a class="header" href="#mysql"><mark class="hltr-cyan">mysql</mark></a></h4>
-<h5 id="footprinting-2"><a class="header" href="#footprinting-2"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<h4 id="mysql"><a class="header" href="#mysql">mysql</a></h4>
+<h5 id="footprinting-2"><a class="header" href="#footprinting-2">Footprinting</a></h5>
 <ul>
 <li>scanning</li>
 </ul>
 <pre><code>sudo nmap 10.129.14.128 -sV -sC -p3306 --script mysql*
 </code></pre>
 <ul>
-<li>interacting with the database
-![[Pasted image 20240727103213.png]]</li>
+<li>interacting with the database</li>
 </ul>
-<p>The most important databases for the MySQL server are the <code>system schema</code> (<mark class="hltr-green">sys</mark>) and <code>information schema</code> (<mark class="hltr-green">information_schema</mark>).
+<p>The most important databases for the MySQL server are the <code>system schema</code> (sys) and <code>information schema</code> (information_schema).
 The system schema contains tables, information, and metadata necessary for management.</p>
 <pre><code>use sys;
 show tables;
 select host, unique_users from host_summary;
 </code></pre>
-<h4 id="mssql"><a class="header" href="#mssql"><mark class="hltr-cyan">MSSQL</mark></a></h4>
+<h4 id="mssql"><a class="header" href="#mssql">MSSQL</a></h4>
 <p>mssql (TCP 1433)</p>
-<h5 id="mssql-databases"><a class="header" href="#mssql-databases"><mark class="hltr-orange">MSSQL Databases</mark></a></h5>
-<p>![[Pasted image 20240727113837.png]]</p>
-<h5 id="footprinting-3"><a class="header" href="#footprinting-3"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<h5 id="footprinting-3"><a class="header" href="#footprinting-3">Footprinting</a></h5>
 <ul>
 <li>Nmap</li>
 </ul>
@@ -479,14 +465,14 @@ run
 </ul>
 <pre><code class="language-cmd-session">C:&gt; sqlcmd -S 10.129.20.13 -U username -P Password123
 </code></pre>
-<p>MSSQL uses <mark class="hltr-red">T-SQL</mark> so the syntax is different from mysql
+<p>MSSQL uses T-SQL so the syntax is different from mysql
 here’s how to list all available databases (you should compare the results with the default databases list shown above)</p>
 <pre><code>select name from sys.databases
 </code></pre>
-<h4 id="oracle-tns"><a class="header" href="#oracle-tns"><mark class="hltr-cyan">Oracle TNS</mark></a></h4>
+<h4 id="oracle-tns"><a class="header" href="#oracle-tns">Oracle TNS</a></h4>
 <p>The <code>Oracle Transparent Network Substrate</code> (<code>TNS</code>) server is a communication protocol that facilitates communication between Oracle databases and applications over networks</p>
 <p>By default, the listener listens for incoming connections on the <code>TCP/1521</code> port</p>
-<h5 id="footprinting-4"><a class="header" href="#footprinting-4"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<h5 id="footprinting-4"><a class="header" href="#footprinting-4">Footprinting</a></h5>
 <ul>
 <li>Nmap</li>
 </ul>
@@ -541,10 +527,10 @@ On Windows:</li>
 <pre><code class="language-shell-session">curl -X GET http://10.129.204.235/testing.txt
 </code></pre>
 <p>if this worked then we can upload a web shell to the target</p>
-<h4 id="ipmi"><a class="header" href="#ipmi"><mark class="hltr-cyan">IPMI</mark></a></h4>
+<h4 id="ipmi"><a class="header" href="#ipmi">IPMI</a></h4>
 <p><a href="https://www.thomas-krenn.com/en/wiki/IPMI_Basics">Intelligent Platform Management Interface</a> IPMI (UDP 623)
 IPMI provides sysadmins with the ability to manage and monitor systems even if they are powered off or in an unresponsive state. It operates using a direct network connection to the system’s hardware and does not require access to the operating system via a login shell</p>
-<h5 id="baseboard-management-controller-bmc"><a class="header" href="#baseboard-management-controller-bmc"><mark class="hltr-orange">Baseboard Management Controller (BMC)</mark></a></h5>
+<h5 id="baseboard-management-controller-bmc"><a class="header" href="#baseboard-management-controller-bmc">Baseboard Management Controller (BMC)</a></h5>
 <ul>
 <li>A micro-controller and essential component of an IPMI.</li>
 <li>The most common BMCs we often see during internal penetration tests are HP iLO, Dell DRAC, and Supermicro IPMI.</li>
@@ -552,7 +538,7 @@ IPMI provides sysadmins with the ability to manage and monitor systems even if t
 <li>Gaining access to a BMC is nearly equivalent to physical access to a system.</li>
 <li>Many BMCs expose a web-based management console.</li>
 </ul>
-<h5 id="footprinting-5"><a class="header" href="#footprinting-5"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<h5 id="footprinting-5"><a class="header" href="#footprinting-5">Footprinting</a></h5>
 <ul>
 <li>Nmap</li>
 </ul>
@@ -566,15 +552,12 @@ set rhosts 10.129.42.195
 run
 </code></pre>
 <ul>
-<li>
-<p>Default passwords
-![[Pasted image 20240728184032.png]]
-When dealing with BMCs, these default passwords may gain us access to the web console or even command line access via SSH or Telnet.</p>
-</li>
-<li>
-<p>Dangerous settings
-If default credentials do not work to access a BMC, we can turn to a <a href="http://fish2.com/ipmi/remote-pw-cracking.html">flaw</a> in the RAKP protocol in <mark class="hltr-red">IPMI 2.0</mark>. During the authentication process, the server sends a salted SHA1 or MD5 hash of the user’s password to the client before authentication takes place. This can be leveraged to obtain the password hash for ANY valid user account on the BMC.</p>
-</li>
+<li>Default passwords</li>
+</ul>
+<p>When dealing with BMCs, these default passwords may gain us access to the web console or even command line access via SSH or Telnet.</p>
+<ul>
+<li>Dangerous settings
+If default credentials do not work to access a BMC, we can turn to a <a href="http://fish2.com/ipmi/remote-pw-cracking.html">flaw</a> in the RAKP protocol in IPMI 2.0. During the authentication process, the server sends a salted SHA1 or MD5 hash of the user’s password to the client before authentication takes place. This can be leveraged to obtain the password hash for ANY valid user account on the BMC.</li>
 </ul>
 <p>These password hashes can then be cracked offline using a dictionary attack using <code>Hashcat</code> mode <code>7300</code>. In the event of an HP iLO using a factory default password, we can use this Hashcat mask attack command <code>hashcat -m 7300 ipmi.txt -a 3 ?1?1?1?1?1?1?1?1 -1 ?d?u</code> which tries all combinations of upper case letters and numbers for an eight-character password.</p>
 <ul>
@@ -596,27 +579,27 @@ once we retrieve the hashes returned by metasploit we can crack those using john
     --session=ipmi \
     hashes.john
 </code></pre>
-<h4 id="ssh"><a class="header" href="#ssh"><mark class="hltr-cyan">SSH</mark></a></h4>
+<h4 id="ssh"><a class="header" href="#ssh">SSH</a></h4>
 <p>ssh (TCP 22)</p>
-<h5 id="footprinting-6"><a class="header" href="#footprinting-6"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<h5 id="footprinting-6"><a class="header" href="#footprinting-6">Footprinting</a></h5>
 <pre><code>ssh-audit.py 10.129.14.132
 </code></pre>
 <p>Allowing password authentication allows us to brute-force a known username for possible passwords</p>
-<h4 id="rsync"><a class="header" href="#rsync"><mark class="hltr-cyan">Rsync</mark></a></h4>
+<h4 id="rsync"><a class="header" href="#rsync">Rsync</a></h4>
 <p><a href="https://linux.die.net/man/1/rsync">Rsync</a> is a fast and efficient tool for locally and remotely copying files. (By default, it uses port TCP <code>873</code>)</p>
 <p>Rsync can be abused, most notably by listing the contents of a shared folder on a target server and retrieving files. This can sometimes be done without authentication. Other times we will need credentials. If you find credentials during a pentest and run into Rsync on an internal (or external) host, it is always worth checking for password re-use as you may be able to pull down some sensitive files that could be used to gain remote access to the target.</p>
-<h5 id="probing-for-accessible-shares"><a class="header" href="#probing-for-accessible-shares"><mark class="hltr-orange">Probing for Accessible Shares</mark></a></h5>
+<h5 id="probing-for-accessible-shares"><a class="header" href="#probing-for-accessible-shares">Probing for Accessible Shares</a></h5>
 <pre><code>nc -nv 127.0.0.1 873
 </code></pre>
 <p>then</p>
 <pre><code>#list
 </code></pre>
 <p>We do this to list shares</p>
-<h5 id="enumerating-an-open-share"><a class="header" href="#enumerating-an-open-share"><mark class="hltr-orange">Enumerating an Open Share</mark></a></h5>
+<h5 id="enumerating-an-open-share"><a class="header" href="#enumerating-an-open-share">Enumerating an Open Share</a></h5>
 <pre><code>rsync -av --list-only rsync://127.0.0.1/dev
 </code></pre>
 <p>If Rsync is configured to use SSH to transfer files, we could modify our commands to include the <code>-e ssh</code> flag, or <code>-e "ssh -p2222"</code> if a non-standard port is in use for SSH</p>
-<h4 id="r-services"><a class="header" href="#r-services"><mark class="hltr-cyan">R-Services</mark></a></h4>
+<h4 id="r-services"><a class="header" href="#r-services">R-Services</a></h4>
 <ul>
 <li>R-Services are a suite of services hosted to enable remote access or issue commands between Unix hosts over TCP/IP.</li>
 <li><code>r-services</code> were the de facto standard for remote access between Unix operating systems until they were replaced by the Secure Shell (<code>SSH</code>) protocols and commands due to inherent security flaws built into them</li>
@@ -625,8 +608,7 @@ once we retrieve the hashes returned by metasploit we can crack those using john
 <p><code>R-services</code> span across the ports <code>512</code>, <code>513</code>, and <code>514</code> and are only accessible through a suite of programs known as <code>r-commands</code>.</p>
 <ul>
 <li>
-<p>R-Services Commands
-![[Pasted image 20240728193938.png]]</p>
+<p>R-Services Commands</p>
 </li>
 <li>
 <p>Scanning for R-Services</p>
@@ -650,10 +632,10 @@ This will give us more information</li>
 </ul>
 <pre><code>rusers -al 10.0.17.5
 </code></pre>
-<h4 id="rdp"><a class="header" href="#rdp"><mark class="hltr-cyan">RDP</mark></a></h4>
+<h4 id="rdp"><a class="header" href="#rdp">RDP</a></h4>
 <p>The <a href="https://docs.microsoft.com/en-us/troubleshoot/windows-server/remote/understanding-remote-desktop-protocol">Remote Desktop Protocol</a> (<code>RDP</code>) is a protocol developed by Microsoft.</p>
 <p>typically utilizing TCP port 3389 as the transport protocol. However, the connectionless UDP protocol can use port 3389 also for remote administration.</p>
-<h5 id="footprinting-7"><a class="header" href="#footprinting-7"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<h5 id="footprinting-7"><a class="header" href="#footprinting-7">Footprinting</a></h5>
 <ul>
 <li>Nmap</li>
 </ul>
@@ -664,11 +646,11 @@ This will give us more information</li>
 </ul>
 <pre><code>xfreerdp /u:cry0l1t3 /p:"P455w0rd!" /v:10.129.201.248
 </code></pre>
-<h4 id="winrm"><a class="header" href="#winrm"><mark class="hltr-cyan">WinRM</mark></a></h4>
+<h4 id="winrm"><a class="header" href="#winrm">WinRM</a></h4>
 <p>The Windows Remote Management (<code>WinRM</code>) is a simple Windows integrated remote management protocol based on the command line.
 WinRM uses the Simple Object Access Protocol (<code>SOAP</code>) to establish connections to remote hosts and their applications.</p>
 <p>WinRM relies on <code>TCP</code> ports <code>5985</code> and <code>5986</code> for communication, with the last port <code>5986 using HTTPS</code></p>
-<h5 id="footprinting-8"><a class="header" href="#footprinting-8"><mark class="hltr-orange">Footprinting</mark></a></h5>
+<h5 id="footprinting-8"><a class="header" href="#footprinting-8">Footprinting</a></h5>
 <ul>
 <li>Nmap</li>
 </ul>
@@ -679,16 +661,16 @@ WinRM uses the Simple Object Access Protocol (<code>SOAP</code>) to establish co
 </ul>
 <pre><code>evil-winrm -i 10.129.201.248 -u Cry0l1t3 -p P455w0rD!
 </code></pre>
-<h4 id="wmi"><a class="header" href="#wmi"><mark class="hltr-cyan">WMI</mark></a></h4>
+<h4 id="wmi"><a class="header" href="#wmi">WMI</a></h4>
 <ul>
 <li>Windows Management Instrumentation (<code>WMI</code>) allows read and write access to almost all settings on Windows systems. Understandably, this makes it the most critical interface in the Windows environment.</li>
 <li>WMI is typically accessed via PowerShell, VBScript, or the Windows Management Instrumentation Console (<code>WMIC</code>). WMI is not a single program but consists of several programs and various databases, also known as repositories.</li>
 </ul>
-<h5 id="footprinting-the-service-4"><a class="header" href="#footprinting-the-service-4"><mark class="hltr-orange">Footprinting the Service</mark></a></h5>
+<h5 id="footprinting-the-service-4"><a class="header" href="#footprinting-the-service-4">Footprinting the Service</a></h5>
 <p>The initialization of the WMI communication always takes place on <code>TCP</code> port <code>135</code>, and after the successful establishment of the connection, the communication is moved to a random port. For example, the program <a href="https://github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py">wmiexec.py</a> from the Impacket toolkit can be used for this.</p>
 <pre><code>wmiexec.py Cry0l1t3:"P455w0rD!"@10.129.201.248 "hostname"
 </code></pre>
-<h2 id="introduction-to-nmap"><a class="header" href="#introduction-to-nmap"><mark class="hltr-pink">Introduction to Nmap</mark></a></h2>
+<h2 id="introduction-to-nmap"><a class="header" href="#introduction-to-nmap">Introduction to Nmap</a></h2>
 <p>There are many scanning types that can be done with nmap</p>
 <pre><code>SCAN TECHNIQUES:
   -sS/sT/sA/sW/sM: TCP SYN/Connect()/ACK/Window/Maimon scans
@@ -701,7 +683,7 @@ WinRM uses the Simple Object Access Protocol (<code>SOAP</code>) to establish co
   -b &lt;FTP relay host&gt;: FTP bounce scan
 </code></pre>
 <p>The TCP SYN scan is the default:
-<em><mark class="hltr-yellow">Quick overview</mark></em>
+<em>Quick overview</em>
 Our machine first sends a TCP SYN segment</p>
 <div class="table-wrapper">
 <table>
@@ -716,46 +698,41 @@ Our machine first sends a TCP SYN segment</p>
 </table>
 </div>
 <hr>
-<h2 id="host-discovery"><a class="header" href="#host-discovery"><mark class="hltr-pink">Host Discovery</mark></a></h2>
-<h3 id="scan-network-range"><a class="header" href="#scan-network-range"><mark class="hltr-cyan">Scan network range</mark></a></h3>
+<h2 id="host-discovery"><a class="header" href="#host-discovery">Host Discovery</a></h2>
+<h3 id="scan-network-range"><a class="header" href="#scan-network-range">Scan network range</a></h3>
 <p>Discovering online systems (ping sweep)</p>
 <pre><code>sudo nmap 10.129.2.0/24 -sn -oA tnet | grep for | cut -d" " -f5
 </code></pre>
-<h3 id="scan-a-list-of-ips"><a class="header" href="#scan-a-list-of-ips"><mark class="hltr-cyan">Scan a list of IPs</mark></a></h3>
+<h3 id="scan-a-list-of-ips"><a class="header" href="#scan-a-list-of-ips">Scan a list of IPs</a></h3>
 <p>In case we have a list of IP addresses in a file we can scan those by giving the file to nmap</p>
 <pre><code>sudo nmap -sn -oA tnet -iL hosts.lst | grep for | cut -d" " -f5
 </code></pre>
 <hr>
-<h2 id="host-and-port-scanning"><a class="header" href="#host-and-port-scanning"><mark class="hltr-pink">Host and Port Scanning</mark></a></h2>
-<h3 id="port-states"><a class="header" href="#port-states"><mark class="hltr-cyan">Port states</mark></a></h3>
-<p>![[Pasted image 20240721030658.png]]</p>
-<h3 id="scanning-the-top-100-ports"><a class="header" href="#scanning-the-top-100-ports"><mark class="hltr-cyan">scanning the top 100 ports</mark></a></h3>
+<h2 id="host-and-port-scanning"><a class="header" href="#host-and-port-scanning">Host and Port Scanning</a></h2>
+<h3 id="scanning-the-top-100-ports"><a class="header" href="#scanning-the-top-100-ports">scanning the top 100 ports</a></h3>
 <pre><code>sudo nmap 10.129.2.28 --top-ports=100
 </code></pre>
 <p>or</p>
 <pre><code>sudo nmap -F 10.129.2.28
 </code></pre>
-<h3 id="scanning-all-ports"><a class="header" href="#scanning-all-ports"><mark class="hltr-cyan">scanning all ports</mark></a></h3>
+<h3 id="scanning-all-ports"><a class="header" href="#scanning-all-ports">scanning all ports</a></h3>
 <pre><code>sudo nmap 10.129.2.28 -p-
 </code></pre>
-<h3 id="scanning-a-port-range"><a class="header" href="#scanning-a-port-range"><mark class="hltr-cyan">scanning a port range</mark></a></h3>
+<h3 id="scanning-a-port-range"><a class="header" href="#scanning-a-port-range">scanning a port range</a></h3>
 <pre><code>sudo nmap 10.129.2.28 -p22-445
 </code></pre>
-<h3 id="udp-scan"><a class="header" href="#udp-scan"><mark class="hltr-cyan">UDP scan</mark></a></h3>
+<h3 id="udp-scan"><a class="header" href="#udp-scan">UDP scan</a></h3>
 <pre><code>sudo nmap -F -sU 10.129.2.28
 </code></pre>
 <hr>
-<h2 id="service-enumeration"><a class="header" href="#service-enumeration"><mark class="hltr-pink">Service enumeration</mark></a></h2>
+<h2 id="service-enumeration"><a class="header" href="#service-enumeration">Service enumeration</a></h2>
 <h3 id="banner-grabbing"><a class="header" href="#banner-grabbing">Banner grabbing</a></h3>
 <pre><code>nc -nv 10.129.2.28 25
 </code></pre>
 <hr>
-<h2 id="scripting-engine"><a class="header" href="#scripting-engine"><mark class="hltr-pink">Scripting engine</mark></a></h2>
-<p>![[Pasted image 20240721041835.png]]</p>
-<hr>
-<h2 id="firewall-and-idsips-evasion"><a class="header" href="#firewall-and-idsips-evasion"><mark class="hltr-pink">Firewall and IDS/IPS Evasion</mark></a></h2>
+<h2 id="firewall-and-idsips-evasion"><a class="header" href="#firewall-and-idsips-evasion">Firewall and IDS/IPS Evasion</a></h2>
 <p>When a port is shown as filtered, it can have several reasons. In most cases, firewalls have certain rules set to handle specific connections.</p>
-<h3 id="determine-firewalls-and-their-rules-ack-scan"><a class="header" href="#determine-firewalls-and-their-rules-ack-scan"><mark class="hltr-cyan">Determine Firewalls and Their Rules ACK scan</mark></a></h3>
+<h3 id="determine-firewalls-and-their-rules-ack-scan"><a class="header" href="#determine-firewalls-and-their-rules-ack-scan">Determine Firewalls and Their Rules ACK scan</a></h3>
 <p>Firewalls and IDS/IPS systems typically block incoming SYN packets making the usual SYN (-sS) and connect (-sT) scans ineffective.
 Thus using an <strong>ACK scan</strong> (-sA) might be a good idea because the firewall cannot determine whether the connection was first established from the external network or the internal network.</p>
 <p>(You should also enable the –packet-trace option, read the SA R S or A in that section)</p>
@@ -771,10 +748,10 @@ Thus using an <strong>ACK scan</strong> (-sA) might be a good idea because the f
 </tbody>
 </table>
 </div>
-<h3 id="scan-by-using-different-source-ip"><a class="header" href="#scan-by-using-different-source-ip"><mark class="hltr-cyan">Scan by using different source ip</mark></a></h3>
+<h3 id="scan-by-using-different-source-ip"><a class="header" href="#scan-by-using-different-source-ip">Scan by using different source ip</a></h3>
 <pre><code>sudo nmap 10.129.2.28 -n -Pn -p445 -S 10.129.2.200 -e tun0
 </code></pre>
-<h3 id="dns-proxying"><a class="header" href="#dns-proxying"><mark class="hltr-cyan">DNS Proxying</mark></a></h3>
+<h3 id="dns-proxying"><a class="header" href="#dns-proxying">DNS Proxying</a></h3>
 <h4 id="syn-scan-from-dns-port"><a class="header" href="#syn-scan-from-dns-port">SYN-Scan from DNS port</a></h4>
 <p>If a port comes up as <code>filtered</code>, you can try to scan it using 53 (DNS) as a source port number</p>
 <pre><code>sudo nmap 10.129.2.28 -p50000 -sS -Pn -n --disable-arp-ping --packet-trace --source-port 53
@@ -783,7 +760,7 @@ Thus using an <strong>ACK scan</strong> (-sA) might be a good idea because the f
 <pre><code>nc -nv --source-port 53 10.129.2.28 50000
 </code></pre>
 <hr>
-<h2 id="references"><a class="header" href="#references"><mark class="hltr-pink">References</mark></a></h2>
+<h2 id="references"><a class="header" href="#references">References</a></h2>
 <ul>
 <li><a href="https://nmap.org/book/man-port-scanning-techniques.html">Nmap scan types</a></li>
 <li><a href="https://www.nmap.org">nmap docs</a></li>
