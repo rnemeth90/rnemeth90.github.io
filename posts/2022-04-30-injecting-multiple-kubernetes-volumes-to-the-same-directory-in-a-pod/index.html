@@ -123,7 +123,7 @@ Mounting a configmap or secret in a Volume is relatively straightforward (for an
 </span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nt>secretName</span><span class=p>:</span><span class=w> </span><span class=l>hello-world-credentials</span><span class=w>
 </span></span></span></code></pre></div><p>Now, if we deploy this, we can see that we have two files in the ‘config’ directory of the pod, rather than a subdirectory for each config/secret:</p><p><a href=https://geekyryan.com/wp-content/uploads/2022/04/image-1.png class=external-link target=_blank rel=noopener></a></p><p>In this example, the key application.properties from the configuration map will be mounted to a file with the same name under /config/, and the secret value credentials.properties will be mounted to a second file under that directory. Both files will be read-only to the application.</p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
 2012 -
-2025
+2026
 Ryan Nemeth
 ·
 Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>

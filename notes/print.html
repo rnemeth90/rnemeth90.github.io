@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-055231ff.js";
+            window.path_to_searchindex_js = "searchindex-9c1f2d1e.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-a641b52b.js"></script>
+        <script src="toc-daccd387.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -203,6 +203,8 @@
 <li><a href="#multi-line-strings">yaml</a></li>
 <li><a href="#ffuf-cheatsheet">ffuf</a></li>
 <li><a href="#hashcat">hashcat</a></li>
+<li><a href="#wafw00f-cheatsheet">wafw00f</a></li>
+<li><a href="#nikto-cheatsheet">nikto</a></li>
 </ul>
 </li>
 <li><a href="clouds/README.html">Clouds</a>
@@ -567,6 +569,10 @@
 <li><a href="#enumeration">Enumeration</a></li>
 <li><a href="#footprinting-9">footprinting</a></li>
 <li><a href="#hydra-1">Brute-Forcing</a></li>
+<li><a href="#cve-common-vulnerabilities-and-exposures">CVE</a></li>
+<li><a href="#cvss-common-vulnerability-scoring-system">CVSS</a></li>
+<li><a href="#openvas">openvas</a></li>
+<li><a href="#nessus">nessus</a></li>
 </ul>
 </li>
 </ul>
@@ -1592,6 +1598,297 @@ SELECT name, sid FROM sys.sql_logins
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="hashcat"><a href="#hashcat" class="header">hashcat</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="wafw00f-cheatsheet"><a class="header" href="#wafw00f-cheatsheet">wafw00f Cheatsheet</a></h1>
+<h2 id="basic-usage"><a class="header" href="#basic-usage">Basic Usage</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>wafw00f &lt;url&gt;</code></td><td>Basic WAF detection scan</td></tr>
+<tr><td><code>wafw00f https://example.com</code></td><td>Scan HTTPS site</td></tr>
+<tr><td><code>wafw00f http://example.com</code></td><td>Scan HTTP site</td></tr>
+<tr><td><code>wafw00f example.com</code></td><td>Scan domain (auto-detects protocol)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="output-options"><a class="header" href="#output-options">Output Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-v</code></td><td>Verbose output</td></tr>
+<tr><td><code>-a</code></td><td>List all WAFs that were tested</td></tr>
+<tr><td><code>-r</code></td><td>Follow redirects</td></tr>
+<tr><td><code>-V</code></td><td>Version information</td></tr>
+<tr><td><code>-h</code></td><td>Show help message</td></tr>
+<tr><td><code>-l</code></td><td>List all WAFs that wafw00f can detect</td></tr>
+<tr><td><code>-p &lt;port&gt;</code></td><td>Use a different port (default: 80/443)</td></tr>
+<tr><td><code>-t &lt;timeout&gt;</code></td><td>Set timeout (default: 10 seconds)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="request-options"><a class="header" href="#request-options">Request Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-H &lt;header&gt;</code></td><td>Add custom header (can be used multiple times)</td></tr>
+<tr><td><code>-c &lt;cookie&gt;</code></td><td>Add cookie to request</td></tr>
+<tr><td><code>-A &lt;user-agent&gt;</code></td><td>Set custom user agent</td></tr>
+<tr><td><code>-m &lt;method&gt;</code></td><td>HTTP method to use (default: GET)</td></tr>
+<tr><td><code>-d &lt;data&gt;</code></td><td>POST data</td></tr>
+<tr><td><code>-X &lt;method&gt;</code></td><td>HTTP method (GET, POST, PUT, DELETE, etc.)</td></tr>
+<tr><td><code>--proxy &lt;proxy&gt;</code></td><td>Use proxy (format: http://host:port)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="advanced-options"><a class="header" href="#advanced-options">Advanced Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-f</code></td><td>Test for false positives</td></tr>
+<tr><td><code>--findall</code></td><td>Find all WAFs (don’t stop at first match)</td></tr>
+<tr><td><code>--json</code></td><td>Output in JSON format</td></tr>
+<tr><td><code>--xml</code></td><td>Output in XML format</td></tr>
+<tr><td><code>--csv</code></td><td>Output in CSV format</td></tr>
+<tr><td><code>-o &lt;file&gt;</code></td><td>Output to file</td></tr>
+<tr><td><code>--format &lt;format&gt;</code></td><td>Output format (normal, json, xml, csv)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="useful-examples-3"><a class="header" href="#useful-examples-3">Useful Examples</a></h2>
+<h3 id="basic-waf-detection"><a class="header" href="#basic-waf-detection">Basic WAF Detection</a></h3>
+<pre><code>wafw00f https://example.com
+</code></pre>
+<h3 id="verbose-output-2"><a class="header" href="#verbose-output-2">Verbose Output</a></h3>
+<pre><code>wafw00f -v https://example.com
+</code></pre>
+<h3 id="list-all-detectable-wafs"><a class="header" href="#list-all-detectable-wafs">List All Detectable WAFs</a></h3>
+<pre><code>wafw00f -l
+</code></pre>
+<h3 id="scan-with-custom-port"><a class="header" href="#scan-with-custom-port">Scan with Custom Port</a></h3>
+<pre><code>wafw00f -p 8080 http://example.com
+</code></pre>
+<h3 id="scan-with-custom-user-agent"><a class="header" href="#scan-with-custom-user-agent">Scan with Custom User Agent</a></h3>
+<pre><code>wafw00f -A "Mozilla/5.0" https://example.com
+</code></pre>
+<h3 id="scan-with-custom-headers"><a class="header" href="#scan-with-custom-headers">Scan with Custom Headers</a></h3>
+<pre><code>wafw00f -H "X-Forwarded-For: 127.0.0.1" https://example.com
+</code></pre>
+<h3 id="scan-with-cookie"><a class="header" href="#scan-with-cookie">Scan with Cookie</a></h3>
+<pre><code>wafw00f -c "session=abc123" https://example.com
+</code></pre>
+<h3 id="scan-through-proxy"><a class="header" href="#scan-through-proxy">Scan Through Proxy</a></h3>
+<pre><code>wafw00f --proxy http://127.0.0.1:8080 https://example.com
+</code></pre>
+<h3 id="post-request-scan"><a class="header" href="#post-request-scan">POST Request Scan</a></h3>
+<pre><code>wafw00f -X POST -d "data=test" https://example.com
+</code></pre>
+<h3 id="find-all-wafs-dont-stop-at-first-match"><a class="header" href="#find-all-wafs-dont-stop-at-first-match">Find All WAFs (Don’t Stop at First Match)</a></h3>
+<pre><code>wafw00f --findall https://example.com
+</code></pre>
+<h3 id="test-for-false-positives"><a class="header" href="#test-for-false-positives">Test for False Positives</a></h3>
+<pre><code>wafw00f -f https://example.com
+</code></pre>
+<h3 id="json-output"><a class="header" href="#json-output">JSON Output</a></h3>
+<pre><code>wafw00f --json https://example.com
+</code></pre>
+<h3 id="output-to-file"><a class="header" href="#output-to-file">Output to File</a></h3>
+<pre><code>wafw00f -o results.txt https://example.com
+</code></pre>
+<h3 id="follow-redirects"><a class="header" href="#follow-redirects">Follow Redirects</a></h3>
+<pre><code>wafw00f -r https://example.com
+</code></pre>
+<h3 id="comprehensive-scan-with-multiple-options"><a class="header" href="#comprehensive-scan-with-multiple-options">Comprehensive Scan with Multiple Options</a></h3>
+<pre><code>wafw00f -v -r -A "Mozilla/5.0" --findall -o results.txt https://example.com
+</code></pre>
+<h3 id="scan-with-custom-timeout"><a class="header" href="#scan-with-custom-timeout">Scan with Custom Timeout</a></h3>
+<pre><code>wafw00f -t 30 https://example.com
+</code></pre>
+<h3 id="show-all-tested-wafs"><a class="header" href="#show-all-tested-wafs">Show All Tested WAFs</a></h3>
+<pre><code>wafw00f -a https://example.com
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="nikto-cheatsheet"><a class="header" href="#nikto-cheatsheet">Nikto Cheatsheet</a></h1>
+<h2 id="basic-usage-1"><a class="header" href="#basic-usage-1">Basic Usage</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>nikto -h &lt;target&gt;</code></td><td>Basic scan of target host</td></tr>
+<tr><td><code>nikto -h &lt;target&gt; -p &lt;port&gt;</code></td><td>Scan specific port</td></tr>
+<tr><td><code>nikto -h &lt;target&gt; -p &lt;port1,port2&gt;</code></td><td>Scan multiple ports</td></tr>
+<tr><td><code>nikto -h &lt;target&gt; -p 80-443</code></td><td>Scan port range</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="output-options-1"><a class="header" href="#output-options-1">Output Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-o &lt;file&gt;</code></td><td>Output to file</td></tr>
+<tr><td><code>-Format txt</code></td><td>Text format (default)</td></tr>
+<tr><td><code>-Format csv</code></td><td>CSV format</td></tr>
+<tr><td><code>-Format htm</code></td><td>HTML format</td></tr>
+<tr><td><code>-Format xml</code></td><td>XML format</td></tr>
+<tr><td><code>-Format json</code></td><td>JSON format</td></tr>
+<tr><td><code>-nossl</code></td><td>Disable SSL checks</td></tr>
+<tr><td><code>-no404</code></td><td>Disable 404 checks (faster)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="authentication"><a class="header" href="#authentication">Authentication</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-id &lt;user:pass&gt;</code></td><td>HTTP basic authentication</td></tr>
+<tr><td><code>-mutate 1</code></td><td>Guess usernames/passwords</td></tr>
+<tr><td><code>-mutate 2</code></td><td>Guess directory names</td></tr>
+<tr><td><code>-mutate 3</code></td><td>Guess filenames</td></tr>
+<tr><td><code>-mutate 4</code></td><td>Guess usernames from Apache</td></tr>
+<tr><td><code>-mutate 5</code></td><td>Guess usernames from cgiwrap</td></tr>
+<tr><td><code>-mutate 6</code></td><td>Guess usernames from Windows</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="important-flags-1"><a class="header" href="#important-flags-1">Important Flags</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-Cgidirs none</code></td><td>Don’t scan CGI directories</td></tr>
+<tr><td><code>-Cgidirs all</code></td><td>Scan all CGI directories</td></tr>
+<tr><td><code>-Display 1</code></td><td>Show redirects</td></tr>
+<tr><td><code>-Display 2</code></td><td>Show cookies received</td></tr>
+<tr><td><code>-Display 3</code></td><td>Show all 200/404/403 responses</td></tr>
+<tr><td><code>-Display 4</code></td><td>Show URLs requiring authentication</td></tr>
+<tr><td><code>-Display D</code></td><td>Debug output</td></tr>
+<tr><td><code>-Display V</code></td><td>Verbose output</td></tr>
+<tr><td><code>-Tuning 1</code></td><td>Interesting files</td></tr>
+<tr><td><code>-Tuning 2</code></td><td>Misconfigurations</td></tr>
+<tr><td><code>-Tuning 3</code></td><td>Information disclosure</td></tr>
+<tr><td><code>-Tuning 4</code></td><td>Injection (XSS/Script/HTML)</td></tr>
+<tr><td><code>-Tuning 5</code></td><td>Remote file retrieval</td></tr>
+<tr><td><code>-Tuning 6</code></td><td>Denial of service</td></tr>
+<tr><td><code>-Tuning 7</code></td><td>Remote file execution</td></tr>
+<tr><td><code>-Tuning 8</code></td><td>SQL injection</td></tr>
+<tr><td><code>-Tuning 9</code></td><td>File upload</td></tr>
+<tr><td><code>-Tuning a</code></td><td>Authentication bypass</td></tr>
+<tr><td><code>-Tuning b</code></td><td>Software identification</td></tr>
+<tr><td><code>-Tuning c</code></td><td>Remote code execution</td></tr>
+<tr><td><code>-Tuning d</code></td><td>Denial of service (DoS)</td></tr>
+<tr><td><code>-Tuning e</code></td><td>Denial of service (DoS)</td></tr>
+<tr><td><code>-Tuning f</code></td><td>Fingerprinting</td></tr>
+<tr><td><code>-Tuning g</code></td><td>SQL injection</td></tr>
+<tr><td><code>-Tuning h</code></td><td>Remote file retrieval</td></tr>
+<tr><td><code>-Tuning i</code></td><td>Misconfigurations</td></tr>
+<tr><td><code>-Tuning j</code></td><td>Information disclosure</td></tr>
+<tr><td><code>-Tuning k</code></td><td>File upload</td></tr>
+<tr><td><code>-Tuning l</code></td><td>Local file inclusion</td></tr>
+<tr><td><code>-Tuning m</code></td><td>Remote file inclusion</td></tr>
+<tr><td><code>-Tuning n</code></td><td>Interesting files</td></tr>
+<tr><td><code>-Tuning o</code></td><td>OS command injection</td></tr>
+<tr><td><code>-Tuning p</code></td><td>Privilege escalation</td></tr>
+<tr><td><code>-Tuning q</code></td><td>Remote code execution</td></tr>
+<tr><td><code>-Tuning r</code></td><td>Remote file execution</td></tr>
+<tr><td><code>-Tuning s</code></td><td>SQL injection</td></tr>
+<tr><td><code>-Tuning t</code></td><td>Authentication bypass</td></tr>
+<tr><td><code>-Tuning u</code></td><td>Remote file retrieval</td></tr>
+<tr><td><code>-Tuning v</code></td><td>XSS</td></tr>
+<tr><td><code>-Tuning w</code></td><td>Information disclosure</td></tr>
+<tr><td><code>-Tuning x</code></td><td>XSS</td></tr>
+<tr><td><code>-Tuning y</code></td><td>XSS</td></tr>
+<tr><td><code>-Tuning z</code></td><td>XSS</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="proxy-and-ssl-options"><a class="header" href="#proxy-and-ssl-options">Proxy and SSL Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-useproxy &lt;url&gt;</code></td><td>Use HTTP proxy</td></tr>
+<tr><td><code>-ssl</code></td><td>Force SSL mode</td></tr>
+<tr><td><code>-nossl</code></td><td>Disable SSL checks</td></tr>
+<tr><td><code>-root</code></td><td>Prepend root value to all requests</td></tr>
+<tr><td><code>-timeout &lt;seconds&gt;</code></td><td>Request timeout (default 10)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="useful-examples-4"><a class="header" href="#useful-examples-4">Useful Examples</a></h2>
+<h3 id="basic-scan"><a class="header" href="#basic-scan">Basic Scan</a></h3>
+<pre><code>nikto -h example.com
+</code></pre>
+<h3 id="scan-specific-port-with-ssl"><a class="header" href="#scan-specific-port-with-ssl">Scan Specific Port with SSL</a></h3>
+<pre><code>nikto -h example.com -p 443 -ssl
+</code></pre>
+<h3 id="scan-with-authentication"><a class="header" href="#scan-with-authentication">Scan with Authentication</a></h3>
+<pre><code>nikto -h example.com -id admin:password
+</code></pre>
+<h3 id="output-to-html-file"><a class="header" href="#output-to-html-file">Output to HTML File</a></h3>
+<pre><code>nikto -h example.com -Format htm -o report.html
+</code></pre>
+<h3 id="scan-with-specific-tuning-sql-injection"><a class="header" href="#scan-with-specific-tuning-sql-injection">Scan with Specific Tuning (SQL Injection)</a></h3>
+<pre><code>nikto -h example.com -Tuning 8
+</code></pre>
+<h3 id="scan-with-multiple-tuning-options"><a class="header" href="#scan-with-multiple-tuning-options">Scan with Multiple Tuning Options</a></h3>
+<pre><code>nikto -h example.com -Tuning 3,4,8
+</code></pre>
+<h3 id="verbose-output-with-redirects"><a class="header" href="#verbose-output-with-redirects">Verbose Output with Redirects</a></h3>
+<pre><code>nikto -h example.com -Display V -Display 1
+</code></pre>
+<h3 id="scan-through-proxy-1"><a class="header" href="#scan-through-proxy-1">Scan Through Proxy</a></h3>
+<pre><code>nikto -h example.com -useproxy http://proxy.example.com:8080
+</code></pre>
+<h3 id="scan-with-custom-user-agent-1"><a class="header" href="#scan-with-custom-user-agent-1">Scan with Custom User Agent</a></h3>
+<pre><code>nikto -h example.com -useragent "Mozilla/5.0"
+</code></pre>
+<h3 id="scan-specific-cgi-directories"><a class="header" href="#scan-specific-cgi-directories">Scan Specific CGI Directories</a></h3>
+<pre><code>nikto -h example.com -Cgidirs /cgi-bin/
+</code></pre>
+<h3 id="scan-with-timeout"><a class="header" href="#scan-with-timeout">Scan with Timeout</a></h3>
+<pre><code>nikto -h example.com -timeout 30
+</code></pre>
+<h3 id="scan-multiple-ports"><a class="header" href="#scan-multiple-ports">Scan Multiple Ports</a></h3>
+<pre><code>nikto -h example.com -p 80,443,8080
+</code></pre>
+<h3 id="scan-with-mutations-directory-guessing"><a class="header" href="#scan-with-mutations-directory-guessing">Scan with Mutations (Directory Guessing)</a></h3>
+<pre><code>nikto -h example.com -mutate 2
+</code></pre>
+<h3 id="comprehensive-scan-with-all-options"><a class="header" href="#comprehensive-scan-with-all-options">Comprehensive Scan with All Options</a></h3>
+<pre><code>nikto -h example.com -p 80,443 -ssl -Format htm -o report.html -Display V -Tuning 1,2,3,4,5,6,7,8,9
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="clouds"><a class="header" href="#clouds">Clouds</a></h1>
 <p>Notes related to various cloud service providers.</p>
@@ -13425,7 +13722,7 @@ Oracle File Upload Test
 <li><a href="#securing-kube-apiserver">Securing kube-apiserver</a>
 <ul>
 <li><a href="#access-controls">Access Controls</a></li>
-<li><a href="#authentication">Authentication</a></li>
+<li><a href="#authentication-1">Authentication</a></li>
 </ul>
 </li>
 </ul>
@@ -13434,7 +13731,7 @@ Oracle File Upload Test
 <p><a href="#2-cluster-hardening">Cluster Hardening</a></p>
 <ul>
 <li><a href="#securing-access-to-the-kubeapi-server">Securing Access to the KubeAPI Server</a></li>
-<li><a href="#authentication">Authentication</a>
+<li><a href="#authentication-1">Authentication</a>
 <ul>
 <li><a href="#user-accounts">User accounts</a></li>
 <li><a href="#service-accounts">Service Accounts</a></li>
@@ -14804,7 +15101,7 @@ k8s:enc:aescbc:v1:key1:ܨt&gt;;8ܑ%TUIodEs*lsHGwjeF8S!Aqaj\Pq;9Ⱥ7dJe{B2=|p4#'B
 <li>kube-apiserver should only listen on an HTTPS endpoint. There was an option to host kube-apiserver on an HTTP endpoint, but this option has been deprecated as of 1.10 and removed in 1.22</li>
 <li>kube-apiserver should have auditing enabled</li>
 </ul>
-<h3 id="authentication"><a class="header" href="#authentication">Authentication</a></h3>
+<h3 id="authentication-1"><a class="header" href="#authentication-1">Authentication</a></h3>
 <ul>
 <li>One can authentication to the KubeAPI server using certificates or a kubeconfig file</li>
 </ul>
@@ -14896,7 +15193,7 @@ k8s:enc:aescbc:v1:key1:ܨt&gt;;8ܑ%TUIodEs*lsHGwjeF8S!Aqaj\Pq;9Ⱥ7dJe{B2=|p4#'B
 </code></pre>
 </li>
 </ul>
-<h2 id="authentication-1"><a class="header" href="#authentication-1">Authentication</a></h2>
+<h2 id="authentication-1-1"><a class="header" href="#authentication-1-1">Authentication</a></h2>
 <ul>
 <li>There are two types of accounts that would need access to a cluster: Humans and Machines. There is no such thing as a ‘user account’ primitive in Kubernetes.</li>
 </ul>
@@ -22369,7 +22666,7 @@ sudo apt-get -y install medusa
 <pre><code class="language-sh">medusa -h 192.168.1.100 -U usernames.txt -P passwords.txt -M ssh -f
 </code></pre>
 <p>Use <code>-F</code> to stop after first success on any host when targeting multiple hosts.</p>
-<h3 id="verbose-output-2"><a class="header" href="#verbose-output-2">Verbose Output</a></h3>
+<h3 id="verbose-output-3"><a class="header" href="#verbose-output-3">Verbose Output</a></h3>
 <p>Get detailed information about the attack progress:</p>
 <pre><code class="language-sh">medusa -h 192.168.1.100 -U usernames.txt -P passwords.txt -M ssh -v 4
 </code></pre>
@@ -23040,6 +23337,13 @@ ac
 <ul>
 <li><a href="#hydra-1">brute-forcing</a></li>
 <li><a href="infosec/htb/enumeration.html">enumeration</a></li>
+</ul>
+<h3 id="vulnerabilities"><a class="header" href="#vulnerabilities">Vulnerabilities</a></h3>
+<ul>
+<li><a href="#cve-common-vulnerabilities-and-exposures">cve</a></li>
+<li><a href="#cvss-common-vulnerability-scoring-system">cvss</a></li>
+<li><a href="#nessus">nessus</a></li>
+<li><a href="#openvas">openvas</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="enumeration"><a class="header" href="#enumeration">Enumeration</a></h1>
@@ -23784,6 +24088,96 @@ Authorization: Basic YWxpY2U6c2VjcmV0MTIz
 </ul>
 <pre><code class="language-shell-session">cupp -i
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="cve-common-vulnerabilities-and-exposures"><a class="header" href="#cve-common-vulnerabilities-and-exposures">CVE (Common Vulnerabilities and Exposures)</a></h1>
+<p>CVE is a publically available catalog of security issues sponsored by the United States Department of Homeland Security (DHS).</p>
+<h1 id="oval-open-vulnerability-and-assessment-language"><a class="header" href="#oval-open-vulnerability-and-assessment-language">OVAL (Open Vulnerability and Assessment Language)</a></h1>
+<ul>
+<li>OVAL is an international, community-driven effort to standardize how to assess and report upon the machine state of computer systems. It includes a language for specifying system details, a method for evaluating those details, and a reporting format for the results. OVAL provides a language for encoding system attributes and various types of content within the security community.</li>
+<li>The OVAL repo has over 7000 definitions for public use.</li>
+<li>The goal of the OVAL process is to have a 3 step structure during the assessment process:
+<ol>
+<li>Identify a systems’ configuration for testing</li>
+<li>Evaulate the current systems’ state</li>
+<li>Disclose the information in a report</li>
+</ol>
+</li>
+<li>OVAL definitions are recorded in XML</li>
+<li>The four main classes of OVAL definitions consist of:
+<ol>
+<li>Vulnerability Definitions</li>
+<li>Compliance Definitions</li>
+<li>Inventory Definitions</li>
+<li>Patch Definitions</li>
+</ol>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="cvss-common-vulnerability-scoring-system"><a class="header" href="#cvss-common-vulnerability-scoring-system">CVSS (Common Vulnerability Scoring System)</a></h1>
+<p>The Common Vulnerability Scoring System (CVSS) is a standardized framework for rating the severity of security vulnerabilities in software and hardware systems. It provides a numerical score that reflects the potential impact of a vulnerability, helping organizations prioritize their response and remediation efforts.</p>
+<p><img src="infosec/images/cvss_scoring.png" alt=""></p>
+<h2 id="cvss-impact-metrics"><a class="header" href="#cvss-impact-metrics">CVSS Impact Metrics</a></h2>
+<p>CVSS scores are calculated based on a set of metrics that assess various aspects of a vulnerability. These metrics are divided into three groups:</p>
+<ol>
+<li>
+<p><strong>Base Metrics</strong>: These metrics represent the intrinsic characteristics of a vulnerability that are constant over time and across user environments. They include:</p>
+<ul>
+<li>Attack Vector (AV)</li>
+<li>Attack Complexity (AC)</li>
+<li>Privileges Required (PR)</li>
+<li>User Interaction (UI)</li>
+<li>Scope (S)</li>
+<li>Confidentiality Impact (C)</li>
+<li>Integrity Impact (I)</li>
+<li>Availability Impact (A)</li>
+</ul>
+</li>
+<li>
+<p><strong>Temporal Metrics</strong>: These metrics reflect characteristics of a vulnerability that may change over time but not across user environments. They include:</p>
+<ul>
+<li>Exploit Code Maturity (E) - The probabilty of the vulnerability being exploited based on ease of exploitation.</li>
+<li>Remediation Level (RL) - The level of remediation available for the vulnerability.
+<ul>
+<li>Official Fix: An official patch or update is available.</li>
+<li>Temporary Fix: A temporary workaround is available.</li>
+<li>Workaround: A non-official workaround is available.</li>
+<li>Unavailable: No remediation is available.</li>
+<li>Not defined: No information is available about remediation.</li>
+</ul>
+</li>
+<li>Report Confidence (RC) - The degree of confidence in the existence of the vulnerability.
+<ul>
+<li>Confirmed: The vulnerability has been confirmed by multiple sources.</li>
+<li>Reasonable: The vulnerability is likely to exist based on available evidence.</li>
+<li>Unknown: There is insufficient information to determine the existence of the vulnerability.</li>
+<li>Not defined: No information is available about the vulnerability.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Environmental Metrics</strong>: This metric group represents the significance of the vulnerability to an organization</p>
+<ul>
+<li>Modified Base Metrics - Represents the metrics that can be altered if the organization deems it is a more significant risk.
+<ul>
+<li>Not Defined: The metric is not defined and the base metric value is used.</li>
+<li>Low: The vulnerability would have a low impact to one of the elements of the CIA triad for the organization.</li>
+<li>Medium:  The vulnerability would have a medium impact to one of the elements of the CIA triad for the organization.</li>
+<li>High: The vulnerability would have a high impact to one of the elements of the CIA triad for the organization.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="cvss-score-calculation"><a class="header" href="#cvss-score-calculation">CVSS Score Calculation</a></h3>
+<ul>
+<li>The CVSS score is calculated using a formula that combines the values of the base, temporal, and environmental metrics. The resulting score ranges from 0 to 10, with higher scores indicating more severe vulnerabilities.</li>
+<li>The National Vulnerability Database (NVD) provides on online calculator here: https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="openvas"><a href="#openvas" class="header">openvas</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="nessus"><a href="#nessus" class="header">nessus</a></h1>
 
                     </main>
 

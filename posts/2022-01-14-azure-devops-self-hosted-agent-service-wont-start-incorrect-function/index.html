@@ -12,7 +12,7 @@ One-minute read</span></div><div class=categories><i class="fa-solid fa-folder" 
 </span><span class=separator>•</span>
 <span class=tag><a href=/tags/devops/>Devops</a></span></div></div></header><div class=post-content><p>I setup a self hosted agent for Azure Devops this morning on Server 2012 R2 (legacy Visual Studio dependencies…) and found that I was unable to start the service. The error I received was “Error 1 Incorrect Function” when attempting to start the service in services.msc.</p><p>I was attempting to run the agent from within my user profile downloads folder. I originally was not aware the service would be running from this directory. I thought it would copy its binary files to program files directory or programdata, like 99% of all other apps. The service installs and attempts to run itself as the “network service” authority. This account does not have permission to a user profile folder by default, and the installation script is not able to grant it permission for some reason (I didn’t investigate this further). I removed the agent, moved the installation files to the root of c:, and then reinstalled. The agent service is now able to start successfully.</p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
 2012 -
-2025
+2026
 Ryan Nemeth
 ·
 Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>

@@ -33,7 +33,7 @@ Overview Link to heading In sub-domain fuzzing, we check different websites to s
 </span></span></code></pre></div><p>This command will test each word in the wordlist as a potential sub-domain. When we run this, we should see several hits for valid sub-domains.</p><p>However, when we try the same thing on <code>academy.htb</code>:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>ffuf -w /opt/useful/seclists/Discovery/DNS/subdomains-top1million-5000.txt:FUZZ -u http://FUZZ.academy.htb/
 </span></span></code></pre></div><p>We see that we do not get any hits back. Does this mean that there are no sub-domains under <code>academy.htb</code>? No.</p><p>This means that there are no public sub-domains under <code>academy.htb</code>, as it does not have a public DNS record. Even though we added <code>academy.htb</code> to our <code>/etc/hosts</code> file, we only added the main domain, so when <code>ffuf</code> is looking for other sub-domains, it will not find them in <code>/etc/hosts</code>, and will ask the public DNS, which obviously will not have them.</p><p>For local or non-public domains, we need to use VHost fuzzing instead, which we&rsquo;ll cover in the next article.</p></article></section></div><footer class=footer><section class=container>©
 2012 -
-2025
+2026
 Ryan Nemeth
 ·
 Powered by <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/ target=_blank rel=noopener>Coder</a>.</section></footer></main><script src=/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script></body></html>
