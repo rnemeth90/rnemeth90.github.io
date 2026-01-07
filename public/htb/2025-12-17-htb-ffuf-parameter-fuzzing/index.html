@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  HTB - Web Application Fuzzing Module - Parameter Fuzzing · GeekyRyan
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Ryan Nemeth">
+<meta name="description" content="
+  HackTheBox Web Application Fuzzing - Parameter Fuzzing
+  
+    
+    Link to heading
+  
+
+This is part of a multi-part series documenting my process for completing the HackTheBox modules.
+This post covers parameter fuzzing, which involves identifying which parameters a web application accepts and processes. This is crucial for finding potential vulnerabilities or hidden functionality.
+
+  Overview
+  
+    
+    Link to heading
+  
+
+Parameter fuzzing is the process of testing various parameter names to see which ones the web application accepts. This can reveal hidden functionality, API endpoints, or potential security vulnerabilities. Once we identify a working parameter, we can then fuzz its values to find the correct input that returns the desired result (like a flag).">
+<meta name="keywords" content="blog,developer,personal,devops">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="HTB - Web Application Fuzzing Module - Parameter Fuzzing">
+  <meta name="twitter:description" content="HackTheBox Web Application Fuzzing - Parameter Fuzzing Link to heading This is part of a multi-part series documenting my process for completing the HackTheBox modules.
+This post covers parameter fuzzing, which involves identifying which parameters a web application accepts and processes. This is crucial for finding potential vulnerabilities or hidden functionality.
+Overview Link to heading Parameter fuzzing is the process of testing various parameter names to see which ones the web application accepts. This can reveal hidden functionality, API endpoints, or potential security vulnerabilities. Once we identify a working parameter, we can then fuzz its values to find the correct input that returns the desired result (like a flag).">
+
+<meta property="og:url" content="http://localhost:1313/htb/2025-12-17-htb-ffuf-parameter-fuzzing/">
+  <meta property="og:site_name" content="GeekyRyan">
+  <meta property="og:title" content="HTB - Web Application Fuzzing Module - Parameter Fuzzing">
+  <meta property="og:description" content="HackTheBox Web Application Fuzzing - Parameter Fuzzing Link to heading This is part of a multi-part series documenting my process for completing the HackTheBox modules.
+This post covers parameter fuzzing, which involves identifying which parameters a web application accepts and processes. This is crucial for finding potential vulnerabilities or hidden functionality.
+Overview Link to heading Parameter fuzzing is the process of testing various parameter names to see which ones the web application accepts. This can reveal hidden functionality, API endpoints, or potential security vulnerabilities. Once we identify a working parameter, we can then fuzz its values to find the correct input that returns the desired result (like a flag).">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="htb">
+    <meta property="article:published_time" content="2025-12-17T16:01:00+00:00">
+    <meta property="article:modified_time" content="2025-12-17T16:01:00+00:00">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/htb/2025-12-17-htb-ffuf-parameter-fuzzing/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/notes/">Notes</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/htb/">HTB</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="http://localhost:1313/htb/2025-12-17-htb-ffuf-parameter-fuzzing/">
+          HTB - Web Application Fuzzing Module - Parameter Fuzzing
+        </a>
+      </h1>
+    </header>
+
+    <h1 id="hackthebox-web-application-fuzzing---parameter-fuzzing">
+  HackTheBox Web Application Fuzzing - Parameter Fuzzing
+  <a class="heading-link" href="#hackthebox-web-application-fuzzing---parameter-fuzzing">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This is part of a multi-part series documenting my process for completing the HackTheBox modules.</p>
+<p>This post covers parameter fuzzing, which involves identifying which parameters a web application accepts and processes. This is crucial for finding potential vulnerabilities or hidden functionality.</p>
+<h2 id="overview">
+  Overview
+  <a class="heading-link" href="#overview">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Parameter fuzzing is the process of testing various parameter names to see which ones the web application accepts. This can reveal hidden functionality, API endpoints, or potential security vulnerabilities. Once we identify a working parameter, we can then fuzz its values to find the correct input that returns the desired result (like a flag).</p>
+<h2 id="get-parameter-fuzzing">
+  GET Parameter Fuzzing
+  <a class="heading-link" href="#get-parameter-fuzzing">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>For GET requests, we can fuzz parameters by placing the <code>FUZZ</code> keyword in the URL where the parameter name would be:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ffuf -w /opt/useful/seclists/Discovery/Web-Content/burp-parameter-names.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php?FUZZ<span class="o">=</span><span class="nb">test</span> -fs xxx
+</span></span></code></pre></div><p>In this example, we&rsquo;re using a wordlist of common parameter names (<code>burp-parameter-names.txt</code>) and testing each one by appending <code>=test</code> as the value. The <code>-fs xxx</code> flag filters out responses with a specific size (you&rsquo;ll need to determine the common size of failed responses first).</p>
+<h2 id="post-parameter-fuzzing">
+  POST Parameter Fuzzing
+  <a class="heading-link" href="#post-parameter-fuzzing">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>For POST requests, we need to use the <code>-X POST</code> flag and specify the data with <code>-d</code>. We also need to set the appropriate Content-Type header:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ffuf -w /opt/useful/seclists/Discovery/Web-Content/burp-parameter-names.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d <span class="s1">&#39;FUZZ=test&#39;</span> -H <span class="s1">&#39;Content-Type: application/x-www-form-urlencoded&#39;</span> -fs xxx
+</span></span></code></pre></div><p>This command will test each parameter name from the wordlist by sending a POST request with <code>FUZZ=test</code> as the data.</p>
+<h2 id="determining-filter-size">
+  Determining Filter Size
+  <a class="heading-link" href="#determining-filter-size">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Before running the fuzzing command, you need to determine what size to filter. You can do this by:</p>
+<ol>
+<li>First running the command without the <code>-fs</code> flag to see the common response size</li>
+<li>Or manually sending a request with an invalid parameter and noting the response size</li>
+<li>Then use that size with <code>-fs</code> to filter out the common &ldquo;invalid parameter&rdquo; responses</li>
+</ol>
+<p>For example, if invalid parameters return a response size of 986 bytes, you would use <code>-fs 986</code> to filter those out, leaving only responses with different sizes that indicate a valid parameter.</p>
+<h2 id="example-output">
+  Example Output
+  <a class="heading-link" href="#example-output">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>When you find a valid parameter, <code>ffuf</code> will display it:</p>
+<pre tabindex="0"><code>[Status: 200, Size: 1234, Words: 45, Lines: 12]
+| URL | http://admin.academy.htb:PORT/admin/admin.php
+| FUZZ | id
+</code></pre><p>This indicates that the <code>id</code> parameter is accepted by the application. Once we identify a working parameter, we can move on to value fuzzing to find the correct value that returns the flag.</p>
+
+  </article>
+</section>
+
+  
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2012 -
+    
+    2026
+     Ryan Nemeth 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

