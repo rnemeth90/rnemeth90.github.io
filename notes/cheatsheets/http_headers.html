@@ -38,7 +38,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-04f64a49.js";
+            window.path_to_searchindex_js = "../searchindex-fbad826e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-f5648287.js"></script>
@@ -225,6 +225,23 @@
 <tr><td>Warning</td><td>Warning: 199 Miscellaneous warning</td><td>A general warning about possible problems with the status of the message. Accepts a special range of values.</td></tr>
 <tr><td>Dnt</td><td>DNT: 1</td><td>If enabled, asks servers to not track the user</td></tr>
 <tr><td>X-CSRF-Token</td><td>X-CSRF-Token: <token></token></td><td>Used to prevent CSRF</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="cache-control"><a class="header" href="#cache-control">Cache-Control</a></h2>
+<p>The Cache-Control header is used to specify directives for caching mechanisms in both requests and responses. Here are some common directives that can be used with the Cache-Control header:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Directive</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>no-cache</td><td>Forces caches to submit the request to the origin server for validation before releasing a cached copy.</td></tr>
+<tr><td>no-store</td><td>Instructs caches not to store any part of the request or response.</td></tr>
+<tr><td>public</td><td>Indicates that the response may be cached by any cache, even if it would</td></tr>
+<tr><td>private</td><td>Indicates that the response is intended for a single user and should not be stored by shared caches.</td></tr>
+<tr><td>max-age=<seconds></seconds></td><td>Specifies the maximum amount of time a resource is considered fresh.</td></tr>
+<tr><td>stale-while-revalidate=<seconds></seconds></td><td>Allows a cache to serve a stale response while it revalidates it in the background.</td></tr>
 </tbody>
 </table>
 </div>
