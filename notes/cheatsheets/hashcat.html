@@ -38,7 +38,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-11556f18.js";
+            window.path_to_searchindex_js = "../searchindex-6c0ac172.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-f2f6bff2.js"></script>
@@ -181,7 +181,144 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        
+                        <h1 id="hashcat-cheatsheet"><a class="header" href="#hashcat-cheatsheet">Hashcat Cheatsheet</a></h1>
+<h2 id="basic-syntax"><a class="header" href="#basic-syntax">Basic Syntax</a></h2>
+<pre><code class="language-bash">hashcat -a &lt;attack_mode&gt; -m &lt;hash_type&gt; &lt;hashes&gt; [wordlist, rule, mask, ...]
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-a</code></td><td>Attack mode</td></tr>
+<tr><td><code>-m</code></td><td>Hash type ID</td></tr>
+<tr><td><code>-r</code></td><td>Rules file</td></tr>
+<tr><td><code>-o</code></td><td>Output file for cracked hashes</td></tr>
+<tr><td><code>--show</code></td><td>Show previously cracked hashes</td></tr>
+<tr><td><code>--force</code></td><td>Ignore warnings</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="attack-modes--a"><a class="header" href="#attack-modes--a">Attack Modes (<code>-a</code>)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mode</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>0</code></td><td>Straight/Dictionary</td><td>Wordlist-based attack</td></tr>
+<tr><td><code>1</code></td><td>Combination</td><td>Combines words from two wordlists</td></tr>
+<tr><td><code>3</code></td><td>Brute-force/Mask</td><td>Uses masks to define keyspace</td></tr>
+<tr><td><code>6</code></td><td>Hybrid Wordlist + Mask</td><td>Appends mask to wordlist entries</td></tr>
+<tr><td><code>7</code></td><td>Hybrid Mask + Wordlist</td><td>Prepends mask to wordlist entries</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="common-hash-types--m"><a class="header" href="#common-hash-types--m">Common Hash Types (<code>-m</code>)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>ID</th><th>Hash Type</th></tr>
+</thead>
+<tbody>
+<tr><td><code>0</code></td><td>MD5</td></tr>
+<tr><td><code>100</code></td><td>SHA1</td></tr>
+<tr><td><code>500</code></td><td>MD5 Crypt / Cisco-IOS / FreeBSD MD5</td></tr>
+<tr><td><code>900</code></td><td>MD4</td></tr>
+<tr><td><code>1000</code></td><td>NTLM</td></tr>
+<tr><td><code>1300</code></td><td>SHA2-224</td></tr>
+<tr><td><code>1400</code></td><td>SHA2-256</td></tr>
+<tr><td><code>1700</code></td><td>SHA2-512</td></tr>
+<tr><td><code>1800</code></td><td>SHA-512 Crypt (Unix)</td></tr>
+<tr><td><code>3000</code></td><td>LM</td></tr>
+<tr><td><code>3200</code></td><td>bcrypt</td></tr>
+<tr><td><code>5600</code></td><td>NetNTLMv2</td></tr>
+<tr><td><code>13100</code></td><td>Kerberos 5 TGS-REP</td></tr>
+<tr><td><code>18200</code></td><td>Kerberos 5 AS-REP</td></tr>
+<tr><td><code>22000</code></td><td>WPA-PBKDF2-PMKID+EAPOL</td></tr>
+</tbody>
+</table>
+</div>
+<p>Full list: <code>hashcat --help</code> or <a href="https://hashcat.net/wiki/doku.php?id=example_hashes">hashcat.net/wiki/doku.php?id=example_hashes</a></p>
+<h2 id="mask-attack-character-sets"><a class="header" href="#mask-attack-character-sets">Mask Attack Character Sets</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Symbol</th><th>Charset</th></tr>
+</thead>
+<tbody>
+<tr><td><code>?l</code></td><td><code>abcdefghijklmnopqrstuvwxyz</code></td></tr>
+<tr><td><code>?u</code></td><td><code>ABCDEFGHIJKLMNOPQRSTUVWXYZ</code></td></tr>
+<tr><td><code>?d</code></td><td><code>0123456789</code></td></tr>
+<tr><td><code>?h</code></td><td><code>0123456789abcdef</code></td></tr>
+<tr><td><code>?H</code></td><td><code>0123456789ABCDEF</code></td></tr>
+<tr><td><code>?s</code></td><td>Special characters (space, punctuation)</td></tr>
+<tr><td><code>?a</code></td><td><code>?l?u?d?s</code> (all printable)</td></tr>
+<tr><td><code>?b</code></td><td><code>0x00 - 0xff</code> (all bytes)</td></tr>
+</tbody>
+</table>
+</div>
+<p>Custom charsets: <code>-1</code>, <code>-2</code>, <code>-3</code>, <code>-4</code> → Reference with <code>?1</code>, <code>?2</code>, <code>?3</code>, <code>?4</code></p>
+<h2 id="quick-reference-commands"><a class="header" href="#quick-reference-commands">Quick Reference Commands</a></h2>
+<h3 id="dictionary-attack"><a class="header" href="#dictionary-attack">Dictionary Attack</a></h3>
+<pre><code class="language-bash">hashcat -a 0 -m 0 hash.txt /usr/share/wordlists/rockyou.txt
+</code></pre>
+<h3 id="dictionary-attack-with-rules"><a class="header" href="#dictionary-attack-with-rules">Dictionary Attack with Rules</a></h3>
+<pre><code class="language-bash">hashcat -a 0 -m 0 hash.txt /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/best64.rule
+</code></pre>
+<h3 id="mask-attack-8-char-6-lowercase--2-digits"><a class="header" href="#mask-attack-8-char-6-lowercase--2-digits">Mask Attack (8 char: 6 lowercase + 2 digits)</a></h3>
+<pre><code class="language-bash">hashcat -a 3 -m 0 hash.txt ?l?l?l?l?l?l?d?d
+</code></pre>
+<h3 id="mask-attack-with-custom-charset"><a class="header" href="#mask-attack-with-custom-charset">Mask Attack with Custom Charset</a></h3>
+<pre><code class="language-bash">hashcat -a 3 -m 0 hash.txt -1 ?l?u ?1?1?1?1?d?d?d?d
+</code></pre>
+<h3 id="hybrid-attack-wordlist--mask"><a class="header" href="#hybrid-attack-wordlist--mask">Hybrid Attack (wordlist + mask)</a></h3>
+<pre><code class="language-bash">hashcat -a 6 -m 0 hash.txt /usr/share/wordlists/rockyou.txt ?d?d?d
+</code></pre>
+<h3 id="show-cracked-hashes"><a class="header" href="#show-cracked-hashes">Show Cracked Hashes</a></h3>
+<pre><code class="language-bash">hashcat -m 0 hash.txt --show
+</code></pre>
+<h3 id="identify-hash-type"><a class="header" href="#identify-hash-type">Identify Hash Type</a></h3>
+<pre><code class="language-bash">hashid -m '&lt;hash_string&gt;'
+</code></pre>
+<h2 id="common-rule-files"><a class="header" href="#common-rule-files">Common Rule Files</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Rule File</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>best64.rule</code></td><td>64 standard password modifications</td></tr>
+<tr><td><code>rockyou-30000.rule</code></td><td>Large ruleset based on rockyou patterns</td></tr>
+<tr><td><code>dive.rule</code></td><td>Comprehensive rule set</td></tr>
+<tr><td><code>d3ad0ne.rule</code></td><td>Popular community ruleset</td></tr>
+<tr><td><code>leetspeak.rule</code></td><td>Leet speak substitutions</td></tr>
+<tr><td><code>toggles1-5.rule</code></td><td>Case toggling rules</td></tr>
+</tbody>
+</table>
+</div>
+<p>Location: <code>/usr/share/hashcat/rules/</code></p>
+<h2 id="useful-options"><a class="header" href="#useful-options">Useful Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--status</code></td><td>Enable automatic status updates</td></tr>
+<tr><td><code>--status-timer=N</code></td><td>Set status update interval (seconds)</td></tr>
+<tr><td><code>-w 3</code></td><td>Workload profile (1=low, 2=default, 3=high, 4=nightmare)</td></tr>
+<tr><td><code>--increment</code></td><td>Enable mask increment mode</td></tr>
+<tr><td><code>--increment-min=N</code></td><td>Start mask length</td></tr>
+<tr><td><code>--increment-max=N</code></td><td>End mask length</td></tr>
+<tr><td><code>-O</code></td><td>Enable optimized kernels (faster, but limits password length)</td></tr>
+<tr><td><code>--username</code></td><td>Ignore username in hash file</td></tr>
+<tr><td><code>--potfile-disable</code></td><td>Don’t write to potfile</td></tr>
+</tbody>
+</table>
+</div>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
