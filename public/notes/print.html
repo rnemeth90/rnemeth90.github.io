@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f334d3c.js";
+            window.path_to_searchindex_js = "searchindex-11556f18.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-e7018c22.js"></script>
+        <script src="toc-f2f6bff2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -211,6 +211,7 @@
 <li><a href="#netcat-file-transfer">netcat</a></li>
 <li><a href="#rdp-file-transfer">rdp</a></li>
 <li><a href="#msfvenom-cheat-sheet">msfvenom</a></li>
+<li><a href="#john-the-ripper-cheatsheet">john the ripper</a></li>
 </ul>
 </li>
 <li><a href="clouds/README.html">Clouds</a>
@@ -543,6 +544,7 @@
 <li><a href="#hashcat">hashcat</a></li>
 <li><a href="#metasploit-framework">metasploit</a></li>
 <li><a href="#msfvenom">msfvenom</a></li>
+<li><a href="#john-the-ripper">john the ripper</a></li>
 </ul>
 </li>
 <li><a href="troubleshooting/README.html">Troubleshooting</a>
@@ -635,6 +637,7 @@
 <li><a href="#sql-cheat-sheet">sql</a></li>
 <li><a href="#wafw00f-cheatsheet">wafw00f</a></li>
 <li><a href="#multi-line-strings">yaml</a></li>
+<li><a href="#john-the-ripper-cheatsheet">john</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="api-architectural-styles"><a class="header" href="#api-architectural-styles">API Architectural Styles</a></h1>
@@ -2817,6 +2820,124 @@ run -j
 <li><a href="https://github.com/polypack">PolyPack Project</a></li>
 <li>Metasploit - The Penetration Tester’s Guide (No Starch Press)</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="john-the-ripper-cheatsheet"><a class="header" href="#john-the-ripper-cheatsheet">John the Ripper Cheatsheet</a></h1>
+<h2 id="basic-syntax-1"><a class="header" href="#basic-syntax-1">Basic Syntax</a></h2>
+<pre><code>john [options] &lt;hash_file&gt;
+</code></pre>
+<hr>
+<h2 id="cracking-modes"><a class="header" href="#cracking-modes">Cracking Modes</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mode</th><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td>Single</td><td><code>--single</code></td><td>Rule-based cracking using username/GECOS data</td><td><code>john --single passwd</code></td></tr>
+<tr><td>Wordlist</td><td><code>--wordlist=FILE</code></td><td>Dictionary attack with wordlist</td><td><code>john --wordlist=rockyou.txt hashes.txt</code></td></tr>
+<tr><td>Incremental</td><td><code>--incremental</code></td><td>Brute-force using Markov chains</td><td><code>john --incremental hashes.txt</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="common-options-4"><a class="header" href="#common-options-4">Common Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--format=FORMAT</code></td><td>Specify hash format</td><td><code>john --format=raw-md5 hashes.txt</code></td></tr>
+<tr><td><code>--wordlist=FILE</code></td><td>Use wordlist for dictionary attack</td><td><code>john --wordlist=passwords.txt hashes.txt</code></td></tr>
+<tr><td><code>--rules</code></td><td>Apply word mangling rules</td><td><code>john --wordlist=words.txt --rules hashes.txt</code></td></tr>
+<tr><td><code>--show</code></td><td>Display cracked passwords</td><td><code>john --show hashes.txt</code></td></tr>
+<tr><td><code>--pot=FILE</code></td><td>Specify pot file location</td><td><code>john --pot=custom.pot hashes.txt</code></td></tr>
+<tr><td><code>--session=NAME</code></td><td>Name the session for restore</td><td><code>john --session=crack1 hashes.txt</code></td></tr>
+<tr><td><code>--restore=NAME</code></td><td>Restore a previous session</td><td><code>john --restore=crack1</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="common-hash-formats"><a class="header" href="#common-hash-formats">Common Hash Formats</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Format</th><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>MD5</td><td><code>--format=raw-md5</code></td><td>Raw MD5 hashes</td></tr>
+<tr><td>SHA1</td><td><code>--format=raw-sha1</code></td><td>Raw SHA1 hashes</td></tr>
+<tr><td>SHA256</td><td><code>--format=raw-sha256</code></td><td>Raw SHA256 hashes</td></tr>
+<tr><td>SHA512</td><td><code>--format=raw-sha512</code></td><td>Raw SHA512 hashes</td></tr>
+<tr><td>SHA512crypt</td><td><code>--format=sha512crypt</code></td><td>Linux $6$ hashes</td></tr>
+<tr><td>MD5crypt</td><td><code>--format=md5crypt</code></td><td>Linux $1$ hashes</td></tr>
+<tr><td>bcrypt</td><td><code>--format=bcrypt</code></td><td>Blowfish-based hashes</td></tr>
+<tr><td>NT</td><td><code>--format=nt</code></td><td>Windows NT hashes</td></tr>
+<tr><td>LM</td><td><code>--format=LM</code></td><td>LAN Manager hashes</td></tr>
+<tr><td>NTLM</td><td><code>--format=netntlm</code></td><td>NTLM network hashes</td></tr>
+<tr><td>NTLMv2</td><td><code>--format=netntlmv2</code></td><td>NTLMv2 network hashes</td></tr>
+<tr><td>Kerberos 5</td><td><code>--format=krb5</code></td><td>Kerberos 5 hashes</td></tr>
+<tr><td>MySQL</td><td><code>--format=mysql-sha1</code></td><td>MySQL SHA1 hashes</td></tr>
+<tr><td>MSSQL</td><td><code>--format=mssql</code></td><td>MS SQL hashes</td></tr>
+<tr><td>Oracle</td><td><code>--format=oracle11</code></td><td>Oracle 11 hashes</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="2john-conversion-tools"><a class="header" href="#2john-conversion-tools">2john Conversion Tools</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>zip2john</code></td><td>Convert ZIP archives</td></tr>
+<tr><td><code>rar2john</code></td><td>Convert RAR archives</td></tr>
+<tr><td><code>pdf2john</code></td><td>Convert PDF documents</td></tr>
+<tr><td><code>ssh2john</code></td><td>Convert SSH private keys</td></tr>
+<tr><td><code>keepass2john</code></td><td>Convert KeePass databases</td></tr>
+<tr><td><code>office2john</code></td><td>Convert MS Office documents</td></tr>
+<tr><td><code>putty2john</code></td><td>Convert PuTTY private keys</td></tr>
+<tr><td><code>gpg2john</code></td><td>Convert GPG keys</td></tr>
+<tr><td><code>wpa2john</code></td><td>Convert WPA/WPA2 handshakes</td></tr>
+<tr><td><code>truecrypt_volume2john</code></td><td>Convert TrueCrypt volumes</td></tr>
+<tr><td><code>bitlocker2john</code></td><td>Convert BitLocker volumes</td></tr>
+<tr><td><code>7z2john.pl</code></td><td>Convert 7-Zip archives</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Usage:</strong></p>
+<pre><code>&lt;tool&gt; &lt;file_to_crack&gt; &gt; file.hash
+john file.hash
+</code></pre>
+<hr>
+<h2 id="useful-examples-5"><a class="header" href="#useful-examples-5">Useful Examples</a></h2>
+<h3 id="crack-linux-shadow-file"><a class="header" href="#crack-linux-shadow-file">Crack Linux Shadow File</a></h3>
+<pre><code>john --single passwd
+</code></pre>
+<h3 id="dictionary-attack-with-rules"><a class="header" href="#dictionary-attack-with-rules">Dictionary Attack with Rules</a></h3>
+<pre><code>john --wordlist=/usr/share/wordlists/rockyou.txt --rules hashes.txt
+</code></pre>
+<h3 id="crack-specific-format"><a class="header" href="#crack-specific-format">Crack Specific Format</a></h3>
+<pre><code>john --format=raw-md5 --wordlist=passwords.txt md5_hashes.txt
+</code></pre>
+<h3 id="show-cracked-passwords"><a class="header" href="#show-cracked-passwords">Show Cracked Passwords</a></h3>
+<pre><code>john --show hashes.txt
+</code></pre>
+<h3 id="crack-zip-file"><a class="header" href="#crack-zip-file">Crack ZIP File</a></h3>
+<pre><code>zip2john protected.zip &gt; zip.hash
+john --wordlist=rockyou.txt zip.hash
+</code></pre>
+<h3 id="crack-ssh-private-key"><a class="header" href="#crack-ssh-private-key">Crack SSH Private Key</a></h3>
+<pre><code>ssh2john id_rsa &gt; ssh.hash
+john --wordlist=passwords.txt ssh.hash
+</code></pre>
+<h3 id="incremental-mode-brute-force"><a class="header" href="#incremental-mode-brute-force">Incremental Mode (Brute Force)</a></h3>
+<pre><code>john --incremental hashes.txt
+</code></pre>
+<h3 id="resume-a-session"><a class="header" href="#resume-a-session">Resume a Session</a></h3>
+<pre><code>john --restore=session_name
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="clouds"><a class="header" href="#clouds">Clouds</a></h1>
 <p>Notes related to various cloud service providers.</p>
@@ -23180,6 +23301,7 @@ PID        TTY     STAT   TIME          CMD
 <li><a href="#medusa">medusa</a></li>
 <li><a href="#metasploit-framework">metasploit</a></li>
 <li><a href="#hashcat">hashcat</a></li>
+<li><a href="#john-the-ripper">john</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="need-to-addrefine"><a class="header" href="#need-to-addrefine">Need to add/refine:</a></h1>
@@ -23638,7 +23760,7 @@ sudo apt-get -y install medusa
 sudo apt-get -y install hydra
 </code></pre>
 <hr>
-<h2 id="basic-syntax-1"><a class="header" href="#basic-syntax-1">Basic Syntax</a></h2>
+<h2 id="basic-syntax-2"><a class="header" href="#basic-syntax-2">Basic Syntax</a></h2>
 <p>Hydra’s basic syntax is:</p>
 <pre><code class="language-sh">hydra [login_options] [password_options] [attack_options] [service_options] service://server
 </code></pre>
@@ -25541,6 +25663,225 @@ run -j
 <li><a href="https://github.com/polypack">PolyPack Project</a> - Packer research</li>
 <li><a href="https://github.com/Veil-Framework/Veil">Veil Framework</a> - Payload generation framework</li>
 <li><a href="https://www.shellterproject.com/">Shellter</a> - Dynamic shellcode injection</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="john-the-ripper"><a class="header" href="#john-the-ripper">John the Ripper</a></h1>
+<p>John the Ripper (aka JtR or john) is a well-known penetration testing tool used for cracking passwords through various attacks including brute-force and dictionary. It is open-source software initially developed for UNIX-based systems and was first released in 1996. It has become a staple of the security industry due to its various capabilities.</p>
+<p>The “jumbo” variant is recommended for penetration testing uses, as it has performance optimizations, additional features such as multilingual word lists, and support for 64-bit architectures. This version is able to crack passwords with greater accuracy and speed.</p>
+<p>Included with JtR are various tools for converting different types of files and hashes into formats that are usable by JtR. Additionally, the software is regularly updated to keep up with the current security trends and technologies.</p>
+<hr>
+<h2 id="installation-3"><a class="header" href="#installation-3">Installation</a></h2>
+<p>John the Ripper often comes pre-installed on penetration testing distributions like Kali Linux. You can verify its presence by running:</p>
+<pre><code class="language-sh">john --help
+</code></pre>
+<p>If not installed, you can install it from the package repository:</p>
+<pre><code class="language-sh">sudo apt-get update
+sudo apt-get install john
+</code></pre>
+<p>For the jumbo version with additional features:</p>
+<pre><code class="language-sh">sudo apt-get install john-jumbo
+</code></pre>
+<hr>
+<h2 id="basic-syntax-3"><a class="header" href="#basic-syntax-3">Basic Syntax</a></h2>
+<pre><code class="language-sh">john [options] &lt;hash_file&gt;
+</code></pre>
+<hr>
+<h2 id="cracking-modes-1"><a class="header" href="#cracking-modes-1">Cracking Modes</a></h2>
+<p>John the Ripper supports multiple cracking modes, each suited for different scenarios.</p>
+<h3 id="single-crack-mode"><a class="header" href="#single-crack-mode">Single Crack Mode</a></h3>
+<p>Single crack mode is a rule-based cracking technique that is most useful when targeting Linux credentials. It generates password candidates based on the victim’s username, home directory name, and GECOS values (full name, room number, phone number, etc.). These strings are run against a large set of rules that apply common string modifications seen in passwords.</p>
+<p><strong>Example:</strong> A user whose real name is “Bob Smith” might use “Smith1” as their password.</p>
+<p>Given a passwd file with contents like:</p>
+<pre><code>r0lf:$6$ues25dIanlctrWxg$nZHVz2z4kCy1760Ee28M1xtHdGoy0C2cYzZ8l2sVa1kIa8K9gAcdBP.GI6ng/qA4oaMrgElZ1Cb9OeXO4Fvy3/:0:0:Rolf Sebastian:/home/r0lf:/bin/bash
+</code></pre>
+<p>Based on the file contents, it can be inferred that the victim has:</p>
+<ul>
+<li>Username: <code>r0lf</code></li>
+<li>Real name: <code>Rolf Sebastian</code></li>
+<li>Home directory: <code>/home/r0lf</code></li>
+</ul>
+<p>Single crack mode will use this information to generate candidate passwords:</p>
+<pre><code class="language-sh">john --single passwd
+</code></pre>
+<h3 id="wordlist-mode"><a class="header" href="#wordlist-mode">Wordlist Mode</a></h3>
+<p>Wordlist mode is used to crack passwords with a dictionary attack, meaning it attempts all passwords in a supplied wordlist against the password hash.</p>
+<pre><code class="language-sh">john --wordlist=&lt;wordlist_file&gt; &lt;hash_file&gt;
+</code></pre>
+<p>The wordlist file must be in plain text format, with one word per line. Multiple wordlists can be specified by separating them with a comma.</p>
+<p>Rules can be applied to generate candidate passwords using transformations such as appending numbers, capitalizing letters, and adding special characters:</p>
+<pre><code class="language-sh">john --wordlist=passwords.txt --rules hashes.txt
+</code></pre>
+<h3 id="incremental-mode"><a class="header" href="#incremental-mode">Incremental Mode</a></h3>
+<p>Incremental mode is a powerful, brute-force-style password cracking mode that generates candidate passwords based on a statistical model (Markov chains). It is designed to test all character combinations defined by a specific character set, prioritizing more likely passwords based on training data.</p>
+<p>This mode is the most exhaustive, but also the most time-consuming. It generates password guesses dynamically and does not rely on a predefined wordlist. Unlike purely random brute-force attacks, Incremental mode uses a statistical model to make educated guesses, resulting in significantly more efficient cracking.</p>
+<pre><code class="language-sh">john --incremental hashes.txt
+</code></pre>
+<hr>
+<h2 id="common-options-5"><a class="header" href="#common-options-5">Common Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--single</code></td><td>Use single crack mode</td><td><code>john --single passwd</code></td></tr>
+<tr><td><code>--wordlist=FILE</code></td><td>Use wordlist for dictionary attack</td><td><code>john --wordlist=passwords.txt hashes.txt</code></td></tr>
+<tr><td><code>--incremental</code></td><td>Use incremental (brute-force) mode</td><td><code>john --incremental hashes.txt</code></td></tr>
+<tr><td><code>--format=FORMAT</code></td><td>Specify hash format</td><td><code>john --format=raw-md5 hashes.txt</code></td></tr>
+<tr><td><code>--rules</code></td><td>Apply word mangling rules</td><td><code>john --wordlist=words.txt --rules hashes.txt</code></td></tr>
+<tr><td><code>--show</code></td><td>Display cracked passwords</td><td><code>john --show hashes.txt</code></td></tr>
+<tr><td><code>--pot=FILE</code></td><td>Specify pot file location</td><td><code>john --pot=custom.pot hashes.txt</code></td></tr>
+<tr><td><code>--session=NAME</code></td><td>Name the session for restore</td><td><code>john --session=crack1 hashes.txt</code></td></tr>
+<tr><td><code>--restore=NAME</code></td><td>Restore a previous session</td><td><code>john --restore=crack1</code></td></tr>
+<tr><td><code>--list=formats</code></td><td>List all supported hash formats</td><td><code>john --list=formats</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="hash-formats"><a class="header" href="#hash-formats">Hash Formats</a></h2>
+<p>John the Ripper supports a wide variety of hash formats. Use <code>--format=FORMAT</code> to specify the hash type.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Format</th><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Raw MD5</td><td><code>john --format=raw-md5 [...] &lt;hash_file&gt;</code></td><td>Raw MD5 password hashes</td></tr>
+<tr><td>Raw SHA1</td><td><code>john --format=raw-sha1 [...] &lt;hash_file&gt;</code></td><td>Raw SHA1 password hashes</td></tr>
+<tr><td>Raw SHA256</td><td><code>john --format=raw-sha256 [...] &lt;hash_file&gt;</code></td><td>Raw SHA256 password hashes</td></tr>
+<tr><td>Raw SHA512</td><td><code>john --format=raw-sha512 [...] &lt;hash_file&gt;</code></td><td>Raw SHA512 password hashes</td></tr>
+<tr><td>SHA512crypt</td><td><code>john --format=sha512crypt [...] &lt;hash_file&gt;</code></td><td>Linux crypt(3) $6$ hashes</td></tr>
+<tr><td>MD5crypt</td><td><code>john --format=md5crypt [...] &lt;hash_file&gt;</code></td><td>Linux crypt(3) $1$ hashes</td></tr>
+<tr><td>bcrypt</td><td><code>john --format=bcrypt [...] &lt;hash_file&gt;</code></td><td>Blowfish-based password hashes</td></tr>
+<tr><td>NT</td><td><code>john --format=nt [...] &lt;hash_file&gt;</code></td><td>Windows NT password hashes</td></tr>
+<tr><td>LM</td><td><code>john --format=LM [...] &lt;hash_file&gt;</code></td><td>LAN Manager password hashes</td></tr>
+<tr><td>NETLM</td><td><code>john --format=netlm [...] &lt;hash_file&gt;</code></td><td>NT LAN Manager network hashes</td></tr>
+<tr><td>NETLMv2</td><td><code>john --format=netlmv2 [...] &lt;hash_file&gt;</code></td><td>NTLMv2 network hashes</td></tr>
+<tr><td>NETNTLM</td><td><code>john --format=netntlm [...] &lt;hash_file&gt;</code></td><td>NTLM network hashes</td></tr>
+<tr><td>NETNTLMv2</td><td><code>john --format=netntlmv2 [...] &lt;hash_file&gt;</code></td><td>NTLMv2 network hashes</td></tr>
+<tr><td>Kerberos 5</td><td><code>john --format=krb5 [...] &lt;hash_file&gt;</code></td><td>Kerberos 5 password hashes</td></tr>
+<tr><td>MS Cache</td><td><code>john --format=mscash [...] &lt;hash_file&gt;</code></td><td>MS Cache password hashes</td></tr>
+<tr><td>MS Cache v2</td><td><code>john --format=mscash2 [...] &lt;hash_file&gt;</code></td><td>MS Cache v2 password hashes</td></tr>
+<tr><td>MySQL</td><td><code>john --format=mysql [...] &lt;hash_file&gt;</code></td><td>MySQL password hashes</td></tr>
+<tr><td>MySQL SHA1</td><td><code>john --format=mysql-sha1 [...] &lt;hash_file&gt;</code></td><td>MySQL SHA1 password hashes</td></tr>
+<tr><td>MSSQL</td><td><code>john --format=mssql [...] &lt;hash_file&gt;</code></td><td>MS SQL password hashes</td></tr>
+<tr><td>MSSQL 2005</td><td><code>john --format=mssql05 [...] &lt;hash_file&gt;</code></td><td>MS SQL 2005 password hashes</td></tr>
+<tr><td>Oracle</td><td><code>john --format=oracle [...] &lt;hash_file&gt;</code></td><td>Oracle password hashes</td></tr>
+<tr><td>Oracle 11</td><td><code>john --format=oracle11 [...] &lt;hash_file&gt;</code></td><td>Oracle 11 password hashes</td></tr>
+<tr><td>PostgreSQL</td><td><code>john --format=postgres [...] &lt;hash_file&gt;</code></td><td>PostgreSQL password hashes</td></tr>
+<tr><td>PDF</td><td><code>john --format=pdf [...] &lt;hash_file&gt;</code></td><td>PDF password hashes</td></tr>
+<tr><td>RAR</td><td><code>john --format=rar [...] &lt;hash_file&gt;</code></td><td>RAR archive password hashes</td></tr>
+<tr><td>ZIP</td><td><code>john --format=zip [...] &lt;hash_file&gt;</code></td><td>ZIP archive password hashes</td></tr>
+<tr><td>SSH</td><td><code>john --format=ssh [...] &lt;hash_file&gt;</code></td><td>SSH private key password hashes</td></tr>
+<tr><td>HMAC-MD5</td><td><code>john --format=hmac-md5 [...] &lt;hash_file&gt;</code></td><td>HMAC-MD5 password hashes</td></tr>
+<tr><td>Cisco PIX MD5</td><td><code>john --format=pix-md5 [...] &lt;hash_file&gt;</code></td><td>Cisco PIX MD5 password hashes</td></tr>
+<tr><td>Lotus Notes 5</td><td><code>john --format=lotus5 [...] &lt;hash_file&gt;</code></td><td>Lotus Notes/Domino 5 password hashes</td></tr>
+<tr><td>SAP BCODE</td><td><code>john --format=sapb [...] &lt;hash_file&gt;</code></td><td>SAP CODVN B password hashes</td></tr>
+<tr><td>SAP PASSCODE</td><td><code>john --format=sapg [...] &lt;hash_file&gt;</code></td><td>SAP CODVN G password hashes</td></tr>
+</tbody>
+</table>
+</div>
+<p>To list all supported formats:</p>
+<pre><code class="language-sh">john --list=formats
+</code></pre>
+<hr>
+<h2 id="cracking-files-with-2john-tools"><a class="header" href="#cracking-files-with-2john-tools">Cracking Files with 2john Tools</a></h2>
+<p>Password-protected or encrypted files can be cracked with JtR using the included “2john” conversion tools. These tools process files and produce hashes compatible with JtR.</p>
+<h3 id="general-syntax"><a class="header" href="#general-syntax">General Syntax</a></h3>
+<pre><code class="language-sh">&lt;tool&gt; &lt;file_to_crack&gt; &gt; file.hash
+john file.hash
+</code></pre>
+<h3 id="available-2john-tools"><a class="header" href="#available-2john-tools">Available 2john Tools</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>pdf2john</code></td><td>Converts PDF documents for John</td></tr>
+<tr><td><code>ssh2john</code></td><td>Converts SSH private keys for John</td></tr>
+<tr><td><code>mscash2john</code></td><td>Converts MS Cash hashes for John</td></tr>
+<tr><td><code>keychain2john</code></td><td>Converts OS X keychain files for John</td></tr>
+<tr><td><code>rar2john</code></td><td>Converts RAR archives for John</td></tr>
+<tr><td><code>pfx2john</code></td><td>Converts PKCS#12 files for John</td></tr>
+<tr><td><code>truecrypt_volume2john</code></td><td>Converts TrueCrypt volumes for John</td></tr>
+<tr><td><code>keepass2john</code></td><td>Converts KeePass databases for John</td></tr>
+<tr><td><code>vncpcap2john</code></td><td>Converts VNC PCAP files for John</td></tr>
+<tr><td><code>putty2john</code></td><td>Converts PuTTY private keys for John</td></tr>
+<tr><td><code>zip2john</code></td><td>Converts ZIP archives for John</td></tr>
+<tr><td><code>hccap2john</code></td><td>Converts WPA/WPA2 handshake captures for John</td></tr>
+<tr><td><code>office2john</code></td><td>Converts MS Office documents for John</td></tr>
+<tr><td><code>wpa2john</code></td><td>Converts WPA/WPA2 handshakes for John</td></tr>
+<tr><td><code>bitlocker2john</code></td><td>Converts BitLocker volumes for John</td></tr>
+<tr><td><code>dmg2john</code></td><td>Converts macOS DMG files for John</td></tr>
+<tr><td><code>gpg2john</code></td><td>Converts GPG keys for John</td></tr>
+<tr><td><code>7z2john.pl</code></td><td>Converts 7-Zip archives for John</td></tr>
+<tr><td><code>1password2john.py</code></td><td>Converts 1Password vaults for John</td></tr>
+<tr><td><code>androidbackup2john.py</code></td><td>Converts Android backup files for John</td></tr>
+</tbody>
+</table>
+</div>
+<p>Find all available 2john tools on your system:</p>
+<pre><code class="language-sh">locate *2john*
+</code></pre>
+<hr>
+<h2 id="common-usage-examples-2"><a class="header" href="#common-usage-examples-2">Common Usage Examples</a></h2>
+<h3 id="crack-linux-shadow-file-single-mode"><a class="header" href="#crack-linux-shadow-file-single-mode">Crack Linux Shadow File (Single Mode)</a></h3>
+<pre><code class="language-sh">john --single passwd
+</code></pre>
+<h3 id="dictionary-attack"><a class="header" href="#dictionary-attack">Dictionary Attack</a></h3>
+<pre><code class="language-sh">john --wordlist=/usr/share/wordlists/rockyou.txt hashes.txt
+</code></pre>
+<h3 id="dictionary-attack-with-rules-1"><a class="header" href="#dictionary-attack-with-rules-1">Dictionary Attack with Rules</a></h3>
+<pre><code class="language-sh">john --wordlist=/usr/share/wordlists/rockyou.txt --rules hashes.txt
+</code></pre>
+<h3 id="crack-specific-hash-format"><a class="header" href="#crack-specific-hash-format">Crack Specific Hash Format</a></h3>
+<pre><code class="language-sh">john --format=raw-md5 --wordlist=passwords.txt md5_hashes.txt
+</code></pre>
+<h3 id="show-cracked-passwords-1"><a class="header" href="#show-cracked-passwords-1">Show Cracked Passwords</a></h3>
+<pre><code class="language-sh">john --show hashes.txt
+</code></pre>
+<h3 id="incremental-brute-force-mode"><a class="header" href="#incremental-brute-force-mode">Incremental (Brute Force) Mode</a></h3>
+<pre><code class="language-sh">john --incremental hashes.txt
+</code></pre>
+<h3 id="crack-a-zip-file"><a class="header" href="#crack-a-zip-file">Crack a ZIP File</a></h3>
+<pre><code class="language-sh">zip2john protected.zip &gt; zip.hash
+john --wordlist=/usr/share/wordlists/rockyou.txt zip.hash
+</code></pre>
+<h3 id="crack-an-ssh-private-key"><a class="header" href="#crack-an-ssh-private-key">Crack an SSH Private Key</a></h3>
+<pre><code class="language-sh">ssh2john id_rsa &gt; ssh.hash
+john --wordlist=passwords.txt ssh.hash
+</code></pre>
+<h3 id="crack-a-keepass-database"><a class="header" href="#crack-a-keepass-database">Crack a KeePass Database</a></h3>
+<pre><code class="language-sh">keepass2john database.kdbx &gt; keepass.hash
+john --wordlist=passwords.txt keepass.hash
+</code></pre>
+<h3 id="crack-a-pdf-file"><a class="header" href="#crack-a-pdf-file">Crack a PDF File</a></h3>
+<pre><code class="language-sh">pdf2john protected.pdf &gt; pdf.hash
+john --wordlist=passwords.txt pdf.hash
+</code></pre>
+<h3 id="crack-ms-office-document"><a class="header" href="#crack-ms-office-document">Crack MS Office Document</a></h3>
+<pre><code class="language-sh">office2john document.docx &gt; office.hash
+john --wordlist=passwords.txt office.hash
+</code></pre>
+<h3 id="save-and-restore-session"><a class="header" href="#save-and-restore-session">Save and Restore Session</a></h3>
+<pre><code class="language-sh"># Start a named session
+john --session=mycrack --wordlist=big_wordlist.txt hashes.txt
+
+# If interrupted, restore the session
+john --restore=mycrack
+</code></pre>
+<hr>
+<h2 id="core-takeaways-4"><a class="header" href="#core-takeaways-4">Core Takeaways</a></h2>
+<ul>
+<li><strong>Single crack mode</strong> is most effective for Linux credentials, using username and GECOS data to generate candidates.</li>
+<li><strong>Wordlist mode</strong> performs dictionary attacks; use <code>--rules</code> to apply transformations for better coverage.</li>
+<li><strong>Incremental mode</strong> is exhaustive brute-force using Markov chains, best for when wordlists fail.</li>
+<li>Use <code>--format=FORMAT</code> when John doesn’t auto-detect the hash type correctly.</li>
+<li>The <strong>2john tools</strong> convert various file types (ZIP, PDF, SSH keys, etc.) into crackable hash formats.</li>
+<li>Use <code>--session</code> and <code>--restore</code> for long-running cracks that may be interrupted.</li>
+<li>Use <code>--show</code> to display previously cracked passwords from the pot file.</li>
+<li>The jumbo version includes more formats, rules, and optimizations for better performance.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
