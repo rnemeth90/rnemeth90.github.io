@@ -38,7 +38,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-6c0ac172.js";
+            window.path_to_searchindex_js = "../searchindex-98be3c39.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-f2f6bff2.js"></script>
@@ -318,6 +318,62 @@
 </tbody>
 </table>
 </div>
+<hr>
+<h2 id="cracking-protected-files--archives"><a class="header" href="#cracking-protected-files--archives">Cracking Protected Files &amp; Archives</a></h2>
+<h3 id="common-hash-modes-for-files"><a class="header" href="#common-hash-modes-for-files">Common Hash Modes for Files</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>ID</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td><code>9400-9600</code></td><td>MS Office 2007-2013</td></tr>
+<tr><td><code>10400-10700</code></td><td>PDF</td></tr>
+<tr><td><code>13600</code></td><td>WinZip</td></tr>
+<tr><td><code>17200-17225</code></td><td>PKZIP</td></tr>
+<tr><td><code>22100</code></td><td>BitLocker</td></tr>
+<tr><td><code>13400</code></td><td>KeePass</td></tr>
+<tr><td><code>6211-6243</code></td><td>TrueCrypt</td></tr>
+<tr><td><code>13711-13723</code></td><td>VeraCrypt</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="crack-bitlocker-drive"><a class="header" href="#crack-bitlocker-drive">Crack BitLocker Drive</a></h3>
+<pre><code class="language-bash"># Extract hash with bitlocker2john (from JtR)
+bitlocker2john -i Backup.vhd &gt; backup.hashes
+grep "bitlocker\$0" backup.hashes &gt; backup.hash
+
+# Crack with hashcat
+hashcat -a 0 -m 22100 backup.hash /usr/share/wordlists/rockyou.txt
+</code></pre>
+<h3 id="crack-zip-file-pkzip"><a class="header" href="#crack-zip-file-pkzip">Crack ZIP File (PKZIP)</a></h3>
+<pre><code class="language-bash"># Extract hash with zip2john (from JtR)
+zip2john protected.zip &gt; zip.hash
+
+# Crack with hashcat (mode depends on ZIP type)
+hashcat -a 0 -m 17200 zip.hash /usr/share/wordlists/rockyou.txt
+</code></pre>
+<h3 id="crack-ms-office-document"><a class="header" href="#crack-ms-office-document">Crack MS Office Document</a></h3>
+<pre><code class="language-bash"># Extract hash with office2john (from JtR)
+office2john.py document.docx &gt; office.hash
+
+# Crack with hashcat (mode depends on Office version)
+hashcat -a 0 -m 9600 office.hash /usr/share/wordlists/rockyou.txt
+</code></pre>
+<h3 id="crack-pdf"><a class="header" href="#crack-pdf">Crack PDF</a></h3>
+<pre><code class="language-bash"># Extract hash with pdf2john (from JtR)
+pdf2john.py document.pdf &gt; pdf.hash
+
+# Crack with hashcat
+hashcat -a 0 -m 10500 pdf.hash /usr/share/wordlists/rockyou.txt
+</code></pre>
+<h3 id="crack-keepass-database"><a class="header" href="#crack-keepass-database">Crack KeePass Database</a></h3>
+<pre><code class="language-bash"># Extract hash with keepass2john (from JtR)
+keepass2john database.kdbx &gt; keepass.hash
+
+# Crack with hashcat
+hashcat -a 0 -m 13400 keepass.hash /usr/share/wordlists/rockyou.txt
+</code></pre>
 
                     </main>
 

@@ -38,7 +38,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-6c0ac172.js";
+            window.path_to_searchindex_js = "../searchindex-98be3c39.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-f2f6bff2.js"></script>
@@ -395,6 +395,134 @@ hashcat -a 3 -m 0 hash.txt ?u?l?l?l?l?d?s
 </code></pre>
 <h3 id="crack-bcrypt-hash"><a class="header" href="#crack-bcrypt-hash">Crack bcrypt hash</a></h3>
 <pre><code class="language-bash">hashcat -a 0 -m 3200 bcrypt_hash.txt /usr/share/wordlists/rockyou.txt
+</code></pre>
+<hr>
+<h2 id="cracking-protected-files"><a class="header" href="#cracking-protected-files">Cracking Protected Files</a></h2>
+<p>The use of file encryption is often neglected in both private and professional contexts. Even today, emails containing job applications, account statements, or contracts are frequently sent without encryption. Nevertheless, encrypted files can still be cracked with the right combination of wordlists and tools.</p>
+<p>In many cases, symmetric encryption algorithms such as AES-256 are used to securely store individual files or folders. For transmitting files, asymmetric encryption is typically employed, using two distinct keys: the sender encrypts with the recipient’s public key, and the recipient decrypts with the corresponding private key.</p>
+<h3 id="hash-modes-for-protected-files"><a class="header" href="#hash-modes-for-protected-files">Hash Modes for Protected Files</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>ID</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td><code>9400</code></td><td>MS Office 2007</td></tr>
+<tr><td><code>9500</code></td><td>MS Office 2010</td></tr>
+<tr><td><code>9600</code></td><td>MS Office 2013</td></tr>
+<tr><td><code>10400</code></td><td>PDF 1.1-1.3 (Acrobat 2-4)</td></tr>
+<tr><td><code>10500</code></td><td>PDF 1.4-1.6 (Acrobat 5-8)</td></tr>
+<tr><td><code>10600</code></td><td>PDF 1.7 Level 3 (Acrobat 9)</td></tr>
+<tr><td><code>10700</code></td><td>PDF 1.7 Level 8 (Acrobat 10-11)</td></tr>
+<tr><td><code>13400</code></td><td>KeePass 1/2 AES/Twofish</td></tr>
+<tr><td><code>22100</code></td><td>BitLocker</td></tr>
+<tr><td><code>6211-6243</code></td><td>TrueCrypt</td></tr>
+<tr><td><code>13711-13723</code></td><td>VeraCrypt</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="hunting-for-encrypted-files"><a class="header" href="#hunting-for-encrypted-files">Hunting for Encrypted Files</a></h3>
+<p>Many different extensions correspond to encrypted files. Use this command to locate commonly encrypted files on a Linux system:</p>
+<pre><code class="language-bash">for ext in $(echo ".xls .xls* .xltx .od* .doc .doc* .pdf .pot .pot* .pp*"); do
+  echo -e "\nFile extension: " $ext
+  find / -name *$ext 2&gt;/dev/null | grep -v "lib\|fonts\|share\|core"
+done
+</code></pre>
+<h3 id="hunting-for-ssh-keys"><a class="header" href="#hunting-for-ssh-keys">Hunting for SSH Keys</a></h3>
+<p>SSH private keys can be identified by their header content:</p>
+<pre><code class="language-bash">grep -rnE '^\-{5}BEGIN [A-Z0-9]+ PRIVATE KEY\-{5}$' /* 2&gt;/dev/null
+</code></pre>
+<p>To check if an SSH key is encrypted:</p>
+<pre><code class="language-bash">ssh-keygen -yf ~/.ssh/id_rsa
+# If encrypted, prompts for passphrase
+</code></pre>
+<p>Note: SSH keys are typically cracked with John the Ripper using <code>ssh2john.py</code>, as hashcat doesn’t have a direct mode for SSH private keys.</p>
+<hr>
+<h2 id="cracking-protected-archives"><a class="header" href="#cracking-protected-archives">Cracking Protected Archives</a></h2>
+<p>Besides standalone files, we often encounter password-protected archives such as ZIP files.</p>
+<h3 id="hash-modes-for-archives"><a class="header" href="#hash-modes-for-archives">Hash Modes for Archives</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>ID</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td><code>11600</code></td><td>7-Zip</td></tr>
+<tr><td><code>13600</code></td><td>WinZip</td></tr>
+<tr><td><code>17200</code></td><td>PKZIP (Compressed)</td></tr>
+<tr><td><code>17210</code></td><td>PKZIP (Uncompressed)</td></tr>
+<tr><td><code>17220</code></td><td>PKZIP (Compressed Multi-File)</td></tr>
+<tr><td><code>17225</code></td><td>PKZIP (Mixed Multi-File)</td></tr>
+<tr><td><code>17230</code></td><td>PKZIP (Compressed Multi-File Checksum-Only)</td></tr>
+<tr><td><code>12500</code></td><td>RAR3-hp</td></tr>
+<tr><td><code>13000</code></td><td>RAR5</td></tr>
+<tr><td><code>23700</code></td><td>RAR3-p (Compressed)</td></tr>
+<tr><td><code>23800</code></td><td>RAR3-p (Uncompressed)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="cracking-bitlocker-encrypted-drives"><a class="header" href="#cracking-bitlocker-encrypted-drives">Cracking BitLocker-Encrypted Drives</a></h3>
+<p>BitLocker is a full-disk encryption feature developed by Microsoft using AES with 128-bit or 256-bit keys. To crack a BitLocker encrypted drive, use <code>bitlocker2john</code> from the John the Ripper suite to extract hashes:</p>
+<pre><code class="language-bash">bitlocker2john -i Backup.vhd &gt; backup.hashes
+grep "bitlocker\$0" backup.hashes &gt; backup.hash
+cat backup.hash
+</code></pre>
+<p>The script outputs four hashes: the first two are for the BitLocker password, the latter two for the recovery key. The recovery key is 48 digits and randomly generated, so focus on cracking the password hash (<code>$bitlocker$0$...</code>).</p>
+<p>Crack with hashcat using mode 22100:</p>
+<pre><code class="language-bash">hashcat -a 0 -m 22100 '$bitlocker$0$16$02b329c0453b9273f2fc1b927443b5fe$1048576$12$00b0a67f961dd80103000000$60$d59f37e70696f7eab6b8f95ae93bd53f3f7067d5e33c0394b3d8e2d1fdb885cb86c1b978f6cc12ed26de0889cd2196b0510bbcd2a8c89187ba8ec54f' /usr/share/wordlists/rockyou.txt
+</code></pre>
+<p>Example output:</p>
+<pre><code>Session..........: hashcat
+Status...........: Cracked
+Hash.Mode........: 22100 (BitLocker)
+Hash.Target......: $bitlocker$0$16$02b329c0453b9273f2fc1b927443b5fe$10...8ec54f
+Time.Started.....: Sat Apr 19 17:49:25 2025 (1 min, 56 secs)
+Time.Estimated...: Sat Apr 19 17:51:21 2025 (0 secs)
+Speed.#1.........:       25 H/s (9.28ms) @ Accel:64 Loops:4096 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests (total), 1/1 (100.00%) Digests (new)
+Progress.........: 2880/14344385 (0.02%)
+Candidates.#1....: pirate -&gt; soccer9
+
+$bitlocker$0$...:1234qwer
+</code></pre>
+<p>Note: BitLocker uses strong AES encryption, so cracking may take considerable time depending on hardware.</p>
+<h3 id="mounting-bitlocker-drives-in-windows"><a class="header" href="#mounting-bitlocker-drives-in-windows">Mounting BitLocker Drives in Windows</a></h3>
+<p>Double-click the <code>.vhd</code> file. Windows will show an error initially since it’s encrypted. After mounting, double-click the BitLocker volume to be prompted for the password.</p>
+<h3 id="mounting-bitlocker-drives-in-linux"><a class="header" href="#mounting-bitlocker-drives-in-linux">Mounting BitLocker Drives in Linux</a></h3>
+<p>Install <code>dislocker</code>:</p>
+<pre><code class="language-bash">sudo apt-get install dislocker
+</code></pre>
+<p>Create mount directories:</p>
+<pre><code class="language-bash">sudo mkdir -p /media/bitlocker
+sudo mkdir -p /media/bitlockermount
+</code></pre>
+<p>Configure VHD as loop device, decrypt, and mount:</p>
+<pre><code class="language-bash">sudo losetup -f -P Backup.vhd
+sudo dislocker /dev/loop0p2 -u1234qwer -- /media/bitlocker
+sudo mount -o loop /media/bitlocker/dislocker-file /media/bitlockermount
+</code></pre>
+<p>Browse the files:</p>
+<pre><code class="language-bash">cd /media/bitlockermount/
+ls -la
+</code></pre>
+<p>Unmount when done:</p>
+<pre><code class="language-bash">sudo umount /media/bitlockermount
+sudo umount /media/bitlocker
+</code></pre>
+<h3 id="cracking-openssl-encrypted-gzip-files"><a class="header" href="#cracking-openssl-encrypted-gzip-files">Cracking OpenSSL Encrypted GZIP Files</a></h3>
+<p>Some archive formats don’t natively support password protection. Use the <code>file</code> command to identify OpenSSL encrypted files:</p>
+<pre><code class="language-bash">file GZIP.gzip
+# GZIP.gzip: openssl enc'd data with salted password
+</code></pre>
+<p>When cracking OpenSSL encrypted files with hashcat, you may encounter challenges including false positives. A more reliable approach is to use openssl within a loop:</p>
+<pre><code class="language-bash">for i in $(cat rockyou.txt); do
+  openssl enc -aes-256-cbc -d -in GZIP.gzip -k $i 2&gt;/dev/null | tar xz
+done
+</code></pre>
+<p>GZIP-related error messages can be safely ignored. When the correct password is found, the file is extracted to the current directory.</p>
+<h3 id="collecting-archive-file-extensions"><a class="header" href="#collecting-archive-file-extensions">Collecting Archive File Extensions</a></h3>
+<p>To get a comprehensive list of archive file types:</p>
+<pre><code class="language-bash">curl -s https://fileinfo.com/filetypes/compressed | html2text | awk '{print tolower($1)}' | grep "\." | tee -a compressed_ext.txt
 </code></pre>
 
                     </main>
