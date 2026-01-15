@@ -38,7 +38,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-6c0ac172.js";
+            window.path_to_searchindex_js = "../searchindex-98be3c39.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-f2f6bff2.js"></script>
@@ -297,6 +297,77 @@ john --wordlist=passwords.txt ssh.hash
 </code></pre>
 <h3 id="resume-a-session"><a class="header" href="#resume-a-session">Resume a Session</a></h3>
 <pre><code>john --restore=session_name
+</code></pre>
+<hr>
+<h2 id="hunting-for-encrypted-files"><a class="header" href="#hunting-for-encrypted-files">Hunting for Encrypted Files</a></h2>
+<h3 id="find-common-encrypted-file-types"><a class="header" href="#find-common-encrypted-file-types">Find common encrypted file types</a></h3>
+<pre><code class="language-bash">for ext in $(echo ".xls .xls* .xltx .od* .doc .doc* .pdf .pot .pot* .pp*"); do
+  echo -e "\nFile extension: " $ext
+  find / -name *$ext 2&gt;/dev/null | grep -v "lib\|fonts\|share\|core"
+done
+</code></pre>
+<h3 id="find-ssh-private-keys"><a class="header" href="#find-ssh-private-keys">Find SSH private keys</a></h3>
+<pre><code class="language-bash">grep -rnE '^\-{5}BEGIN [A-Z0-9]+ PRIVATE KEY\-{5}$' /* 2&gt;/dev/null
+</code></pre>
+<h3 id="check-if-ssh-key-is-encrypted"><a class="header" href="#check-if-ssh-key-is-encrypted">Check if SSH key is encrypted</a></h3>
+<pre><code class="language-bash">ssh-keygen -yf ~/.ssh/id_rsa
+# If encrypted, prompts for passphrase
+</code></pre>
+<hr>
+<h2 id="cracking-protected-files"><a class="header" href="#cracking-protected-files">Cracking Protected Files</a></h2>
+<h3 id="crack-encrypted-ssh-key"><a class="header" href="#crack-encrypted-ssh-key">Crack Encrypted SSH Key</a></h3>
+<pre><code class="language-bash">ssh2john.py SSH.private &gt; ssh.hash
+john --wordlist=rockyou.txt ssh.hash
+john ssh.hash --show
+</code></pre>
+<h3 id="crack-office-document"><a class="header" href="#crack-office-document">Crack Office Document</a></h3>
+<pre><code class="language-bash">office2john.py Protected.docx &gt; protected-docx.hash
+john --wordlist=rockyou.txt protected-docx.hash
+john protected-docx.hash --show
+</code></pre>
+<h3 id="crack-pdf-file"><a class="header" href="#crack-pdf-file">Crack PDF File</a></h3>
+<pre><code class="language-bash">pdf2john.py PDF.pdf &gt; pdf.hash
+john --wordlist=rockyou.txt pdf.hash
+john pdf.hash --show
+</code></pre>
+<hr>
+<h2 id="cracking-protected-archives"><a class="header" href="#cracking-protected-archives">Cracking Protected Archives</a></h2>
+<h3 id="crack-zip-file-1"><a class="header" href="#crack-zip-file-1">Crack ZIP File</a></h3>
+<pre><code class="language-bash">zip2john ZIP.zip &gt; zip.hash
+john --wordlist=rockyou.txt zip.hash
+john zip.hash --show
+</code></pre>
+<h3 id="crack-openssl-encrypted-gzip"><a class="header" href="#crack-openssl-encrypted-gzip">Crack OpenSSL Encrypted GZIP</a></h3>
+<pre><code class="language-bash"># Check file type
+file GZIP.gzip
+# Output: openssl enc'd data with salted password
+
+# Brute-force with loop (errors expected, file extracts on success)
+for i in $(cat rockyou.txt); do
+  openssl enc -aes-256-cbc -d -in GZIP.gzip -k $i 2&gt;/dev/null | tar xz
+done
+</code></pre>
+<h3 id="crack-bitlocker-drive"><a class="header" href="#crack-bitlocker-drive">Crack BitLocker Drive</a></h3>
+<pre><code class="language-bash">bitlocker2john -i Backup.vhd &gt; backup.hashes
+grep "bitlocker\$0" backup.hashes &gt; backup.hash
+john --wordlist=rockyou.txt backup.hash
+</code></pre>
+<hr>
+<h2 id="mounting-bitlocker-drives-linux"><a class="header" href="#mounting-bitlocker-drives-linux">Mounting BitLocker Drives (Linux)</a></h2>
+<pre><code class="language-bash"># Install dislocker
+sudo apt-get install dislocker
+
+# Create mount points
+sudo mkdir -p /media/bitlocker /media/bitlockermount
+
+# Mount and decrypt
+sudo losetup -f -P Backup.vhd
+sudo dislocker /dev/loop0p2 -u&lt;password&gt; -- /media/bitlocker
+sudo mount -o loop /media/bitlocker/dislocker-file /media/bitlockermount
+
+# Unmount when done
+sudo umount /media/bitlockermount
+sudo umount /media/bitlocker
 </code></pre>
 
                     </main>
