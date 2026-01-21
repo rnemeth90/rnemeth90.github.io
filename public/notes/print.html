@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-6f36b74e.js";
+            window.path_to_searchindex_js = "searchindex-811518ef.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-ec49e19a.js"></script>
+        <script src="toc-7ea494cf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -600,6 +600,7 @@
 <li><a href="#windows-authentication-process">windows-auth</a></li>
 <li><a href="#attacking-windows-credential-manager">attacking-cred-mgr</a></li>
 <li><a href="#attacking-active-directory">Active Directory Domain Services</a></li>
+<li><a href="#linux-authentication">linux-auth</a></li>
 </ul>
 </li>
 </ul>
@@ -652,6 +653,7 @@
 <li><a href="#pypykatz-cheatsheet">pypykatz</a></li>
 <li><a href="#lazagne-cheatsheet">lazagne</a></li>
 <li><a href="#server-side-template-injection">server-side template injection</a></li>
+<li><a href="cheatsheets/unshadow.html">unshadow</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="api-architectural-styles"><a class="header" href="#api-architectural-styles">API Architectural Styles</a></h1>
@@ -23985,6 +23987,7 @@ PID        TTY     STAT   TIME          CMD
 <li><a href="#john-the-ripper">john</a></li>
 <li><a href="#pypykatz">pypykatz</a></li>
 <li><a href="#lazagne">lazagne</a></li>
+<li><a href="tools/unshadow.html">unshadow</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="need-to-addrefine"><a class="header" href="#need-to-addrefine">Need to add/refine:</a></h1>
@@ -28022,6 +28025,10 @@ ac
 <li><a href="#attacking-active-directory">ADDS</a></li>
 <li><a href="#attacking-windows-credential-manager">credential manager</a></li>
 </ul>
+<h3 id="linux-1"><a class="header" href="#linux-1">Linux</a></h3>
+<ul>
+<li><a href="#linux-authentication">linux-auth</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="crawling"><a class="header" href="#crawling">Crawling</a></h1>
 <p>Crawling (or spidering) is the automated process of systematically browsing the web to index and collect information from websites. It is commonly used by search engines to gather data for indexing, but it can also be employed for various other purposes, including security assessments, data mining, and competitive analysis. Crawlers, also known as spiders or bots, follow links on web pages to discover new content and extract relevant information.</p>
@@ -29769,6 +29776,132 @@ NTDSUTIL    192.168.86.218  445    WIN-F78TN8NTHVE  [-] Error while dumping NTDS
 <p>We can still use hashes to attempt to authenticate with a system using a type of attack called Pass-the-Hash (PtH). A PtH attack takes advantage of the NTLM authentication protocol to authenticate a user using a password hash. Instead of username:clear-text password as the format for login, we can instead use username:password hash. Here is an example of how this would work:</p>
 <pre><code class="language-bash">rnemeth@htb[/htb]$ evil-winrm -i 10.129.201.57 -u Administrator -H 64f12cddaa88057e06a81b54e73b949b
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="linux-authentication"><a class="header" href="#linux-authentication">Linux Authentication</a></h1>
+<h2 id="summary-3"><a class="header" href="#summary-3">Summary</a></h2>
+<p>Linux uses Pluggable Authentication Modules (PAM) for authentication. The key modules (<code>pam_unix.so</code>, <code>pam_unix2.so</code>) are located in <code>/usr/lib/x86_64-linux-gnu/security/</code> on Debian-based systems. PAM handles user information, authentication, sessions, and password changes.</p>
+<h3 id="key-files-1"><a class="header" href="#key-files-1">Key Files</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>File</th><th>Purpose</th><th>Permissions</th></tr>
+</thead>
+<tbody>
+<tr><td><code>/etc/passwd</code></td><td>User account info</td><td>World-readable</td></tr>
+<tr><td><code>/etc/shadow</code></td><td>Password hashes</td><td>Root only</td></tr>
+<tr><td><code>/etc/security/opasswd</code></td><td>Previous passwords</td><td>Root only</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="etcpasswd-1"><a class="header" href="#etcpasswd-1">/etc/passwd</a></h2>
+<p>Contains user information in seven colon-separated fields:</p>
+<pre><code>htb-student:x:1000:1000:,,,:/home/htb-student:/bin/bash
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Username</td><td>Login name</td></tr>
+<tr><td>Password</td><td><code>x</code> = hash in shadow file; empty = no password</td></tr>
+<tr><td>UID</td><td>User ID</td></tr>
+<tr><td>GID</td><td>Primary group ID</td></tr>
+<tr><td>GECOS</td><td>User info (name, phone, etc.)</td></tr>
+<tr><td>Home</td><td>Home directory path</td></tr>
+<tr><td>Shell</td><td>Default login shell</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Security Note:</strong> If password field contains an actual hash (rare, old systems) or the file is writable, this is a critical vulnerability.</p>
+<hr>
+<h2 id="etcshadow-1"><a class="header" href="#etcshadow-1">/etc/shadow</a></h2>
+<p>Stores password hashes with nine colon-separated fields:</p>
+<pre><code>htb-student:$y$j9T$3QSBB6CbHEu...SNIP...f8Ms:18955:0:99999:7:::
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Username</td><td>Login name</td></tr>
+<tr><td>Password</td><td>Hashed password</td></tr>
+<tr><td>Last change</td><td>Days since epoch of last change</td></tr>
+<tr><td>Min age</td><td>Minimum days between changes</td></tr>
+<tr><td>Max age</td><td>Maximum days before change required</td></tr>
+<tr><td>Warning</td><td>Days before expiry to warn</td></tr>
+<tr><td>Inactivity</td><td>Days after expiry until disabled</td></tr>
+<tr><td>Expiration</td><td>Absolute expiry date</td></tr>
+<tr><td>Reserved</td><td>Unused</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Special Password Values:</strong></p>
+<ul>
+<li><code>!</code> or <code>*</code> = Unix password login disabled (other methods may work)</li>
+<li>Empty = No password required</li>
+</ul>
+<h3 id="hash-format"><a class="header" href="#hash-format">Hash Format</a></h3>
+<pre><code>$&lt;id&gt;$&lt;salt&gt;$&lt;hashed&gt;
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>ID</th><th>Algorithm</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>MD5</td></tr>
+<tr><td>2a</td><td>Blowfish</td></tr>
+<tr><td>5</td><td>SHA-256</td></tr>
+<tr><td>6</td><td>SHA-512</td></tr>
+<tr><td>sha1</td><td>SHA1crypt</td></tr>
+<tr><td>y</td><td>Yescrypt (modern default)</td></tr>
+<tr><td>gy</td><td>Gost-yescrypt</td></tr>
+<tr><td>7</td><td>Scrypt</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="etcsecurityopasswd"><a class="header" href="#etcsecurityopasswd">/etc/security/opasswd</a></h2>
+<p>PAM stores previous passwords here to prevent reuse. Contains comma-separated historical hashes per user:</p>
+<pre><code>cry0l1t3:1000:2:$1$HjFAfYTG$qNDkF0zJ3v8ylCOrKB0kt0,$1$kcUjWZJX$E9uMSmiQeRh4pAAgzuvkq1
+</code></pre>
+<p><strong>Note:</strong> Older hashes (e.g., MD5 <code>$1$</code>) are easier to crack and may reveal password patterns.</p>
+<hr>
+<h2 id="cracking-linux-credentials"><a class="header" href="#cracking-linux-credentials">Cracking Linux Credentials</a></h2>
+<h3 id="using-unshadow"><a class="header" href="#using-unshadow">Using unshadow</a></h3>
+<p>Combine passwd and shadow files for cracking:</p>
+<pre><code class="language-sh">sudo cp /etc/passwd /tmp/passwd.bak
+sudo cp /etc/shadow /tmp/shadow.bak
+unshadow /tmp/passwd.bak /tmp/shadow.bak &gt; /tmp/unshadowed.hashes
+</code></pre>
+<h3 id="cracking-with-hashcat"><a class="header" href="#cracking-with-hashcat">Cracking with hashcat</a></h3>
+<pre><code class="language-sh">hashcat -m 1800 -a 0 /tmp/unshadowed.hashes rockyou.txt -o /tmp/unshadowed.cracked
+</code></pre>
+<h3 id="cracking-with-john-the-ripper"><a class="header" href="#cracking-with-john-the-ripper">Cracking with John the Ripper</a></h3>
+<p>John’s single crack mode is ideal for this scenario as it uses GECOS/username data:</p>
+<pre><code class="language-sh">john --single /tmp/unshadowed.hashes
+</code></pre>
+<p>Or with a wordlist:</p>
+<pre><code class="language-sh">john --wordlist=rockyou.txt /tmp/unshadowed.hashes
+</code></pre>
+<hr>
+<h2 id="common-hashcat-modes-for-linux"><a class="header" href="#common-hashcat-modes-for-linux">Common Hashcat Modes for Linux</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mode</th><th>Algorithm</th></tr>
+</thead>
+<tbody>
+<tr><td>500</td><td>MD5crypt ($1$)</td></tr>
+<tr><td>1800</td><td>SHA-512crypt ($6$)</td></tr>
+<tr><td>7400</td><td>SHA-256crypt ($5$)</td></tr>
+<tr><td>3200</td><td>bcrypt ($2a$)</td></tr>
+</tbody>
+</table>
+</div>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="electronics"><a class="header" href="#electronics">Electronics</a></h1>
 <ul>
