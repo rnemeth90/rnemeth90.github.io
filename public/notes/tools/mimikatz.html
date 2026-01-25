@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-45f66119.js";
+            window.path_to_searchindex_js = "../searchindex-4f962408.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-9a594cb9.js"></script>
+        <script src="../toc-22248eaf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -229,7 +229,7 @@
 <tr><td><code>kerberos</code></td><td>Kerberos ticket operations</td></tr>
 <tr><td><code>vault</code></td><td>Windows Vault/Credential Manager</td></tr>
 <tr><td><code>dpapi</code></td><td>DPAPI masterkey and blob decryption</td></tr>
-<tr><td><code>crypto</code></td><td>Certificate and key operations</td></tr>
+<tr><td><code>crypto</code></td><td>Certificate and key operations (Pass-the-Certificate)</td></tr>
 <tr><td><code>token</code></td><td>Token manipulation</td></tr>
 </tbody>
 </table>
@@ -259,6 +259,36 @@
 <pre><code>sekurlsa::pth /user:Administrator /domain:DOMAIN /aes256:&lt;aes256_hash&gt; /run:cmd
 </code></pre>
 <p>Converts a Kerberos key (AES256, AES128, or RC4) into a full TGT. The spawned process can then request service tickets for lateral movement.</p>
+<hr>
+<h2 id="crypto-module-certificates"><a class="header" href="#crypto-module-certificates">crypto Module (Certificates)</a></h2>
+<p>Used for certificate operations related to Pass-the-Certificate attacks and AD CS abuse.</p>
+<h3 id="export-user-certificates"><a class="header" href="#export-user-certificates">Export User Certificates</a></h3>
+<pre><code>crypto::certificates /export
+</code></pre>
+<h3 id="export-machine-certificates"><a class="header" href="#export-machine-certificates">Export Machine Certificates</a></h3>
+<pre><code>crypto::certificates /systemstore:local_machine /export
+</code></pre>
+<h3 id="make-non-exportable-keys-exportable"><a class="header" href="#make-non-exportable-keys-exportable">Make Non-Exportable Keys Exportable</a></h3>
+<pre><code>crypto::capi
+crypto::cng
+</code></pre>
+<p>Patches CryptoAPI/CNG to allow export of keys marked as non-exportable. Run before exporting certificates.</p>
+<h3 id="common-crypto-commands"><a class="header" href="#common-crypto-commands">Common crypto Commands</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>crypto::capi</code></td><td>Patch CryptoAPI for key export</td></tr>
+<tr><td><code>crypto::cng</code></td><td>Patch CNG for key export</td></tr>
+<tr><td><code>crypto::certificates /export</code></td><td>Export user certificates to PFX</td></tr>
+<tr><td><code>crypto::certificates /systemstore:local_machine /export</code></td><td>Export machine certificates</td></tr>
+<tr><td><code>crypto::keys</code></td><td>List cryptographic keys</td></tr>
+<tr><td><code>crypto::stores</code></td><td>List certificate stores</td></tr>
+</tbody>
+</table>
+</div>
 <hr>
 <h2 id="lsadump-module"><a class="header" href="#lsadump-module">lsadump Module</a></h2>
 <h3 id="dump-sam-database"><a class="header" href="#dump-sam-database">Dump SAM Database</a></h3>
