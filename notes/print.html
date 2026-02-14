@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-16137b64.js";
+            window.path_to_searchindex_js = "searchindex-7b0a9fd7.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-fada16db.js"></script>
+        <script src="toc-1751eafe.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -437,6 +437,13 @@
 <li><a href="#well-known-uris">well-known-uris</a></li>
 <li><a href="#windows-file-transfer-methods">Windows File Transfer Methods</a></li>
 <li><a href="#windows-authentication-process">windows-auth</a></li>
+<li><a href="infosec/active-directory/README.html">Active Directory</a>
+<ul>
+<li><a href="#external-recon-and-enumeration-principles">External Recon and Enumeration</a></li>
+<li><a href="#initial-enumeration-of-the-domain">Initial Enumeration of the Domain</a></li>
+<li><a href="#llmnrnbt-ns-poisoning---from-linux">LLMNR/NBT-NS Poisoning - from Linux</a></li>
+</ul>
+</li>
 <li><a href="infosec/pivoting-tunneling-portforward/README.html">Pivoting, Tunneling, and Port Forwarding</a>
 <ul>
 <li><a href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></li>
@@ -621,7 +628,7 @@
 <li><a href="#hashcat">hashcat</a></li>
 <li><a href="#hydra-2">hydra</a></li>
 <li><a href="#instructions-for-using-dnspinger">instructions for using dnspinger</a></li>
-<li><a href="#john-the-ripper">john the ripper</a></li>
+<li><a href="#john-the-ripper-1">john the ripper</a></li>
 <li><a href="#lazagne">lazagne</a></li>
 <li><a href="#medusa">medusa</a></li>
 <li><a href="#metasploit-framework">metasploit</a></li>
@@ -18595,6 +18602,10 @@ ac
 <ul>
 <li><a href="#linux-authentication">linux-auth</a></li>
 </ul>
+<h3 id="active-directory"><a class="header" href="#active-directory">Active Directory</a></h3>
+<ul>
+<li><a href="infosec/active-directory">active-directory</a></li>
+</ul>
 <h3 id="pivoting-tunneling-and-port-forwarding"><a class="header" href="#pivoting-tunneling-and-port-forwarding">Pivoting, Tunneling, and Port Forwarding</a></h3>
 <ul>
 <li><a href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></li>
@@ -22448,8 +22459,358 @@ https://learn.microsoft.com/en-us/windows-server/security/windows-authentication
 https://www.microsoft.com/en-us/msrc/blog/2014/06/an-overview-of-kb2871997
 https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="pivoting-tunneling-and-port-forwarding-1"><a class="header" href="#pivoting-tunneling-and-port-forwarding-1">Pivoting, Tunneling, and Port Forwarding</a></h1>
+<h1 id="active-directory-1"><a class="header" href="#active-directory-1">Active Directory</a></h1>
 <h2 id="directory-map-14"><a class="header" href="#directory-map-14">Directory Map</a></h2>
+<ul>
+<li><a href="#external-recon-and-enumeration-principles">External Recon and Enumeration</a></li>
+<li><a href="#initial-enumeration-of-the-domain">Initial Enumeration of the Domain</a></li>
+<li><a href="#llmnrnbt-ns-poisoning---from-linux">LLMNR/NBT-NS Poisoning - from Linux</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="external-recon-and-enumeration-principles"><a class="header" href="#external-recon-and-enumeration-principles">External Recon and Enumeration Principles</a></h1>
+<p>External reconnaissance is performed before an Active Directory pentest to gather publicly accessible information that can affect the outcome of the engagement. Goals include:</p>
+<ul>
+<li>Validating information in the scoping document</li>
+<li>Ensuring actions are taken against the correct scope</li>
+<li>Identifying publicly accessible information such as leaked credentials</li>
+</ul>
+<h2 id="what-to-look-for"><a class="header" href="#what-to-look-for">What to Look For</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Data Point</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>IP Space</strong></td><td>Valid ASN, netblocks, cloud presence, hosting providers, DNS record entries</td></tr>
+<tr><td><strong>Domain Information</strong></td><td>DNS records, subdomains, publicly accessible services (mail servers, VPN portals, etc.), defenses in place (SIEM, AV, IPS/IDS)</td></tr>
+<tr><td><strong>Schema Format</strong></td><td>Email accounts, AD usernames, password policies — useful for building username lists for password spraying, credential stuffing, brute forcing</td></tr>
+<tr><td><strong>Data Disclosures</strong></td><td>Publicly accessible files (.pdf, .ppt, .docx, .xlsx) containing intranet links, user metadata, shares, credentials in code repos, AD username formats in document metadata</td></tr>
+<tr><td><strong>Breach Data</strong></td><td>Publicly released usernames, passwords, or other critical information</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="where-to-look"><a class="header" href="#where-to-look">Where to Look</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Resource</th><th>Examples</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>ASN / IP Registrars</strong></td><td>IANA, ARIN (Americas), RIPE (Europe), BGP Toolkit</td></tr>
+<tr><td><strong>Domain Registrars &amp; DNS</strong></td><td>DomainTools, PTRArchive, ICANN, manual DNS queries against well-known servers (e.g. 8.8.8.8)</td></tr>
+<tr><td><strong>Social Media</strong></td><td>LinkedIn, Twitter, Facebook, regional social media, news articles</td></tr>
+<tr><td><strong>Public-Facing Company Websites</strong></td><td>News articles, embedded documents, “About Us” and “Contact Us” pages</td></tr>
+<tr><td><strong>Cloud &amp; Dev Storage</strong></td><td>GitHub, AWS S3 buckets, Azure Blob storage, Google Dorks</td></tr>
+<tr><td><strong>Breach Data Sources</strong></td><td>HaveIBeenPwned, Dehashed — search for corporate emails with cleartext passwords or crackable hashes to test against exposed login portals (Citrix, RDS, OWA, O365, VPN, VMware Horizon, etc.)</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="finding-address-spaces"><a class="header" href="#finding-address-spaces">Finding Address Spaces</a></h2>
+<p>Use the <strong>BGP Toolkit</strong> (Hurricane Electric) to research address blocks and ASNs for an organization. Key considerations:</p>
+<ul>
+<li>Large corporations often self-host infrastructure and have their own ASN</li>
+<li>Smaller organizations typically host with third-party providers (Cloudflare, GCP, AWS, Azure)</li>
+<li>Always verify you are not interacting with infrastructure outside your scope</li>
+<li>Some hosting providers (e.g. AWS) have specific penetration testing guidelines; others (e.g. Oracle) require a Cloud Security Testing Notification</li>
+<li>When in doubt, <strong>escalate before attacking</strong> any external-facing services you are unsure of</li>
+</ul>
+<h2 id="dns-enumeration"><a class="header" href="#dns-enumeration">DNS Enumeration</a></h2>
+<p>Use sites like <strong>DomainTools</strong> and <strong>ViewDNS.info</strong> to:</p>
+<ul>
+<li>Validate scope and find undisclosed reachable hosts</li>
+<li>Retrieve DNS resolution data, DNSSEC status, and accessibility info</li>
+<li>Discover additional subdomains residing on in-scope IP addresses</li>
+<li>Cross-validate IP/ASN search results</li>
+</ul>
+<h2 id="public-data"><a class="header" href="#public-data">Public Data</a></h2>
+<h3 id="social-media--job-postings"><a class="header" href="#social-media--job-postings">Social Media &amp; Job Postings</a></h3>
+<ul>
+<li>Sites like LinkedIn, Indeed, and Glassdoor can reveal organizational structure, technology stack, software versions, and security implementations</li>
+<li>Job postings may disclose specific software versions (e.g. SharePoint 2013/2016), which hints at potential upgrade-in-place vulnerabilities</li>
+</ul>
+<h3 id="company-websites"><a class="header" href="#company-websites">Company Websites</a></h3>
+<ul>
+<li>Gather contact emails, phone numbers, org charts, published documents</li>
+<li>Embedded documents may contain links to internal infrastructure or intranet sites</li>
+<li>Check for data inadvertently leaked on GitHub, AWS cloud storage, or other web platforms</li>
+<li>Tools: <strong>Trufflehog</strong> (credential scanning in repos), <strong>Greyhat Warfare</strong> (public cloud storage search)</li>
+</ul>
+<h2 id="username-harvesting"><a class="header" href="#username-harvesting">Username Harvesting</a></h2>
+<p>Use tools like <strong>linkedin2username</strong> to scrape a company’s LinkedIn page and generate username permutations:</p>
+<ul>
+<li><code>flast</code></li>
+<li><code>first.last</code></li>
+<li><code>f.last</code></li>
+</ul>
+<p>These can be added to password spraying target lists.</p>
+<h2 id="credential-hunting"><a class="header" href="#credential-hunting">Credential Hunting</a></h2>
+<p><strong>Dehashed</strong> can be used to search for cleartext credentials and password hashes in breach data:</p>
+<pre><code class="language-bash">sudo python3 dehashed.py -q inlanefreight.local -p
+</code></pre>
+<p>Results may include email, username, cleartext password, hashed password, and the source database. Test discovered credentials against exposed login portals using AD authentication.</p>
+<h2 id="google-dorking-examples"><a class="header" href="#google-dorking-examples">Google Dorking Examples</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Purpose</th><th>Dork</th></tr>
+</thead>
+<tbody>
+<tr><td>Find PDF files on target</td><td><code>filetype:pdf inurl:targetdomain.com</code></td></tr>
+<tr><td>Find email addresses on target</td><td><code>intext:"@targetdomain.com" inurl:targetdomain.com</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="overarching-enumeration-principles"><a class="header" href="#overarching-enumeration-principles">Overarching Enumeration Principles</a></h2>
+<p>Enumeration is an <strong>iterative process</strong> repeated throughout a penetration test:</p>
+<ol>
+<li>Start with <strong>passive</strong> resources, wide in scope, and narrow down</li>
+<li>Exhaust passive enumeration, examine results</li>
+<li>Move into <strong>active</strong> enumeration</li>
+</ol>
+<h3 id="example-enumeration-workflow"><a class="header" href="#example-enumeration-workflow">Example Enumeration Workflow</a></h3>
+<ol>
+<li><strong>Check ASN/IP &amp; Domain Data</strong> — Use BGP Toolkit to find IP addresses, mail servers, nameservers</li>
+<li><strong>Validate findings</strong> — Cross-reference with ViewDNS.info, nslookup, etc.</li>
+<li><strong>Harvest public data</strong> — Google Dorks for files and email addresses on the target domain</li>
+<li><strong>Scrape usernames</strong> — LinkedIn and other sources</li>
+<li><strong>Search breach data</strong> — Dehashed, HaveIBeenPwned for credential leaks</li>
+<li><strong>Build wordlists</strong> — Combine findings for targeted password spraying</li>
+</ol>
+<h3 id="key-takeaways-1"><a class="header" href="#key-takeaways-1">Key Takeaways</a></h3>
+<ul>
+<li>Always save files, screenshots, scan output, and tool output as soon as you find them</li>
+<li>If stuck during a pentest, revisit passive recon for additional leads (e.g. breach data for VPN access)</li>
+<li>The majority of internal AD enumeration can be performed with just <strong>low-privilege domain user credentials</strong></li>
+<li>A thorough external recon phase can mean the difference between days of brute-forcing and a quick foothold</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="initial-enumeration-of-the-domain"><a class="header" href="#initial-enumeration-of-the-domain">Initial Enumeration of the Domain</a></h1>
+<p>Internal AD enumeration begins once you are positioned inside the target network. The goal is to identify hosts, critical services, users, and potential footholds before gaining domain credentials.</p>
+<h2 id="common-test-setups"><a class="header" href="#common-test-setups">Common Test Setups</a></h2>
+<p>Clients may choose from several engagement configurations:</p>
+<ul>
+<li><strong>Pentest VM</strong> in their internal network calling back to a jump host over VPN (SSH access)</li>
+<li><strong>Physical device</strong> plugged into an ethernet port, calling back over VPN</li>
+<li><strong>Physical presence</strong> at the client’s office with your own laptop</li>
+<li><strong>Cloud VM</strong> (Azure/AWS) with internal network access via SSH and IP whitelisting</li>
+<li><strong>VPN access</strong> into the internal network (limits certain attacks like LLMNR/NBT-NS poisoning)</li>
+<li><strong>Corporate laptop</strong> connected to client VPN</li>
+<li><strong>Managed workstation</strong> (typically Windows) at the office, with limited or full internet access</li>
+<li><strong>VDI</strong> (Citrix or similar), accessible over VPN</li>
+</ul>
+<h3 id="testing-approaches"><a class="header" href="#testing-approaches">Testing Approaches</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Approach</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Grey box</strong></td><td>Provided a list of in-scope IPs/CIDR ranges</td></tr>
+<tr><td><strong>Black box</strong></td><td>No information; all discovery is blind</td></tr>
+<tr><td><strong>Evasive</strong></td><td>Start quiet, increase noise to find detection threshold</td></tr>
+<tr><td><strong>Non-evasive</strong></td><td>Full speed, no stealth concerns</td></tr>
+</tbody>
+</table>
+</div>
+<p>The client may also choose whether to provide credentials upfront or require you to start unauthenticated.</p>
+<h2 id="key-data-points-to-enumerate"><a class="header" href="#key-data-points-to-enumerate">Key Data Points to Enumerate</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Data Point</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>AD Users</strong></td><td>Valid user accounts to target for password spraying</td></tr>
+<tr><td><strong>AD Joined Computers</strong></td><td>Domain Controllers, file servers, SQL servers, web servers, Exchange servers, database servers</td></tr>
+<tr><td><strong>Key Services</strong></td><td>Kerberos, NetBIOS, LDAP, DNS</td></tr>
+<tr><td><strong>Vulnerable Hosts and Services</strong></td><td>Quick wins — easy hosts to exploit for an initial foothold</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="enumeration-methodology-ttps"><a class="header" href="#enumeration-methodology-ttps">Enumeration Methodology (TTPs)</a></h2>
+<ol>
+<li><strong>Passive identification</strong> of hosts on the network</li>
+<li><strong>Active validation</strong> of results (services, names, potential vulnerabilities)</li>
+<li><strong>Probe hosts</strong> for interesting data</li>
+<li><strong>Regroup and assess</strong> — ideally you now have credentials or a target for a foothold</li>
+</ol>
+<h2 id="identifying-hosts"><a class="header" href="#identifying-hosts">Identifying Hosts</a></h2>
+<h3 id="passive-wireshark--tcpdump"><a class="header" href="#passive-wireshark--tcpdump">Passive: Wireshark / TCPDump</a></h3>
+<p>Listen to network traffic to identify hosts and traffic types. Useful in black box assessments.</p>
+<pre><code class="language-bash">sudo -E wireshark
+sudo tcpdump -i ens224
+</code></pre>
+<ul>
+<li><strong>ARP requests/replies</strong> reveal hosts on the local broadcast domain</li>
+<li><strong>MDNS</strong> queries reveal hostnames (e.g. <code>ACADEMY-EA-WEB01.local</code>)</li>
+<li>Save PCAP captures for later review and reporting</li>
+</ul>
+<h3 id="passive-responder-analyze-mode"><a class="header" href="#passive-responder-analyze-mode">Passive: Responder (Analyze Mode)</a></h3>
+<p>Responder in analyze mode passively listens for LLMNR, NBT-NS, and MDNS requests without sending poisoned packets:</p>
+<pre><code class="language-bash">sudo responder -I ens224 -A
+</code></pre>
+<p>This can reveal additional hosts not seen in Wireshark captures.</p>
+<h3 id="active-fping-icmp-sweep"><a class="header" href="#active-fping-icmp-sweep">Active: fping (ICMP Sweep)</a></h3>
+<p>Use <code>fping</code> to quickly identify live hosts across a subnet:</p>
+<pre><code class="language-bash">fping -asgq 172.16.5.0/23
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-a</code></td><td>Show targets that are alive</td></tr>
+<tr><td><code>-s</code></td><td>Print stats at end of scan</td></tr>
+<tr><td><code>-g</code></td><td>Generate target list from CIDR</td></tr>
+<tr><td><code>-q</code></td><td>Quiet — don’t show per-target results</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="active-nmap-scanning"><a class="header" href="#active-nmap-scanning">Active: Nmap Scanning</a></h3>
+<p>Perform detailed service enumeration on discovered hosts:</p>
+<pre><code class="language-bash">sudo nmap -v -A -iL hosts.txt -oN /home/user/Documents/host-enum
+</code></pre>
+<p>Key things to look for in results:</p>
+<ul>
+<li><strong>Domain Controllers</strong> — identified by open ports: DNS (53), Kerberos (88), LDAP (389/636), SMB (445)</li>
+<li><strong>Naming conventions</strong> — NetBIOS and DNS names (e.g. <code>ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL</code>)</li>
+<li><strong>Legacy/outdated hosts</strong> — Windows Server 2008, Windows 7, etc. may be vulnerable to EternalBlue, MS08-067, and similar exploits</li>
+<li><strong>SQL servers, web servers, mail servers</strong> — additional attack surface</li>
+</ul>
+<p><strong>Best practices:</strong></p>
+<ul>
+<li>Always use <code>-oA</code> to save scan results in multiple formats</li>
+<li>Understand what your scans do before running them (some Nmap scripts run active vuln checks that can crash hosts)</li>
+<li>Alert the client before exploiting legacy systems — get written approval</li>
+</ul>
+<h2 id="identifying-users"><a class="header" href="#identifying-users">Identifying Users</a></h2>
+<h3 id="kerbrute-internal-ad-username-enumeration"><a class="header" href="#kerbrute-internal-ad-username-enumeration">Kerbrute (Internal AD Username Enumeration)</a></h3>
+<p>Kerbrute exploits Kerberos pre-authentication failures (which often don’t trigger logs or alerts) to enumerate valid domain accounts:</p>
+<pre><code class="language-bash">kerbrute userenum -d INLANEFREIGHT.LOCAL --dc 172.16.5.5 jsmith.txt -o valid_ad_users
+</code></pre>
+<ul>
+<li>Use wordlists from <a href="https://github.com/insidetrust/statistically-likely-usernames">Insidetrust</a> (e.g. <code>jsmith.txt</code>, <code>jsmith2.txt</code>)</li>
+<li>Compile from source: <code>git clone https://github.com/ropnop/kerbrute.git &amp;&amp; sudo make all</code></li>
+<li>Move binary to PATH: <code>sudo mv kerbrute_linux_amd64 /usr/local/bin/kerbrute</code></li>
+</ul>
+<p>Results provide a list of valid usernames for targeted password spraying.</p>
+<h2 id="gaining-system-level-access"><a class="header" href="#gaining-system-level-access">Gaining SYSTEM-Level Access</a></h2>
+<p>The <code>NT AUTHORITY\SYSTEM</code> account on a domain-joined host can enumerate AD by impersonating the computer account. Ways to gain SYSTEM access:</p>
+<ul>
+<li><strong>Remote exploits</strong> — MS08-067, EternalBlue, BlueKeep</li>
+<li><strong>Service account abuse</strong> — SeImpersonate privileges via Juicy Potato (older Windows OS)</li>
+<li><strong>Local privilege escalation</strong> — e.g. Windows 10 Task Scheduler 0-day</li>
+<li><strong>Local admin + PsExec</strong> — launch a SYSTEM cmd window</li>
+</ul>
+<h3 id="what-system-access-enables"><a class="header" href="#what-system-access-enables">What SYSTEM Access Enables</a></h3>
+<ul>
+<li>Enumerate the domain with BloodHound, PowerView, or built-in tools</li>
+<li>Perform Kerberoasting / ASREPRoasting</li>
+<li>Run Inveigh for Net-NTLMv2 hash capture or SMB relay attacks</li>
+<li>Token impersonation to hijack privileged domain accounts</li>
+<li>ACL attacks</li>
+</ul>
+<h2 id="a-word-of-caution"><a class="header" href="#a-word-of-caution">A Word of Caution</a></h2>
+<ul>
+<li><strong>Non-evasive tests</strong>: noise level doesn’t typically matter</li>
+<li><strong>Evasive / red team</strong>: stealth is critical — tools like Nmap full-network scans are loud</li>
+<li><strong>Industrial environments</strong>: scanning sensors or logic controllers can overload them and disrupt operations</li>
+<li>Always clarify the assessment goal and rules of engagement <strong>in writing</strong> before starting</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="llmnrnbt-ns-poisoning---from-linux"><a class="header" href="#llmnrnbt-ns-poisoning---from-linux">LLMNR/NBT-NS Poisoning - from Linux</a></h1>
+<p>A Man-in-the-Middle attack on LLMNR and NBT-NS broadcasts to capture NTLMv1/NTLMv2 password hashes. Captured hashes can be cracked offline or used in SMB Relay attacks.</p>
+<h2 id="llmnr--nbt-ns-primer"><a class="header" href="#llmnr--nbt-ns-primer">LLMNR &amp; NBT-NS Primer</a></h2>
+<ul>
+<li><strong>LLMNR</strong> (Link-Local Multicast Name Resolution) — fallback when DNS fails; hosts on the same local link perform name resolution for other hosts. Uses <strong>UDP port 5355</strong>.</li>
+<li><strong>NBT-NS</strong> (NetBIOS Name Service) — fallback when LLMNR fails; identifies systems by their NetBIOS name. Uses <strong>UDP port 137</strong>.</li>
+</ul>
+<p>The critical weakness: when LLMNR/NBT-NS are used for name resolution, <strong>any host on the network can reply</strong>. An attacker can spoof an authoritative name resolution source and capture authentication requests.</p>
+<h2 id="attack-flow"><a class="header" href="#attack-flow">Attack Flow</a></h2>
+<ol>
+<li>A host attempts to connect to <code>\\print01.inlanefreight.local</code> but mistypes <code>\\printer01.inlanefreight.local</code></li>
+<li>DNS responds that the host is unknown</li>
+<li>The host broadcasts to the local network asking if anyone knows the location of <code>\\printer01.inlanefreight.local</code></li>
+<li>The attacker (running Responder) responds, claiming to be that host</li>
+<li>The victim sends an authentication request containing a <strong>username and NTLMv2 password hash</strong></li>
+<li>The hash can be cracked offline or used in an SMB Relay attack</li>
+</ol>
+<h2 id="poisoning-tools"><a class="header" href="#poisoning-tools">Poisoning Tools</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Responder</strong></td><td>Purpose-built Python tool to poison LLMNR, NBT-NS, and MDNS (Linux, .exe version for Windows)</td></tr>
+<tr><td><strong>Inveigh</strong></td><td>Cross-platform MITM platform in C# and PowerShell for spoofing and poisoning</td></tr>
+<tr><td><strong>Metasploit</strong></td><td>Built-in scanners and spoofing modules for poisoning attacks</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="protocols-targeted-responder--inveigh"><a class="header" href="#protocols-targeted-responder--inveigh">Protocols Targeted (Responder &amp; Inveigh)</a></h3>
+<p>LLMNR, DNS, MDNS, NBNS, DHCP, ICMP, HTTP, HTTPS, SMB, LDAP, WebDAV, Proxy Auth</p>
+<p>Responder additionally supports: MSSQL, DCE-RPC, FTP, POP3, IMAP, SMTP auth</p>
+<h2 id="using-responder"><a class="header" href="#using-responder">Using Responder</a></h2>
+<h3 id="key-options"><a class="header" href="#key-options">Key Options</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-I</code></td><td>Network interface (required)</td></tr>
+<tr><td><code>-A</code></td><td>Analyze mode — passive listening, no poisoning</td></tr>
+<tr><td><code>-w</code></td><td>Start WPAD rogue proxy server (captures HTTP requests from IE with auto-detect enabled)</td></tr>
+<tr><td><code>-f</code></td><td>Fingerprint remote host OS and version</td></tr>
+<tr><td><code>-v</code></td><td>Verbose output</td></tr>
+<tr><td><code>-F</code></td><td>Force NTLM/Basic auth on wpad.dat retrieval (may cause login prompt)</td></tr>
+<tr><td><code>-P</code></td><td>Force proxy authentication (effective with <code>-r</code>)</td></tr>
+<tr><td><code>--lm</code></td><td>Force LM hashing downgrade for XP/2003 and earlier</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="required-ports"><a class="header" href="#required-ports">Required Ports</a></h3>
+<pre><code>UDP 137, UDP 138, UDP 53, UDP/TCP 389, TCP 1433, UDP 1434,
+TCP 80, TCP 135, TCP 139, TCP 445, TCP 21, TCP 3141,
+TCP 25, TCP 110, TCP 587, TCP 3128, Multicast UDP 5355 and 5353
+</code></pre>
+<p>Rogue servers (e.g. SMB) can be disabled in <code>Responder.conf</code>.</p>
+<h3 id="starting-responder"><a class="header" href="#starting-responder">Starting Responder</a></h3>
+<pre><code class="language-bash">sudo responder -I ens224
+</code></pre>
+<p>Run in a <code>tmux</code> window while performing other enumeration tasks to maximize hash collection.</p>
+<h3 id="log-files"><a class="header" href="#log-files">Log Files</a></h3>
+<p>Hashes are saved to <code>/usr/share/responder/logs</code> in the format:</p>
+<pre><code>(MODULE_NAME)-(HASH_TYPE)-(CLIENT_IP).txt
+</code></pre>
+<p>Example: <code>SMB-NTLMv2-SSP-172.16.5.25.txt</code></p>
+<p>Hashes are also stored in a SQLite database (configurable in <code>Responder.conf</code>).</p>
+<h2 id="cracking-captured-hashes"><a class="header" href="#cracking-captured-hashes">Cracking Captured Hashes</a></h2>
+<p>NetNTLMv2 hashes <strong>cannot</strong> be used for pass-the-hash — they must be cracked offline.</p>
+<h3 id="hashcat-mode-5600-for-ntlmv2"><a class="header" href="#hashcat-mode-5600-for-ntlmv2">Hashcat (Mode 5600 for NTLMv2)</a></h3>
+<pre><code class="language-bash">hashcat -m 5600 forend_ntlmv2 /usr/share/wordlists/rockyou.txt
+</code></pre>
+<ul>
+<li>NTLMv2 = hash mode <code>5600</code></li>
+<li>NTLMv1 and other types: consult the <a href="https://hashcat.net/wiki/doku.php?id=example_hashes">Hashcat example hashes page</a></li>
+<li>These hashes can be slow to crack even on GPU rigs — large/complex passwords may be infeasible</li>
+</ul>
+<h3 id="john-the-ripper"><a class="header" href="#john-the-ripper">John the Ripper</a></h3>
+<pre><code class="language-bash">john --wordlist=/usr/share/wordlists/rockyou.txt forend_ntlmv2
+</code></pre>
+<h2 id="key-takeaways-2"><a class="header" href="#key-takeaways-2">Key Takeaways</a></h2>
+<ul>
+<li>LLMNR/NBT-NS poisoning is one of the most common ways to gain an initial foothold during internal AD assessments</li>
+<li>Start Responder early and let it run passively while performing other enumeration</li>
+<li>Cracked hashes provide cleartext credentials for credentialed enumeration or further attacks</li>
+<li>LLMNR/NBT-NS spoofing combined with <strong>lack of SMB signing</strong> can lead to administrative access via SMB Relay</li>
+<li>Collect as many hashes as possible, but prioritize cracking those for accounts that further your access</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="pivoting-tunneling-and-port-forwarding-1"><a class="header" href="#pivoting-tunneling-and-port-forwarding-1">Pivoting, Tunneling, and Port Forwarding</a></h1>
+<h2 id="directory-map-15"><a class="header" href="#directory-map-15">Directory Map</a></h2>
 <ul>
 <li><a href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></li>
 <li><a href="#ssh-dynamic-port-forwarding-with-socks">SSH Dynamic Port Forwarding</a></li>
@@ -23108,7 +23469,7 @@ sed -i '$s/.*/LDFLAGS=-static "${NEW_WD}\/configure" --enable-static $@ \&amp;\&
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
-<h2 id="directory-map-15"><a class="header" href="#directory-map-15">Directory Map</a></h2>
+<h2 id="directory-map-16"><a class="header" href="#directory-map-16">Directory Map</a></h2>
 <ul>
 <li><a href="kubernetes/cks">cks</a></li>
 <li><a href="kubernetes/kcna">kcna</a></li>
@@ -23116,7 +23477,7 @@ sed -i '$s/.*/LDFLAGS=-static "${NEW_WD}\/configure" --enable-static $@ \&amp;\&
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cks"><a class="header" href="#cks">CKS</a></h1>
-<h2 id="directory-map-16"><a class="header" href="#directory-map-16">Directory Map</a></h2>
+<h2 id="directory-map-17"><a class="header" href="#directory-map-17">Directory Map</a></h2>
 <ul>
 <li><a href="#certified-kubernetes-security-specialist-cks-notes">notes</a></li>
 <li><a href="#kubernetes-security-specialist-cks-practice-scenarios">questions</a></li>
@@ -26231,7 +26592,7 @@ EOF
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcna"><a class="header" href="#kcna">KCNA</a></h1>
-<h2 id="directory-map-17"><a class="header" href="#directory-map-17">Directory Map</a></h2>
+<h2 id="directory-map-18"><a class="header" href="#directory-map-18">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-native-associate-kcna-notes">notes</a></li>
 </ul>
@@ -26765,7 +27126,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcsa"><a class="header" href="#kcsa">KCSA</a></h1>
-<h2 id="directory-map-18"><a class="header" href="#directory-map-18">Directory Map</a></h2>
+<h2 id="directory-map-19"><a class="header" href="#directory-map-19">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-security-associate-kcsa-notes">notes</a></li>
 </ul>
@@ -27366,7 +27727,7 @@ spec:
 </h4>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="networking"><a class="header" href="#networking">Networking</a></h1>
-<h2 id="directory-map-19"><a class="header" href="#directory-map-19">Directory Map</a></h2>
+<h2 id="directory-map-20"><a class="header" href="#directory-map-20">Directory Map</a></h2>
 <ul>
 <li><a href="networking/browser-networking">browser-networking</a></li>
 <li><a href="networking/http">http</a></li>
@@ -27396,7 +27757,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="browser-networking"><a class="header" href="#browser-networking">Browser Networking</a></h1>
-<h2 id="directory-map-20"><a class="header" href="#directory-map-20">Directory Map</a></h2>
+<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory Map</a></h2>
 <ul>
 <li><a href="#chapter-1">chapter01</a></li>
 <li><a href="#chapter-2">chapter02</a></li>
@@ -27669,7 +28030,7 @@ Message: Frame[&lt;Header&gt;] Frame[&lt;Payload&gt;]                           
 <p>WebSockets can transfer test or binary data.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http"><a class="header" href="#http">HTTP</a></h1>
-<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory Map</a></h2>
+<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
 <ul>
 <li><a href="#clean-urls">clean_urls</a></li>
 <li><a href="#http-persistent-connection">persistent_connections</a></li>
@@ -27770,7 +28131,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="load-balancing"><a class="header" href="#load-balancing">Load Balancing</a></h1>
-<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
+<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
 <ul>
 <li><a href="#load-balancing-1">load-balancing</a></li>
 </ul>
@@ -27805,7 +28166,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nginx"><a class="header" href="#nginx">Nginx</a></h1>
-<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
+<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
 <ul>
 <li><a href="#set-header">custom-header-response</a></li>
 </ul>
@@ -27819,7 +28180,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="rate-limiting-algorithms"><a class="header" href="#rate-limiting-algorithms">Rate Limiting Algorithms</a></h1>
-<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
+<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
 <ul>
 <li><a href="#fixed-window-counter-algorithm">fixed-window-counter</a></li>
 <li><a href="#leaking-bucket-algorithm">leaking-bucket</a></li>
@@ -27976,7 +28337,7 @@ func main() {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="protocols-1"><a class="header" href="#protocols-1">Protocols</a></h1>
-<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
+<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
 <ul>
 <li><a href="#dns-3">dns</a></li>
 <li><a href="#ftp-2">ftp</a></li>
@@ -29039,7 +29400,7 @@ iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64"
 <h1 id="websockets"><a class="header" href="#websockets">WebSockets</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="redis-1"><a class="header" href="#redis-1">Redis</a></h1>
-<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
+<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
 <ul>
 <li><a href="#redis-2">redis</a></li>
 </ul>
@@ -29152,7 +29513,7 @@ The SLOWLOG GET command returns entries from the slow log in chronological order
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="bash-1"><a class="header" href="#bash-1">Bash</a></h1>
-<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
+<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
 <ul>
 <li><a href="#bash-notes">bash_notes</a></li>
 <li><a href="#moving-the-cursor-1">keyboard_shortcuts</a></li>
@@ -29427,7 +29788,7 @@ similarly Ctrl+v ENTER will display the escape sequence for the Enter key: ^M
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="commands-2"><a class="header" href="#commands-2">Commands</a></h1>
-<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
+<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
 <ul>
 <li><a href="#chgrp">chgrp</a></li>
 <li><a href="#chmod">chmod</a></li>
@@ -29966,7 +30327,7 @@ https://www.kernel.org/doc/Documentation/filesystems/sysfs.txt</p>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="greybeard-qualification-1"><a class="header" href="#greybeard-qualification-1">Greybeard Qualification</a></h1>
-<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
+<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
 <ul>
 <li><a href="#block-devices-and-file-systems">block_dev_and_file_systems</a></li>
 <li><a href="#memory-management">memory_management</a></li>
@@ -31756,14 +32117,14 @@ As stated above, most processes have the same EUID and RUID. As a result, the de
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="tools-4"><a class="header" href="#tools-4">Tools</a></h1>
-<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
+<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
 <ul>
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
 <li><a href="#ffuf">ffuf</a></li>
 <li><a href="#hashcat">hashcat</a></li>
 <li><a href="#hydra-2">hydra</a></li>
-<li><a href="#john-the-ripper">john</a></li>
+<li><a href="#john-the-ripper-1">john</a></li>
 <li><a href="#lazagne">lazagne</a></li>
 <li><a href="#medusa">medusa</a></li>
 <li><a href="#metasploit-framework">metasploit</a></li>
@@ -32639,7 +33000,7 @@ customEvents
 
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="john-the-ripper"><a class="header" href="#john-the-ripper">John the Ripper</a></h1>
+<h1 id="john-the-ripper-1"><a class="header" href="#john-the-ripper-1">John the Ripper</a></h1>
 <p>John the Ripper (aka JtR or john) is a well-known penetration testing tool used for cracking passwords through various attacks including brute-force and dictionary. It is open-source software initially developed for UNIX-based systems and was first released in 1996. It has become a staple of the security industry due to its various capabilities.</p>
 <p>The “jumbo” variant is recommended for penetration testing uses, as it has performance optimizations, additional features such as multilingual word lists, and support for 64-bit architectures. This version is able to crack passwords with greater accuracy and speed.</p>
 <p>Included with JtR are various tools for converting different types of files and hashes into formats that are usable by JtR. Additionally, the software is regularly updated to keep up with the current security trends and technologies.</p>
@@ -33824,7 +34185,7 @@ C:\Windows\system32&gt; whoami
 nt authority\system
 </code></pre>
 <hr>
-<h2 id="key-takeaways-1"><a class="header" href="#key-takeaways-1">Key Takeaways</a></h2>
+<h2 id="key-takeaways-3"><a class="header" href="#key-takeaways-3">Key Takeaways</a></h2>
 <ol>
 <li><strong>Module Structure</strong>: Understanding the <code>&lt;type&gt;/&lt;os&gt;/&lt;service&gt;/&lt;name&gt;</code> format helps identify appropriate modules</li>
 <li><strong>Search Functionality</strong>: Powerful search with multiple keywords and filters helps find the right module quickly</li>
@@ -35862,14 +36223,14 @@ sudo cp /etc/shadow /tmp/shadow.bak
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-4"><a class="header" href="#troubleshooting-4">Troubleshooting</a></h1>
-<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
+<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
 <ul>
 <li><a href="troubleshooting/linux">linux</a></li>
 <li><a href="troubleshooting/troubleshooting_playbook">troubleshooting_playbook</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-1"><a class="header" href="#linux-1">Linux</a></h1>
-<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
+<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-memory">memory</a></li>
 </ul>
@@ -35961,7 +36322,7 @@ For every service, check the request rate, errors, and duration per request</p>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-playbook"><a class="header" href="#troubleshooting-playbook">Troubleshooting Playbook</a></h1>
-<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
+<h2 id="directory-map-34"><a class="header" href="#directory-map-34">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-503s-for-apps-in-kubernetes">kubernetes-containerized-app-503s</a></li>
 <li><a href="#general-troubleshootingnotes">kubernetes-general</a></li>
@@ -36087,7 +36448,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="what-happens-when"><a class="header" href="#what-happens-when">What Happens When…</a></h1>
-<h2 id="directory-map-34"><a class="header" href="#directory-map-34">Directory Map</a></h2>
+<h2 id="directory-map-35"><a class="header" href="#directory-map-35">Directory Map</a></h2>
 <ul>
 <li><a href="#what-happens-when-a-cpu-starts">a-cpu-starts</a></li>
 </ul>
