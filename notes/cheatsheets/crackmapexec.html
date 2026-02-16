@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-f5f60548.js";
+            window.path_to_searchindex_js = "../searchindex-e60b928f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-3b61a774.js"></script>
+        <script src="../toc-4a6e0194.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -250,6 +250,12 @@
 <h3 id="enumerate-sessions"><a class="header" href="#enumerate-sessions">Enumerate Sessions</a></h3>
 <pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 --sessions
 </code></pre>
+<hr>
+<h2 id="password-policy-enumeration"><a class="header" href="#password-policy-enumeration">Password Policy Enumeration</a></h2>
+<h3 id="dump-domain-password-policy"><a class="header" href="#dump-domain-password-policy">Dump Domain Password Policy</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 --pass-pol
+</code></pre>
+<p>Returns: minimum password length, password history, complexity flags, lockout threshold, lockout duration, and reset counter.</p>
 <hr>
 <h2 id="password-spraying"><a class="header" href="#password-spraying">Password Spraying</a></h2>
 <h3 id="single-password-against-user-list"><a class="header" href="#single-password-against-user-list">Single Password Against User List</a></h3>
