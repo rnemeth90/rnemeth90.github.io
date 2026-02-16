@@ -1,0 +1,647 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Memory Allocation - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-9dfbd86b.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-f5f60548.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-3b61a774.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="memory-allocation"><a class="header" href="#memory-allocation">Memory Allocation</a></h1>
+<ul>
+<li>There is just one engine for memory allocation in the Linux kernel. The page allocator (buddy system or BSA) with the Slab allocator layered on top.</li>
+<li>The kernel’s primary means of memory allocation using using the Page Allocator API (aka the buddy system) or the Slab Allocator API.</li>
+<li>The internal implementation of the slab allocator used by the kernel is called the SLUB allocator.</li>
+<li>The SLAB allocator solves fragmentation issues that arise with the page allocator by allocating memory in chunks of fixed sizes. This allows for more efficient use of memory and reduces overhead. Thus, the slab allocator is layered on top of the page allocator.</li>
+<li>The only way to allocate or deallocate physical memory in the kernel is through the page allocator API.</li>
+<li>The slab and page allocators reside completely in the kernel space and are not accessible from user space. Calling <code>malloc</code> or free in user space does not interact with the kernel’s memory allocation mechanisms. You should use <code>kmalloc</code> and <code>kfree</code> or <code>kzmalloc</code> and <code>kzfree</code> in kernel space.</li>
+<li>The page allocator gets its page frames from the kernels low-mem area</li>
+<li>Linux kernel memory is non-swappable</li>
+</ul>
+<h2 id="page-allocator-buddy-system"><a class="header" href="#page-allocator-buddy-system">Page Allocator (Buddy System)</a></h2>
+<ul>
+<li>The key to the page allocator is it’s primary internal metadata structure. It’s called the “buddy system free-list” and consists of an array of pointers to doubly linked circular lists.</li>
+<li>The index of this array of pointers is called the ‘order’ of the list. It’s the power to which to raise to 2. The array length is from <code>MAX_ORDER</code> - 1. The value of <code>MAX_ORDER</code> is architecture dependent, but is typically 11 or 12.</li>
+<li>On x86 systems, a page is typically 4KB in size. Thus, order 0 corresponds to a single 4KB page, order 1 corresponds to 8KB (2 contiguous pages), order 2 corresponds to 16KB (4 contiguous pages), and so on.</li>
+<li>Each doubly linked circular list points to free and physically contiguous blocks of memory of the corresponding order.</li>
+<li>The kernel gives us a convenient view into the current state of the page allocator through the <code>/proc/buddyinfo</code> file. This file shows the number of free blocks of each order for each memory zone in the system.</li>
+</ul>
+<pre><code class="language-bash">λ ~ $ cat /proc/buddyinfo
+Node 0, zone      DMA      0      0      0      0      0      0      0      0      1      1      2
+Node 0, zone    DMA32      6      6      8      7      5      6      7      4      8      9    283
+Node 0, zone   Normal      5    113    180   1018    715    320    151     49     38     10  14971
+λ ~ $
+</code></pre>
+<ul>
+<li>The first column indicates the memory zone. Common zones include DMA, DMA32, and Normal. DMA is used for legacy devices that can only address the first 16MB of memory. DMA32 is used for devices that can address up to 4GB of memory. Normal is the standard memory zone for general-purpose allocations. The third and subsequent columns represent the number of free blocks of each order, starting from order 0.</li>
+<li>If it’s not already obvious based on <code>/proc/buddyinfo</code>, the kernel keeps a different free-list for each memory zone to accommodate the different addressing requirements of various hardware devices.</li>
+</ul>
+<h3 id="how-it-works"><a class="header" href="#how-it-works">How it works</a></h3>
+<ul>
+<li>
+<p>When a request for memory allocation is made, the page allocator first determines the smallest order that can satisfy the request. It then checks the corresponding free-list for available blocks.</p>
+</li>
+<li>
+<p>If a suitable block is found, it is removed from the free-list and returned to the requester.</p>
+</li>
+<li>
+<p>If no suitable block is available, the allocator looks for a larger block in higher-order free lists. If a larger block is found, it is split into two smaller blocks, one of which is returned to the requester while the other is added back to the appropriate free-list.</p>
+</li>
+<li>
+<p>When memory is freed, the allocator checks if the freed block’s “buddy” (the adjacent block of the same order) is also free. If so, the two blocks are merged back into a larger block and added to the higher-order free-list. This merging process continues recursively up the orders until no further merging is possible.</p>
+</li>
+<li>
+<p>The buddy system’s design helps to minimize fragmentation by ensuring that memory blocks are always combined into larger blocks when possible.</p>
+</li>
+<li>
+<p>The page allocator also incorporates various strategies to handle memory pressure, such as reclaiming memory from other parts of the kernel or invoking the Out-Of-Memory (OOM) killer when necessary.</p>
+</li>
+<li>
+<p>The page allocator is optimized for performance, with fast allocation and deallocation operations to meet the demands of the kernel’s memory management needs.</p>
+</li>
+<li>
+<p>The kernel provides another view into the state of memory allocation through the <code>/proc/pagetypeinfo</code> file. This file gives a more detailed breakdown of free pages by migrate type and order within each memory zone.</p>
+</li>
+</ul>
+<pre><code class="language-bash">λ ~ $ sudo cat /proc/pagetypeinfo
+Page block order: 9
+Pages per block:  512
+
+Free pages count per migrate type at order       0      1      2      3      4      5      6      7      8      9     10
+Node    0, zone      DMA, type    Unmovable      0      0      0      0      0      0      0      0      1      0      0
+Node    0, zone      DMA, type      Movable      0      0      0      0      0      0      0      0      0      1      2
+Node    0, zone      DMA, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
+Node    0, zone      DMA, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
+Node    0, zone      DMA, type          CMA      0      0      0      0      0      0      0      0      0      0      0
+Node    0, zone      DMA, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
+Node    0, zone    DMA32, type    Unmovable      0      0      0      1      1      0      1      0      0      1      0
+Node    0, zone    DMA32, type      Movable      6      6      8      6      4      6      6      4      8      8    283
+Node    0, zone    DMA32, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
+Node    0, zone    DMA32, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
+Node    0, zone    DMA32, type          CMA      0      0      0      0      0      0      0      0      0      0      0
+Node    0, zone    DMA32, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
+Node    0, zone   Normal, type    Unmovable    616    401    143     51     19      3      0      2      2      9      1
+Node    0, zone   Normal, type      Movable   2290   1082    620   1032    792    350    161     47     31      0  14945
+Node    0, zone   Normal, type  Reclaimable      1      1      1     19     31     18      4      2      3      1      2
+Node    0, zone   Normal, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
+Node    0, zone   Normal, type          CMA      0      0      0      0      0      0      0      0      0      0      0
+Node    0, zone   Normal, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
+
+Number of blocks type     Unmovable      Movable  Reclaimable   HighAtomic          CMA      Isolate
+Node 0, zone      DMA            3            5            0            0            0            0
+Node 0, zone    DMA32            6          614            0            0            0            0
+Node 0, zone   Normal          254        31436           40            0            0            0
+</code></pre>
+<h2 id="using-the-page-allocator-api"><a class="header" href="#using-the-page-allocator-api">Using the Page Allocator API</a></h2>
+<ul>
+<li>The Linux kernel exposes a comprehensive API for memory allocation through the page allocator.</li>
+<li>All of the AIPs or macros that take two parameters, the first parameter is called the GFP flags or bitmask (named <code>gfp_mask</code>). The second parameter is typically the order of the allocation (<code>order</code>).</li>
+<li>The API prototypes are currently defined in the <code>include/linux/gfp.h&gt;</code> header file.</li>
+</ul>
+<pre><code class="language-c">#define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
+#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/mm.h&gt;
+#include "../../klib.h"
+
+MODULE_AUTHOR("rtn");
+MODULE_VERSION("0.2");
+MODULE_LICENSE("Dual MIT/GPL");
+
+static void *gptr1, *gptr2, *gptr3, *gptr4, *gptr5;
+static int bsa_alloc_order = 3;
+module_param_named(order, bsa_alloc_order, int, 0660);
+MODULE_PARM_DESC(order, "order of our step 2 allocation (power-to-raise-2-to; default:3)");
+
+/*
+ * bsa_alloc : test some of the bsa (buddy system allocator
+ * aka page allocator) APIs
+ */
+static int bsa_alloc(void)
+{
+	int stat = -ENOMEM;
+	u64 numpg2alloc = 0;
+	const struct page *pg_ptr1;
+
+	/* 0. Show the identity mapping: physical RAM page frames to kernel virtual
+	 *    addresses, from PAGE_OFFSET for 5 pages
+	 */
+	pr_info("0. Show identity mapping: RAM page frames : kernel virtual pages :: 1:1\n"
+		"(PAGE_SIZE = %ld bytes)\n", PAGE_SIZE);
+	/* SEE THIS!
+	 * Show the virt, phy addr and PFNs (page frame numbers).
+	 * This function is in our 'library' code here: ../../klib.c
+	 * This way, we can see if the pages allocated are really physically
+	 * contiguous! Signature:
+	 *  void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check);
+	 */
+	pr_info("[--------- show_phy_pages() output follows:\n");
+	show_phy_pages((void *)PAGE_OFFSET, 5 * PAGE_SIZE, 1);
+	pr_info(" --------- show_phy_pages() output done]\n");
+
+	/* 1. Allocate one page with the __get_free_page() API */
+	gptr1 = (void *)__get_free_page(GFP_KERNEL);
+	if (!gptr1) {
+		pr_warn("mem alloc via __get_free_page() failed!\n");
+		/* As per convention, we emit a printk above saying that the
+		 * allocation failed. In practice it isn't required; the kernel
+		 * will definitely emit many warning printk's if a memory alloc
+		 * request ever fails! Thus, we do this only once (here; could also
+		 * use the WARN_ONCE()); from now on we don't pedantically print any
+		 * error message on a memory allocation request failing.
+		 */
+		goto out1;
+	}
+	pr_info("#.    BSA/PA API     Amt alloc'ed        KVA\n");	// header
+
+	pr_info("1.  __get_free_page()     1 page    %px\n", gptr1);
+
+	/* 2. Allocate 2^bsa_alloc_order pages with the __get_free_pages() API */
+	numpg2alloc = powerof(2, bsa_alloc_order);  /* returns 2^bsa_alloc_order */
+	gptr2 = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, bsa_alloc_order);
+	if (!gptr2) {
+		/* no error/warning printk now; see above comment */
+		goto out2;
+	}
+	pr_info("2. __get_free_pages()  2^%d page(s)  %px\n",
+		bsa_alloc_order, gptr2);
+	pr_info("[--------- show_phy_pages() output follows:\n");
+	show_phy_pages(gptr2, numpg2alloc * PAGE_SIZE, 1);
+	pr_info(" --------- show_phy_pages() output done]\n");
+
+	/* 3. Allocate and init one page with the get_zeroed_page() API */
+	gptr3 = (void *)get_zeroed_page(GFP_KERNEL);
+	if (!gptr3)
+		goto out3;
+	pr_info("#.    BSA/PA API     Amt alloc'ed        KVA\n");	// header
+	pr_info("3.  get_zeroed_page()   1 page      %px\n", gptr3);
+
+	/* 4. Allocate one page with the alloc_page() API.
+	 * Careful! It does not return the alloc'ed page addr but rather the pointer
+	 * to the metadata structure 'page' representing the allocated page:
+	 *    struct page * alloc_page(gfp_mask);
+	 * So, we use the page_address() helper to convert it to a kernel
+	 * logical (or virtual) address.
+	 */
+	pg_ptr1 = alloc_page(GFP_KERNEL);
+	if (!pg_ptr1)
+		goto out4;
+	gptr4 = page_address(pg_ptr1);
+	pr_info("4.       alloc_page()   1 page      %px\n"
+		" (struct page addr = %px)\n", (void *)gptr4, pg_ptr1);
+
+	/* 5. Allocate 2^5 = 32 pages with the alloc_pages() API.
+	 * &lt; Same warning as above applies here too! &gt;
+	 */
+	gptr5 = page_address(alloc_pages(GFP_KERNEL, 5));
+	if (!gptr5)
+		goto out5;
+	pr_info("5.      alloc_pages()  %lld pages     %px\n",
+		powerof(2, 5), (void *)gptr5);
+
+	return 0;
+ out5:
+	free_page((unsigned long)gptr4);
+ out4:
+	free_page((unsigned long)gptr3);
+ out3:
+	free_pages((unsigned long)gptr2, bsa_alloc_order);
+ out2:
+	free_page((unsigned long)gptr1);
+ out1:
+	return stat;
+}
+
+static int __init lowlevel_mem_init(void)
+{
+	return bsa_alloc();
+}
+
+static void __exit lowlevel_mem_exit(void)
+{
+	pr_info("free-ing up the prev allocated BSA/PA memory chunks...\n");
+	/* Free 'em! We follow the convention of freeing them in the reverse
+	 * order from which they were allocated
+	 */
+	free_pages((unsigned long)gptr5, 5);
+	free_page((unsigned long)gptr4);
+	free_page((unsigned long)gptr3);
+	free_pages((unsigned long)gptr2, bsa_alloc_order);
+	free_page((unsigned long)gptr1);
+	pr_info("removed\n");
+}
+
+module_init(lowlevel_mem_init);
+module_exit(lowlevel_mem_exit);
+</code></pre>
+<h1 id="using-the-slab-allocator-api"><a class="header" href="#using-the-slab-allocator-api">Using the Slab Allocator API</a></h1>
+<ul>
+<li>The slab allocator is optimized for allocating and deallocating small objects, making it suitable for kernel data structures.</li>
+<li><code>kmalloc</code> is used to allocate memory, while <code>kfree</code> is used to free the allocated memory.</li>
+<li><code>kzmalloc</code> is a variant of <code>kmalloc</code> that initializes the allocated memory to zero.</li>
+<li>You can use <code>vmstat -m</code> to view slab allocator statistics.</li>
+<li>The kernel keeps a whole slew of slab caches of various sizes to optimize memory allocation for frequently used object sizes.</li>
+</ul>
+<h1 id="creating-a-custom-slab-cache"><a class="header" href="#creating-a-custom-slab-cache">Creating a custom slab cache</a></h1>
+<ul>
+<li>If we’re writing a driver, and within it, we notice that we frequently need to allocate and free objects of a particular size, we can create a custom slab cache for that object type using the <code>kmem_cache_create</code> API.</li>
+</ul>
+<pre><code class="language-c">#define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
+
+#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/slab.h&gt;
+#include &lt;linux/version.h&gt;
+#include &lt;linux/sched.h&gt;	/* current */
+#include "../../convenient.h"
+#include "../../klib.h"
+
+#define OURCACHENAME "ryans_slab_cache"
+
+static int use_ctor = 1;
+module_param(use_ctor, uint, 0);
+MODULE_PARM_DESC(use_ctor, "If set to 1 (default), our custom ctor routine"
+	 " will initialize slabmem; when 0, no custom constructor will run");
+
+MODULE_AUTHOR("rtn");
+MODULE_DESCRIPTION("simple demo of creating a custom slab cache");
+MODULE_LICENSE("Dual MIT/GPL");
+MODULE_VERSION("0.1");
+
+/* Our 'demo' structure; one that (we imagine) is often allocated and freed;
+ * hence, we create a custom slab cache to hold pre-allocated 'instances'
+ * of it... It's size: 328 bytes.
+ */
+struct myctx {
+	u32 iarr[10];		// 40 bytes; total=40
+	u64 uarr[10];		// 80 bytes; total=120
+	s8 uname[128], passwd[16], config[64];	// 128+16+64=208 bytes; total=328
+};
+static struct kmem_cache *gctx_cachep;
+
+static int use_our_cache(void)
+{
+	struct myctx *obj = NULL;
+
+#if LINUX_VERSION_CODE &lt; KERNEL_VERSION(2, 6, 39)
+	pr_debug("Cache name is %s\n", kmem_cache_name(gctx_cachep));
+#else
+	pr_debug("[ker ver &gt; 2.6.38 cache name deprecated...]\n");
+#endif
+
+	obj = kmem_cache_alloc(gctx_cachep, GFP_KERNEL);
+	if (!obj) {		/* pedantic warning printk below... */
+		pr_warn("[Pedantic] kmem_cache_alloc() failed\n");
+		return -ENOMEM;
+	}
+
+	pr_info("Our cache object (@ %pK, actual=%px) size is %u bytes; actual ksize=%zu\n",
+		obj, obj, kmem_cache_size(gctx_cachep), ksize(obj));
+	print_hex_dump_bytes("obj: ", DUMP_PREFIX_OFFSET, obj, sizeof(struct myctx));
+
+	/* free it */
+	kmem_cache_free(gctx_cachep, obj);
+	return 0;
+}
+
+/* The parameter to the constructor is the pointer to the just-allocated memory
+ * 'object' from our custom slab cache. Here, in our 'constructor' routine,
+ * we initialize the just-allocated memory object.
+ */
+static void our_ctor(void *new)
+{
+	struct myctx *ctx = new;
+	struct task_struct *p = current;
+
+	/* TIPS:
+	 * 1. To see how exactly we got here, insert this call: dump_stack();
+	 *    (read its output bottom-up ignoring call frames that begin with '?')
+	 * 2. Count the number of times the below printk's emitted; its, in effect,
+	 *    the number of objects cached by the kernel within this slab cache.
+	 */
+	pr_info("in ctor: just alloced mem object is @ 0x%px\n", ctx);	/* %pK in production */
+	memset(ctx, 0, sizeof(struct myctx));
+
+	/* As a demo, we init the 'config' field of our structure to some
+	 * (arbitrary) 'accounting' values from our task_struct
+	 */
+	snprintf_lkp(ctx-&gt;config, 6 * sizeof(u64) + 5, "%d.%d,%ld.%ld,%ld,%ld",
+		 p-&gt;tgid, p-&gt;pid, p-&gt;nvcsw, p-&gt;nivcsw, p-&gt;min_flt, p-&gt;maj_flt);
+}
+
+static int create_our_cache(void)
+{
+	int ret = 0;
+	void *ctor_fn = NULL;
+
+	if (use_ctor == 1)
+		ctor_fn = our_ctor;
+
+	pr_info("sizeof our ctx structure is %zu bytes\n"
+		" using custom constructor routine? %s\n",
+		sizeof(struct myctx), use_ctor == 1 ? "yes" : "no");
+
+	/* Create a new slab cache:
+	 * kmem_cache_create(const char *name, unsigned int size, unsigned int align,
+	 *                   slab_flags_t flags, void (*ctor)(void *));
+	 * When our constructor's enabled (the default), this call will trigger it.
+	 */
+	gctx_cachep = kmem_cache_create(OURCACHENAME,	// name of our cache
+					sizeof(struct myctx),	// (min) size of each object
+					sizeof(long),	// alignment
+					SLAB_POISON |	/* use slab poison values (explained soon) */
+					SLAB_RED_ZONE |	/* good for catching buffer under|over-flow bugs */
+					SLAB_HWCACHE_ALIGN,	/* good for performance */
+					ctor_fn);	// ctor: here, on by default
+	if (!gctx_cachep) {
+		/* When a kernel-space mem alloc fails we'll usually not require a warning
+		 * message as the kernel will definitely emit warning printk's.
+		 * We do so here pedantically...
+		 */
+		pr_warn("kmem_cache_create() failed\n");
+		if (IS_ERR(gctx_cachep))
+			ret = PTR_ERR(gctx_cachep);
+	}
+
+	return ret;
+}
+
+static int __init slab_custom_init(void)
+{
+	pr_info("inserted\n");
+	create_our_cache();
+	return use_our_cache();
+}
+
+static void __exit slab_custom_exit(void)
+{
+	kmem_cache_destroy(gctx_cachep);
+	pr_info("custom cache destroyed; removed\n");
+}
+
+module_init(slab_custom_init);
+module_exit(slab_custom_exit);
+
+</code></pre>
+<ul>
+<li>After create a custom slab cache, we can view it using the <code>vmstat -m</code> command.</li>
+</ul>
+<pre><code class="language-bash">λ ~ $ sudo vmstat -m | head -n1
+Cache                       Num  Total   Size  Pages
+λ ~ $ sudo vmstat -m |grep -i ryan
+ryans_slab_cache              0     36    448     36
+λ ~ $
+</code></pre>
+<ul>
+<li>We also have access to slab information in the sysfs file system. Example: <code>/sys/kernel/slabs/&lt;slab name&gt;</code>:</li>
+</ul>
+<pre><code class="language-bash">λ notes (main) $ grep . /sys/kernel/slab/ryans_slab_cache/
+aliases                   ctor                      object_size               poison                    shrink                    store_user
+align                     destroy_by_rcu            objects_partial           reclaim_account           skip_kfence               total_objects
+cache_dma                 hwcache_align             objs_per_slab             red_zone                  slabs                     trace
+cpu_partial               min_partial               order                     remote_node_defrag_ratio  slabs_cpu_partial         usersize
+cpu_slabs                 objects                   partial                   sanity_checks             slab_size                 validate
+
+
+</code></pre>
+<h1 id="vmalloc"><a class="header" href="#vmalloc">vmalloc</a></h1>
+<ul>
+<li>The <code>vmalloc</code> function is used to allocate virtually contiguous memory in the kernel space. Unlike <code>kmalloc</code>, which allocates physically contiguous memory, <code>vmalloc</code> can allocate larger blocks of memory that may not be physically contiguous but are contiguous in the virtual address space.</li>
+</ul>
+<h1 id="design-tips"><a class="header" href="#design-tips">Design Tips</a></h1>
+<ul>
+<li>Keep the most important (frequently accessed) members together and at the top of a data structure to minimize padding and improve cache utilization. To understand why, imagine there are five important members (of a total size of 56 bytes) in your data structure and you keep them all together at the top of your structure. Say the CPU cacheline size is 64 bytes. When the CPU fetches the first cacheline containing your data structure, it will bring in all five important members in a single cacheline fetch, resulting in better performance.</li>
+<li>Try to align structure members so that a single member does not ‘fall off’ a cacheline. For example, consider a structure with a 4-byte integer followed by an 8-byte double. If the integer is at the end of a cacheline, the double will span two cachelines, resulting in two cacheline fetches when accessing the double. To avoid this, you can add padding to ensure that the double starts at the beginning of a cacheline.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../systems/linux-kernel-development/linux-process-state-machine.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../systems/linux-kernel-development/oom-killer.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../systems/linux-kernel-development/linux-process-state-machine.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../systems/linux-kernel-development/oom-killer.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
