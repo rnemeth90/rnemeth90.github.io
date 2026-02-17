@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-a085d3cf.js";
+            window.path_to_searchindex_js = "../searchindex-bd2df0d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-4a6e0194.js"></script>
+        <script src="../toc-16d4fbb8.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -184,6 +184,28 @@
                         <h1 id="commandstools-that-do-not-fit-elsewhere"><a class="header" href="#commandstools-that-do-not-fit-elsewhere">Commands/Tools that do not fit elsewhere</a></h1>
 <h2 id="search-a-directory-for-ssh-private-keys"><a class="header" href="#search-a-directory-for-ssh-private-keys">search a directory for ssh private keys</a></h2>
 <pre><code class="language-bash">grep -rnE '^\-{5}BEGIN [A-Z0-9]+ PRIVATE KEY\-{5}$' /* 2&gt;/dev/null
+</code></pre>
+<h2 id="windows-living-off-the-land---quick-reference"><a class="header" href="#windows-living-off-the-land---quick-reference">Windows Living Off the Land - Quick Reference</a></h2>
+<h3 id="check-powershell-command-history-for-credentials"><a class="header" href="#check-powershell-command-history-for-credentials">Check PowerShell command history for credentials</a></h3>
+<pre><code class="language-powershell">Get-Content $env:APPDATA\Microsoft\Windows\Powershell\PSReadline\ConsoleHost_history.txt
+</code></pre>
+<h3 id="downgrade-powershell-to-evade-script-block-logging"><a class="header" href="#downgrade-powershell-to-evade-script-block-logging">Downgrade PowerShell to evade Script Block Logging</a></h3>
+<pre><code class="language-powershell">powershell.exe -version 2
+</code></pre>
+<h3 id="check-for-other-logged-in-users"><a class="header" href="#check-for-other-logged-in-users">Check for other logged-in users</a></h3>
+<pre><code class="language-powershell">qwinsta
+</code></pre>
+<h3 id="check-windows-defender-status-cmd"><a class="header" href="#check-windows-defender-status-cmd">Check Windows Defender status (CMD)</a></h3>
+<pre><code class="language-cmd">sc query windefend
+</code></pre>
+<h3 id="domain-and-trust-enumeration-via-wmi"><a class="header" href="#domain-and-trust-enumeration-via-wmi">Domain and trust enumeration via WMI</a></h3>
+<pre><code class="language-powershell">wmic ntdomain get Caption,Description,DnsForestName,DomainName,DomainControllerAddress
+</code></pre>
+<h3 id="dsquery---find-users-with-passwd_notreqd"><a class="header" href="#dsquery---find-users-with-passwd_notreqd">Dsquery - find users with PASSWD_NOTREQD</a></h3>
+<pre><code class="language-powershell">dsquery * -filter "(&amp;(objectCategory=person)(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=32))" -attr distinguishedName userAccountControl
+</code></pre>
+<h3 id="dsquery---find-domain-controllers"><a class="header" href="#dsquery---find-domain-controllers">Dsquery - find Domain Controllers</a></h3>
+<pre><code class="language-powershell">dsquery * -filter "(userAccountControl:1.2.840.113556.1.4.803:=8192)" -limit 5 -attr sAMAccountName
 </code></pre>
 
                     </main>
