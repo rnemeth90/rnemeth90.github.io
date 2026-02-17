@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-a085d3cf.js";
+            window.path_to_searchindex_js = "../searchindex-bd2df0d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-4a6e0194.js"></script>
+        <script src="../toc-16d4fbb8.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -321,6 +321,11 @@
 <li><code>enum_av</code> - Enumerate AV products</li>
 <li><code>gpp_password</code> - Find GPP passwords</li>
 </ul>
+<h3 id="spider_plus-module"><a class="header" href="#spider_plus-module">spider_plus Module</a></h3>
+<p>Spider a specific share and output all readable files as JSON:</p>
+<pre><code class="language-bash">crackmapexec smb 10.10.10.10 -u admin -p Password123 -M spider_plus --share 'Department Shares'
+</code></pre>
+<p>Output written to <code>/tmp/cme_spider_plus/&lt;ip&gt;.json</code>. Look for <code>web.config</code>, scripts, and files with hardcoded credentials.</p>
 <hr>
 <h2 id="database"><a class="header" href="#database">Database</a></h2>
 <p>CME stores results in a database:</p>

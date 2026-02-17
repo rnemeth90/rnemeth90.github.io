@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-a085d3cf.js";
+            window.path_to_searchindex_js = "../searchindex-bd2df0d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-4a6e0194.js"></script>
+        <script src="../toc-16d4fbb8.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -273,6 +273,9 @@
 </code></pre>
 <h3 id="recursive-listing-with-depth"><a class="header" href="#recursive-listing-with-depth">Recursive Listing with Depth</a></h3>
 <pre><code class="language-bash">smbmap -H 10.10.10.10 -u admin -p Password123 -R --depth 3
+</code></pre>
+<h3 id="recursive-listing-directories-only"><a class="header" href="#recursive-listing-directories-only">Recursive Listing (Directories Only)</a></h3>
+<pre><code class="language-bash">smbmap -u admin -p Password123 -d MYDOMAIN -H 10.10.10.10 -R 'Share Name' --dir-only
 </code></pre>
 <h3 id="download-all-text-files"><a class="header" href="#download-all-text-files">Download All Text Files</a></h3>
 <pre><code class="language-bash">smbmap -H 10.10.10.10 -u admin -p Password123 -R -A '\.txt$'

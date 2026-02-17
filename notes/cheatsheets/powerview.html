@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-a085d3cf.js";
+            window.path_to_searchindex_js = "../searchindex-bd2df0d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-4a6e0194.js"></script>
+        <script src="../toc-16d4fbb8.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -254,11 +254,16 @@ Get-DomainComputer | select dnshostname, operatingsystem
 <h3 id="find-computers-where-current-user-has-local-admin"><a class="header" href="#find-computers-where-current-user-has-local-admin">Find Computers Where Current User Has Local Admin</a></h3>
 <pre><code class="language-powershell">Find-LocalAdminAccess
 </code></pre>
+<h3 id="test-local-admin-access-on-specific-host"><a class="header" href="#test-local-admin-access-on-specific-host">Test Local Admin Access on Specific Host</a></h3>
+<pre><code class="language-powershell">Test-AdminAccess -ComputerName dc01
+</code></pre>
 <hr>
-<h2 id="share-enumeration"><a class="header" href="#share-enumeration">Share Enumeration</a></h2>
+<h2 id="share--file-server-enumeration"><a class="header" href="#share--file-server-enumeration">Share / File Server Enumeration</a></h2>
 <pre><code class="language-powershell">Find-DomainShare
 Find-DomainShare -CheckShareAccess
 Find-InterestingDomainShareFile
+Get-DomainFileServer
+Get-DomainDFSShare
 </code></pre>
 <hr>
 <h2 id="acl-enumeration"><a class="header" href="#acl-enumeration">ACL Enumeration</a></h2>
@@ -288,6 +293,11 @@ Find-InterestingDomainShareFile
 Get-DomainTrust -Domain other.local
 Get-ForestDomain
 Get-ForestTrust
+Get-DomainTrustMapping
+</code></pre>
+<h3 id="foreign-users-and-groups"><a class="header" href="#foreign-users-and-groups">Foreign Users and Groups</a></h3>
+<pre><code class="language-powershell">Get-DomainForeignUser
+Get-DomainForeignGroupMember
 </code></pre>
 <hr>
 <h2 id="gpo-enumeration"><a class="header" href="#gpo-enumeration">GPO Enumeration</a></h2>
@@ -319,12 +329,39 @@ $cred = New-Object System.Management.Automation.PSCredential('DOMAIN\user', $pas
 Get-DomainUser -Credential $cred
 </code></pre>
 <hr>
+<h2 id="security-control-enumeration"><a class="header" href="#security-control-enumeration">Security Control Enumeration</a></h2>
+<p>These are built-in PowerShell cmdlets (not PowerView) commonly used alongside AD enumeration to assess host defenses.</p>
+<h3 id="windows-defender-status"><a class="header" href="#windows-defender-status">Windows Defender Status</a></h3>
+<pre><code class="language-powershell">Get-MpComputerStatus
+</code></pre>
+<p>Key fields: <code>RealTimeProtectionEnabled</code>, <code>AntivirusEnabled</code>, <code>BehaviorMonitorEnabled</code></p>
+<h3 id="applocker-policy"><a class="header" href="#applocker-policy">AppLocker Policy</a></h3>
+<pre><code class="language-powershell">Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+</code></pre>
+<h3 id="powershell-language-mode"><a class="header" href="#powershell-language-mode">PowerShell Language Mode</a></h3>
+<pre><code class="language-powershell">$ExecutionContext.SessionState.LanguageMode
+</code></pre>
+<p><code>ConstrainedLanguage</code> = restricted; <code>FullLanguage</code> = unrestricted.</p>
+<hr>
+<h2 id="utility-functions"><a class="header" href="#utility-functions">Utility Functions</a></h2>
+<h3 id="export-results-to-csv"><a class="header" href="#export-results-to-csv">Export Results to CSV</a></h3>
+<pre><code class="language-powershell">Get-DomainUser | Export-PowerViewCSV -Path users.csv
+</code></pre>
+<h3 id="convert-name-to-sid"><a class="header" href="#convert-name-to-sid">Convert Name to SID</a></h3>
+<pre><code class="language-powershell">ConvertTo-SID -ObjectName "Domain Admins"
+</code></pre>
+<h3 id="request-kerberos-ticket-for-spn"><a class="header" href="#request-kerberos-ticket-for-spn">Request Kerberos Ticket for SPN</a></h3>
+<pre><code class="language-powershell">Get-DomainSPNTicket -SPN "MSSQLSvc/sql01.domain.local:1433"
+</code></pre>
+<hr>
 <h2 id="tips"><a class="header" href="#tips">Tips</a></h2>
 <ul>
 <li>Pair with BloodHound for visual attack path analysis</li>
 <li><code>Find-LocalAdminAccess</code> can be noisy — scans all domain computers</li>
 <li>Use <code>-Properties</code> to limit returned attributes for faster queries</li>
 <li>SharpView is a .NET port for environments where PowerShell is restricted</li>
+<li>BC-Security maintains an updated fork with additions like <code>Get-NetGmsa</code> (Group Managed Service Accounts)</li>
+<li><code>Get-DomainGroupMember -Recurse</code> reveals nested group membership (critical for finding hidden privilege escalation)</li>
 </ul>
 
                     </main>

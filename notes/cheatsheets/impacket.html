@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-a085d3cf.js";
+            window.path_to_searchindex_js = "../searchindex-bd2df0d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-4a6e0194.js"></script>
+        <script src="../toc-16d4fbb8.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -234,13 +234,27 @@
 </code></pre>
 <hr>
 <h2 id="impacket-wmiexec"><a class="header" href="#impacket-wmiexec">impacket-wmiexec</a></h2>
-<p>Execute commands via WMI.</p>
+<p>Execute commands via WMI. More stealthy than psexec — no files dropped on disk, fewer logs. Runs as the authenticated user (not SYSTEM). Each command spawns a new <code>cmd.exe</code> via WMI (generates Event ID 4688).</p>
 <h3 id="interactive-shell-2"><a class="header" href="#interactive-shell-2">Interactive Shell</a></h3>
 <pre><code class="language-bash">impacket-wmiexec administrator:'Password123'@10.10.10.10
 </code></pre>
 <h3 id="execute-command-2"><a class="header" href="#execute-command-2">Execute Command</a></h3>
 <pre><code class="language-bash">impacket-wmiexec administrator:'Password123'@10.10.10.10 'whoami'
 </code></pre>
+<h3 id="psexec-vs-wmiexec"><a class="header" href="#psexec-vs-wmiexec">psexec vs wmiexec</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th></th><th>psexec</th><th>wmiexec</th></tr>
+</thead>
+<tbody>
+<tr><td>Runs as</td><td>SYSTEM</td><td>Authenticated user</td></tr>
+<tr><td>Files on disk</td><td>Yes (ADMIN$)</td><td>No</td></tr>
+<tr><td>Log volume</td><td>Higher</td><td>Lower</td></tr>
+<tr><td>Stealth</td><td>Lower</td><td>Higher</td></tr>
+</tbody>
+</table>
+</div>
 <hr>
 <h2 id="impacket-dcomexec"><a class="header" href="#impacket-dcomexec">impacket-dcomexec</a></h2>
 <p>Execute commands via DCOM.</p>

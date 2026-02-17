@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-a085d3cf.js";
+            window.path_to_searchindex_js = "../searchindex-bd2df0d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-4a6e0194.js"></script>
+        <script src="../toc-16d4fbb8.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -292,13 +292,39 @@ net stop &lt;service&gt;
 <pre><code class="language-cmd">net time \\dc01 /set
 </code></pre>
 <hr>
+<h2 id="domain-computer-and-dc-enumeration"><a class="header" href="#domain-computer-and-dc-enumeration">Domain Computer and DC Enumeration</a></h2>
+<h3 id="list-domain-computers"><a class="header" href="#list-domain-computers">List Domain Computers</a></h3>
+<pre><code class="language-cmd">net group "domain computers" /domain
+</code></pre>
+<h3 id="list-domain-controllers"><a class="header" href="#list-domain-controllers">List Domain Controllers</a></h3>
+<pre><code class="language-cmd">net group "Domain Controllers" /domain
+</code></pre>
+<h3 id="list-domain-admin-members"><a class="header" href="#list-domain-admin-members">List Domain Admin Members</a></h3>
+<pre><code class="language-cmd">net group "Domain Admins" /domain
+</code></pre>
+<h3 id="view-domain-shares"><a class="header" href="#view-domain-shares">View Domain Shares</a></h3>
+<pre><code class="language-cmd">net view /all /domain
+</code></pre>
+<h3 id="view-all-shares-on-a-host"><a class="header" href="#view-all-shares-on-a-host">View All Shares on a Host</a></h3>
+<pre><code class="language-cmd">net view \\computer /ALL
+</code></pre>
+<hr>
+<h2 id="evasion"><a class="header" href="#evasion">Evasion</a></h2>
+<h3 id="use-net1-to-avoid-detection"><a class="header" href="#use-net1-to-avoid-detection">Use net1 to Avoid Detection</a></h3>
+<p><code>net1</code> executes the same functions as <code>net</code> but may bypass string-based EDR detection rules:</p>
+<pre><code class="language-cmd">net1 user /domain
+net1 group /domain
+net1 accounts /domain
+</code></pre>
+<hr>
 <h2 id="tips"><a class="header" href="#tips">Tips</a></h2>
 <ul>
 <li>Always available on Windows — no need to transfer tools</li>
 <li><code>/domain</code> flag targets the domain instead of the local machine</li>
 <li><code>net accounts</code> is the quickest way to check password policy when on a Windows host</li>
 <li>Combine with <code>net view</code> and <code>net use</code> for lateral movement</li>
-<li>Output can be noisy in logs — consider alternatives like PowerView for stealth</li>
+<li><code>net.exe</code> commands are commonly monitored by EDR — use <code>net1</code> as an alternative</li>
+<li>Consider <code>dsquery</code> for LDAP-based queries when <code>net</code> is being monitored</li>
 </ul>
 
                     </main>
