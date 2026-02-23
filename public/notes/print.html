@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-bd2df0d9.js";
+            window.path_to_searchindex_js = "searchindex-7b833b8d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-16d4fbb8.js"></script>
@@ -20439,6 +20439,32 @@ find . -exec /bin/sh \; -quit
 <li><a href="#credentialed-enumeration---from-linux">Credentialed Enumeration - from Linux</a></li>
 <li><a href="#credentialed-enumeration---from-windows">Credentialed Enumeration - from Windows</a></li>
 <li><a href="#living-off-the-land">Living Off the Land</a></li>
+<li><a href="infosec/active-directory/kerberoasting-from-linux.html">Kerberoasting - from Linux</a></li>
+<li><a href="infosec/active-directory/kerberoasting-from-windows.html">Kerberoasting - from Windows</a></li>
+<li><a href="infosec/active-directory/acl-abuse-primer.html">ACL Abuse Primer</a></li>
+<li><a href="infosec/active-directory/acl-enumeration.html">ACL Enumeration</a></li>
+<li><a href="infosec/active-directory/acl-abuse-tactics.html">ACL Abuse Tactics</a></li>
+<li><a href="infosec/active-directory/dcsync.html">DCSync</a></li>
+<li><a href="infosec/active-directory/privileged-access.html">Privileged Access</a></li>
+<li><a href="infosec/active-directory/kerberos-double-hop.html">Kerberos Double Hop Problem</a></li>
+<li><a href="infosec/active-directory/bleeding-edge-vulnerabilities.html">Bleeding Edge Vulnerabilities</a></li>
+<li><a href="infosec/active-directory/miscellaneous-misconfigurations.html">Miscellaneous Misconfigurations</a></li>
+<li><a href="infosec/active-directory/domain-trusts-primer.html">Domain Trusts Primer</a></li>
+<li><a href="infosec/active-directory/child-to-parent-trusts-windows.html">Child -&gt; Parent Trusts - from Windows</a></li>
+</ul>
+<h2 id="cheatsheets-2"><a class="header" href="#cheatsheets-2">Cheatsheets</a></h2>
+<ul>
+<li><a href="infosec/active-directory/kerberoasting-cheatsheet.html">Kerberoasting Cheatsheet</a></li>
+<li><a href="infosec/active-directory/acl-abuse-cheatsheet.html">ACL Abuse Cheatsheet</a></li>
+<li><a href="infosec/active-directory/dcsync-cheatsheet.html">DCSync Cheatsheet</a></li>
+<li><a href="infosec/active-directory/lateral-movement-cheatsheet.html">Lateral Movement Cheatsheet</a></li>
+<li><a href="infosec/active-directory/bleeding-edge-cheatsheet.html">Bleeding Edge Vulnerabilities Cheatsheet</a></li>
+<li><a href="infosec/active-directory/misc-misconfig-cheatsheet.html">Miscellaneous Misconfigurations Cheatsheet</a></li>
+<li><a href="infosec/active-directory/domain-trusts-cheatsheet.html">Domain Trusts Cheatsheet</a></li>
+</ul>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<ul>
+<li><a href="infosec/active-directory/summary.html">Summary</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="external-recon-and-enumeration-principles"><a class="header" href="#external-recon-and-enumeration-principles">External Recon and Enumeration Principles</a></h1>
@@ -21150,7 +21176,7 @@ rpcclient $&gt; enumdomusers
 <p>Search for LAPS-enabled computers, password expiration times, and the cleartext passwords (if your user has access):</p>
 <pre><code class="language-powershell">Get-LAPSComputers
 </code></pre>
-<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -21397,7 +21423,7 @@ bloodhound
 <li><a href="https://wadcoms.github.io/">WADComs</a> — interactive cheat sheet for Windows/AD offensive tools</li>
 <li><a href="https://hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/">BloodHound Cypher Cheatsheet</a> — custom Cypher queries for BloodHound</li>
 </ul>
-<h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
+<h2 id="summary-2"><a class="header" href="#summary-2">Summary</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -21618,7 +21644,7 @@ bloodhound
 <li>Domain Users as local admin on any host = any account can be used for access</li>
 <li>Always document files transferred to/from hosts and clean up at engagement end</li>
 </ul>
-<h2 id="summary-2"><a class="header" href="#summary-2">Summary</a></h2>
+<h2 id="summary-3"><a class="header" href="#summary-3">Summary</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -21832,7 +21858,7 @@ dsquery ou
 </tbody>
 </table>
 </div>
-<h2 id="summary-3"><a class="header" href="#summary-3">Summary</a></h2>
+<h2 id="summary-4"><a class="header" href="#summary-4">Summary</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -21987,7 +22013,7 @@ sudo mount -t cifs //&lt;IP&gt;/sharename /mnt/smb -o username=user
 cp file.txt /mnt/smb/
 sudo umount /mnt/smb
 </code></pre>
-<h2 id="summary-4"><a class="header" href="#summary-4">Summary</a></h2>
+<h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
 <ul>
 <li><strong>Base64</strong>: No network needed, limited by terminal/paste buffer size</li>
 <li><strong>HTTP/HTTPS</strong>: Most common, multiple tools (curl, wget, Python), often allowed outbound</li>
@@ -22122,7 +22148,7 @@ echo PUT &lt;file&gt; &gt;&gt; ftpcommand.txt
 echo bye &gt;&gt; ftpcommand.txt
 ftp -v -n -s:ftpcommand.txt
 </code></pre>
-<h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
+<h2 id="summary-6"><a class="header" href="#summary-6">Summary</a></h2>
 <ul>
 <li><strong>Base64</strong>: No network needed, limited by terminal length</li>
 <li><strong>PowerShell WebClient</strong>: HTTP/HTTPS, most common, supports fileless execution</li>
@@ -22814,7 +22840,7 @@ Thus using an <strong>ACK scan</strong> (-sA) might be a good idea because the f
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-authentication"><a class="header" href="#linux-authentication">Linux Authentication</a></h1>
-<h2 id="summary-6"><a class="header" href="#summary-6">Summary</a></h2>
+<h2 id="summary-7"><a class="header" href="#summary-7">Summary</a></h2>
 <p>Linux uses Pluggable Authentication Modules (PAM) for authentication. The key modules (<code>pam_unix.so</code>, <code>pam_unix2.so</code>) are located in <code>/usr/lib/x86_64-linux-gnu/security/</code> on Debian-based systems. PAM handles user information, authentication, sessions, and password changes.</p>
 <h3 id="key-files-1"><a class="header" href="#key-files-1">Key Files</a></h3>
 <div class="table-wrapper">
