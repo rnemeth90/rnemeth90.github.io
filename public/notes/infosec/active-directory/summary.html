@@ -1,0 +1,351 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Active Directory Summary - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-9dfbd86b.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-e5d4a7b8.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-c2b40e26.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="active-directory---summary"><a class="header" href="#active-directory---summary">Active Directory - Summary</a></h1>
+<p>A condensed reference covering the AD attack methodology documented in this directory, from external recon through credential abuse.</p>
+<h2 id="1-external-recon--enumeration"><a class="header" href="#1-external-recon--enumeration">1. External Recon &amp; Enumeration</a></h2>
+<p>Gather publicly accessible information before touching the target network. Use OSINT tools (Google dorking, LinkedIn, GitHub, DNS records, Shodan, Wayback Machine, credential leak databases) to map the organization’s external footprint, identify employees, find leaked credentials, and validate scope.</p>
+<h2 id="2-initial-domain-enumeration"><a class="header" href="#2-initial-domain-enumeration">2. Initial Domain Enumeration</a></h2>
+<p>Once on the internal network, enumerate without credentials using passive and active techniques:</p>
+<ul>
+<li><strong>Passive:</strong> Wireshark/tcpdump for ARP, MDNS, LLMNR traffic; identify hosts and naming conventions</li>
+<li><strong>Active:</strong> Responder in analyze mode, fping sweeps, Nmap scans for common AD ports (DNS 53, Kerberos 88, LDAP 389/636, SMB 445, RDP 3389, WinRM 5985/5986)</li>
+<li><strong>Key tools:</strong> Kerbrute for user enumeration via Kerberos pre-auth, enum4linux for SMB/RPC enumeration</li>
+</ul>
+<h2 id="3-llmnrnbt-ns-poisoning"><a class="header" href="#3-llmnrnbt-ns-poisoning">3. LLMNR/NBT-NS Poisoning</a></h2>
+<p>Exploit fallback name resolution protocols to capture NTLMv1/v2 hashes. Run Responder or Inveigh to spoof responses when DNS fails. Captured hashes can be cracked offline with Hashcat (mode 5600 for NTLMv2) or relayed with ntlmrelayx.py.</p>
+<h2 id="4-password-policy-enumeration"><a class="header" href="#4-password-policy-enumeration">4. Password Policy Enumeration</a></h2>
+<p>Retrieve the domain password policy before spraying to avoid lockouts. Methods include CrackMapExec (<code>--pass-pol</code>), rpcclient, ldapsearch, enum4linux, and the AD PowerShell module (<code>Get-ADDefaultDomainPasswordPolicy</code>). Key fields: lockout threshold, observation window, min password length, complexity requirements.</p>
+<h2 id="5-password-spraying"><a class="header" href="#5-password-spraying">5. Password Spraying</a></h2>
+<p>Try one common password across many accounts, respecting lockout thresholds. Build target user lists via SMB NULL sessions, LDAP anonymous binds, Kerbrute, or credentialed queries. Use seasonal/company-specific password patterns. Tools: Kerbrute, CrackMapExec, rpcclient, DomainPasswordSpray.ps1.</p>
+<h2 id="6-enumerating-security-controls"><a class="header" href="#6-enumerating-security-controls">6. Enumerating Security Controls</a></h2>
+<p>After gaining a foothold, assess defensive posture: Windows Defender status, AppLocker rules, PowerShell language mode (Constrained Language Mode), LAPS deployment, and EDR/AV products. This informs tool selection and evasion strategy.</p>
+<h2 id="7-credentialed-enumeration"><a class="header" href="#7-credentialed-enumeration">7. Credentialed Enumeration</a></h2>
+<h3 id="from-linux"><a class="header" href="#from-linux">From Linux</a></h3>
+<p>CrackMapExec, BloodHound (via bloodhound-python), rpcclient, ldapsearch, Windapsearch, Impacket tools (GetUserSPNs.py, psexec.py).</p>
+<h3 id="from-windows"><a class="header" href="#from-windows">From Windows</a></h3>
+<p>ActiveDirectory PowerShell module, PowerView/SharpView, BloodHound/SharpHound, Snaffler (file share mining). Focus on group memberships, ACLs, GPOs, trusts, SPN accounts, and sensitive data in shares.</p>
+<h2 id="8-living-off-the-land"><a class="header" href="#8-living-off-the-land">8. Living Off the Land</a></h2>
+<p>AD enumeration using only native Windows tools when offensive tools can’t be loaded: <code>net</code>, <code>dsquery</code>, <code>nltest</code>, <code>setspn</code>, PowerShell AD module, WMI, and environment variables. Generates fewer logs than importing external tools.</p>
+<h2 id="9-kerberoasting"><a class="header" href="#9-kerberoasting">9. Kerberoasting</a></h2>
+<p>Request TGS tickets for SPN accounts and crack them offline. Any domain user can request a ticket for any SPN in the domain. Service accounts are often privileged (Domain Admins, local admins on multiple servers) and may have weak or reused passwords.</p>
+<h3 id="from-linux-1"><a class="header" href="#from-linux-1">From Linux</a></h3>
+<p>Impacket’s <code>GetUserSPNs.py</code> handles the full workflow: enumerate SPNs, request TGS tickets, and output Hashcat-ready hashes. Requires domain credentials (cleartext or NTLM hash) and DC IP. Use <code>-request</code> for all tickets, <code>-request-user</code> for a specific account, and <code>-outputfile</code> to save hashes. Verify cracked creds with CrackMapExec.</p>
+<h3 id="from-windows-1"><a class="header" href="#from-windows-1">From Windows</a></h3>
+<p>Three approaches:</p>
+<ul>
+<li><strong>Semi-manual:</strong> <code>setspn.exe</code> to enumerate SPNs, PowerShell <code>KerberosRequestorSecurityToken</code> to request tickets, Mimikatz to export, kirbi2john + Hashcat to crack</li>
+<li><strong>PowerView:</strong> <code>Get-DomainUser * -SPN | Get-DomainSPNTicket -Format Hashcat</code> for direct hash extraction</li>
+<li><strong>Rubeus:</strong> <code>kerberoast /stats</code> for recon, <code>/ldapfilter:'admincount=1' /nowrap</code> for high-value targets, <code>/tgtdeleg</code> to force RC4 on pre-2019 DCs</li>
+</ul>
+<h3 id="cracking--reporting"><a class="header" href="#cracking--reporting">Cracking &amp; Reporting</a></h3>
+<p>RC4 tickets (type 23, Hashcat mode 13100) crack orders of magnitude faster than AES-256 (type 18, mode 19700). Even if no tickets crack, report the finding as medium risk — SPNs with crackable encryption are a standing vulnerability. Mitigate with gMSA/MSA, long passphrases, and monitoring Event IDs 4769/4770 for bulk TGS requests.</p>
+<h2 id="10-acl-abuse"><a class="header" href="#10-acl-abuse">10. ACL Abuse</a></h2>
+<p>Access Control Lists define who can access AD objects and at what level. Misconfigurations are invisible to vulnerability scanners and often persist for years. Key abusable permissions:</p>
+<ul>
+<li><strong>ForceChangePassword</strong> — reset a user’s password without knowing it (<code>Set-DomainUserPassword</code>)</li>
+<li><strong>GenericAll</strong> — full control; change passwords, modify group membership, read LAPS passwords</li>
+<li><strong>GenericWrite</strong> — write non-protected attributes; assign SPNs for targeted Kerberoasting, add group members</li>
+<li><strong>WriteDACL</strong> — modify the DACL to grant yourself further rights; powerful for persistence</li>
+<li><strong>WriteOwner</strong> — take ownership, then modify DACL for full control</li>
+</ul>
+<p>Enumerate with BloodHound (SharpHound/bloodhound-python) and PowerView (<code>Find-InterestingDomainAcl</code>). Common attack scenarios: abusing Help Desk password reset permissions, adding controlled accounts to privileged groups, and exploiting excessive rights from software installs (Exchange). Always get client approval before destructive actions and revert all changes.</p>
+<h3 id="acl-enumeration-methodology"><a class="header" href="#acl-enumeration-methodology">ACL Enumeration Methodology</a></h3>
+<p>Avoid broad <code>Find-InterestingDomainAcl</code> dumps — use targeted enumeration instead. Get the SID of a controlled user (<code>Convert-NameToSid</code>), then find objects they have rights over with <code>Get-DomainObjectACL -ResolveGUIDs</code>. Follow the chain: each compromised user may have rights over another, forming multi-hop attack paths (e.g., ForceChangePassword → GenericWrite on group → nested group membership → GenericAll → DCSync). BloodHound’s “Transitive Object Control” view and pre-built queries reveal these full chains instantly. Without PowerView, use <code>Get-Acl</code> with <code>Get-ADUser</code> in a foreach loop and manually resolve GUIDs via <code>Get-ADObject</code> against the Extended-Rights container.</p>
+<h3 id="acl-abuse-execution"><a class="header" href="#acl-abuse-execution">ACL Abuse Execution</a></h3>
+<p>Execute multi-hop chains by authenticating as each user in sequence using <code>PSCredential</code> objects. Use <code>Set-DomainUserPassword</code> for ForceChangePassword, <code>Add-DomainGroupMember</code> for GenericWrite on groups, and <code>Set-DomainObject</code> to assign fake SPNs for targeted Kerberoasting via GenericAll (preferred over password reset when the target can’t be interrupted). Cleanup in reverse order — remove SPN before group membership, since membership grants the rights to modify the SPN. Detect ACL abuse via Event ID 5136 (directory object modified); convert SDDL strings with <code>ConvertFrom-SddlString</code> to identify unauthorized GenericWrite/GenericAll grants on high-value objects.</p>
+<h2 id="11-dcsync"><a class="header" href="#11-dcsync">11. DCSync</a></h2>
+<p>Abuses the Directory Replication Service Remote Protocol to mimic a Domain Controller and extract NTLM hashes for all domain users. Requires <code>DS-Replication-Get-Changes</code> and <code>DS-Replication-Get-Changes-All</code> rights on the domain object (held by Domain/Enterprise Admins by default, but commonly found on other accounts).</p>
+<ul>
+<li><strong>From Linux:</strong> <code>secretsdump.py -just-dc DOMAIN/user@DC_IP</code> dumps all NTLM hashes, Kerberos keys, and cleartext passwords (for accounts with reversible encryption). Use <code>-just-dc-ntlm</code> for hashes only, <code>-just-dc-user</code> for a single account.</li>
+<li><strong>From Windows:</strong> <code>mimikatz # lsadump::dcsync /domain:DOMAIN /user:administrator</code> (run as a user with DCSync rights via <code>runas /netonly</code>).</li>
+<li><strong>Verify rights:</strong> PowerView <code>Get-ObjectAcl</code> filtering for <code>Replication-Get</code> ACEs, or BloodHound’s “Find Principals with DCSync Rights” query.</li>
+<li><strong>Reversible encryption:</strong> Accounts with <code>ENCRYPTED_TEXT_PWD_ALLOWED</code> store passwords using RC4 with the Syskey; secretsdump decrypts them automatically. Enumerate with <code>Get-ADUser -Filter 'userAccountControl -band 128'</code>.</li>
+<li><strong>Post-DCSync:</strong> Pass-the-Hash with the Administrator NTLM hash, create Golden Tickets with the krbtgt hash, or crack hashes for password strength reporting (filter disabled accounts with <code>-user-status</code>).</li>
+</ul>
+<h2 id="12-privileged-access--lateral-movement"><a class="header" href="#12-privileged-access--lateral-movement">12. Privileged Access &amp; Lateral Movement</a></h2>
+<p>When you lack local admin rights for Pass-the-Hash, leverage RDP, WinRM, and MSSQL access for lateral movement. Enumerate with BloodHound edges (<code>CanRDP</code>, <code>CanPSRemote</code>, <code>SQLAdmin</code>) and PowerView (<code>Get-NetLocalGroupMember</code> for “Remote Desktop Users” and “Remote Management Users” groups). First check: does Domain Users have execution rights over any hosts?</p>
+<ul>
+<li><strong>RDP:</strong> GUI access for data pillaging, credential harvesting, and local privilege escalation. Connect with <code>xfreerdp</code> (Linux) or <code>mstsc.exe</code> (Windows).</li>
+<li><strong>WinRM:</strong> Remote PowerShell via <code>Enter-PSSession</code> (Windows) or <code>evil-winrm</code> (Linux, supports pass-the-hash with <code>-H</code>). The “Remote Management Users” group grants WinRM without local admin.</li>
+<li><strong>MSSQL:</strong> Sysadmin access enables OS command execution via <code>xp_cmdshell</code>. The SQL service account nearly always has <code>SeImpersonatePrivilege</code>, making SYSTEM escalation possible via JuicyPotato/PrintSpoofer/RoguePotato. Enumerate with PowerUpSQL (<code>Get-SQLInstanceDomain</code>) or connect with <code>mssqlclient.py</code>. SQL credentials often found via Kerberoasting, Snaffler (web.config), or password spraying.</li>
+</ul>
+<p>Enumeration and attack is iterative — repeat after every new account takeover.</p>
+<h2 id="13-kerberos-double-hop-problem"><a class="header" href="#13-kerberos-double-hop-problem">13. Kerberos Double Hop Problem</a></h2>
+<p>WinRM/PSRemoting only forwards a TGS ticket for the target service — the user’s TGT is not sent, so the remote host cannot authenticate to a third resource (e.g., querying a DC from a WinRM session). This does not affect RDP or PSExec, which cache NTLM hashes in memory.</p>
+<p><strong>Workarounds:</strong></p>
+<ul>
+<li><strong>PSCredential object:</strong> Pass <code>-Credential $Cred</code> explicitly on every command that reaches a second hop (works from evil-winrm and Enter-PSSession).</li>
+<li><strong>Register-PSSessionConfiguration:</strong> Create a named session config with <code>-RunAsCredential</code>, restart WinRM, reconnect with <code>-ConfigurationName</code>. Caches a TGT so all commands work without explicit credentials. Requires GUI access and an elevated PowerShell console (not usable from evil-winrm or Linux).</li>
+<li><strong>Other options:</strong> CredSSP, port forwarding, sacrificial process injection, nested <code>Invoke-Command</code>.</li>
+</ul>
+<h2 id="14-bleeding-edge-vulnerabilities"><a class="header" href="#14-bleeding-edge-vulnerabilities">14. Bleeding Edge Vulnerabilities</a></h2>
+<p>Three high-impact attacks that exploit slow patch management cycles to achieve domain compromise quickly.</p>
+<ul>
+<li><strong>NoPac (CVE-2021-42278 + CVE-2021-42287):</strong> SamAccountName spoofing — any standard domain user creates a machine account, renames it to match a DC, requests Kerberos tickets as the DC, and gets a SYSTEM shell or performs DCSync. Blocked if <code>ms-DS-MachineAccountQuota</code> is 0. Uses <code>smbexec.py</code> under the hood (noisy, may trigger AV).</li>
+<li><strong>PrintNightmare (CVE-2021-34527 + CVE-2021-1675):</strong> RCE via the Print Spooler service. Requires MS-RPRN/MS-PAR exposed on target (check with <code>rpcdump.py</code>). Delivers a DLL payload via SMB share for a Meterpreter SYSTEM shell on the DC. Risk: may crash Print Spooler. Requires cube0x0’s Impacket fork.</li>
+<li><strong>PetitPotam (CVE-2021-36942):</strong> Unauthenticated LSA spoofing — coerces a DC to authenticate via NTLM to an attacker host, relayed to AD CS Web Enrollment to obtain a certificate for the DC machine account. Certificate → TGT (via PKINIT/gettgtpkinit.py) → DCSync. Patching alone is insufficient; must also disable NTLM on DCs/AD CS and enable Extended Protection for Authentication. See “Certified Pre-Owned” whitepaper for full AD CS hardening.</li>
+</ul>
+<p>All three can lead to full domain compromise. NoPac and PrintNightmare require standard domain credentials; PetitPotam requires none (but requires AD CS).</p>
+<h2 id="15-miscellaneous-misconfigurations"><a class="header" href="#15-miscellaneous-misconfigurations">15. Miscellaneous Misconfigurations</a></h2>
+<p>A grab-bag of commonly overlooked AD issues that provide footholds, credentials, or escalation paths.</p>
+<ul>
+<li><strong>Exchange group abuse:</strong> The <code>Exchange Windows Permissions</code> group can write DACLs on the domain object — leverage for DCSync. <code>Organization Management</code> has full control over Exchange security groups and can access all mailboxes. The PrivExchange flaw lets any mailbox user relay Exchange’s SYSTEM-level NTLM auth to LDAP for instant Domain Admin.</li>
+<li><strong>Printer Bug (MS-RPRN):</strong> Any domain user can coerce a server’s spooler service (runs as SYSTEM) to authenticate to an attacker host via SMB. Relay to LDAP for DCSync rights or RBCD. Useful for cross-forest attacks when unconstrained delegation is enabled. Enumerate with <code>Get-SpoolStatus</code>.</li>
+<li><strong>MS14-068:</strong> Forged Kerberos PAC accepted by KDC — standard user to Domain Admin. Defense is patching only.</li>
+<li><strong>Sniffing LDAP credentials:</strong> Redirect LDAP test connections from printers/applications to a listener on port 389. Credentials often sent in cleartext and frequently privileged.</li>
+<li><strong>DNS enumeration:</strong> <code>adidnsdump</code> resolves all DNS records in a zone via LDAP (all domain users can list DNS child objects). Reveals “hidden” hostnames behind non-descriptive naming conventions. Use <code>-r</code> to resolve unknown records.</li>
+<li><strong>Password in Description field:</strong> <code>Get-DomainUser</code> with description filtering finds passwords stored in account descriptions/notes.</li>
+<li><strong>PASSWD_NOTREQD flag:</strong> Accounts exempt from password policy length — may have no password. Enumerate with <code>Get-DomainUser -UACFilter PASSWD_NOTREQD</code>.</li>
+<li><strong>SYSVOL script credentials:</strong> The <code>scripts</code> directory is readable by all authenticated users. Hunt for passwords in <code>.vbs</code>, <code>.ps1</code>, <code>.bat</code> files. Spray found passwords with CrackMapExec <code>--local-auth</code>.</li>
+<li><strong>GPP passwords:</strong> AES-encrypted <code>cpassword</code> in SYSVOL XML files — Microsoft published the key. Patched (MS14-025) but existing files remain. Decrypt with <code>gpp-decrypt</code>; discover with CrackMapExec <code>gpp_password</code>/<code>gpp_autologin</code> modules or <code>Get-GPPPassword.ps1</code>.</li>
+<li><strong>ASREPRoasting:</strong> Accounts with <code>DONT_REQ_PREAUTH</code> — request AS-REP without credentials and crack offline (Hashcat mode 18200). Enumerate with PowerView, attack with Rubeus (<code>asreproast /nowrap</code>), Impacket (<code>GetNPUsers.py</code>), or Kerbrute (auto-dumps during user enumeration). If you have GenericWrite over an account, enable the flag temporarily.</li>
+<li><strong>GPO abuse:</strong> Writable GPOs (WriteProperty/WriteDacl) allow adding local admins, granting privileges, or creating scheduled tasks on all computers in linked OUs. Enumerate with PowerView or BloodHound; exploit with SharpGPOAbuse. Audit with group3r, ADRecon, or PingCastle.</li>
+</ul>
+<h2 id="16-domain-trusts"><a class="header" href="#16-domain-trusts">16. Domain Trusts</a></h2>
+<p>Trusts create authentication links between domains/forests, allowing cross-domain resource access. Common in M&amp;A scenarios for quick integration but frequently introduce unintended attack paths.</p>
+<p><strong>Trust types:</strong> Parent-child (intra-forest, bidirectional, transitive), cross-link (between child domains), tree-root, forest (between forest root domains), external (non-transitive, uses SID filtering), and ESAE (bastion forest). Transitive trusts extend trust to objects the child domain trusts; non-transitive trusts are direct only.</p>
+<p><strong>Direction:</strong> One-way (trusted → trusting only) or bidirectional (both ways). Bidirectional trusts with acquired companies are particularly risky — a weaker trusted domain becomes an indirect attack path into the principal domain.</p>
+<p><strong>Enumeration:</strong> Use <code>Get-ADTrust -Filter *</code> (built-in), <code>Get-DomainTrust</code> / <code>Get-DomainTrustMapping</code> (PowerView), <code>netdom query /domain:&lt;DOMAIN&gt; trust</code> (cmd), or BloodHound’s “Map Domain Trusts” query. Key properties: Direction, IntraForest, ForestTransitive, SIDFilteringQuarantined, TGTDelegation. Once trusts are mapped, enumerate users/groups/SPNs across each trust and perform cross-trust attacks (Kerberoasting, password spraying). Always document discovered trusts for the report — clients are often unaware of them.</p>
+<h2 id="17-child---parent-trust-attacks-windows"><a class="header" href="#17-child---parent-trust-attacks-windows">17. Child -&gt; Parent Trust Attacks (Windows)</a></h2>
+<p>Compromising any child domain in a forest means compromising the entire forest via the <strong>ExtraSids attack</strong>. Within the same forest, <code>sidHistory</code> is respected (no SID Filtering on intra-forest trusts), so a Golden Ticket forged in the child domain with the Enterprise Admins SID (<code>-519</code>) injected as an ExtraSID grants full forest-wide administrative access.</p>
+<p><strong>Prerequisites (from compromised child domain):</strong> Child domain KRBTGT NT hash (via DCSync), child domain SID (<code>Get-DomainSID</code>), Enterprise Admins SID from the parent domain (<code>Get-DomainGroup -Domain &lt;PARENT&gt; -Identity "Enterprise Admins"</code>), any username (can be fake), and the child domain FQDN.</p>
+<p><strong>Execution:</strong> Mimikatz <code>kerberos::golden /user:hacker /domain:&lt;CHILD&gt; /sid:&lt;CHILD_SID&gt; /krbtgt:&lt;HASH&gt; /sids:&lt;EA_SID&gt; /ptt</code> or Rubeus <code>golden /rc4:&lt;HASH&gt; /domain:&lt;CHILD&gt; /sid:&lt;CHILD_SID&gt; /sids:&lt;EA_SID&gt; /user:hacker /ptt</code>. Then DCSync the parent domain with <code>lsadump::dcsync /user:&lt;PARENT&gt;\administrator /domain:&lt;PARENT&gt;</code>. The only defense is changing the KRBTGT password (twice) after compromise.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../infosec/active-directory/child-to-parent-trusts-windows.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../infosec/file-transfers/linux.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../infosec/active-directory/child-to-parent-trusts-windows.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../infosec/file-transfers/linux.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
