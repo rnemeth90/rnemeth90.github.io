@@ -38,10 +38,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-45349103.js";
+            window.path_to_searchindex_js = "../../searchindex-fcd1995d.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-1ea46699.js"></script>
+        <script src="../../toc-8905383a.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -186,9 +186,11 @@
 <ul>
 <li><a href="./introduction.html">Introduction — what XSS is, risk, examples, types</a></li>
 <li><a href="./stored-xss.html">Stored (persistent) XSS — impact, testing, persistence checks</a></li>
+<li><a href="./reflected-xss.html">Reflected (non-persistent) XSS — vs DOM-based, lab pattern, URL delivery</a></li>
+<li><a href="./dom-xss.html">DOM-based XSS — source/sink, innerHTML, fragment URLs, payloads without <code>&lt;script&gt;</code></a></li>
 </ul>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
-<p>Cross-site scripting lets attackers run JavaScript in victims’ browsers when applications fail to sanitize or encode user-controlled data. Notes cover client-side execution, typical impacts (session theft, forced actions, abuse of browser APIs), limits of pure XSS versus chaining with browser bugs, notable incidents (Samy worm, TweetDeck), and the three main types: <strong>stored</strong>, <strong>reflected</strong>, and <strong>DOM-based</strong> XSS. Stored XSS is called out in depth: saved payloads, wide victim pool, remediation in the database, basic PoC payloads (<code>alert(window.origin)</code>, <code>&lt;plaintext&gt;</code>, <code>print()</code>), iframe/origin confirmation, and using refresh to verify persistence.</p>
+<p>Cross-site scripting lets attackers run JavaScript in victims’ browsers when applications fail to sanitize or encode user-controlled data. Notes cover client-side execution, typical impacts (session theft, forced actions, abuse of browser APIs), limits of pure XSS versus chaining with browser bugs, notable incidents (Samy worm, TweetDeck), and the three main types: <strong>stored</strong>, <strong>reflected</strong>, and <strong>DOM-based</strong> XSS. <strong>Stored</strong> XSS is covered in depth: saved payloads, wide victim pool, remediation in the database, basic PoC payloads (<code>alert(window.origin)</code>, <code>&lt;plaintext&gt;</code>, <code>print()</code>), iframe/origin confirmation, and using refresh to verify persistence. <strong>Reflected</strong> XSS is summarized separately: non-persistent behavior (vs DOM-based), error-message reflection, empty-quotes UI vs view-source confirmation, and delivering GET-based attacks via malicious URLs. <strong>DOM-based</strong> XSS is summarized separately: client-only processing, hash/URL sources, view-source vs inspector, source and sink functions, why <code>innerHTML</code> often blocks <code>&lt;script&gt;</code>, and event-handler payloads (e.g. <code>img</code> / <code>onerror</code>) delivered via shared URLs.</p>
 
                     </main>
 
