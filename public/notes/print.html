@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-45349103.js";
+            window.path_to_searchindex_js = "searchindex-fcd1995d.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-1ea46699.js"></script>
+        <script src="toc-8905383a.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -27834,9 +27834,11 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 <ul>
 <li><a href="#cross-site-scripting-xss--introduction">Introduction — what XSS is, risk, examples, types</a></li>
 <li><a href="#stored-persistent-xss">Stored (persistent) XSS — impact, testing, persistence checks</a></li>
+<li><a href="#reflected-non-persistent-xss">Reflected (non-persistent) XSS — vs DOM-based, lab pattern, URL delivery</a></li>
+<li><a href="#dom-based-xss">DOM-based XSS — source/sink, innerHTML, fragment URLs, payloads without <code>&lt;script&gt;</code></a></li>
 </ul>
 <h2 id="summary-9"><a class="header" href="#summary-9">Summary</a></h2>
-<p>Cross-site scripting lets attackers run JavaScript in victims’ browsers when applications fail to sanitize or encode user-controlled data. Notes cover client-side execution, typical impacts (session theft, forced actions, abuse of browser APIs), limits of pure XSS versus chaining with browser bugs, notable incidents (Samy worm, TweetDeck), and the three main types: <strong>stored</strong>, <strong>reflected</strong>, and <strong>DOM-based</strong> XSS. Stored XSS is called out in depth: saved payloads, wide victim pool, remediation in the database, basic PoC payloads (<code>alert(window.origin)</code>, <code>&lt;plaintext&gt;</code>, <code>print()</code>), iframe/origin confirmation, and using refresh to verify persistence.</p>
+<p>Cross-site scripting lets attackers run JavaScript in victims’ browsers when applications fail to sanitize or encode user-controlled data. Notes cover client-side execution, typical impacts (session theft, forced actions, abuse of browser APIs), limits of pure XSS versus chaining with browser bugs, notable incidents (Samy worm, TweetDeck), and the three main types: <strong>stored</strong>, <strong>reflected</strong>, and <strong>DOM-based</strong> XSS. <strong>Stored</strong> XSS is covered in depth: saved payloads, wide victim pool, remediation in the database, basic PoC payloads (<code>alert(window.origin)</code>, <code>&lt;plaintext&gt;</code>, <code>print()</code>), iframe/origin confirmation, and using refresh to verify persistence. <strong>Reflected</strong> XSS is summarized separately: non-persistent behavior (vs DOM-based), error-message reflection, empty-quotes UI vs view-source confirmation, and delivering GET-based attacks via malicious URLs. <strong>DOM-based</strong> XSS is summarized separately: client-only processing, hash/URL sources, view-source vs inspector, source and sink functions, why <code>innerHTML</code> often blocks <code>&lt;script&gt;</code>, and event-handler payloads (e.g. <code>img</code> / <code>onerror</code>) delivered via shared URLs.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cross-site-scripting-xss--introduction"><a class="header" href="#cross-site-scripting-xss--introduction">Cross-Site Scripting (XSS) — Introduction</a></h1>
 <h2 id="why-it-matters"><a class="header" href="#why-it-matters">Why it matters</a></h2>
@@ -27924,6 +27926,94 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 <p>Use the app’s <strong>reset</strong> (or equivalent) between tests if you need a clean state.</p>
 <h2 id="confirming-persistence"><a class="header" href="#confirming-persistence">Confirming persistence</a></h2>
 <p><strong>Refresh the page</strong> after submitting the payload. If the alert (or other effect) <strong>returns on every load</strong>, the string is <strong>stored</strong> and re-served—<strong>stored/persistent XSS</strong>. Any other user hitting the same page gets the same behavior, not only the attacker’s session.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="reflected-non-persistent-xss"><a class="header" href="#reflected-non-persistent-xss">Reflected (Non-Persistent) XSS</a></h1>
+<h2 id="non-persistent-xss-two-flavors"><a class="header" href="#non-persistent-xss-two-flavors">Non-persistent XSS: two flavors</a></h2>
+<p><strong>Non-persistent</strong> XSS does <strong>not</strong> survive a normal revisit without replaying the same request. It affects <strong>whoever triggers that response</strong> (often one user at a time), not everyone who loads a shared page.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Where it is processed</th><th>Reaches back end?</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Reflected XSS</strong></td><td>Server reflects input into the <strong>HTML response</strong></td><td>Yes</td></tr>
+<tr><td><strong>DOM-based XSS</strong></td><td>Client-side code writes untrusted data into the <strong>DOM</strong></td><td>Often no (dangerous string may never be stored or echoed by the server the same way)</td></tr>
+</tbody>
+</table>
+</div>
+<p>Unlike <strong>persistent (stored)</strong> XSS, non-persistent issues are <strong>temporary</strong>: leave the page or reload without the same parameters, and the injected output usually <strong>does not run again</strong>.</p>
+<h2 id="what-reflected-xss-is"><a class="header" href="#what-reflected-xss-is">What reflected XSS is</a></h2>
+<p><strong>Reflected XSS</strong> happens when user input is sent to the <strong>back end</strong>, then <strong>returned in the response without proper filtering or encoding</strong>. Common sinks include <strong>error messages</strong>, <strong>confirmation text</strong>, <strong>search results</strong>, or any UI that <strong>echoes the full input</strong> into HTML.</p>
+<p>If the reflection is <strong>HTML context</strong> and unencoded, a PoC such as <code>&lt;script&gt;alert(window.origin)&lt;/script&gt;</code> may execute when that response is rendered.</p>
+<h2 id="lab-pattern-to-do-style-app"><a class="header" href="#lab-pattern-to-do-style-app">Lab pattern (to-do style app)</a></h2>
+<p>A to-do app may show errors like <code>Task 'test' could not be added.</code> with <strong>your string inside the message</strong>. That pattern is a candidate for reflected XSS if the value is inserted <strong>raw</strong> into the page.</p>
+<p>After submitting a script payload, the <strong>visible</strong> error might show <strong>empty quotes</strong> (e.g. <code>Task '' could not be added.</code>) because the browser <strong>executes</strong> the <code>&lt;script&gt;</code> and does not display its contents as normal text. <strong>View page source</strong> confirms the payload still appears in the HTML, for example:</p>
+<pre><code class="language-html">&lt;div style="padding-left:25px"&gt;Task '&lt;script&gt;alert(window.origin)&lt;/script&gt;' could not be added.&lt;/div&gt;
+</code></pre>
+<h2 id="confirming-non-persistence"><a class="header" href="#confirming-non-persistence">Confirming non-persistence</a></h2>
+<p>Open the same URL again <strong>without</strong> the parameters or body that caused the error. If the message and XSS <strong>do not</strong> reappear, the issue is <strong>non-persistent (reflected)</strong> rather than stored.</p>
+<h2 id="delivering-reflected-xss-to-a-victim"><a class="header" href="#delivering-reflected-xss-to-a-victim">Delivering reflected XSS to a victim</a></h2>
+<p>Impact is still serious: you must get the victim to issue the <strong>same HTTP request</strong> that reflects the payload.</p>
+<ol>
+<li>Use <strong>Developer Tools</strong> (e.g. Firefox: <code>Ctrl+Shift+I</code>) → <strong>Network</strong> tab, submit the payload, and inspect the request <strong>method</strong> and shape.</li>
+<li>If the app uses <strong>GET</strong>, parameters appear in the <strong>URL</strong>. Copy the full URL from the address bar or via <strong>Copy → Copy URL</strong> on the request. Sharing that link can execute the payload when the victim loads it, e.g.<br><code>http://SERVER_IP:PORT/index.php?task=&lt;script&gt;alert(window.origin)&lt;/script&gt;</code></li>
+</ol>
+<p>For <strong>POST</strong>-only reflection, delivery typically requires <strong>social engineering</strong> (tricking the victim into submitting a form), <strong>CSRF-style</strong> tricks, or other ways to force the browser to send the right request—not just a single malicious link.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="dom-based-xss"><a class="header" href="#dom-based-xss">DOM-Based XSS</a></h1>
+<h2 id="what-it-is"><a class="header" href="#what-it-is">What it is</a></h2>
+<p><strong>DOM-based XSS</strong> is the third main XSS type. Like <strong>reflected</strong> XSS, it is usually <strong>non-persistent</strong>: the dangerous output does not survive a simple revisit without the same client-side inputs (e.g. fragment or client state).</p>
+<p>The difference from reflected XSS: data is <strong>not</strong> necessarily sent to the back end in an HTTP request that returns your string in HTML. Instead, <strong>JavaScript on the client</strong> reads untrusted input and <strong>writes it into the DOM</strong>. The server may serve a <strong>static</strong> page; the vulnerability is in <strong>client-side</strong> source → sink handling.</p>
+<h2 id="lab-clues-to-do-style-app"><a class="header" href="#lab-clues-to-do-style-app">Lab clues (to-do style app)</a></h2>
+<p>Behavior that suggests DOM XSS:</p>
+<ul>
+<li><strong>Network tab:</strong> Adding an item triggers <strong>no new HTTP request</strong>—only client-side updates.</li>
+<li><strong>URL uses a hash fragment</strong> (e.g. <code>#task=...</code>). The fragment is <strong>not</strong> sent to the server in normal navigation; the browser keeps it and <strong>client script</strong> can read <code>location</code> / <code>document.URL</code> and parse parameters after <code>#</code>.</li>
+<li><strong>View page source (<code>Ctrl+U</code>):</strong> Your test string may <strong>not</strong> appear. The base HTML was fetched <strong>before</strong> JS ran; the DOM is updated <strong>after</strong> load when you click Add. <strong>Web Inspector</strong> (<code>Ctrl+Shift+C</code>) shows the <strong>live</strong> DOM including injected text.</li>
+<li><strong>Refresh</strong> without the same fragment/state: the injected content is <strong>gone</strong> → <strong>non-persistent</strong>.</li>
+</ul>
+<h2 id="source-and-sink"><a class="header" href="#source-and-sink">Source and sink</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Concept</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Source</strong></td><td>Where untrusted data enters the page in JS—URL (query or fragment), <code>location</code>, form fields, <code>postMessage</code>, storage, etc.</td></tr>
+<tr><td><strong>Sink</strong></td><td>A function or API that <strong>writes</strong> that data into the DOM (or otherwise executes it). If the sink does not <strong>sanitize or encode</strong> for the HTML context, DOM XSS is possible.</td></tr>
+</tbody>
+</table>
+</div>
+<p>Common <strong>sinks</strong> (examples):</p>
+<ul>
+<li><code>document.write()</code></li>
+<li><code>element.innerHTML</code></li>
+<li><code>element.outerHTML</code></li>
+</ul>
+<p>jQuery examples that can write HTML:</p>
+<ul>
+<li><code>.add()</code>, <code>.after()</code>, <code>.append()</code></li>
+</ul>
+<p>If user-controlled data reaches a sink <strong>without</strong> safe encoding and <strong>without</strong> a safer API (e.g. <code>textContent</code> for plain text), treat the page as a DOM XSS candidate.</p>
+<h2 id="example-vulnerable-pattern-illustrative"><a class="header" href="#example-vulnerable-pattern-illustrative">Example vulnerable pattern (illustrative)</a></h2>
+<p>Reading the task from the URL (fragment or query—lab used <code>task=</code> in the URL string the script parses):</p>
+<pre><code class="language-javascript">var pos = document.URL.indexOf("task=");
+var task = document.URL.substring(pos + 5, document.URL.length);
+</code></pre>
+<p>Writing it into the DOM with <strong><code>innerHTML</code></strong> (no sanitization):</p>
+<pre><code class="language-javascript">document.getElementById("todo").innerHTML = "&lt;b&gt;Next Task:&lt;/b&gt; " + decodeURIComponent(task);
+</code></pre>
+<p>Attacker controls <code>task</code>; the string is concatenated into HTML → XSS if a working payload is injected.</p>
+<h2 id="why-script-often-fails-in-innerhtml"><a class="header" href="#why-script-often-fails-in-innerhtml">Why <code>&lt;script&gt;</code> often fails in <code>innerHTML</code></a></h2>
+<p>Many browsers <strong>do not execute</strong> <code>&lt;script&gt;</code> nodes inserted via <code>innerHTML</code> as a mitigation. That does <strong>not</strong> mean the page is safe: use payloads that do not rely on <code>&lt;script&gt;</code>, for example an image with a bad <code>src</code> and <strong><code>onerror</code></strong>:</p>
+<pre><code class="language-html">&lt;img src="" onerror=alert(window.origin)&gt;
+</code></pre>
+<p>Encoded for a URL fragment (example shape):</p>
+<p><code>http://SERVER_IP:PORT/#task=&lt;img src='' onerror=alert(window.origin)&gt;</code></p>
+<p>(Exact encoding depends on context; <code>decodeURIComponent</code> in the sink affects how you must encode the fragment.)</p>
+<h2 id="delivering-dom-xss-to-a-victim"><a class="header" href="#delivering-dom-xss-to-a-victim">Delivering DOM XSS to a victim</a></h2>
+<p>If the <strong>source</strong> is in the URL (especially the <strong>fragment</strong>), share the <strong>full URL</strong> including <code>#task=...</code>. When the victim loads it, client-side script reads the source and hits the unsafe sink—<strong>no server round-trip</strong> required for the malicious string to reach the DOM.</p>
+<p>Payload choice varies with filters, context, and browser behavior; <code>innerHTML</code> blocking <code>&lt;script&gt;</code> is one common reason to pivot to event-handler or other tags.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
 <h2 id="directory-map-18"><a class="header" href="#directory-map-18">Directory Map</a></h2>
