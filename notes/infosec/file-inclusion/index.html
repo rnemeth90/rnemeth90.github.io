@@ -38,10 +38,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-a6e286f4.js";
+            window.path_to_searchindex_js = "../../searchindex-c73e8bc6.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-6dbf9054.js"></script>
+        <script src="../../toc-10bb4e26.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -185,15 +185,17 @@
 <h2 id="directory-map"><a class="header" href="#directory-map">Directory map</a></h2>
 <ul>
 <li><a href="./intro-to-file-inclusions.html">Intro to file inclusions — LFI basics, templating, impact, examples (PHP, Node, Java, .NET), read vs execute</a></li>
+<li><a href="./local-file-inclusion.html">Local file inclusion (LFI) — exploitation basics, traversal, prefixes, extensions, second-order</a></li>
 </ul>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>File inclusion flaws happen when <strong>HTTP parameters or path segments choose a file</strong> to load or render, and that choice is <strong>not safely constrained</strong>. <strong>Local File Inclusion (LFI)</strong> lets attackers read (or sometimes execute) arbitrary server files—common around <strong>templating</strong> patterns such as <code>index.php?page=about</code> where the <code>page</code> fragment maps to an include path. Impacts include <strong>source disclosure</strong>, <strong>secret leakage</strong> (keys, credentials, configs), and under some primitives <strong>remote code execution</strong>. Examples span <strong>PHP</strong> (<code>include</code> / <code>require</code> / <code>file_get_contents</code> and friends), <strong>Node</strong> (<code>fs.readFile</code>, <code>path.join</code> breakout, <code>res.render</code> with interpolated paths), <strong>Java/JSP</strong> (<code>jsp:include</code>, <code>c:import</code>), and <strong>.NET</strong> (<code>Response.WriteFile</code>, <code>@Html.Partial</code>, SSI includes). A key review axis is <strong>read-only vs execute</strong> and <strong>local vs remote URL</strong> support: execution-capable includes (e.g. PHP <code>include</code>, some <code>c:import</code> / SSI cases) widen blast radius to <strong>RCE</strong>, while read-only sinks still enable <strong>credential and logic leakage</strong>. Defensive themes are <strong>allowlisting</strong>, <strong>canonical path checks</strong>, and <strong>never wiring raw request data into filesystem or template resolution</strong>.</p>
+<p>For <strong>exploitation mechanics</strong>, see <a href="./local-file-inclusion.html">local-file-inclusion.md</a>: swapping parameters for system files (e.g. <code>/etc/passwd</code>), <strong><code>../</code> path traversal</strong> when a directory is prepended, <strong><code>/</code>-led payloads</strong> when a <strong>filename prefix</strong> is concatenated, the effect of <strong>appended extensions</strong> (and why bypasses are a separate topic), <strong>second-order</strong> LFI via stored fields (e.g. usernames used in download paths), and the lab distinction between <strong>reading PHP source</strong> vs <strong>executing</strong> it.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../infosec/file-transfers/windows.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../infosec/active-directory/summary.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
@@ -207,7 +209,7 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../infosec/file-transfers/windows.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../infosec/active-directory/summary.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
