@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-c73e8bc6.js";
+            window.path_to_searchindex_js = "searchindex-15b3ab1b.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-10bb4e26.js"></script>
+        <script src="toc-8a7eafe2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -19325,7 +19325,7 @@ ac
 </ul>
 <h3 id="file-inclusion"><a class="header" href="#file-inclusion">File inclusion</a></h3>
 <ul>
-<li><a href="infosec/file-inclusion/README.html">File inclusion — intro, LFI exploitation (traversal, prefixes, second-order), read vs execute</a></li>
+<li><a href="infosec/file-inclusion/README.html">File inclusion — intro, LFI exploitation (traversal, prefixes, second-order), basic filter bypasses, read vs execute</a></li>
 </ul>
 <h3 id="htb"><a class="header" href="#htb">HTB</a></h3>
 <ul>
@@ -24174,10 +24174,12 @@ SQL&gt; xp_cmdshell whoami /priv
 <ul>
 <li><a href="#intro-to-file-inclusions">Intro to file inclusions — LFI basics, templating, impact, examples (PHP, Node, Java, .NET), read vs execute</a></li>
 <li><a href="#local-file-inclusion-lfi--exploitation-basics">Local file inclusion (LFI) — exploitation basics, traversal, prefixes, extensions, second-order</a></li>
+<li><a href="#local-file-inclusion-lfi--basic-bypasses">LFI — basic bypasses — non-recursive filters, encoding, approved paths, appended extension (legacy truncation/null byte)</a></li>
 </ul>
 <h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
 <p>File inclusion flaws happen when <strong>HTTP parameters or path segments choose a file</strong> to load or render, and that choice is <strong>not safely constrained</strong>. <strong>Local File Inclusion (LFI)</strong> lets attackers read (or sometimes execute) arbitrary server files—common around <strong>templating</strong> patterns such as <code>index.php?page=about</code> where the <code>page</code> fragment maps to an include path. Impacts include <strong>source disclosure</strong>, <strong>secret leakage</strong> (keys, credentials, configs), and under some primitives <strong>remote code execution</strong>. Examples span <strong>PHP</strong> (<code>include</code> / <code>require</code> / <code>file_get_contents</code> and friends), <strong>Node</strong> (<code>fs.readFile</code>, <code>path.join</code> breakout, <code>res.render</code> with interpolated paths), <strong>Java/JSP</strong> (<code>jsp:include</code>, <code>c:import</code>), and <strong>.NET</strong> (<code>Response.WriteFile</code>, <code>@Html.Partial</code>, SSI includes). A key review axis is <strong>read-only vs execute</strong> and <strong>local vs remote URL</strong> support: execution-capable includes (e.g. PHP <code>include</code>, some <code>c:import</code> / SSI cases) widen blast radius to <strong>RCE</strong>, while read-only sinks still enable <strong>credential and logic leakage</strong>. Defensive themes are <strong>allowlisting</strong>, <strong>canonical path checks</strong>, and <strong>never wiring raw request data into filesystem or template resolution</strong>.</p>
-<p>For <strong>exploitation mechanics</strong>, see <a href="#local-file-inclusion-lfi--exploitation-basics">local-file-inclusion.md</a>: swapping parameters for system files (e.g. <code>/etc/passwd</code>), <strong><code>../</code> path traversal</strong> when a directory is prepended, <strong><code>/</code>-led payloads</strong> when a <strong>filename prefix</strong> is concatenated, the effect of <strong>appended extensions</strong> (and why bypasses are a separate topic), <strong>second-order</strong> LFI via stored fields (e.g. usernames used in download paths), and the lab distinction between <strong>reading PHP source</strong> vs <strong>executing</strong> it.</p>
+<p>For <strong>exploitation mechanics</strong>, see <a href="#local-file-inclusion-lfi--exploitation-basics">local-file-inclusion.md</a>: swapping parameters for system files (e.g. <code>/etc/passwd</code>), <strong><code>../</code> path traversal</strong> when a directory is prepended, <strong><code>/</code>-led payloads</strong> when a <strong>filename prefix</strong> is concatenated, the effect of <strong>appended extensions</strong>, <strong>second-order</strong> LFI via stored fields (e.g. usernames used in download paths), and the lab distinction between <strong>reading PHP source</strong> vs <strong>executing</strong> it.</p>
+<p>For <strong>filter and normalizer bypasses</strong> (single-pass <code>../</code> stripping, URL/double encoding, regex-approved path prefixes, and legacy PHP tricks for forced extensions), see <a href="#local-file-inclusion-lfi--basic-bypasses">lfi-basic-bypasses.md</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="intro-to-file-inclusions"><a class="header" href="#intro-to-file-inclusions">Intro to File Inclusions</a></h1>
 <p>Many back-end stacks (PHP, JavaScript/Node, Java, .NET, and others) use HTTP parameters or path segments to choose which resource is rendered. That keeps templates small and pages dynamic. If the resolved path is built from user-controlled input without strict validation, an attacker can point the application at arbitrary local files—<strong>Local File Inclusion (LFI)</strong>—or, where the API allows it, remote resources (<strong>Remote File Inclusion</strong>, RFI, when applicable).</p>
@@ -24276,7 +24278,7 @@ SQL&gt; xp_cmdshell whoami /priv
 <p>Another common hardening attempt is <strong>forcing an extension</strong>:</p>
 <pre><code class="language-php">include($_GET['language'] . ".php");
 </code></pre>
-<p>Then <code>/etc/passwd</code> becomes <code>/etc/passwd.php</code> and fails. Multiple bypass styles exist (null bytes where allowed, wrappers/filters, truncation quirks, etc.)—those belong in dedicated follow-on notes.</p>
+<p>Then <code>/etc/passwd</code> becomes <code>/etc/passwd.php</code> and fails. On <strong>current</strong> PHP you are often limited to files that already end in <code>.php</code> (still useful for source disclosure). <strong>Legacy</strong> PHP had truncation and null-byte tricks against appended extensions; see <a href="#local-file-inclusion-lfi--basic-bypasses">lfi-basic-bypasses.md</a>. Wrappers, filters, and other chains are covered in separate material.</p>
 <p><strong>Lab exercise:</strong> try LFI against a <code>.php</code> file (e.g. <code>index.php</code>). Observe whether you get <strong>source</strong> disclosure or <strong>executed</strong> HTML—this distinguishes read vs execute behavior of the sink.</p>
 <h2 id="second-order-lfi"><a class="header" href="#second-order-lfi">Second-order LFI</a></h2>
 <p><strong>Second-order</strong> attacks store the payload <strong>indirectly</strong> (often in a <strong>database</strong>), then a <strong>later</strong> feature uses that value as a path component.</p>
@@ -24288,6 +24290,43 @@ SQL&gt; xp_cmdshell whoami /priv
 <li><strong>Extension appending</strong> and other normalizations need their own bypass families.</li>
 <li><strong>Second-order</strong> issues follow data from write-time (registration, profile update) to read-time (export, report, attachment).</li>
 <li>Techniques are <strong>language-agnostic</strong> at the logic level: any stack that builds paths from untrusted data can exhibit the same classes of flaws.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="local-file-inclusion-lfi--basic-bypasses"><a class="header" href="#local-file-inclusion-lfi--basic-bypasses">Local File Inclusion (LFI) — basic bypasses</a></h1>
+<p>When an app tries to block LFI, weak filters and normalizers often <strong>fail in predictable ways</strong>. The patterns below apply to <strong>any</strong> stack where user input becomes part of a filesystem path—the examples use PHP because labs often do, but the logic (single-pass replacement, regex anchors, decoding order) is universal.</p>
+<h2 id="non-recursive--removal"><a class="header" href="#non-recursive--removal">Non-recursive <code>../</code> removal</a></h2>
+<p>A naive defense deletes the literal substring <code>../</code> once:</p>
+<pre><code class="language-php">$language = str_replace('../', '', $_GET['language']);
+</code></pre>
+<p>Input like <code>../../../../etc/passwd</code> becomes <code>./languages/etc/passwd</code> after stripping—traversal is “neutralized” only on paper. Because the replacement runs <strong>once</strong> on the original string (not repeatedly on the result), you can <strong>rebuild</strong> <code>../</code> after the filter runs. Example: <code>....//</code> loses the inner <code>../</code> and leaves <code>../</code>. Chaining gives real traversal again, e.g. <code>....//....//....//....//etc/passwd</code>.</p>
+<p>Similar shapes include <code>..././</code>, <code>....\/</code>, extra slashes (<code>....////</code>), and other encodings that collapse or re-form traversal after a single pass.</p>
+<h2 id="url-encoding-and-double-encoding"><a class="header" href="#url-encoding-and-double-encoding">URL encoding (and double encoding)</a></h2>
+<p>Filters that look for raw <code>.</code> or <code>/</code> may miss the same bytes <strong>after</strong> decoding. Encoding <code>../</code> as <code>%2e%2e%2f</code> (encode <strong>both</strong> dots—some encoders skip dots) can slip past character blacklists. Older PHP (around <strong>5.3.4 and earlier</strong>) had known issues around decoding and path handling; modern PHP is stricter, but <strong>custom</strong> WAFs and app-layer checks still mis-order “block” vs “decode,” so <strong>double encoding</strong> (encode the already-encoded string again) sometimes clears a second line of defense.</p>
+<p>Treat this like other injection families: the same blacklist/encoding games used in command injection often transfer to LFI. Burp <strong>Decoder</strong> is a practical way to iterate encodings in testing.</p>
+<h2 id="approved-path-prefixes-regex-allowlists"><a class="header" href="#approved-path-prefixes-regex-allowlists">Approved path prefixes (regex allowlists)</a></h2>
+<p>An app may require paths under a fixed prefix, e.g.:</p>
+<pre><code class="language-php">if (preg_match('/^\.\/languages\/.+$/', $_GET['language'])) {
+    include($_GET['language']);
+}
+</code></pre>
+<p><strong>Discovery:</strong> watch normal traffic from forms and fuzz sibling directories under the same prefix until something matches the pattern.</p>
+<p><strong>Bypass:</strong> satisfy the regex <strong>then</strong> traverse out, e.g. <code>./languages/../../../../etc/passwd</code>. Combine with encoding or non-recursive tricks when multiple defenses are stacked.</p>
+<h2 id="appended-extension-eg-forced-php"><a class="header" href="#appended-extension-eg-forced-php">Appended extension (e.g. forced <code>.php</code>)</a></h2>
+<p>If the server does <code>include($input . '.php')</code>, modern PHP usually keeps the suffix—so you may be limited to <strong>disclosure of same-extension files</strong> (still valuable for source and secrets). Two <strong>legacy</strong> PHP angles matter only on <strong>old</strong> runtimes but are worth knowing for rare targets.</p>
+<h3 id="path-truncation-pre53--54-era-behavior"><a class="header" href="#path-truncation-pre53--54-era-behavior">Path truncation (pre–5.3 / 5.4 era behavior)</a></h3>
+<p>Historically, very long path strings could hit <strong>length limits</strong> (often cited around <strong>4096</strong> characters on 32-bit-era PHP), with trailing normalization quirks (extra <code>/</code>, lone <code>.</code> segments, multiple slashes) behaving like typical filesystem rules. The idea: craft an enormous padding path so that, after truncation and normalization, the <strong>appended <code>.php</code> falls off</strong> or the resolved path ends where you need it—often starting with a <strong>non-existent</strong> leading directory segment and repeating <code>./</code> (or similar) many times so only the intended file survives the truncation math.</p>
+<p>Example pattern to generate padding (adjust counts to hit the length you need after measuring the full string):</p>
+<pre><code class="language-bash">echo -n "non_existing_directory/../../../etc/passwd/" &amp;&amp; for i in {1..2048}; do echo -n "./"; done
+</code></pre>
+<p>Always <strong>measure total length</strong> so truncation removes the extension (or junk) and <strong>not</strong> your target filename.</p>
+<h3 id="null-bytes-php-before-55"><a class="header" href="#null-bytes-php-before-55">Null bytes (PHP before 5.5)</a></h3>
+<p>Older PHP treated <code>%00</code> as a <strong>C-style string terminator</strong> in some path contexts. Payload shape: <code>/etc/passwd%00</code> so the effective path becomes <code>/etc/passwd</code> before the appended <code>.php</code> is considered—<strong>obsolete</strong> on current PHP but still relevant when auditing ancient servers.</p>
+<h2 id="takeaways-1"><a class="header" href="#takeaways-1">Takeaways</a></h2>
+<ul>
+<li><strong>Single-pass</strong> <code>../</code> stripping is bypassable with residual <code>../</code> after substitution.</li>
+<li><strong>Encoding</strong> and <strong>double encoding</strong> exploit “filter before decode” mistakes; dots must be encoded when the defense keys on literal dots.</li>
+<li><strong>Regex-approved prefixes</strong> are not roots: traversal <strong>after</strong> the allowed prefix often still reaches <code>/etc/passwd</code> and friends.</li>
+<li><strong>Forced extensions</strong> narrow modern PHP LFI; <strong>truncation</strong> and <strong>null bytes</strong> are historical PHP bypasses for very old versions only.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-file-transfer-methods"><a class="header" href="#linux-file-transfer-methods">Linux File Transfer Methods</a></h1>
@@ -28305,7 +28344,7 @@ sudo php -S 0.0.0.0:80
 </code></pre>
 <h2 id="view-source-vs-what-users-see"><a class="header" href="#view-source-vs-what-users-see">View source vs what users see</a></h2>
 <p><strong>Injected scripts</strong> may sit at the <strong>end</strong> of the HTML (e.g. inside list markup) while <strong>runtime</strong> changes rewrite the <strong>DOM</strong>—users see the defaced view. If injection sits <strong>mid-page</strong>, <strong>later</strong> scripts or nodes might still run or render, so you may need <strong>ordering</strong> or <strong>additional</strong> DOM edits to get the final look you want.</p>
-<h2 id="takeaways-1"><a class="header" href="#takeaways-1">Takeaways</a></h2>
+<h2 id="takeaways-2"><a class="header" href="#takeaways-2">Takeaways</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -28336,7 +28375,7 @@ sudo php -S 0.0.0.0:80
 <h2 id="code-review"><a class="header" href="#code-review">Code review</a></h2>
 <p><strong>Manual review</strong> of <strong>server and client</strong> code is the most dependable method when you can follow <strong>data flow from entry to browser</strong>. If you know <strong>encoding, templating, and sinks</strong> (including DOM <strong>sources/sinks</strong>), you can craft <strong>context-specific</strong> payloads with high confidence.</p>
 <p>Mature products are often pre-scanned and patched; <strong>subtle XSS</strong> may survive where <strong>lists and scanners</strong> fail. Deeper <strong>secure coding</strong> and <strong>white-box</strong> material is left to dedicated courses (e.g. Secure Coding 101: JavaScript, Whitebox Pentesting 101: Command Injection) referenced in the original module.</p>
-<h2 id="takeaways-2"><a class="header" href="#takeaways-2">Takeaways</a></h2>
+<h2 id="takeaways-3"><a class="header" href="#takeaways-3">Takeaways</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
