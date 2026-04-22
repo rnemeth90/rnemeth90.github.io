@@ -38,10 +38,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-c73e8bc6.js";
+            window.path_to_searchindex_js = "../../searchindex-15b3ab1b.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-10bb4e26.js"></script>
+        <script src="../../toc-8a7eafe2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -206,7 +206,7 @@
 <p>Another common hardening attempt is <strong>forcing an extension</strong>:</p>
 <pre><code class="language-php">include($_GET['language'] . ".php");
 </code></pre>
-<p>Then <code>/etc/passwd</code> becomes <code>/etc/passwd.php</code> and fails. Multiple bypass styles exist (null bytes where allowed, wrappers/filters, truncation quirks, etc.)—those belong in dedicated follow-on notes.</p>
+<p>Then <code>/etc/passwd</code> becomes <code>/etc/passwd.php</code> and fails. On <strong>current</strong> PHP you are often limited to files that already end in <code>.php</code> (still useful for source disclosure). <strong>Legacy</strong> PHP had truncation and null-byte tricks against appended extensions; see <a href="./lfi-basic-bypasses.html">lfi-basic-bypasses.md</a>. Wrappers, filters, and other chains are covered in separate material.</p>
 <p><strong>Lab exercise:</strong> try LFI against a <code>.php</code> file (e.g. <code>index.php</code>). Observe whether you get <strong>source</strong> disclosure or <strong>executed</strong> HTML—this distinguishes read vs execute behavior of the sink.</p>
 <h2 id="second-order-lfi"><a class="header" href="#second-order-lfi">Second-order LFI</a></h2>
 <p><strong>Second-order</strong> attacks store the payload <strong>indirectly</strong> (often in a <strong>database</strong>), then a <strong>later</strong> feature uses that value as a path component.</p>
@@ -228,7 +228,7 @@
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../../infosec/file-transfers/linux.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../infosec/file-inclusion/lfi-basic-bypasses.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -242,7 +242,7 @@
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../../infosec/file-transfers/linux.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../infosec/file-inclusion/lfi-basic-bypasses.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
