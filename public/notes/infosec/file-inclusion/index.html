@@ -38,10 +38,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-15b3ab1b.js";
+            window.path_to_searchindex_js = "../../searchindex-abd32c2f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-8a7eafe2.js"></script>
+        <script src="../../toc-e696de98.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -187,11 +187,13 @@
 <li><a href="./intro-to-file-inclusions.html">Intro to file inclusions — LFI basics, templating, impact, examples (PHP, Node, Java, .NET), read vs execute</a></li>
 <li><a href="./local-file-inclusion.html">Local file inclusion (LFI) — exploitation basics, traversal, prefixes, extensions, second-order</a></li>
 <li><a href="./lfi-basic-bypasses.html">LFI — basic bypasses — non-recursive filters, encoding, approved paths, appended extension (legacy truncation/null byte)</a></li>
+<li><a href="./php-filters-lfi.html">PHP filter wrappers (<code>php://filter</code>) — Base64 source disclosure, fuzzing PHP endpoints, appended extensions</a></li>
 </ul>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>File inclusion flaws happen when <strong>HTTP parameters or path segments choose a file</strong> to load or render, and that choice is <strong>not safely constrained</strong>. <strong>Local File Inclusion (LFI)</strong> lets attackers read (or sometimes execute) arbitrary server files—common around <strong>templating</strong> patterns such as <code>index.php?page=about</code> where the <code>page</code> fragment maps to an include path. Impacts include <strong>source disclosure</strong>, <strong>secret leakage</strong> (keys, credentials, configs), and under some primitives <strong>remote code execution</strong>. Examples span <strong>PHP</strong> (<code>include</code> / <code>require</code> / <code>file_get_contents</code> and friends), <strong>Node</strong> (<code>fs.readFile</code>, <code>path.join</code> breakout, <code>res.render</code> with interpolated paths), <strong>Java/JSP</strong> (<code>jsp:include</code>, <code>c:import</code>), and <strong>.NET</strong> (<code>Response.WriteFile</code>, <code>@Html.Partial</code>, SSI includes). A key review axis is <strong>read-only vs execute</strong> and <strong>local vs remote URL</strong> support: execution-capable includes (e.g. PHP <code>include</code>, some <code>c:import</code> / SSI cases) widen blast radius to <strong>RCE</strong>, while read-only sinks still enable <strong>credential and logic leakage</strong>. Defensive themes are <strong>allowlisting</strong>, <strong>canonical path checks</strong>, and <strong>never wiring raw request data into filesystem or template resolution</strong>.</p>
 <p>For <strong>exploitation mechanics</strong>, see <a href="./local-file-inclusion.html">local-file-inclusion.md</a>: swapping parameters for system files (e.g. <code>/etc/passwd</code>), <strong><code>../</code> path traversal</strong> when a directory is prepended, <strong><code>/</code>-led payloads</strong> when a <strong>filename prefix</strong> is concatenated, the effect of <strong>appended extensions</strong>, <strong>second-order</strong> LFI via stored fields (e.g. usernames used in download paths), and the lab distinction between <strong>reading PHP source</strong> vs <strong>executing</strong> it.</p>
 <p>For <strong>filter and normalizer bypasses</strong> (single-pass <code>../</code> stripping, URL/double encoding, regex-approved path prefixes, and legacy PHP tricks for forced extensions), see <a href="./lfi-basic-bypasses.html">lfi-basic-bypasses.md</a>.</p>
+<p>For <strong>PHP <code>php://filter</code> streams</strong>—using <strong><code>read=convert.base64-encode</code></strong> so included <code>.php</code> files leak as Base64 instead of executing, fuzzing <strong><code>*.php</code></strong> with non-200 responses in scope, and chaining reads from <strong><code>index.php</code></strong> or ffuf hits—see <a href="./php-filters-lfi.html">php-filters-lfi.md</a>.</p>
 
                     </main>
 
