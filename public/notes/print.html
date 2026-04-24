@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-abd32c2f.js";
+            window.path_to_searchindex_js = "searchindex-446be115.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-e696de98.js"></script>
+        <script src="toc-c433b8a1.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -19325,7 +19325,7 @@ ac
 </ul>
 <h3 id="file-inclusion"><a class="header" href="#file-inclusion">File inclusion</a></h3>
 <ul>
-<li><a href="infosec/file-inclusion/README.html">File inclusion — intro, LFI exploitation (traversal, prefixes, second-order), basic filter bypasses, PHP <code>php://filter</code> source disclosure, read vs execute</a></li>
+<li><a href="infosec/file-inclusion/README.html">File inclusion — intro, LFI exploitation (traversal, prefixes, second-order), basic filter bypasses, PHP <code>php://filter</code> source disclosure, PHP <code>data</code>/<code>input</code>/<code>expect</code> wrappers and RCE prerequisites, read vs execute</a></li>
 </ul>
 <h3 id="htb"><a class="header" href="#htb">HTB</a></h3>
 <ul>
@@ -24176,12 +24176,14 @@ SQL&gt; xp_cmdshell whoami /priv
 <li><a href="#local-file-inclusion-lfi--exploitation-basics">Local file inclusion (LFI) — exploitation basics, traversal, prefixes, extensions, second-order</a></li>
 <li><a href="#local-file-inclusion-lfi--basic-bypasses">LFI — basic bypasses — non-recursive filters, encoding, approved paths, appended extension (legacy truncation/null byte)</a></li>
 <li><a href="#php-filter-wrappers-for-lfi-source-disclosure">PHP filter wrappers (<code>php://filter</code>) — Base64 source disclosure, fuzzing PHP endpoints, appended extensions</a></li>
+<li><a href="#php-wrappers--lfi-to-rce">PHP wrappers for LFI → RCE — <code>data://</code>, <code>php://input</code>, <code>expect://</code>, <code>allow_url_include</code>, reading <code>php.ini</code></a></li>
 </ul>
 <h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
 <p>File inclusion flaws happen when <strong>HTTP parameters or path segments choose a file</strong> to load or render, and that choice is <strong>not safely constrained</strong>. <strong>Local File Inclusion (LFI)</strong> lets attackers read (or sometimes execute) arbitrary server files—common around <strong>templating</strong> patterns such as <code>index.php?page=about</code> where the <code>page</code> fragment maps to an include path. Impacts include <strong>source disclosure</strong>, <strong>secret leakage</strong> (keys, credentials, configs), and under some primitives <strong>remote code execution</strong>. Examples span <strong>PHP</strong> (<code>include</code> / <code>require</code> / <code>file_get_contents</code> and friends), <strong>Node</strong> (<code>fs.readFile</code>, <code>path.join</code> breakout, <code>res.render</code> with interpolated paths), <strong>Java/JSP</strong> (<code>jsp:include</code>, <code>c:import</code>), and <strong>.NET</strong> (<code>Response.WriteFile</code>, <code>@Html.Partial</code>, SSI includes). A key review axis is <strong>read-only vs execute</strong> and <strong>local vs remote URL</strong> support: execution-capable includes (e.g. PHP <code>include</code>, some <code>c:import</code> / SSI cases) widen blast radius to <strong>RCE</strong>, while read-only sinks still enable <strong>credential and logic leakage</strong>. Defensive themes are <strong>allowlisting</strong>, <strong>canonical path checks</strong>, and <strong>never wiring raw request data into filesystem or template resolution</strong>.</p>
 <p>For <strong>exploitation mechanics</strong>, see <a href="#local-file-inclusion-lfi--exploitation-basics">local-file-inclusion.md</a>: swapping parameters for system files (e.g. <code>/etc/passwd</code>), <strong><code>../</code> path traversal</strong> when a directory is prepended, <strong><code>/</code>-led payloads</strong> when a <strong>filename prefix</strong> is concatenated, the effect of <strong>appended extensions</strong>, <strong>second-order</strong> LFI via stored fields (e.g. usernames used in download paths), and the lab distinction between <strong>reading PHP source</strong> vs <strong>executing</strong> it.</p>
 <p>For <strong>filter and normalizer bypasses</strong> (single-pass <code>../</code> stripping, URL/double encoding, regex-approved path prefixes, and legacy PHP tricks for forced extensions), see <a href="#local-file-inclusion-lfi--basic-bypasses">lfi-basic-bypasses.md</a>.</p>
 <p>For <strong>PHP <code>php://filter</code> streams</strong>—using <strong><code>read=convert.base64-encode</code></strong> so included <code>.php</code> files leak as Base64 instead of executing, fuzzing <strong><code>*.php</code></strong> with non-200 responses in scope, and chaining reads from <strong><code>index.php</code></strong> or ffuf hits—see <a href="#php-filter-wrappers-for-lfi-source-disclosure">php-filters-lfi.md</a>.</p>
+<p>For <strong>PHP stream wrappers that drive RCE</strong> through an execution-capable <code>include</code>-style sink: confirm <strong><code>allow_url_include</code></strong> (and related settings) by Base64-reading <strong><code>php.ini</code></strong> under <code>/etc/php/X.Y/apache2/</code> or <code>.../fpm/</code>; then try <strong><code>data://text/plain;base64,...</code></strong> for inline PHP, <strong><code>php://input</code></strong> with a POST body when the parameter accepts POST, and <strong><code>expect://command</code></strong> when the <strong>expect</strong> extension is installed and working. Trivial pivots (configs, <strong><code>~/.ssh/id_rsa</code></strong>) remain parallel options. Phar/zip + upload chains are noted as follow-ons—see <a href="#php-wrappers--lfi-to-rce">php-wrappers-lfi-rce.md</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="intro-to-file-inclusions"><a class="header" href="#intro-to-file-inclusions">Intro to File Inclusions</a></h1>
 <p>Many back-end stacks (PHP, JavaScript/Node, Java, .NET, and others) use HTTP parameters or path segments to choose which resource is rendered. That keeps templates small and pages dynamic. If the resolved path is built from user-controlled input without strict validation, an attacker can point the application at arbitrary local files—<strong>Local File Inclusion (LFI)</strong>—or, where the API allows it, remote resources (<strong>Remote File Inclusion</strong>, RFI, when applicable).</p>
@@ -24375,6 +24377,36 @@ SQL&gt; xp_cmdshell whoami /priv
 <li><a href="#local-file-inclusion-lfi--exploitation-basics">LFI exploitation basics — traversal, prefixes, extensions</a></li>
 <li><a href="#local-file-inclusion-lfi--basic-bypasses">Basic bypasses — filters, encoding, approved paths</a></li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="php-wrappers--lfi-to-rce"><a class="header" href="#php-wrappers--lfi-to-rce">PHP wrappers — LFI to RCE</a></h1>
+<p>After using LFI mainly for <strong>local file disclosure</strong>, the next step is often <strong>remote code execution</strong> on the back-end. Viability depends on <strong>language</strong>, <strong>sink</strong> (<code>include</code> vs read-only APIs), and <strong>server configuration</strong>.</p>
+<h2 id="paths-that-do-not-need-stream-wrappers"><a class="header" href="#paths-that-do-not-need-stream-wrappers">Paths that do not need stream wrappers</a></h2>
+<p>Before reaching for wrappers, <strong>enumeration</strong> still matters: read <code>config.php</code> for DB passwords (possible reuse as OS user passwords), home <strong><code>.ssh/id_rsa</code></strong> when permissions allow, then pivot via <strong>SSH</strong> or another remote session.</p>
+<h2 id="allow_url_include-and-phpini"><a class="header" href="#allow_url_include-and-phpini"><code>allow_url_include</code> and <code>php.ini</code></a></h2>
+<p>Several PHP stream attacks require <strong><code>allow_url_include = On</code></strong> (off by default). It also gates <strong><code>php://input</code></strong> abuse and <strong>RFI</strong>. Some apps (e.g. certain <strong>WordPress</strong> plugins/themes) enable it anyway.</p>
+<p>Confirm by reading <strong><code>php.ini</code></strong> through LFI, using <strong><code>php://filter/read=convert.base64-encode/resource=...</code></strong> so the response stays usable (similar to reading other <code>.ini</code> / PHP files):</p>
+<ul>
+<li>Apache: <code>/etc/php/X.Y/apache2/php.ini</code></li>
+<li>Nginx / PHP-FPM: <code>/etc/php/X.Y/fpm/php.ini</code></li>
+</ul>
+<p>Try current <strong>X.Y</strong> first, then older versions. Prefer <strong>cURL</strong> or <strong>Burp</strong> over a browser for long Base64 output. Decode and search:</p>
+<pre><code class="language-bash">echo '&lt;BASE64&gt;' | base64 -d | grep allow_url_include
+</code></pre>
+<h2 id="data--inline-php"><a class="header" href="#data--inline-php"><code>data://</code> — inline PHP</a></h2>
+<p>When <strong><code>allow_url_include</code></strong> is on, <strong><code>data://</code></strong> can supply <strong>PHP source</strong> to an execution-capable include. Use <strong><code>text/plain;base64,</code></strong> and <strong>URL-encode</strong> the Base64 payload.</p>
+<p>Example shell one-liner to encode:</p>
+<pre><code class="language-bash">echo '&lt;?php system($_GET["cmd"]); ?&gt;' | base64
+</code></pre>
+<p>Request shape (conceptually): vulnerable parameter set to <code>data://text/plain;base64,&lt;PAYLOAD&gt;</code> plus <strong><code>&amp;cmd=</code></strong> for the command (if the app merges <strong>GET</strong> into the included context as expected).</p>
+<h2 id="phpinput--post-body-as-php"><a class="header" href="#phpinput--post-body-as-php"><code>php://input</code> — POST body as PHP</a></h2>
+<p>Same <strong><code>allow_url_include</code></strong> dependency. Point the include at <strong><code>php://input</code></strong> and send <strong>raw PHP</strong> in the <strong>POST body</strong>. If <strong><code>$_GET["cmd"]</code></strong> is not merged into the executed code path, bake the command into the POST body (e.g. <code>&lt;?php system('id'); ?&gt;</code>) instead of a tiny dynamic shell.</p>
+<h2 id="expect--command-execution-stream"><a class="header" href="#expect--command-execution-stream"><code>expect://</code> — command execution stream</a></h2>
+<p><strong><code>expect</code></strong> is an <strong>optional extension</strong> (<code>extension=expect</code> in <code>php.ini</code>). Presence in config does not prove it loads at runtime—<strong>test</strong> with:</p>
+<pre><code class="language-text">expect://id
+</code></pre>
+<p>(or the equivalent in your vulnerable parameter). No separate web shell payload is required; the wrapper is built for <strong>command-style</strong> use. Same idea appears elsewhere (e.g. <strong>XXE</strong> with <code>expect</code>).</p>
+<h2 id="related-topics"><a class="header" href="#related-topics">Related topics</a></h2>
+<p>The <strong><code>php://filter</code></strong> chain for <strong>source disclosure</strong> (without RCE) is covered in <a href="#php-filter-wrappers-for-lfi-source-disclosure">php-filters-lfi.md</a>. <strong>Phar</strong> and <strong>zip</strong> stream tricks (often paired with <strong>uploads</strong> + LFI) are a separate follow-on.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-file-transfer-methods"><a class="header" href="#linux-file-transfer-methods">Linux File Transfer Methods</a></h1>
 <h2 id="introduction-29"><a class="header" href="#introduction-29">Introduction</a></h2>
