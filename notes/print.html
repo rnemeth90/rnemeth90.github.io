@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-22bf77e5.js";
+            window.path_to_searchindex_js = "searchindex-52323166.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-da663546.js"></script>
+        <script src="toc-d47aa4f8.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -19325,7 +19325,7 @@ ac
 </ul>
 <h3 id="file-inclusion"><a class="header" href="#file-inclusion">File inclusion</a></h3>
 <ul>
-<li><a href="infosec/file-inclusion/README.html">File inclusion — intro, LFI exploitation (traversal, prefixes, second-order), basic filter bypasses, PHP <code>php://filter</code> source disclosure, PHP <code>data</code>/<code>input</code>/<code>expect</code> wrappers and RCE prerequisites, RFI (HTTP/FTP/SMB), LFI chained with uploads (polyglot images, <code>zip://</code> / <code>phar://</code>), SSRF overlap, read vs execute</a></li>
+<li><a href="infosec/file-inclusion/README.html">File inclusion — intro, LFI exploitation (traversal, prefixes, second-order), basic filter bypasses, PHP <code>php://filter</code> source disclosure, PHP <code>data</code>/<code>input</code>/<code>expect</code> wrappers and RCE prerequisites, RFI (HTTP/FTP/SMB), LFI chained with uploads (polyglot images, <code>zip://</code> / <code>phar://</code>), log/session poisoning (access logs, <code>sess_*</code>, <code>/proc</code>), SSRF overlap, read vs execute</a></li>
 </ul>
 <h3 id="htb"><a class="header" href="#htb">HTB</a></h3>
 <ul>
@@ -24179,6 +24179,7 @@ SQL&gt; xp_cmdshell whoami /priv
 <li><a href="#php-wrappers--lfi-to-rce">PHP wrappers for LFI → RCE — <code>data://</code>, <code>php://input</code>, <code>expect://</code>, <code>allow_url_include</code>, reading <code>php.ini</code></a></li>
 <li><a href="#remote-file-inclusion-rfi">Remote file inclusion (RFI) — LFI vs RFI, verifying URL inclusion, RCE via HTTP/FTP/SMB, SSRF overlap</a></li>
 <li><a href="#lfi-and-file-uploads">LFI and file uploads — polyglot images, discovering upload paths, PHP <code>zip://</code> / <code>phar://</code> chains, legacy phpinfo edge case</a></li>
+<li><a href="#log-poisoning-for-lfi--rce">Log poisoning (LFI → RCE) — PHP session files, Apache/Nginx access logs, <code>/proc</code> hints, SSH/FTP/mail logs, permissions and safety</a></li>
 </ul>
 <h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
 <p>File inclusion flaws happen when <strong>HTTP parameters or path segments choose a file</strong> to load or render, and that choice is <strong>not safely constrained</strong>. <strong>Local File Inclusion (LFI)</strong> lets attackers read (or sometimes execute) arbitrary server files—common around <strong>templating</strong> patterns such as <code>index.php?page=about</code> where the <code>page</code> fragment maps to an include path. Impacts include <strong>source disclosure</strong>, <strong>secret leakage</strong> (keys, credentials, configs), and under some primitives <strong>remote code execution</strong>. Examples span <strong>PHP</strong> (<code>include</code> / <code>require</code> / <code>file_get_contents</code> and friends), <strong>Node</strong> (<code>fs.readFile</code>, <code>path.join</code> breakout, <code>res.render</code> with interpolated paths), <strong>Java/JSP</strong> (<code>jsp:include</code>, <code>c:import</code>), and <strong>.NET</strong> (<code>Response.WriteFile</code>, <code>@Html.Partial</code>, SSI includes). A key review axis is <strong>read-only vs execute</strong> and <strong>local vs remote URL</strong> support: execution-capable includes (e.g. PHP <code>include</code>, some <code>c:import</code> / SSI cases) widen blast radius to <strong>RCE</strong>, while read-only sinks still enable <strong>credential and logic leakage</strong>. Defensive themes are <strong>allowlisting</strong>, <strong>canonical path checks</strong>, and <strong>never wiring raw request data into filesystem or template resolution</strong>.</p>
@@ -24188,6 +24189,7 @@ SQL&gt; xp_cmdshell whoami /priv
 <p>For <strong>PHP stream wrappers that drive RCE</strong> through an execution-capable <code>include</code>-style sink: confirm <strong><code>allow_url_include</code></strong> (and related settings) by Base64-reading <strong><code>php.ini</code></strong> under <code>/etc/php/X.Y/apache2/</code> or <code>.../fpm/</code>; then try <strong><code>data://text/plain;base64,...</code></strong> for inline PHP, <strong><code>php://input</code></strong> with a POST body when the parameter accepts POST, and <strong><code>expect://command</code></strong> when the <strong>expect</strong> extension is installed and working. Trivial pivots (configs, <strong><code>~/.ssh/id_rsa</code></strong>) remain parallel options. Phar/zip + upload chains are noted as follow-ons—see <a href="#php-wrappers--lfi-to-rce">php-wrappers-lfi-rce.md</a>.</p>
 <p><strong>Remote File Inclusion (RFI)</strong> applies when the sink accepts <strong>remote URLs</strong> (<code>http://</code>, <code>ftp://</code>, or on Windows <strong>UNC/SMB</strong> paths). Benefits: <strong>RCE</strong> by hosting a script the server includes and executes (when the primitive executes), and <strong>SSRF-style</strong> probing of <strong>localhost / internal ports</strong> (e.g. <code>http://127.0.0.1:80/...</code>). RFI usually implies LFI; the converse fails when URL wrappers are disallowed, the attacker cannot supply a full scheme, or the stack disables remote inclusion (default on many servers). <strong>Verify</strong> with a real URL fetch (often starting with loopback HTTP); <code>php.ini</code> alone is not always definitive. Delivery channels: <strong>HTTP</strong> (<code>python3 -m http.server</code>), <strong>FTP</strong> (<code>pyftpdlib</code>, <code>ftp://</code>—useful if HTTP is filtered), <strong>SMB</strong> (<code>impacket-smbserver</code>, <code>\\host\share\file.php</code> on Windows without <code>allow_url_include</code>). Avoid recursive self-includes. Details: <a href="#remote-file-inclusion-rfi">remote-file-inclusion.md</a>.</p>
 <p><strong>LFI plus file uploads</strong> chains a <strong>benign-looking upload</strong> (often profile images) with an <strong>execution-capable include</strong>. The upload need only <strong>store</strong> attacker bytes (e.g. <strong>polyglot GIF</strong>: magic bytes <code>GIF8</code> plus embedded <strong><code>&lt;?php ... ?&gt;</code></strong>); normal image delivery does not execute code, but <strong>including</strong> that path via LFI does. Discover paths from <strong><code>img src</code></strong>, app URLs, or fuzz common upload directories; adjust with <strong><code>../</code></strong> when the sink prepends a base path. <strong>PHP</strong> fallbacks use <strong><code>zip://</code></strong> (zip containing <code>shell.php</code>, <code>#</code> → <code>%23</code> in the URL) or <strong><code>phar://</code></strong> (generated with <code>phar.readonly=0</code>); wrappers may be off or blocked, and zip-as-image can fail content checks—<strong>polyglot + include</strong> remains the most broadly reliable. A rare legacy combo is <strong>LFI + <code>file_uploads</code> + old PHP + exposed <code>phpinfo()</code></strong> for temp upload paths. Details: <a href="#lfi-and-file-uploads">lfi-file-uploads.md</a>.</p>
+<p><strong>Log poisoning</strong> writes <strong>PHP into a file the server already appends to</strong> (session store or HTTP/service logs), then <strong>includes that path</strong> through LFI so the sink <strong>executes</strong> it. <strong>PHP session poisoning</strong> targets <strong><code>sess_&lt;PHPSESSID&gt;</code></strong> under <code>/var/lib/php/sessions/</code> (Linux) or <code>C:\Windows\Temp\</code> (Windows): confirm a <strong>controllable session key</strong> (e.g. <code>page</code> driven by <code>?language=</code>), URL-encode a small <strong><code>system($_GET['cmd'])</code></strong> payload into that key, re-include the session file with <strong><code>&amp;cmd=</code></strong>, and expect <strong>session churn</strong> after inclusion (re-poison or pivot to a durable shell). <strong>Access-log poisoning</strong> sets <strong><code>User-Agent</code></strong> to PHP (Burp or <code>curl -H @file</code>); include <strong><code>access.log</code></strong> from <code>/var/log/apache2/</code> or <code>/var/log/nginx/</code> (defaults vary; misconfigurations may expose logs to <strong>www-data</strong>). Large logs are <strong>slow and risky</strong> in prod. <strong><code>/proc/self/environ</code></strong> and <strong><code>/proc/self/fd/N</code></strong> may mirror <strong>User-Agent</strong> when logs are unreadable. Broader pattern: <strong>SSH username</strong>, <strong>FTP user</strong>, or <strong>mail</strong> lines in <strong><code>sshd</code> / <code>vsftpd</code> / mail logs</strong> if LFI can read them. Details: <a href="#log-poisoning-for-lfi--rce">log-poisoning-lfi.md</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="intro-to-file-inclusions"><a class="header" href="#intro-to-file-inclusions">Intro to File Inclusions</a></h1>
 <p>Many back-end stacks (PHP, JavaScript/Node, Java, .NET, and others) use HTTP parameters or path segments to choose which resource is rendered. That keeps templates small and pages dynamic. If the resolved path is built from user-controlled input without strict validation, an attacker can point the application at arbitrary local files—<strong>Local File Inclusion (LFI)</strong>—or, where the API allows it, remote resources (<strong>Remote File Inclusion</strong>, RFI, when applicable).</p>
@@ -24515,6 +24517,79 @@ SQL&gt; xp_cmdshell whoami /priv
 <p>Older setups: <strong><code>file_uploads</code></strong> on, <strong>old PHP</strong>, <strong><code>phpinfo()</code></strong> exposed, plus LFI—historical <strong>temporary upload path</strong> abuse. Rare today; specific requirements.</p>
 <h2 id="defensive-takeaway"><a class="header" href="#defensive-takeaway">Defensive takeaway</a></h2>
 <p>Secure <strong>uploads</strong> (type, storage outside web root, non-executable serving) still matters, but <strong>do not</strong> rely on “images are safe” if <strong>any code path can include</strong> user-influenced filesystem paths with <strong>execute</strong> semantics. Prefer <strong>no user input in include paths</strong>, <strong>allowlists</strong>, and <strong>non-executable</strong> storage and response paths.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="log-poisoning-for-lfi--rce"><a class="header" href="#log-poisoning-for-lfi--rce">Log poisoning for LFI → RCE</a></h1>
+<p>When an <strong>execution-capable</strong> include processes a path as PHP, <strong>any included file that contains PHP runs</strong>. <strong>Log poisoning</strong> (also called log contamination) means <strong>writing attacker PHP into a log or session file</strong> the app already writes, then <strong>including that file</strong> through the LFI parameter. It works wherever the <strong>web process can read</strong> the poisoned file—paths and permissions differ by stack and hardening.</p>
+<p>The same <strong>read / execute / remote URL</strong> matrix applies as in <a href="#intro-to-file-inclusions">intro to file inclusions</a>: sinks that <strong>execute</strong> (e.g. PHP <code>include</code> / <code>include_once</code>, Java <code>import</code> / .NET <code>include</code> in risky patterns) enable RCE; <code>require</code> / Node <code>res.render</code> rows in course material stress <strong>no remote URL</strong> in some cases—here the focus is <strong>execute + readable poisoned file</strong>.</p>
+<h2 id="php-session-poisoning"><a class="header" href="#php-session-poisoning">PHP session poisoning</a></h2>
+<p>PHP stores session data in files keyed by <strong><code>PHPSESSID</code></strong>:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Platform</th><th>Typical directory</th></tr>
+</thead>
+<tbody>
+<tr><td>Linux</td><td><code>/var/lib/php/sessions/</code></td></tr>
+<tr><td>Windows</td><td><code>C:\Windows\Temp\</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Filename: <strong><code>sess_</code> + cookie value</strong>, e.g. cookie <code>abc123</code> → <code>/var/lib/php/sessions/sess_abc123</code>.</p>
+<p><strong>Workflow</strong></p>
+<ol>
+<li>Confirm you have a <strong><code>PHPSESSID</code></strong>; map it to <strong><code>sess_&lt;id&gt;</code></strong> on disk.</li>
+<li><strong>Include the session file</strong> via LFI and inspect serialized contents for <strong>fields you control</strong> (e.g. a <code>page</code> key tied to <code>?language=</code>).</li>
+<li><strong>Poison</strong>: request with <code>?language=</code> set to <strong>URL-encoded PHP</strong> (e.g. <code>&lt;?php system($_GET['cmd']); ?&gt;</code>).</li>
+<li><strong>Include the session file again</strong> and pass <strong><code>&amp;cmd=id</code></strong> (or another command) on the include request.</li>
+</ol>
+<p><strong>Operational notes</strong></p>
+<ul>
+<li>Cookie values <strong>differ per session</strong>; always use <strong>your</strong> <code>sess_*</code> path.</li>
+<li>After you include the session file with <code>language=/var/lib/php/sessions/sess_...</code>, the app may <strong>overwrite</strong> session data with that path string—<strong>re-poison</strong> before another command. Prefer dropping a <strong>persistent webshell</strong> under the web root or <strong>reverse shell</strong> once you have execution.</li>
+<li>If nothing in the session file is user-influenced, this chain does not apply.</li>
+</ul>
+<h2 id="web-server-access-logs-apache--nginx"><a class="header" href="#web-server-access-logs-apache--nginx">Web server access logs (Apache / Nginx)</a></h2>
+<p><strong><code>access.log</code></strong> records each request, including the <strong><code>User-Agent</code></strong> header—<strong>fully client-controlled</strong>. Poison by sending <strong>any</strong> request (not only the LFI URL) with <code>User-Agent: &lt;?php system($_GET['cmd']); ?&gt;</code>, then <strong>include the log</strong> via LFI.</p>
+<p><strong>Default log locations</strong> (verify; fuzz with an LFI wordlist if needed)</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Server</th><th>Linux</th><th>Windows (common)</th></tr>
+</thead>
+<tbody>
+<tr><td>Apache</td><td><code>/var/log/apache2/</code></td><td><code>C:\xampp\apache\logs\</code></td></tr>
+<tr><td>Nginx</td><td><code>/var/log/nginx/</code></td><td><code>C:\nginx\log\</code></td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Permissions</strong></p>
+<ul>
+<li><strong>Nginx</strong> logs are often readable by low-privileged users (e.g. <code>www-data</code>) by default.</li>
+<li><strong>Apache</strong> logs are often restricted to <strong>root</strong> / <strong>adm</strong>; <strong>older or misconfigured</strong> Apache may allow <strong>www-data</strong> read access.</li>
+</ul>
+<p><strong>cURL example</strong> (write header to a file, then send):</p>
+<pre><code class="language-bash">echo -n "User-Agent: &lt;?php system(\$_GET['cmd']); ?&gt;" &gt; Poison
+curl -s "http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php" -H @Poison
+</code></pre>
+<p>Then trigger LFI against <code>access.log</code> and add <strong><code>&amp;cmd=id</code></strong>.</p>
+<p><strong>Safety</strong></p>
+<ul>
+<li>Logs can be <strong>very large</strong>; including them may be <strong>slow</strong> or <strong>harmful</strong> in production. Minimize noise and avoid repeated full-log pulls.</li>
+</ul>
+<p><strong>Alternatives</strong></p>
+<ul>
+<li><strong><code>User-Agent</code></strong> may also appear under <strong><code>/proc/</code></strong> (e.g. <code>/proc/self/environ</code>, <code>/proc/self/fd/N</code> for small <strong>N</strong>). If logs are unreadable, these are worth trying—<strong>they may still require elevated read</strong>.</li>
+</ul>
+<h2 id="other-service-logs"><a class="header" href="#other-service-logs">Other service logs</a></h2>
+<p>If LFI can <strong>read</strong> a log and you can <strong>inject PHP into a logged field</strong>, the same idea applies:</p>
+<ul>
+<li><strong><code>/var/log/sshd.log</code></strong> — e.g. <strong>username</strong> set to PHP when SSH is exposed.</li>
+<li><strong><code>/var/log/vsftpd.log</code></strong> — <strong>FTP username</strong> as payload.</li>
+<li><strong><code>/var/log/mail</code></strong> (or similar) — <strong>mail content</strong> that gets logged.</li>
+</ul>
+<p>Generalize: <strong>any log that records attacker-controlled bytes</strong> and is <strong>readable through LFI</strong> can become a <strong>staged PHP file</strong> for an execute-capable include.</p>
+<h2 id="defensive-takeaway-1"><a class="header" href="#defensive-takeaway-1">Defensive takeaway</a></h2>
+<p>Treat <strong>session files</strong> and <strong>logs</strong> as sensitive: <strong>strict path allowlists</strong> for includes, <strong>no user input in include resolution</strong>, <strong>least privilege</strong> on log and session directories, and <strong>avoid execute semantics</strong> on attacker-influenced paths. From an assurance perspective, <strong>readable logs + LFI + execute include</strong> is a full <strong>RCE</strong> chain.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-file-transfer-methods"><a class="header" href="#linux-file-transfer-methods">Linux File Transfer Methods</a></h1>
 <h2 id="introduction-29"><a class="header" href="#introduction-29">Introduction</a></h2>
