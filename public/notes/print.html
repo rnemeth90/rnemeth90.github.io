@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-adec9fac.js";
+            window.path_to_searchindex_js = "searchindex-03bccdc9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-f886f5a3.js"></script>
+        <script src="toc-daddb707.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -19373,6 +19373,10 @@ ac
 <li><a href="#pass-the-hash-pth-attacks">Pass the Hash (PtH)</a></li>
 <li><a href="#pass-the-ticket-ptt-attacks">Pass the Ticket (PtT)</a></li>
 </ul>
+<h3 id="web-attacks"><a class="header" href="#web-attacks">Web Attacks</a></h3>
+<ul>
+<li><a href="infosec/web-attacks/README.html">Web Attacks — HTTP Verb Tampering, IDOR, XXE overview</a></li>
+</ul>
 <h3 id="xss-cross-site-scripting"><a class="header" href="#xss-cross-site-scripting">XSS (Cross-Site Scripting)</a></h3>
 <ul>
 <li><a href="infosec/xss/README.html">XSS — types, labs, phishing, discovery, defacing, session hijacking, prevention</a></li>
@@ -27091,6 +27095,35 @@ $result = $conn-&gt;query($query);
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="openvas"><a href="#openvas" class="header">Openvas</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="web-attacks-1"><a class="header" href="#web-attacks-1">Web Attacks</a></h1>
+<h2 id="directory-map-19"><a class="header" href="#directory-map-19">Directory map</a></h2>
+<ul>
+<li><a href="#introduction-to-web-attacks">Introduction — web attack context, HTTP Verb Tampering, IDOR, XXE overview</a></li>
+</ul>
+<h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
+<p>Web attacks are the most common class of attacks against businesses, targeting external-facing applications, internal web apps, and API endpoints alike. This section covers three attack types found across many web applications. <strong>HTTP Verb Tampering</strong> exploits servers that accept unexpected HTTP methods, allowing attackers to bypass authorization mechanisms and security controls by sending requests with non-standard verbs. <strong>Insecure Direct Object References (IDOR)</strong> exploit weak or missing back-end access controls: when applications use predictable identifiers (sequential IDs, user numbers) to reference resources, an attacker can guess or calculate valid IDs to access other users’ data. <strong>XML External Entity (XXE) Injection</strong> targets applications using outdated XML parsers to process user-supplied XML — malicious payloads can read local files (configs, source code, credentials), enable whitebox testing, steal server credentials, and potentially achieve remote code execution.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="introduction-to-web-attacks"><a class="header" href="#introduction-to-web-attacks">Introduction to Web Attacks</a></h1>
+<h2 id="why-web-attacks-matter"><a class="header" href="#why-web-attacks-matter">Why web attacks matter</a></h2>
+<p>Web applications are the most common attack surface for businesses today. Compromising an external-facing web application can pivot to an internal network, leading to stolen assets or disrupted services. Even organizations with no external web apps typically have internal web apps or external API endpoints, both vulnerable to the same attack classes.</p>
+<h2 id="http-verb-tampering"><a class="header" href="#http-verb-tampering">HTTP Verb Tampering</a></h2>
+<p>Exploits web servers that accept many HTTP verbs and methods. Sending requests with <strong>unexpected HTTP methods</strong> can:</p>
+<ul>
+<li>Bypass the web application’s authorization mechanism</li>
+<li>Bypass security controls against other web attacks (e.g., filters that only check specific methods)</li>
+</ul>
+<p>Part of a broader class of HTTP attacks that exploit web server configuration weaknesses.</p>
+<h2 id="insecure-direct-object-references-idor"><a class="header" href="#insecure-direct-object-references-idor">Insecure Direct Object References (IDOR)</a></h2>
+<p>Among the most common web vulnerabilities. Arises when a web application <strong>exposes direct references</strong> to files or resources (e.g., sequential numbers, user IDs) <strong>without a robust access control mechanism</strong> on the back-end.</p>
+<p>An attacker can access other users’ files or data by <strong>guessing or calculating</strong> a valid resource ID — no special exploitation required beyond manipulating a parameter.</p>
+<h2 id="xml-external-entity-xxe-injection"><a class="header" href="#xml-external-entity-xxe-injection">XML External Entity (XXE) Injection</a></h2>
+<p>Targets web applications that process XML input using <strong>outdated XML libraries</strong>. Malicious XML payloads can:</p>
+<ul>
+<li><strong>Disclose local files</strong> on the back-end server (configuration files, source code, credentials)</li>
+<li>Enable <strong>Whitebox Penetration Testing</strong> if source code is leaked</li>
+<li><strong>Steal server credentials</strong> and potentially achieve remote code execution by compromising the hosting server</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="attacking-active-directory"><a class="header" href="#attacking-active-directory">Attacking Active Directory</a></h1>
 <p>We can attempt to extract credentials from Active Directory (ADDS) using dictionary attacks against AD accounts and dumping hashing from the ntds.dit file.</p>
 <p>Once a workstation is joined to a domain, it will no longer use the local SAM database for authentication, but will instead query the domain controller (DC) for user credentials. However, the SAM database will still be used if you login locally to the workstation. This means that if we can compromise a workstation that is part of a domain, we may be able to extract credentials for domain users.</p>
@@ -28693,7 +28726,7 @@ https://www.microsoft.com/en-us/msrc/blog/2014/06/an-overview-of-kb2871997
 https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="xss-cross-site-scripting-1"><a class="header" href="#xss-cross-site-scripting-1">XSS (Cross-Site Scripting)</a></h1>
-<h2 id="directory-map-19"><a class="header" href="#directory-map-19">Directory map</a></h2>
+<h2 id="directory-map-20"><a class="header" href="#directory-map-20">Directory map</a></h2>
 <ul>
 <li><a href="#cross-site-scripting-xss--introduction">Introduction — what XSS is, risk, examples, types</a></li>
 <li><a href="#stored-persistent-xss">Stored (persistent) XSS — impact, testing, persistence checks</a></li>
@@ -28705,7 +28738,7 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 <li><a href="#xss-blind-detection--session-hijacking-cookie-stealing">XSS session hijacking — blind XSS, remote script OOB, cookie exfil, Firefox storage</a></li>
 <li><a href="#xss-prevention">XSS prevention — sources/sinks, validation, encoding, CSP, cookies</a></li>
 </ul>
-<h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
+<h2 id="summary-12"><a class="header" href="#summary-12">Summary</a></h2>
 <p>Cross-site scripting lets attackers run JavaScript in victims’ browsers when applications fail to sanitize or encode user-controlled data. Notes cover client-side execution, typical impacts (session theft, forced actions, abuse of browser APIs), limits of pure XSS versus chaining with browser bugs, notable incidents (Samy worm, TweetDeck), and the three main types: <strong>stored</strong>, <strong>reflected</strong>, and <strong>DOM-based</strong> XSS. <strong>Stored</strong> XSS is covered in depth: saved payloads, wide victim pool, remediation in the database, basic PoC payloads (<code>alert(window.origin)</code>, <code>&lt;plaintext&gt;</code>, <code>print()</code>), iframe/origin confirmation, and using refresh to verify persistence. <strong>Reflected</strong> XSS is summarized separately: non-persistent behavior (vs DOM-based), error-message reflection, empty-quotes UI vs view-source confirmation, and delivering GET-based attacks via malicious URLs. <strong>DOM-based</strong> XSS is summarized separately: client-only processing, hash/URL sources, view-source vs inspector, source and sink functions, why <code>innerHTML</code> often blocks <code>&lt;script&gt;</code>, and event-handler payloads (e.g. <code>img</code> / <code>onerror</code>) delivered via shared URLs. <strong>XSS phishing</strong> is summarized separately: <strong>trusted-domain</strong> fake login UI that posts credentials to the attacker; <strong>authorized</strong> use as <strong>awareness simulations</strong>; <strong><code>/phishing</code>-style image URL</strong> labs where a raw <strong><code>&lt;script&gt;</code></strong> test often fails until <strong>source/context</strong> review; <strong><code>document.write</code></strong> for minified form HTML; <strong><code>getElementById('urlform').remove()</code></strong> after inspector (<strong><code>Ctrl+Shift+C</code></strong>) to drop the real URL field; <strong><code>&lt;!--</code></strong> after the payload to comment out trailing template; <strong>reflected</strong> delivery via a copied <strong>malicious URL</strong>; <strong>netcat</strong> on port <strong>80</strong> for quick <strong>GET</strong> <code>/?username=…&amp;password=…</code> capture vs a <strong>PHP</strong> listener that <strong>logs</strong> to <strong><code>creds.txt</code></strong> and <strong>redirects</strong> to the clean app so the victim does not see a broken HTTP response. <strong>XSS discovery</strong> is summarized separately: <strong>automated</strong> scanning (passive DOM hints vs active payload injection; commercial vs OSS tradeoffs), tools such as <strong>XSStrike</strong> / <strong>Brute XSS</strong> / <strong>XSSer</strong> and why <strong>reflection in HTML ≠ execution</strong>, <strong>manual</strong> testing with public payload lists and non-form sinks (<strong>headers</strong> like <strong>Cookie</strong> / <strong>User-Agent</strong>), why generic lists miss simple labs, optional custom scripting for odd targets, and <strong>manual code review</strong> as the most reliable path when full data flow is visible (with deeper secure-coding / white-box study left to other modules). <strong>XSS defacing</strong> is summarized separately: using <strong>stored</strong> XSS for <strong>persistent</strong> visual takeover, <strong>reputation</strong> impact (e.g. public sector defacements), four common levers (<strong><code>document.body.style.background</code></strong>, <strong><code>document.body.background</code></strong>, <strong><code>document.title</code></strong>, <strong><code>innerHTML</code></strong>), swapping <strong>full <code>&lt;body&gt;</code></strong> markup (with <strong><code>getElementsByTagName('body')[0]</code></strong>), optional <strong>jQuery</strong> when present, <strong>minified</strong> one-line HTML inside payloads, and how <strong>view-source</strong> can still show original structure while the <strong>rendered DOM</strong> looks defaced—plus <strong>injection position</strong> (end vs middle of page) affecting what later content might still appear. <strong>XSS session hijacking / blind XSS</strong> is summarized separately: <strong>cookies</strong> as session handles; <strong>blind</strong> sinks (<strong>admin</strong> panels, tickets, reviews, <strong><code>User-Agent</code></strong>); <strong><code>/hijacking</code></strong>-style registration reviewed by staff; <strong>OOB</strong> detection via <strong><code>&lt;script src=http://IP/fieldname&gt;</code></strong> so the <strong>request path</strong> names the vulnerable input; <strong>PayloadsAllTheThings</strong>-style <strong>quote-break</strong> variants and <strong>XHR</strong> / <strong><code>$.getScript</code></strong> when jQuery exists; <strong><code>sudo php -S 0.0.0.0:80</code></strong> to catch callbacks; pragmatic <strong>skips</strong> (<strong>email</strong> validation, <strong>password</strong> unlikely echoed); then <strong><code>new Image().src</code></strong> (vs <strong><code>document.location</code></strong>) to send <strong><code>document.cookie</code></strong> in a <strong>GET</strong> to <strong><code>index.php?c=</code></strong>, <strong>PHP</strong> splitting on <strong><code>;</code></strong>, <strong><code>urldecode</code></strong>, <strong><code>cookies.txt</code></strong> lines with <strong><code>REMOTE_ADDR</code></strong>; replay in <strong>Firefox Storage</strong> (<strong><code>Shift+F9</code></strong>) by adding <strong>name/value</strong> and refreshing—plus <strong><code>HttpOnly</code></strong> as the main cookie theft mitigation. <strong>XSS prevention</strong> is summarized separately: secure <strong>sources</strong> and <strong>sinks</strong> on <strong>client and server</strong>; front-end <strong>regex validation</strong> (e.g. email), <strong>DOMPurify</strong> for client-side HTML sanitization, avoiding <strong><code>&lt;script&gt;</code> / <code>&lt;style&gt;</code> / attributes / comments</strong> built from input and dangerous APIs (<strong><code>innerHTML</code></strong>, <strong><code>document.write</code></strong>, <strong><code>document.domain</code></strong>, jQuery <strong><code>.html()</code></strong> / <strong><code>parseHTML()</code></strong> / insertion helpers); back-end <strong><code>filter_var</code></strong> / validation, sanitization libraries, <strong>never raw echo</strong> of request params; <strong>output encoding</strong> with <strong><code>htmlspecialchars</code>/<code>htmlentities</code></strong> (PHP) or <strong><code>html-entities</code></strong> (Node); deployment levers (<strong>HTTPS</strong>, <strong>CSP</strong> like <strong><code>script-src 'self'</code></strong>, <strong><code>X-Content-Type-Options: nosniff</code></strong>, <strong><code>HttpOnly</code>/<code>Secure</code></strong> cookies, <strong>WAF</strong>, framework defaults such as <strong>ASP.NET</strong>); and ongoing <strong>offensive retesting</strong> because secure coding plus config can still miss edge cases—the note clarifies that <strong><code>addslashes</code></strong> alone is a weak primary HTML-XSS control versus <strong>contextual encoding</strong>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="dom-based-xss"><a class="header" href="#dom-based-xss">DOM-Based XSS</a></h1>
@@ -29222,7 +29255,7 @@ if (isset($_GET['c'])) {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
-<h2 id="directory-map-20"><a class="header" href="#directory-map-20">Directory Map</a></h2>
+<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory Map</a></h2>
 <ul>
 <li><a href="kubernetes/cks">cks</a></li>
 <li><a href="kubernetes/kcna">kcna</a></li>
@@ -29230,7 +29263,7 @@ if (isset($_GET['c'])) {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cks"><a class="header" href="#cks">CKS</a></h1>
-<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory Map</a></h2>
+<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
 <ul>
 <li><a href="#certified-kubernetes-security-specialist-cks-notes">notes</a></li>
 <li><a href="#kubernetes-security-specialist-cks-practice-scenarios">questions</a></li>
@@ -32345,7 +32378,7 @@ EOF
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcna"><a class="header" href="#kcna">KCNA</a></h1>
-<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
+<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-native-associate-kcna-notes">notes</a></li>
 </ul>
@@ -32879,7 +32912,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcsa"><a class="header" href="#kcsa">KCSA</a></h1>
-<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
+<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-security-associate-kcsa-notes">notes</a></li>
 </ul>
@@ -33480,7 +33513,7 @@ spec:
 </h4>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="networking"><a class="header" href="#networking">Networking</a></h1>
-<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
+<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
 <ul>
 <li><a href="networking/browser-networking">browser-networking</a></li>
 <li><a href="networking/http">http</a></li>
@@ -33510,7 +33543,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="browser-networking"><a class="header" href="#browser-networking">Browser Networking</a></h1>
-<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
+<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
 <ul>
 <li><a href="#chapter-1">chapter01</a></li>
 <li><a href="#chapter-2">chapter02</a></li>
@@ -33783,7 +33816,7 @@ Message: Frame[&lt;Header&gt;] Frame[&lt;Payload&gt;]                           
 <p>WebSockets can transfer test or binary data.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-1"><a class="header" href="#http-1">HTTP</a></h1>
-<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
+<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
 <ul>
 <li><a href="#clean-urls">clean_urls</a></li>
 <li><a href="#http-persistent-connection">persistent_connections</a></li>
@@ -34032,7 +34065,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="load-balancing"><a class="header" href="#load-balancing">Load Balancing</a></h1>
-<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
+<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
 <ul>
 <li><a href="#load-balancing-1">load-balancing</a></li>
 </ul>
@@ -34067,7 +34100,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nginx"><a class="header" href="#nginx">Nginx</a></h1>
-<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
+<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
 <ul>
 <li><a href="#custom-header-response">custom-header-response</a></li>
 </ul>
@@ -34081,7 +34114,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="protocols-1"><a class="header" href="#protocols-1">Protocols</a></h1>
-<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
+<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
 <ul>
 <li><a href="#dns-3">dns</a></li>
 <li><a href="#ftp-2">ftp</a></li>
@@ -35146,7 +35179,7 @@ iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64"
 <h1 id="websockets"><a class="header" href="#websockets">WebSockets</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="rate-limiting-algorithms"><a class="header" href="#rate-limiting-algorithms">Rate Limiting Algorithms</a></h1>
-<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
+<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
 <ul>
 <li><a href="#fixed-window-counter-algorithm">fixed-window-counter</a></li>
 <li><a href="#leaking-bucket-algorithm">leaking-bucket</a></li>
@@ -35303,7 +35336,7 @@ func main() {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="redis-1"><a class="header" href="#redis-1">Redis</a></h1>
-<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
+<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
 <ul>
 <li><a href="#redis-2">redis</a></li>
 </ul>
@@ -37284,7 +37317,7 @@ As stated above, most processes have the same EUID and RUID. As a result, the de
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="bash-1"><a class="header" href="#bash-1">Bash</a></h1>
-<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
+<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
 <ul>
 <li><a href="#bash-notes">bash_notes</a></li>
 <li><a href="#moving-the-cursor-1">keyboard_shortcuts</a></li>
@@ -37559,7 +37592,7 @@ similarly Ctrl+v ENTER will display the escape sequence for the Enter key: ^M
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="commands-4"><a class="header" href="#commands-4">Commands</a></h1>
-<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
+<h2 id="directory-map-34"><a class="header" href="#directory-map-34">Directory Map</a></h2>
 <ul>
 <li><a href="#chgrp">chgrp</a></li>
 <li><a href="#chmod">chmod</a></li>
@@ -37751,7 +37784,7 @@ PID        TTY     STAT   TIME          CMD
 <p>See page 37</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="greybeard-qualification-1"><a class="header" href="#greybeard-qualification-1">Greybeard Qualification</a></h1>
-<h2 id="directory-map-34"><a class="header" href="#directory-map-34">Directory Map</a></h2>
+<h2 id="directory-map-35"><a class="header" href="#directory-map-35">Directory Map</a></h2>
 <ul>
 <li><a href="#block-devices-and-file-systems">block_dev_and_file_systems</a></li>
 <li><a href="#memory-management-1">memory_management</a></li>
@@ -38897,7 +38930,7 @@ When the process calls exit():
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="tools-4"><a class="header" href="#tools-4">Tools</a></h1>
-<h2 id="directory-map-35"><a class="header" href="#directory-map-35">Directory Map</a></h2>
+<h2 id="directory-map-36"><a class="header" href="#directory-map-36">Directory Map</a></h2>
 <ul>
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
@@ -43003,7 +43036,7 @@ sudo cp /etc/shadow /tmp/shadow.bak
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-4"><a class="header" href="#troubleshooting-4">Troubleshooting</a></h1>
-<h2 id="directory-map-36"><a class="header" href="#directory-map-36">Directory Map</a></h2>
+<h2 id="directory-map-37"><a class="header" href="#directory-map-37">Directory Map</a></h2>
 <ul>
 <li><a href="troubleshooting/linux">linux</a></li>
 <li><a href="troubleshooting/troubleshooting_playbook">troubleshooting_playbook</a></li>
@@ -43058,7 +43091,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-1"><a class="header" href="#linux-1">Linux</a></h1>
-<h2 id="directory-map-37"><a class="header" href="#directory-map-37">Directory Map</a></h2>
+<h2 id="directory-map-38"><a class="header" href="#directory-map-38">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-memory">memory</a></li>
 </ul>
@@ -43114,7 +43147,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-playbook"><a class="header" href="#troubleshooting-playbook">Troubleshooting Playbook</a></h1>
-<h2 id="directory-map-38"><a class="header" href="#directory-map-38">Directory Map</a></h2>
+<h2 id="directory-map-39"><a class="header" href="#directory-map-39">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-503s-for-apps-in-kubernetes">kubernetes-containerized-app-503s</a></li>
 <li><a href="#general-troubleshootingnotes">kubernetes-general</a></li>
@@ -43228,7 +43261,7 @@ KubePodInventory
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="what-happens-when"><a class="header" href="#what-happens-when">What Happens When…</a></h1>
-<h2 id="directory-map-39"><a class="header" href="#directory-map-39">Directory Map</a></h2>
+<h2 id="directory-map-40"><a class="header" href="#directory-map-40">Directory Map</a></h2>
 <ul>
 <li><a href="#what-happens-when-a-cpu-starts">a-cpu-starts</a></li>
 </ul>
