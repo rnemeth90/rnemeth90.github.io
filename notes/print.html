@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-03bccdc9.js";
+            window.path_to_searchindex_js = "searchindex-e71e8236.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-daddb707.js"></script>
+        <script src="toc-b5acf25f.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -17105,6 +17105,20 @@ int main() {}
 }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="developing-with-ai"><a href="#developing-with-ai" class="header">Developing With Ai</a></h1>
+<ol>
+<li>Use gherkin to define the intent of the feature or functionality you want to implement. Gherkin is a language that allows you to write human-readable specifications for your software. This should be written to the AI rules file. For example, <code>claude.md</code>.</li>
+<li>Use the Gherkin syntax to write scenarios that describe the expected behavior of the feature. Each scenario should include a title, a description, and a series of steps that outline the actions and expected outcomes. For example:</li>
+</ol>
+<pre><code>Scenario: Breaker guesses a word
+  Given the Maker has chosen a word
+  When the Breaker makes a guess
+  Then the Maker is asked to score
+</code></pre>
+<ol start="3">
+<li>Have AI generate unit tests based on the Gherkin scenarios. The AI can use the scenarios to create test cases that validate the expected behavior of the feature. For example, it can generate unit tests in a testing framework like Jest or Mocha.</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="the-bufio-package"><a class="header" href="#the-bufio-package">the bufio package</a></h1>
 <h2 id="scanner"><a class="header" href="#scanner">scanner</a></h2>
 <p>A scanner is a convenient way of reading data delimited by new lines or spaces.</p>
@@ -27099,14 +27113,70 @@ $result = $conn-&gt;query($query);
 <h2 id="directory-map-19"><a class="header" href="#directory-map-19">Directory map</a></h2>
 <ul>
 <li><a href="#introduction-to-web-attacks">Introduction — web attack context, HTTP Verb Tampering, IDOR, XXE overview</a></li>
+<li><a href="#http-verb-tampering">HTTP Verb Tampering — HTTP methods, insecure server config, insecure coding, auth bypass</a></li>
 </ul>
 <h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
 <p>Web attacks are the most common class of attacks against businesses, targeting external-facing applications, internal web apps, and API endpoints alike. This section covers three attack types found across many web applications. <strong>HTTP Verb Tampering</strong> exploits servers that accept unexpected HTTP methods, allowing attackers to bypass authorization mechanisms and security controls by sending requests with non-standard verbs. <strong>Insecure Direct Object References (IDOR)</strong> exploit weak or missing back-end access controls: when applications use predictable identifiers (sequential IDs, user numbers) to reference resources, an attacker can guess or calculate valid IDs to access other users’ data. <strong>XML External Entity (XXE) Injection</strong> targets applications using outdated XML parsers to process user-supplied XML — malicious payloads can read local files (configs, source code, credentials), enable whitebox testing, steal server credentials, and potentially achieve remote code execution.</p>
+<p>HTTP Verb Tampering vulnerabilities stem from two sources. <strong>Insecure server configuration</strong> occurs when authentication rules are scoped to specific methods (e.g., <code>&lt;Limit GET POST&gt;</code>) leaving any other verb — such as <code>HEAD</code> — unauthenticated and freely accessible. <strong>Insecure coding</strong> occurs when input sanitization is applied to one HTTP method (e.g., <code>$_GET</code>) while the query uses a broader parameter source (e.g., <code>$_REQUEST</code>), allowing an attacker to switch to POST to bypass the filter entirely. The coding variant is more prevalent because it arises from common developer mistakes rather than misconfiguration.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="http-verb-tampering"><a class="header" href="#http-verb-tampering">HTTP Verb Tampering</a></h1>
+<h2 id="how-http-methods-work"><a class="header" href="#how-http-methods-work">How HTTP methods work</a></h2>
+<p>HTTP servers accept various methods (verbs) at the start of a request and perform different actions depending on which is used. Most developers only consider <strong>GET</strong> and <strong>POST</strong>, but clients can send any method — how the server handles unexpected ones determines whether a vulnerability exists.</p>
+<p>If a server is configured to accept <strong>only</strong> GET/POST, an unknown method returns an error page (minor UX/info-disclosure issue, not a critical vulnerability). If the server accepts additional methods without being configured to handle them securely, those methods can be exploited.</p>
+<h2 id="http-verbs-reference"><a class="header" href="#http-verbs-reference">HTTP verbs reference</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Verb</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>GET</code></td><td>Retrieve a resource</td></tr>
+<tr><td><code>POST</code></td><td>Submit data to be processed</td></tr>
+<tr><td><code>HEAD</code></td><td>Identical to GET but returns headers only — no response body</td></tr>
+<tr><td><code>PUT</code></td><td>Write the request payload to the specified location</td></tr>
+<tr><td><code>DELETE</code></td><td>Delete the resource at the specified location</td></tr>
+<tr><td><code>OPTIONS</code></td><td>List accepted HTTP methods/options for a resource</td></tr>
+<tr><td><code>PATCH</code></td><td>Apply partial modifications to a resource</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>PUT</code> and <code>DELETE</code> in particular can be destructive — writing or removing files in the webroot — if the server is not locked down.</p>
+<h2 id="vulnerability-sources"><a class="header" href="#vulnerability-sources">Vulnerability sources</a></h2>
+<p>HTTP Verb Tampering vulnerabilities arise from two distinct sources:</p>
+<h3 id="insecure-server-configuration"><a class="header" href="#insecure-server-configuration">Insecure server configuration</a></h3>
+<p>Authentication rules scoped to specific methods leave other methods unauthenticated. Example Apache/similar config:</p>
+<pre><code class="language-xml">&lt;Limit GET POST&gt;
+    Require valid-user
+&lt;/Limit&gt;
+</code></pre>
+<p>This enforces authentication on GET and POST, but a request using <code>HEAD</code> (or any other unlisted verb) bypasses the rule entirely. An attacker can reach protected pages without credentials.</p>
+<h3 id="insecure-coding"><a class="header" href="#insecure-coding">Insecure coding</a></h3>
+<p>Filters or sanitization applied only to one HTTP method while the underlying query uses a broader parameter source. Example PHP:</p>
+<pre><code class="language-php">$pattern = "/^[A-Za-z\s]+$/";
+
+if (preg_match($pattern, $_GET["code"])) {
+    $query = "Select * from ports where port_code like '%" . $_REQUEST["code"] . "%'";
+    ...
+}
+</code></pre>
+<p>The sanitization check runs against <code>$_GET["code"]</code>, but the query uses <code>$_REQUEST["code"]</code> — which includes POST parameters. An attacker sends the payload via <strong>POST</strong> (leaving GET empty), the filter passes on the empty GET value, and the unsanitized POST value reaches the query. The SQL injection mitigation is bypassed entirely.</p>
+<h2 id="comparison-1"><a class="header" href="#comparison-1">Comparison</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Cause</th><th>Prevalence</th></tr>
+</thead>
+<tbody>
+<tr><td>Insecure server config</td><td>Auth restricted to specific verbs</td><td>Less common — documentation warns against it</td></tr>
+<tr><td>Insecure coding</td><td>Filter applied to one method, query uses another</td><td>More common — easy mistake in application code</td></tr>
+</tbody>
+</table>
+</div>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="introduction-to-web-attacks"><a class="header" href="#introduction-to-web-attacks">Introduction to Web Attacks</a></h1>
 <h2 id="why-web-attacks-matter"><a class="header" href="#why-web-attacks-matter">Why web attacks matter</a></h2>
 <p>Web applications are the most common attack surface for businesses today. Compromising an external-facing web application can pivot to an internal network, leading to stolen assets or disrupted services. Even organizations with no external web apps typically have internal web apps or external API endpoints, both vulnerable to the same attack classes.</p>
-<h2 id="http-verb-tampering"><a class="header" href="#http-verb-tampering">HTTP Verb Tampering</a></h2>
+<h2 id="http-verb-tampering-1"><a class="header" href="#http-verb-tampering-1">HTTP Verb Tampering</a></h2>
 <p>Exploits web servers that accept many HTTP verbs and methods. Sending requests with <strong>unexpected HTTP methods</strong> can:</p>
 <ul>
 <li>Bypass the web application’s authorization mechanism</li>
