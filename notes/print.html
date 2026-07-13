@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e71e8236.js";
+            window.path_to_searchindex_js = "searchindex-40391175.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-b5acf25f.js"></script>
+        <script src="toc-915252be.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -27114,10 +27114,46 @@ $result = $conn-&gt;query($query);
 <ul>
 <li><a href="#introduction-to-web-attacks">Introduction — web attack context, HTTP Verb Tampering, IDOR, XXE overview</a></li>
 <li><a href="#http-verb-tampering">HTTP Verb Tampering — HTTP methods, insecure server config, insecure coding, auth bypass</a></li>
+<li><a href="#http-verb-tampering--bypassing-basic-authentication">HTTP Verb Tampering — bypassing basic auth — identify restricted pages, OPTIONS enumeration, HEAD bypass</a></li>
 </ul>
 <h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
 <p>Web attacks are the most common class of attacks against businesses, targeting external-facing applications, internal web apps, and API endpoints alike. This section covers three attack types found across many web applications. <strong>HTTP Verb Tampering</strong> exploits servers that accept unexpected HTTP methods, allowing attackers to bypass authorization mechanisms and security controls by sending requests with non-standard verbs. <strong>Insecure Direct Object References (IDOR)</strong> exploit weak or missing back-end access controls: when applications use predictable identifiers (sequential IDs, user numbers) to reference resources, an attacker can guess or calculate valid IDs to access other users’ data. <strong>XML External Entity (XXE) Injection</strong> targets applications using outdated XML parsers to process user-supplied XML — malicious payloads can read local files (configs, source code, credentials), enable whitebox testing, steal server credentials, and potentially achieve remote code execution.</p>
 <p>HTTP Verb Tampering vulnerabilities stem from two sources. <strong>Insecure server configuration</strong> occurs when authentication rules are scoped to specific methods (e.g., <code>&lt;Limit GET POST&gt;</code>) leaving any other verb — such as <code>HEAD</code> — unauthenticated and freely accessible. <strong>Insecure coding</strong> occurs when input sanitization is applied to one HTTP method (e.g., <code>$_GET</code>) while the query uses a broader parameter source (e.g., <code>$_REQUEST</code>), allowing an attacker to switch to POST to bypass the filter entirely. The coding variant is more prevalent because it arises from common developer mistakes rather than misconfiguration.</p>
+<p><strong>Bypassing basic authentication</strong> via verb tampering follows a short process: identify the restricted page/directory, intercept the request, try switching GET → POST (if also blocked, move on), send an <code>OPTIONS</code> request to enumerate accepted methods (<code>curl -i -X OPTIONS http://TARGET/</code>), then try <code>HEAD</code>. Because <code>HEAD</code> is accepted by default on most servers and is often excluded from <code>&lt;Limit&gt;</code> blocks, it bypasses the auth prompt while still executing the server-side action — the empty response body is expected behavior, not a failure. Verify success by checking application state rather than response content.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="http-verb-tampering--bypassing-basic-authentication"><a class="header" href="#http-verb-tampering--bypassing-basic-authentication">HTTP Verb Tampering — Bypassing Basic Authentication</a></h1>
+<p>Exploiting insecure server configuration verb tampering is straightforward: try alternate HTTP methods and observe how the server handles them. Automated scanners catch this type reliably (auth bypass is obvious once it works), but miss the insecure-coding variant, which requires active testing.</p>
+<h2 id="identify"><a class="header" href="#identify">Identify</a></h2>
+<ol>
+<li>Find a page or directory that returns an <strong>HTTP Basic Auth prompt</strong> (401).</li>
+<li>Confirm the scope of the restriction — does the whole <code>/admin</code> directory require auth, or just a specific endpoint? Visit the parent directory to check.</li>
+<li>Note the HTTP method the protected action uses (typically GET).</li>
+</ol>
+<h2 id="exploit-2"><a class="header" href="#exploit-2">Exploit</a></h2>
+<h3 id="step-1--try-the-obvious-alternative"><a class="header" href="#step-1--try-the-obvious-alternative">Step 1 — try the obvious alternative</a></h3>
+<p>Intercept the request in Burp Suite. If the action uses GET, switch to POST (right-click → <em>Change Request Method</em>). Forward and check whether the 401 still appears.</p>
+<p>If POST is also blocked, the config covers both — move to step 2.</p>
+<h3 id="step-2--enumerate-accepted-methods"><a class="header" href="#step-2--enumerate-accepted-methods">Step 2 — enumerate accepted methods</a></h3>
+<p>Use <code>OPTIONS</code> to see what the server actually allows:</p>
+<pre><code class="language-bash">curl -i -X OPTIONS http://TARGET/
+</code></pre>
+<p>Example response:</p>
+<pre><code>HTTP/1.1 200 OK
+Allow: POST,OPTIONS,HEAD,GET
+</code></pre>
+<h3 id="step-3--try-head"><a class="header" href="#step-3--try-head">Step 3 — try HEAD</a></h3>
+<p><code>HEAD</code> is identical to <code>GET</code> but returns no response body. It is accepted by default on many web servers and is frequently <strong>not</strong> included in auth restrictions that only list <code>GET</code> and <code>POST</code>.</p>
+<p>Change the intercepted request method to <code>HEAD</code> and forward. Expected results:</p>
+<ul>
+<li>No login prompt</li>
+<li>No 401</li>
+<li>Empty response body (normal for HEAD)</li>
+<li>The server-side action <strong>still executes</strong> (e.g., files deleted, state changed)</li>
+</ul>
+<h3 id="key-point"><a class="header" href="#key-point">Key point</a></h3>
+<p>The absence of output is not failure — HEAD suppresses the body by design. Verify the action took effect by checking application state rather than looking for response content.</p>
+<h2 id="takeaway"><a class="header" href="#takeaway">Takeaway</a></h2>
+<p>Any HTTP method not explicitly covered by an auth rule is a potential bypass. Always test <code>HEAD</code> first (near-universal support, no body to raise suspicion), then work through the full <code>OPTIONS</code> list.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-verb-tampering"><a class="header" href="#http-verb-tampering">HTTP Verb Tampering</a></h1>
 <h2 id="how-http-methods-work"><a class="header" href="#how-http-methods-work">How HTTP methods work</a></h2>
