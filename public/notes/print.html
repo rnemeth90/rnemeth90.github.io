@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-40391175.js";
+            window.path_to_searchindex_js = "searchindex-71afe8cf.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-915252be.js"></script>
+        <script src="toc-30b744a7.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -27115,10 +27115,12 @@ $result = $conn-&gt;query($query);
 <li><a href="#introduction-to-web-attacks">Introduction — web attack context, HTTP Verb Tampering, IDOR, XXE overview</a></li>
 <li><a href="#http-verb-tampering">HTTP Verb Tampering — HTTP methods, insecure server config, insecure coding, auth bypass</a></li>
 <li><a href="#http-verb-tampering--bypassing-basic-authentication">HTTP Verb Tampering — bypassing basic auth — identify restricted pages, OPTIONS enumeration, HEAD bypass</a></li>
+<li><a href="#http-verb-tampering--bypassing-security-filters">HTTP Verb Tampering — bypassing security filters — method-scoped filters, switching methods, confirming command injection</a></li>
 </ul>
 <h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
 <p>Web attacks are the most common class of attacks against businesses, targeting external-facing applications, internal web apps, and API endpoints alike. This section covers three attack types found across many web applications. <strong>HTTP Verb Tampering</strong> exploits servers that accept unexpected HTTP methods, allowing attackers to bypass authorization mechanisms and security controls by sending requests with non-standard verbs. <strong>Insecure Direct Object References (IDOR)</strong> exploit weak or missing back-end access controls: when applications use predictable identifiers (sequential IDs, user numbers) to reference resources, an attacker can guess or calculate valid IDs to access other users’ data. <strong>XML External Entity (XXE) Injection</strong> targets applications using outdated XML parsers to process user-supplied XML — malicious payloads can read local files (configs, source code, credentials), enable whitebox testing, steal server credentials, and potentially achieve remote code execution.</p>
 <p>HTTP Verb Tampering vulnerabilities stem from two sources. <strong>Insecure server configuration</strong> occurs when authentication rules are scoped to specific methods (e.g., <code>&lt;Limit GET POST&gt;</code>) leaving any other verb — such as <code>HEAD</code> — unauthenticated and freely accessible. <strong>Insecure coding</strong> occurs when input sanitization is applied to one HTTP method (e.g., <code>$_GET</code>) while the query uses a broader parameter source (e.g., <code>$_REQUEST</code>), allowing an attacker to switch to POST to bypass the filter entirely. The coding variant is more prevalent because it arises from common developer mistakes rather than misconfiguration.</p>
+<p><strong>Bypassing security filters</strong> is the more common variant: if a filter only inspects one method’s parameter source (e.g., <code>$_POST</code>), switching to a different method (e.g., GET) carries the payload through an unchecked channel while the underlying function (using <code>$_REQUEST</code>) still processes it. To confirm exploitation, use a two-file command injection payload (<code>file1; touch file2;</code>) — both files appearing proves command execution. A web app that appears fully filtered against injection may be completely exposed once the method is switched.</p>
 <p><strong>Bypassing basic authentication</strong> via verb tampering follows a short process: identify the restricted page/directory, intercept the request, try switching GET → POST (if also blocked, move on), send an <code>OPTIONS</code> request to enumerate accepted methods (<code>curl -i -X OPTIONS http://TARGET/</code>), then try <code>HEAD</code>. Because <code>HEAD</code> is accepted by default on most servers and is often excluded from <code>&lt;Limit&gt;</code> blocks, it bypasses the auth prompt while still executing the server-side action — the empty response body is expected behavior, not a failure. Verify success by checking application state rather than response content.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-verb-tampering--bypassing-basic-authentication"><a class="header" href="#http-verb-tampering--bypassing-basic-authentication">HTTP Verb Tampering — Bypassing Basic Authentication</a></h1>
@@ -27154,6 +27156,33 @@ Allow: POST,OPTIONS,HEAD,GET
 <p>The absence of output is not failure — HEAD suppresses the body by design. Verify the action took effect by checking application state rather than looking for response content.</p>
 <h2 id="takeaway"><a class="header" href="#takeaway">Takeaway</a></h2>
 <p>Any HTTP method not explicitly covered by an auth rule is a potential bypass. Always test <code>HEAD</code> first (near-universal support, no body to raise suspicion), then work through the full <code>OPTIONS</code> list.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="http-verb-tampering--bypassing-security-filters"><a class="header" href="#http-verb-tampering--bypassing-security-filters">HTTP Verb Tampering — Bypassing Security Filters</a></h1>
+<p>The more common verb tampering variant. Security filters that only inspect parameters from a specific HTTP method (e.g., <code>$_POST['parameter']</code>) can be bypassed by switching the request to a method the filter ignores.</p>
+<h2 id="identify-1"><a class="header" href="#identify-1">Identify</a></h2>
+<p>Look for a security filter that blocks certain input:</p>
+<ul>
+<li>Submit a payload with special characters (e.g., <code>test;</code>) via the normal method</li>
+<li>If the app returns a “Malicious Request Denied” style message, a filter is in place</li>
+<li>The filter is the target — the goal is to reach the underlying vulnerability it is protecting</li>
+</ul>
+<h2 id="exploit-3"><a class="header" href="#exploit-3">Exploit</a></h2>
+<h3 id="step-1--switch-request-method"><a class="header" href="#step-1--switch-request-method">Step 1 — switch request method</a></h3>
+<p>Intercept the request in Burp Suite and change the method (e.g., GET → POST, or POST → GET). If the filter only checks one method’s parameter source, the alternate method carries the payload past it.</p>
+<ul>
+<li>No “Malicious Request Denied” response = filter bypassed</li>
+</ul>
+<h3 id="step-2--confirm-the-underlying-vulnerability"><a class="header" href="#step-2--confirm-the-underlying-vulnerability">Step 2 — confirm the underlying vulnerability</a></h3>
+<p>Bypassing the filter alone is not enough — confirm the actual vulnerability is exploitable. For a <strong>command injection</strong> sink:</p>
+<ol>
+<li>Submit a payload that creates two files: <code>file1; touch file2;</code></li>
+<li>Change the request method to bypass the filter</li>
+<li>Check whether both <code>file1</code> and <code>file2</code> appear — if they do, the command executed</li>
+</ol>
+<h3 id="why-this-works-1"><a class="header" href="#why-this-works-1">Why this works</a></h3>
+<p>The filter inspects one parameter source (e.g., <code>$_POST</code>) but the underlying function uses a broader source (e.g., <code>$_REQUEST</code>). Switching methods delivers the payload through an unchecked channel while the function still processes it.</p>
+<h2 id="key-point-1"><a class="header" href="#key-point-1">Key point</a></h2>
+<p>HTTP Verb Tampering can turn a well-filtered vulnerability into an exploitable one. A web application may appear secure against injection when tested normally, but if the filter does not cover all HTTP methods, a simple method switch exposes the underlying flaw.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-verb-tampering"><a class="header" href="#http-verb-tampering">HTTP Verb Tampering</a></h1>
 <h2 id="how-http-methods-work"><a class="header" href="#how-http-methods-work">How HTTP methods work</a></h2>
