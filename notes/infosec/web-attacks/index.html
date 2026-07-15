@@ -38,10 +38,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-71afe8cf.js";
+            window.path_to_searchindex_js = "../../searchindex-e9b1a214.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-30b744a7.js"></script>
+        <script src="../../toc-671755c2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -188,6 +188,7 @@
 <li><a href="./http-verb-tampering.html">HTTP Verb Tampering — HTTP methods, insecure server config, insecure coding, auth bypass</a></li>
 <li><a href="./http-verb-tampering-bypass-auth.html">HTTP Verb Tampering — bypassing basic auth — identify restricted pages, OPTIONS enumeration, HEAD bypass</a></li>
 <li><a href="./http-verb-tampering-bypass-filters.html">HTTP Verb Tampering — bypassing security filters — method-scoped filters, switching methods, confirming command injection</a></li>
+<li><a href="./http-verb-tampering-prevention.html">HTTP Verb Tampering — prevention — insecure config fixes (Apache, Tomcat, ASP.NET), insecure coding fixes</a></li>
 </ul>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>Web attacks are the most common class of attacks against businesses, targeting external-facing applications, internal web apps, and API endpoints alike. This section covers three attack types found across many web applications. <strong>HTTP Verb Tampering</strong> exploits servers that accept unexpected HTTP methods, allowing attackers to bypass authorization mechanisms and security controls by sending requests with non-standard verbs. <strong>Insecure Direct Object References (IDOR)</strong> exploit weak or missing back-end access controls: when applications use predictable identifiers (sequential IDs, user numbers) to reference resources, an attacker can guess or calculate valid IDs to access other users’ data. <strong>XML External Entity (XXE) Injection</strong> targets applications using outdated XML parsers to process user-supplied XML — malicious payloads can read local files (configs, source code, credentials), enable whitebox testing, steal server credentials, and potentially achieve remote code execution.</p>
