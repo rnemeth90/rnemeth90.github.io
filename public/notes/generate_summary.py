@@ -9,6 +9,7 @@ SKIP_DIRS = {".git", ".github", "theme", "book", "__pycache__", "images", "node_
 
 # Top-level categories (directory name -> display title) in desired order
 TOP_LEVEL = [
+    ("AI", "AI"),
     ("cheatsheets", "Cheatsheets"),
     ("clouds", "Clouds"),
     ("coding", "Coding"),
