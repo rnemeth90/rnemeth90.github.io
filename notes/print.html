@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cbad76df.js";
+            window.path_to_searchindex_js = "searchindex-9f1c01d6.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-d8b0128c.js"></script>
+        <script src="toc-995102f7.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -28161,6 +28161,7 @@ $result = $conn-&gt;query($query);
 <li><a href="#http-verb-tampering--bypassing-security-filters">HTTP Verb Tampering — bypassing security filters — method-scoped filters, switching methods, confirming command injection</a></li>
 <li><a href="#http-verb-tampering--prevention">HTTP Verb Tampering — prevention — insecure config fixes (Apache, Tomcat, ASP.NET), insecure coding fixes</a></li>
 <li><a href="#intro-to-idor">Intro to IDOR — what it is, why common, impact (disclosure, modification, privilege escalation), attack pattern</a></li>
+<li><a href="#identifying-idors">Identifying IDORs — URL params, AJAX calls, encoded/hashed references, comparing user roles</a></li>
 </ul>
 <h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
 <p>Web attacks are the most common class of attacks against businesses, targeting external-facing applications, internal web apps, and API endpoints alike. This section covers three attack types found across many web applications. <strong>HTTP Verb Tampering</strong> exploits servers that accept unexpected HTTP methods, allowing attackers to bypass authorization mechanisms and security controls by sending requests with non-standard verbs. <strong>Insecure Direct Object References (IDOR)</strong> exploit weak or missing back-end access controls: when applications use predictable identifiers (sequential IDs, user numbers) to reference resources, an attacker can guess or calculate valid IDs to access other users’ data. <strong>XML External Entity (XXE) Injection</strong> targets applications using outdated XML parsers to process user-supplied XML — malicious payloads can read local files (configs, source code, credentials), enable whitebox testing, steal server credentials, and potentially achieve remote code execution.</p>
@@ -28168,6 +28169,7 @@ $result = $conn-&gt;query($query);
 <p><strong>Bypassing security filters</strong> is the more common variant: if a filter only inspects one method’s parameter source (e.g., <code>$_POST</code>), switching to a different method (e.g., GET) carries the payload through an unchecked channel while the underlying function (using <code>$_REQUEST</code>) still processes it. To confirm exploitation, use a two-file command injection payload (<code>file1; touch file2;</code>) — both files appearing proves command execution. A web app that appears fully filtered against injection may be completely exposed once the method is switched.</p>
 <p><strong>Bypassing basic authentication</strong> via verb tampering follows a short process: identify the restricted page/directory, intercept the request, try switching GET → POST (if also blocked, move on), send an <code>OPTIONS</code> request to enumerate accepted methods (<code>curl -i -X OPTIONS http://TARGET/</code>), then try <code>HEAD</code>. Because <code>HEAD</code> is accepted by default on most servers and is often excluded from <code>&lt;Limit&gt;</code> blocks, it bypasses the auth prompt while still executing the server-side action — the empty response body is expected behavior, not a failure. Verify success by checking application state rather than response content.</p>
 <p><strong>IDOR</strong> vulnerabilities arise when a web application exposes direct references to internal objects (file IDs, database records, API paths) <strong>without back-end access control</strong> validating that the requesting user is authorized. The reference itself is not the flaw — the missing authorization check is. Impact ranges from <strong>information disclosure</strong> (reading other users’ files/PII) to <strong>data modification/account takeover</strong> (write-capable references) to <strong>privilege escalation</strong> (calling admin-only API endpoints that the back-end fails to restrict to admin roles). IDOR is pervasive because access control is inherently hard to build, hard to automate testing for, and frequently skipped by developers who rely on front-end logic alone.</p>
+<p><strong>Identifying IDORs</strong> starts with spotting direct object references in URL parameters (<code>?uid=1</code>), API paths, cookies, or headers, then incrementing/fuzzing values to check for unauthorized access. Front-end JavaScript AJAX calls may reveal hidden endpoints and parameters (including admin functions disabled client-side but present in source). <strong>Encoded</strong> references (Base64) can be decoded, modified, and re-encoded; <strong>hashed</strong> references can often be reproduced by finding the algorithm in front-end source (e.g., <code>CryptoJS.MD5(filename)</code>) or identifying the hash type. Registering <strong>multiple accounts</strong> and comparing their HTTP requests reveals how identifiers are calculated and whether the back-end validates the caller’s session against the requested resource.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-verb-tampering--bypassing-basic-authentication"><a class="header" href="#http-verb-tampering--bypassing-basic-authentication">HTTP Verb Tampering — Bypassing Basic Authentication</a></h1>
 <p>Exploiting insecure server configuration verb tampering is straightforward: try alternate HTTP methods and observe how the server handles them. Automated scanners catch this type reliably (auth bypass is obvious once it works), but miss the insecure-coding variant, which requires active testing.</p>
@@ -28375,6 +28377,70 @@ if (preg_match($pattern, $_GET["code"])) {
 </tbody>
 </table>
 </div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="identifying-idors"><a class="header" href="#identifying-idors">Identifying IDORs</a></h1>
+<h2 id="url-parameters-and-apis"><a class="header" href="#url-parameters-and-apis">URL parameters and APIs</a></h2>
+<p>The first step is spotting <strong>direct object references</strong> in HTTP traffic. Look for:</p>
+<ul>
+<li>URL parameters: <code>?uid=1</code>, <code>?filename=file_1.pdf</code></li>
+<li>API path segments: <code>/api/users/1/profile</code></li>
+<li>Other headers: cookies, custom headers</li>
+</ul>
+<p>In basic cases, increment the value (<code>?uid=2</code>) and check whether data belonging to another user is returned. Fuzz with thousands of variations to find hits — any successful access to resources that are not yours indicates an IDOR.</p>
+<h2 id="ajax-calls-in-front-end-code"><a class="header" href="#ajax-calls-in-front-end-code">AJAX calls in front-end code</a></h2>
+<p>JavaScript-heavy applications may place <strong>all</strong> function calls in the front-end and selectively enable them based on user role. Admin functions are disabled for standard users but the code is still present and inspectable.</p>
+<p>Example hidden AJAX call:</p>
+<pre><code class="language-javascript">function changeUserPassword() {
+    $.ajax({
+        url: "change_password.php",
+        type: "post",
+        dataType: "json",
+        data: {uid: user.uid, password: user.password, is_admin: is_admin},
+        success: function(result) { }
+    });
+}
+</code></pre>
+<p>This function may never fire for a non-admin user, but finding it in the source reveals the endpoint, parameters, and direct object references (<code>uid</code>). Test these references manually — if the back-end executes the call without role validation, it is vulnerable.</p>
+<p>This applies to any function, not just admin-level ones. Review front-end JS for endpoints not visible through normal HTTP traffic.</p>
+<h2 id="encoded-references"><a class="header" href="#encoded-references">Encoded references</a></h2>
+<p>Some applications encode or hash object references instead of using sequential integers. This does not provide security if there is no back-end access control.</p>
+<h3 id="base64-encoded-references"><a class="header" href="#base64-encoded-references">Base64-encoded references</a></h3>
+<p>If a parameter looks like Base64 (e.g., <code>?filename=ZmlsZV8xMjMucGRm</code>):</p>
+<ol>
+<li>Decode it → <code>file_123.pdf</code></li>
+<li>Modify the plaintext → <code>file_124.pdf</code></li>
+<li>Re-encode → <code>ZmlsZV8xMjQucGRm</code></li>
+<li>Request with the new value — if it returns data, IDOR confirmed</li>
+</ol>
+<h3 id="hashed-references"><a class="header" href="#hashed-references">Hashed references</a></h3>
+<p>A parameter like <code>?filename=c81e728d9d4c2f636f067f89cc14862c</code> looks secure at first glance. Check the front-end source for the hashing logic:</p>
+<pre><code class="language-javascript">$.ajax({
+    url: "download.php",
+    type: "post",
+    dataType: "json",
+    data: {filename: CryptoJS.MD5('file_1.pdf').toString()},
+    success: function(result) { }
+});
+</code></pre>
+<p>If the hash is just <code>MD5(filename)</code>, compute hashes for other filenames and request them. If the algorithm is not visible in the source, use hash identifier tools to guess it, then verify by hashing a known value and comparing.</p>
+<h2 id="comparing-user-roles"><a class="header" href="#comparing-user-roles">Comparing user roles</a></h2>
+<p>For advanced IDOR testing, register <strong>multiple accounts</strong> and compare their HTTP requests and object references side by side. This reveals:</p>
+<ul>
+<li>How unique identifiers are calculated</li>
+<li>Which API parameters differ between roles</li>
+<li>Whether the back-end validates the caller’s session against the requested data</li>
+</ul>
+<p>Example: User1 can view their salary via:</p>
+<pre><code class="language-json">{
+  "attributes": {
+    "type": "salary",
+    "url": "/services/data/salaries/users/1"
+  },
+  "Id": "1",
+  "Name": "User1"
+}
+</code></pre>
+<p>User2 may not see this endpoint in their UI, but if they replay the same API call (changing the ID), and the back-end only checks for a valid session — not whether the session matches the requested resource — the data is returned. Even if the parameters for other users cannot be calculated, finding that the back-end lacks this check is itself a vulnerability worth documenting.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="intro-to-idor"><a class="header" href="#intro-to-idor">Intro to IDOR</a></h1>
 <h2 id="what-idor-is"><a class="header" href="#what-idor-is">What IDOR is</a></h2>
