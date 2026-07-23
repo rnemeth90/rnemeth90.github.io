@@ -38,10 +38,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-98784f48.js";
+            window.path_to_searchindex_js = "../../searchindex-1df47fb7.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-829beffb.js"></script>
+        <script src="../../toc-fac9f2dd.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -192,6 +192,7 @@
 <li><a href="./idor-intro.html">Intro to IDOR — what it is, why common, impact (disclosure, modification, privilege escalation), attack pattern</a></li>
 <li><a href="./idor-identifying.html">Identifying IDORs — URL params, AJAX calls, encoded/hashed references, comparing user roles</a></li>
 <li><a href="./idor-mass-enumeration.html">IDOR mass enumeration — insecure parameters, static file IDOR, parameter-based IDOR, bulk download scripting</a></li>
+<li><a href="./idor-bypassing-encoded-references.html">IDOR — Bypassing Encoded References — MD5/Base64 schemes, function disclosure, reproducing hashes, mass enumeration script</a></li>
 </ul>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>Web attacks are the most common class of attacks against businesses, targeting external-facing applications, internal web apps, and API endpoints alike. This section covers three attack types found across many web applications. <strong>HTTP Verb Tampering</strong> exploits servers that accept unexpected HTTP methods, allowing attackers to bypass authorization mechanisms and security controls by sending requests with non-standard verbs. <strong>Insecure Direct Object References (IDOR)</strong> exploit weak or missing back-end access controls: when applications use predictable identifiers (sequential IDs, user numbers) to reference resources, an attacker can guess or calculate valid IDs to access other users’ data. <strong>XML External Entity (XXE) Injection</strong> targets applications using outdated XML parsers to process user-supplied XML — malicious payloads can read local files (configs, source code, credentials), enable whitebox testing, steal server credentials, and potentially achieve remote code execution.</p>
@@ -201,6 +202,7 @@
 <p><strong>IDOR</strong> vulnerabilities arise when a web application exposes direct references to internal objects (file IDs, database records, API paths) <strong>without back-end access control</strong> validating that the requesting user is authorized. The reference itself is not the flaw — the missing authorization check is. Impact ranges from <strong>information disclosure</strong> (reading other users’ files/PII) to <strong>data modification/account takeover</strong> (write-capable references) to <strong>privilege escalation</strong> (calling admin-only API endpoints that the back-end fails to restrict to admin roles). IDOR is pervasive because access control is inherently hard to build, hard to automate testing for, and frequently skipped by developers who rely on front-end logic alone.</p>
 <p><strong>Identifying IDORs</strong> starts with spotting direct object references in URL parameters (<code>?uid=1</code>), API paths, cookies, or headers, then incrementing/fuzzing values to check for unauthorized access. Front-end JavaScript AJAX calls may reveal hidden endpoints and parameters (including admin functions disabled client-side but present in source). <strong>Encoded</strong> references (Base64) can be decoded, modified, and re-encoded; <strong>hashed</strong> references can often be reproduced by finding the algorithm in front-end source (e.g., <code>CryptoJS.MD5(filename)</code>) or identifying the hash type. Registering <strong>multiple accounts</strong> and comparing their HTTP requests reveals how identifiers are calculated and whether the back-end validates the caller’s session against the requested resource.</p>
 <p><strong>Mass enumeration</strong> automates IDOR exploitation at scale. <strong>Static file IDORs</strong> embed the user ID in predictable filenames (<code>Invoice_1_09_2021.pdf</code>); <strong>parameter-based IDORs</strong> pass the UID directly in a query string (<code>?uid=1</code>) — always check linked file URLs and page source since the UI may look identical across different UIDs. Extract document links with <code>curl</code> + regex (<code>grep -oP "\/documents.*?.pdf"</code>), then loop over UID ranges with a bash script using <code>wget</code>, or use Burp Intruder / ZAP Fuzzer for the same result.</p>
+<p><strong>Bypassing encoded references</strong> exploits the common mistake of performing hashing or encoding client-side. When a web application obscures object references using a scheme like <code>MD5(Base64(uid))</code>, the algorithm is visible to anyone who reads the front-end JavaScript source. Reproducing the scheme on the command line (<code>echo -n 1 | base64 -w 0 | md5sum</code>) confirms the algorithm, after which all object references become calculable and the protection is equivalent to none. A bash loop generates hashes for every target UID and <code>curl -sOJ</code> downloads the associated file in a single script. True security requires the hash to be computed server-side with a secret salt <strong>and</strong> a back-end authorization check — encoding or hashing alone is not access control.</p>
 
                     </main>
 
