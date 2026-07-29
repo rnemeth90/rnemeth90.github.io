@@ -38,10 +38,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-1df47fb7.js";
+            window.path_to_searchindex_js = "../../searchindex-a0e2973e.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-fac9f2dd.js"></script>
+        <script src="../../toc-4b57a162.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -192,6 +192,7 @@
 <li><a href="./idor-intro.html">Intro to IDOR — what it is, why common, impact (disclosure, modification, privilege escalation), attack pattern</a></li>
 <li><a href="./idor-identifying.html">Identifying IDORs — URL params, AJAX calls, encoded/hashed references, comparing user roles</a></li>
 <li><a href="./idor-mass-enumeration.html">IDOR mass enumeration — insecure parameters, static file IDOR, parameter-based IDOR, bulk download scripting</a></li>
+<li><a href="./xxe-intro.html">Intro to XXE — XML structure, DTD, internal/external entities, the external entity file-read primitive</a></li>
 <li><a href="./idor-bypassing-encoded-references.html">IDOR — Bypassing Encoded References — MD5/Base64 schemes, function disclosure, reproducing hashes, mass enumeration script</a></li>
 </ul>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
@@ -203,6 +204,7 @@
 <p><strong>Identifying IDORs</strong> starts with spotting direct object references in URL parameters (<code>?uid=1</code>), API paths, cookies, or headers, then incrementing/fuzzing values to check for unauthorized access. Front-end JavaScript AJAX calls may reveal hidden endpoints and parameters (including admin functions disabled client-side but present in source). <strong>Encoded</strong> references (Base64) can be decoded, modified, and re-encoded; <strong>hashed</strong> references can often be reproduced by finding the algorithm in front-end source (e.g., <code>CryptoJS.MD5(filename)</code>) or identifying the hash type. Registering <strong>multiple accounts</strong> and comparing their HTTP requests reveals how identifiers are calculated and whether the back-end validates the caller’s session against the requested resource.</p>
 <p><strong>Mass enumeration</strong> automates IDOR exploitation at scale. <strong>Static file IDORs</strong> embed the user ID in predictable filenames (<code>Invoice_1_09_2021.pdf</code>); <strong>parameter-based IDORs</strong> pass the UID directly in a query string (<code>?uid=1</code>) — always check linked file URLs and page source since the UI may look identical across different UIDs. Extract document links with <code>curl</code> + regex (<code>grep -oP "\/documents.*?.pdf"</code>), then loop over UID ranges with a bash script using <code>wget</code>, or use Burp Intruder / ZAP Fuzzer for the same result.</p>
 <p><strong>Bypassing encoded references</strong> exploits the common mistake of performing hashing or encoding client-side. When a web application obscures object references using a scheme like <code>MD5(Base64(uid))</code>, the algorithm is visible to anyone who reads the front-end JavaScript source. Reproducing the scheme on the command line (<code>echo -n 1 | base64 -w 0 | md5sum</code>) confirms the algorithm, after which all object references become calculable and the protection is equivalent to none. A bash loop generates hashes for every target UID and <code>curl -sOJ</code> downloads the associated file in a single script. True security requires the hash to be computed server-side with a secret salt <strong>and</strong> a back-end authorization check — encoding or hashing alone is not access control.</p>
+<p><strong>XXE Injection</strong> targets web applications that parse user-supplied XML (SOAP APIs, web forms, file uploads) using XML parsers that allow external entity resolution. XML documents can define <strong>external entities</strong> via the <code>SYSTEM</code> keyword (<code>&lt;!ENTITY name SYSTEM "file:///etc/passwd"&gt;</code>); when the server parses the document and substitutes entity references in its response, the contents of local files are returned to the attacker. The DTD mechanism (<code>&lt;!DOCTYPE&gt;</code>) is what makes this possible — it allows entities to be defined inline before the parser processes the document body. Understanding the core XML primitives (elements, attributes, entities, DTD declarations) is prerequisite to constructing XXE payloads.</p>
 
                     </main>
 

