@@ -38,10 +38,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-a0e2973e.js";
+            window.path_to_searchindex_js = "../../searchindex-67dcea17.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-4b57a162.js"></script>
+        <script src="../../toc-1af41089.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -193,6 +193,7 @@
 <li><a href="./idor-identifying.html">Identifying IDORs — URL params, AJAX calls, encoded/hashed references, comparing user roles</a></li>
 <li><a href="./idor-mass-enumeration.html">IDOR mass enumeration — insecure parameters, static file IDOR, parameter-based IDOR, bulk download scripting</a></li>
 <li><a href="./xxe-intro.html">Intro to XXE — XML structure, DTD, internal/external entities, the external entity file-read primitive</a></li>
+<li><a href="./xxe-local-file-disclosure.html">XXE local file disclosure — identifying XXE, reading files/source code, RCE via expect/curl, SSRF, DoS</a></li>
 <li><a href="./idor-bypassing-encoded-references.html">IDOR — Bypassing Encoded References — MD5/Base64 schemes, function disclosure, reproducing hashes, mass enumeration script</a></li>
 </ul>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
@@ -205,6 +206,7 @@
 <p><strong>Mass enumeration</strong> automates IDOR exploitation at scale. <strong>Static file IDORs</strong> embed the user ID in predictable filenames (<code>Invoice_1_09_2021.pdf</code>); <strong>parameter-based IDORs</strong> pass the UID directly in a query string (<code>?uid=1</code>) — always check linked file URLs and page source since the UI may look identical across different UIDs. Extract document links with <code>curl</code> + regex (<code>grep -oP "\/documents.*?.pdf"</code>), then loop over UID ranges with a bash script using <code>wget</code>, or use Burp Intruder / ZAP Fuzzer for the same result.</p>
 <p><strong>Bypassing encoded references</strong> exploits the common mistake of performing hashing or encoding client-side. When a web application obscures object references using a scheme like <code>MD5(Base64(uid))</code>, the algorithm is visible to anyone who reads the front-end JavaScript source. Reproducing the scheme on the command line (<code>echo -n 1 | base64 -w 0 | md5sum</code>) confirms the algorithm, after which all object references become calculable and the protection is equivalent to none. A bash loop generates hashes for every target UID and <code>curl -sOJ</code> downloads the associated file in a single script. True security requires the hash to be computed server-side with a secret salt <strong>and</strong> a back-end authorization check — encoding or hashing alone is not access control.</p>
 <p><strong>XXE Injection</strong> targets web applications that parse user-supplied XML (SOAP APIs, web forms, file uploads) using XML parsers that allow external entity resolution. XML documents can define <strong>external entities</strong> via the <code>SYSTEM</code> keyword (<code>&lt;!ENTITY name SYSTEM "file:///etc/passwd"&gt;</code>); when the server parses the document and substitutes entity references in its response, the contents of local files are returned to the attacker. The DTD mechanism (<code>&lt;!DOCTYPE&gt;</code>) is what makes this possible — it allows entities to be defined inline before the parser processes the document body. Understanding the core XML primitives (elements, attributes, entities, DTD declarations) is prerequisite to constructing XXE payloads.</p>
+<p><strong>XXE local file disclosure</strong> starts by confirming entity injection: insert an inline DTD with an internal entity and check whether the reflected value in the response is substituted (<code>Inlane Freight</code>) or literal (<code>&amp;company;</code>). Once confirmed, switch to an external <code>SYSTEM</code> entity pointing to <code>file:///etc/passwd</code> to read server files. PHP source code containing special XML characters can be read using <code>php://filter/convert.base64-encode/resource=index.php</code> — the base64 output is safe to embed in XML. RCE is possible via <code>expect://</code> (PHP only, module rarely enabled) or by using <code>expect://curl$IFS</code> to fetch and write a web shell; <code>$IFS</code> substitutes for spaces to avoid breaking XML syntax. XXE also enables <strong>SSRF</strong> (internal URL probing) and a <strong>Billion Laughs DoS</strong> (exponential entity expansion) — though modern servers protect against the latter.</p>
 
                     </main>
 

