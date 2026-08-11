@@ -38,10 +38,10 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-1cca927e.js";
+            window.path_to_searchindex_js = "../../../searchindex-58b690d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../../toc-49607fe0.js"></script>
+        <script src="../../../toc-6f9cff0c.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -185,11 +185,13 @@
 <h2 id="directory-map"><a class="header" href="#directory-map">Directory map</a></h2>
 <ul>
 <li><a href="./wordpress-discovery-enumeration.html">WordPress — Discovery &amp; Enumeration — footprinting, manual enumeration, user roles, WPScan</a></li>
+<li><a href="./wordpress-attacking.html">Attacking WordPress — login brute force, theme editor RCE, Metasploit shell upload, mail-masta LFI, wpDiscuz RCE</a></li>
 </ul>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>WordPress is the most widely deployed CMS on the internet (~32.5% of all sites), making it a near-certain encounter during external penetration tests. It runs PHP on Apache with a MySQL backend and exposes a predictable directory structure: <code>/wp-admin/</code> (admin dashboard), <code>/wp-content/plugins/</code>, <code>/wp-content/themes/</code>, and <code>/wp-login.php</code>. The presence of these paths in <code>robots.txt</code> or page source is usually enough to confirm a WordPress installation.</p>
 <p><strong>Manual enumeration</strong> starts with <code>curl | grep WordPress</code> to extract the version from the <code>&lt;meta name="generator"&gt;</code> tag, then <code>grep themes</code> and <code>grep plugins</code> across multiple page URLs to map installed components and their versions (exposed via <code>?ver=</code> query parameters). Plugin <code>readme.txt</code> files — often accessible when directory listing is enabled — confirm exact versions. Many plugins carry publicly known CVEs; <code>mail-masta 1.0.0</code> (LFI), <code>wpDiscuz 7.0.4</code> (unauthenticated RCE), and outdated core versions are common findings.</p>
 <p><strong>User enumeration</strong> is possible because WordPress returns distinct error messages for unknown usernames versus wrong passwords at <code>/wp-login.php</code>. <strong>WPScan</strong> (<code>wpscan --url TARGET --enumerate --api-token TOKEN</code>) automates core/theme/plugin/user enumeration and maps findings to CVEs via WPVulnDB (free tier: 25 requests/day). Automated scanning alone is insufficient — WPScan only sees plugins referenced on scanned pages; manual <code>curl | grep plugins</code> across multiple posts catches the rest. The two methods must be combined.</p>
+<p><strong>Attacking WordPress</strong> follows a two-stage pattern. First, obtain admin credentials — WPScan brute-forces <code>/xmlrpc.php</code> (preferred for speed) or <code>/wp-login.php</code> using <code>--password-attack xmlrpc</code>. With credentials, the theme editor (<code>Appearance → Theme Editor</code>) allows injecting a one-line PHP web shell (<code>system($_GET[0]);</code>) into an inactive theme’s <code>404.php</code>, reachable at <code>/wp-content/themes/&lt;theme&gt;/404.php?0=&lt;cmd&gt;</code>. The Metasploit module <code>exploit/unix/webapp/wp_admin_shell_upload</code> automates this as a plugin upload. Plugin CVEs can bypass authentication entirely: <code>mail-masta 1.0.0</code> exposes an unauthenticated LFI via an unsanitized <code>include($_GET['pl'])</code>, and <code>wpDiscuz 7.0.4</code> (CVE-2020-24186) allows unauthenticated file upload via MIME type bypass, resulting in a PHP web shell in <code>/wp-content/uploads/</code>.</p>
 
                     </main>
 
@@ -199,7 +201,7 @@
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../../../infosec/attacking-common-applications/wordpress/wordpress-discovery-enumeration.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../../infosec/attacking-common-applications/wordpress/wordpress-attacking.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -213,7 +215,7 @@
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../../../infosec/attacking-common-applications/wordpress/wordpress-discovery-enumeration.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../../infosec/attacking-common-applications/wordpress/wordpress-attacking.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
