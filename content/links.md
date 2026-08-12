@@ -11,3 +11,4 @@ permalink: /links/
 - [lab401](https://lab401.com/)
 - [go.dev](https://go.dev/)
 - [distrowatch](https://distrowatch.com/)
+- [stilldrinking](https://www.stilldrinking.org/)
