@@ -3,8 +3,11 @@ title: Links
 permalink: /links/
 ---
 
-# Link to google
-
-- [Google](https://www.google.com)
-
-
+- [Hacker News](https://news.ycombinator.com/)
+- [xkcd](https://xkcd.com/)
+- [Azure DevOps blog](https://devblogs.microsoft.com/devops/)
+- [Laws of Software](https://www.laws-of-software.com/)
+- [archive.org](https://archive.org/)
+- [lab401](https://lab401.com/)
+- [go.dev](https://go.dev/)
+- [distrowatch](https://distrowatch.com/)
