@@ -67,7 +67,6 @@ permalink: /links/
 - [darkhelmet/balance: Simple TCP load balancer in Go](https://github.com/darkhelmet/balance)
 - [TinyKnife/rpass/rpass.go at master · jarod-liu/TinyKnife](https://github.com/jarod-liu/TinyKnife/blob/master/rpass/rpass.go)
 - [kainlite/kube-image-bouncer: Simple endpoint for the ImagePolicyWebhook and the GenericAdmissionWebhook Kubernetes admission controllers](https://github.com/kainlite/kube-image-bouncer)
-- [Hakky54/certificate-ripper: 🔐 A CLI tool to extract server certificates](https://github.com/Hakky54/certificate-ripper)
 
 #### Go > how-to
 
