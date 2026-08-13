@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-60674d6b.js";
+            window.path_to_searchindex_js = "searchindex-8e98a2fe.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-f4e075f0.js"></script>
@@ -17787,47 +17787,702 @@ $params = @{
 <ul>
 <li><a href="#intel">Intel</a></li>
 <li><a href="#att">AT&amp;T</a></li>
+<li><a href="#side-by-side-comparison">Side-by-side comparison</a></li>
 </ul>
 </li>
 <li><a href="#registers">Registers</a>
 <ul>
-<li><a href="#general-purpose-registers">general-purpose Registers</a></li>
+<li><a href="#general-purpose-registers">General-Purpose Registers</a></li>
+<li><a href="#control-registers">Control Registers</a></li>
+<li><a href="#segment-registers">Segment Registers</a></li>
+<li><a href="#eflags-register">EFLAGS Register</a></li>
+<li><a href="#register-size-sub-divisions">Register size sub-divisions</a></li>
 </ul>
 </li>
+<li><a href="#memory--addressing-modes">Memory &amp; Addressing Modes</a></li>
+<li><a href="#program-sections">Program Sections</a></li>
+<li><a href="#data-directives">Data Directives</a></li>
+<li><a href="#instructions">Instructions</a>
+<ul>
+<li><a href="#data-movement">Data Movement</a></li>
+<li><a href="#arithmetic">Arithmetic</a></li>
+<li><a href="#logical">Logical</a></li>
+<li><a href="#shift--rotate">Shift &amp; Rotate</a></li>
+<li><a href="#control-flow">Control Flow</a></li>
+<li><a href="#stack-operations">Stack Operations</a></li>
+<li><a href="#string-operations">String Operations</a></li>
 </ul>
+</li>
+<li><a href="#the-stack">The Stack</a></li>
+<li><a href="#system-calls-linux-int-0x80">System Calls (Linux int 0x80)</a></li>
+<li><a href="#assembling--linking">Assembling &amp; Linking</a></li>
+<li><a href="#calling-conventions">Calling Conventions</a></li>
+<li><a href="#example-programs">Example Programs</a></li>
+</ul>
+<hr>
 <h1 id="syntaxes"><a class="header" href="#syntaxes">Syntaxes</a></h1>
-<ul>
-<li>There are 2 types of assembly language syntax in common use:</li>
-</ul>
+<p>There are 2 types of assembly language syntax in common use:</p>
 <h2 id="intel"><a class="header" href="#intel">Intel</a></h2>
-<h2 id="att"><a class="header" href="#att">ATT</a></h2>
-<h1 id="registers"><a class="header" href="#registers">Registers</a></h1>
 <ul>
-<li>Registers are small, fast storage areas on the CPU</li>
-<li>In IA-32 architecture, there are 10 32-bit registers and 6 16-bit registers</li>
-<li>Registers are grouped into 3 categories: general-purpose, control, and segment
+<li>Used by NASM, MASM, and in Intel documentation</li>
+<li>Destination operand comes <strong>first</strong>: <code>mov dst, src</code></li>
+<li>No prefix on register names: <code>eax</code>, <code>ebx</code></li>
+<li>Immediate values have no prefix: <code>mov eax, 5</code></li>
+<li>Memory references use square brackets: <code>mov eax, [ebx]</code></li>
+<li>Size specified on the operand when ambiguous: <code>mov DWORD PTR [ebx], 5</code></li>
+</ul>
+<pre><code class="language-asm">mov eax, 1        ; move immediate 1 into eax
+mov ebx, eax      ; copy eax into ebx
+add eax, 5        ; eax = eax + 5
+mov eax, [ebx]    ; load value at address in ebx into eax
+</code></pre>
+<h2 id="att"><a class="header" href="#att">AT&amp;T</a></h2>
 <ul>
-<li>general-purpose is further grouped into data, index, and pointer</li>
+<li>Used by GAS (GNU Assembler — default for <code>.s</code> files with <code>gcc</code>/<code>as</code>)</li>
+<li>Source operand comes <strong>first</strong>: <code>mov src, dst</code></li>
+<li>Registers prefixed with <code>%</code>: <code>%eax</code>, <code>%ebx</code></li>
+<li>Immediate values prefixed with <code>$</code>: <code>$5</code>, <code>$0x80</code></li>
+<li>Memory references use parentheses: <code>(%ebx)</code></li>
+<li><strong>Size suffix</strong> on the mnemonic (b=byte, w=word, l=long/32-bit, q=quad/64-bit):
+<ul>
+<li><code>movb</code> — 8-bit</li>
+<li><code>movw</code> — 16-bit</li>
+<li><code>movl</code> — 32-bit</li>
+<li><code>movq</code> — 64-bit</li>
 </ul>
 </li>
 </ul>
+<pre><code class="language-asm">movl $1, %eax         # move immediate 1 into eax
+movl %eax, %ebx       # copy eax into ebx
+addl $5, %eax         # eax = eax + 5
+movl (%ebx), %eax     # load value at address in ebx into eax
+</code></pre>
+<h2 id="side-by-side-comparison"><a class="header" href="#side-by-side-comparison">Side-by-side comparison</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Operation</th><th>Intel (NASM)</th><th>AT&amp;T (GAS)</th></tr>
+</thead>
+<tbody>
+<tr><td>Move immediate</td><td><code>mov eax, 5</code></td><td><code>movl $5, %eax</code></td></tr>
+<tr><td>Move register</td><td><code>mov ebx, eax</code></td><td><code>movl %eax, %ebx</code></td></tr>
+<tr><td>Load from memory</td><td><code>mov eax, [ebx]</code></td><td><code>movl (%ebx), %eax</code></td></tr>
+<tr><td>Store to memory</td><td><code>mov [ebx], eax</code></td><td><code>movl %eax, (%ebx)</code></td></tr>
+<tr><td>Add immediate</td><td><code>add eax, 10</code></td><td><code>addl $10, %eax</code></td></tr>
+<tr><td>Jump</td><td><code>jmp label</code></td><td><code>jmp label</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h1 id="registers"><a class="header" href="#registers">Registers</a></h1>
+<p>Registers are small, fast storage areas on the CPU. In IA-32 (x86-32) architecture there are:</p>
+<ul>
+<li>8 general-purpose 32-bit registers</li>
+<li>6 16-bit segment registers</li>
+<li>1 32-bit EFLAGS register</li>
+<li>1 32-bit instruction pointer (EIP)</li>
+<li>Several control registers (CR0–CR4)</li>
+</ul>
+<p>Registers are grouped into categories: <strong>general-purpose</strong>, <strong>control</strong>, and <strong>segment</strong>.</p>
 <h2 id="general-purpose-registers"><a class="header" href="#general-purpose-registers">General-Purpose Registers</a></h2>
 <h3 id="data-registers"><a class="header" href="#data-registers">Data Registers</a></h3>
-<pre><code>  %eax: Accumulator, often used for arithmetic and return values.
-  %ebx: Base register, used for extra storage.
-  %ecx: Counter, often used in loops.
-  %edx: Data register, often used for I/O operations.
-</code></pre>
-<h3 id="index-registers"><a class="header" href="#index-registers">Index registers</a></h3>
-<pre><code>  %esi/%edi: Source and destination for data operations.
-</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Register</th><th>Name</th><th>Common use</th></tr>
+</thead>
+<tbody>
+<tr><td><code>EAX</code></td><td>Accumulator</td><td>Arithmetic, function return values, syscall number</td></tr>
+<tr><td><code>EBX</code></td><td>Base</td><td>General storage; syscall arg 1 (Linux int 0x80)</td></tr>
+<tr><td><code>ECX</code></td><td>Counter</td><td>Loop counters; syscall arg 2</td></tr>
+<tr><td><code>EDX</code></td><td>Data</td><td>I/O port operations, extended precision; syscall arg 3</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="index-registers"><a class="header" href="#index-registers">Index Registers</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Register</th><th>Name</th><th>Common use</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ESI</code></td><td>Source Index</td><td>Source address for string/memory operations</td></tr>
+<tr><td><code>EDI</code></td><td>Destination Index</td><td>Destination address for string/memory operations</td></tr>
+</tbody>
+</table>
+</div>
 <h3 id="pointer-registers"><a class="header" href="#pointer-registers">Pointer Registers</a></h3>
-<pre><code>    %eip: stores the offset address of the next instruction to be executed. 
-    %esp: Stack Pointer, points to the top of the stack.
-    %ebp: Base Pointer, used for stack frame management.
-</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Register</th><th>Name</th><th>Common use</th></tr>
+</thead>
+<tbody>
+<tr><td><code>EIP</code></td><td>Instruction Pointer</td><td>Address of the <strong>next</strong> instruction to execute — not directly writable; modified by <code>jmp</code>, <code>call</code>, <code>ret</code></td></tr>
+<tr><td><code>ESP</code></td><td>Stack Pointer</td><td>Points to the <strong>top</strong> of the stack (current stack address); decremented by <code>push</code>, incremented by <code>pop</code></td></tr>
+<tr><td><code>EBP</code></td><td>Base Pointer</td><td>Points to the <strong>base of the current stack frame</strong>; used for stable access to local variables and parameters</td></tr>
+</tbody>
+</table>
+</div>
 <h2 id="control-registers"><a class="header" href="#control-registers">Control Registers</a></h2>
+<p>Control registers govern processor operation modes. Not directly accessible in user-space programs — require ring 0 (kernel) privilege.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Register</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>CR0</code></td><td>System control flags: <strong>PE</strong> (bit 0) enables protected mode; <strong>PG</strong> (bit 31) enables paging; <strong>WP</strong> (bit 16) write-protect</td></tr>
+<tr><td><code>CR1</code></td><td>Reserved</td></tr>
+<tr><td><code>CR2</code></td><td><strong>Page Fault Linear Address</strong> — holds the address that caused the last page fault</td></tr>
+<tr><td><code>CR3</code></td><td><strong>Page Directory Base Register</strong> — physical address of the page directory; used by the MMU for virtual-to-physical address translation</td></tr>
+<tr><td><code>CR4</code></td><td>Extended feature enable: PSE (4 MB pages), PAE (physical address extension), VME, etc.</td></tr>
+</tbody>
+</table>
+</div>
 <h2 id="segment-registers"><a class="header" href="#segment-registers">Segment Registers</a></h2>
+<p>Segment registers hold 16-bit <strong>segment selectors</strong> — they index into the Global Descriptor Table (GDT) or Local Descriptor Table (LDT) to define memory segments. In modern 32-bit flat-memory Linux programs, most segments cover the entire 4 GB address space and act as a formality.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Register</th><th>Name</th><th>Role</th></tr>
+</thead>
+<tbody>
+<tr><td><code>CS</code></td><td>Code Segment</td><td>Points to the segment containing executable code; determines privilege level (CPL)</td></tr>
+<tr><td><code>DS</code></td><td>Data Segment</td><td>Default segment for data read/write operations</td></tr>
+<tr><td><code>ES</code></td><td>Extra Segment</td><td>Extra segment; used by string instructions as the destination segment</td></tr>
+<tr><td><code>FS</code></td><td>F Segment</td><td>General purpose; used by OS for thread-local storage (TLS) on Linux/Windows</td></tr>
+<tr><td><code>GS</code></td><td>G Segment</td><td>General purpose; used by OS for per-CPU data on Linux</td></tr>
+<tr><td><code>SS</code></td><td>Stack Segment</td><td>Points to the segment containing the current stack</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="eflags-register"><a class="header" href="#eflags-register">EFLAGS Register</a></h2>
+<p>EFLAGS is a 32-bit register where individual bits are <strong>status flags</strong> set/cleared by arithmetic and logic instructions. Conditional jumps read these flags.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Bit</th><th>Name</th><th>Set when…</th></tr>
+</thead>
+<tbody>
+<tr><td><code>CF</code></td><td>0</td><td>Carry</td><td>Unsigned overflow / borrow occurred</td></tr>
+<tr><td><code>PF</code></td><td>2</td><td>Parity</td><td>Least-significant byte of result has even number of 1-bits</td></tr>
+<tr><td><code>AF</code></td><td>4</td><td>Auxiliary Carry</td><td>Carry out of bit 3 (used for BCD arithmetic)</td></tr>
+<tr><td><code>ZF</code></td><td>6</td><td>Zero</td><td>Result is zero</td></tr>
+<tr><td><code>SF</code></td><td>7</td><td>Sign</td><td>Result is negative (MSB = 1)</td></tr>
+<tr><td><code>TF</code></td><td>8</td><td>Trap</td><td>Single-step debugging mode</td></tr>
+<tr><td><code>IF</code></td><td>9</td><td>Interrupt Enable</td><td>Maskable interrupts are enabled</td></tr>
+<tr><td><code>DF</code></td><td>10</td><td>Direction</td><td>String operations go high→low (set) or low→high (clear)</td></tr>
+<tr><td><code>OF</code></td><td>11</td><td>Overflow</td><td>Signed overflow occurred</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="register-size-sub-divisions"><a class="header" href="#register-size-sub-divisions">Register size sub-divisions</a></h2>
+<p>Each 32-bit general-purpose register can be accessed in smaller pieces:</p>
+<pre><code> 31          16 15       8 7        0
+ ┌─────────────┬──────────┬─────────┐
+ │   (upper)   │    AH    │   AL    │  ← 8-bit halves of AX
+ │   (upper)   │        AX          │  ← 16-bit
+ │             EAX                  │  ← 32-bit
+ └─────────────────────────────────┘
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>32-bit</th><th>16-bit</th><th>High 8-bit</th><th>Low 8-bit</th></tr>
+</thead>
+<tbody>
+<tr><td><code>EAX</code></td><td><code>AX</code></td><td><code>AH</code></td><td><code>AL</code></td></tr>
+<tr><td><code>EBX</code></td><td><code>BX</code></td><td><code>BH</code></td><td><code>BL</code></td></tr>
+<tr><td><code>ECX</code></td><td><code>CX</code></td><td><code>CH</code></td><td><code>CL</code></td></tr>
+<tr><td><code>EDX</code></td><td><code>DX</code></td><td><code>DH</code></td><td><code>DL</code></td></tr>
+<tr><td><code>ESI</code></td><td><code>SI</code></td><td>—</td><td>—</td></tr>
+<tr><td><code>EDI</code></td><td><code>DI</code></td><td>—</td><td>—</td></tr>
+<tr><td><code>ESP</code></td><td><code>SP</code></td><td>—</td><td>—</td></tr>
+<tr><td><code>EBP</code></td><td><code>BP</code></td><td>—</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+<p>In 64-bit mode (x86-64) the registers extend to <code>RAX</code>, <code>RBX</code>, etc. and eight additional registers <code>R8</code>–<code>R15</code> are added.</p>
+<hr>
+<h1 id="memory--addressing-modes"><a class="header" href="#memory--addressing-modes">Memory &amp; Addressing Modes</a></h1>
+<p>Assembly accesses memory through several addressing modes. Examples shown in AT&amp;T syntax.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mode</th><th>AT&amp;T syntax</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Immediate</strong></td><td><code>$5</code></td><td>The literal value 5</td></tr>
+<tr><td><strong>Register</strong></td><td><code>%eax</code></td><td>Value stored in EAX</td></tr>
+<tr><td><strong>Direct / absolute</strong></td><td><code>0x804a000</code></td><td>Value at that fixed address</td></tr>
+<tr><td><strong>Register indirect</strong></td><td><code>(%eax)</code></td><td>Value at the address stored in EAX</td></tr>
+<tr><td><strong>Base + displacement</strong></td><td><code>4(%eax)</code></td><td>Value at address EAX + 4</td></tr>
+<tr><td><strong>Indexed</strong></td><td><code>(%eax, %ebx)</code></td><td>Value at address EAX + EBX</td></tr>
+<tr><td><strong>Scaled indexed</strong></td><td><code>(%eax, %ebx, 4)</code></td><td>Value at address EAX + EBX×4</td></tr>
+<tr><td><strong>Base + scaled index + displacement</strong></td><td><code>8(%eax, %ebx, 4)</code></td><td>Value at address EAX + EBX×4 + 8</td></tr>
+</tbody>
+</table>
+</div>
+<p>The general form is: <code>displacement(base, index, scale)</code> → <code>base + index * scale + displacement</code></p>
+<p>Scale must be 1, 2, 4, or 8 (matching byte, word, dword, qword element sizes).</p>
+<pre><code class="language-asm">movl (%eax), %ebx          # ebx = memory[eax]
+movl 4(%esp), %eax         # eax = memory[esp + 4]  (second stack slot)
+movl (%eax, %ecx, 4), %edx # edx = memory[eax + ecx*4]  (array indexing)
+</code></pre>
+<hr>
+<h1 id="program-sections"><a class="header" href="#program-sections">Program Sections</a></h1>
+<p>A GAS (AT&amp;T) source file is organized into sections:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Section</th><th>Directive</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Code</td><td><code>.section .text</code></td><td>Executable instructions; read-only at runtime</td></tr>
+<tr><td>Initialized data</td><td><code>.section .data</code></td><td>Global/static variables with initial values</td></tr>
+<tr><td>Uninitialized data</td><td><code>.section .bss</code></td><td>Global/static variables zero-initialized by the OS; no space in binary</td></tr>
+<tr><td>Read-only data</td><td><code>.section .rodata</code></td><td>String literals and constants</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-asm">.section .data
+message:    .ascii "Hello, World!\n"   # initialized string
+counter:    .long 0                     # 32-bit integer initialized to 0
+
+.section .bss
+buffer:     .space 256                  # 256 bytes of zero-initialized space
+
+.section .text
+.global _start
+_start:
+    # code here
+</code></pre>
+<p><code>.global _start</code> makes the <code>_start</code> symbol visible to the linker. The linker requires this as the program entry point when not using the C runtime.</p>
+<hr>
+<h1 id="data-directives"><a class="header" href="#data-directives">Data Directives</a></h1>
+<p>Use these directives inside <code>.data</code> or <code>.bss</code> to reserve and initialize storage:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Directive</th><th>Size</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>.byte</code></td><td>1 byte</td><td>8-bit value(s)</td></tr>
+<tr><td><code>.word</code></td><td>2 bytes</td><td>16-bit value(s)</td></tr>
+<tr><td><code>.long</code></td><td>4 bytes</td><td>32-bit value(s)</td></tr>
+<tr><td><code>.quad</code></td><td>8 bytes</td><td>64-bit value(s)</td></tr>
+<tr><td><code>.ascii</code></td><td>n bytes</td><td>String — <strong>no</strong> null terminator</td></tr>
+<tr><td><code>.asciz</code></td><td>n+1 bytes</td><td>String <strong>with</strong> null terminator (<code>\0</code>)</td></tr>
+<tr><td><code>.space n</code></td><td>n bytes</td><td>Allocate n bytes, zero-initialized</td></tr>
+<tr><td><code>.fill n, size, val</code></td><td>varies</td><td>Fill n copies of <code>val</code> at <code>size</code> bytes each</td></tr>
+<tr><td><code>.equ name, val</code></td><td>—</td><td>Define a symbolic constant (no storage)</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-asm">.section .data
+num:     .long 42
+pi:      .long 0x40490FDB     # IEEE 754 float for pi (approx)
+msg:     .asciz "hello\n"     # null-terminated
+arr:     .long 1, 2, 3, 4, 5  # array of five 32-bit integers
+
+.equ STDIN, 0
+.equ STDOUT, 1
+.equ SYS_EXIT, 1
+.equ SYS_WRITE, 4
+</code></pre>
+<hr>
+<h1 id="instructions"><a class="header" href="#instructions">Instructions</a></h1>
+<h2 id="data-movement"><a class="header" href="#data-movement">Data Movement</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mnemonic (AT&amp;T)</th><th>Operation</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>movl src, dst</code></td><td><code>dst = src</code></td><td>Copy between registers, memory, or immediates. Cannot move memory→memory directly.</td></tr>
+<tr><td><code>leal src, dst</code></td><td><code>dst = address of src</code></td><td>Load Effective Address — computes the address without dereferencing it. Useful for pointer arithmetic and fast multiplication.</td></tr>
+<tr><td><code>pushl src</code></td><td><code>esp -= 4; mem[esp] = src</code></td><td>Push onto the stack</td></tr>
+<tr><td><code>popl dst</code></td><td><code>dst = mem[esp]; esp += 4</code></td><td>Pop from the stack</td></tr>
+<tr><td><code>xchgl a, b</code></td><td><code>a ↔ b</code></td><td>Swap two registers (or register and memory) atomically</td></tr>
+<tr><td><code>movzbl src, dst</code></td><td><code>dst = zero-extend(src)</code></td><td>Move byte to long, zero-extending to 32 bits</td></tr>
+<tr><td><code>movsbl src, dst</code></td><td><code>dst = sign-extend(src)</code></td><td>Move byte to long, sign-extending to 32 bits</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-asm">movl  $10, %eax          # eax = 10
+movl  %eax, %ebx         # ebx = eax
+leal  4(%eax), %ecx      # ecx = eax + 4  (address calculation, no memory access)
+leal  (%eax, %ebx, 4), %edx  # ecx = eax + ebx*4
+xchgl %eax, %ebx         # swap eax and ebx
+</code></pre>
+<h2 id="arithmetic"><a class="header" href="#arithmetic">Arithmetic</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mnemonic (AT&amp;T)</th><th>Operation</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>addl src, dst</code></td><td><code>dst = dst + src</code></td><td>Sets CF, ZF, SF, OF</td></tr>
+<tr><td><code>subl src, dst</code></td><td><code>dst = dst - src</code></td><td>Sets CF, ZF, SF, OF</td></tr>
+<tr><td><code>incl dst</code></td><td><code>dst = dst + 1</code></td><td>Does <strong>not</strong> set CF</td></tr>
+<tr><td><code>decl dst</code></td><td><code>dst = dst - 1</code></td><td>Does <strong>not</strong> set CF</td></tr>
+<tr><td><code>negl dst</code></td><td><code>dst = -dst</code></td><td>Two’s complement negation</td></tr>
+<tr><td><code>imull src, dst</code></td><td><code>dst = dst * src</code></td><td>Signed multiply (2-operand form)</td></tr>
+<tr><td><code>mull src</code></td><td><code>edx:eax = eax * src</code></td><td>Unsigned multiply — result in EDX:EAX</td></tr>
+<tr><td><code>imull src</code></td><td><code>edx:eax = eax * src</code></td><td>Signed multiply — result in EDX:EAX</td></tr>
+<tr><td><code>divl src</code></td><td><code>eax = edx:eax / src; edx = remainder</code></td><td>Unsigned divide — dividend in EDX:EAX, zero-extend: <code>xorl %edx, %edx</code> before dividing</td></tr>
+<tr><td><code>idivl src</code></td><td><code>eax = edx:eax / src; edx = remainder</code></td><td>Signed divide — sign-extend EAX into EDX:EAX using <code>cdq</code> first</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-asm">movl  $10, %eax
+addl  $5,  %eax          # eax = 15
+subl  $3,  %eax          # eax = 12
+imull $4,  %eax          # eax = 48
+
+movl  $100, %eax
+movl  $7,   %ecx
+xorl  %edx, %edx         # zero-extend eax into edx:eax for unsigned divide
+divl  %ecx               # eax = 14 (quotient), edx = 2 (remainder)
+</code></pre>
+<h2 id="logical"><a class="header" href="#logical">Logical</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mnemonic (AT&amp;T)</th><th>Operation</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>andl src, dst</code></td><td><code>dst = dst &amp; src</code></td><td>Bitwise AND; clears OF, CF</td></tr>
+<tr><td><code>orl src, dst</code></td><td><code>dst = dst | src</code></td><td>Bitwise OR</td></tr>
+<tr><td><code>xorl src, dst</code></td><td><code>dst = dst ^ src</code></td><td>Bitwise XOR; <code>xorl %eax, %eax</code> is the canonical way to zero a register</td></tr>
+<tr><td><code>notl dst</code></td><td><code>dst = ~dst</code></td><td>Bitwise NOT (one’s complement)</td></tr>
+<tr><td><code>testl src, dst</code></td><td><code>dst &amp; src</code> (set flags only)</td><td>AND without storing result — used to check bits or test for zero</td></tr>
+<tr><td><code>cmpl src, dst</code></td><td><code>dst - src</code> (set flags only)</td><td>Subtract without storing result — sets flags for conditional jumps</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-asm">xorl  %eax, %eax         # eax = 0  (faster than movl $0, %eax)
+movl  $0xFF, %ebx
+andl  $0x0F, %ebx        # ebx = 0x0F  (mask lower nibble)
+testl %eax, %eax         # set ZF if eax == 0
+cmpl  $10,   %ecx        # compare ecx to 10; sets flags for je/jl/jg etc.
+</code></pre>
+<h2 id="shift--rotate"><a class="header" href="#shift--rotate">Shift &amp; Rotate</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mnemonic (AT&amp;T)</th><th>Operation</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>shll $n, dst</code></td><td><code>dst = dst &lt;&lt; n</code></td><td>Logical (unsigned) left shift; fills with 0</td></tr>
+<tr><td><code>shrl $n, dst</code></td><td><code>dst = dst &gt;&gt; n</code></td><td>Logical (unsigned) right shift; fills with 0</td></tr>
+<tr><td><code>sarl $n, dst</code></td><td><code>dst = dst &gt;&gt; n</code></td><td>Arithmetic right shift; sign-extends (preserves sign)</td></tr>
+<tr><td><code>roll $n, dst</code></td><td>Rotate left n bits</td><td>Bit shifted out wraps to the other end</td></tr>
+<tr><td><code>rorl $n, dst</code></td><td>Rotate right n bits</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<p>Shift by a variable amount using <code>%cl</code>:</p>
+<pre><code class="language-asm">movl  $1, %eax
+shll  $3, %eax           # eax = 8  (1 &lt;&lt; 3; multiply by 8)
+shrl  $1, %eax           # eax = 4  (divide by 2, unsigned)
+movb  $2, %cl
+shll  %cl, %eax          # eax = eax &lt;&lt; 2  (variable shift)
+</code></pre>
+<h2 id="control-flow"><a class="header" href="#control-flow">Control Flow</a></h2>
+<h3 id="unconditional-jump"><a class="header" href="#unconditional-jump">Unconditional jump</a></h3>
+<pre><code class="language-asm">jmp label                # jump to label (near, relative)
+jmp *%eax                # indirect jump — jump to address in eax
+</code></pre>
+<h3 id="comparison--conditional-jump"><a class="header" href="#comparison--conditional-jump">Comparison + conditional jump</a></h3>
+<p>Always pair <code>cmpl</code> (or <code>testl</code>) with a conditional jump:</p>
+<pre><code class="language-asm">cmpl $10, %eax           # compute eax - 10, set flags
+je   equal               # jump if ZF=1  (eax == 10)
+jne  not_equal           # jump if ZF=0  (eax != 10)
+jl   less                # jump if SF≠OF (signed less than)
+jle  less_or_eq          # jump if ZF=1 or SF≠OF
+jg   greater             # jump if ZF=0 and SF=OF (signed greater)
+jge  greater_or_eq       # jump if SF=OF
+jb   below               # unsigned less than (CF=1)
+jbe  below_or_eq         # unsigned less or equal
+ja   above               # unsigned greater than
+jae  above_or_eq         # unsigned greater or equal
+</code></pre>
+<h3 id="call-and-return"><a class="header" href="#call-and-return">Call and return</a></h3>
+<pre><code class="language-asm">call function            # push EIP (return address) onto stack, jump to function
+ret                      # pop return address from stack into EIP
+</code></pre>
+<h3 id="loop-instruction"><a class="header" href="#loop-instruction">Loop instruction</a></h3>
+<pre><code class="language-asm">movl $5, %ecx
+loop_top:
+    # loop body
+    loop loop_top        # decrement ecx; jump to loop_top if ecx != 0
+</code></pre>
+<p><code>loop</code> is equivalent to <code>decl %ecx; jnz loop_top</code> but only reads ECX.</p>
+<hr>
+<h1 id="stack-operations"><a class="header" href="#stack-operations">Stack Operations</a></h1>
+<p>The stack is a <strong>LIFO</strong> (Last In, First Out) region of memory that grows <strong>downward</strong> (toward lower addresses) on x86.</p>
+<pre><code>High addresses
+┌─────────────┐
+│ stack frame │  ← EBP (base of current frame)
+│  saved EBP  │
+│  local vars │
+│  ...        │
+│  top value  │  ← ESP (always points here)
+└─────────────┘
+Low addresses
+</code></pre>
+<ul>
+<li><code>push</code> decrements ESP by the operand size, then writes the value to <code>[ESP]</code></li>
+<li><code>pop</code> reads the value at <code>[ESP]</code>, then increments ESP</li>
+</ul>
+<h3 id="standard-function-prologue--epilogue"><a class="header" href="#standard-function-prologue--epilogue">Standard function prologue / epilogue</a></h3>
+<pre><code class="language-asm">function:
+    pushl %ebp           # save caller's base pointer
+    movl  %esp, %ebp     # establish new stack frame
+    subl  $16, %esp      # allocate 16 bytes for local variables
+    # function body
+    # locals accessed as -4(%ebp), -8(%ebp), etc.
+    # caller's args accessed as 8(%ebp), 12(%ebp), etc.
+    movl  %ebp, %esp     # restore stack pointer (deallocate locals)
+    popl  %ebp           # restore caller's base pointer
+    ret                  # return to caller
+</code></pre>
+<p>The <code>enter</code> and <code>leave</code> instructions compress the prologue/epilogue:</p>
+<pre><code class="language-asm">enter $16, $0    # equivalent to: pushl %ebp; movl %esp, %ebp; subl $16, %esp
+leave            # equivalent to: movl %ebp, %esp; popl %ebp
+</code></pre>
+<h3 id="stack-arithmetic-example-from-stackasm"><a class="header" href="#stack-arithmetic-example-from-stackasm">Stack arithmetic example (from stack.asm)</a></h3>
+<pre><code class="language-asm">pushl $10                # push 10; esp -= 4
+pushl $20                # push 20; esp -= 4
+movl (%esp), %eax        # eax = 20  (top of stack)
+addl 4(%esp), %eax       # eax = 20 + 10 = 30
+addl $8, %esp            # pop both values (esp += 8)
+</code></pre>
+<hr>
+<h1 id="system-calls-linux-int-0x80"><a class="header" href="#system-calls-linux-int-0x80">System Calls (Linux int 0x80)</a></h1>
+<p>On 32-bit Linux, system calls are made by:</p>
+<ol>
+<li>Loading the <strong>syscall number</strong> into <code>EAX</code></li>
+<li>Loading arguments into <code>EBX</code>, <code>ECX</code>, <code>EDX</code>, <code>ESI</code>, <code>EDI</code> (in order)</li>
+<li>Executing <code>int $0x80</code> — software interrupt 0x80 switches to kernel mode</li>
+</ol>
+<p>The return value is placed in <code>EAX</code> after the interrupt.</p>
+<h3 id="common-syscalls-ia-32-linux"><a class="header" href="#common-syscalls-ia-32-linux">Common syscalls (IA-32 Linux)</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>EAX</th><th>Name</th><th>EBX</th><th>ECX</th><th>EDX</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td><code>exit</code></td><td>exit code</td><td>—</td><td>—</td></tr>
+<tr><td>2</td><td><code>fork</code></td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>3</td><td><code>read</code></td><td>fd</td><td>buffer ptr</td><td>count</td></tr>
+<tr><td>4</td><td><code>write</code></td><td>fd</td><td>buffer ptr</td><td>count</td></tr>
+<tr><td>5</td><td><code>open</code></td><td>filename ptr</td><td>flags</td><td>mode</td></tr>
+<tr><td>6</td><td><code>close</code></td><td>fd</td><td>—</td><td>—</td></tr>
+<tr><td>45</td><td><code>brk</code></td><td>new break addr</td><td>—</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="exit-example"><a class="header" href="#exit-example">Exit example</a></h3>
+<pre><code class="language-asm">movl $1,  %eax       # syscall: exit
+xorl %ebx, %ebx     # exit code 0  (xor is faster than movl $0)
+int  $0x80
+</code></pre>
+<h3 id="write-hello-world-example"><a class="header" href="#write-hello-world-example">Write “Hello, World!” example</a></h3>
+<pre><code class="language-asm">.section .data
+msg:    .asciz "Hello, World!\n"
+len = . - msg                        # '.' is current address; len = length of msg
+
+.section .text
+.global _start
+_start:
+    movl $4,   %eax          # syscall: write
+    movl $1,   %ebx          # fd: stdout (1)
+    leal msg,  %ecx          # pointer to message
+    movl $len, %edx          # number of bytes to write
+    int  $0x80
+
+    movl $1,   %eax          # syscall: exit
+    xorl %ebx, %ebx          # exit code 0
+    int  $0x80
+</code></pre>
+<hr>
+<h1 id="assembling--linking"><a class="header" href="#assembling--linking">Assembling &amp; Linking</a></h1>
+<h2 id="gas-gnu-assembler--att-syntax-s-files"><a class="header" href="#gas-gnu-assembler--att-syntax-s-files">GAS (GNU Assembler) — AT&amp;T syntax, <code>.s</code> files</a></h2>
+<pre><code class="language-bash"># Assemble to object file
+as program.s -o program.o
+
+# Link to executable
+ld program.o -o program
+
+# Or combine with gcc (handles linking for you)
+gcc -m32 -nostdlib program.s -o program
+</code></pre>
+<h2 id="nasm--intel-syntax-asm-files"><a class="header" href="#nasm--intel-syntax-asm-files">NASM — Intel syntax, <code>.asm</code> files</a></h2>
+<pre><code class="language-bash"># Assemble to ELF32 object file
+nasm -f elf32 program.asm -o program.o
+
+# Link
+ld -m elf_i386 program.o -o program
+</code></pre>
+<h2 id="flags-reference"><a class="header" href="#flags-reference">Flags reference</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-m32</code></td><td>Compile/link for 32-bit target (on 64-bit host)</td></tr>
+<tr><td><code>-nostdlib</code></td><td>Do not link against C standard library (use for bare <code>_start</code> programs)</td></tr>
+<tr><td><code>-f elf32</code></td><td>NASM: output format = 32-bit ELF</td></tr>
+<tr><td><code>-m elf_i386</code></td><td><code>ld</code>: link for 32-bit ELF</td></tr>
+<tr><td><code>-g</code></td><td>Include debug info (for use with GDB)</td></tr>
+<tr><td><code>-o outfile</code></td><td>Specify output filename</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="debugging-with-gdb"><a class="header" href="#debugging-with-gdb">Debugging with GDB</a></h2>
+<pre><code class="language-bash">gcc -m32 -nostdlib -g program.s -o program
+gdb ./program
+
+(gdb) break _start       # set breakpoint at entry
+(gdb) run                # start execution
+(gdb) info registers     # display all registers
+(gdb) x/10xw $esp        # examine 10 words on stack in hex
+(gdb) stepi              # step one instruction
+(gdb) disas              # disassemble current function
+</code></pre>
+<hr>
+<h1 id="calling-conventions"><a class="header" href="#calling-conventions">Calling Conventions</a></h1>
+<p>The <strong>cdecl</strong> convention is standard for C on 32-bit x86 Linux:</p>
+<ol>
+<li>Caller pushes arguments onto the stack <strong>right-to-left</strong> (last arg first)</li>
+<li>Caller executes <code>call function</code> (pushes return address, jumps)</li>
+<li>Callee sets up a stack frame (<code>push %ebp; mov %esp, %ebp</code>)</li>
+<li>Callee uses <code>%eax</code> (and <code>%edx</code> for 64-bit values) for return value</li>
+<li>Callee restores <code>%ebx</code>, <code>%esi</code>, <code>%edi</code>, <code>%ebp</code>, <code>%esp</code> (<strong>callee-saved</strong>)</li>
+<li><code>%eax</code>, <code>%ecx</code>, <code>%edx</code> are <strong>caller-saved</strong> (callee may clobber them)</li>
+<li>Caller cleans up arguments from the stack after <code>ret</code></li>
+</ol>
+<pre><code class="language-asm"># Calling a C function: int result = add(3, 5);
+pushl $5                 # push second argument
+pushl $3                 # push first argument
+call  add                # call; return value will be in %eax
+addl  $8, %esp           # caller cleans up 2 × 4 bytes of args
+# %eax now holds the return value
+</code></pre>
+<h3 id="register-saverestore-summary"><a class="header" href="#register-saverestore-summary">Register save/restore summary</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Register</th><th>Who saves?</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>EAX</code></td><td>Caller</td><td>Return value</td></tr>
+<tr><td><code>ECX</code></td><td>Caller</td><td>Often used as scratch</td></tr>
+<tr><td><code>EDX</code></td><td>Caller</td><td>High half of return for 64-bit values</td></tr>
+<tr><td><code>EBX</code></td><td>Callee</td><td>Must be preserved across calls</td></tr>
+<tr><td><code>ESI</code></td><td>Callee</td><td>Must be preserved</td></tr>
+<tr><td><code>EDI</code></td><td>Callee</td><td>Must be preserved</td></tr>
+<tr><td><code>EBP</code></td><td>Callee</td><td>Frame pointer — must be preserved</td></tr>
+<tr><td><code>ESP</code></td><td>Both</td><td>Caller sets up args; callee must restore before ret</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h1 id="example-programs"><a class="header" href="#example-programs">Example Programs</a></h1>
+<h2 id="program1s--register-moves-and-exit"><a class="header" href="#program1s--register-moves-and-exit">program1.s — register moves and exit</a></h2>
+<pre><code class="language-asm">.section .text
+.global _start
+
+_start:
+    movl $42, %eax       # load 42 into eax
+    movl %eax, %ebx      # copy eax -&gt; ebx
+    movl %ebx, %ecx      # copy ebx -&gt; ecx
+
+    movl $1,  %eax       # syscall: exit
+    xorl %ebx, %ebx      # exit code 0
+    int  $0x80
+</code></pre>
+<p>Demonstrates <code>movl</code> between registers and the exit syscall. <code>xorl %ebx, %ebx</code> is the idiomatic zero — it is shorter and faster than <code>movl $0, %ebx</code>.</p>
+<h2 id="program2asm--intel-syntax-minimal-exit"><a class="header" href="#program2asm--intel-syntax-minimal-exit">program2.asm — Intel syntax minimal exit</a></h2>
+<pre><code class="language-asm">.global start
+.intel_syntax
+
+.section .text
+_start:
+    mov %eax, 1          # syscall: exit
+    mov %ebx, 0          # exit code 0
+    int 0x80
+</code></pre>
+<p>Same logic in Intel syntax (GAS Intel mode). Note: GAS Intel syntax still uses <code>%</code> on register names unlike NASM.</p>
+<h2 id="stackasm--stack-arithmetic"><a class="header" href="#stackasm--stack-arithmetic">stack.asm — stack arithmetic</a></h2>
+<pre><code class="language-asm">.section .text
+.global _start
+
+_start:
+    pushl $10            # push 10 onto stack  (esp = esp - 4)
+    pushl $20            # push 20 onto stack  (esp = esp - 4)
+
+    movl (%esp),   %eax  # eax = top of stack = 20
+    addl 4(%esp),  %eax  # eax += *(esp+4) = 10  →  eax = 30
+
+    addl $8, %esp        # pop both values (esp = esp + 8)
+
+    movl $1,  %eax       # syscall: exit
+    xorl %ebx, %ebx      # exit code 0
+    int  $0x80
+</code></pre>
+<p>Demonstrates <code>push</code>/<code>pop</code> mechanics, stack-relative addressing (<code>4(%esp)</code>), and manual stack cleanup. After the two pushes, the stack looks like:</p>
+<pre><code>esp+0 → [ 20 ]
+esp+4 → [ 10 ]
+</code></pre>
+<p><code>addl $8, %esp</code> discards both values — equivalent to two <code>popl</code> instructions without actually reading them into registers.</p>
+<h2 id="string-operations-overview"><a class="header" href="#string-operations-overview">String operations overview</a></h2>
+<pre><code class="language-asm"># Copy 10 dwords from source to destination
+.section .data
+source: .long 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+dest:   .space 40
+
+.section .text
+.global _start
+_start:
+    leal source, %esi    # esi = source address
+    leal dest,   %edi    # edi = destination address
+    movl $10,    %ecx    # count = 10 dwords
+    cld                  # clear DF: increment esi/edi after each step
+    rep movsl            # copy ecx dwords from [esi] to [edi]
+
+    movl $1, %eax
+    xorl %ebx, %ebx
+    int  $0x80
+</code></pre>
+<p><code>rep movsl</code> repeats <code>movsl</code> (move dword from <code>[ESI]</code> to <code>[EDI]</code>, increment both) until <code>ECX</code> reaches zero.</p>
+<hr>
+<h2 id="string-operations-reference"><a class="header" href="#string-operations-reference">String Operations (reference)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Instruction</th><th>Operation</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>movsl</code></td><td><code>mem[edi] = mem[esi]; esi += 4; edi += 4</code></td><td>Copy dword; direction depends on DF</td></tr>
+<tr><td><code>movsb</code></td><td>Same but byte</td><td></td></tr>
+<tr><td><code>stosl</code></td><td><code>mem[edi] = eax; edi += 4</code></td><td>Store EAX into memory at EDI</td></tr>
+<tr><td><code>lodsl</code></td><td><code>eax = mem[esi]; esi += 4</code></td><td>Load dword from ESI into EAX</td></tr>
+<tr><td><code>scasl</code></td><td><code>eax - mem[edi]; edi += 4</code></td><td>Compare EAX to memory at EDI (set flags)</td></tr>
+<tr><td><code>cmpsb</code></td><td>Compare <code>mem[esi]</code> to <code>mem[edi]</code>; advance both</td><td>Used for <code>strcmp</code>-style loops</td></tr>
+<tr><td><code>rep</code></td><td>Repeat next string op ECX times</td><td></td></tr>
+<tr><td><code>repe</code>/<code>repz</code></td><td>Repeat while ZF=1 (equal)</td><td>Used with <code>cmps</code>/<code>scas</code></td></tr>
+<tr><td><code>repne</code>/<code>repnz</code></td><td>Repeat while ZF=0 (not equal)</td><td><code>repne scasb</code> finds a byte in memory</td></tr>
+<tr><td><code>cld</code></td><td>Clear DF (forward direction)</td><td>Call before string ops</td></tr>
+<tr><td><code>std</code></td><td>Set DF (reverse direction)</td><td>Rarely used</td></tr>
+</tbody>
+</table>
+</div>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="the-4-steps-of-compilation-with-gcc"><a class="header" href="#the-4-steps-of-compilation-with-gcc">The 4 Steps of Compilation with GCC</a></h1>
 <p>GCC transforms source code into an executable file through four primary steps:</p>
@@ -39799,7 +40454,7 @@ echo ====================================
 echo
 cat /dev/stdin | cut -d' ' -f 2,3 | sort
 </code></pre>
-<h2 id="arithmetic"><a class="header" href="#arithmetic">Arithmetic</a></h2>
+<h2 id="arithmetic-1"><a class="header" href="#arithmetic-1">Arithmetic</a></h2>
 <h3 id="let"><a class="header" href="#let">let</a></h3>
 <p>let is a builtin function of Bash that allows us to do simple arithmetic. It follows the basic format:</p>
 <pre><code class="language-sh">#!/bin/bash
