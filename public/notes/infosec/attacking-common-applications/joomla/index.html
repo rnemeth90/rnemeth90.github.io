@@ -38,10 +38,10 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-f5872527.js";
+            window.path_to_searchindex_js = "../../../searchindex-60674d6b.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../../toc-9405cdb8.js"></script>
+        <script src="../../../toc-f4e075f0.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -185,11 +185,13 @@
 <h2 id="directory-map"><a class="header" href="#directory-map">Directory map</a></h2>
 <ul>
 <li><a href="./joomla-discovery-enumeration.html">Joomla — Discovery &amp; Enumeration — footprinting, version fingerprinting, droopescan, JoomlaScan, login brute force</a></li>
+<li><a href="./joomla-attacking.html">Attacking Joomla — template RCE, web shell hygiene, CVE-2019-10945 directory traversal</a></li>
 </ul>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>Joomla is the second most widely deployed open-source CMS (~3% of all websites, ~2.5 million installs), making it a likely encounter during external assessments. Written in PHP with a MySQL backend, it follows a predictable directory structure that is largely self-disclosed via <code>robots.txt</code> (<code>/administrator/</code>, <code>/components/</code>, <code>/plugins/</code>, etc.) and the <code>&lt;meta name="generator"&gt;</code> tag in page source.</p>
 <p><strong>Version fingerprinting</strong> has multiple paths: <code>/README.txt</code> gives the major version, <code>/administrator/manifests/files/joomla.xml</code> gives the exact version via the <code>&lt;version&gt;</code> tag, and <code>/plugins/system/cache/cache.xml</code> gives an approximation. <strong>droopescan</strong> (<code>droopescan scan joomla --url TARGET</code>) provides a version range and surfaces interesting URLs. <strong>JoomlaScan</strong> (Python2) enumerates installed components and exposed directories under <code>/components/</code> and <code>/administrator/components/</code>.</p>
 <p>Unlike WordPress, Joomla’s login portal at <code>/administrator/index.php</code> returns a <strong>generic error message</strong> for both bad usernames and bad passwords, preventing the username enumeration oracle that WordPress exposes. The default admin username is <code>admin</code>; always try common defaults (<code>admin:admin</code>) before running a full brute-force with <code>joomla-brute.py</code>.</p>
+<p><strong>Attacking Joomla</strong> with admin credentials mirrors the WordPress approach: navigate to <strong>Configuration → Templates</strong>, select an inactive theme (e.g., protostar), and inject a PHP one-liner (<code>system($_GET['&lt;hash&gt;']);</code>) into <code>error.php</code>. The shell is served at <code>/templates/protostar/error.php?&lt;hash&gt;=&lt;cmd&gt;</code>. Use a non-dictionary parameter name to reduce opportunistic access, and remove the shell as soon as it is no longer needed. Known core vulnerabilities are rare — CVE-2019-10945 (directory traversal + authenticated file deletion, affecting 3.9.4) is notable, but template RCE is the primary path when admin credentials are available. The majority of Joomla CVEs target extensions, not core.</p>
 
                     </main>
 
@@ -199,7 +201,7 @@
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../../../infosec/attacking-common-applications/joomla/joomla-discovery-enumeration.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../../infosec/attacking-common-applications/joomla/joomla-attacking.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -213,7 +215,7 @@
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../../../infosec/attacking-common-applications/joomla/joomla-discovery-enumeration.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../../infosec/attacking-common-applications/joomla/joomla-attacking.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
