@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-8e98a2fe.js";
+            window.path_to_searchindex_js = "searchindex-9e590778.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-f4e075f0.js"></script>
+        <script src="toc-243200de.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -25907,6 +25907,14 @@ SQL&gt; xp_cmdshell whoami /priv
 </ul>
 </li>
 </ul>
+<h3 id="drupal"><a class="header" href="#drupal">Drupal</a></h3>
+<ul>
+<li><a href="infosec/attacking-common-applications/drupal">Drupal — discovery &amp; enumeration, node URLs, CHANGELOG version, droopescan</a>
+<ul>
+<li><a href="#drupal--discovery--enumeration">Discovery &amp; Enumeration — footprinting, node URLs, CHANGELOG version, droopescan, admin login</a></li>
+</ul>
+</li>
+</ul>
 <h3 id="joomla"><a class="header" href="#joomla">Joomla</a></h3>
 <ul>
 <li><a href="infosec/attacking-common-applications/joomla">Joomla — discovery &amp; enumeration, template RCE, CVE-2019-10945</a>
@@ -26044,13 +26052,140 @@ SQL&gt; xp_cmdshell whoami /priv
 <li>Notes (interesting endpoints, CVEs, pivot potential)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="joomla-1"><a class="header" href="#joomla-1">Joomla</a></h1>
+<h1 id="drupal-1"><a class="header" href="#drupal-1">Drupal</a></h1>
 <h2 id="directory-map-16"><a class="header" href="#directory-map-16">Directory map</a></h2>
+<ul>
+<li><a href="#drupal--discovery--enumeration">Drupal — Discovery &amp; Enumeration — footprinting, node URLs, CHANGELOG version, droopescan, admin login</a></li>
+</ul>
+<h2 id="summary-6"><a class="header" href="#summary-6">Summary</a></h2>
+<p>Drupal is the third most popular CMS (~2.4% market share, ~1.1 million sites), written in PHP with MySQL, PostgreSQL, or SQLite as the backend. It is heavily used by government (56% of government websites) and higher education (23.8% of universities), making it a likely target in public-sector assessments. It supports ~43,000 modules and ~2,900 themes.</p>
+<p><strong>Fingerprinting</strong> is straightforward when default settings are in place: the <code>&lt;meta name="Generator"&gt;</code> tag and “Powered by Drupal” footer are visible in page source, and all content pages follow a <code>/node/&lt;id&gt;</code> URL pattern. The <code>robots.txt</code> often references <code>/node</code>. <strong>Version fingerprinting</strong> via <code>/CHANGELOG.txt</code> works on older installs (Drupal 7 and some 8.x); newer installs block the file with a 404. The Drupal 8+ changelog is at <code>/core/CHANGELOG.txt</code>. <strong>droopescan</strong> (<code>droopescan scan drupal -u TARGET</code>) provides a version range and enumerates installed modules via <code>LICENSE.txt</code> files in <code>/modules/</code> — significantly more capable than its Joomla mode. The admin login is at <code>/user/login</code>. The presence of the PHP module (<code>/modules/php/</code>) is a high-value finding, as it can enable authenticated code execution.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="drupal--discovery--enumeration"><a class="header" href="#drupal--discovery--enumeration">Drupal — Discovery &amp; Enumeration</a></h1>
+<h2 id="background"><a class="header" href="#background">Background</a></h2>
+<p>Drupal (launched 2001) is the third most popular CMS by market share (~2.4%), written in PHP with support for MySQL, PostgreSQL, or SQLite as the backend. It supports ~43,000 modules and ~2,900 themes.</p>
+<p>Key stats:</p>
+<ul>
+<li>~1.5% of all websites (~1.1 million sites); 5% of the top 1 million sites; 7% of the top 10,000</li>
+<li>Available in 100 languages; 1.3+ million community members</li>
+<li>56% of government websites worldwide use Drupal</li>
+<li>33 Fortune 500 companies use Drupal</li>
+<li>Notable users: Tesla, Warner Bros Records</li>
+</ul>
+<hr>
+<h2 id="discovery--footprinting"><a class="header" href="#discovery--footprinting">Discovery / Footprinting</a></h2>
+<h3 id="fingerprinting-indicators"><a class="header" href="#fingerprinting-indicators">Fingerprinting indicators</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Indicator</th><th>Location</th></tr>
+</thead>
+<tbody>
+<tr><td><code>&lt;meta name="Generator" content="Drupal 8 ..."&gt;</code></td><td>Page source</td></tr>
+<tr><td><code>Powered by Drupal</code> text/link</td><td>Page header or footer</td></tr>
+<tr><td><code>/node/&lt;id&gt;</code> URL structure</td><td>Any content page</td></tr>
+<tr><td>Standard Drupal logo</td><td>Site header</td></tr>
+<tr><td><code>/CHANGELOG.txt</code> or <code>/README.txt</code></td><td>Direct access (may be blocked on newer installs)</td></tr>
+<tr><td>References to <code>/node</code></td><td><code>robots.txt</code></td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="page-source-grep"><a class="header" href="#page-source-grep">Page source grep</a></h3>
+<pre><code class="language-bash">curl -s http://drupal.inlanefreight.local | grep Drupal
+</code></pre>
+<pre><code class="language-html">&lt;meta name="Generator" content="Drupal 8 (https://www.drupal.org)" /&gt;
+&lt;span&gt;Powered by &lt;a href="https://www.drupal.org"&gt;Drupal&lt;/a&gt;&lt;/span&gt;
+</code></pre>
+<h3 id="node-based-fingerprinting"><a class="header" href="#node-based-fingerprinting">Node-based fingerprinting</a></h3>
+<p>Drupal indexes all content as <strong>nodes</strong> at predictable URIs:</p>
+<pre><code>http://drupal.inlanefreight.local/node/1
+http://drupal.inlanefreight.local/node/2
+</code></pre>
+<p>A node can represent a blog post, article, poll, or any other content type. The <code>/node/&lt;id&gt;</code> path structure is a reliable Drupal indicator even when a custom theme hides other signs.</p>
+<h3 id="user-types"><a class="header" href="#user-types">User types</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Role</th><th>Default capabilities</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Administrator</strong></td><td>Complete control over the site</td></tr>
+<tr><td><strong>Authenticated User</strong></td><td>Login + role-based operations (add/edit articles, etc.)</td></tr>
+<tr><td><strong>Anonymous</strong></td><td>Read-only access to public posts</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="enumeration-11"><a class="header" href="#enumeration-11">Enumeration</a></h2>
+<h3 id="version-via-changelogtxt-older-installs"><a class="header" href="#version-via-changelogtxt-older-installs">Version via CHANGELOG.txt (older installs)</a></h3>
+<pre><code class="language-bash">curl -s http://drupal-acc.inlanefreight.local/CHANGELOG.txt | grep -m2 ""
+</code></pre>
+<pre><code>Drupal 7.57, 2018-02-21
+</code></pre>
+<p>Newer Drupal installs (8.x+) block access to <code>CHANGELOG.txt</code> by default — a 404 response does not rule out Drupal, it just means this technique is unavailable.</p>
+<p>Other files that may disclose the version when CHANGELOG.txt is blocked:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Path</th><th>Contents</th></tr>
+</thead>
+<tbody>
+<tr><td><code>/README.txt</code></td><td>Generic Drupal intro, sometimes includes version</td></tr>
+<tr><td><code>/core/CHANGELOG.txt</code></td><td>Drupal 8+ changelog location</td></tr>
+<tr><td><code>/core/includes/bootstrap.inc</code></td><td><code>VERSION</code> constant (if readable)</td></tr>
+<tr><td><code>/modules/php/LICENSE.txt</code></td><td>Presence confirms PHP module installed</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="droopescan"><a class="header" href="#droopescan">droopescan</a></h3>
+<p>droopescan has significantly more Drupal functionality than it does for Joomla.</p>
+<pre><code class="language-bash">droopescan scan drupal -u http://drupal.inlanefreight.local
+</code></pre>
+<p><strong>Example output:</strong></p>
+<pre><code>[+] Plugins found:
+    php http://drupal.inlanefreight.local/modules/php/
+        http://drupal.inlanefreight.local/modules/php/LICENSE.txt
+
+[+] No themes found.
+
+[+] Possible version(s):
+    8.9.0
+    8.9.1
+
+[+] Possible interesting urls found:
+    Default admin - http://drupal.inlanefreight.local/user/login
+</code></pre>
+<p>droopescan surfaces:</p>
+<ul>
+<li>Installed modules/plugins (from <code>LICENSE.txt</code> and other files under <code>/modules/</code>)</li>
+<li>A version range based on file hashes</li>
+<li>The admin login URL</li>
+</ul>
+<h3 id="admin-login"><a class="header" href="#admin-login">Admin login</a></h3>
+<p>The default Drupal login portal is at:</p>
+<pre><code>http://&lt;target&gt;/user/login
+</code></pre>
+<p>Unlike WordPress (which uses <code>/wp-login.php</code>) and Joomla (<code>/administrator/index.php</code>), Drupal uses the <code>/user/login</code> path. The login page behavior for incorrect credentials should be noted — does it distinguish between bad username and bad password (username enumeration oracle) or return a generic message?</p>
+<hr>
+<h2 id="enumeration-checklist"><a class="header" href="#enumeration-checklist">Enumeration checklist</a></h2>
+<ul>
+<li><input disabled="" type="checkbox"> Confirm Drupal via <code>&lt;meta name="Generator"&gt;</code> tag, footer text, or <code>robots.txt</code></li>
+<li><input disabled="" type="checkbox"> Check <code>/node/1</code>, <code>/node/2</code> to confirm node-based URL structure</li>
+<li><input disabled="" type="checkbox"> Attempt <code>/CHANGELOG.txt</code> for version (expect 404 on newer installs)</li>
+<li><input disabled="" type="checkbox"> Attempt <code>/core/CHANGELOG.txt</code> (Drupal 8+)</li>
+<li><input disabled="" type="checkbox"> Run <code>droopescan scan drupal -u TARGET</code> for version range, modules, and interesting URLs</li>
+<li><input disabled="" type="checkbox"> Note admin login at <code>/user/login</code></li>
+<li><input disabled="" type="checkbox"> Record installed modules — cross-reference with CVE databases</li>
+<li><input disabled="" type="checkbox"> Check whether the PHP module is installed (<code>/modules/php/</code>) — if so, it may enable code execution</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="joomla-1"><a class="header" href="#joomla-1">Joomla</a></h1>
+<h2 id="directory-map-17"><a class="header" href="#directory-map-17">Directory map</a></h2>
 <ul>
 <li><a href="#joomla--discovery--enumeration">Joomla — Discovery &amp; Enumeration — footprinting, version fingerprinting, droopescan, JoomlaScan, login brute force</a></li>
 <li><a href="#attacking-joomla">Attacking Joomla — template RCE, web shell hygiene, CVE-2019-10945 directory traversal</a></li>
 </ul>
-<h2 id="summary-6"><a class="header" href="#summary-6">Summary</a></h2>
+<h2 id="summary-7"><a class="header" href="#summary-7">Summary</a></h2>
 <p>Joomla is the second most widely deployed open-source CMS (~3% of all websites, ~2.5 million installs), making it a likely encounter during external assessments. Written in PHP with a MySQL backend, it follows a predictable directory structure that is largely self-disclosed via <code>robots.txt</code> (<code>/administrator/</code>, <code>/components/</code>, <code>/plugins/</code>, etc.) and the <code>&lt;meta name="generator"&gt;</code> tag in page source.</p>
 <p><strong>Version fingerprinting</strong> has multiple paths: <code>/README.txt</code> gives the major version, <code>/administrator/manifests/files/joomla.xml</code> gives the exact version via the <code>&lt;version&gt;</code> tag, and <code>/plugins/system/cache/cache.xml</code> gives an approximation. <strong>droopescan</strong> (<code>droopescan scan joomla --url TARGET</code>) provides a version range and surfaces interesting URLs. <strong>JoomlaScan</strong> (Python2) enumerates installed components and exposed directories under <code>/components/</code> and <code>/administrator/components/</code>.</p>
 <p>Unlike WordPress, Joomla’s login portal at <code>/administrator/index.php</code> returns a <strong>generic error message</strong> for both bad usernames and bad passwords, preventing the username enumeration oracle that WordPress exposes. The default admin username is <code>admin</code>; always try common defaults (<code>admin:admin</code>) before running a full brute-force with <code>joomla-brute.py</code>.</p>
@@ -26120,14 +26255,14 @@ SQL&gt; xp_cmdshell whoami /priv
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="joomla--discovery--enumeration"><a class="header" href="#joomla--discovery--enumeration">Joomla — Discovery &amp; Enumeration</a></h1>
-<h2 id="background"><a class="header" href="#background">Background</a></h2>
+<h2 id="background-1"><a class="header" href="#background-1">Background</a></h2>
 <p>Joomla (released August 2005) is a free, open-source CMS written in PHP with MySQL as the backend. It powers approximately 3% of all websites (~2.5 million sites) and holds ~3.5% of the CMS market share — roughly 10% of WordPress’s reach. It supports 7,000+ extensions and 1,000+ templates.</p>
 <p>Notable users: eBay, Yamaha, Harvard University, UK government.</p>
 <p>Query live install counts via Joomla’s public API:</p>
 <pre><code class="language-bash">curl -s https://developer.joomla.org/stats/cms_version | python3 -m json.tool
 </code></pre>
 <hr>
-<h2 id="discovery--footprinting"><a class="header" href="#discovery--footprinting">Discovery / Footprinting</a></h2>
+<h2 id="discovery--footprinting-1"><a class="header" href="#discovery--footprinting-1">Discovery / Footprinting</a></h2>
 <h3 id="page-source--meta-generator-tag"><a class="header" href="#page-source--meta-generator-tag">Page source — meta generator tag</a></h3>
 <pre><code class="language-bash">curl -s http://dev.inlanefreight.local/ | grep Joomla
 </code></pre>
@@ -26178,8 +26313,8 @@ Disallow: /tmp/
 &lt;creationDate&gt;March 2019&lt;/creationDate&gt;
 </code></pre>
 <hr>
-<h2 id="enumeration-11"><a class="header" href="#enumeration-11">Enumeration</a></h2>
-<h3 id="droopescan"><a class="header" href="#droopescan">droopescan</a></h3>
+<h2 id="enumeration-12"><a class="header" href="#enumeration-12">Enumeration</a></h2>
+<h3 id="droopescan-1"><a class="header" href="#droopescan-1">droopescan</a></h3>
 <p>Plugin-based scanner with support for SilverStripe, WordPress, Drupal, and limited Joomla/Moodle support.</p>
 <p><strong>Install:</strong></p>
 <pre><code class="language-bash">sudo pip3 install droopescan
@@ -26225,7 +26360,7 @@ Disallow: /tmp/
 </code></pre>
 <p>Always try common/default credentials first (<code>admin:admin</code>, <code>admin:password</code>, <code>admin:joomla</code>) before running a full wordlist.</p>
 <hr>
-<h2 id="enumeration-checklist"><a class="header" href="#enumeration-checklist">Enumeration checklist</a></h2>
+<h2 id="enumeration-checklist-1"><a class="header" href="#enumeration-checklist-1">Enumeration checklist</a></h2>
 <ul>
 <li><input disabled="" type="checkbox"> Confirm Joomla via <code>&lt;meta name="generator"&gt;</code> tag or <code>robots.txt</code> Disallow paths</li>
 <li><input disabled="" type="checkbox"> Check <code>/README.txt</code> for major version</li>
@@ -26238,12 +26373,12 @@ Disallow: /tmp/
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="wordpress-1"><a class="header" href="#wordpress-1">WordPress</a></h1>
-<h2 id="directory-map-17"><a class="header" href="#directory-map-17">Directory map</a></h2>
+<h2 id="directory-map-18"><a class="header" href="#directory-map-18">Directory map</a></h2>
 <ul>
 <li><a href="#wordpress--discovery--enumeration">WordPress — Discovery &amp; Enumeration — footprinting, manual enumeration, user roles, WPScan</a></li>
 <li><a href="#attacking-wordpress">Attacking WordPress — login brute force, theme editor RCE, Metasploit shell upload, mail-masta LFI, wpDiscuz RCE</a></li>
 </ul>
-<h2 id="summary-7"><a class="header" href="#summary-7">Summary</a></h2>
+<h2 id="summary-8"><a class="header" href="#summary-8">Summary</a></h2>
 <p>WordPress is the most widely deployed CMS on the internet (~32.5% of all sites), making it a near-certain encounter during external penetration tests. It runs PHP on Apache with a MySQL backend and exposes a predictable directory structure: <code>/wp-admin/</code> (admin dashboard), <code>/wp-content/plugins/</code>, <code>/wp-content/themes/</code>, and <code>/wp-login.php</code>. The presence of these paths in <code>robots.txt</code> or page source is usually enough to confirm a WordPress installation.</p>
 <p><strong>Manual enumeration</strong> starts with <code>curl | grep WordPress</code> to extract the version from the <code>&lt;meta name="generator"&gt;</code> tag, then <code>grep themes</code> and <code>grep plugins</code> across multiple page URLs to map installed components and their versions (exposed via <code>?ver=</code> query parameters). Plugin <code>readme.txt</code> files — often accessible when directory listing is enabled — confirm exact versions. Many plugins carry publicly known CVEs; <code>mail-masta 1.0.0</code> (LFI), <code>wpDiscuz 7.0.4</code> (unauthenticated RCE), and outdated core versions are common findings.</p>
 <p><strong>User enumeration</strong> is possible because WordPress returns distinct error messages for unknown usernames versus wrong passwords at <code>/wp-login.php</code>. <strong>WPScan</strong> (<code>wpscan --url TARGET --enumerate --api-token TOKEN</code>) automates core/theme/plugin/user enumeration and maps findings to CVEs via WPVulnDB (free tier: 25 requests/day). Automated scanning alone is insufficient — WPScan only sees plugins referenced on scanned pages; manual <code>curl | grep plugins</code> across multiple posts catches the rest. The two methods must be combined.</p>
@@ -26357,7 +26492,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="wordpress--discovery--enumeration"><a class="header" href="#wordpress--discovery--enumeration">WordPress — Discovery &amp; Enumeration</a></h1>
-<h2 id="background-1"><a class="header" href="#background-1">Background</a></h2>
+<h2 id="background-2"><a class="header" href="#background-2">Background</a></h2>
 <p>WordPress (launched 2003) is the most popular CMS on the internet, accounting for roughly 32.5% of all sites. Written in PHP, it typically runs on Apache with MySQL. Its extensibility through themes and plugins makes it ubiquitous — and vulnerable.</p>
 <p>Key stats:</p>
 <ul>
@@ -26366,7 +26501,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 <li>~8% of hacks due to weak passwords; ~60% due to outdated WordPress versions</li>
 </ul>
 <hr>
-<h2 id="discovery--footprinting-1"><a class="header" href="#discovery--footprinting-1">Discovery / Footprinting</a></h2>
+<h2 id="discovery--footprinting-2"><a class="header" href="#discovery--footprinting-2">Discovery / Footprinting</a></h2>
 <h3 id="robotstxt-2"><a class="header" href="#robotstxt-2">robots.txt</a></h3>
 <p>A WordPress installation almost always has a <code>robots.txt</code> that exposes its directory structure:</p>
 <pre><code>User-agent: *
@@ -26514,7 +26649,7 @@ Sitemap: https://inlanefreight.local/wp-sitemap.xml
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="command-injection-1"><a class="header" href="#command-injection-1">Command Injection</a></h1>
-<h2 id="directory-map-18"><a class="header" href="#directory-map-18">Directory map</a></h2>
+<h2 id="directory-map-19"><a class="header" href="#directory-map-19">Directory map</a></h2>
 <ul>
 <li><a href="#intro-to-command-injections">Intro — what command injection is, OWASP #3, OS command injection, PHP/NodeJS examples</a></li>
 <li><a href="#detecting-and-injecting-commands">Detection — injection operators, injecting commands, bypassing front-end validation, AND/OR operators, cross-injection operator reference</a></li>
@@ -26526,7 +26661,7 @@ Sitemap: https://inlanefreight.local/wp-sitemap.xml
 <li><a href="#evasion-tools">Evasion tools — Bashfuscator (Linux), DOSfuscation (Windows)</a></li>
 <li><a href="#command-injection-prevention">Prevention — system command avoidance, input validation, sanitization, server configuration</a></li>
 </ul>
-<h2 id="summary-8"><a class="header" href="#summary-8">Summary</a></h2>
+<h2 id="summary-9"><a class="header" href="#summary-9">Summary</a></h2>
 <p><strong>Command injection</strong> vulnerabilities arise when user-controlled input flows unsanitized into a function that executes OS commands, allowing attackers to run arbitrary commands on the back-end server. Ranked <strong>#3 in OWASP’s Top 10</strong>, command injection is among the most critical web vulnerabilities — a successful exploitation can lead to full network compromise. All major web languages expose system command primitives (<code>exec</code>/<code>system</code>/<code>shell_exec</code> in PHP; <code>child_process.exec</code> / <code>child_process.spawn</code> in Node); the same injection techniques apply across all of them, and to any thick client or binary that passes unsanitized input to shell commands.</p>
 <p><strong>Detection</strong> mirrors exploitation: append a command after a known-good value using an injection operator and observe whether output changes. The core <strong>injection operators</strong> cover <code>;</code> (both commands run), <code>\n</code> / <code>%0a</code> (both, newline-separated), <code>&amp;</code> (both, second shown first), <code>|</code> (both, only second shown), <code>&amp;&amp;</code> (both only if first succeeds), <code>||</code> (second only if first fails), and sub-shell forms <code>`</code> and <code>$()</code> (Linux-only). When a front-end format check blocks a payload but fires <strong>no network request</strong>, validation is client-side only — bypass by sending a raw request through Burp Suite or ZAP, URL-encoding the payload before sending.</p>
 <p><strong>Filter and WAF identification</strong> starts by reducing the payload to one character at a time. An “Invalid input” inline response indicates an app-layer filter (e.g., a PHP <code>strpos</code> blacklist); a separate error page with IP/request details indicates a WAF. Map every blocked operator before choosing a bypass strategy.</p>
@@ -26927,7 +27062,7 @@ var ip = DOMPurify.sanitize(ip);
 <p>Secure configuration complements secure coding — neither alone is sufficient. Pair both with ongoing penetration testing, since any single mistake in a large codebase can reintroduce a vulnerability.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="file-inclusion-1"><a class="header" href="#file-inclusion-1">File inclusion</a></h1>
-<h2 id="directory-map-19"><a class="header" href="#directory-map-19">Directory map</a></h2>
+<h2 id="directory-map-20"><a class="header" href="#directory-map-20">Directory map</a></h2>
 <ul>
 <li><a href="#intro-to-file-inclusions">Intro to file inclusions — LFI basics, templating, impact, examples (PHP, Node, Java, .NET), read vs execute</a></li>
 <li><a href="#local-file-inclusion-lfi--exploitation-basics">Local file inclusion (LFI) — exploitation basics, traversal, prefixes, extensions, second-order</a></li>
@@ -26938,7 +27073,7 @@ var ip = DOMPurify.sanitize(ip);
 <li><a href="#lfi-and-file-uploads">LFI and file uploads — polyglot images, discovering upload paths, PHP <code>zip://</code> / <code>phar://</code> chains, legacy phpinfo edge case</a></li>
 <li><a href="#log-poisoning-for-lfi--rce">Log poisoning (LFI → RCE) — PHP session files, Apache/Nginx access logs, <code>/proc</code> hints, SSH/FTP/mail logs, permissions and safety</a></li>
 </ul>
-<h2 id="summary-9"><a class="header" href="#summary-9">Summary</a></h2>
+<h2 id="summary-10"><a class="header" href="#summary-10">Summary</a></h2>
 <p>File inclusion flaws happen when <strong>HTTP parameters or path segments choose a file</strong> to load or render, and that choice is <strong>not safely constrained</strong>. <strong>Local File Inclusion (LFI)</strong> lets attackers read (or sometimes execute) arbitrary server files—common around <strong>templating</strong> patterns such as <code>index.php?page=about</code> where the <code>page</code> fragment maps to an include path. Impacts include <strong>source disclosure</strong>, <strong>secret leakage</strong> (keys, credentials, configs), and under some primitives <strong>remote code execution</strong>. Examples span <strong>PHP</strong> (<code>include</code> / <code>require</code> / <code>file_get_contents</code> and friends), <strong>Node</strong> (<code>fs.readFile</code>, <code>path.join</code> breakout, <code>res.render</code> with interpolated paths), <strong>Java/JSP</strong> (<code>jsp:include</code>, <code>c:import</code>), and <strong>.NET</strong> (<code>Response.WriteFile</code>, <code>@Html.Partial</code>, SSI includes). A key review axis is <strong>read-only vs execute</strong> and <strong>local vs remote URL</strong> support: execution-capable includes (e.g. PHP <code>include</code>, some <code>c:import</code> / SSI cases) widen blast radius to <strong>RCE</strong>, while read-only sinks still enable <strong>credential and logic leakage</strong>. Defensive themes are <strong>allowlisting</strong>, <strong>canonical path checks</strong>, and <strong>never wiring raw request data into filesystem or template resolution</strong>.</p>
 <p>For <strong>exploitation mechanics</strong>, see <a href="#local-file-inclusion-lfi--exploitation-basics">local-file-inclusion.md</a>: swapping parameters for system files (e.g. <code>/etc/passwd</code>), <strong><code>../</code> path traversal</strong> when a directory is prepended, <strong><code>/</code>-led payloads</strong> when a <strong>filename prefix</strong> is concatenated, the effect of <strong>appended extensions</strong>, <strong>second-order</strong> LFI via stored fields (e.g. usernames used in download paths), and the lab distinction between <strong>reading PHP source</strong> vs <strong>executing</strong> it.</p>
 <p>For <strong>filter and normalizer bypasses</strong> (single-pass <code>../</code> stripping, URL/double encoding, regex-approved path prefixes, and legacy PHP tricks for forced extensions), see <a href="#local-file-inclusion-lfi--basic-bypasses">lfi-basic-bypasses.md</a>.</p>
@@ -27483,7 +27618,7 @@ sudo mount -t cifs //&lt;IP&gt;/sharename /mnt/smb -o username=user
 cp file.txt /mnt/smb/
 sudo umount /mnt/smb
 </code></pre>
-<h2 id="summary-10"><a class="header" href="#summary-10">Summary</a></h2>
+<h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
 <ul>
 <li><strong>Base64</strong>: No network needed, limited by terminal/paste buffer size</li>
 <li><strong>HTTP/HTTPS</strong>: Most common, multiple tools (curl, wget, Python), often allowed outbound</li>
@@ -27618,7 +27753,7 @@ echo PUT &lt;file&gt; &gt;&gt; ftpcommand.txt
 echo bye &gt;&gt; ftpcommand.txt
 ftp -v -n -s:ftpcommand.txt
 </code></pre>
-<h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
+<h2 id="summary-12"><a class="header" href="#summary-12">Summary</a></h2>
 <ul>
 <li><strong>Base64</strong>: No network needed, limited by terminal length</li>
 <li><strong>PowerShell WebClient</strong>: HTTP/HTTPS, most common, supports fileless execution</li>
@@ -28310,7 +28445,7 @@ Thus using an <strong>ACK scan</strong> (-sA) might be a good idea because the f
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-authentication"><a class="header" href="#linux-authentication">Linux Authentication</a></h1>
-<h2 id="summary-12"><a class="header" href="#summary-12">Summary</a></h2>
+<h2 id="summary-13"><a class="header" href="#summary-13">Summary</a></h2>
 <p>Linux uses Pluggable Authentication Modules (PAM) for authentication. The key modules (<code>pam_unix.so</code>, <code>pam_unix2.so</code>) are located in <code>/usr/lib/x86_64-linux-gnu/security/</code> on Debian-based systems. PAM handles user information, authentication, sessions, and password changes.</p>
 <h3 id="key-files-1"><a class="header" href="#key-files-1">Key Files</a></h3>
 <div class="table-wrapper">
@@ -28436,7 +28571,7 @@ unshadow /tmp/passwd.bak /tmp/shadow.bak &gt; /tmp/unshadowed.hashes
 </div>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="pivoting-tunneling-and-port-forwarding-1"><a class="header" href="#pivoting-tunneling-and-port-forwarding-1">Pivoting, Tunneling, and Port Forwarding</a></h1>
-<h2 id="directory-map-20"><a class="header" href="#directory-map-20">Directory Map</a></h2>
+<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory Map</a></h2>
 <ul>
 <li><a href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></li>
 <li><a href="#ssh-dynamic-port-forwarding-with-socks">SSH Dynamic Port Forwarding</a></li>
@@ -29095,13 +29230,13 @@ debug1: channel 1: connected to 0.0.0.0 port 8000
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="sql-1"><a class="header" href="#sql-1">SQL</a></h1>
-<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory Map</a></h2>
+<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
 <ul>
 <li><a href="#attacking-sql-databases">Attacking SQL Databases</a></li>
 <li><a href="#intro-to-sql-injections">Intro to SQL Injections</a></li>
 <li><a href="#subverting-query-logic">Subverting Query Logic</a></li>
 </ul>
-<h2 id="summary-13"><a class="header" href="#summary-13">Summary</a></h2>
+<h2 id="summary-14"><a class="header" href="#summary-14">Summary</a></h2>
 <p>Notes on attacking MySQL and MSSQL databases. Covers enumeration, authentication modes, connecting to databases, command execution (xp_cmdshell, webshells), privilege escalation via user impersonation, lateral movement through linked servers, and hash stealing techniques. Also covers SQL injection fundamentals including how unsanitized user input leads to injection, syntax error handling, the taxonomy of injection types (in-band, blind, and out-of-band), and subverting query logic with OR injection for authentication bypass.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="attacking-sql-databases"><a class="header" href="#attacking-sql-databases">Attacking SQL Databases</a></h1>
@@ -29120,7 +29255,7 @@ debug1: channel 1: connected to 0.0.0.0 port 8000
 </tbody>
 </table>
 </div>
-<h2 id="enumeration-12"><a class="header" href="#enumeration-12">Enumeration</a></h2>
+<h2 id="enumeration-13"><a class="header" href="#enumeration-13">Enumeration</a></h2>
 <pre><code class="language-bash"># Banner grabbing with Nmap
 nmap -Pn -sV -sC -p1433 &lt;target&gt;
 </code></pre>
@@ -29432,7 +29567,7 @@ $result = $conn-&gt;query($query);
 <h1 id="openvas"><a href="#openvas" class="header">Openvas</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="web-attacks-1"><a class="header" href="#web-attacks-1">Web Attacks</a></h1>
-<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory map</a></h2>
+<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory map</a></h2>
 <ul>
 <li><a href="#introduction-to-web-attacks">Introduction — web attack context, HTTP Verb Tampering, IDOR, XXE overview</a></li>
 <li><a href="#http-verb-tampering">HTTP Verb Tampering — HTTP methods, insecure server config, insecure coding, auth bypass</a></li>
@@ -29448,7 +29583,7 @@ $result = $conn-&gt;query($query);
 <li><a href="#xxe--blind-data-exfiltration">XXE blind data exfiltration — OOB via HTTP, PHP listener, DNS OOB, XXEinjector</a></li>
 <li><a href="#idor--bypassing-encoded-references">IDOR — Bypassing Encoded References — MD5/Base64 schemes, function disclosure, reproducing hashes, mass enumeration script</a></li>
 </ul>
-<h2 id="summary-14"><a class="header" href="#summary-14">Summary</a></h2>
+<h2 id="summary-15"><a class="header" href="#summary-15">Summary</a></h2>
 <p>Web attacks are the most common class of attacks against businesses, targeting external-facing applications, internal web apps, and API endpoints alike. This section covers three attack types found across many web applications. <strong>HTTP Verb Tampering</strong> exploits servers that accept unexpected HTTP methods, allowing attackers to bypass authorization mechanisms and security controls by sending requests with non-standard verbs. <strong>Insecure Direct Object References (IDOR)</strong> exploit weak or missing back-end access controls: when applications use predictable identifiers (sequential IDs, user numbers) to reference resources, an attacker can guess or calculate valid IDs to access other users’ data. <strong>XML External Entity (XXE) Injection</strong> targets applications using outdated XML parsers to process user-supplied XML — malicious payloads can read local files (configs, source code, credentials), enable whitebox testing, steal server credentials, and potentially achieve remote code execution.</p>
 <p>HTTP Verb Tampering vulnerabilities stem from two sources. <strong>Insecure server configuration</strong> occurs when authentication rules are scoped to specific methods (e.g., <code>&lt;Limit GET POST&gt;</code>) leaving any other verb — such as <code>HEAD</code> — unauthenticated and freely accessible. <strong>Insecure coding</strong> occurs when input sanitization is applied to one HTTP method (e.g., <code>$_GET</code>) while the query uses a broader parameter source (e.g., <code>$_REQUEST</code>), allowing an attacker to switch to POST to bypass the filter entirely. The coding variant is more prevalent because it arises from common developer mistakes rather than misconfiguration.</p>
 <p><strong>Bypassing security filters</strong> is the more common variant: if a filter only inspects one method’s parameter source (e.g., <code>$_POST</code>), switching to a different method (e.g., GET) carries the payload through an unchecked channel while the underlying function (using <code>$_REQUEST</code>) still processes it. To confirm exploitation, use a two-file command injection payload (<code>file1; touch file2;</code>) — both files appearing proves command execution. A web app that appears fully filtered against injection may be completely exposed once the method is switched.</p>
@@ -31799,7 +31934,7 @@ https://www.microsoft.com/en-us/msrc/blog/2014/06/an-overview-of-kb2871997
 https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="xss-cross-site-scripting-1"><a class="header" href="#xss-cross-site-scripting-1">XSS (Cross-Site Scripting)</a></h1>
-<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory map</a></h2>
+<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory map</a></h2>
 <ul>
 <li><a href="#cross-site-scripting-xss--introduction">Introduction — what XSS is, risk, examples, types</a></li>
 <li><a href="#stored-persistent-xss">Stored (persistent) XSS — impact, testing, persistence checks</a></li>
@@ -31811,7 +31946,7 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 <li><a href="#xss-blind-detection--session-hijacking-cookie-stealing">XSS session hijacking — blind XSS, remote script OOB, cookie exfil, Firefox storage</a></li>
 <li><a href="#xss-prevention">XSS prevention — sources/sinks, validation, encoding, CSP, cookies</a></li>
 </ul>
-<h2 id="summary-15"><a class="header" href="#summary-15">Summary</a></h2>
+<h2 id="summary-16"><a class="header" href="#summary-16">Summary</a></h2>
 <p>Cross-site scripting lets attackers run JavaScript in victims’ browsers when applications fail to sanitize or encode user-controlled data. Notes cover client-side execution, typical impacts (session theft, forced actions, abuse of browser APIs), limits of pure XSS versus chaining with browser bugs, notable incidents (Samy worm, TweetDeck), and the three main types: <strong>stored</strong>, <strong>reflected</strong>, and <strong>DOM-based</strong> XSS. <strong>Stored</strong> XSS is covered in depth: saved payloads, wide victim pool, remediation in the database, basic PoC payloads (<code>alert(window.origin)</code>, <code>&lt;plaintext&gt;</code>, <code>print()</code>), iframe/origin confirmation, and using refresh to verify persistence. <strong>Reflected</strong> XSS is summarized separately: non-persistent behavior (vs DOM-based), error-message reflection, empty-quotes UI vs view-source confirmation, and delivering GET-based attacks via malicious URLs. <strong>DOM-based</strong> XSS is summarized separately: client-only processing, hash/URL sources, view-source vs inspector, source and sink functions, why <code>innerHTML</code> often blocks <code>&lt;script&gt;</code>, and event-handler payloads (e.g. <code>img</code> / <code>onerror</code>) delivered via shared URLs. <strong>XSS phishing</strong> is summarized separately: <strong>trusted-domain</strong> fake login UI that posts credentials to the attacker; <strong>authorized</strong> use as <strong>awareness simulations</strong>; <strong><code>/phishing</code>-style image URL</strong> labs where a raw <strong><code>&lt;script&gt;</code></strong> test often fails until <strong>source/context</strong> review; <strong><code>document.write</code></strong> for minified form HTML; <strong><code>getElementById('urlform').remove()</code></strong> after inspector (<strong><code>Ctrl+Shift+C</code></strong>) to drop the real URL field; <strong><code>&lt;!--</code></strong> after the payload to comment out trailing template; <strong>reflected</strong> delivery via a copied <strong>malicious URL</strong>; <strong>netcat</strong> on port <strong>80</strong> for quick <strong>GET</strong> <code>/?username=…&amp;password=…</code> capture vs a <strong>PHP</strong> listener that <strong>logs</strong> to <strong><code>creds.txt</code></strong> and <strong>redirects</strong> to the clean app so the victim does not see a broken HTTP response. <strong>XSS discovery</strong> is summarized separately: <strong>automated</strong> scanning (passive DOM hints vs active payload injection; commercial vs OSS tradeoffs), tools such as <strong>XSStrike</strong> / <strong>Brute XSS</strong> / <strong>XSSer</strong> and why <strong>reflection in HTML ≠ execution</strong>, <strong>manual</strong> testing with public payload lists and non-form sinks (<strong>headers</strong> like <strong>Cookie</strong> / <strong>User-Agent</strong>), why generic lists miss simple labs, optional custom scripting for odd targets, and <strong>manual code review</strong> as the most reliable path when full data flow is visible (with deeper secure-coding / white-box study left to other modules). <strong>XSS defacing</strong> is summarized separately: using <strong>stored</strong> XSS for <strong>persistent</strong> visual takeover, <strong>reputation</strong> impact (e.g. public sector defacements), four common levers (<strong><code>document.body.style.background</code></strong>, <strong><code>document.body.background</code></strong>, <strong><code>document.title</code></strong>, <strong><code>innerHTML</code></strong>), swapping <strong>full <code>&lt;body&gt;</code></strong> markup (with <strong><code>getElementsByTagName('body')[0]</code></strong>), optional <strong>jQuery</strong> when present, <strong>minified</strong> one-line HTML inside payloads, and how <strong>view-source</strong> can still show original structure while the <strong>rendered DOM</strong> looks defaced—plus <strong>injection position</strong> (end vs middle of page) affecting what later content might still appear. <strong>XSS session hijacking / blind XSS</strong> is summarized separately: <strong>cookies</strong> as session handles; <strong>blind</strong> sinks (<strong>admin</strong> panels, tickets, reviews, <strong><code>User-Agent</code></strong>); <strong><code>/hijacking</code></strong>-style registration reviewed by staff; <strong>OOB</strong> detection via <strong><code>&lt;script src=http://IP/fieldname&gt;</code></strong> so the <strong>request path</strong> names the vulnerable input; <strong>PayloadsAllTheThings</strong>-style <strong>quote-break</strong> variants and <strong>XHR</strong> / <strong><code>$.getScript</code></strong> when jQuery exists; <strong><code>sudo php -S 0.0.0.0:80</code></strong> to catch callbacks; pragmatic <strong>skips</strong> (<strong>email</strong> validation, <strong>password</strong> unlikely echoed); then <strong><code>new Image().src</code></strong> (vs <strong><code>document.location</code></strong>) to send <strong><code>document.cookie</code></strong> in a <strong>GET</strong> to <strong><code>index.php?c=</code></strong>, <strong>PHP</strong> splitting on <strong><code>;</code></strong>, <strong><code>urldecode</code></strong>, <strong><code>cookies.txt</code></strong> lines with <strong><code>REMOTE_ADDR</code></strong>; replay in <strong>Firefox Storage</strong> (<strong><code>Shift+F9</code></strong>) by adding <strong>name/value</strong> and refreshing—plus <strong><code>HttpOnly</code></strong> as the main cookie theft mitigation. <strong>XSS prevention</strong> is summarized separately: secure <strong>sources</strong> and <strong>sinks</strong> on <strong>client and server</strong>; front-end <strong>regex validation</strong> (e.g. email), <strong>DOMPurify</strong> for client-side HTML sanitization, avoiding <strong><code>&lt;script&gt;</code> / <code>&lt;style&gt;</code> / attributes / comments</strong> built from input and dangerous APIs (<strong><code>innerHTML</code></strong>, <strong><code>document.write</code></strong>, <strong><code>document.domain</code></strong>, jQuery <strong><code>.html()</code></strong> / <strong><code>parseHTML()</code></strong> / insertion helpers); back-end <strong><code>filter_var</code></strong> / validation, sanitization libraries, <strong>never raw echo</strong> of request params; <strong>output encoding</strong> with <strong><code>htmlspecialchars</code>/<code>htmlentities</code></strong> (PHP) or <strong><code>html-entities</code></strong> (Node); deployment levers (<strong>HTTPS</strong>, <strong>CSP</strong> like <strong><code>script-src 'self'</code></strong>, <strong><code>X-Content-Type-Options: nosniff</code></strong>, <strong><code>HttpOnly</code>/<code>Secure</code></strong> cookies, <strong>WAF</strong>, framework defaults such as <strong>ASP.NET</strong>); and ongoing <strong>offensive retesting</strong> because secure coding plus config can still miss edge cases—the note clarifies that <strong><code>addslashes</code></strong> alone is a weak primary HTML-XSS control versus <strong>contextual encoding</strong>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="dom-based-xss"><a class="header" href="#dom-based-xss">DOM-Based XSS</a></h1>
@@ -32328,7 +32463,7 @@ if (isset($_GET['c'])) {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
-<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
+<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
 <ul>
 <li><a href="kubernetes/cks">cks</a></li>
 <li><a href="kubernetes/kcna">kcna</a></li>
@@ -32336,7 +32471,7 @@ if (isset($_GET['c'])) {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cks"><a class="header" href="#cks">CKS</a></h1>
-<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
+<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
 <ul>
 <li><a href="#certified-kubernetes-security-specialist-cks-notes">notes</a></li>
 <li><a href="#kubernetes-security-specialist-cks-practice-scenarios">questions</a></li>
@@ -35451,7 +35586,7 @@ EOF
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcna"><a class="header" href="#kcna">KCNA</a></h1>
-<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
+<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-native-associate-kcna-notes">notes</a></li>
 </ul>
@@ -35985,7 +36120,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcsa"><a class="header" href="#kcsa">KCSA</a></h1>
-<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
+<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-security-associate-kcsa-notes">notes</a></li>
 </ul>
@@ -36586,7 +36721,7 @@ spec:
 </h4>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="networking"><a class="header" href="#networking">Networking</a></h1>
-<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
+<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
 <ul>
 <li><a href="networking/browser-networking">browser-networking</a></li>
 <li><a href="networking/http">http</a></li>
@@ -36616,7 +36751,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="browser-networking"><a class="header" href="#browser-networking">Browser Networking</a></h1>
-<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
+<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
 <ul>
 <li><a href="#chapter-1">chapter01</a></li>
 <li><a href="#chapter-2">chapter02</a></li>
@@ -36889,7 +37024,7 @@ Message: Frame[&lt;Header&gt;] Frame[&lt;Payload&gt;]                           
 <p>WebSockets can transfer test or binary data.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-1"><a class="header" href="#http-1">HTTP</a></h1>
-<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
+<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
 <ul>
 <li><a href="#clean-urls">clean_urls</a></li>
 <li><a href="#http-persistent-connection">persistent_connections</a></li>
@@ -37138,7 +37273,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="load-balancing"><a class="header" href="#load-balancing">Load Balancing</a></h1>
-<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
+<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
 <ul>
 <li><a href="#load-balancing-1">load-balancing</a></li>
 </ul>
@@ -37173,7 +37308,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nginx"><a class="header" href="#nginx">Nginx</a></h1>
-<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
+<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
 <ul>
 <li><a href="#custom-header-response">custom-header-response</a></li>
 </ul>
@@ -37187,7 +37322,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="protocols-1"><a class="header" href="#protocols-1">Protocols</a></h1>
-<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
+<h2 id="directory-map-34"><a class="header" href="#directory-map-34">Directory Map</a></h2>
 <ul>
 <li><a href="#dns-3">dns</a></li>
 <li><a href="#ftp-2">ftp</a></li>
@@ -38252,7 +38387,7 @@ iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64"
 <h1 id="websockets"><a class="header" href="#websockets">WebSockets</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="rate-limiting-algorithms"><a class="header" href="#rate-limiting-algorithms">Rate Limiting Algorithms</a></h1>
-<h2 id="directory-map-34"><a class="header" href="#directory-map-34">Directory Map</a></h2>
+<h2 id="directory-map-35"><a class="header" href="#directory-map-35">Directory Map</a></h2>
 <ul>
 <li><a href="#fixed-window-counter-algorithm">fixed-window-counter</a></li>
 <li><a href="#leaking-bucket-algorithm">leaking-bucket</a></li>
@@ -38409,7 +38544,7 @@ func main() {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="redis-1"><a class="header" href="#redis-1">Redis</a></h1>
-<h2 id="directory-map-35"><a class="header" href="#directory-map-35">Directory Map</a></h2>
+<h2 id="directory-map-36"><a class="header" href="#directory-map-36">Directory Map</a></h2>
 <ul>
 <li><a href="#redis-2">redis</a></li>
 </ul>
@@ -40390,7 +40525,7 @@ As stated above, most processes have the same EUID and RUID. As a result, the de
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="bash-1"><a class="header" href="#bash-1">Bash</a></h1>
-<h2 id="directory-map-36"><a class="header" href="#directory-map-36">Directory Map</a></h2>
+<h2 id="directory-map-37"><a class="header" href="#directory-map-37">Directory Map</a></h2>
 <ul>
 <li><a href="#bash-notes">bash_notes</a></li>
 <li><a href="#moving-the-cursor-1">keyboard_shortcuts</a></li>
@@ -40665,7 +40800,7 @@ similarly Ctrl+v ENTER will display the escape sequence for the Enter key: ^M
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="commands-4"><a class="header" href="#commands-4">Commands</a></h1>
-<h2 id="directory-map-37"><a class="header" href="#directory-map-37">Directory Map</a></h2>
+<h2 id="directory-map-38"><a class="header" href="#directory-map-38">Directory Map</a></h2>
 <ul>
 <li><a href="#chgrp">chgrp</a></li>
 <li><a href="#chmod">chmod</a></li>
@@ -40857,7 +40992,7 @@ PID        TTY     STAT   TIME          CMD
 <p>See page 37</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="greybeard-qualification-1"><a class="header" href="#greybeard-qualification-1">Greybeard Qualification</a></h1>
-<h2 id="directory-map-38"><a class="header" href="#directory-map-38">Directory Map</a></h2>
+<h2 id="directory-map-39"><a class="header" href="#directory-map-39">Directory Map</a></h2>
 <ul>
 <li><a href="#block-devices-and-file-systems">block_dev_and_file_systems</a></li>
 <li><a href="#memory-management-1">memory_management</a></li>
@@ -42003,7 +42138,7 @@ When the process calls exit():
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="tools-4"><a class="header" href="#tools-4">Tools</a></h1>
-<h2 id="directory-map-39"><a class="header" href="#directory-map-39">Directory Map</a></h2>
+<h2 id="directory-map-40"><a class="header" href="#directory-map-40">Directory Map</a></h2>
 <ul>
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
@@ -46109,7 +46244,7 @@ sudo cp /etc/shadow /tmp/shadow.bak
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-4"><a class="header" href="#troubleshooting-4">Troubleshooting</a></h1>
-<h2 id="directory-map-40"><a class="header" href="#directory-map-40">Directory Map</a></h2>
+<h2 id="directory-map-41"><a class="header" href="#directory-map-41">Directory Map</a></h2>
 <ul>
 <li><a href="troubleshooting/linux">linux</a></li>
 <li><a href="troubleshooting/troubleshooting_playbook">troubleshooting_playbook</a></li>
@@ -46164,7 +46299,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-1"><a class="header" href="#linux-1">Linux</a></h1>
-<h2 id="directory-map-41"><a class="header" href="#directory-map-41">Directory Map</a></h2>
+<h2 id="directory-map-42"><a class="header" href="#directory-map-42">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-memory">memory</a></li>
 </ul>
@@ -46220,7 +46355,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-playbook"><a class="header" href="#troubleshooting-playbook">Troubleshooting Playbook</a></h1>
-<h2 id="directory-map-42"><a class="header" href="#directory-map-42">Directory Map</a></h2>
+<h2 id="directory-map-43"><a class="header" href="#directory-map-43">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-503s-for-apps-in-kubernetes">kubernetes-containerized-app-503s</a></li>
 <li><a href="#general-troubleshootingnotes">kubernetes-general</a></li>
@@ -46334,7 +46469,7 @@ KubePodInventory
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="what-happens-when"><a class="header" href="#what-happens-when">What Happens When…</a></h1>
-<h2 id="directory-map-43"><a class="header" href="#directory-map-43">Directory Map</a></h2>
+<h2 id="directory-map-44"><a class="header" href="#directory-map-44">Directory Map</a></h2>
 <ul>
 <li><a href="#what-happens-when-a-cpu-starts">a-cpu-starts</a></li>
 </ul>
