@@ -113,7 +113,6 @@ permalink: /links/
 - [OS Credential Dumping: NTDS, Sub-technique T1003.003 - Enterprise | MITRE ATT&CK®](https://attack.mitre.org/techniques/T1003/003/)
 - [HackTricks - HackTricks](https://book.hacktricks.wiki/en/index.html)
 - [Download Cradles](https://gist.github.com/HarmJ0y/bb48307ffa663256e239)
-- [Stack-Based Buffer Overflows on Windows x86](https://academy.hackthebox.com/module/details/89?redirect_to_section=931)
 - [IppSec - Search](https://ippsec.rocks/?#)
 - [Kali NetHunter | Kali Linux Documentation](https://www.kali.org/docs/nethunter/)
 - [Pwnagotchi - Deep Reinforcement Learning instrumenting bettercap for WiFi pwning. :: Usage](https://pwnagotchi.ai/usage/#anatomy-of-a-pwnagotchi-face)
@@ -133,27 +132,12 @@ permalink: /links/
 - [dafthack/DomainPasswordSpray: DomainPasswordSpray is a tool written in PowerShell to perform a password spray attack against users of a domain. By default it will automatically generate the userlist from the domain. BE VERY CAREFUL NOT TO LOCKOUT ACCOUNTS!](https://github.com/dafthack/DomainPasswordSpray)
 - [Service overview and network port requirements - Windows Server](https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/service-overview-and-network-port-requirements)
 
-### adds
-
-- [Extended Rights - Win32 apps](https://learn.microsoft.com/en-us/windows/win32/adschema/extended-rights)
-- [rvazarkar/GMSAPasswordReader](https://github.com/rvazarkar/GMSAPasswordReader)
-- [\[Tip\] Using dotnet diagnostic tools in Kubernetes - Overview](https://dev.azure.com/marketingops/Aprimo/_wiki/wikis/Aprimo.wiki/22028/-Tip-Using-dotnet-diagnostic-tools-in-Kubernetes)
-- [Pipelines - Run nginx-ingress-master-20260305.4](https://dev.azure.com/marketingops/adam/_build/results?buildId=1054273&view=results)
-- [Introduction - Training](https://learn.microsoft.com/en-us/training/modules/configure-customize-github-copilot-visual-studio-code/1-introduction?source=learn)
-- [prod-09au1-nginx-vmss - Microsoft Azure](https://portal.azure.com/#@attune.gshapps.net/resource/subscriptions/3a0b2801-2ab5-4b2d-8ce7-426aa48f826f/resourceGroups/prod-09au1-nginx-rg/providers/Microsoft.Compute/virtualMachineScaleSets/prod-09au1-nginx-vmss/instances)
 
 ### cheat sheets
 
 - [ihebski/DefaultCreds-cheat-sheet: One place for all the default credentials to assist the Blue/Red teamers identifying devices with default password 🛡️](https://github.com/ihebski/DefaultCreds-cheat-sheet/tree/main)
 - [Default Router Password to Login for all Top Routers 2026](https://www.softwaretestinghelp.com/default-router-username-and-password-list/)
 - [Shodan Cheat Sheet: Ultimate List of Dorks & Search Filters with Examples - InfosecOne](https://infosecone.com/blog/shodan-cheat-sheet/)
-
-### docs
-
-- [\[MS-DCOM\]: Distributed Component Object Model (DCOM) Remote Protocol](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-dcom/4a893f3d-bd29-48cd-9f43-d9777a4415b0)
-- [Logo & Banner | NetExec](https://www.netexec.wiki/logo-and-banner)
-- [Web-Based Enterprise Management - Wikipedia](https://en.wikipedia.org/wiki/Web-Based_Enterprise_Management)
-- [WS-Management Protocol - Win32 apps](https://learn.microsoft.com/en-us/windows/win32/winrm/ws-management-protocol)
 
 ### flipper
 
@@ -166,7 +150,7 @@ permalink: /links/
 - [owasp-amass/amass: In-depth attack surface mapping and asset discovery](https://github.com/owasp-amass/amass?tab=readme-ov-file)
 - [TryHackMe](https://tryhackme.com/)
 
-### reads
+### read sometime
 
 - [Shikata Ga Nai Encoder Still Going Strong | Mandiant | Google Cloud Blog](https://cloud.google.com/blog/topics/threat-intelligence/shikata-ga-nai-encoder-still-going-strong/)
 - [Row hammer - Wikipedia](https://en.wikipedia.org/wiki/Row_hammer)
@@ -259,7 +243,6 @@ permalink: /links/
 - [Global Ping Statistics - WonderNetwork](https://wondernetwork.com/pings)
 - [DNS Performance - Compare the speed and uptime of enterprise and commercial DNS services | DNSPerf](https://www.dnsperf.com/)
 - [Sort IPs - IP Address Sorter - Online - Browserling Web Developer Tools](https://www.browserling.com/tools/ip-sort)
-- [FreeDNS - Free DNS - Dynamic DNS - Static DNS subdomain and domain hosting](https://freedns.afraid.org/)
 - [HTTP Status Codes Cheat Sheet by kstep - Download free from Cheatography - Cheatography.com: Cheat Sheets For Every Occasion](https://cheatography.com/kstep/cheat-sheets/http-status-codes/)
 - [DNS Checker - DNS Check Propagation Tool](https://dnschecker.org/)
 - [DNS Performance - Compare the speed and uptime of enterprise and commercial DNS services | DNSPerf](https://www.dnsperf.com/)
