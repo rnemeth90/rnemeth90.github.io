@@ -3,307 +3,244 @@ title: Links
 permalink: /links/
 ---
 
-- [Laws of Software](https://www.laws-of-software.com/)
-- [Hacker News](https://news.ycombinator.com/)
-- [go.dev](https://go.dev/)
-- [distrowatch](https://distrowatch.com/)
-- [the complain department](http://www.noreallyidocare.com/)
+## General
 
-### Utils
-- [archive.org](https://archive.org/)
+| | | |
+|:---|:---|:---|
+| [Laws of Software](https://www.laws-of-software.com/) | [Hacker News](https://news.ycombinator.com/) | [Distrowatch](https://distrowatch.com/) |
+| [Archive.org](https://archive.org/) | [go.dev](https://go.dev/) | [Azure DevOps Blog](https://devblogs.microsoft.com/devops/) |
+| [xkcd](https://xkcd.com/) | [stilldrinking](https://www.stilldrinking.org/) | [PCjs](https://www.pcjs.org/about/) |
+| [The Complain Dept](http://www.noreallyidocare.com/) | [lab401 Shop](https://lab401.com/) | |
 
-### Blogs
-- [Azure DevOps blog](https://devblogs.microsoft.com/devops/)
+---
 
-### Shop
-- [lab401](https://lab401.com/)
+## Go
 
-### Zines
-- [stilldrinking](https://www.stilldrinking.org/)
-- [xkcd](https://xkcd.com/)
+### Articles & Concepts
 
-### Fun
-- [PCjs](https://www.pcjs.org/about/)
+| | | |
+|:---|:---|:---|
+| [Pointers vs Values](https://blog.boot.dev/golang/pointers-faster-than-values/) | [HTTP Middleware](https://www.alexedwards.net/blog/making-and-using-middleware) | [Worker Pool (Medium)](https://medium.com/code-chasm/go-concurrency-pattern-worker-pool-a437117025b1) |
+| [Worker Pool (brandur)](https://brandur.org/go-worker-pool) | [Using Contexts](https://www.digitalocean.com/community/tutorials/how-to-use-contexts-in-go) | [GC Guide](https://tip.golang.org/doc/gc-guide) |
+| [Supply Chain Security](https://go.dev/blog/supply-chain) | [Concurrent HTTP Requests](https://stackoverflow.com/questions/23318419/how-can-i-effectively-max-out-concurrent-http-requests) | [Linux Syscall Table](https://chromium.googlesource.com/chromiumos/docs/+/master/constants/syscalls.md) |
+| [Large File Transfers](https://itnext.io/optimizing-large-file-transfers-in-linux-with-go-an-exploration-of-tcp-and-syscall-ebe1b93fb72f) | [File Change Watcher (gist)](https://gist.github.com/hiroakis/8968d8caae55d460a80206ea4930bab7) | [100 Golang Exercises](https://github.com/cblte/100-golang-exercises) |
+| [gpool (goroutine pool)](https://github.com/sherifabdlnaby/gpool) | [Best Practices (2016)](https://peter.bourgon.org/go-best-practices-2016/#repository-structure) | |
 
-## Coding
+### How-To
 
-- [Chromium OS Docs - Linux System Call Table](https://chromium.googlesource.com/chromiumos/docs/+/master/constants/syscalls.md)
-- [Are Pointers in Go Faster Than Values? | Boot.dev](https://blog.boot.dev/golang/pointers-faster-than-values/)
+| | | |
+|:---|:---|:---|
+| [REST API with Gin](https://go.dev/doc/tutorial/web-service-gin) | [Web Scraping](https://www.scrapingbee.com/blog/web-scraping-go/) | [Build & Distribute CLI](https://dev.to/mauriciolinhares/building-and-distributing-a-command-line-tool-in-golang-go0) |
+| [K8s API Health Status](https://stackoverflow.com/questions/64113932/go-get-k8s-api-server-health-status) | [Watch File Changes](https://levelup.gitconnected.com/how-to-watch-for-file-change-in-golang-4d1eaa3d2964) | [Worker Pools (example)](https://gobyexample.com/worker-pools) |
 
-### Go
+### Apps
 
-- [UFG-GO](https://up-for-grabs.net/#/filters?tags=go)
-- [fsnotify example: Detect file changes in real time.](https://gist.github.com/hiroakis/8968d8caae55d460a80206ea4930bab7)
-- [Optimizing Large File Transfers in Linux with Go — An Exploration of TCP and Syscall | by Douglas Mendez | Jan, 2023 | ITNEXT](https://itnext.io/optimizing-large-file-transfers-in-linux-with-go-an-exploration-of-tcp-and-syscall-ebe1b93fb72f)
-- [Making and Using HTTP Middleware – Alex Edwards](https://www.alexedwards.net/blog/making-and-using-middleware)
-- [concurrency - How Can I Effectively 'Max Out' Concurrent HTTP Requests? - Stack Overflow](https://stackoverflow.com/questions/23318419/how-can-i-effectively-max-out-concurrent-http-requests)
-- [Go Concurrency Pattern: Worker Pool | by Syafdia Okta | Code Chasm | Medium](https://medium.com/code-chasm/go-concurrency-pattern-worker-pool-a437117025b1)
-- [The Case For A Go Worker Pool — brandur.org](https://brandur.org/go-worker-pool)
-- [How To Use Contexts in Go | DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-use-contexts-in-go)
-- [cblte/100-golang-exercises: 100 challenging programming exercises for golang with solutions](https://github.com/cblte/100-golang-exercises)
-- [sherifabdlnaby/gpool: gpool - a generic context-aware resizable goroutines pool to bound concurrency based on semaphore.](https://github.com/sherifabdlnaby/gpool)
-- [A Guide to the Go Garbage Collector - The Go Programming Language](https://tip.golang.org/doc/gc-guide)
-- [How Go Mitigates Supply Chain Attacks - The Go Programming Language](https://go.dev/blog/supply-chain)
+| | | |
+|:---|:---|:---|
+| [aztfy (Azure → Terraform)](https://github.com/Azure/aztfy) | [noted (notes CLI)](https://github.com/torbratsberg/noted) | [grv (git TUI)](https://github.com/rgburke/grv) |
+| [circumflex (HN TUI)](https://github.com/bensadeh/circumflex) | [httpit (HTTP benchmark)](https://github.com/gonetx/httpit) | [Hashy](https://github.com/AstroOrbis/Hashy) |
+| [colly (scraping)](http://go-colly.org/) | [gping (graph ping)](https://github.com/orf/gping) | [termui (terminal dashboard)](https://github.com/gizak/termui) |
 
-#### Go > Apps
+### Tools to Build
 
-- [Azure/aztfy: A tool to bring existing Azure resources under Terraform's management](https://github.com/Azure/aztfy)
-- [torbratsberg/noted: Notes library, with viewer and shortcuts to add, delete and edit notes.](https://github.com/torbratsberg/noted)
-- [rgburke/grv: GRV is a terminal interface for viewing git repositories](https://github.com/rgburke/grv)
-- [bensadeh/circumflex: 🌿 It's Hacker News in your terminal](https://github.com/bensadeh/circumflex)
-- [gonetx/httpit: A rapid http(s) benchmark tool written in Go](https://github.com/gonetx/httpit)
-- [AstroOrbis/Hashy: A program written in Golang to help with hashing strings and files!](https://github.com/AstroOrbis/Hashy)
-- [Scraping Framework for Golang](http://go-colly.org/)
-- [orf/gping: Ping, but with a graph](https://github.com/orf/gping)
-- [gizak/termui: Golang terminal dashboard](https://github.com/gizak/termui)
+| | | |
+|:---|:---|:---|
+| [topic (top in container)](https://github.com/silenceshell/topic) | [inigo (INI parser)](https://github.com/kucuny/inigo) | [balance (TCP load balancer)](https://github.com/darkhelmet/balance) |
+| [rpass](https://github.com/jarod-liu/TinyKnife/blob/master/rpass/rpass.go) | [kube-image-bouncer](https://github.com/kainlite/kube-image-bouncer) | [silenceshell (GitHub)](https://github.com/silenceshell) |
+| [abursavich (GitHub)](https://github.com/abursavich) | | |
 
-#### Go > Tools (make)
+### Packages
 
-- [silenceshell/topic: top in container.](https://github.com/silenceshell/topic)
-- [Peter Bourgon · Go best practices, six years in](https://peter.bourgon.org/go-best-practices-2016/#repository-structure)
-- [silenceshell (silenceshell)](https://github.com/silenceshell)
-- [abursavich (Andy Bursavich)](https://github.com/abursavich)
-- [kucuny/inigo: Go INI Parser (with inheritance)](https://github.com/kucuny/inigo)
-- [darkhelmet/balance: Simple TCP load balancer in Go](https://github.com/darkhelmet/balance)
-- [TinyKnife/rpass/rpass.go at master · jarod-liu/TinyKnife](https://github.com/jarod-liu/TinyKnife/blob/master/rpass/rpass.go)
-- [kainlite/kube-image-bouncer: Simple endpoint for the ImagePolicyWebhook and the GenericAdmissionWebhook Kubernetes admission controllers](https://github.com/kainlite/kube-image-bouncer)
+| | | |
+|:---|:---|:---|
+| [time](https://pkg.go.dev/time#ParseDuration) | [net/http](https://pkg.go.dev/net/http#Server.Shutdown) | [gohtml (HTML formatter)](https://github.com/yosssi/gohtml) |
+| [chi (router)](https://github.com/go-chi/chi) | [spinner](https://github.com/briandowns/spinner) | [bubbletea (TUI framework)](https://github.com/charmbracelet/bubbletea) |
 
-#### Go > how-to
+### Training
 
-- [Tutorial: Developing a RESTful API with Go and Gin - go.dev](https://go.dev/doc/tutorial/web-service-gin)
-- [Web Scraping with Go | ScrapingBee](https://www.scrapingbee.com/blog/web-scraping-go/)
-- [Building and distributing a command line tool in Golang - DEV Community 👩‍💻👨‍💻](https://dev.to/mauriciolinhares/building-and-distributing-a-command-line-tool-in-golang-go0)
-- [kubernetes - GO get K8S api server health status - Stack Overflow](https://stackoverflow.com/questions/64113932/go-get-k8s-api-server-health-status)
-- [How To Watch For File Change in Golang | by Jerry An | Level Up Coding](https://levelup.gitconnected.com/how-to-watch-for-file-change-in-golang-4d1eaa3d2964)
-- [Go by Example: Worker Pools](https://gobyexample.com/worker-pools)
+| | | |
+|:---|:---|:---|
+| [Gophercises](https://gophercises.com/) | [Learn Go: 11 Projects](https://www.freecodecamp.org/news/learn-go-by-building-11-projects/) | [exercism](https://exercism.org/dashboard) |
+| [codecrafters](https://app.codecrafters.io/users/rnemeth90) | [boot.dev](https://www.boot.dev/u/rtn) | [Up For Grabs (Go)](https://up-for-grabs.net/#/filters?tags=go) |
 
-#### Go > packages
-
-- [time package - time - Go Packages](https://pkg.go.dev/time#ParseDuration)
-- [http package - net/http - Go Packages](https://pkg.go.dev/net/http#Server.Shutdown)
-- [yosssi/gohtml: HTML formatter for Go](https://github.com/yosssi/gohtml)
-- [go-chi/chi: lightweight, idiomatic and composable router for building Go HTTP services](https://github.com/go-chi/chi)
-- [briandowns/spinner: Go (golang) package with 90 configurable terminal spinner/progress indicators.](https://github.com/briandowns/spinner)
-- [charmbracelet/bubbletea: A powerful little TUI framework 🏗](https://github.com/charmbracelet/bubbletea)
-
-#### Go > training
-
-- [Gophercises](https://gophercises.com/)
-- [Learn Go Programming by Building 11 Projects](https://www.freecodecamp.org/news/learn-go-by-building-11-projects/)
-- [exercism](https://exercism.org/dashboard)
-- [codecrafters](https://app.codecrafters.io/users/rnemeth90)
-- [boot.dev](https://www.boot.dev/u/rtn)
-
-### RFCs
-
-- [RFC 2616: Hypertext Transfer Protocol -- HTTP/1.1](https://datatracker.ietf.org/doc/html/rfc2616)
-- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110)
-- [RFC 9112 - HTTP/1.1](https://datatracker.ietf.org/doc/html/rfc9112)
-- [RFC 7231 - Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content](https://datatracker.ietf.org/doc/html/rfc7231)
-- [RFC 9112: HTTP/1.1](https://datatracker.ietf.org/doc/html/rfc9112#name-message-format)
+---
 
 ## InfoSec
 
-- [swisskyrepo/PayloadsAllTheThings: A list of useful payloads and bypass for Web Application Security and Pentest/CTF](https://github.com/swisskyrepo/PayloadsAllTheThings?tab=readme-ov-file)
-- [Default TTL (Time To Live) Values of Different OS](https://subinsb.com/default-device-ttl-values/)
-- [Linux : Products and vulnerabilities, CVEs](https://www.cvedetails.com/vendor/33/Linux.html)
-- [Deep Dive Into Stageless Meterpreter Payloads | Rapid7 Blog](https://www.rapid7.com/blog/post/2015/03/25/stageless-meterpreter-payloads/)
-- [Internal All The Things](https://swisskyrepo.github.io/InternalAllTheThings/)
-- [Usage Statistics and Market Share of Email Server Providers, January 2026](https://w3techs.com/technologies/overview/email_server)
-- [OS Credential Dumping: NTDS, Sub-technique T1003.003 - Enterprise | MITRE ATT&CK®](https://attack.mitre.org/techniques/T1003/003/)
-- [HackTricks - HackTricks](https://book.hacktricks.wiki/en/index.html)
-- [Download Cradles](https://gist.github.com/HarmJ0y/bb48307ffa663256e239)
-- [IppSec - Search](https://ippsec.rocks/?#)
-- [Kali NetHunter | Kali Linux Documentation](https://www.kali.org/docs/nethunter/)
-- [Pwnagotchi - Deep Reinforcement Learning instrumenting bettercap for WiFi pwning. :: Usage](https://pwnagotchi.ai/usage/#anatomy-of-a-pwnagotchi-face)
-- [CVE-2025-1974 "Ingress-Nightmare" Explained: How Lacework FortiCNAPP Secures Kubernetes Ingress - Latest | Fortinet Video Library](https://video.fortinet.com/video/cve-2025-1974-ingress-nightmare-explained-how-lacework-forticnapp-secures-kubernetes-ingress)
-- [Abusing Microsoft Kerberos - Sorry you guys don't get it](https://www.slideshare.net/slideshow/abusing-microsoft-kerberos-sorry-you-guys-dont-get-it/37957800#18)
-- [Reverse Shell Generator](https://www.revshells.com/)
-- [What is FTP Bounce Attack? - GeeksforGeeks](https://www.geeksforgeeks.org/computer-networks/what-is-ftp-bounce-attack/)
-- [All Products](https://lab401.com/collections/all-products)
-- [ohpe/juicy-potato: A sugared version of RottenPotatoNG, with a bit of juice, i.e. another Local Privilege Escalation tool, from a Windows Service Accounts to NT AUTHORITY\SYSTEM.](https://github.com/ohpe/juicy-potato)
-- [Hurricane Electric Internet Services - Internet Backbone and Colocation Provider](https://www.he.net/)
-- [trufflesecurity/trufflehog: Find, verify, and analyze leaked credentials](https://github.com/trufflesecurity/truffleHog)
-- [Internet Assigned Numbers Authority](https://www.iana.org/)
-- [American Registry for Internet Numbers](https://www.arin.net/)
-- [Welcome to RIPE and the RIPE NCC — RIPE Network Coordination Centre](https://www.ripe.net/)
-- [rnemeth90/linkedin2username: OSINT Tool: Generate username lists for companies on LinkedIn](https://github.com/rnemeth90/linkedin2username)
-- [insidetrust/statistically-likely-usernames: Wordlists for creating statistically likely username lists for use in password attacks and security testing](https://github.com/insidetrust/statistically-likely-usernames)
-- [dafthack/DomainPasswordSpray: DomainPasswordSpray is a tool written in PowerShell to perform a password spray attack against users of a domain. By default it will automatically generate the userlist from the domain. BE VERY CAREFUL NOT TO LOCKOUT ACCOUNTS!](https://github.com/dafthack/DomainPasswordSpray)
-- [Service overview and network port requirements - Windows Server](https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/service-overview-and-network-port-requirements)
+### References & Reads
 
+| | | |
+|:---|:---|:---|
+| [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings?tab=readme-ov-file) | [Default TTL Values](https://subinsb.com/default-device-ttl-values/) | [Linux CVEs](https://www.cvedetails.com/vendor/33/Linux.html) |
+| [Stageless Meterpreter](https://www.rapid7.com/blog/post/2015/03/25/stageless-meterpreter-payloads/) | [Internal All The Things](https://swisskyrepo.github.io/InternalAllTheThings/) | [Email Server Market Share](https://w3techs.com/technologies/overview/email_server) |
+| [NTDS Credential Dumping (ATT&CK)](https://attack.mitre.org/techniques/T1003/003/) | [HackTricks](https://book.hacktricks.wiki/en/index.html) | [Download Cradles](https://gist.github.com/HarmJ0y/bb48307ffa663256e239) |
+| [Buffer Overflows x86 (HTB)](https://academy.hackthebox.com/module/details/89?redirect_to_section=931) | [IppSec Search](https://ippsec.rocks/?#) | [Kali NetHunter](https://www.kali.org/docs/nethunter/) |
+| [Pwnagotchi](https://pwnagotchi.ai/usage/#anatomy-of-a-pwnagotchi-face) | [CVE-2025-1974 Ingress-Nightmare](https://video.fortinet.com/video/cve-2025-1974-ingress-nightmare-explained-how-lacework-forticnapp-secures-kubernetes-ingress) | [Abusing Kerberos (slides)](https://www.slideshare.net/slideshow/abusing-microsoft-kerberos-sorry-you-guys-dont-get-it/37957800#18) |
+| [FTP Bounce Attack](https://www.geeksforgeeks.org/computer-networks/what-is-ftp-bounce-attack/) | [Windows Port Requirements](https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/service-overview-and-network-port-requirements) | [Hurricane Electric](https://www.he.net/) |
+| [Shikata Ga Nai Encoder](https://cloud.google.com/blog/topics/threat-intelligence/shikata-ga-nai-encoder-still-going-strong/) | [Row Hammer](https://en.wikipedia.org/wiki/Row_hammer) | [What is HTTP/3?](https://www.cloudflare.com/learning/performance/what-is-http3/) |
 
-### cheat sheets
+### Search Engines & Databases
 
-- [ihebski/DefaultCreds-cheat-sheet: One place for all the default credentials to assist the Blue/Red teamers identifying devices with default password 🛡️](https://github.com/ihebski/DefaultCreds-cheat-sheet/tree/main)
-- [Default Router Password to Login for all Top Routers 2026](https://www.softwaretestinghelp.com/default-router-username-and-password-list/)
-- [Shodan Cheat Sheet: Ultimate List of Dorks & Search Filters with Examples - InfosecOne](https://infosecone.com/blog/shodan-cheat-sheet/)
+| | | |
+|:---|:---|:---|
+| [GTFOBins](https://gtfobins.github.io/) | [crt.sh](https://crt.sh/) | [CVE.org](https://www.cve.org/) |
+| [WADComs](https://wadcoms.github.io/) | [LOLBAS](https://lolbas-project.github.io/) | [PayloadsAllTheThings (web)](https://swisskyrepo.github.io/PayloadsAllTheThings/) |
+| [Exploit-DB](https://www.exploit-db.com/) | [CrackStation](https://crackstation.net/) | [CVSS v3 Calculator](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator) |
 
-### flipper
+### Active Directory
 
-- [Firmware update - Flipper Zero - Documentation](https://docs.flipper.net/zero/basics/firmware-update)
-- [Momentum Firmware | Momentum Firmware](https://momentum-fw.dev/)
+| | | |
+|:---|:---|:---|
+| [Extended Rights](https://learn.microsoft.com/en-us/windows/win32/adschema/extended-rights) | [GMSAPasswordReader](https://github.com/rvazarkar/GMSAPasswordReader) | [DomainPasswordSpray](https://github.com/dafthack/DomainPasswordSpray) |
+| [DCOM Remote Protocol](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-dcom/4a893f3d-bd29-48cd-9f43-d9777a4415b0) | [NetExec Docs](https://www.netexec.wiki/logo-and-banner) | [WBEM (Wikipedia)](https://en.wikipedia.org/wiki/Web-Based_Enterprise_Management) |
+| [WS-Management Protocol](https://learn.microsoft.com/en-us/windows/win32/winrm/ws-management-protocol) | | |
 
-### labs
+### Cheat Sheets
 
-- [digininja/DVWA: Damn Vulnerable Web Application (DVWA)](https://github.com/digininja/DVWA)
-- [owasp-amass/amass: In-depth attack surface mapping and asset discovery](https://github.com/owasp-amass/amass?tab=readme-ov-file)
-- [TryHackMe](https://tryhackme.com/)
+| | | |
+|:---|:---|:---|
+| [DefaultCreds Cheat Sheet](https://github.com/ihebski/DefaultCreds-cheat-sheet/tree/main) | [Default Router Passwords](https://www.softwaretestinghelp.com/default-router-username-and-password-list/) | [Shodan Filters](https://infosecone.com/blog/shodan-cheat-sheet/) |
 
-### read sometime
+### OSINT & Recon
 
-- [Shikata Ga Nai Encoder Still Going Strong | Mandiant | Google Cloud Blog](https://cloud.google.com/blog/topics/threat-intelligence/shikata-ga-nai-encoder-still-going-strong/)
-- [Row hammer - Wikipedia](https://en.wikipedia.org/wiki/Row_hammer)
-- [What is HTTP/3?](https://www.cloudflare.com/learning/performance/what-is-http3/)
+| | | |
+|:---|:---|:---|
+| [recon-ng](https://github.com/lanmaster53/recon-ng) | [gobuster](https://github.com/OJ/gobuster) | [fierce (DNS recon)](https://github.com/mschwager/fierce) |
+| [EyeWitness](https://github.com/RedSiege/EyeWitness) | [linkedin2username](https://github.com/rnemeth90/linkedin2username) | [statistically-likely-usernames](https://github.com/insidetrust/statistically-likely-usernames) |
+| [username-anarchy](https://github.com/urbanadventurer/username-anarchy#) | [Enumeration-as-a-Service](https://github.com/sosdave/Enumeration-as-a-Service) | [DNSDumpster](https://dnsdumpster.com/) |
+| [ARIN](https://www.arin.net/) | [RIPE NCC](https://www.ripe.net/) | [IANA](https://www.iana.org/) |
+| [trufflehog (leaked creds)](https://github.com/trufflesecurity/trufflehog) | | |
 
-### search engines
+### Tools & Utils
 
-- [GTFOBins](https://gtfobins.github.io/)
-- [crt.sh | Certificate Search](https://crt.sh/)
-- [CVE: Common Vulnerabilities and Exposures](https://www.cve.org/)
-- [WADComs](https://wadcoms.github.io/)
-- [LOLBAS](https://lolbas-project.github.io/)
-- [Payloads All The Things](https://swisskyrepo.github.io/PayloadsAllTheThings/)
+| | | |
+|:---|:---|:---|
+| [evil-winrm](https://github.com/Hackplayers/evil-winrm) | [kerbrute](https://github.com/ropnop/kerbrute) | [PCredz](https://github.com/lgandx/PCredz) |
+| [Snaffler](https://github.com/SnaffCon/Snaffler) | [firefox_decrypt](https://github.com/unode/firefox_decrypt) | [printerbug.py](https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py) |
+| [linikatz](https://github.com/CiscoCXSecurity/linikatz/blob/master/linikatz.sh) | [chisel (TCP tunnel)](https://github.com/jpillora/chisel) | [LaZagne (credentials)](https://github.com/AlessandroZ/LaZagne?tab=readme-ov-file#) |
+| [pwn_jenkins](https://github.com/gquere/pwn_jenkins) | [darkarmour (AV evasion)](https://github.com/bats3c/darkarmour) | [nishang (PowerShell)](https://github.com/samratashok/nishang) |
+| [hashID](https://github.com/psypanda/hashID) | [juicy-potato](https://github.com/ohpe/juicy-potato) | [UserAgentString](https://useragentstring.com/) |
 
-### shells
+### Shells & Payloads
 
-- [raw.githubusercontent.com/WhiteWinterWolf/wwwolf-php-webshell/refs/heads/master/webshell.php](https://raw.githubusercontent.com/WhiteWinterWolf/wwwolf-php-webshell/refs/heads/master/webshell.php)
-- [raw.githubusercontent.com/samratashok/nishang/refs/heads/master/Antak-WebShell/antak.aspx](https://raw.githubusercontent.com/samratashok/nishang/refs/heads/master/Antak-WebShell/antak.aspx)
-- [Web-Shells/laudanum/wordpress/laudanum.php at master · jbarcia/Web-Shells](https://github.com/jbarcia/Web-Shells/blob/master/laudanum/wordpress/laudanum.php)
-- [hal3002/shellcode_generator](https://github.com/hal3002/shellcode_generator)
+| | | |
+|:---|:---|:---|
+| [PHP Webshell](https://raw.githubusercontent.com/WhiteWinterWolf/wwwolf-php-webshell/refs/heads/master/webshell.php) | [Antak ASPX](https://raw.githubusercontent.com/samratashok/nishang/refs/heads/master/Antak-WebShell/antak.aspx) | [Laudanum (WordPress)](https://github.com/jbarcia/Web-Shells/blob/master/laudanum/wordpress/laudanum.php) |
+| [shellcode_generator](https://github.com/hal3002/shellcode_generator) | [Reverse Shell Generator](https://www.revshells.com/) | [lab401 Products](https://lab401.com/collections/all-products) |
 
-### utils
+### Flipper Zero
 
-- [lanmaster53/recon-ng: Open Source Intelligence gathering tool aimed at reducing the time spent harvesting information from open sources.](https://github.com/lanmaster53/recon-ng)
-- [OJ/gobuster: Directory/File, DNS and VHost busting tool written in Go](https://github.com/OJ/gobuster)
-- [mschwager/fierce: A DNS reconnaissance tool for locating non-contiguous IP space.](https://github.com/mschwager/fierce)
-- [RedSiege/EyeWitness: EyeWitness is designed to take screenshots of websites, provide some server header info, and identify default credentials if possible.](https://github.com/RedSiege/EyeWitness)
-- [NVD - CVSS v3 Calculator](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator)
-- [OffSec’s Exploit Database Archive](https://www.exploit-db.com/)
-- [UserAgentString.com - Chrome version 142.0.0.0](https://useragentstring.com/)
-- [bats3c/darkarmour: Windows AV Evasion](https://github.com/bats3c/darkarmour)
-- [samratashok/nishang: Nishang - Offensive PowerShell for red team, penetration testing and offensive security.](https://github.com/samratashok/nishang)
-- [psypanda/hashID: Software to identify the different types of hashes -](https://github.com/psypanda/hashID)
-- [urbanadventurer/username-anarchy: Username tools for penetration testing](https://github.com/urbanadventurer/username-anarchy#)
-- [Hackplayers/evil-winrm: The ultimate WinRM shell for hacking/pentesting](https://github.com/Hackplayers/evil-winrm)
-- [ropnop/kerbrute: A tool to perform Kerberos pre-auth bruteforcing](https://github.com/ropnop/kerbrute)
-- [lgandx/PCredz: This tool extracts Credit card numbers, NTLM(DCE-RPC, HTTP, SQL, LDAP, etc), Kerberos (AS-REQ Pre-Auth etype 23), HTTP Basic, SNMP, POP, SMTP, FTP, IMAP, etc from a pcap file or from a live interface.](https://github.com/lgandx/PCredz)
-- [SnaffCon/Snaffler: a tool for pentesters to help find delicious candy, by @l0ss and @Sh3r4 ( Twitter: @/mikeloss and @/sh3r4_hax )](https://github.com/SnaffCon/Snaffler)
-- [unode/firefox_decrypt: Firefox Decrypt is a tool to extract passwords from Mozilla (Firefox™, Waterfox™, Thunderbird®, SeaMonkey®) profiles](https://github.com/unode/firefox_decrypt)
-- [krbrelayx/printerbug.py at master · dirkjanm/krbrelayx](https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py)
-- [linikatz/linikatz.sh at master · CiscoCXSecurity/linikatz](https://github.com/CiscoCXSecurity/linikatz/blob/master/linikatz.sh)
-- [jpillora/chisel: A fast TCP/UDP tunnel over HTTP](https://github.com/jpillora/chisel)
-- [CrackStation - Online Password Hash Cracking - MD5, SHA1, Linux, Rainbow Tables, etc.](https://crackstation.net/)
-- [sosdave/Enumeration-as-a-Service: Script for Enumerating SaaS offerings of a specific domain through DNS queries](https://github.com/sosdave/Enumeration-as-a-Service)
-- [AlessandroZ/LaZagne: Credentials recovery project](https://github.com/AlessandroZ/LaZagne?tab=readme-ov-file#)
-- [gquere/pwn_jenkins: Notes about attacking Jenkins servers](https://github.com/gquere/pwn_jenkins)
+| | |
+|:---|:---|
+| [Firmware Update](https://docs.flipper.net/zero/basics/firmware-update) | [Momentum Firmware](https://momentum-fw.dev/) |
 
-## Tools
+### Labs
 
-- [asciinema - Record and share your terminal sessions, the simple way](https://asciinema.org/)
-- [Crontab.guru - The cron schedule expression editor](https://crontab.guru/)
-- [HttpREPL](https://docs.microsoft.com/en-us/aspnet/core/web-api/http-repl/?view=aspnetcore-6.0&tabs=windows)
-- [HAR Analyzer](https://toolbox.googleapps.com/apps/har_analyzer/)
-- [ShellCheck – shell script analysis tool](https://www.shellcheck.net/)
-- [ngrok - download](https://ngrok.com/download)
-- [sivel/speedtest-cli: Command line interface for testing internet bandwidth using speedtest.net](https://github.com/sivel/speedtest-cli)
-- [hcl2json](https://www.hcl2json.com/)
-- [RequestBin.com — A modern request bin to collect, inspect and debug HTTP requests and webhooks](https://requestbin.com/)
-- [WebPageTest - Website Performance and Optimization Test](https://www.webpagetest.org/)
-- [Can I use... Support tables for HTML5, CSS3, etc](https://caniuse.com/)
-- [https://substack-post-media.s3.amazonaws.com/public/images/041727d8-aaba-4c1d-8b74-b2c26e2e05e2_1446x1890.png (1446×1890)](https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F041727d8-aaba-4c1d-8b74-b2c26e2e05e2_1446x1890.png?utm_source=substack&utm_medium=email)
-- [DNSDumpster - Find & lookup dns records for recon & research](https://dnsdumpster.com/)
-- [ipleak](https://ipleak.net/)
+| | | |
+|:---|:---|:---|
+| [DVWA](https://github.com/digininja/DVWA) | [amass](https://github.com/owasp-amass/amass?tab=readme-ov-file) | [TryHackMe](https://tryhackme.com/) |
+
+---
+
+## Cloud & DevOps
 
 ### Azure
 
-- [Azure Latency Test - Azure Speed Test](https://www.azurespeed.com/Azure/Latency)
-- [Azure VM Comparison](https://azureprice.net/)
-- [Azure Charts](https://azurecharts.com/)
-- [AKS Release Status](https://releases.aks.azure.com/webpage/index.html)
-- [Azure Kubernetes Service Roadmap (Public)](https://github.com/Azure/AKS/projects/1#card-34781074)
-- [Cloud design patterns - Azure Architecture Center | Microsoft Docs](https://docs.microsoft.com/en-us/azure/architecture/patterns/)
-- [Graph Explorer - Microsoft Graph](https://developer.microsoft.com/en-us/graph/graph-explorer)
-- [Azure, AWS, GCP Instance Comparison | CloudPrice](https://cloudprice.net/)
+| | | |
+|:---|:---|:---|
+| [Azure Latency Test](https://www.azurespeed.com/Azure/Latency) | [Azure VM Comparison](https://azureprice.net/) | [Azure Charts](https://azurecharts.com/) |
+| [AKS Release Status](https://releases.aks.azure.com/webpage/index.html) | [AKS Roadmap](https://github.com/Azure/AKS/projects/1#card-34781074) | [Cloud Design Patterns](https://docs.microsoft.com/en-us/azure/architecture/patterns/) |
+| [Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer) | [CloudPrice (multi-cloud)](https://cloudprice.net/) | |
 
 ### Kubernetes
 
-- [Mizu - API Traffic viewer for Kubernetes](https://getmizu.io/)
-- [armosec/kubescape: Kubescape is the first open-source tool for testing if Kubernetes is deployed securely according to multiple frameworks: regulatory, customized company policies and DevSecOps best practices, such as the NSA-CISA and the MITRE ATT&CK®.](https://github.com/armosec/kubescape)
-- [Ksniff: packet capture at pod level for k8s 🕵️‍♂️📦 - Kubes&Clouds](https://kubesandclouds.com/index.php/2021/01/20/ksniff/)
+| | | |
+|:---|:---|:---|
+| [Mizu (API traffic viewer)](https://getmizu.io/) | [kubescape](https://github.com/armosec/kubescape) | [Ksniff (packet capture)](https://kubesandclouds.com/index.php/2021/01/20/ksniff/) |
+
+---
+
+## Dev Tools
+
+| | | |
+|:---|:---|:---|
+| [asciinema](https://asciinema.org/) | [Crontab.guru](https://crontab.guru/) | [HttpREPL](https://docs.microsoft.com/en-us/aspnet/core/web-api/http-repl/?view=aspnetcore-6.0&tabs=windows) |
+| [HAR Analyzer](https://toolbox.googleapps.com/apps/har_analyzer/) | [ShellCheck](https://www.shellcheck.net/) | [ngrok](https://ngrok.com/download) |
+| [speedtest-cli](https://github.com/sivel/speedtest-cli) | [hcl2json](https://www.hcl2json.com/) | [RequestBin](https://requestbin.com/) |
+| [WebPageTest](https://www.webpagetest.org/) | [Can I use...](https://caniuse.com/) | [ipleak](https://ipleak.net/) |
+| [explainshell](https://www.explainshell.com/) | [Substack image](https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F041727d8-aaba-4c1d-8b74-b2c26e2e05e2_1446x1890.png?utm_source=substack&utm_medium=email) | |
 
 ### Regex
 
-- [regex101: build, test, and debug regex](https://regex101.com/r/S2CbwM/1)
-- [Regular Expressions: Now You Have Two Problems](https://blog.codinghorror.com/regular-expressions-now-you-have-two-problems/)
-- [RegExr](https://regexr.com/)
+| | | |
+|:---|:---|:---|
+| [regex101](https://regex101.com/r/S2CbwM/1) | [RegExr](https://regexr.com/) | [Regex: Now You Have Two Problems](https://blog.codinghorror.com/regular-expressions-now-you-have-two-problems/) |
 
-### TCP-IP
+### Git & Badges
 
-- [Global Ping Statistics - WonderNetwork](https://wondernetwork.com/pings)
-- [DNS Performance - Compare the speed and uptime of enterprise and commercial DNS services | DNSPerf](https://www.dnsperf.com/)
-- [Sort IPs - IP Address Sorter - Online - Browserling Web Developer Tools](https://www.browserling.com/tools/ip-sort)
-- [HTTP Status Codes Cheat Sheet by kstep - Download free from Cheatography - Cheatography.com: Cheat Sheets For Every Occasion](https://cheatography.com/kstep/cheat-sheets/http-status-codes/)
-- [DNS Checker - DNS Check Propagation Tool](https://dnschecker.org/)
-- [DNS Performance - Compare the speed and uptime of enterprise and commercial DNS services | DNSPerf](https://www.dnsperf.com/)
-- [FreeDNS - Free DNS - Dynamic DNS - Static DNS subdomain and domain hosting](https://freedns.afraid.org/)
-- [Sort IPs - IP Address Sorter - Online - Browserling Web Developer Tools](https://www.browserling.com/tools/ip-sort)
+| | | |
+|:---|:---|:---|
+| [For the Badge](https://forthebadge.com/) | [Shields.io](https://shields.io/category/build) | [Up For Grabs](https://up-for-grabs.net/#/) |
+| [gist.cafe](https://gist.cafe/#hello/c) | | |
 
-### git
+---
 
-- [For the Badge](https://forthebadge.com/)
-- [Shields.io: Quality metadata badges for open source projects](https://shields.io/category/build)
-- [Up For Grabs](https://up-for-grabs.net/#/)
-- [gist.cafe](https://gist.cafe/#hello/c)
+## Networking
 
-### vim
+### TCP/IP & DNS
 
-- [Vim Cheat Sheet](https://vim.rtorr.com/)
-- [Vim commands and shortcuts | ShortcutFoo](https://www.shortcutfoo.com/app/dojos/vim)
-- [Buffers - Vim - mkaz.blog](https://mkaz.blog/working-with-vim/buffers)
-- [ikatyang/tree-sitter-yaml: YAML grammar for tree-sitter](https://github.com/ikatyang/tree-sitter-yaml)
-- [vim - C# LSP autocompletion client for neovim / vim8 - Stack Overflow](https://stackoverflow.com/questions/58627964/c-sharp-lsp-autocompletion-client-for-neovim-vim8)
-- [nvim-lspconfig/server_configurations.md at master · neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#gopls)
-- [Mason Packages](https://github.com/williamboman/mason.nvim/blob/main/PACKAGES.md#csharp-language-server)
-- [Everything you need to know to configure neovim using lua | Devlog](https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/)
-- [Learn Lua in Y Minutes](https://learnxinyminutes.com/docs/lua/)
-- [Dotfyle | Neovim Plugins & Neovim News](https://dotfyle.com/)
-- [Interactive Vim tutorial](https://openvim.com/)
+| | | |
+|:---|:---|:---|
+| [Global Ping Statistics](https://wondernetwork.com/pings) | [DNS Performance](https://www.dnsperf.com/) | [DNS Checker](https://dnschecker.org/) |
+| [Sort IPs](https://www.browserling.com/tools/ip-sort) | [FreeDNS](https://freedns.afraid.org/) | [HTTP Status Codes Cheat Sheet](https://cheatography.com/kstep/cheat-sheets/http-status-codes/) |
 
-## Training
+### RFCs
 
-- [Certification Dashboard](https://www.microsoft.com/en-us/learning/dashboard.aspx)
-- [Content Security Policy (CSP) - HTTP | MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
-- [Session Management - OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html#renew-the-session-id-after-any-privilege-level-change)
-- [Cross-Site Request Forgery Prevention - OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
-- [HTTP response status codes - HTTP | MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
-- [explainshell.com - match command-line arguments to their help text](https://www.explainshell.com/)
-- [Killer Shell - Exam Simulators](https://killer.sh/login)
-- [SOLID Principles - Acronymat](https://www.acronymat.com/2021/01/11/solid/)
-- [GitHub Repositories Every Software Engineer Should Know - DEV Community](https://dev.to/jrmarcio_/github-repositories-every-software-engineer-should-know-2e80?ref=dailydev)
-- [Eric Chiang | Containers from scratch](https://ericchiang.github.io/post/containers-from-scratch/)
-- [kamranahmedse/design-patterns-for-humans: An ultra-simplified explanation to design patterns](https://github.com/kamranahmedse/design-patterns-for-humans)
-- [tayllan/awesome-algorithms: A curated list of awesome places to learn and/or practice algorithms.](https://github.com/tayllan/awesome-algorithms?tab=readme-ov-file#websites)
-- [sdmg15/Best-websites-a-programmer-should-visit: :link: Some useful websites for programmers.](https://github.com/sdmg15/Best-websites-a-programmer-should-visit?tab=readme-ov-file#when-you-get-stuck)
-- [All commands](https://www.commandlinefu.com/commands/browse)
-- [bytes.usc.edu/cs104/wiki/makefile](https://bytes.usc.edu/cs104/wiki/makefile)
-- [codecrafters-io/build-your-own-x: Master programming by recreating your favorite technologies from scratch.](https://github.com/codecrafters-io/build-your-own-x?tab=readme-ov-file)
-- [Kubestronaut - Credly](https://www.credly.com/org/the-linux-foundation/badge/kubestronaut)
-- [Home | nand2tetris](https://www.nand2tetris.org/)
-- [Learn eBPF Tracing: Tutorial and Examples](https://www.brendangregg.com/blog/2019-01-01/learn-ebpf-tracing.html)
-- [Electronics](https://www.youtube.com/watch?v=-HpIzM11xJI&list=PLah6faXAgguOeMUIxS22ZU4w5nDvCl5gs&index=3&ab_channel=CodeNMore)
-- [Course AI-200T00-A: Develop AI cloud solutions on Microsoft Azure - Training](https://learn.microsoft.com/en-us/training/courses/ai-200t00)
+| | | |
+|:---|:---|:---|
+| [RFC 2616 (HTTP/1.1)](https://datatracker.ietf.org/doc/html/rfc2616) | [RFC 9110 (HTTP Semantics)](https://datatracker.ietf.org/doc/html/rfc9110) | [RFC 9112 (HTTP/1.1)](https://datatracker.ietf.org/doc/html/rfc9112) |
+| [RFC 7231 (HTTP/1.1 Semantics)](https://datatracker.ietf.org/doc/html/rfc7231) | | |
 
-### CompSci
+---
 
-- [E.W. Dijkstra Archive: Why numbering should start at zero (EWD 831)](https://www.cs.utexas.edu/users/EWD/transcriptions/EWD08xx/EWD831.html)
-- [esx-mem-osdi02.pdf](https://www.waldspurger.org/carl/papers/esx-mem-osdi02.pdf)
-- [Index of /home/burt/learning/Csc521.081/notes](https://www.cs.miami.edu/home/burt/learning/Csc521.081/notes/)
-- [PhiloComp.net](https://www.philocomp.net/home.htm)
-- [Telnet BBS Guide](https://www.telnetbbsguide.com/)
-- [Index of /perry/os/Chapters](https://fog.misty.com/perry/os/Chapters/)
-- [E.W.Dijkstra Archive: Cooperating sequential processes (EWD 123)](https://www.cs.utexas.edu/users/EWD/transcriptions/EWD01xx/EWD123.html)
-- [Thread Local Storage (TLS) | Microsoft Learn](https://learn.microsoft.com/en-us/cpp/parallel/thread-local-storage-tls?view=msvc-170)
-- [Book notes - OSTEP (part 1) – River Writes - A MediaWiki Blog](https://river.me/blog/book-notes-ostep-1/)
-- [myCompiler - An online IDE for C, C++, Java, Python, Go, NodeJS and other languages](https://www.mycompiler.io/)
-- [Compiler Explorer](https://godbolt.org/)
+## Vim / Neovim
+
+| | | |
+|:---|:---|:---|
+| [Vim Cheat Sheet](https://vim.rtorr.com/) | [Vim Commands (ShortcutFoo)](https://www.shortcutfoo.com/app/dojos/vim) | [Buffers in Vim](https://mkaz.blog/working-with-vim/buffers) |
+| [Interactive Vim Tutorial](https://openvim.com/) | [Dotfyle (plugins)](https://dotfyle.com/) | [Configure Neovim with Lua](https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/) |
+| [Learn Lua in Y Minutes](https://learnxinyminutes.com/docs/lua/) | [nvim-lspconfig servers](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#gopls) | [Mason Packages](https://github.com/williamboman/mason.nvim/blob/main/PACKAGES.md#csharp-language-server) |
+| [tree-sitter-yaml](https://github.com/ikatyang/tree-sitter-yaml) | [C# LSP for Neovim (SO)](https://stackoverflow.com/questions/58627964/c-sharp-lsp-autocompletion-client-for-neovim-vim8) | |
+
+---
+
+## Learning
+
+### General
+
+| | | |
+|:---|:---|:---|
+| [MS Certification Dashboard](https://www.microsoft.com/en-us/learning/dashboard.aspx) | [CSP (MDN)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) | [Session Management (OWASP)](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html#renew-the-session-id-after-any-privilege-level-change) |
+| [CSRF Prevention (OWASP)](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html) | [HTTP Status Codes (MDN)](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) | [Killer Shell](https://killer.sh/login) |
+| [SOLID Principles](https://www.acronymat.com/2021/01/11/solid/) | [GitHub Repos Every Engineer Should Know](https://dev.to/jrmarcio_/github-repositories-every-software-engineer-should-know-2e80?ref=dailydev) | [Containers from Scratch](https://ericchiang.github.io/post/containers-from-scratch/) |
+| [Design Patterns for Humans](https://github.com/kamranahmedse/design-patterns-for-humans) | [awesome-algorithms](https://github.com/tayllan/awesome-algorithms?tab=readme-ov-file#websites) | [Best Programmer Websites](https://github.com/sdmg15/Best-websites-a-programmer-should-visit?tab=readme-ov-file#when-you-get-stuck) |
+| [commandlinefu](https://www.commandlinefu.com/commands/browse) | [Makefile Guide](https://bytes.usc.edu/cs104/wiki/makefile) | [build-your-own-x](https://github.com/codecrafters-io/build-your-own-x?tab=readme-ov-file) |
+| [Kubestronaut (Credly)](https://www.credly.com/org/the-linux-foundation/badge/kubestronaut) | [nand2tetris](https://www.nand2tetris.org/) | [Learn eBPF Tracing](https://www.brendangregg.com/blog/2019-01-01/learn-ebpf-tracing.html) |
+| [Electronics (YouTube)](https://www.youtube.com/watch?v=-HpIzM11xJI&list=PLah6faXAgguOeMUIxS22ZU4w5nDvCl5gs&index=3&ab_channel=CodeNMore) | [Azure AI-200T00-A](https://learn.microsoft.com/en-us/training/courses/ai-200t00) | [GitHub Copilot (VS Code)](https://learn.microsoft.com/en-us/training/modules/configure-customize-github-copilot-visual-studio-code/1-introduction?source=learn) |
+
+### Computer Science
+
+| | | |
+|:---|:---|:---|
+| [Why Numbering Starts at Zero (Dijkstra)](https://www.cs.utexas.edu/users/EWD/transcriptions/EWD08xx/EWD831.html) | [ESX Memory (paper)](https://www.waldspurger.org/carl/papers/esx-mem-osdi02.pdf) | [OS Notes (U Miami)](https://www.cs.miami.edu/home/burt/learning/Csc521.081/notes/) |
+| [PhiloComp.net](https://www.philocomp.net/home.htm) | [Telnet BBS Guide](https://www.telnetbbsguide.com/) | [OS Chapters](https://fog.misty.com/perry/os/Chapters/) |
+| [Cooperating Sequential Processes (Dijkstra)](https://www.cs.utexas.edu/users/EWD/transcriptions/EWD01xx/EWD123.html) | [Thread Local Storage (MSDN)](https://learn.microsoft.com/en-us/cpp/parallel/thread-local-storage-tls?view=msvc-170) | [OSTEP Book Notes](https://river.me/blog/book-notes-ostep-1/) |
+| [myCompiler](https://www.mycompiler.io/) | [Compiler Explorer (godbolt)](https://godbolt.org/) | |
+
+---
+
+## Work
+
+| | | |
+|:---|:---|:---|
+| [dotnet diagnostics in K8s](https://dev.azure.com/marketingops/Aprimo/_wiki/wikis/Aprimo.wiki/22028/-Tip-Using-dotnet-diagnostic-tools-in-Kubernetes) | [nginx-ingress pipeline run](https://dev.azure.com/marketingops/adam/_build/results?buildId=1054273&view=results) | [Azure VMSS (prod-09au1)](https://portal.azure.com/#@attune.gshapps.net/resource/subscriptions/3a0b2801-2ab5-4b2d-8ce7-426aa48f826f/resourceGroups/prod-09au1-nginx-rg/providers/Microsoft.Compute/virtualMachineScaleSets/prod-09au1-nginx-vmss/instances) |
