@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <title>
   Chaining YAML Pipelines in Azure Devops · GeekyRyan
 </title>
@@ -27,7 +27,7 @@ some infrastructure you want to build, prior to deploying something to that infr
   <meta name="twitter:description" content="In this article, we’ll take a quick look at chaining two pipelines together in Azure Devops, so that the completion of one pipeline, triggers the other to run. Microsoft documentation is leaps and bounds ahead of where it used to be. However, I still feel like there is a lot of room for improvement, as it took me a while to figure this out.
 Our two pipelines will exist in the same repository. We have a dependent-pipeline, that we only want to run once the source-pipeline is finished. This is useful if you have some infrastructure you want to build, prior to deploying something to that infrastructure.">
 
-<meta property="og:url" content="http://localhost:1313/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/">
+<meta property="og:url" content="https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Chaining YAML Pipelines in Azure Devops">
   <meta property="og:description" content="In this article, we’ll take a quick look at chaining two pipelines together in Azure Devops, so that the completion of one pipeline, triggers the other to run. Microsoft documentation is leaps and bounds ahead of where it used to be. However, I still feel like there is a lot of room for improvement, as it took me a while to figure this out.
@@ -44,7 +44,7 @@ Our two pipelines will exist in the same repository. We have a dependent-pipelin
 
 
 
-<link rel="canonical" href="http://localhost:1313/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/">
+<link rel="canonical" href="https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/">
 
 
 <link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -54,7 +54,7 @@ Our two pipelines will exist in the same repository. We have a dependent-pipelin
 
   
   
-  <link rel="stylesheet" href="/css/coder.css" media="screen">
+  <link rel="stylesheet" href="/css/coder.min.ed30115a76cdaa62f2229e973d5b1c89b2d3dd4b1d9c07a729baad06aa3b0cbe.css" integrity="sha256-7TARWnbNqmLyIp6XPVscibLT3UsdnAenKbqtBqo7DL4=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -64,7 +64,7 @@ Our two pipelines will exist in the same repository. We have a dependent-pipelin
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -112,7 +112,7 @@ Our two pipelines will exist in the same repository. We have a dependent-pipelin
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="http://localhost:1313/">
+    <a class="navigation-title" href="https://rnemeth90.github.io/">
       GeekyRyan
     </a>
     
@@ -152,6 +152,10 @@ Our two pipelines will exist in the same repository. We have a dependent-pipelin
               <a class="navigation-link " href="/htb/">HTB</a>
             </li>
           
+            <li class="navigation-item">
+              <a class="navigation-link " href="/links/">Links</a>
+            </li>
+          
         
         
       </ul>
@@ -167,7 +171,7 @@ Our two pipelines will exist in the same repository. We have a dependent-pipelin
       <header>
         <div class="post-title">
           <h1 class="title">
-            <a class="title-link" href="http://localhost:1313/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/">
+            <a class="title-link" href="https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/">
               Chaining YAML Pipelines in Azure Devops
             </a>
           </h1>
@@ -233,7 +237,7 @@ some infrastructure you want to build, prior to deploying something to that infr
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
 </span></span></span><span class="line"><span class="cl"><span class="sd">    echo Add other tasks to build, test, and deploy your project.
-</span></span></span><span class="line"><span class="cl"><span class="sd">    echo See https://aka.ms/yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    echo See https://aka.ms/yaml</span><span class="w">    
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;Run a multi-line  script&#39;</span><span class="w">
 </span></span></span></code></pre></div><p>Nothing fancy here, just the build in template pipeline that Microsoft gives us for free when we create a &ldquo;Starter Pipeline&rdquo;.</p>
 <p>Now, let&rsquo;s create another pipeline in the same repo that will be triggered when the pipeline above completes:</p>
@@ -257,7 +261,7 @@ some infrastructure you want to build, prior to deploying something to that infr
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
 </span></span></span><span class="line"><span class="cl"><span class="sd">    echo Add other tasks to build, test, and deploy your project.
-</span></span></span><span class="line"><span class="cl"><span class="sd">    echo See https://aka.ms/yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    echo See https://aka.ms/yaml</span><span class="w">    
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;Run a multi-line script&#39;</span><span class="w">
 </span></span></span></code></pre></div><p>The resources block above defines our dependency. You want to be sure to configure the trigger of the dependent pipeline appropriately as well.</p>
 <p>There are several options for fine-tuning this process. See the office Microsoft documentation below:</p>
@@ -306,7 +310,7 @@ some infrastructure you want to build, prior to deploying something to that infr
 
   
   
-  <script src="/js/coder.js"></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

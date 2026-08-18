@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <title>
   Azure Kubernetes sFTP Solution · GeekyRyan
 </title>
@@ -28,7 +28,7 @@ Here is the link to my Github account where you can download the code mentioned 
 https://github.com/rnemeth90/kubernetes-sftp
 We will work through the following steps in this article:">
 
-<meta property="og:url" content="http://localhost:1313/posts/2022-01-16-azure-kubernetes-sftp-solution/">
+<meta property="og:url" content="https://rnemeth90.github.io/posts/2022-01-16-azure-kubernetes-sftp-solution/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Azure Kubernetes sFTP Solution">
   <meta property="og:description" content="In this post, we’ll take a look at deploying a highly available sFTP solution to Azure Kubernetes with user files stored in an Azure NFSv4 File Share. The sFTP application reads user credentials from a file named users.conf, containing secrets from an Azure Key Vault.
@@ -49,7 +49,7 @@ We will work through the following steps in this article:">
 
 
 
-<link rel="canonical" href="http://localhost:1313/posts/2022-01-16-azure-kubernetes-sftp-solution/">
+<link rel="canonical" href="https://rnemeth90.github.io/posts/2022-01-16-azure-kubernetes-sftp-solution/">
 
 
 <link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -59,7 +59,7 @@ We will work through the following steps in this article:">
 
   
   
-  <link rel="stylesheet" href="/css/coder.css" media="screen">
+  <link rel="stylesheet" href="/css/coder.min.ed30115a76cdaa62f2229e973d5b1c89b2d3dd4b1d9c07a729baad06aa3b0cbe.css" integrity="sha256-7TARWnbNqmLyIp6XPVscibLT3UsdnAenKbqtBqo7DL4=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -69,7 +69,7 @@ We will work through the following steps in this article:">
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -117,7 +117,7 @@ We will work through the following steps in this article:">
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="http://localhost:1313/">
+    <a class="navigation-title" href="https://rnemeth90.github.io/">
       GeekyRyan
     </a>
     
@@ -157,6 +157,10 @@ We will work through the following steps in this article:">
               <a class="navigation-link " href="/htb/">HTB</a>
             </li>
           
+            <li class="navigation-item">
+              <a class="navigation-link " href="/links/">Links</a>
+            </li>
+          
         
         
       </ul>
@@ -172,7 +176,7 @@ We will work through the following steps in this article:">
       <header>
         <div class="post-title">
           <h1 class="title">
-            <a class="title-link" href="http://localhost:1313/posts/2022-01-16-azure-kubernetes-sftp-solution/">
+            <a class="title-link" href="https://rnemeth90.github.io/posts/2022-01-16-azure-kubernetes-sftp-solution/">
               Azure Kubernetes sFTP Solution
             </a>
           </h1>
@@ -286,7 +290,7 @@ We will work through the following steps in this article:">
 </span></span></span><span class="line"><span class="cl"><span class="sd">    if [[ ! -s $CONF_FILE ]]; then
 </span></span></span><span class="line"><span class="cl"><span class="sd">        echo &#34;** ERROR: user.conf is empty&#34; 1&gt;&amp;2
 </span></span></span><span class="line"><span class="cl"><span class="sd">        exit 1
-</span></span></span><span class="line"><span class="cl"><span class="sd">    fi</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    fi</span><span class="w">    
 </span></span></span></code></pre></div><p>The initContainer will use this configMap to read secrets from an Azure Key Vault and then write the secrets to the users.conf file. The users.conf file contains user account information. In the Key Vault, the secret name should be the username and the secret value should be the password. This Key Vault must exist and contain the secrets prior to deploying this solution.</p>
 <p>When I deployed this solution in my environment, I used an Azure DevOps pipeline to create/manage the Key Vault with Terraform and then deploy the secrets using an inline Powershell script. However, this is beyond the scope of this article, and I will not be covering it here. You will also need to create a Service Principal in your AAD tenant and grant it access to the Key Vault. The Service Principal needs to have at least read access to the Key Vault.</p>
 <p>Before deploying the configMap, you need to fill in values for these variables:</p>
@@ -442,7 +446,7 @@ We will work through the following steps in this article:">
 
   
   
-  <script src="/js/coder.js"></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

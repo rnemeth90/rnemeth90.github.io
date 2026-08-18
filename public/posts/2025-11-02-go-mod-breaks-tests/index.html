@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <title>
   Understanding Why “module main” Breaks Go Tests · GeekyRyan
 </title>
@@ -32,7 +32,7 @@ At first glance, this doesn’t make much sense — after all, your code and tes
   <meta name="twitter:description" content="Introduction Link to heading If you have ever initialized a new Go project with go mod init main and later tried to write tests for it, you may have seen this cryptic error:
 cannot import &#34;main&#34; At first glance, this doesn’t make much sense — after all, your code and tests are both in package main. However, there’s a subtle interaction between how Go handles modules, packages, and test harnesses that causes this issue. Let’s walk through what’s actually happening.">
 
-<meta property="og:url" content="http://localhost:1313/posts/2025-11-02-go-mod-breaks-tests/">
+<meta property="og:url" content="https://rnemeth90.github.io/posts/2025-11-02-go-mod-breaks-tests/">
   <meta property="og:site_name" content="GeekyRyan">
   <meta property="og:title" content="Understanding Why “module main” Breaks Go Tests">
   <meta property="og:description" content="Introduction Link to heading If you have ever initialized a new Go project with go mod init main and later tried to write tests for it, you may have seen this cryptic error:
@@ -46,7 +46,7 @@ cannot import &#34;main&#34; At first glance, this doesn’t make much sense —
 
 
 
-<link rel="canonical" href="http://localhost:1313/posts/2025-11-02-go-mod-breaks-tests/">
+<link rel="canonical" href="https://rnemeth90.github.io/posts/2025-11-02-go-mod-breaks-tests/">
 
 
 <link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -56,7 +56,7 @@ cannot import &#34;main&#34; At first glance, this doesn’t make much sense —
 
   
   
-  <link rel="stylesheet" href="/css/coder.css" media="screen">
+  <link rel="stylesheet" href="/css/coder.min.ed30115a76cdaa62f2229e973d5b1c89b2d3dd4b1d9c07a729baad06aa3b0cbe.css" integrity="sha256-7TARWnbNqmLyIp6XPVscibLT3UsdnAenKbqtBqo7DL4=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -66,7 +66,7 @@ cannot import &#34;main&#34; At first glance, this doesn’t make much sense —
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -114,7 +114,7 @@ cannot import &#34;main&#34; At first glance, this doesn’t make much sense —
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="http://localhost:1313/">
+    <a class="navigation-title" href="https://rnemeth90.github.io/">
       GeekyRyan
     </a>
     
@@ -154,6 +154,10 @@ cannot import &#34;main&#34; At first glance, this doesn’t make much sense —
               <a class="navigation-link " href="/htb/">HTB</a>
             </li>
           
+            <li class="navigation-item">
+              <a class="navigation-link " href="/links/">Links</a>
+            </li>
+          
         
         
       </ul>
@@ -169,7 +173,7 @@ cannot import &#34;main&#34; At first glance, this doesn’t make much sense —
       <header>
         <div class="post-title">
           <h1 class="title">
-            <a class="title-link" href="http://localhost:1313/posts/2025-11-02-go-mod-breaks-tests/">
+            <a class="title-link" href="https://rnemeth90.github.io/posts/2025-11-02-go-mod-breaks-tests/">
               Understanding Why “module main” Breaks Go Tests
             </a>
           </h1>
@@ -226,29 +230,29 @@ cannot import &#34;main&#34; At first glance, this doesn’t make much sense —
   </a>
 </h3>
 <p>When you initialize a new Go module for an executable project, it’s common to do something like:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Golang" data-lang="Golang"><span class="line"><span class="cl"><span class="k">go</span><span class="w"> </span><span class="nx">mod</span><span class="w"> </span><span class="nx">init</span><span class="w"> </span><span class="nx">main</span><span class="w">
-</span></span></span></code></pre></div><p>That creates the following <code>go.mod</code> file:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Golang" data-lang="Golang"><span class="line"><span class="cl"><span class="nx">module</span><span class="w"> </span><span class="nx">main</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">go</span><span class="w"> </span><span class="mf">1.25.3</span><span class="w">
-</span></span></span></code></pre></div><p>Then you might have a simple file like this:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Golang" data-lang="Golang"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nx">main</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">func</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nf">square</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">func</span><span class="w"> </span><span class="nf">square</span><span class="p">(</span><span class="nx">n</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">n</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p>Now you decide to write a quick unit test in <code>main_test.go</code>:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Golang" data-lang="Golang"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nx">main</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kn">import</span><span class="w"> </span><span class="s">&#34;testing&#34;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">func</span><span class="w"> </span><span class="nf">TestSquare</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">t</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">&#34;Test successful&#34;</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p>At this point, everything looks fine — until you run:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Golang" data-lang="Golang"><span class="line"><span class="cl"><span class="k">go</span> <span class="nx">mod</span> <span class="nx">init</span> <span class="nx">main</span>
+</span></span></code></pre></div><p>That creates the following <code>go.mod</code> file:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Golang" data-lang="Golang"><span class="line"><span class="cl"><span class="nx">module</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl"><span class="k">go</span> <span class="mf">1.25.3</span>
+</span></span></code></pre></div><p>Then you might have a simple file like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Golang" data-lang="Golang"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">square</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">square</span><span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">n</span> <span class="o">*</span> <span class="nx">n</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Now you decide to write a quick unit test in <code>main_test.go</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Golang" data-lang="Golang"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="s">&#34;testing&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">TestSquare</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">t</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">&#34;Test successful&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>At this point, everything looks fine — until you run:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">go <span class="nb">test</span>
 </span></span></code></pre></div><p>and get the following output:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># main.test</span>
@@ -280,9 +284,9 @@ cannot import &#34;main&#34; At first glance, this doesn’t make much sense —
   </a>
 </h3>
 <p>Change your <code>go.mod</code> file to use a different name, for example:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Golang" data-lang="Golang"><span class="line"><span class="cl"><span class="nx">module</span><span class="w"> </span><span class="nx">myapp</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">go</span><span class="w"> </span><span class="mf">1.25.3</span><span class="w">
-</span></span></span></code></pre></div><p>Then rerun:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Golang" data-lang="Golang"><span class="line"><span class="cl"><span class="nx">module</span> <span class="nx">myapp</span>
+</span></span><span class="line"><span class="cl"><span class="k">go</span> <span class="mf">1.25.3</span>
+</span></span></code></pre></div><p>Then rerun:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">go <span class="nb">test</span>
 </span></span></code></pre></div><p>You should now see:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ok   myapp  0.35s
@@ -361,7 +365,7 @@ cannot import &#34;main&#34; At first glance, this doesn’t make much sense —
 
   
   
-  <script src="/js/coder.js"></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

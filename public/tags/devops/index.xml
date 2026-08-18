@@ -2,101 +2,101 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Devops on GeekyRyan</title>
-    <link>http://localhost:1313/tags/devops/</link>
+    <link>https://rnemeth90.github.io/tags/devops/</link>
     <description>Recent content in Devops on GeekyRyan</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Thu, 05 Dec 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://rnemeth90.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Kubernetes Health Probing in Dotnet Console Apps</title>
-      <link>http://localhost:1313/posts/2024-12-05-dotnet-console-app-health-probe/</link>
+      <link>https://rnemeth90.github.io/posts/2024-12-05-dotnet-console-app-health-probe/</link>
       <pubDate>Thu, 05 Dec 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2024-12-05-dotnet-console-app-health-probe/</guid>
+      <guid>https://rnemeth90.github.io/posts/2024-12-05-dotnet-console-app-health-probe/</guid>
       <description>&lt;h1 id=&#34;introduction&#34;&gt;&#xA;  Introduction&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#introduction&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;This post covers a simple and efficient solution for implementing liveness probes in pods running console applications (think background services or utility DaemonSets). A common question I see in Kubernetes forums is:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;“How do I use health probes with console apps?”&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;The typical responses often suggest:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Sidecar Container with HTTP Server: Requires coding the server, building a sidecar container, and managing additional infrastructure. While effective, this can be overkill for lightweight applications.&lt;/li&gt;&#xA;&lt;li&gt;Exec Probes with Shell Scripts: Feels hacky and can waste resources, depending on what the script does.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;Pods are meant to be lightweight, and both solutions can deviate from that principle.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Mounting Multiple Kubernetes Secrets into One Directory</title>
-      <link>http://localhost:1313/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</link>
+      <link>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</link>
       <pubDate>Sat, 29 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</guid>
+      <guid>https://rnemeth90.github.io/posts/2024-06-29-mount-multiple-kubernetes-secrets-into-one-directory/</guid>
       <description>&lt;h1 id=&#34;introduction&#34;&gt;&#xA;  Introduction&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#introduction&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;Combining multiple Kubernetes secrets into a single directory can streamline secret management in your applications. This guide walks you through the process of achieving this in Kubernetes, ensuring efficient and organized secret management.&lt;/p&gt;&#xA;&lt;h1 id=&#34;creating-secrets&#34;&gt;&#xA;  Creating Secrets&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#creating-secrets&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;First, create your secrets using the &lt;code&gt;kubectl create secret&lt;/code&gt; command:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl create secret generic secret-one --from-literal=key1=value1&#xA;kubectl create secret generic secret-two --from-literal=key2=value2&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Each secret can contain multiple key-value pairs, and you can add more secrets as needed.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Using try/catch/finally Blocks in PowerShell</title>
-      <link>http://localhost:1313/posts/2023-08-15-powershell-try-catch/</link>
+      <link>https://rnemeth90.github.io/posts/2023-08-15-powershell-try-catch/</link>
       <pubDate>Tue, 15 Aug 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2023-08-15-powershell-try-catch/</guid>
+      <guid>https://rnemeth90.github.io/posts/2023-08-15-powershell-try-catch/</guid>
       <description>&lt;p&gt;Despite being a great language, PowerShell is not impervious to errors. Errors that occur within your code can stop it&amp;rsquo;s execution or even cause unexpected changes in the resources that your script is managing. Learning to handle these errors gracefully is the foundation of defensive coding. Today, we&amp;rsquo;ll take a quick look at how PowerShell handles errors with Try-Catch-Finally blocks. They allow you to gracefully handle errors and perform cleanup operations, ensuring that your script doesn&amp;rsquo;t crash when the unexpected occurs. We&amp;rsquo;ll then cover the differences in terminating and non-terminating errors and why you should take these into consideration when implementing error handling.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Golang: When Identical Strings are Not Equal</title>
-      <link>http://localhost:1313/posts/2023-01-24-golang-strings-not-equal/</link>
+      <link>https://rnemeth90.github.io/posts/2023-01-24-golang-strings-not-equal/</link>
       <pubDate>Tue, 24 Jan 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2023-01-24-golang-strings-not-equal/</guid>
+      <guid>https://rnemeth90.github.io/posts/2023-01-24-golang-strings-not-equal/</guid>
       <description>&lt;p&gt;&lt;em&gt;This will be a quick and dirty post, so please forgive any spelling/grammar mistakes.&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;I was writing a little CLI tool in Golang to track todo items. Just a dumb little app to help hone my skills a bit, but still something useful that serves a purpose to me. I don&amp;rsquo;t write a ton of code at work (mostly just scripting/pipelines when I do), so I&amp;rsquo;m constantly working on something like this in my spare time. Anyway, I was writing this app, got everything working like I wanted it to. I then wrote some of the tests and was iterating over them. I noticed the &lt;code&gt;ListTasks&lt;/code&gt; test was failing:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Handling Graceful Shutdown in a .NET App Hosted in Kubernetes</title>
-      <link>http://localhost:1313/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/</link>
+      <link>https://rnemeth90.github.io/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/</link>
       <pubDate>Wed, 28 Dec 2022 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/</guid>
+      <guid>https://rnemeth90.github.io/posts/2022-12-28-graceful-shutdown-in-kubernetes-dotnet-pod/</guid>
       <description>&lt;p&gt;I was recently involved with troubleshooting some API&amp;rsquo;s hosted in Kubernetes throwing http/502&amp;rsquo;s. This was incredibly difficult to diagnose because it seemingly happened at random, and I had never encountered anything like this. Being that I had never dealt with this in the past, and I (nor my team) was able to figure it out within a reasonable amount of time, I turned to google. My searches resulted in various blogs and SO posts of other people experiencing similar issues, but none of their resolutions worked for us. It was actually a combination of these blogs (and the resolutions posted) that ended up resolving our issue.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Chaining YAML Pipelines in Azure Devops</title>
-      <link>http://localhost:1313/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</link>
+      <link>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</link>
       <pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</guid>
+      <guid>https://rnemeth90.github.io/posts/2022-11-03-chaining-yaml-pipelines-in-azure-devops-copy/</guid>
       <description>&lt;p&gt;In this article, we&amp;rsquo;ll take a quick look at chaining two pipelines together in Azure Devops, so that the completion of one pipeline, triggers the other to run.&#xA;Microsoft documentation is leaps and bounds ahead of where it used to be. However, I still feel like there is a lot of room for improvement, as it took me a while to&#xA;figure this out.&lt;/p&gt;&#xA;&lt;p&gt;Our two pipelines will exist in the same repository. We have a dependent-pipeline, that we only want to run once the source-pipeline is finished. This is useful if you have&#xA;some infrastructure you want to build, prior to deploying something to that infrastructure.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Update Azure Devops SPN Secret</title>
-      <link>http://localhost:1313/posts/2022-09-12-update-azure-devops-spn-secret/</link>
+      <link>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</link>
       <pubDate>Mon, 12 Sep 2022 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2022-09-12-update-azure-devops-spn-secret/</guid>
+      <guid>https://rnemeth90.github.io/posts/2022-09-12-update-azure-devops-spn-secret/</guid>
       <description>&lt;p&gt;If you need to update the secret for a service principal in Azure Devops, prior to it expiring, you may be surprised to find that this cannot be done via the Azure Portal.&lt;/p&gt;&#xA;&lt;p&gt;In this article, I&amp;rsquo;ll show you two methods for updating a secret for a service principal prior to expiration.&lt;/p&gt;&#xA;&lt;h1 id=&#34;update-the-secret-via-the-azure-devops-portal&#34;&gt;&#xA;  Update the secret via the Azure Devops Portal:&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#update-the-secret-via-the-azure-devops-portal&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Go to &amp;ldquo;Service Connections&amp;rdquo; in the Azure Devops portal&lt;/li&gt;&#xA;&lt;li&gt;Find the SPN you want to update, then click &amp;ldquo;Manage Service Principal&amp;rdquo;&lt;/li&gt;&#xA;&lt;li&gt;Then on the service principal page, click Certificates &amp;amp; Secrets&lt;/li&gt;&#xA;&lt;li&gt;Create a &amp;ldquo;New Client Secret&amp;rdquo;, take note of the value&lt;/li&gt;&#xA;&lt;li&gt;Delete the &amp;lsquo;old&amp;rsquo; secret&lt;/li&gt;&#xA;&lt;li&gt;Return to the Service Connection in the Azure Devops portal&lt;/li&gt;&#xA;&lt;li&gt;Click Edit - click the verify button. It should tell you the client certificate has expired&lt;/li&gt;&#xA;&lt;li&gt;Now you need to make an arbitrary change and save it. I just type a character in the optional description and save.&lt;/li&gt;&#xA;&lt;li&gt;Now edit again and click verify, it will now pick up the new client secret and all is happy.&lt;/li&gt;&#xA;&lt;li&gt;You can now remove whatever you added to the description.&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
     <item>
       <title>Running Docker in WSL v1</title>
-      <link>http://localhost:1313/posts/2022-06-26-running-docker-in-wsl-v1/</link>
+      <link>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</link>
       <pubDate>Sun, 26 Jun 2022 15:00:28 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2022-06-26-running-docker-in-wsl-v1/</guid>
+      <guid>https://rnemeth90.github.io/posts/2022-06-26-running-docker-in-wsl-v1/</guid>
       <description>&lt;p&gt;I have somewhat of a niche issue, where I have no network connectivity while connecting to my work VPN inside of WSL v2. I have found others complaining about this issue on Github. Though no one seems to know how to fix it and I have not had the time to properly investigate.&lt;/p&gt;&#xA;&lt;p&gt;Because of this, I’m required to continue using WSL v1. Though, with WSL v1, Docker does not work. I receive this nice message:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Accessing Secrets Securely in Azure DevOps Pipelines</title>
-      <link>http://localhost:1313/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</link>
+      <link>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</link>
       <pubDate>Sat, 19 Feb 2022 16:02:50 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</guid>
+      <guid>https://rnemeth90.github.io/posts/2022-02-19-accessing-secrets-ecurely-in-azure-devops-pipelines/</guid>
       <description>&lt;p&gt;This post will cover a secure method for accessing secrets in Azure DevOps pipelines.&lt;/p&gt;&#xA;&lt;h2 id=&#34;why-azure-key-vault&#34;&gt;&#xA;  Why Azure Key Vault?&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#why-azure-key-vault&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Azure Key Vault is an Azure cloud service used to securely store secrets, keys, and certificates. A secret can be any string of characters, such as API keys, passwords, URLs, etc. Azure Key Vault encrypts data at rest and in transit using HTTPS. Depending on the type of Key Vault you are using, data at rest is encrypted using software encryption (AES 256) or HSM-backed keys.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Kubernetes Pod Eviction</title>
-      <link>http://localhost:1313/posts/2022-02-05-kubernetes-pod-eviction/</link>
+      <link>https://rnemeth90.github.io/posts/2022-02-05-kubernetes-pod-eviction/</link>
       <pubDate>Sat, 05 Feb 2022 23:49:16 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2022-02-05-kubernetes-pod-eviction/</guid>
+      <guid>https://rnemeth90.github.io/posts/2022-02-05-kubernetes-pod-eviction/</guid>
       <description>&lt;p&gt;In this article, we will dive into the process of pod eviction in a Kubernetes cluster, how you can pod prevent pod eviction, and how you can recover from such a situation.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-pod-eviction&#34;&gt;&#xA;  What is Pod Eviction?&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#what-is-pod-eviction&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Kubernetes pod eviction is a type of involuntary service disruption in which a pod is forcefully stopped on a node or fails to be scheduled on a node. Pod eviction can happen for a variety of reasons. The most common of which is resource starvation on a node. This is referred to as “node-pressure eviction.”&lt;/p&gt;</description>
     </item>
     <item>
       <title>Continuous Deployment Models</title>
-      <link>http://localhost:1313/posts/2022-01-14-continuous-deployment-models/</link>
+      <link>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</link>
       <pubDate>Fri, 14 Jan 2022 19:24:01 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2022-01-14-continuous-deployment-models/</guid>
+      <guid>https://rnemeth90.github.io/posts/2022-01-14-continuous-deployment-models/</guid>
       <description>&lt;p&gt;When deploying new software releases to servers or (insert -as-a-service&amp;gt; here), it’s a good idea to either deploy the releases in a controlled manner or to have a quick rollback plan. This article will be diving into blue/green deployments, canary deployments, ring-based deployments, and feature tag deployments.&lt;/p&gt;&#xA;&lt;h2 id=&#34;bluegreen-deployments&#34;&gt;&#xA;  Blue/Green Deployments&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#bluegreen-deployments&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Blue/green deployments are a deployment model where a new application version never gets deployed to the production servers (green) directly. Instead, it gets deployed to another set of servers (blue) first. Since the blue servers are not currently serving any traffic for users, the deployment has no impact. However, once the deployment has been completed successfully and tested, users will be directed to the new deployment (blue). You can control all user traffic or a subset of user traffic if your load balancer supports it (referred to as ‘Progressive Exposure’).&lt;/p&gt;</description>
     </item>
     <item>
       <title>Deploy Azure VMs Using Azure Devops CI/CD Pipeline</title>
-      <link>http://localhost:1313/posts/2022-01-14-deploy-azure-vms-using-azure-devops-ci-cd-pipeline/</link>
+      <link>https://rnemeth90.github.io/posts/2022-01-14-deploy-azure-vms-using-azure-devops-ci-cd-pipeline/</link>
       <pubDate>Fri, 14 Jan 2022 18:46:35 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2022-01-14-deploy-azure-vms-using-azure-devops-ci-cd-pipeline/</guid>
+      <guid>https://rnemeth90.github.io/posts/2022-01-14-deploy-azure-vms-using-azure-devops-ci-cd-pipeline/</guid>
       <description>&lt;p&gt;This article assumes that you have already created a pipeline in Azure Devops and have it linked to an Azure Devops repo. You will need to create a variable named $vmpassword and assign it the value stored in your key vault.&lt;/p&gt;&#xA;&lt;p&gt;To create a release pipeline that will automatically create a VM (using the password stored in key vault for the local administrator account), do the following:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Create a new release pipeline&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://www.rnemeth90.github.io/content/images/2021/01/image-13.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>Azure Devops &amp;#8211; Self Hosted Agent Service Won&amp;#8217;t Start &amp;#8211; Incorrect Function</title>
-      <link>http://localhost:1313/posts/2022-01-14-azure-devops-self-hosted-agent-service-wont-start-incorrect-function/</link>
+      <link>https://rnemeth90.github.io/posts/2022-01-14-azure-devops-self-hosted-agent-service-wont-start-incorrect-function/</link>
       <pubDate>Fri, 14 Jan 2022 18:45:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2022-01-14-azure-devops-self-hosted-agent-service-wont-start-incorrect-function/</guid>
+      <guid>https://rnemeth90.github.io/posts/2022-01-14-azure-devops-self-hosted-agent-service-wont-start-incorrect-function/</guid>
       <description>&lt;p&gt;I setup a self hosted agent for Azure Devops this morning on Server 2012 R2 (legacy Visual Studio dependencies…) and found that I was unable to start the service. The error I received was “Error 1 Incorrect Function” when attempting to start the service in services.msc.&lt;/p&gt;&#xA;&lt;p&gt;I was attempting to run the agent from within my user profile downloads folder. I originally was not aware the service would be running from this directory. I thought it would copy its binary files to program files directory or programdata, like 99% of all other apps. The service installs and attempts to run itself as the “network service” authority. This account does not have permission to a user profile folder by default, and the installation script is not able to grant it permission for some reason (I didn’t investigate this further). I removed the agent, moved the installation files to the root of c:, and then reinstalled. The agent service is now able to start successfully.&lt;/p&gt;</description>
     </item>
   </channel>
