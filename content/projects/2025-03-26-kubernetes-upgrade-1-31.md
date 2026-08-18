@@ -3,7 +3,7 @@ title: 'Kubernetes 1.31 Upgrade'
 date: '2025-03-26T09:00:00+00:00'
 author: Ryan
 layout: post
-draft: true
+draft: false
 categories:
     - Projects
 tags:
@@ -12,6 +12,6 @@ tags:
     - azure
 ---
 
-Another entry in the ongoing Kubernetes version treadmill, this time moving to 1.31. This upgrade was sequenced deliberately behind a separate networking project (a NAT gateway rollout) that needed to land first, since it touched the same clusters and we wanted to avoid stacking two risky changes on top of each other at once.
+Kubernetes 1.31 upgrade. Deliberately sequenced behind a NAT gateway rollout that touched the same clusters - didn't want to stack two risky changes on top of each other at once.
 
-Sequencing matters a lot in infrastructure work — it's tempting to parallelize everything to move faster, but when two projects touch the same blast radius, doing them in a deliberate order (and confirming the first is stable before starting the second) is usually the safer bet, even if it means the calendar slips a bit.
+Sequencing matters in infrastructure work. Tempting to parallelize everything, but when two projects hit the same blast radius, doing them in order and confirming stability between is safer, even if the calendar slips a bit.

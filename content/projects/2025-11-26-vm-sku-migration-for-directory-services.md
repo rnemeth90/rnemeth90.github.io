@@ -3,7 +3,7 @@ title: 'Migrating Directory Services VMs Ahead of a SKU Deprecation'
 date: '2025-11-26T09:00:00+00:00'
 author: Ryan
 layout: post
-draft: true
+draft: false
 categories:
     - Projects
 tags:
@@ -12,8 +12,8 @@ tags:
     - migration
 ---
 
-Our managed directory services infrastructure was running on an Azure VM SKU whose reservation was expiring, and the SKU itself (along with a related series) was being phased out by Microsoft. Waiting until the deprecation forced our hand wasn't an option, so this project got ahead of it with a planned migration to a supported, cost-effective replacement SKU.
+Directory services infrastructure was running on an Azure VM SKU that was being phased out. The reservation was expiring and Microsoft was deprecating the whole series, so we needed to migrate before the deadline.
 
-A couple of details mattered here beyond "just pick a new SKU": the replacement series doesn't include temporary local storage, which we confirmed wasn't actually needed for this workload, so we didn't pay for capability we wouldn't use. And critically, these directory services workloads can't tolerate eviction, so every new deployment had to be explicitly configured for standard (regular) priority rather than spot or low-priority — an easy thing to get wrong if you're optimizing for cost without considering workload requirements.
+Two things mattered beyond just picking a cheaper SKU: the replacement series doesn't have temporary local storage, which we confirmed we didn't actually need. And critically, directory services workloads can't handle spot evictions, so we had to explicitly configure for standard (non-evictable) priority - easy to miss if you're just optimizing for cost.
 
-A good reminder that "cheaper VM SKU" isn't always a free lunch — you have to validate that the replacement's feature set (or lack thereof) and pricing model actually match what the workload needs.
+It's a reminder that "cheaper VM" isn't free - you have to verify the replacement's features and pricing model actually fit what the workload needs.

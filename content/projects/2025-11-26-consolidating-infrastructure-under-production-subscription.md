@@ -3,7 +3,7 @@ title: 'Consolidating a Platform''s Infrastructure Under a Single Production Sub
 date: '2025-11-26T09:00:00+00:00'
 author: Ryan
 layout: post
-draft: true
+draft: false
 categories:
     - Projects
 tags:
@@ -12,8 +12,8 @@ tags:
     - cost-optimization
 ---
 
-Infrastructure that grows organically over time tends to end up scattered across subscriptions in ways that made sense at the time but create real operational cost later — inconsistent governance, harder-to-track spend, and no single place to reason about the platform's full footprint.
+Infrastructure that grows organically ends up scattered across multiple subscriptions - made sense when each part went in, but creates operational debt over time. Inconsistent governance, fragmented cost tracking, no single place to understand the full footprint.
 
-This project consolidated critical infrastructure for one of our platforms — clusters, databases, networking, and supporting services — into a single, designated production Azure subscription. The goals were pretty concrete: better operational visibility, consistent enforcement of security and governance policies across resources that used to live in different administrative boundaries, reduced cost overhead from fragmented environments, and a cleaner foundation to scale from going forward.
+We consolidated critical infrastructure - clusters, databases, networking - into a single production subscription. Better visibility, consistent governance policies everywhere instead of different rules per subscription, reduced operational overhead, and a cleaner foundation to scale from.
 
-The "single pane of glass" framing is a bit of a cliché in infrastructure work, but it's genuinely what this delivered — before this, understanding the platform's full footprint meant checking multiple subscriptions with different policies applied; after, it's one subscription with one consistent set of guardrails.
+Before, understanding the platform meant checking multiple subscriptions with different policies. After, one subscription, one set of guardrails.

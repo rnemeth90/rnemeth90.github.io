@@ -3,7 +3,7 @@ title: 'Developing a Plan for SLA Reporting and Shipping Version 1'
 date: '2024-09-05T09:00:00+00:00'
 author: Ryan
 layout: post
-draft: true
+draft: false
 categories:
     - Projects
 tags:
@@ -12,6 +12,6 @@ tags:
     - planning
 ---
 
-Service Level Agreements only mean something if you can actually measure and report against them. This OKR-driven project developed a plan for SLA reporting for one of our platform environments and delivered an initial (v1) version of that reporting.
+SLAs don't mean much if you can't actually measure and report on them. This project was about figuring out what metrics mattered for our SLA commitments, finding where that data lives, and building a v1 reporting system so stakeholders could see how we were actually tracking.
 
-The work involved defining what metrics actually mattered for the SLA commitments in question, figuring out where that data could be reliably sourced from, and building a first version of a reporting process/output that stakeholders could use to see how we were tracking. As with most "v1" reporting efforts, the goal wasn't to be exhaustive on day one — it was to get a credible, trustworthy baseline in front of people and iterate from there.
+I wasn't trying to solve everything on day one - just get a credible baseline in front of people and iterate from there. That's usually the right approach for reporting work anyway.

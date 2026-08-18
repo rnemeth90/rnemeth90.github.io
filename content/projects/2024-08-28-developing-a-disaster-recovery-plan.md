@@ -3,7 +3,7 @@ title: 'Developing and Documenting a Disaster Recovery Plan'
 date: '2024-08-28T09:00:00+00:00'
 author: Ryan
 layout: post
-draft: true
+draft: false
 categories:
     - Projects
 tags:
@@ -12,8 +12,8 @@ tags:
     - planning
 ---
 
-Disaster recovery plans have a way of existing informally in people's heads until you actually need one — at which point tribal knowledge is a poor substitute for a documented, tested plan. This was an OKR-driven effort to change that: develop and document a clear, actionable disaster recovery plan for one of our platform environments.
+DR plans usually exist in people's heads until you actually need one - at which point tribal knowledge doesn't cut it. Time to actually write one down.
 
-The work centered on turning ad hoc recovery knowledge into a structured plan covering recovery point/time objectives, failover procedures, and roles and responsibilities during an incident — the kind of document that lets someone who wasn't in the room when the environment was built still execute a recovery competently under pressure.
+Turn the ad hoc recovery knowledge into a structured plan: recovery point/time objectives, failover procedures, who does what during an incident. A document so someone who wasn't in the room when the environment was built can still execute a recovery under pressure.
 
-This groundwork later fed directly into the recurring disaster recovery exercises we run for compliance purposes (see the DR exercise posts), which is a good example of how a planning/documentation OKR pays for itself in later operational work — the plan you write becomes the runbook you actually use.
+The plan becomes the runbook you actually use during the DR exercises, so it pays for itself immediately.

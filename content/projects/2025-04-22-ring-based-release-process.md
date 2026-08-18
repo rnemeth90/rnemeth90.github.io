@@ -3,7 +3,7 @@ title: 'Building a Ring-Based Release Process for Independent Team Execution'
 date: '2025-04-22T09:00:00+00:00'
 author: Ryan
 layout: post
-draft: true
+draft: false
 categories:
     - Projects
 tags:
@@ -12,12 +12,11 @@ tags:
     - release-engineering
 ---
 
-One of the more release-engineering-flavored projects in this list: building a reliable, ring-based release process for a multi-repository application stack, with the explicit goal of letting the release team run releases independently rather than needing engineering to shepherd every deployment.
+Build a ring-based release process so the release team could run deployments without needing engineering to babysit every release. Ring-based releases are straightforward in theory (roll through internal, then limited customer set, then everyone), but operationalizing it for a non-engineering team meant more than just the mechanics.
 
-Ring-based releases (rolling a change through progressively larger/higher-risk rings — think internal, then a limited customer subset, then everyone) are a well-known pattern, but making one "operationalized" for a non-engineering release team to run on their own required more than just the rollout mechanics. It meant:
+It took:
+- Aligning versioning across multiple repos so a "release" was actually a coherent unit, not a loose collection of independently-versioned pieces.
+- Tagging artifacts and tickets consistently so you could always trace what code and what work was in a given release.
+- Building enough guardrails and automation that the release team could run the whole thing confidently without checking with engineering for every step.
 
-- Aligning versioning across multiple repositories so a "release" was a coherent, well-defined unit rather than a loose bundle of independently-versioned pieces.
-- Tagging work items and build artifacts consistently so it was always traceable what code and what tickets were in a given release.
-- Building enough guardrails and automation into the flow that the release team could execute it confidently without engineering in the loop for every step.
-
-The real win here wasn't the ring mechanism itself — it was taking a process that lived in engineers' heads and turning it into something a different team could run independently and confidently.
+The win wasn't the ring pattern itself - it was taking knowledge that lived in engineers' heads and turning it into a process someone else could own and execute.

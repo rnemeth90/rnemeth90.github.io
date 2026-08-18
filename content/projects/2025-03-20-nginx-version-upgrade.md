@@ -3,7 +3,7 @@ title: 'Upgrading Nginx Across the Environment'
 date: '2025-03-20T09:00:00+00:00'
 author: Ryan
 layout: post
-draft: true
+draft: false
 categories:
     - Projects
 tags:
@@ -12,6 +12,6 @@ tags:
     - security
 ---
 
-A version upgrade for Nginx deployments across our environment — one of the steady drumbeat of "stay current on your dependencies" projects that don't make headlines but keep you off of end-of-life versions and ahead of the CVEs that inevitably target unpatched software.
+Nginx upgrade across the board - one of those quiet maintenance projects that keeps you off end-of-life versions and away from CVEs. Nothing flashy, but necessary.
 
-One wrinkle worth calling out: Nginx has gone through licensing changes over the past few years for some of its distributions and modules, so part of this project involved getting clarity on which license terms applied to the versions and modules we were running before rolling the upgrade out broadly. It's a good reminder that "just upgrade the version" projects sometimes carry licensing or compliance homework alongside the purely technical work.
+The interesting part was that Nginx licensing has shifted around over the years for different distributions and modules, so before pushing the upgrade out I had to sort out which license terms applied to what we were running. It's a good reminder that even straightforward upgrade projects sometimes have compliance homework hiding inside them.

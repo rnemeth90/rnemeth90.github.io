@@ -3,7 +3,7 @@ title: 'Upgrading the Auxiliary Services That Keep a Kubernetes Platform Running
 date: '2025-06-27T09:00:00+00:00'
 author: Ryan
 layout: post
-draft: true
+draft: false
 categories:
     - Projects
 tags:
@@ -13,8 +13,8 @@ tags:
     - operations
 ---
 
-Beyond the core Kubernetes version itself, a real-world cluster runs a whole ecosystem of supporting services — an ingress controller, certificate automation, cost visibility tooling, an OAuth proxy for authentication, a metrics stack, and autoscaling add-ons, among others. All of these need their own version upgrade cadence, and letting them drift is just as risky as letting the cluster's Kubernetes version fall behind.
+Running a Kubernetes cluster means managing a whole ecosystem of supporting services - ingress controller, cert automation, cost visibility tooling, authentication proxy, metrics stack, autoscaling add-ons. They all need upgrades on their own cadence, and letting them rot is just as risky as letting Kubernetes itself fall behind.
 
-This project was a coordinated upgrade pass across that whole auxiliary service ecosystem — ingress controller, cert automation, cost-visibility tooling, the metrics/dashboarding stack, event-driven autoscaling, and the authentication proxy sitting in front of ingress. Because these services often have dependencies on each other (the ingress controller and the auth proxy, for instance, or the metrics stack and the autoscaler), the upgrades had to be sequenced and tested carefully rather than done as one big-bang change.
+This was a coordinated upgrade pass through that whole ecosystem - ingress, certs, autoscaling, auth proxy, the metrics and dashboarding stack. These services depend on each other (ingress and the auth proxy, metrics and autoscaler, etc.), so the upgrades had to be sequenced and tested carefully, not just done all at once.
 
-It's easy to think of "the cluster" as just its Kubernetes version, but in practice the health of a platform depends just as much on this whole supporting cast staying current.
+People think of "the cluster" as just the Kubernetes version, but platform health depends just as much on all this supporting infrastructure staying current.
