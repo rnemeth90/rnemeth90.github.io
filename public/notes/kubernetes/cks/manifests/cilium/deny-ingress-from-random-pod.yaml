@@ -1,0 +1,15 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: deny-ingress-from-random-pod
+spec:
+  endpointSelector:
+    matchLabels:
+      app: server
+  ingress:
+  - fromEntities:
+    - "all"
+  ingressDeny:
+  - fromEndpoints:
+    - matchLabels:
+        app: random-pod
