@@ -38,10 +38,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-b5ad1aa7.js";
+            window.path_to_searchindex_js = "../../searchindex-6f2f3797.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-cbbb72f8.js"></script>
+        <script src="../../toc-f554789b.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -212,6 +212,15 @@
 </ul>
 </li>
 </ul>
+<h3 id="splunk"><a class="header" href="#splunk">Splunk</a></h3>
+<ul>
+<li><a href="./splunk/">Splunk — discovery &amp; enumeration, default creds, Splunk Free, scripted input RCE, deployment server pivot</a>
+<ul>
+<li><a href="./splunk/splunk-discovery-enumeration.html">Discovery &amp; Enumeration — ports, default credentials, Splunk Free, scripted inputs, data of interest</a></li>
+<li><a href="./splunk/splunk-attacking.html">Attacking Splunk — scripted input RCE, app structure, PowerShell/Python reverse shells, deployment server pivot</a></li>
+</ul>
+</li>
+</ul>
 <h3 id="tomcat"><a class="header" href="#tomcat">Tomcat</a></h3>
 <ul>
 <li><a href="./tomcat/">Tomcat — discovery &amp; enumeration, Manager access, WAR deployment, default credentials</a>
@@ -230,10 +239,22 @@
 </ul>
 </li>
 </ul>
+<h3 id="prtg-network-monitor"><a class="header" href="#prtg-network-monitor">PRTG Network Monitor</a></h3>
+<ul>
+<li><a href="./prtg/">PRTG Network Monitor — discovery &amp; enumeration, CVE-2018-9276 command injection, default credentials, persistence</a>
+<ul>
+<li><a href="./prtg/overview.html">Overview — background, key facts, vulnerabilities, prevalence in assessments</a></li>
+<li><a href="./prtg/discovery.html">Discovery &amp; Enumeration — network discovery, service fingerprinting, version detection, default credentials</a></li>
+<li><a href="./prtg/exploitation.html">Exploitation — CVE-2018-9276 authenticated command injection, step-by-step walkthrough, payload crafting</a></li>
+<li><a href="./prtg/post-exploitation.html">Post-Exploitation — reverse shells, persistence mechanisms, scheduled tasks, lateral movement, log cleanup</a></li>
+</ul>
+</li>
+</ul>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>Attacking common applications begins with a structured discovery phase before any exploitation is attempted. <strong>Nmap</strong> sweeps the scope list for common web ports (80, 443, 8000, 8080, 8180, 8888, 10000) using <code>--open -oA</code> to produce XML output that downstream tools can consume directly. A follow-up service version scan (<code>-sV</code>) fingerprints what is actually running — frequently revealing Splunk, PRTG, Tomcat, or other management interfaces on non-standard ports that are easily missed.</p>
 <p><strong>EyeWitness</strong> (<code>eyewitness --web -x web_discovery.xml</code>) and <strong>Aquatone</strong> (<code>cat web_discovery.xml | ./aquatone -nmap</code>) both accept Nmap XML and produce HTML screenshot reports, grouping targets into categories such as “High Value Targets.” These reports rapidly surface default-credential login pages (Tomcat Manager, Splunk, PRTG) and default install pages that confirm software versions without manual browsing across dozens of hosts.</p>
-<p>When interpreting results, prioritize applications with known default credentials or recent CVEs: Tomcat Manager enables WAR-based RCE, Splunk’s search engine can execute server-side scripts, PRTG has authenticated RCE vulnerabilities in older versions, and osTicket can leak internal employee/email data useful for phishing. Findings should be tracked in a hierarchical note structure (host → application → credentials → exploitation path) throughout the engagement to support the final report.</p>
+<p>When interpreting results, prioritize applications with known default credentials or recent CVEs: Tomcat Manager enables WAR-based RCE, Splunk’s search engine can execute server-side scripts, PRTG has authenticated RCE vulnerabilities in older versions (CVE-2018-9276), and osTicket can leak internal employee/email data useful for phishing. Findings should be tracked in a hierarchical note structure (host → application → credentials → exploitation path) throughout the engagement to support the final report.</p>
+<p><strong>PRTG Network Monitor</strong> deserves special attention in internal assessments — it’s frequently encountered in monitored network infrastructure, has a well-known authenticated command injection (CVE-2018-9276 &lt; v18.2.39), and default credentials (<code>prtgadmin:prtgadmin</code>) are often unchanged. Successful exploitation yields SYSTEM-level code execution with built-in persistence through scheduled notifications, plus access to credentials stored for monitored infrastructure enabling further lateral movement.</p>
 
                     </main>
 
