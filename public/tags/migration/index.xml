@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Migration on GeekyRyan</title>
+    <link>https://rnemeth90.github.io/tags/migration/</link>
+    <description>Recent content in Migration on GeekyRyan</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 26 Nov 2025 09:00:00 +0000</lastBuildDate>
+    <atom:link href="https://rnemeth90.github.io/tags/migration/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Migrating a Legacy Windows API Service into Kubernetes</title>
+      <link>https://rnemeth90.github.io/projects/2025-11-26-migrating-a-legacy-api-to-kubernetes/</link>
+      <pubDate>Wed, 26 Nov 2025 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2025-11-26-migrating-a-legacy-api-to-kubernetes/</guid>
+      <description>&lt;p&gt;Legacy ASP.NET Framework API service running in IIS on Windows VMs. Need to move it to Kubernetes for better scaling and cost efficiency.&lt;/p&gt;&#xA;&lt;p&gt;The catch: this isn&amp;rsquo;t a modern cloud-native app that containerizes trivially. It&amp;rsquo;s full-framework, IIS-hosted. Containerized it as a Windows container with self-hosted OWIN instead of keeping IIS in the container - smaller footprint, less dependencies.&lt;/p&gt;&#xA;&lt;p&gt;Windows Kubernetes migrations are different from Linux/.NET Core ones. Different tooling, larger images, longer startup times, Windows node pools. Don&amp;rsquo;t assume Linux Kubernetes knowledge transfers - Windows containers are a different ecosystem.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Migrating Directory Services VMs Ahead of a SKU Deprecation</title>
+      <link>https://rnemeth90.github.io/projects/2025-11-26-vm-sku-migration-for-directory-services/</link>
+      <pubDate>Wed, 26 Nov 2025 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2025-11-26-vm-sku-migration-for-directory-services/</guid>
+      <description>&lt;p&gt;Directory services infrastructure was running on an Azure VM SKU that was being phased out. The reservation was expiring and Microsoft was deprecating the whole series, so we needed to migrate before the deadline.&lt;/p&gt;&#xA;&lt;p&gt;Two things mattered beyond just picking a cheaper SKU: the replacement series doesn&amp;rsquo;t have temporary local storage, which we confirmed we didn&amp;rsquo;t actually need. And critically, directory services workloads can&amp;rsquo;t handle spot evictions, so we had to explicitly configure for standard (non-evictable) priority - easy to miss if you&amp;rsquo;re just optimizing for cost.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

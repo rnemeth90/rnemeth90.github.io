@@ -6,14 +6,98 @@
     <description>Recent content in Kubernetes on GeekyRyan</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 11 Dec 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 17 Aug 2026 09:00:00 +0000</lastBuildDate>
     <atom:link href="https://rnemeth90.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DnsPinger: A Small .NET Tool for Diagnosing DNS Issues in Kubernetes</title>
+      <link>https://rnemeth90.github.io/projects/2023-08-17-dnspinger/</link>
+      <pubDate>Mon, 17 Aug 2026 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2023-08-17-dnspinger/</guid>
+      <description>&lt;p&gt;DNS problems in Kubernetes are some of the most frustrating issues to chase down. They&amp;rsquo;re often intermittent, they can differ by node, by node pool, by which resolver actually answered the query, and the standard toolbox (&lt;code&gt;nslookup&lt;/code&gt;/&lt;code&gt;dig&lt;/code&gt; run once by hand) doesn&amp;rsquo;t tell you much about a problem that only shows up 1% of the time or only on certain nodes. I got tired of manually reproducing DNS flakiness during incidents, so I wrote &lt;strong&gt;DnsPinger&lt;/strong&gt; - a small, purpose-built .NET console application that continuously exercises DNS resolution from inside the cluster and reports what it finds.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Migrating Off Ingress NGINX Ahead of Its Retirement</title>
+      <link>https://rnemeth90.github.io/projects/2026-07-08-replacing-deprecated-ingress-nginx/</link>
+      <pubDate>Wed, 08 Jul 2026 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2026-07-08-replacing-deprecated-ingress-nginx/</guid>
+      <description>&lt;p&gt;Ingress NGINX is being retired. Best-effort support until March 2026, then nothing. Need to migrate everything before then.&lt;/p&gt;&#xA;&lt;p&gt;Structured approach:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Inventory - every cluster, every Ingress resource, every controller config and Helm release.&lt;/li&gt;&#xA;&lt;li&gt;Assess options - Gateway API, Azure AppGW Ingress Controller, Traefik, Kong, HAProxy, NGINX Gateway Fabric, Blixt.&lt;/li&gt;&#xA;&lt;li&gt;Select based on maintainability, security, performance, Azure integration, roadmap stability - not just popularity.&lt;/li&gt;&#xA;&lt;li&gt;Migrate across all clusters.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;Upstream retirements are a forcing function to revisit if the original choice is still right. Instead of a like-for-like replacement, this was a real opportunity to evaluate the Gateway API ecosystem that&amp;rsquo;s matured a lot since we first picked ingress-nginx.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Emergency Patching of Nginx VM Scale Sets and Kubernetes Nodes for a Critical CVE</title>
+      <link>https://rnemeth90.github.io/projects/2026-05-14-patching-nginx-for-a-critical-cve/</link>
+      <pubDate>Thu, 14 May 2026 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2026-05-14-patching-nginx-for-a-critical-cve/</guid>
+      <description>&lt;p&gt;Critical CVE in Linux copy_file_range hit both Nginx VMs and AKS Linux nodes. Multiple scale sets, multiple clusters, spanning production, RC, test, and lab. Need to patch everything in the blast radius.&lt;/p&gt;&#xA;&lt;p&gt;Production gets the formal process - change request, off-hours patching to minimize maintenance window impact. Lab and test can move faster. Scope was big, but having a clear map of what&amp;rsquo;s affected and what process each environment needs let us move fast where we could and be deliberate where it mattered.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Migrating a Legacy Windows API Service into Kubernetes</title>
+      <link>https://rnemeth90.github.io/projects/2025-11-26-migrating-a-legacy-api-to-kubernetes/</link>
+      <pubDate>Wed, 26 Nov 2025 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2025-11-26-migrating-a-legacy-api-to-kubernetes/</guid>
+      <description>&lt;p&gt;Legacy ASP.NET Framework API service running in IIS on Windows VMs. Need to move it to Kubernetes for better scaling and cost efficiency.&lt;/p&gt;&#xA;&lt;p&gt;The catch: this isn&amp;rsquo;t a modern cloud-native app that containerizes trivially. It&amp;rsquo;s full-framework, IIS-hosted. Containerized it as a Windows container with self-hosted OWIN instead of keeping IIS in the container - smaller footprint, less dependencies.&lt;/p&gt;&#xA;&lt;p&gt;Windows Kubernetes migrations are different from Linux/.NET Core ones. Different tooling, larger images, longer startup times, Windows node pools. Don&amp;rsquo;t assume Linux Kubernetes knowledge transfers - Windows containers are a different ecosystem.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Upgrading the Auxiliary Services That Keep a Kubernetes Platform Running</title>
+      <link>https://rnemeth90.github.io/projects/2025-06-27-kubernetes-auxiliary-service-upgrades/</link>
+      <pubDate>Fri, 27 Jun 2025 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2025-06-27-kubernetes-auxiliary-service-upgrades/</guid>
+      <description>&lt;p&gt;Running a Kubernetes cluster means managing a whole ecosystem of supporting services - ingress controller, cert automation, cost visibility tooling, authentication proxy, metrics stack, autoscaling add-ons. They all need upgrades on their own cadence, and letting them rot is just as risky as letting Kubernetes itself fall behind.&lt;/p&gt;&#xA;&lt;p&gt;This was a coordinated upgrade pass through that whole ecosystem - ingress, certs, autoscaling, auth proxy, the metrics and dashboarding stack. These services depend on each other (ingress and the auth proxy, metrics and autoscaler, etc.), so the upgrades had to be sequenced and tested carefully, not just done all at once.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Replacing an Unreliable Log Shipping Pipeline in Kubernetes</title>
+      <link>https://rnemeth90.github.io/projects/2025-06-18-replacing-fluent-bit-log-shipping/</link>
+      <pubDate>Wed, 18 Jun 2025 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2025-06-18-replacing-fluent-bit-log-shipping/</guid>
+      <description>&lt;p&gt;We were using Fluent Bit to ship ingress logs out of Kubernetes. Found out it had a known upstream bug that silently dropped log entries in transit - and it wasn&amp;rsquo;t getting fixed upstream, so we couldn&amp;rsquo;t just wait for a patch.&lt;/p&gt;&#xA;&lt;p&gt;The problem with silent log drops is you don&amp;rsquo;t notice them until the middle of an incident when you go looking for a specific log entry and it&amp;rsquo;s just&amp;hellip; gone. So the priority was finding something more reliable. A logging pipeline that silently loses data is worse than having no pipeline at all - at least you know no pipeline won&amp;rsquo;t give you false confidence.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Kubernetes 1.31 Upgrade</title>
+      <link>https://rnemeth90.github.io/projects/2025-03-26-kubernetes-upgrade-1-31/</link>
+      <pubDate>Wed, 26 Mar 2025 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2025-03-26-kubernetes-upgrade-1-31/</guid>
+      <description>&lt;p&gt;Kubernetes 1.31 upgrade. Deliberately sequenced behind a NAT gateway rollout that touched the same clusters - didn&amp;rsquo;t want to stack two risky changes on top of each other at once.&lt;/p&gt;&#xA;&lt;p&gt;Sequencing matters in infrastructure work. Tempting to parallelize everything, but when two projects hit the same blast radius, doing them in order and confirming stability between is safer, even if the calendar slips a bit.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Kubernetes 1.26 Upgrade and API Deprecation Cleanup</title>
+      <link>https://rnemeth90.github.io/projects/2024-01-15-kubernetes-upgrade-1-26/</link>
+      <pubDate>Mon, 15 Jan 2024 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2024-01-15-kubernetes-upgrade-1-26/</guid>
+      <description>&lt;p&gt;Every Kubernetes minor version bump is a small adventure in finding deprecated APIs lurking in your manifests, Helm charts, and third-party controllers. Move from 1.25 to 1.26 and something&amp;rsquo;s going to break if you&amp;rsquo;re not careful.&lt;/p&gt;&#xA;&lt;p&gt;The big gotcha for this cycle was autoscaling/v2beta2 getting axed in favor of the stable autoscaling/v2 API. I went through our manifests and every Helm chart we use to catch anything still on the beta version before we touched a single cluster. I also dug into the Azure advisories for this version since cloud providers always have some surprises lurking.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Nginx Ingress Response Header Size - A Cautionary Tale</title>
       <link>https://rnemeth90.github.io/posts/2023-12-04-nginx-ingress-resp-header-size/</link>
       <pubDate>Mon, 11 Dec 2023 00:00:00 +0000</pubDate>
       <guid>https://rnemeth90.github.io/posts/2023-12-04-nginx-ingress-resp-header-size/</guid>
       <description>&lt;p&gt;This will be a short post about a recent issue I encountered when using Nginx as a Kubernetes ingress. Though, this could also be encountered when using Nginx as a reverse proxy as well. The two definitions are functionally similar.&lt;/p&gt;&#xA;&lt;p&gt;We recently had a client call in complaining of our application returning random 502s (Bad Gateway).&lt;/p&gt;&#xA;&lt;p&gt;After some investigation and the common finger-pointing, I found this entry in the logs of our ingress controllers:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Migrating AKS Workloads to Azure Workload Identity</title>
+      <link>https://rnemeth90.github.io/projects/2023-06-13-aks-workload-identity-migration/</link>
+      <pubDate>Tue, 13 Jun 2023 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2023-06-13-aks-workload-identity-migration/</guid>
+      <description>&lt;p&gt;For a long time, the standard way for a pod in AKS to authenticate to Azure resources (Key Vault, databases, service bus, etc.) was some flavor of managed identity binding via a sidecar (AAD Pod Identity), or worse, credentials baked into a secret. Azure Workload Identity is the modern replacement: it federates a Kubernetes service account with an Azure AD identity using OIDC, with no secrets to manage or rotate.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Locking Down AKS Access with Azure RBAC and Privileged Identity Management</title>
+      <link>https://rnemeth90.github.io/projects/2023-05-01-aks-rbac-and-pim/</link>
+      <pubDate>Mon, 01 May 2023 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2023-05-01-aks-rbac-and-pim/</guid>
+      <description>&lt;p&gt;Kubernetes&amp;rsquo; built-in RBAC is powerful, but managing it purely inside the cluster (via kubeconfigs and static role bindings) doesn&amp;rsquo;t integrate well with how most organizations manage identity and access at the directory level. Azure RBAC integration for AKS lets you manage cluster access using Azure AD groups and role assignments, which is a much better fit for how access reviews and least-privilege policies actually get enforced.&lt;/p&gt;&#xA;&lt;p&gt;This project deployed Azure RBAC to our AKS clusters so that cluster access is controlled the same way as the rest of our Azure resources, and paired it with Privileged Identity Management (PIM) so that elevated cluster permissions are just-in-time and time-bound rather than standing access.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Diagnosing and Safely Re-enabling AKS Automatic Node Image Updates</title>
+      <link>https://rnemeth90.github.io/projects/2023-03-21-aks-automatic-node-image-updates/</link>
+      <pubDate>Tue, 21 Mar 2023 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2023-03-21-aks-automatic-node-image-updates/</guid>
+      <description>&lt;p&gt;AKS has a feature that automatically applies the latest node image to your node pools on a schedule. It&amp;rsquo;s a great way to stay current on OS-level patches without manual intervention - until it causes a service degradation in prod.&lt;/p&gt;&#xA;&lt;p&gt;After an automatic node image rollout caused instability in one of our environments, we disabled the feature while we investigated with Microsoft support. No definitive root cause was found, but the support engagement did produce some useful recommendations around additional node-level logging to capture if the issue recurred.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Rolling Out New AKS Clusters to Retire Duplicate Infrastructure</title>
+      <link>https://rnemeth90.github.io/projects/2023-03-21-rolling-out-new-aks-clusters/</link>
+      <pubDate>Tue, 21 Mar 2023 09:00:00 +0000</pubDate>
+      <guid>https://rnemeth90.github.io/projects/2023-03-21-rolling-out-new-aks-clusters/</guid>
+      <description>&lt;p&gt;Over time, infrastructure accumulates cruft - clusters stood up for a specific purpose that never got cleaned up, duplicate environments left over from a migration, that sort of thing. This project stood up a new generation of AKS clusters specifically so we could decommission an older, duplicate set of infrastructure that was quietly costing money every month.&lt;/p&gt;&#xA;&lt;p&gt;The approach was straightforward: build the new clusters alongside the old ones, migrate workloads over, validate, and then tear down the legacy infrastructure. Running both environments in parallel for a short overlap period had a real (if temporary) cost - a few thousand dollars over a couple of months - but it bought us a safe cutover with a rollback path, which was worth it compared to the ongoing cost of carrying duplicate infrastructure indefinitely.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Handling Graceful Shutdown in a .NET App Hosted in Kubernetes</title>

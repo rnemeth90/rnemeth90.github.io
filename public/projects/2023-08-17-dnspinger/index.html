@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  DnsPinger: A Small .NET Tool for Diagnosing DNS Issues in Kubernetes · GeekyRyan
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Ryan Nemeth">
+<meta name="description" content="DNS problems in Kubernetes are some of the most frustrating issues to chase down. They&rsquo;re often intermittent, they can differ by node, by node pool, by which resolver actually answered the query, and the standard toolbox (nslookup/dig run once by hand) doesn&rsquo;t tell you much about a problem that only shows up 1% of the time or only on certain nodes. I got tired of manually reproducing DNS flakiness during incidents, so I wrote DnsPinger - a small, purpose-built .NET console application that continuously exercises DNS resolution from inside the cluster and reports what it finds.">
+<meta name="keywords" content="blog,developer,personal,devops">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="DnsPinger: A Small .NET Tool for Diagnosing DNS Issues in Kubernetes">
+  <meta name="twitter:description" content="DNS problems in Kubernetes are some of the most frustrating issues to chase down. They’re often intermittent, they can differ by node, by node pool, by which resolver actually answered the query, and the standard toolbox (nslookup/dig run once by hand) doesn’t tell you much about a problem that only shows up 1% of the time or only on certain nodes. I got tired of manually reproducing DNS flakiness during incidents, so I wrote DnsPinger - a small, purpose-built .NET console application that continuously exercises DNS resolution from inside the cluster and reports what it finds.">
+
+<meta property="og:url" content="https://rnemeth90.github.io/projects/2023-08-17-dnspinger/">
+  <meta property="og:site_name" content="GeekyRyan">
+  <meta property="og:title" content="DnsPinger: A Small .NET Tool for Diagnosing DNS Issues in Kubernetes">
+  <meta property="og:description" content="DNS problems in Kubernetes are some of the most frustrating issues to chase down. They’re often intermittent, they can differ by node, by node pool, by which resolver actually answered the query, and the standard toolbox (nslookup/dig run once by hand) doesn’t tell you much about a problem that only shows up 1% of the time or only on certain nodes. I got tired of manually reproducing DNS flakiness during incidents, so I wrote DnsPinger - a small, purpose-built .NET console application that continuously exercises DNS resolution from inside the cluster and reports what it finds.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="projects">
+    <meta property="article:published_time" content="2026-08-17T09:00:00+00:00">
+    <meta property="article:modified_time" content="2026-08-17T09:00:00+00:00">
+    <meta property="article:tag" content="Dotnet">
+    <meta property="article:tag" content="Kubernetes">
+    <meta property="article:tag" content="Dns">
+    <meta property="article:tag" content="Observability">
+    <meta property="article:tag" content="Csharp">
+
+
+
+
+<link rel="canonical" href="https://rnemeth90.github.io/projects/2023-08-17-dnspinger/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.ed30115a76cdaa62f2229e973d5b1c89b2d3dd4b1d9c07a729baad06aa3b0cbe.css" integrity="sha256-7TARWnbNqmLyIp6XPVscibLT3UsdnAenKbqtBqo7DL4=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="https://rnemeth90.github.io/">
+      GeekyRyan
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/til/">TIL</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/notes/">Notes</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/htb/">HTB</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/links/">Links</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://rnemeth90.github.io/projects/2023-08-17-dnspinger/">
+          DnsPinger: A Small .NET Tool for Diagnosing DNS Issues in Kubernetes
+        </a>
+      </h1>
+    </header>
+
+    <p>DNS problems in Kubernetes are some of the most frustrating issues to chase down. They&rsquo;re often intermittent, they can differ by node, by node pool, by which resolver actually answered the query, and the standard toolbox (<code>nslookup</code>/<code>dig</code> run once by hand) doesn&rsquo;t tell you much about a problem that only shows up 1% of the time or only on certain nodes. I got tired of manually reproducing DNS flakiness during incidents, so I wrote <strong>DnsPinger</strong> - a small, purpose-built .NET console application that continuously exercises DNS resolution from inside the cluster and reports what it finds.</p>
+<h2 id="what-it-does">
+  What it does
+  <a class="heading-link" href="#what-it-does">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>At its core, DnsPinger runs a simple loop: on a fixed interval, it resolves a configurable list of domain names using multiple resolvers in parallel, and reports the result (success/failure, number of records returned, and how long the lookup took) as telemetry. It&rsquo;s designed to run continuously as a long-lived pod (deployed via daemon-set), rather than as a one-off diagnostic you run manually when something&rsquo;s already on fire - the value is in having a continuous baseline so you can see exactly when resolution started failing or slowing down, on which node, against which resolver.</p>
+<p>A few design details worth calling out:</p>
+<ul>
+<li><strong>Pluggable resolvers.</strong> DnsPinger supports the built-in .NET resolver (<code>Dns.GetHostEntry</code>) as well as one or more custom resolvers pointed at specific DNS server IPs, via the <code>DnsClient</code> library. This matters because in Kubernetes, &ldquo;DNS isn&rsquo;t working&rdquo; can mean different things depending on whether the problem is with the cluster&rsquo;s DNS service, an upstream resolver, or something node-specific - running the same lookup through multiple resolvers side-by-side isolates which layer is actually failing.</li>
+<li><strong>Environment-variable driven configuration.</strong> Everything - which domains to resolve, which custom resolvers to use and their IPs, a region label, and arbitrary custom telemetry dimensions - is configured through environment variables. That makes it trivial to deploy the same container image with different configurations to different node pools or environments via Helm values, without a rebuild.</li>
+<li><strong>Application Insights telemetry.</strong> Every lookup attempt is reported as a telemetry event with dimensions (resolver used, domain, region, success/failure, custom tags) and metrics (result count, time taken). That turns &ldquo;is DNS broken right now&rdquo; from a guessing game into a dashboard/query you can filter by node pool, resolver, or time window.</li>
+<li><strong>ICMP/NIC statistics.</strong> Alongside DNS lookups, it periodically reports network interface ICMP statistics (echo requests/replies, unreachable messages, etc.), which has been useful for correlating DNS failures with broader network-layer symptoms rather than assuming every failure is DNS-specific.</li>
+</ul>
+<h2 id="why-a-custom-tool-instead-of-existing-options">
+  Why a custom tool instead of existing options
+  <a class="heading-link" href="#why-a-custom-tool-instead-of-existing-options">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>There are off-the-shelf DNS monitoring tools, but most are built to monitor DNS from the outside (synthetic checks against public records) rather than from inside a cluster&rsquo;s own network, resolving the cluster&rsquo;s own internal and external dependencies through the cluster&rsquo;s own resolver chain. Writing something purpose-built meant I could tune it exactly to the failure modes I actually cared about - resolver-specific comparisons (OpenDNS, Google, in-cluster coredns, etc.) for each node and custom telemetry dimensions with long-term retention for behavioral analysis over days/weeks/months.</p>
+<h2 id="where-its-deployed">
+  Where it&rsquo;s deployed
+  <a class="heading-link" href="#where-its-deployed">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>DnsPinger runs as a lightweight, always-on pod across a handful of node pools (both Windows and Linux), each with its own Helm values file so region/resolver/domain configuration can be tuned per pool without touching code. It&rsquo;s been genuinely useful during past DNS-flakiness investigations - instead of trying to reproduce an intermittent issue by hand while everyone&rsquo;s watching, I can just go pull up the telemetry and see exactly which resolver, which node pool, and what time window was affected.</p>
+<p>This one didn&rsquo;t come out of a formal planning process or a tracked work item - it was a &ldquo;let me just build the tool I wish I had&rdquo; project born out of one too many frustrating DNS troubleshooting sessions, and it stuck around for a long-time while we debugged countless DNS resolution failures in our cluster!</p>
+
+  </article>
+</section>
+
+  
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2012 -
+    
+    2026
+     Ryan Nemeth 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
