@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-df557b97.js";
+            window.path_to_searchindex_js = "../searchindex-5b860f22.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-da42f48c.js"></script>
+        <script src="../toc-85f76174.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -183,8 +183,8 @@
                     <main>
                         <h1 id="memory-management"><a class="header" href="#memory-management">Memory Management</a></h1>
 <ul>
-<li>When you get done using heap memory, it needs to be cleaned up. This can done using a process known as ‘garbage collection’, or manually by the developer when creating the app</li>
-<li>Implementation of both the stack and heap is usually down to the runtime / OS.</li>
+<li>When you get done using heap memory, it needs to be cleaned up. This can done using a process known as ‘garbage collection’, or manually by the developer when creating the app
+Implementation of both the stack and heap is usually down to the runtime / OS.</li>
 <li>There are 2 memory constructs, stack and heap.</li>
 </ul>
 <h3 id="stack"><a class="header" href="#stack">Stack:</a></h3>
@@ -238,6 +238,319 @@
 <li>Sharing: Heap objects can be shared between multiple threads, while stack objects are local to a single thread.</li>
 <li>Polymorphism: Creating objects on the heap allows for polymorphism, where objects of different derived classes can be referenced using a base class pointer.</li>
 </ol>
+<h3 id="free-space-management"><a class="header" href="#free-space-management">Free space Management</a></h3>
+<ul>
+<li><code>malloc</code> is one example of a library used to manage4 pages of a process’s heap, the OS manages the address space of a process</li>
+<li>managing free space is simple when the space being managed is divided into fixed-size units. When a client requests memory, just return the first available segment.</li>
+<li>Free space management becomes difficult when the free space you are managing consists of variable-sized segments.</li>
+<li>This is external fragmentation</li>
+<li>The generic data structure used to manage free space in the heap is known as the “free list”. The free list contains links to all free chunks of space in the managed memory.</li>
+<li>Any modern memory allocator will handle both splitting and coalescing</li>
+<li>Most allocators store a little bit of extra information in a header block which is kept in memory. The header contains the size of the allocated region, and potentially a magic number to provider additional integrity checking, additional pointers to speed up deallocation, etc.</li>
+</ul>
+<h3 id="paging"><a class="header" href="#paging">Paging</a></h3>
+<ul>
+<li>It is said that the operating system takes two approaches when solving most any space-management problem: the first approach is to chop things up into variable-sized pieces (i.e. segmentation), this can lead to fragmentation and becomes difficult to manage over time. The second approach chops things up into fixesd-sized pieces (i.e. paging). With paging, we divide a processes address space into a number of fixed-sized units known as ‘pages’. We then view physical memory as a number of fixed-sized slots called “page frames”, each of which can contain a single virtual memory page.</li>
+</ul>
+<p>Physical memory (100 MB total (we choose a small size here for simplicity)):
+Pages frames:
+|——————|</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>- Frame 0 (25MB) -</th></tr>
+</thead>
+<tbody>
+<tr><td>- Frame 1 (25MB) -</td></tr>
+<tr><td>——————</td></tr>
+<tr><td>- Frame 2 (25MB) -</td></tr>
+<tr><td>——————</td></tr>
+<tr><td>- Frame 3 (25MB) -</td></tr>
+<tr><td>——————</td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>These frames can exist practically anywhere in physical memory. The OS keeps track of the virtual-to-physical mapping in a “page table”.  The page table is a “per-process” data structure.</li>
+</ul>
+<p>Page table for process with PID 8012:
+|———————————————|</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>- Virtual Frame 0 (25MB) &gt; Physical frame 0 -</th></tr>
+</thead>
+<tbody>
+<tr><td>- Virtual Frame 1 (25MB) &gt; Physical frame 6 -</td></tr>
+<tr><td>———————————————</td></tr>
+<tr><td>- Virtual Frame 2 (25MB) &gt; Physical frame 1 -</td></tr>
+<tr><td>———————————————</td></tr>
+<tr><td>- Virtual Frame 3 (25MB) &gt; Physical frame 3 -</td></tr>
+<tr><td>———————————————</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="virtual-address-structure"><a class="header" href="#virtual-address-structure">Virtual Address Structure</a></h3>
+<ul>
+<li>Every virtual address issued by a process is split into two parts by the hardware:
+<ul>
+<li><strong>Virtual Page Number (VPN)</strong> — identifies which page the address falls in</li>
+<li><strong>Page Offset</strong> — the byte position <em>within</em> that page</li>
+</ul>
+</li>
+<li>The page size determines how many bits go to the offset. A 4 KB page needs 12 bits (2^12 = 4096).</li>
+<li>The remaining bits form the VPN.</li>
+</ul>
+<p>32-bit virtual address with 4 KB pages (12-bit offset, 20-bit VPN):</p>
+<pre><code> 31                 12 11                 0
+ |-------- VPN -------|------ Offset ------|
+ |     20 bits        |      12 bits       |
+ |--------------------|-------------------|
+</code></pre>
+<p>64-bit virtual address with 4 KB pages (common on x86-64):</p>
+<pre><code> 63          48 47          12 11          0
+ |-- unused --|---- VPN -----|-- Offset ---|
+ |  16 bits   |   36 bits    |   12 bits   |
+ |------------|--------------|-------------|
+</code></pre>
+<p>(x86-64 only uses 48 bits for virtual addresses in practice; bits 48–63 are sign-extended.)</p>
+<h3 id="translating-a-virtual-address-to-a-physical-address"><a class="header" href="#translating-a-virtual-address-to-a-physical-address">Translating a Virtual Address to a Physical Address</a></h3>
+<p>When the CPU accesses a virtual address, the MMU (Memory Management Unit) performs the following steps:</p>
+<pre><code>Step 1: Split the virtual address
++------------------+----------------+
+|   VPN            |   Offset       |
++------------------+----------------+
+
+Step 2: Use VPN to index into the page table
++------------------+      +---------------------+
+|   VPN            | ---&gt; | Page Table Entry    |
++------------------+      | (contains PFN +     |
+                          |  valid/dirty/prot   |
+                          |  flags)             |
+                          +---------------------+
+
+Step 3: Combine PFN with original offset
++------------------+----------------+
+|   PFN            |   Offset       |  &lt;-- Physical Address
++------------------+----------------+
+</code></pre>
+<ul>
+<li>The <strong>offset is never translated</strong> — it passes through unchanged. Only the VPN is replaced by the PFN.</li>
+<li>If the page table entry’s <strong>valid bit</strong> is 0, the page is not in physical memory and a <strong>page fault</strong> is triggered — the OS loads the page from disk and retries.</li>
+</ul>
+<h3 id="concrete-example"><a class="header" href="#concrete-example">Concrete Example</a></h3>
+<p>Assume:</p>
+<ul>
+<li>16-bit virtual address space</li>
+<li>Page size: 256 bytes → offset = 8 bits (2^8 = 256)</li>
+<li>VPN = upper 8 bits</li>
+</ul>
+<pre><code>Virtual address: 0x026C  =  0000 0010 0110 1100
+
+Split:
++----------+----------+
+|  VPN     |  Offset  |
+|  0x02    |  0x6C    |
+| (page 2) | (byte 108)|
++----------+----------+
+
+Page table lookup (VPN 0x02):
++---------+-------------------+
+| VPN     | PFN               |
++---------+-------------------+
+|  0x00   | 0x05              |
+|  0x01   | 0x08              |
+|  0x02   | 0x03  &lt;-- match   |
+|  0x03   | 0x07              |
++---------+-------------------+
+
+Physical address = PFN 0x03 + offset 0x6C:
++----------+----------+
+|  PFN     |  Offset  |
+|  0x03    |  0x6C    |
++----------+----------+
+= 0x036C
+</code></pre>
+<h3 id="page-table-entry-pte-flags"><a class="header" href="#page-table-entry-pte-flags">Page Table Entry (PTE) Flags</a></h3>
+<p>Each entry in the page table stores more than just the PFN — it also carries protection and status bits:</p>
+<pre><code>+-----+-----+-----+-----+-----+-------- PFN --------+
+|  V  |  R  |  W  |  X  |  D  |   Physical Frame #  |
++-----+-----+-----+-----+-----+--------------------+
+  ^     ^     ^     ^     ^
+  |     |     |     |     Dirty: page has been written to
+  |     |     |     Execute: page can be executed
+  |     |     Write: page can be written
+  |     Read: page can be read
+  Valid: page is present in physical memory (0 = page fault)
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Name</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>V</td><td>Valid</td><td>1 = page is in physical memory; 0 = triggers page fault</td></tr>
+<tr><td>R</td><td>Read</td><td>Page is readable</td></tr>
+<tr><td>W</td><td>Write</td><td>Page is writable</td></tr>
+<tr><td>X</td><td>Execute</td><td>Page is executable (NX bit when cleared = no-execute)</td></tr>
+<tr><td>D</td><td>Dirty</td><td>Page has been modified since last written to disk</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="the-translation-lookaside-buffer-tlb"><a class="header" href="#the-translation-lookaside-buffer-tlb">The Translation Lookaside Buffer (TLB)</a></h3>
+<ul>
+<li>Looking up the page table on every memory access would require an additional memory read, doubling the cost of every instruction.</li>
+<li>The CPU caches recent VPN→PFN translations in a small, fast hardware structure called the <strong>TLB</strong> (Translation Lookaside Buffer).</li>
+<li>On each memory access the MMU checks the TLB first:</li>
+</ul>
+<pre><code>CPU issues virtual address
+         |
+         v
+   +------------+     hit     +----------------------+
+   |    TLB     | ----------&gt; | Use cached PFN       |
+   +------------+             +----------------------+
+         |
+       miss
+         |
+         v
+   +------------+
+   | Page Table | (walks the page table in memory)
+   | Walk       |
+   +------------+
+         |
+         v
+   +------------------+
+   | Load entry into  |
+   | TLB, retry       |
+   +------------------+
+</code></pre>
+<ul>
+<li>A <strong>TLB hit</strong> resolves the address in ~1 cycle. A <strong>TLB miss</strong> takes tens to hundreds of cycles (memory access to walk the page table).</li>
+<li>Context switches (switching between processes) require either <strong>flushing</strong> the TLB or tagging entries with an <strong>ASID</strong> (Address Space Identifier) so entries from different processes can coexist.</li>
+</ul>
+<h3 id="page-table-structure"><a class="header" href="#page-table-structure">Page Table Structure</a></h3>
+<h4 id="linear-single-level-page-table"><a class="header" href="#linear-single-level-page-table">Linear (Single-Level) Page Table</a></h4>
+<ul>
+<li>The simplest form: a flat array stored in memory, indexed directly by the VPN.</li>
+<li>Entry <code>i</code> in the array is the PTE for virtual page <code>i</code>.</li>
+<li>The OS stores the base address of this array in a register (e.g., <code>CR3</code> on x86).</li>
+</ul>
+<pre><code>VPN 0  +------------------+
+       | PTE 0 (PFN + flags)|
+VPN 1  +------------------+
+       | PTE 1 (PFN + flags)|
+VPN 2  +------------------+
+       | PTE 2 (PFN + flags)|
+  ...  +------------------+
+VPN N  | PTE N (PFN + flags)|
+       +------------------+
+</code></pre>
+<p><strong>The size problem:</strong></p>
+<ul>
+<li>32-bit address space, 4 KB pages → 2^20 = 1,048,576 entries</li>
+<li>Each PTE is 4 bytes → <strong>4 MB per process</strong>, just for the page table</li>
+<li>With 100 running processes → 400 MB of memory consumed by page tables alone</li>
+<li>A 64-bit address space makes this completely impractical</li>
+</ul>
+<h4 id="multi-level-page-tables"><a class="header" href="#multi-level-page-tables">Multi-Level Page Tables</a></h4>
+<ul>
+<li>Rather than one large flat array, split the VPN into multiple parts and build a tree of page tables.</li>
+<li>Only allocate inner table nodes for regions of the address space actually in use — large unmapped gaps consume no memory.</li>
+<li>Each level of the tree is itself a page-sized table (fits in one 4 KB page).</li>
+</ul>
+<p><strong>Two-level example (x86 32-bit, 10|10|12 split):</strong></p>
+<pre><code>Virtual address (32 bits):
++----------+----------+--------------+
+|  VPN1    |  VPN2    |   Offset     |
+| 10 bits  | 10 bits  |   12 bits    |
++----------+----------+--------------+
+     |           |
+     |           +-------&gt; indexes into a second-level page table
+     +-----------------&gt; indexes into the Page Directory
+</code></pre>
+<p>The walk:</p>
+<pre><code>CR3 register
+     |
+     v
++--------------------+         (Page Directory — 1024 entries)
+| PDE 0              |
+| PDE 1              |
+| ...                |
+| PDE[VPN1] ------+  |
+| ...             |  |
++--------------------+
+                  |
+                  v
+         +--------------------+   (Second-level Page Table — 1024 entries)
+         | PTE 0              |
+         | PTE 1              |
+         | ...                |
+         | PTE[VPN2] ---+     |
+         | ...          |     |
+         +--------------------+
+                        |
+                        v
+                  +----------+----------+
+                  |   PFN    |  Offset  |  &lt;-- Physical Address
+                  +----------+----------+
+</code></pre>
+<ul>
+<li>If <code>PDE[VPN1]</code> is not valid, the entire second-level table for that region is not allocated — saving 4 MB for every 4 MB gap in the address space.</li>
+<li>A process with a small code segment and a small heap/stack needs only a handful of second-level tables, regardless of the total address space size.</li>
+</ul>
+<p><strong>Three-level and four-level tables</strong> extend this pattern for larger address spaces. Each additional level adds 9 bits of VPN indexing in exchange for one more memory access during a TLB miss.</p>
+<h4 id="x86-64-four-level-page-table-999912"><a class="header" href="#x86-64-four-level-page-table-999912">x86-64 Four-Level Page Table (9|9|9|9|12)</a></h4>
+<p>x86-64 uses a 48-bit virtual address split into four 9-bit VPN fields plus a 12-bit offset:</p>
+<pre><code>Virtual address (48 bits used):
++-------+-------+-------+-------+--------------+
+|  PGD  |  PUD  |  PMD  |  PTE  |   Offset     |
+| 9 bits| 9 bits| 9 bits| 9 bits|   12 bits    |
++-------+-------+-------+-------+--------------+
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Level</th><th>Linux name</th><th>x86 name</th><th>Indexes</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>PGD (Page Global Directory)</td><td>PML4</td><td>bits 47–39</td></tr>
+<tr><td>2</td><td>PUD (Page Upper Directory)</td><td>PDPT</td><td>bits 38–30</td></tr>
+<tr><td>3</td><td>PMD (Page Middle Directory)</td><td>PD</td><td>bits 29–21</td></tr>
+<tr><td>4</td><td>PTE (Page Table Entry)</td><td>PT</td><td>bits 20–12</td></tr>
+<tr><td>—</td><td>Offset</td><td>—</td><td>bits 11–0</td></tr>
+</tbody>
+</table>
+</div>
+<p>The four-level walk (four memory accesses on a TLB miss):</p>
+<pre><code>CR3
+ |
+ v
++-------+    +-------+    +-------+    +-------+    +---------+
+|  PGD  | -&gt; |  PUD  | -&gt; |  PMD  | -&gt; |  PTE  | -&gt; | PFN +   |
+| [idx] |    | [idx] |    | [idx] |    | [idx] |    | Offset  |
++-------+    +-------+    +-------+    +-------+    +---------+
+  ^             ^             ^             ^
+  bits 47-39    bits 38-30    bits 29-21    bits 20-12
+</code></pre>
+<ul>
+<li>Each table fits in exactly one 4 KB page (512 entries × 8 bytes = 4096 bytes).</li>
+<li>An entire 512 GB region of virtual address space can be left unallocated by having one null PGD entry — zero memory consumed.</li>
+<li>Linux 5.4+ supports a <strong>five-level</strong> page table (57-bit virtual addresses) for systems needing more than 128 TB of virtual address space per process.</li>
+</ul>
+<h4 id="page-table-size-comparison"><a class="header" href="#page-table-size-comparison">Page Table Size Comparison</a></h4>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Architecture</th><th>Levels</th><th>VPN split</th><th>Max virtual space</th><th>Table walk cost</th></tr>
+</thead>
+<tbody>
+<tr><td>x86 32-bit</td><td>2</td><td>10|10|12</td><td>4 GB</td><td>2 memory reads</td></tr>
+<tr><td>x86-64</td><td>4</td><td>9|9|9|9|12</td><td>128 TB</td><td>4 memory reads</td></tr>
+<tr><td>x86-64 (5-level)</td><td>5</td><td>9|9|9|9|9|12</td><td>128 PB</td><td>5 memory reads</td></tr>
+</tbody>
+</table>
+</div>
+<p>Each level adds one memory access on a TLB miss — the TLB exists precisely to amortize this cost. With a warm TLB, the number of levels has no runtime impact.</p>
 
                     </main>
 

