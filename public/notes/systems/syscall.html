@@ -1,0 +1,725 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>System Calls - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-e5200d07.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-33caecdc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="system-calls"><a class="header" href="#system-calls">System Calls</a></h1>
+<p>The kernel implements a programming interface called the <strong>system call interface</strong>. User-space programs cannot directly access hardware or kernel data structures — they must request privileged operations by crossing the user/kernel boundary via a system call.</p>
+<hr>
+<h2 id="how-system-calls-work"><a class="header" href="#how-system-calls-work">How System Calls Work</a></h2>
+<h3 id="user-mode-vs-kernel-mode"><a class="header" href="#user-mode-vs-kernel-mode">User mode vs. kernel mode</a></h3>
+<p>The CPU operates in two privilege levels (rings on x86):</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mode</th><th>Ring</th><th>Access</th></tr>
+</thead>
+<tbody>
+<tr><td>User mode</td><td>Ring 3</td><td>Restricted — no direct hardware access, limited memory</td></tr>
+<tr><td>Kernel mode</td><td>Ring 0</td><td>Unrestricted — full hardware access, all memory</td></tr>
+</tbody>
+</table>
+</div>
+<p>Normal application code runs in user mode. System calls are the controlled gateway into kernel mode.</p>
+<h3 id="the-trap-mechanism"><a class="header" href="#the-trap-mechanism">The trap mechanism</a></h3>
+<p>A system call is initiated by a <strong>trap</strong> (software interrupt). On x86-32 this is <code>int 0x80</code>; on x86-64 it is the <code>syscall</code> instruction. The sequence:</p>
+<ol>
+<li><strong>User space:</strong> Program loads the syscall number into <code>rax</code> (x86-64) or <code>eax</code> (x86-32) and arguments into the designated registers, then executes <code>syscall</code> / <code>int 0x80</code>.</li>
+<li><strong>Hardware:</strong> Saves the current instruction pointer, stack pointer, and CPU flags onto the kernel stack; switches privilege level to ring 0; jumps to the kernel’s trap handler (whose address was registered at boot).</li>
+<li><strong>Kernel:</strong> Looks up the syscall number in the <strong>syscall table</strong>, calls the corresponding kernel function, places the return value in <code>rax</code>/<code>eax</code>.</li>
+<li><strong>Hardware:</strong> On <code>sysret</code> / <code>iret</code>, restores user-mode registers and privilege level, resumes the program at the instruction after the trap.</li>
+</ol>
+<h3 id="trap-table-boot-time-setup"><a class="header" href="#trap-table-boot-time-setup">Trap table (boot-time setup)</a></h3>
+<p>When the machine boots, the OS runs in kernel mode and registers the addresses of its <strong>trap handlers</strong> with the hardware — one handler per exception type (syscall, page fault, divide-by-zero, hardware interrupt, etc.). This is stored in the <strong>Interrupt Descriptor Table (IDT)</strong>. Once set, the hardware uses this table for the lifetime of the boot until reboot. This is why user code cannot redirect syscalls — only the kernel can modify the IDT.</p>
+<h3 id="syscall-numbers"><a class="header" href="#syscall-numbers">Syscall numbers</a></h3>
+<p>Every syscall has an integer ID. The kernel maintains a <strong>syscall table</strong> that maps each number to a kernel function pointer.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Syscall</th><th>x86-64 number</th></tr>
+</thead>
+<tbody>
+<tr><td><code>read</code></td><td>0</td></tr>
+<tr><td><code>write</code></td><td>1</td></tr>
+<tr><td><code>open</code></td><td>2</td></tr>
+<tr><td><code>close</code></td><td>3</td></tr>
+<tr><td><code>mmap</code></td><td>9</td></tr>
+<tr><td><code>brk</code></td><td>12</td></tr>
+<tr><td><code>kill</code></td><td>62</td></tr>
+<tr><td><code>fork</code></td><td>57</td></tr>
+<tr><td><code>execve</code></td><td>59</td></tr>
+<tr><td><code>exit</code></td><td>60</td></tr>
+<tr><td><code>wait4</code></td><td>61</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="x86-64-calling-convention-for-syscalls"><a class="header" href="#x86-64-calling-convention-for-syscalls">x86-64 calling convention for syscalls</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Register</th><th>Role</th></tr>
+</thead>
+<tbody>
+<tr><td><code>rax</code></td><td>Syscall number (input); return value (output)</td></tr>
+<tr><td><code>rdi</code></td><td>Argument 1</td></tr>
+<tr><td><code>rsi</code></td><td>Argument 2</td></tr>
+<tr><td><code>rdx</code></td><td>Argument 3</td></tr>
+<tr><td><code>r10</code></td><td>Argument 4</td></tr>
+<tr><td><code>r8</code></td><td>Argument 5</td></tr>
+<tr><td><code>r9</code></td><td>Argument 6</td></tr>
+</tbody>
+</table>
+</div>
+<p>On error, <code>rax</code> holds a negative errno value (e.g., <code>-2</code> for <code>ENOENT</code>).</p>
+<h3 id="c-library-wrappers"><a class="header" href="#c-library-wrappers">C library wrappers</a></h3>
+<p>Most programs never invoke syscalls directly. The C standard library (glibc on Linux) provides a wrapper function for every syscall. The wrapper:</p>
+<ul>
+<li>Marshals arguments into the correct registers</li>
+<li>Executes the trap instruction</li>
+<li>Translates a negative return value into <code>errno</code> and returns <code>-1</code></li>
+</ul>
+<pre><code class="language-c">ssize_t write(int fd, const void *buf, size_t count);
+// ↑ glibc wrapper — internally executes: mov rax, 1; syscall
+</code></pre>
+<p>Direct syscall invocation is done with <code>syscall(2)</code>:</p>
+<pre><code class="language-c">#include &lt;sys/syscall.h&gt;
+#include &lt;unistd.h&gt;
+
+long ret = syscall(SYS_write, 1, "hello\n", 6);
+</code></pre>
+<hr>
+<h2 id="process-states"><a class="header" href="#process-states">Process States</a></h2>
+<p>A process moves through these states during its lifetime:</p>
+<pre><code>           fork()
+             │
+         ┌───▼───┐
+         │ Ready │ ◄────── waiting for CPU
+         └───┬───┘
+  scheduled  │  preempted
+         ┌───▼───┐
+         │Running│ ── I/O or event wait ──► Blocked
+         └───┬───┘                          │
+             │                              │ I/O complete
+             │ exit()           ┌───────────┘
+         ┌───▼───┐
+         │Zombie │ ◄── exit called; waiting for parent to wait()
+         └───┬───┘
+             │ parent calls wait()
+          (reaped)
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>State</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Ready</strong></td><td>Runnable, waiting for the scheduler to assign a CPU</td></tr>
+<tr><td><strong>Running</strong></td><td>Currently executing on a CPU</td></tr>
+<tr><td><strong>Blocked</strong></td><td>Waiting for an event (I/O completion, signal, lock) — not schedulable</td></tr>
+<tr><td><strong>Zombie</strong></td><td>Exited but not yet reaped by parent; minimal state retained in the process table</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="process-management-syscalls"><a class="header" href="#process-management-syscalls">Process Management Syscalls</a></h2>
+<h3 id="fork"><a class="header" href="#fork">fork</a></h3>
+<p>Creates a new child process that is an almost-exact copy of the parent.</p>
+<ul>
+<li>The child inherits the parent’s address space (copy-on-write), CPU register state, open file descriptors, signal handlers, and environment.</li>
+<li>The OS creates a new <strong>PCB</strong> (Process Control Block / <code>task_struct</code>) and assigns the child a new PID.</li>
+<li>Both parent and child resume execution at the return of <code>fork()</code>.</li>
+</ul>
+<p><strong>Return values:</strong></p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Context</th><th>Return value</th></tr>
+</thead>
+<tbody>
+<tr><td>Parent</td><td>PID of the new child (positive integer)</td></tr>
+<tr><td>Child</td><td><code>0</code></td></tr>
+<tr><td>Error</td><td><code>-1</code> (only returned to parent; child not created)</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(void)
+{
+    pid_t pid = fork();
+
+    if (pid &lt; 0) {
+        perror("fork failed");
+        return 1;
+    } else if (pid == 0) {
+        /* child */
+        printf("Child: my PID is %d, parent PID is %d\n", getpid(), getppid());
+    } else {
+        /* parent */
+        printf("Parent: my PID is %d, child PID is %d\n", getpid(), pid);
+    }
+
+    return 0;
+}
+</code></pre>
+<h3 id="exec"><a class="header" href="#exec">exec</a></h3>
+<p>The <code>exec</code> family replaces the calling process’s image with a new program loaded from a binary file. The PID is preserved but the address space, code, data, heap, and stack are completely replaced. Open file descriptors survive unless marked <code>O_CLOEXEC</code>.</p>
+<p><strong>exec variants:</strong></p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>Arg style</th><th>PATH search</th><th>Environment</th></tr>
+</thead>
+<tbody>
+<tr><td><code>execve</code></td><td>array</td><td>No</td><td>explicit array</td></tr>
+<tr><td><code>execvp</code></td><td>array</td><td>Yes</td><td>inherited</td></tr>
+<tr><td><code>execv</code></td><td>array</td><td>No</td><td>inherited</td></tr>
+<tr><td><code>execle</code></td><td>varargs</td><td>No</td><td>explicit array</td></tr>
+<tr><td><code>execlp</code></td><td>varargs</td><td>Yes</td><td>inherited</td></tr>
+<tr><td><code>execl</code></td><td>varargs</td><td>No</td><td>inherited</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>execve</code> is the actual syscall; all others are C library wrappers built on top of it.</p>
+<pre><code class="language-c">#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+    char *args[] = { "ls", "-lh", "/home", NULL };
+
+    execvp("ls", args);
+
+    /* exec only returns on failure */
+    perror("execvp failed");
+    return 1;
+}
+</code></pre>
+<p><code>fork</code> + <code>exec</code> is the standard pattern for spawning a new program:</p>
+<pre><code class="language-c">pid_t pid = fork();
+if (pid == 0) {
+    /* child: replace image with new program */
+    execvp("ls", (char *[]){ "ls", "-la", NULL });
+    perror("exec failed");
+    _exit(1);
+}
+/* parent continues here */
+</code></pre>
+<h3 id="exit"><a class="header" href="#exit">exit</a></h3>
+<p>Terminates the calling process.</p>
+<pre><code class="language-c">#include &lt;stdlib.h&gt;
+void exit(int status);     // flushes stdio buffers, runs atexit() handlers, then calls _exit()
+
+#include &lt;unistd.h&gt;
+void _exit(int status);    // raw syscall — immediate termination, no cleanup
+</code></pre>
+<p>On exit:</p>
+<ol>
+<li>The OS closes all file descriptors and releases most resources.</li>
+<li>A <code>SIGCHLD</code> signal is delivered to the parent.</li>
+<li>The process moves to the <strong>zombie</strong> state — the PCB remains in the process table with exit status info until the parent calls <code>wait</code>.</li>
+</ol>
+<h3 id="wait-and-waitpid"><a class="header" href="#wait-and-waitpid">wait and waitpid</a></h3>
+<p>A parent <strong>reaps</strong> a zombie child by calling <code>wait</code> or <code>waitpid</code>. This removes the child’s entry from the process table and retrieves its exit status.</p>
+<pre><code class="language-c">#include &lt;sys/wait.h&gt;
+
+pid_t wait(int *status);
+pid_t waitpid(pid_t pid, int *status, int options);
+</code></pre>
+<p><strong><code>wait</code></strong> — blocks until any child exits; returns the child’s PID.</p>
+<p><strong><code>waitpid</code></strong> — more flexible:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th><code>pid</code> argument</th><th>Behavior</th></tr>
+</thead>
+<tbody>
+<tr><td><code>-1</code></td><td>Wait for any child (same as <code>wait</code>)</td></tr>
+<tr><td><code>&gt; 0</code></td><td>Wait for the specific child PID</td></tr>
+<tr><td><code>0</code></td><td>Wait for any child in the same process group</td></tr>
+<tr><td><code>&lt; -1</code></td><td>Wait for any child in process group <code>abs(pid)</code></td></tr>
+</tbody>
+</table>
+</div>
+<p><code>options</code>:</p>
+<ul>
+<li><code>WNOHANG</code> — return immediately if no child has exited (non-blocking)</li>
+<li><code>WUNTRACED</code> — also return if a child has stopped (not just exited)</li>
+</ul>
+<p><strong>Status macros:</strong></p>
+<pre><code class="language-c">int status;
+pid_t child = waitpid(-1, &amp;status, 0);
+
+if (WIFEXITED(status))
+    printf("exited normally, status %d\n", WEXITSTATUS(status));
+else if (WIFSIGNALED(status))
+    printf("killed by signal %d\n", WTERMSIG(status));
+</code></pre>
+<p><strong>Full fork/exec/wait example:</strong></p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(void)
+{
+    pid_t pid = fork();
+
+    if (pid &lt; 0) {
+        perror("fork");
+        return 1;
+    } else if (pid == 0) {
+        execvp("ls", (char *[]){ "ls", "-la", NULL });
+        perror("exec");
+        _exit(1);
+    }
+
+    int status;
+    waitpid(pid, &amp;status, 0);
+
+    if (WIFEXITED(status))
+        printf("child exited with status %d\n", WEXITSTATUS(status));
+
+    return 0;
+}
+</code></pre>
+<p>If a parent exits before reaping its children, the children are <strong>reparented</strong> to PID 1 (<code>init</code> / <code>systemd</code>), which reaps them automatically.</p>
+<h3 id="getpid--getppid"><a class="header" href="#getpid--getppid">getpid / getppid</a></h3>
+<pre><code class="language-c">#include &lt;unistd.h&gt;
+
+pid_t getpid(void);    // PID of the calling process
+pid_t getppid(void);   // PID of the calling process's parent
+</code></pre>
+<hr>
+<h2 id="file-io-syscalls"><a class="header" href="#file-io-syscalls">File I/O Syscalls</a></h2>
+<p>Everything in Unix is a file — regular files, devices, sockets, and pipes are all accessed through file descriptors using the same four calls.</p>
+<h3 id="file-descriptors"><a class="header" href="#file-descriptors">File descriptors</a></h3>
+<p>Every process starts with three open file descriptors:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>FD</th><th>Name</th><th>Default destination</th></tr>
+</thead>
+<tbody>
+<tr><td>0</td><td><code>stdin</code></td><td>keyboard</td></tr>
+<tr><td>1</td><td><code>stdout</code></td><td>terminal</td></tr>
+<tr><td>2</td><td><code>stderr</code></td><td>terminal</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="open"><a class="header" href="#open">open</a></h3>
+<pre><code class="language-c">#include &lt;fcntl.h&gt;
+int open(const char *path, int flags, mode_t mode);
+</code></pre>
+<p>Returns a file descriptor (non-negative integer) on success, <code>-1</code> on error.</p>
+<p>Common <code>flags</code>:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>O_RDONLY</code></td><td>Open for reading only</td></tr>
+<tr><td><code>O_WRONLY</code></td><td>Open for writing only</td></tr>
+<tr><td><code>O_RDWR</code></td><td>Open for reading and writing</td></tr>
+<tr><td><code>O_CREAT</code></td><td>Create file if it doesn’t exist (requires <code>mode</code>)</td></tr>
+<tr><td><code>O_TRUNC</code></td><td>Truncate existing file to zero length</td></tr>
+<tr><td><code>O_APPEND</code></td><td>Writes always go to end of file</td></tr>
+<tr><td><code>O_CLOEXEC</code></td><td>Close FD automatically on <code>exec</code></td></tr>
+</tbody>
+</table>
+</div>
+<p><code>mode</code> sets file permissions when <code>O_CREAT</code> is used (e.g., <code>0644</code>):</p>
+<pre><code class="language-c">int fd = open("output.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+if (fd &lt; 0) {
+    perror("open");
+    exit(1);
+}
+</code></pre>
+<h3 id="read"><a class="header" href="#read">read</a></h3>
+<pre><code class="language-c">#include &lt;unistd.h&gt;
+ssize_t read(int fd, void *buf, size_t count);
+</code></pre>
+<p>Reads up to <code>count</code> bytes from <code>fd</code> into <code>buf</code>. Returns the number of bytes actually read, <code>0</code> on EOF, <code>-1</code> on error. May return fewer bytes than requested (short read) — always loop:</p>
+<pre><code class="language-c">char buf[4096];
+ssize_t n;
+while ((n = read(fd, buf, sizeof(buf))) &gt; 0) {
+    /* process n bytes */
+}
+if (n &lt; 0)
+    perror("read");
+</code></pre>
+<h3 id="write"><a class="header" href="#write">write</a></h3>
+<pre><code class="language-c">#include &lt;unistd.h&gt;
+ssize_t write(int fd, const void *buf, size_t count);
+</code></pre>
+<p>Writes up to <code>count</code> bytes from <code>buf</code> to <code>fd</code>. Returns bytes written, or <code>-1</code> on error. Like <code>read</code>, may write fewer than <code>count</code> bytes — loop on short writes:</p>
+<pre><code class="language-c">const char *msg = "Hello, World!\n";
+size_t total = strlen(msg);
+size_t written = 0;
+while (written &lt; total) {
+    ssize_t n = write(STDOUT_FILENO, msg + written, total - written);
+    if (n &lt; 0) { perror("write"); break; }
+    written += n;
+}
+</code></pre>
+<h3 id="close"><a class="header" href="#close">close</a></h3>
+<pre><code class="language-c">#include &lt;unistd.h&gt;
+int close(int fd);
+</code></pre>
+<p>Releases the file descriptor. Always check the return value — <code>close</code> can fail (e.g., flushing buffered writes to disk on NFS). Always close file descriptors when done to avoid FD leaks.</p>
+<pre><code class="language-c">if (close(fd) &lt; 0)
+    perror("close");
+</code></pre>
+<hr>
+<h2 id="signal-syscalls"><a class="header" href="#signal-syscalls">Signal Syscalls</a></h2>
+<p>Signals are asynchronous notifications delivered to a process by the kernel or another process.</p>
+<h3 id="common-signals"><a class="header" href="#common-signals">Common signals</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Signal</th><th>Number</th><th>Default action</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>SIGINT</code></td><td>2</td><td>Terminate</td><td>Ctrl+C</td></tr>
+<tr><td><code>SIGQUIT</code></td><td>3</td><td>Core dump</td><td>Ctrl+\</td></tr>
+<tr><td><code>SIGKILL</code></td><td>9</td><td>Terminate</td><td>Cannot be caught or ignored</td></tr>
+<tr><td><code>SIGSEGV</code></td><td>11</td><td>Core dump</td><td>Segmentation fault</td></tr>
+<tr><td><code>SIGTERM</code></td><td>15</td><td>Terminate</td><td>Graceful termination request</td></tr>
+<tr><td><code>SIGCHLD</code></td><td>17</td><td>Ignore</td><td>Child stopped or exited</td></tr>
+<tr><td><code>SIGSTOP</code></td><td>19</td><td>Stop</td><td>Cannot be caught or ignored</td></tr>
+<tr><td><code>SIGCONT</code></td><td>18</td><td>Continue</td><td>Resume a stopped process</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="kill"><a class="header" href="#kill">kill</a></h3>
+<p>Despite the name, <code>kill</code> sends any signal to any process (not just <code>SIGKILL</code>):</p>
+<pre><code class="language-c">#include &lt;signal.h&gt;
+int kill(pid_t pid, int sig);
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th><code>pid</code></th><th>Target</th></tr>
+</thead>
+<tbody>
+<tr><td><code>&gt; 0</code></td><td>Specific process</td></tr>
+<tr><td><code>0</code></td><td>All processes in the caller’s process group</td></tr>
+<tr><td><code>-1</code></td><td>All processes the caller has permission to signal</td></tr>
+<tr><td><code>&lt; -1</code></td><td>All processes in process group <code>abs(pid)</code></td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-c">kill(child_pid, SIGTERM);   // ask child to terminate gracefully
+kill(child_pid, SIGKILL);   // force kill (cannot be blocked)
+</code></pre>
+<h3 id="sigaction"><a class="header" href="#sigaction">sigaction</a></h3>
+<p>The preferred way to install a signal handler (more portable and controllable than <code>signal()</code>):</p>
+<pre><code class="language-c">#include &lt;signal.h&gt;
+
+void handler(int sig) {
+    /* sig is the signal number */
+    write(STDOUT_FILENO, "caught signal\n", 14);  /* async-signal-safe only */
+}
+
+int main(void)
+{
+    struct sigaction sa = {
+        .sa_handler = handler,
+        .sa_flags   = SA_RESTART,   /* restart interrupted syscalls */
+    };
+    sigemptyset(&amp;sa.sa_mask);
+    sigaction(SIGINT, &amp;sa, NULL);
+
+    /* ... */
+}
+</code></pre>
+<p><code>SA_RESTART</code> causes syscalls interrupted by the signal to restart automatically rather than returning <code>EINTR</code>.</p>
+<p>Only <strong>async-signal-safe</strong> functions may be called inside a signal handler (e.g., <code>write</code>, <code>_exit</code>, <code>kill</code>). <code>printf</code>, <code>malloc</code>, and most library functions are not safe inside handlers.</p>
+<hr>
+<h2 id="memory-syscalls"><a class="header" href="#memory-syscalls">Memory Syscalls</a></h2>
+<h3 id="brk--sbrk"><a class="header" href="#brk--sbrk">brk / sbrk</a></h3>
+<p><code>brk</code> sets the <strong>program break</strong> — the top of the heap. <code>sbrk</code> moves it by a relative increment. <code>malloc</code> uses these internally.</p>
+<pre><code class="language-c">#include &lt;unistd.h&gt;
+
+void *sbrk(intptr_t increment);  // returns old break address
+int   brk(void *addr);           // sets break to addr
+</code></pre>
+<p>Direct use is rare — always prefer <code>malloc</code>/<code>free</code>.</p>
+<h3 id="mmap"><a class="header" href="#mmap">mmap</a></h3>
+<p>Maps a file or anonymous memory region into the process’s address space:</p>
+<pre><code class="language-c">#include &lt;sys/mman.h&gt;
+
+void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
+int   munmap(void *addr, size_t length);
+</code></pre>
+<p>Common uses:</p>
+<ul>
+<li><strong>Anonymous memory</strong> (alternative to <code>malloc</code> for large allocations): <code>fd = -1</code>, <code>flags = MAP_PRIVATE | MAP_ANONYMOUS</code></li>
+<li><strong>File mapping</strong> (load a file directly into memory): <code>flags = MAP_SHARED</code> or <code>MAP_PRIVATE</code>, <code>fd</code> = open file descriptor</li>
+</ul>
+<pre><code class="language-c">/* allocate 4096 bytes of anonymous memory */
+void *mem = mmap(NULL, 4096, PROT_READ | PROT_WRITE,
+                 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+if (mem == MAP_FAILED) {
+    perror("mmap");
+    exit(1);
+}
+
+/* map a file read-only */
+int fd = open("data.bin", O_RDONLY);
+void *data = mmap(NULL, file_size, PROT_READ, MAP_PRIVATE, fd, 0);
+close(fd);  /* fd can be closed after mmap */
+</code></pre>
+<p><code>prot</code> flags:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>PROT_READ</code></td><td>Pages are readable</td></tr>
+<tr><td><code>PROT_WRITE</code></td><td>Pages are writable</td></tr>
+<tr><td><code>PROT_EXEC</code></td><td>Pages are executable</td></tr>
+<tr><td><code>PROT_NONE</code></td><td>No access</td></tr>
+</tbody>
+</table>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../systems/storage.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../systems/system-wide-analysis.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../systems/storage.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../systems/system-wide-analysis.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
