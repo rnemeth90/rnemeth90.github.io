@@ -5,6 +5,9 @@ on:
     branches:
       - main  # Set a branch to deploy
   pull_request:
+  repository_dispatch:
+    types: [notes-updated]  # Triggered by rnemeth90/notes when it changes
+  workflow_dispatch: {}
 
 jobs:
   deploy:
@@ -14,6 +17,32 @@ jobs:
         with:
           submodules: true  # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+
+      - name: Checkout notes source
+        uses: actions/checkout@v4
+        with:
+          repository: rnemeth90/notes
+          path: notes-src
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install mdBook
+        run: cargo install mdbook
+
+      - name: Generate SUMMARY.md
+        working-directory: notes-src
+        run: python3 generate_summary.py
+
+      - name: Build mdBook
+        working-directory: notes-src
+        run: mdbook build
+
+      - name: Copy notes into Hugo public dir
+        run: |
+          rm -rf public/notes
+          mkdir -p public/notes
+          cp -r notes-src/book/. public/notes/
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
