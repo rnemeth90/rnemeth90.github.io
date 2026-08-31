@@ -43,7 +43,10 @@ jobs:
         run: |
           rm -rf public/notes
           mkdir -p public/notes
-          cp -r notes-src/book/. public/notes/
+          # notes-src/book.toml sets src = ".", so mdbook copies the whole repo
+          # root (including .git/.gitmodules) into book/. Exclude those so we
+          # never commit a stray submodule gitlink to gh-pages.
+          rsync -a --exclude='.git*' --exclude='.github' notes-src/book/ public/notes/
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
