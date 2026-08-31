@@ -23,6 +23,7 @@ jobs:
         with:
           repository: rnemeth90/notes
           path: notes-src
+          token: ${{ secrets.NOTES_REPO_TOKEN }}
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
