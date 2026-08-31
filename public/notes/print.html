@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-190f6cd0.js";
+            window.path_to_searchindex_js = "searchindex-e5200d07.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-33caecdc.js"></script>
@@ -43225,8 +43225,8 @@ Node 0, zone   Normal   3170   7694  10543   8113   5011   1761    552    182   
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="memory-management"><a class="header" href="#memory-management">Memory Management</a></h1>
 <ul>
-<li>When you get done using heap memory, it needs to be cleaned up. This can done using a process known as ‘garbage collection’, or manually by the developer when creating the app</li>
-<li>Implementation of both the stack and heap is usually down to the runtime / OS.</li>
+<li>When you get done using heap memory, it needs to be cleaned up. This can done using a process known as ‘garbage collection’, or manually by the developer when creating the app
+Implementation of both the stack and heap is usually down to the runtime / OS.</li>
 <li>There are 2 memory constructs, stack and heap.</li>
 </ul>
 <h3 id="stack"><a class="header" href="#stack">Stack:</a></h3>
@@ -43280,6 +43280,16 @@ Node 0, zone   Normal   3170   7694  10543   8113   5011   1761    552    182   
 <li>Sharing: Heap objects can be shared between multiple threads, while stack objects are local to a single thread.</li>
 <li>Polymorphism: Creating objects on the heap allows for polymorphism, where objects of different derived classes can be referenced using a base class pointer.</li>
 </ol>
+<h3 id="free-space-management"><a class="header" href="#free-space-management">Free space Management</a></h3>
+<ul>
+<li><code>malloc</code> is one example of a library used to manage4 pages of a process’s heap, the OS manages the address space of a process</li>
+<li>managing free space is simple when the space being managed is divided into fixed-size units. When a client requests memory, just return the first available segment.</li>
+<li>Free space management becomes difficult when the free space you are managing consists of variable-sized segments.</li>
+<li>This is external fragmentation</li>
+<li>The generic data structure used to manage free space in the heap is known as the “free list”. The free list contains links to all free chunks of space in the managed memory.</li>
+<li>Any modern memory allocator will handle both splitting and coalescing</li>
+<li>Most allocators store a little bit of extra information in a header block which is kept in memory. The header contains the size of the allocated region, and potentially a magic number to provider additional integrity checking, additional pointers to speed up deallocation, etc.</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="network-manager"><a class="header" href="#network-manager">network manager</a></h1>
 <ul>
