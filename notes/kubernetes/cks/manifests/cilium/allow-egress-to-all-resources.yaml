@@ -1,0 +1,9 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-egress-to-all-resources
+spec:
+  endpointSelector: {}
+  egress:
+  - toEntities:
+    - world

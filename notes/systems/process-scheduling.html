@@ -1,0 +1,1031 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Process Scheduling - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-897a42b1.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-7558c244.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="process-scheduling"><a class="header" href="#process-scheduling">Process Scheduling</a></h1>
+<p>Process scheduling is a core function of operating system kernels. It determines which process runs on the CPU at any given time, managing CPU allocation fairly and efficiently among multiple competing processes.</p>
+<h2 id="scheduling-metrics"><a class="header" href="#scheduling-metrics">Scheduling Metrics</a></h2>
+<h3 id="turnaround-time"><a class="header" href="#turnaround-time">Turnaround Time</a></h3>
+<p>Time from when a job is submitted until it completes.</p>
+<ul>
+<li><strong>Formula</strong>: <code>Turnaround Time = Completion Time - Arrival Time</code></li>
+<li>Measures total time a job spends in the system</li>
+<li>Includes both waiting and execution time</li>
+<li>Lower is better (less time job sits around)</li>
+</ul>
+<h3 id="response-time"><a class="header" href="#response-time">Response Time</a></h3>
+<p>Time from when a job arrives until it first starts running.</p>
+<ul>
+<li><strong>Formula</strong>: <code>Response Time = First Run Time - Arrival Time</code></li>
+<li>Critical for interactive systems (user perceives responsiveness)</li>
+<li>Different from turnaround time (only measures wait before first run)</li>
+<li>Lower is better (immediate feedback to user)</li>
+</ul>
+<h3 id="other-key-metrics"><a class="header" href="#other-key-metrics">Other Key Metrics</a></h3>
+<ul>
+<li><strong>Waiting Time</strong>: Time spent waiting in ready queue (not running)</li>
+<li><strong>CPU Utilization</strong>: Percentage of time CPU is actively executing processes</li>
+<li><strong>Throughput</strong>: Number of processes completed per unit time</li>
+</ul>
+<h2 id="scheduling-algorithms"><a class="header" href="#scheduling-algorithms">Scheduling Algorithms</a></h2>
+<h3 id="fifo-first-in-first-out"><a class="header" href="#fifo-first-in-first-out">FIFO (First In, First Out)</a></h3>
+<p><strong>Description</strong>: Processes are executed in the order they arrive. The first process to arrive runs to completion before the next process starts.</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Non-preemptive (once a process starts, it runs until completion)</li>
+<li>Simple to implement</li>
+<li>No starvation (all processes eventually run)</li>
+<li>Fair in theory (processes run in order of arrival)</li>
+</ul>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Very simple algorithm</li>
+<li>No context switching overhead</li>
+<li>Predictable behavior</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Convoy Effect</strong>: One long process blocks all others</li>
+<li>Poor response time for interactive applications</li>
+<li>Doesn’t account for job length</li>
+<li>Not optimal for mixed workloads</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code>Jobs: A(10ms), B(5ms), C(3ms) arrive at t=0
+
+Timeline:
+[----A (10ms)----][--B (5ms)--][C (3ms)]
+0                 10          15       18
+
+Turnaround Times:
+- A: 10ms
+- B: 15ms  
+- C: 18ms
+Average: 14.33ms
+
+Response Times:
+- A: 0ms (starts immediately)
+- B: 10ms (waits for A)
+- C: 15ms (waits for A, B)
+Average: 8.33ms
+</code></pre>
+<h3 id="sjf-shortest-job-first"><a class="header" href="#sjf-shortest-job-first">SJF (Shortest Job First)</a></h3>
+<p><strong>Description</strong>: Process with the shortest burst time (CPU time needed) runs first. Minimizes average waiting time.</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Non-preemptive (process runs to completion)</li>
+<li>Optimal for minimizing average turnaround time</li>
+<li>Requires knowing job length in advance (not always available)</li>
+<li>Can cause starvation of long jobs</li>
+</ul>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Minimizes average turnaround time (provably optimal)</li>
+<li>Better than FIFO for mixed workloads</li>
+<li>Good average waiting time</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Long jobs can starve (convoy effect still exists)</li>
+<li>Requires prior knowledge of job length</li>
+<li>Poor response time (long job must complete before others run)</li>
+<li>Unpredictable (user doesn’t know when short job will run)</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code>Jobs: A(10ms), B(5ms), C(3ms) arrive at t=0
+
+Timeline (sorted by length):
+[C (3ms)][--B (5ms)--][----A (10ms)----]
+0       3           8                  18
+
+Turnaround Times:
+- C: 3ms
+- B: 8ms
+- A: 18ms
+Average: 9.67ms (better than FIFO!)
+
+Response Times:
+- C: 0ms
+- B: 3ms
+- A: 8ms
+Average: 3.67ms
+</code></pre>
+<h3 id="stcf-shortest-time-to-completion-first"><a class="header" href="#stcf-shortest-time-to-completion-first">STCF (Shortest Time to Completion First)</a></h3>
+<p><strong>Description</strong>: Preemptive version of SJF. The process with the shortest remaining time is always run. When a new job arrives, if it has less remaining time than the current job, the current job is preempted.</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Preemptive (can pause a running process)</li>
+<li>Optimal for minimizing average turnaround time</li>
+<li>Also called Preemptive Shortest Job First (PSJF)</li>
+<li>Requires knowing remaining job length</li>
+</ul>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Optimal average turnaround time</li>
+<li>Better than SJF for varying arrival times</li>
+<li>Responsive to new short jobs</li>
+<li>Improves over SJF significantly with staggered arrivals</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Long jobs can still starve</li>
+<li>Requires knowing/estimating job length</li>
+<li>Poor response time for long jobs</li>
+<li>Context switching overhead</li>
+<li>Not fair (long jobs get less CPU time)</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code>Jobs: A(8ms), B(4ms), C(2ms)
+- A arrives at t=0
+- B arrives at t=1  
+- C arrives at t=2
+
+Timeline:
+[A(1ms)][C(2ms)][B(3ms)][A(2ms)]
+0      1       3      6       8
+
+Detailed:
+t=0: A starts (remaining: 8ms)
+t=1: B arrives (remaining: 4ms &lt; 8ms) → preempt A, run B
+t=2: C arrives (remaining: 2ms &lt; 4ms) → preempt B, run C
+t=4: C completes, run B (remaining: 3ms)
+t=6: B completes, run A (remaining: 7ms)
+t=8: A completes
+
+Turnaround Times:
+- A: 8ms (arrives at 0, completes at 8)
+- B: 5ms (arrives at 1, completes at 6)
+- C: 2ms (arrives at 2, completes at 4)
+Average: 5ms
+</code></pre>
+<h3 id="round-robin-rr"><a class="header" href="#round-robin-rr">Round Robin (RR)</a></h3>
+<p><strong>Description</strong>: Each process is assigned a fixed time slice (quantum/time slice) to run. Processes are placed in a queue and run in order for their time slice. If a process doesn’t complete within its time slice, it’s preempted and moved to the back of the queue.</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Preemptive (every process gets equal CPU time)</li>
+<li>Fair (all processes get equal opportunity)</li>
+<li>No starvation (all processes eventually complete)</li>
+<li>Time slice/quantum determines fairness vs. context switching trade-off</li>
+<li>Works well for interactive systems</li>
+</ul>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Fair CPU allocation</li>
+<li>Good response time (every process runs regularly)</li>
+<li>No starvation</li>
+<li>Works well for time-sharing systems</li>
+<li>Responsive to user input</li>
+<li>Predictable (known max wait time)</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Context switching overhead increases with more processes</li>
+<li>If quantum too small: many context switches (overhead)</li>
+<li>If quantum too large: becomes like FIFO (poor response time)</li>
+<li>Worse average turnaround time than SJF/STCF</li>
+<li>Longer jobs get interrupted (cache pollution)</li>
+</ul>
+<p><strong>Example</strong> (Quantum = 3ms):</p>
+<pre><code>Jobs: A(8ms), B(4ms), C(2ms) arrive at t=0
+
+Timeline:
+[A:3][B:3][C:2][A:3][B:1]
+0   3   6   8   11   14
+
+Detailed:
+t=0-3: A runs (remaining: 5ms) → back to queue
+t=3-6: B runs (remaining: 1ms) → back to queue
+t=6-8: C runs (remaining: 0ms) → done
+t=8-11: A runs (remaining: 2ms) → back to queue
+t=11-14: B runs (remaining: -1ms, done at 13)
+t=13-15: A runs (remaining: -1ms, done at 15)
+
+Turnaround Times:
+- A: 15ms
+- B: 13ms
+- C: 8ms
+Average: 12ms (worse than SJF/STCF but fair)
+
+Response Times:
+- A: 0ms (starts immediately)
+- B: 3ms (waits 1 quantum)
+- C: 6ms (waits 2 quanta)
+Average: 3ms (good responsiveness)
+</code></pre>
+<h3 id="lottery-scheduling"><a class="header" href="#lottery-scheduling">Lottery Scheduling</a></h3>
+<p><strong>Description</strong>: A probabilistic scheduling algorithm where each process is allocated lottery tickets. The scheduler randomly draws a ticket and runs the process holding that ticket. Processes get CPU time proportionally to the number of tickets they hold.</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Preemptive (process runs for a time slice then is preempted)</li>
+<li>Probabilistic fairness (not guaranteed, but statistically fair over time)</li>
+<li>No starvation (every process has at least one ticket)</li>
+<li>Simple implementation (just a random number generator)</li>
+<li>Highly flexible and extensible</li>
+</ul>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Proportional resource allocation (tickets control CPU share)</li>
+<li>Responsive to priority changes (can adjust tickets dynamically)</li>
+<li>No starvation (everyone gets at least one ticket)</li>
+<li>Simple to understand and implement</li>
+<li>Excellent for multi-resource scheduling (extend with tickets for I/O, memory)</li>
+<li>Good for fairness without complex data structures</li>
+<li>Minimal overhead (O(1) selection with good RNG)</li>
+<li>Works well in distributed systems</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Not perfectly fair (short term variation due to randomness)</li>
+<li>Can take time to converge to fair allocation (statistical fairness)</li>
+<li>Doesn’t minimize turnaround time like SJF/STCF</li>
+<li>Poor worst-case response time for low-ticket processes</li>
+<li>Random behavior may be undesirable for deterministic systems</li>
+<li>Ticket management can become complex in large systems</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code>Three processes with tickets:
+- Process A: 50 tickets
+- Process B: 30 tickets
+- Process C: 20 tickets
+Total: 100 tickets
+
+Probability each is selected:
+- A: 50% chance (runs roughly half the time)
+- B: 30% chance (runs roughly 30% of time)
+- C: 20% chance (runs roughly 20% of time)
+
+Quantum = 10ms, 1000ms total time:
+
+Possible random draws (10 draws total):
+Draw 1: Random 37 → A runs (10ms elapsed)
+Draw 2: Random 15 → B runs (20ms elapsed)
+Draw 3: Random 62 → A runs (30ms elapsed)
+Draw 4: Random 88 → A runs (40ms elapsed)
+Draw 5: Random 41 → A runs (50ms elapsed)
+Draw 6: Random 12 → B runs (60ms elapsed)
+Draw 7: Random 95 → A runs (70ms elapsed)
+Draw 8: Random 73 → A runs (80ms elapsed)
+Draw 9: Random 27 → B runs (90ms elapsed)
+Draw 10: Random 18 → C runs (100ms elapsed)
+
+Result after 100ms:
+- A: 70ms (expected: 50ms, got 40% more due to randomness)
+- B: 30ms (expected: 30ms, perfect!)
+- C: 10ms (expected: 20ms, got 50% less due to randomness)
+
+Over longer period (1000ms), proportions converge to expected values.
+</code></pre>
+<p><strong>Ticket Mechanisms</strong></p>
+<p><em>Transfer</em>: Process can temporarily transfer tickets to another process</p>
+<pre><code class="language-c">transfer(from_pid, to_pid, num_tickets);
+</code></pre>
+<p>Useful for client-server applications where client gives tickets to server.</p>
+<p><em>Inflation</em>: Process temporarily increases its own ticket count</p>
+<pre><code class="language-c">inflate_tickets(pid, multiplier);  // 1.5x tickets temporarily
+</code></pre>
+<p>Risky: requires mutual trust, can break fairness if abused.</p>
+<p><em>Compensation Tickets</em>: Process receives bonus tickets based on I/O wait</p>
+<pre><code>If process blocks for I/O:
+- Give back unused CPU time at end of quantum
+- Or give bonus tickets for next scheduling opportunity
+- Compensates for I/O latency
+</code></pre>
+<p><strong>Comparison to Round Robin</strong></p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Aspect</th><th>Lottery</th><th>Round Robin</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Fairness</strong></td><td>Statistical</td><td>Exact per quantum</td></tr>
+<tr><td><strong>Implementation</strong></td><td>Simple RNG</td><td>Queue management</td></tr>
+<tr><td><strong>Overhead</strong></td><td>O(1)</td><td>O(1) but queue ops</td></tr>
+<tr><td><strong>Deterministic</strong></td><td>No</td><td>Yes</td></tr>
+<tr><td><strong>Extensibility</strong></td><td>High (tickets for resources)</td><td>Low</td></tr>
+<tr><td><strong>Predictability</strong></td><td>Poor</td><td>Good</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Real-World Usage</strong></p>
+<ul>
+<li>Not commonly used as primary OS scheduler (OSes prefer deterministic fairness)</li>
+<li>Used in specialized systems and research (Lottery scheduler papers)</li>
+<li>Useful for resource management in distributed systems</li>
+<li>Good model for proportional fair queueing (networking)</li>
+<li>Similar to weighted fair queueing (WFQ) in network schedulers</li>
+</ul>
+<p><strong>Stride Scheduling</strong> (Related Algorithm)</p>
+<p>A deterministic variant of lottery scheduling:</p>
+<ul>
+<li>Each process has a stride (inverse of priority/tickets)</li>
+<li>Each process has a pass value (accumulated stride)</li>
+<li>Always pick process with smallest pass value (like CFS vruntime)</li>
+<li>Increment that process’s pass by its stride</li>
+<li>Result: Deterministic fairness without randomness</li>
+<li>Trade-off: More complex than lottery, simpler than CFS</li>
+</ul>
+<pre><code>Stride = LARGE_NUMBER / num_tickets
+
+Process A (50 tickets): stride = 200
+Process B (30 tickets): stride = 333
+Process C (20 tickets): stride = 500
+
+Initial: All pass = 0
+
+1. Pick A (smallest pass=0), run, increment pass: 0+200=200
+2. Pick B (pass=0), run, increment pass: 0+333=333
+3. Pick C (pass=0), run, increment pass: 0+500=500
+4. Pick A (pass=200), run, increment pass: 200+200=400
+5. Pick B (pass=333), run, increment pass: 333+333=666
+6. Pick A (pass=400), run, increment pass: 400+200=600
+
+Result: A,B,C,A,B,A scheduling order
+A runs 50%, B runs 33%, C runs 17% (exactly fair!)
+</code></pre>
+<h2 id="algorithm-comparison"><a class="header" href="#algorithm-comparison">Algorithm Comparison</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Metric</th><th>FIFO</th><th>SJF</th><th>STCF</th><th>Round Robin</th><th>Lottery</th><th>Stride</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Avg Turnaround</strong></td><td>Poor</td><td>Best</td><td>Best</td><td>Okay</td><td>Fair</td><td>Fair</td></tr>
+<tr><td><strong>Avg Response</strong></td><td>Poor</td><td>Poor</td><td>Good</td><td>Good</td><td>Fair</td><td>Good</td></tr>
+<tr><td><strong>Fairness</strong></td><td>Fair</td><td>Unfair</td><td>Unfair</td><td>Fair</td><td>Statistical</td><td>Exact</td></tr>
+<tr><td><strong>Starvation</strong></td><td>None</td><td>Possible</td><td>Possible</td><td>None</td><td>None</td><td>None</td></tr>
+<tr><td><strong>Preemptive</strong></td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><strong>Context Switches</strong></td><td>Low</td><td>Low</td><td>High</td><td>High</td><td>High</td><td>High</td></tr>
+<tr><td><strong>Implementation</strong></td><td>Simple</td><td>Simple</td><td>Moderate</td><td>Simple</td><td>Simple</td><td>Moderate</td></tr>
+<tr><td><strong>Overhead</strong></td><td>Low</td><td>Low</td><td>Medium</td><td>Medium</td><td>Low</td><td>Medium</td></tr>
+<tr><td><strong>Deterministic</strong></td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+<tr><td><strong>Extensible</strong></td><td>No</td><td>No</td><td>No</td><td>Limited</td><td>Excellent</td><td>Good</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="choosing-a-scheduling-algorithm"><a class="header" href="#choosing-a-scheduling-algorithm">Choosing a Scheduling Algorithm</a></h2>
+<p><strong>For Batch Systems</strong> (long-running background jobs):</p>
+<ul>
+<li>Use STCF or SJF for optimal turnaround time</li>
+<li>Minimize response time requirement</li>
+</ul>
+<p><strong>For Interactive Systems</strong> (user-facing applications):</p>
+<ul>
+<li>Use Round Robin with appropriate quantum</li>
+<li>Prioritize response time over turnaround time</li>
+<li>Balance quantum size: too small = overhead, too large = lag</li>
+</ul>
+<p><strong>For Real-time Systems</strong> (strict deadlines):</p>
+<ul>
+<li>Need priority-based scheduling</li>
+<li>Often use Earliest Deadline First (EDF)</li>
+<li>Combined with Round Robin or priority queues</li>
+</ul>
+<p><strong>For Modern Systems</strong> (typical servers/desktops):</p>
+<ul>
+<li>Hybrid approach: priority-based Round Robin</li>
+<li>Different priority levels</li>
+<li>Different quantum sizes per priority</li>
+<li>Example: Linux Completely Fair Scheduler (CFS)</li>
+</ul>
+<h2 id="real-world-considerations"><a class="header" href="#real-world-considerations">Real-World Considerations</a></h2>
+<h3 id="context-switching-cost"><a class="header" href="#context-switching-cost">Context Switching Cost</a></h3>
+<ul>
+<li>Saving/restoring process state</li>
+<li>TLB flushes (if address space changes)</li>
+<li>Cache misses (warm cache lost)</li>
+<li>Can be significant with frequent preemption</li>
+</ul>
+<h3 id="process-estimation"><a class="header" href="#process-estimation">Process Estimation</a></h3>
+<ul>
+<li>SJF/STCF require knowing job length</li>
+<li>Can estimate from historical data</li>
+<li>Hard to predict for new workloads</li>
+<li>Can use adaptive techniques</li>
+</ul>
+<h3 id="priority"><a class="header" href="#priority">Priority</a></h3>
+<ul>
+<li>Most systems use priority-based scheduling</li>
+<li>High priority process runs before low priority</li>
+<li>Can starve low priority processes</li>
+<li>Solution: aging (increase priority over time)</li>
+</ul>
+<h3 id="multi-cpu-scheduling"><a class="header" href="#multi-cpu-scheduling">Multi-CPU Scheduling</a></h3>
+<ul>
+<li>Single queue: contention on lock</li>
+<li>Per-CPU queues: load balancing issues</li>
+<li>Affinity: keep process on same CPU (cache locality)</li>
+<li>Complex in modern systems</li>
+</ul>
+<hr>
+<h2 id="linux-process-scheduling-implementation"><a class="header" href="#linux-process-scheduling-implementation">Linux Process Scheduling Implementation</a></h2>
+<h3 id="processthread-states"><a class="header" href="#processthread-states">Process/Thread States</a></h3>
+<p>Every process/thread in Linux goes through various states throughout its lifetime. The <strong>KSE (Kernel Scheduling Entity)</strong> on a Linux system is the thread. Each thread has its own state, represented by flags in the <code>task_struct</code> structure.</p>
+<h4 id="thread-states"><a class="header" href="#thread-states">Thread States</a></h4>
+<ul>
+<li><strong>TASK_RUNNING</strong>: Thread is either running on CPU or ready to run. Thread is in a run queue (one per core).</li>
+<li><strong>TASK_INTERRUPTIBLE</strong>: Thread is sleeping and can be woken up by signals. Threads waiting are put in wait queues.</li>
+<li><strong>TASK_UNINTERRUPTIBLE</strong>: Thread is sleeping and cannot be woken up by signals (blocking I/O, futex operations).</li>
+<li><strong>TASK_STOPPED</strong>: Thread has been stopped, usually by a signal (SIGSTOP, SIGTSTP).</li>
+<li><strong>TASK_TRACED</strong>: Thread is being traced by another process (e.g., a debugger).</li>
+<li><strong>EXIT_ZOMBIE</strong>: Thread has finished execution but still has entry in process table. Parent must call <code>wait()</code> to reap it.</li>
+<li><strong>EXIT_DEAD</strong>: Thread has been completely removed from process table.</li>
+</ul>
+<h3 id="linux-process-state-machine"><a class="header" href="#linux-process-state-machine">Linux Process State Machine</a></h3>
+<pre><code>                    +--------------------+
+                    |      CREATED       |
+                    |  (new task_struct) |
+                    +---------+----------+
+                              |
+                              v
+                   +----------+----------+
+                   |      READY          |
+                   | (runnable, in runq) |
+                   +----------+----------+
+                              |
+                              | scheduled by CPU
+                              v
+                   +----------+----------+
+                   |      RUNNING        |
+                   +----------+----------+
+                              |
+        +---------------------+-----+---------------------+
+        |                           |                       |
+        | voluntary sleep           | preemption            |
+        v                           v                       |
++-------+--------+        +---------+---------+              |
+| INTERRUPTIBLE  | &lt;----- |     READY         | &lt;-----------+
+|   SLEEP (S)    |        | (runnable again)  |
++-------+--------+        +-------------------+
+        |
+        | syscall waits (I/O, futex, etc.)
+        v
++-------+--------+
+|UNINTERRUPTIBLE|
+|   SLEEP (D)    |
++-------+--------+
+        |
+        | I/O completes / futex satisfied
+        v
++-------+--------+
+|      READY     |
++-------+--------+
+
+(signals)
+        |
+        v
++-------+--------+
+|     STOPPED    |
+|  (T state)    |
++-------+--------+
+        |
+        | SIGCONT
+        v
++-------+--------+
+|      READY     |
++-------+--------+
+
+When process calls exit():
+        |
+        v
++-------+--------+
+|      ZOMBIE    |
+|   (defunct)    |
++-------+--------+
+        |
+        | parent calls wait()
+        v
++-------+--------+
+|     REAPED     |
+|  (freed)       |
++-------+--------+
+</code></pre>
+<h3 id="linux-scheduling-policies"><a class="header" href="#linux-scheduling-policies">Linux Scheduling Policies</a></h3>
+<p>Linux supports several scheduling policies that determine how threads are prioritized and scheduled:</p>
+<h4 id="sched_other-default-cfs"><a class="header" href="#sched_other-default-cfs">SCHED_OTHER (Default, CFS)</a></h4>
+<ul>
+<li>Time-sharing policy for regular threads</li>
+<li>Uses the <strong>Completely Fair Scheduler (CFS)</strong></li>
+<li>Default for most user-space applications</li>
+<li>Threads can be preempted at any time</li>
+<li>Fairly allocates CPU time based on priority (nice value)</li>
+</ul>
+<h4 id="sched_fifo-real-time-fifo"><a class="header" href="#sched_fifo-real-time-fifo">SCHED_FIFO (Real-time, FIFO)</a></h4>
+<ul>
+<li>First-in, first-out real-time scheduling</li>
+<li>Higher priority than SCHED_OTHER</li>
+<li>Requires CAP_SYS_NICE capability</li>
+<li>Thread runs until it:
+<ul>
+<li>Blocks on I/O</li>
+<li>Stops or dies</li>
+<li>Higher priority real-time thread becomes runnable</li>
+</ul>
+</li>
+<li>No time slice (runs indefinitely until one of above happens)</li>
+<li><strong>Risk</strong>: Can starve system if high-priority thread loops infinitely</li>
+</ul>
+<h4 id="sched_rr-real-time-round-robin"><a class="header" href="#sched_rr-real-time-round-robin">SCHED_RR (Real-time, Round-Robin)</a></h4>
+<ul>
+<li>Round-robin real-time scheduling</li>
+<li>Similar to SCHED_FIFO but with time slice</li>
+<li>Typical time slice: 100ms</li>
+<li>Thread yields back CPU when:
+<ul>
+<li>Time slice expires</li>
+<li>Blocks on I/O</li>
+<li>Stops or dies</li>
+<li>Higher priority real-time thread becomes runnable</li>
+</ul>
+</li>
+</ul>
+<h4 id="sched_batch"><a class="header" href="#sched_batch">SCHED_BATCH</a></h4>
+<ul>
+<li>Suitable for low-priority, non-interactive batch jobs</li>
+<li>Less frequent preemption than SCHED_OTHER</li>
+<li>Reduces context switching for throughput-oriented workloads</li>
+</ul>
+<h4 id="sched_idle"><a class="header" href="#sched_idle">SCHED_IDLE</a></h4>
+<ul>
+<li>Lowest priority background tasks</li>
+<li>Only runs when system is idle</li>
+<li>Good for background maintenance tasks</li>
+</ul>
+<h3 id="completely-fair-scheduler-cfs"><a class="header" href="#completely-fair-scheduler-cfs">Completely Fair Scheduler (CFS)</a></h3>
+<p>The CFS is the default scheduling algorithm for <code>SCHED_OTHER</code> threads in modern Linux kernels.</p>
+<h4 id="design-goals"><a class="header" href="#design-goals">Design Goals</a></h4>
+<ul>
+<li>Allocate CPU time <strong>fairly</strong> among all runnable threads</li>
+<li>Each thread gets proportional share of CPU based on its weight (priority)</li>
+<li>Provide good response time for interactive applications</li>
+<li>Maintain high CPU utilization for system throughput</li>
+</ul>
+<h4 id="implementation-details"><a class="header" href="#implementation-details">Implementation Details</a></h4>
+<p><strong>Virtual Runtime (vruntime)</strong></p>
+<ul>
+<li>Each thread tracks a virtual runtime representing CPU time received</li>
+<li>Lower vruntime = less CPU time received = runs next</li>
+<li>Adjusted based on priority: higher priority threads’ vruntime advances slower</li>
+</ul>
+<p><strong>Red-Black Tree Data Structure</strong></p>
+<ul>
+<li>Maintains runnable threads in a red-black tree (balanced binary search tree)</li>
+<li>Sorted by vruntime</li>
+<li>Leftmost node (smallest vruntime) is next thread to run</li>
+<li>O(log n) insertion, deletion, and selection</li>
+<li>Efficient for large numbers of threads</li>
+</ul>
+<p><strong>Selection Algorithm</strong></p>
+<ol>
+<li>Always pick leftmost node (smallest vruntime) to run</li>
+<li>When thread runs, its vruntime increases by actual time spent</li>
+<li>Thread is reinserted in tree with updated vruntime</li>
+<li>High-priority threads’ vruntime increases slower (or more slowly)</li>
+<li>Result: Low-priority threads advance in tree, eventually get selected</li>
+</ol>
+<p><strong>Priority/Weight</strong></p>
+<ul>
+<li>Threads have a priority (nice value: -20 to +19)</li>
+<li>Nice value converted to weight</li>
+<li>Lower nice value (higher priority) → weight increases → vruntime advances slower</li>
+<li>Thread gets more CPU time with lower (higher priority) nice value</li>
+</ul>
+<p><strong>Time Slice (Scheduling Period) - sched_latency</strong></p>
+<ul>
+<li><strong>sched_latency</strong>: Target scheduling latency (target time to schedule all runnable tasks once)</li>
+<li>Default: 6ms (tunable via <code>/proc/sys/kernel/sched_latency_ns</code>)</li>
+<li>On single core: each of N threads gets ~6ms/N time slice</li>
+<li>Represents desired responsiveness of system</li>
+<li><strong>Trade-off</strong>:
+<ul>
+<li>Larger latency = longer time slices = fewer context switches = less overhead</li>
+<li>Smaller latency = shorter time slices = more responsive = more overhead</li>
+</ul>
+</li>
+</ul>
+<p><strong>Minimum Granularity - min_granularity</strong></p>
+<ul>
+<li><strong>min_granularity</strong>: Minimum time slice a task should get</li>
+<li>Default: 0.75ms (tunable via <code>/proc/sys/kernel/sched_min_granularity_ns</code>)</li>
+<li>Ensures tasks always get at least this much time (even with many threads)</li>
+<li>Prevents excessive context switching overhead</li>
+<li>If N tasks × min_granularity &gt; sched_latency, then:
+<ul>
+<li>Scheduling period becomes N × min_granularity</li>
+<li>Each task gets min_granularity time</li>
+<li>Latency target is exceeded (acceptable trade-off for efficiency)</li>
+</ul>
+</li>
+</ul>
+<p><strong>vruntime Calculation</strong></p>
+<ul>
+<li>Actual runtime = wall-clock time the task ran</li>
+<li>Weight = priority weight based on nice value</li>
+<li><code>vruntime_delta = (actual_time * NICE_0_LOAD) / task_weight</code></li>
+<li>Higher priority (lower nice) task has higher weight → vruntime advances slower</li>
+<li>Lower priority (higher nice) task has lower weight → vruntime advances faster</li>
+</ul>
+<p><strong>Preemption Decision</strong></p>
+<ul>
+<li>After each task runs for its time slice, scheduler checks if preemption needed</li>
+<li>Preemption occurs when: <code>se-&gt;vruntime &gt; cfs_rq-&gt;min_vruntime + sched_latency</code>
+<ul>
+<li>se-&gt;vruntime: current task’s virtual runtime</li>
+<li>cfs_rq-&gt;min_vruntime: minimum vruntime in run queue</li>
+<li>sched_latency: scheduling latency target</li>
+</ul>
+</li>
+<li>If current task’s vruntime exceeds min_vruntime by more than sched_latency, it’s preempted</li>
+<li>Next task selected is leftmost in tree (minimum vruntime)</li>
+</ul>
+<h4 id="example-cfs-behavior-with-sched_latency"><a class="header" href="#example-cfs-behavior-with-sched_latency">Example CFS Behavior with sched_latency</a></h4>
+<pre><code>Three threads with equal priority (nice=0, weight=1024):
+sched_latency = 6ms, min_granularity = 0.75ms
+Expected time slice per thread: 6ms / 3 = 2ms
+
+Timeline:
+t=0ms:    min_vruntime=0
+          Select A (vruntime=0, leftmost)
+          
+t=2ms:    A ran for 2ms, A-&gt;vruntime += 2
+          A-&gt;vruntime = 2, min_vruntime = 0
+          Check preemption: 2 &gt; 0 + 6? No (2 ≤ 6), continue? 
+          Actually: select next = B, but A can continue if time allows
+          A inserted at vruntime=2
+          min_vruntime still 0 (B,C at 0)
+          B becomes leftmost
+          Select B
+          
+t=4ms:    B ran for 2ms, B-&gt;vruntime = 2
+          Min thread (C) has vruntime=0
+          B inserted at vruntime=2
+          Select C
+          
+t=6ms:    C ran for 2ms, C-&gt;vruntime = 2
+          All threads now have vruntime=2
+          min_vruntime = 2
+          Select A (leftmost at vruntime=2)
+          
+t=8ms:    A runs 2ms more, A-&gt;vruntime = 4
+          All at 2, A at 4
+          Min is 2 (B,C)
+          Select B
+
+Result: Perfect round-robin, each gets 2ms per cycle
+        sched_latency = 6ms = 3 tasks × 2ms (exactly met)
+</code></pre>
+<h4 id="example-with-many-tasks-hitting-min_granularity"><a class="header" href="#example-with-many-tasks-hitting-min_granularity">Example with Many Tasks (hitting min_granularity)</a></h4>
+<pre><code>10 threads, same nice value
+sched_latency = 6ms, min_granularity = 0.75ms
+Ideal time slice: 6ms / 10 = 0.6ms
+Problem: 0.6ms &lt; min_granularity (0.75ms)
+Solution: Use min_granularity instead
+Actual time slice: 0.75ms per thread
+Actual scheduling period: 10 × 0.75ms = 7.5ms (exceeds sched_latency)
+
+This is acceptable because:
+- Prevents excessive context switching overhead
+- Latency still reasonable for typical workloads
+- Context switch cost would dominate if time slices too small
+</code></pre>
+<h4 id="cfs-tuning-parameters"><a class="header" href="#cfs-tuning-parameters">CFS Tuning Parameters</a></h4>
+<p><strong>/proc/sys/kernel/sched_latency_ns</strong></p>
+<pre><code class="language-bash"># View current value (in nanoseconds)
+cat /proc/sys/kernel/sched_latency_ns
+# Output: 24000000 (24ms default on many systems)
+
+# Increase for systems with many tasks / higher throughput focus
+echo 48000000 &gt; /proc/sys/kernel/sched_latency_ns  # 48ms
+
+# Decrease for interactive systems / lower latency focus
+echo 6000000 &gt; /proc/sys/kernel/sched_latency_ns   # 6ms
+
+# Effect of increasing:
+# - Longer time slices per task
+# - Fewer context switches
+# - Less responsive to user input
+# - Better throughput for batch jobs
+</code></pre>
+<p><strong>/proc/sys/kernel/sched_min_granularity_ns</strong></p>
+<pre><code class="language-bash"># View current value
+cat /proc/sys/kernel/sched_min_granularity_ns
+# Output: 3000000 (3ms default on many systems)
+
+# Increase to reduce context switching
+echo 5000000 &gt; /proc/sys/kernel/sched_min_granularity_ns
+
+# Decrease for more responsive systems (more context switches)
+echo 1000000 &gt; /proc/sys/kernel/sched_min_granularity_ns
+
+# Effect of decreasing:
+# - More context switches (more overhead)
+# - Better fairness with many threads
+# - More responsive (shorter time per task)
+</code></pre>
+<p><strong>/proc/sys/kernel/sched_wakeup_granularity_ns</strong></p>
+<pre><code class="language-bash"># How much vruntime advantage a waking task gets
+# Default: ~0.5ms - 1.5ms
+
+# Smaller value: newly woken tasks run sooner (better for client-server)
+# Larger value: avoid waking up sleeping task unless necessary benefit
+
+# Typical scenario: network packet arrives, wake application task
+# Wakeup granularity determines if wake task displaces running task
+</code></pre>
+<h4 id="vruntime-weight-mapping"><a class="header" href="#vruntime-weight-mapping">vruntime Weight Mapping</a></h4>
+<pre><code>Nice Value → Weight mapping (approximate)
+nice -20:  88761   (1.25× previous level)
+nice -10:  9548
+nice   0:  1024    (reference point)
+nice +10:  110
+nice +20:  15
+
+Example: Two threads, one at nice=-5 (weight≈3121), one at nice=+5 (weight≈335)
+
+If both run for 1 second:
+Thread 1 (higher priority): vruntime += 1000 × 1024 / 3121 ≈ 328
+Thread 2 (lower priority):  vruntime += 1000 × 1024 / 335  ≈ 3055
+
+Thread 2's vruntime advances ~9.3× faster
+Thread 1 gets ~90% of CPU, Thread 2 gets ~10% (weight ratio: 3121/335 ≈ 9.3)
+</code></pre>
+<h4 id="cfs-advantages"><a class="header" href="#cfs-advantages">CFS Advantages</a></h4>
+<ul>
+<li>Fairness: All threads get proportional CPU time</li>
+<li>Responsiveness: No fixed time slice, adapts to workload</li>
+<li>Scalability: O(log n) tree operations</li>
+<li>Starvation-free: All threads eventually get CPU time</li>
+<li>Good cache locality: Threads tend to run on same CPU</li>
+</ul>
+<h3 id="setting-process-priority"><a class="header" href="#setting-process-priority">Setting Process Priority</a></h3>
+<p><strong>Nice Value</strong> (for SCHED_OTHER)</p>
+<pre><code class="language-bash"># Set priority when starting process
+nice -n 10 ./my_process    # Lower priority (higher nice value)
+nice -n -10 ./my_process   # Higher priority (lower nice value, needs root)
+
+# Change priority of running process
+renice -n 5 -p PID         # Increase nice value (lower priority)
+renice -n -5 -p PID        # Decrease nice value (higher priority)
+</code></pre>
+<p><strong>Real-time Priority</strong> (for SCHED_FIFO/SCHED_RR)</p>
+<pre><code class="language-bash"># Set real-time policy and priority
+chrt -f 50 ./my_process    # FIFO with priority 50 (1-99 range)
+chrt -r 50 ./my_process    # Round-robin with priority 50
+
+# Change running process
+chrt -f -p 50 PID          # Change to FIFO priority 50
+</code></pre>
+<h3 id="process-creation-and-scheduling"><a class="header" href="#process-creation-and-scheduling">Process Creation and Scheduling</a></h3>
+<p>Once a thread is created via <code>fork()</code>, <code>clone()</code>, or <code>pthread_create()</code>, it informs the scheduler that it’s ready for execution:</p>
+<ol>
+<li>New <code>task_struct</code> allocated and initialized</li>
+<li>Thread state set to <code>TASK_RUNNING</code></li>
+<li>Added to run queue</li>
+<li>CFS: inserted into red-black tree at appropriate vruntime position</li>
+<li>Scheduler can select it on next scheduling opportunity</li>
+<li>Thread runs until preempted or blocks</li>
+</ol>
+<h3 id="load-balancing"><a class="header" href="#load-balancing">Load Balancing</a></h3>
+<p>On multi-core systems, Linux must distribute load across CPUs:</p>
+<ul>
+<li><strong>Per-CPU Run Queues</strong>: Each core has its own red-black tree to reduce lock contention</li>
+<li><strong>Load Balancing</strong>: Periodic migration of threads between queues to balance load</li>
+<li><strong>CPU Affinity</strong>: Attempt to keep threads on same CPU for cache locality</li>
+<li><strong>Domain Hierarchy</strong>: Balancing happens at multiple levels (core, cache domain, NUMA node)</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../systems/permissions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../systems/processes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../systems/permissions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../systems/processes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

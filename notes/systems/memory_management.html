@@ -1,0 +1,677 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Memory Management - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-897a42b1.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-7558c244.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="memory-management"><a class="header" href="#memory-management">Memory Management</a></h1>
+<h2 id="virtual-memory"><a class="header" href="#virtual-memory">Virtual Memory</a></h2>
+<p>The OS’s process abstraction provides each process with a virtual memory space. Virtual memory is an abstraction that gives each process its own private, logical address space in which its instructions and data are stored. Each process’s virtual address space can be thought of as an array of addressable bytes from 0 up to some maximum address. Processes cannot access the contents of one another’s address spaces.</p>
+<p>Operating systems implement virtual memory as part of the lone view abstraction of processes. That is, each process only interacts with memory in terms of its own virtual address space rather than the reality of many processes sharing the computers RAM simultaneously.</p>
+<h3 id="process-address-space-layout"><a class="header" href="#process-address-space-layout">Process Address Space Layout</a></h3>
+<p>A process’s virtual address space is divided into several sections, each of which stores a different part of the process’s memory. The top part is reserved for the OS and can only be accessed in kernel mode. The text and data parts of a process’s virtual address space are initialized from the program executable file. The text section contains the program instructions, and the data section contains global variables. The stack and heap sections vary in size as the process runs. Stack space grows in response to the process making function calls, and shrinks as it returns from the function calls. Heap space grows when the process dynamically allocates memory space (via calls to malloc), and shrinks when the process frees memory space (with calls to free).</p>
+<pre><code>--------------------------------
+|            OS Code           |
+--------------------------------
+|       Application Code       |
+--------------------------------
+|      Data (Global Vars)      |
+--------------------------------
+|             Heap             |
+|             ⌄⌄⌄⌄             |
+|                              |
+|                              |
+--------------------------------
+|                              |
+|                              |
+|            ^^^^^             |
+|            Stack             |
+--------------------------------
+</code></pre>
+<hr>
+<h2 id="stack-and-heap"><a class="header" href="#stack-and-heap">Stack and Heap</a></h2>
+<ul>
+<li>When you get done using heap memory, it needs to be cleaned up. This can be done using a process known as ‘garbage collection’, or manually by the developer when creating the app.</li>
+<li>Implementation of both the stack and heap is usually down to the runtime / OS.</li>
+<li>There are 2 memory constructs, stack and heap.</li>
+</ul>
+<h3 id="stack"><a class="header" href="#stack">Stack</a></h3>
+<ul>
+<li>A stack is a structure that represents a sequence of objects or elements that are available in a linear data structure. What does that mean? It simply means you can add or remove elements in a linear order. This way, a portion of memory that keeps variables created can function temporarily.</li>
+<li>Stored in computer RAM just like the heap.</li>
+<li>Variables created on the stack will go out of scope and are automatically deallocated.</li>
+<li>Much faster to allocate in comparison to variables on the heap.</li>
+<li>Implemented with an actual stack data structure.</li>
+<li>Stores local data, return addresses, used for parameter passing.</li>
+<li>Can have a stack overflow when too much of the stack is used (mostly from infinite or too deep recursion, very large allocations).</li>
+<li>Data created on the stack can be used without pointers.</li>
+<li>You would use the stack if you know exactly how much data you need to allocate before compile time and it is not too big.</li>
+<li>Usually has a maximum size already determined when your program starts.</li>
+<li>A collection of data needed for a single method is called a stack frame.</li>
+</ul>
+<h3 id="heap"><a class="header" href="#heap">Heap</a></h3>
+<ul>
+<li>Stored in RAM just like the stack.</li>
+<li>In C++, variables on the heap must be destroyed manually and never fall out of scope. The data is freed with delete, delete[], or free.</li>
+<li>Slower to allocate in comparison to variables on the stack.</li>
+<li>Used on demand to allocate a block of data for use by the program.</li>
+<li>Can have fragmentation when there are a lot of allocations and deallocations.</li>
+<li>In C++ or C, data created on the heap will be pointed to by pointers (from the stack) and allocated with new or malloc respectively.</li>
+<li>Can have allocation failures if too big of a buffer is requested to be allocated.</li>
+<li>You would use the heap if you don’t know exactly how much data you will need at run time or if you need to allocate a lot of data.</li>
+<li>Responsible for memory leaks.</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-c">int foo()
+{
+  char *pBuffer; //&lt;--nothing allocated yet (excluding the pointer itself, which is allocated here on the stack).
+  bool b = true; // Allocated on the stack.
+  if(b)
+  {
+    //Create 500 bytes on the stack
+    char buffer[500];
+
+    //Create 500 bytes on the heap
+    pBuffer = new char[500];
+
+   }//&lt;-- buffer is deallocated here, pBuffer is not
+}//&lt;--- oops there's a memory leak, I should have called delete[] pBuffer;
+</code></pre>
+<h3 id="why-would-an-object-be-created-on-the-heap-or-stack"><a class="header" href="#why-would-an-object-be-created-on-the-heap-or-stack">Why would an object be created on the heap or stack?</a></h3>
+<p>In computer science, whether an object is created on the heap or the stack depends on several factors, including object size, lifetime, dynamic allocation needs, sharing requirements, and polymorphism.</p>
+<ol>
+<li>Object size: If the object is small, it can be created on the stack, but if it’s large, then it should be created on the heap.</li>
+<li>Lifetime: If the object’s lifetime needs to transcend beyond the block/scope where it was created, objects should be created on the heap. Alternatively, if the object’s lifetime is within the context of the block/scope where it was created, objects can be created on the stack.</li>
+<li>Dynamic allocation: Heap objects can be allocated dynamically at runtime, while stack objects need to be allocated at compile time.</li>
+<li>Sharing: Heap objects can be shared between multiple threads, while stack objects are local to a single thread.</li>
+<li>Polymorphism: Creating objects on the heap allows for polymorphism, where objects of different derived classes can be referenced using a base class pointer.</li>
+</ol>
+<h3 id="free-space-management"><a class="header" href="#free-space-management">Free Space Management</a></h3>
+<ul>
+<li><code>malloc</code> is one example of a library used to manage pages of a process’s heap; the OS manages the address space of a process.</li>
+<li>Managing free space is simple when the space being managed is divided into fixed-size units. When a client requests memory, just return the first available segment.</li>
+<li>Free space management becomes difficult when the free space you are managing consists of variable-sized segments.</li>
+<li>This is external fragmentation.</li>
+<li>The generic data structure used to manage free space in the heap is known as the “free list”. The free list contains links to all free chunks of space in the managed memory.</li>
+<li>Any modern memory allocator will handle both splitting and coalescing.</li>
+<li>Most allocators store a little bit of extra information in a header block which is kept in memory. The header contains the size of the allocated region, and potentially a magic number to provide additional integrity checking, additional pointers to speed up deallocation, etc.</li>
+</ul>
+<hr>
+<h2 id="memory-addresses"><a class="header" href="#memory-addresses">Memory Addresses</a></h2>
+<p>Because processes operate within their own virtual address spaces, operating systems must make an important distinction between two types of memory addresses. Virtual addresses refer to storage locations in a process’s virtual address space, and physical addresses refer to a location in RAM.</p>
+<p>At any point in time, the OS stores in RAM the address space contents of many processes as well as OS code that it may map into every process’s virtual address space.</p>
+<h3 id="virtual-addresses"><a class="header" href="#virtual-addresses">Virtual Addresses</a></h3>
+<ul>
+<li>Virtual memory is the per-process view of its memory space, and virtual addresses are addresses in the process’s view of its memory. If two processes run the same binary executable, then they will have the exact same virtual addresses for function code and for global variables in the address spaces.</li>
+<li>Processors generally provide some hardware support for virtual memory. An OS can make use of this hardware support to perform virtual to physical address translation quickly, avoiding having to trap to the OS to handle every address translation.</li>
+<li>The memory management unit (MMU) is the part of the computer hardware that implements address translation. The CPU has a memory management unit (MMU) to add flexibility in accessing memory. The kernel assists the MMU by breaking down the memory used by a process into chunks called ‘pages’. The kernel maintains a data structure, called a ‘page table’, that maps a process’s virtual page addresses into real page addresses in memory. As a process accesses memory, the MMU translates the virtual addresses used by the process into real addresses based on the kernel’s page table.</li>
+</ul>
+<hr>
+<h2 id="paging"><a class="header" href="#paging">Paging</a></h2>
+<p>Although many virtual memory systems have been implemented over the years, paging is now the most widely used implementation of virtual memory.</p>
+<p>It is said that the operating system takes two approaches when solving most any space-management problem: the first approach is to chop things up into variable-sized pieces (i.e. segmentation), this can lead to fragmentation and becomes difficult to manage over time. The second approach chops things up into fixed-sized pieces (i.e. paging). With paging, we divide a process’s address space into a number of fixed-sized units known as ‘pages’. We then view physical memory as a number of fixed-sized slots called “page frames”, each of which can contain a single virtual memory page.</p>
+<p>In a paged virtual memory system, the OS divides the virtual address space of each process into fixed-sized chunks called pages. The OS defines the page size for the system. Page sizes of a few kilobytes are commonly used in general purpose operating systems today. 4 KB is the default page size on many systems. Physical memory is similarly divided into page-sized chunks called frames. Because pages and frames are defined to be the same size, any page of a process’s virtual memory can be stored in any frame of physical RAM.</p>
+<p>You can get a system’s page size by looking at the kernel configuration:</p>
+<pre><code class="language-sh">getconf PAGE_SIZE
+4096
+</code></pre>
+<p>Physical memory (100 MB total (we choose a small size here for simplicity)):
+Pages frames:</p>
+<pre><code>|------------------|
+|- Frame 0 (25MB) -|
+|------------------|
+|- Frame 1 (25MB) -|
+|------------------|
+|- Frame 2 (25MB) -|
+|------------------|
+|- Frame 3 (25MB) -|
+|------------------|
+</code></pre>
+<p>These frames can exist practically anywhere in physical memory. The OS keeps track of the virtual-to-physical mapping in a “page table”. The page table is a “per-process” data structure.</p>
+<p>Page table for process with PID 8012:</p>
+<pre><code>|---------------------------------------------|
+|- Virtual Frame 0 (25MB) &gt; Physical frame 0 -|
+|---------------------------------------------|
+|- Virtual Frame 1 (25MB) &gt; Physical frame 6 -|
+|---------------------------------------------|
+|- Virtual Frame 2 (25MB) &gt; Physical frame 1 -|
+|---------------------------------------------|
+|- Virtual Frame 3 (25MB) &gt; Physical frame 3 -|
+|---------------------------------------------|
+</code></pre>
+<h3 id="virtual-and-physical-addresses-in-paged-systems"><a class="header" href="#virtual-and-physical-addresses-in-paged-systems">Virtual and Physical Addresses in Paged Systems</a></h3>
+<p>Paged virtual memory systems divide the bits of a virtual address into two parts; the high-order bits specify the page number on which the virtual address is stored, and the low-order bits correspond to the byte offset within the page (which byte from the top of the page corresponds to the address).</p>
+<p>Similarly, paging systems divide physical addresses into two parts; the high-order bits specify the frame number of physical memory, and the low-order bits specify the byte offset within the frame. Because frames and pages are the same size, the byte offset bits in a virtual address are identical to the byte offset bits in its translated physical address. Virtual addresses differ from their translated physical addresses in their high-order bits, which specify the virtual page number and the physical frame number.</p>
+<h3 id="virtual-address-structure"><a class="header" href="#virtual-address-structure">Virtual Address Structure</a></h3>
+<ul>
+<li>Every virtual address issued by a process is split into two parts by the hardware:
+<ul>
+<li><strong>Virtual Page Number (VPN)</strong> — identifies which page the address falls in</li>
+<li><strong>Page Offset</strong> — the byte position <em>within</em> that page</li>
+</ul>
+</li>
+<li>The page size determines how many bits go to the offset. A 4 KB page needs 12 bits (2^12 = 4096).</li>
+<li>The remaining bits form the VPN.</li>
+</ul>
+<p>32-bit virtual address with 4 KB pages (12-bit offset, 20-bit VPN):</p>
+<pre><code> 31                 12 11                 0
+ |-------- VPN -------|------ Offset ------|
+ |     20 bits        |      12 bits       |
+ |--------------------|-------------------|
+</code></pre>
+<p>64-bit virtual address with 4 KB pages (common on x86-64):</p>
+<pre><code> 63          48 47          12 11          0
+ |-- unused --|---- VPN -----|-- Offset ---|
+ |  16 bits   |   36 bits    |   12 bits   |
+ |------------|--------------|-------------|
+</code></pre>
+<p>(x86-64 only uses 48 bits for virtual addresses in practice; bits 48–63 are sign-extended.)</p>
+<h3 id="translating-a-virtual-address-to-a-physical-address"><a class="header" href="#translating-a-virtual-address-to-a-physical-address">Translating a Virtual Address to a Physical Address</a></h3>
+<p>When the CPU accesses a virtual address, the MMU performs the following steps:</p>
+<pre><code>Step 1: Split the virtual address
++------------------+----------------+
+|   VPN            |   Offset       |
++------------------+----------------+
+
+Step 2: Use VPN to index into the page table
++------------------+      +---------------------+
+|   VPN            | ---&gt; | Page Table Entry    |
++------------------+      | (contains PFN +     |
+                          |  valid/dirty/prot   |
+                          |  flags)             |
+                          +---------------------+
+
+Step 3: Combine PFN with original offset
++------------------+----------------+
+|   PFN            |   Offset       |  &lt;-- Physical Address
++------------------+----------------+
+</code></pre>
+<ul>
+<li>The <strong>offset is never translated</strong> — it passes through unchanged. Only the VPN is replaced by the PFN.</li>
+<li>If the page table entry’s <strong>valid bit</strong> is 0, the page is not in physical memory and a <strong>page fault</strong> is triggered — the OS loads the page from disk and retries.</li>
+</ul>
+<h3 id="concrete-example"><a class="header" href="#concrete-example">Concrete Example</a></h3>
+<p>Assume:</p>
+<ul>
+<li>16-bit virtual address space</li>
+<li>Page size: 256 bytes → offset = 8 bits (2^8 = 256)</li>
+<li>VPN = upper 8 bits</li>
+</ul>
+<pre><code>Virtual address: 0x026C  =  0000 0010 0110 1100
+
+Split:
++----------+----------+
+|  VPN     |  Offset  |
+|  0x02    |  0x6C    |
+| (page 2) | (byte 108)|
++----------+----------+
+
+Page table lookup (VPN 0x02):
++---------+-------------------+
+| VPN     | PFN               |
++---------+-------------------+
+|  0x00   | 0x05              |
+|  0x01   | 0x08              |
+|  0x02   | 0x03  &lt;-- match   |
+|  0x03   | 0x07              |
++---------+-------------------+
+
+Physical address = PFN 0x03 + offset 0x6C:
++----------+----------+
+|  PFN     |  Offset  |
+|  0x03    |  0x6C    |
++----------+----------+
+= 0x036C
+</code></pre>
+<h3 id="page-table-entry-pte-flags"><a class="header" href="#page-table-entry-pte-flags">Page Table Entry (PTE) Flags</a></h3>
+<p>Each entry in the page table stores more than just the PFN — it also carries protection and status bits:</p>
+<pre><code>+-----+-----+-----+-----+-----+-------- PFN --------+
+|  V  |  R  |  W  |  X  |  D  |   Physical Frame #  |
++-----+-----+-----+-----+-----+--------------------+
+  ^     ^     ^     ^     ^
+  |     |     |     |     Dirty: page has been written to
+  |     |     |     Execute: page can be executed
+  |     |     Write: page can be written
+  |     Read: page can be read
+  Valid: page is present in physical memory (0 = page fault)
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Name</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>V</td><td>Valid</td><td>1 = page is in physical memory; 0 = triggers page fault</td></tr>
+<tr><td>R</td><td>Read</td><td>Page is readable</td></tr>
+<tr><td>W</td><td>Write</td><td>Page is writable</td></tr>
+<tr><td>X</td><td>Execute</td><td>Page is executable (NX bit when cleared = no-execute)</td></tr>
+<tr><td>D</td><td>Dirty</td><td>Page has been modified since last written to disk</td></tr>
+</tbody>
+</table>
+</div>
+<p>A Page Table Entry (PTE) also includes a dirty bit that is used to indicate if the in-RAM copy of the page has been modified.</p>
+<h3 id="page-table-structure"><a class="header" href="#page-table-structure">Page Table Structure</a></h3>
+<h4 id="linear-single-level-page-table"><a class="header" href="#linear-single-level-page-table">Linear (Single-Level) Page Table</a></h4>
+<ul>
+<li>The simplest form: a flat array stored in memory, indexed directly by the VPN.</li>
+<li>Entry <code>i</code> in the array is the PTE for virtual page <code>i</code>.</li>
+<li>The OS stores the base address of this array in a register (e.g., <code>CR3</code> on x86).</li>
+</ul>
+<pre><code>VPN 0  +------------------+
+       | PTE 0 (PFN + flags)|
+VPN 1  +------------------+
+       | PTE 1 (PFN + flags)|
+VPN 2  +------------------+
+       | PTE 2 (PFN + flags)|
+  ...  +------------------+
+VPN N  | PTE N (PFN + flags)|
+       +------------------+
+</code></pre>
+<p><strong>The size problem:</strong></p>
+<ul>
+<li>32-bit address space, 4 KB pages → 2^20 = 1,048,576 entries</li>
+<li>Each PTE is 4 bytes → <strong>4 MB per process</strong>, just for the page table</li>
+<li>With 100 running processes → 400 MB of memory consumed by page tables alone</li>
+<li>A 64-bit address space makes this completely impractical</li>
+</ul>
+<h4 id="multi-level-page-tables"><a class="header" href="#multi-level-page-tables">Multi-Level Page Tables</a></h4>
+<ul>
+<li>Rather than one large flat array, split the VPN into multiple parts and build a tree of page tables.</li>
+<li>Only allocate inner table nodes for regions of the address space actually in use — large unmapped gaps consume no memory.</li>
+<li>Each level of the tree is itself a page-sized table (fits in one 4 KB page).</li>
+</ul>
+<p><strong>Two-level example (x86 32-bit, 10|10|12 split):</strong></p>
+<pre><code>Virtual address (32 bits):
++----------+----------+--------------+
+|  VPN1    |  VPN2    |   Offset     |
+| 10 bits  | 10 bits  |   12 bits    |
++----------+----------+--------------+
+     |           |
+     |           +-------&gt; indexes into a second-level page table
+     +-----------------&gt; indexes into the Page Directory
+</code></pre>
+<p>The walk:</p>
+<pre><code>CR3 register
+     |
+     v
++--------------------+         (Page Directory — 1024 entries)
+| PDE 0              |
+| PDE 1              |
+| ...                |
+| PDE[VPN1] ------+  |
+| ...             |  |
++--------------------+
+                  |
+                  v
+         +--------------------+   (Second-level Page Table — 1024 entries)
+         | PTE 0              |
+         | PTE 1              |
+         | ...                |
+         | PTE[VPN2] ---+     |
+         | ...          |     |
+         +--------------------+
+                        |
+                        v
+                  +----------+----------+
+                  |   PFN    |  Offset  |  &lt;-- Physical Address
+                  +----------+----------+
+</code></pre>
+<ul>
+<li>If <code>PDE[VPN1]</code> is not valid, the entire second-level table for that region is not allocated — saving 4 MB for every 4 MB gap in the address space.</li>
+</ul>
+<h4 id="x86-64-four-level-page-table-999912"><a class="header" href="#x86-64-four-level-page-table-999912">x86-64 Four-Level Page Table (9|9|9|9|12)</a></h4>
+<p>x86-64 uses a 48-bit virtual address split into four 9-bit VPN fields plus a 12-bit offset:</p>
+<pre><code>Virtual address (48 bits used):
++-------+-------+-------+-------+--------------+
+|  PGD  |  PUD  |  PMD  |  PTE  |   Offset     |
+| 9 bits| 9 bits| 9 bits| 9 bits|   12 bits    |
++-------+-------+-------+-------+--------------+
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Level</th><th>Linux name</th><th>x86 name</th><th>Indexes</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>PGD (Page Global Directory)</td><td>PML4</td><td>bits 47–39</td></tr>
+<tr><td>2</td><td>PUD (Page Upper Directory)</td><td>PDPT</td><td>bits 38–30</td></tr>
+<tr><td>3</td><td>PMD (Page Middle Directory)</td><td>PD</td><td>bits 29–21</td></tr>
+<tr><td>4</td><td>PTE (Page Table Entry)</td><td>PT</td><td>bits 20–12</td></tr>
+<tr><td>—</td><td>Offset</td><td>—</td><td>bits 11–0</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code>CR3
+ |
+ v
++-------+    +-------+    +-------+    +-------+    +---------+
+|  PGD  | -&gt; |  PUD  | -&gt; |  PMD  | -&gt; |  PTE  | -&gt; | PFN +   |
+| [idx] |    | [idx] |    | [idx] |    | [idx] |    | Offset  |
++-------+    +-------+    +-------+    +-------+    +---------+
+  ^             ^             ^             ^
+  bits 47-39    bits 38-30    bits 29-21    bits 20-12
+</code></pre>
+<h4 id="page-table-size-comparison"><a class="header" href="#page-table-size-comparison">Page Table Size Comparison</a></h4>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Architecture</th><th>Levels</th><th>VPN split</th><th>Max virtual space</th><th>Table walk cost</th></tr>
+</thead>
+<tbody>
+<tr><td>x86 32-bit</td><td>2</td><td>10|10|12</td><td>4 GB</td><td>2 memory reads</td></tr>
+<tr><td>x86-64</td><td>4</td><td>9|9|9|9|12</td><td>128 TB</td><td>4 memory reads</td></tr>
+<tr><td>x86-64 (5-level)</td><td>5</td><td>9|9|9|9|9|12</td><td>128 PB</td><td>5 memory reads</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="translation-lookaside-buffer-tlb"><a class="header" href="#translation-lookaside-buffer-tlb">Translation Lookaside Buffer (TLB)</a></h3>
+<p>Although paging has many benefits, it also results in a significant slowdown to every memory access. In a paged virtual memory system, every load and store to a virtual memory address requires two RAM accesses; the first reads the page table entry (PTE) to get the frame number for virtual-to-physical address translation, and the second reads or writes the byte(s) at the physical RAM address. Thus, in a paged virtual memory system, every memory access is twice as slow as in a system that supports direct physical RAM addressing.</p>
+<p>One way to reduce the additional overhead of paging is to cache page table mappings of virtual page numbers to physical frame numbers. When translating a virtual address, the MMU first checks for the page numbers in the cache. If found, then the page’s frame number mapping can be grabbed from the cache entry, avoiding one RAM access for reading the PTE.</p>
+<p>A translation look-aside buffer (TLB) is a hardware cache that stores (page number, frame number) mappings. It is a small, fully associative cache that is optimized for fast lookups in hardware. When the MMU finds a mapping in the TLB (a TLB hit), a page table lookup is not needed, and only one RAM access is required to execute a load or store to a virtual memory address.</p>
+<pre><code>CPU issues virtual address
+         |
+         v
+   +------------+     hit     +----------------------+
+   |    TLB     | ----------&gt; | Use cached PFN       |
+   +------------+             +----------------------+
+         |
+       miss
+         |
+         v
+   +------------+
+   | Page Table | (walks the page table in memory)
+   | Walk       |
+   +------------+
+         |
+         v
+   +------------------+
+   | Load entry into  |
+   | TLB, retry       |
+   +------------------+
+</code></pre>
+<ul>
+<li>A <strong>TLB hit</strong> resolves the address in ~1 cycle. A <strong>TLB miss</strong> takes tens to hundreds of cycles (memory access to walk the page table).</li>
+<li>Context switches (switching between processes) require either <strong>flushing</strong> the TLB or tagging entries with an <strong>ASID</strong> (Address Space Identifier) so entries from different processes can coexist.</li>
+<li>With a warm TLB, the number of page table levels has no runtime impact.</li>
+</ul>
+<hr>
+<h2 id="demand-paging"><a class="header" href="#demand-paging">Demand Paging</a></h2>
+<p>A user process doesn’t need all of its memory to be immediately available in order to run. The kernel generally loads and allocates pages as a process needs them; this system is known as on-demand paging or just demand paging. Let’s see how a program starts and runs as a new process:</p>
+<ol>
+<li>The kernel loads the beginning of the program’s instruction code into memory pages.</li>
+<li>The kernel may allocate some working-memory pages to the new process.</li>
+<li>As the process runs, it may determine that the next instruction in code isn’t in any of the memory pages that the kernel loaded initially. At this point, the kernel will take over and load the necessary page into memory, and then lets the program resume execution.</li>
+</ol>
+<hr>
+<h2 id="page-faults"><a class="header" href="#page-faults">Page Faults</a></h2>
+<p>If a memory page isn’t ready when a process wants to use it, the process triggers a page fault. If a page fault occurs, the kernel takes control of the CPU from the process in order to get the page ready. There are two kinds of page faults, major and minor.</p>
+<ul>
+<li>A <strong>page fault</strong> occurs when a process tries to access a page that is not currently stored in RAM. The opposite is a page hit. To handle a page fault, the OS needs to keep track of which RAM frames are free so that it can find a free frame of RAM into which the page read from disk can be stored.</li>
+<li><strong>Minor page faults</strong> occur when the page is in main memory, but the MMU doesn’t know where it is.</li>
+<li><strong>Major page faults</strong> occur when the desired memory page isn’t in main memory at all, which means that the kernel must load it from disk or some other slow storage media. Major page faults will bog down a system. Some major page faults are unavoidable, like when the system loads the code from disk when running a program for the first time.</li>
+</ul>
+<p>You can drill down to the page faults for individual processes by using the <code>top</code>, <code>ps</code>, and <code>time</code> commands. You’ll need to use the system version of time for this:</p>
+<pre><code class="language-sh">/usr/bin/time cal &gt; /dev/null
+0.00user 0.00system 0:00.00elapsed 100%CPU (0avgtext+0avgdata 2824maxresident)k
+0inputs+0outputs (0major+130minor)pagefaults 0swaps
+</code></pre>
+<p>As you can see in the output above, there were 0 major page faults and 130 minor page faults when running the <code>cal</code> program.</p>
+<hr>
+<h2 id="how-linux-organizes-physical-memory"><a class="header" href="#how-linux-organizes-physical-memory">How Linux Organizes Physical Memory</a></h2>
+<p>At boot, the kernel organizes and partitions RAM into a tree-like hierarchy consisting of nodes, zones, and page frames (page frames are physical pages of RAM). The top level of the hierarchy is made up of nodes, which represent a collection of memory that is local to a particular CPU or group of CPUs. Each node contains one or more zones, which are collections of page frames that share similar characteristics. The zones are further divided into page frames, which are the smallest unit of memory that can be allocated by the kernel.</p>
+<p>Any processor core can access any physical memory location, regardless of which node it belongs to. However, accessing memory that is local to the core’s node is faster than accessing memory that is located on a different node. This is because local memory access avoids the overhead of traversing interconnects between nodes.</p>
+<h3 id="numa-vs-uma"><a class="header" href="#numa-vs-uma">NUMA vs. UMA</a></h3>
+<p>Essentially, nodes are data structures that are used to denote and abstract a physical RAM module on the system motherboard and its associated controller chipset. Actual hardware is being abstracted via software. Two types of memory architectures exist, UMA (Uniform Memory Access) and NUMA (Non-Uniform Memory Access).</p>
+<h4 id="numa"><a class="header" href="#numa">NUMA</a></h4>
+<ul>
+<li>In a NUMA architecture, each processor has its own local memory, and accessing local memory is faster than accessing memory that is located on a different node. This is because local memory access avoids the overhead of traversing interconnects between nodes.</li>
+<li>NUMA architectures are commonly used in high-performance computing systems, where multiple processors are used to perform complex computations. By using NUMA, these systems can achieve better performance and scalability than traditional UMA architectures.</li>
+<li>NUMA systems must have at least 2 physical memory banks (nodes) to be considered NUMA.</li>
+<li>One can use the <code>lstopo</code> command to view the NUMA topology of a system. The output will show the number of nodes, the amount of memory in each node, and the CPUs that are associated with each node. <code>hwloc</code> is another tool that can be used to view the NUMA topology of a system. It provides a graphical representation of the system’s hardware topology, including the NUMA nodes and their associated memory and CPUs.</li>
+<li>The number of zones per node is dynamically determined by the kernel at boot time based on the amount of memory in the node and the system architecture. The kernel typically creates three zones per node: DMA, DMA32, and Normal. The DMA zone is used for memory that is accessible by devices that use direct memory access (DMA), the DMA32 zone is used for memory that is accessible by 32-bit devices, and the Normal zone is used for all other memory. In addition to these standard zones, the kernel may also create additional zones based on the system architecture and configuration. You can view <code>/proc/buddyinfo</code> to see the memory zones and their associated page frames.</li>
+</ul>
+<pre><code class="language-bash">cat /proc/buddyinfo
+Node 0, zone      DMA      0      0      0      0      0      0      0      0      1      1      2
+Node 0, zone    DMA32      6      6      8      7      5      6      7      4      8      9    283
+Node 0, zone   Normal   3170   7694  10543   8113   5011   1761    552    182     55     66  10595
+</code></pre>
+<h4 id="uma"><a class="header" href="#uma">UMA</a></h4>
+<ul>
+<li>In a UMA architecture, all processors share the same physical memory, and accessing any memory location takes the same amount of time, regardless of which processor is accessing it.</li>
+<li>In Linux, UMA systems are treated as NUMA systems with a single node. This means that the kernel still uses the same data structures and algorithms for managing memory, but there is no need to consider the locality of memory access.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../systems/make.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../systems/network-manager.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../systems/make.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../systems/network-manager.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
