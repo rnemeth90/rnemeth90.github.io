@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-resources
+  namespace: t21
+subjects:
+- kind: Group
+  name: observer
+  apiGroup: rbac.authorization.k8s.io
+- kind: ServiceAccount
+  name: api-caller
+  namespace: t21
+roleRef:
+  kind: Role
+  name: resource-reader
+  apiGroup: rbac.authorization.k8s.io
+

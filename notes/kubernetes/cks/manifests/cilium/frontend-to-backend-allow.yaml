@@ -1,0 +1,23 @@
+# Scenario 1: Basic Ingress and Egress Control
+#
+# You have a namespace called frontend with a service called web. You also have a backend namespace with a service called api.
+# 	1.	Allow the web service to access the api service in the backend namespace.
+# 	2.	Deny all external traffic from reaching the web service, but allow traffic from within the frontend namespace.
+
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: frontend-to-backend-allow
+  namespace: frontend
+spec:
+  endpointSelector:
+    matchLabels:
+      tier: frontend
+  egress:
+    - toEndpoints:
+      - matchLabels:
+          k8s:io.kubernetes.pod.namespace: backend
+  ingress: 
+  - fromEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: frontend
