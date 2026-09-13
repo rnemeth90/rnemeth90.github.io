@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-e5200d07.js";
+            window.path_to_searchindex_js = "../searchindex-ac4c2b02.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-33caecdc.js"></script>
+        <script src="../toc-f4375573.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,12 +182,37 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="memory-management"><a class="header" href="#memory-management">Memory Management</a></h1>
+<h2 id="virtual-memory"><a class="header" href="#virtual-memory">Virtual Memory</a></h2>
+<p>The OS’s process abstraction provides each process with a virtual memory space. Virtual memory is an abstraction that gives each process its own private, logical address space in which its instructions and data are stored. Each process’s virtual address space can be thought of as an array of addressable bytes from 0 up to some maximum address. Processes cannot access the contents of one another’s address spaces.</p>
+<p>Operating systems implement virtual memory as part of the lone view abstraction of processes. That is, each process only interacts with memory in terms of its own virtual address space rather than the reality of many processes sharing the computers RAM simultaneously.</p>
+<h3 id="process-address-space-layout"><a class="header" href="#process-address-space-layout">Process Address Space Layout</a></h3>
+<p>A process’s virtual address space is divided into several sections, each of which stores a different part of the process’s memory. The top part is reserved for the OS and can only be accessed in kernel mode. The text and data parts of a process’s virtual address space are initialized from the program executable file. The text section contains the program instructions, and the data section contains global variables. The stack and heap sections vary in size as the process runs. Stack space grows in response to the process making function calls, and shrinks as it returns from the function calls. Heap space grows when the process dynamically allocates memory space (via calls to malloc), and shrinks when the process frees memory space (with calls to free).</p>
+<pre><code>--------------------------------
+|            OS Code           |
+--------------------------------
+|       Application Code       |
+--------------------------------
+|      Data (Global Vars)      |
+--------------------------------
+|             Heap             |
+|             ⌄⌄⌄⌄             |
+|                              |
+|                              |
+--------------------------------
+|                              |
+|                              |
+|            ^^^^^             |
+|            Stack             |
+--------------------------------
+</code></pre>
+<hr>
+<h2 id="stack-and-heap"><a class="header" href="#stack-and-heap">Stack and Heap</a></h2>
 <ul>
-<li>When you get done using heap memory, it needs to be cleaned up. This can done using a process known as ‘garbage collection’, or manually by the developer when creating the app
-Implementation of both the stack and heap is usually down to the runtime / OS.</li>
+<li>When you get done using heap memory, it needs to be cleaned up. This can be done using a process known as ‘garbage collection’, or manually by the developer when creating the app.</li>
+<li>Implementation of both the stack and heap is usually down to the runtime / OS.</li>
 <li>There are 2 memory constructs, stack and heap.</li>
 </ul>
-<h3 id="stack"><a class="header" href="#stack">Stack:</a></h3>
+<h3 id="stack"><a class="header" href="#stack">Stack</a></h3>
 <ul>
 <li>A stack is a structure that represents a sequence of objects or elements that are available in a linear data structure. What does that mean? It simply means you can add or remove elements in a linear order. This way, a portion of memory that keeps variables created can function temporarily.</li>
 <li>Stored in computer RAM just like the heap.</li>
@@ -199,9 +224,9 @@ Implementation of both the stack and heap is usually down to the runtime / OS.</
 <li>Data created on the stack can be used without pointers.</li>
 <li>You would use the stack if you know exactly how much data you need to allocate before compile time and it is not too big.</li>
 <li>Usually has a maximum size already determined when your program starts.</li>
-<li>A collection of data needed for a single method is called a stack frame</li>
+<li>A collection of data needed for a single method is called a stack frame.</li>
 </ul>
-<h3 id="heap"><a class="header" href="#heap">Heap:</a></h3>
+<h3 id="heap"><a class="header" href="#heap">Heap</a></h3>
 <ul>
 <li>Stored in RAM just like the stack.</li>
 <li>In C++, variables on the heap must be destroyed manually and never fall out of scope. The data is freed with delete, delete[], or free.</li>
@@ -229,31 +254,393 @@ Implementation of both the stack and heap is usually down to the runtime / OS.</
    }//&lt;-- buffer is deallocated here, pBuffer is not
 }//&lt;--- oops there's a memory leak, I should have called delete[] pBuffer;
 </code></pre>
-<h1 id="why-would-an-object-be-created-on-the-heap-or-stack"><a class="header" href="#why-would-an-object-be-created-on-the-heap-or-stack">why would an object be created on the heap or stack?</a></h1>
+<h3 id="why-would-an-object-be-created-on-the-heap-or-stack"><a class="header" href="#why-would-an-object-be-created-on-the-heap-or-stack">Why would an object be created on the heap or stack?</a></h3>
 <p>In computer science, whether an object is created on the heap or the stack depends on several factors, including object size, lifetime, dynamic allocation needs, sharing requirements, and polymorphism.</p>
 <ol>
 <li>Object size: If the object is small, it can be created on the stack, but if it’s large, then it should be created on the heap.</li>
-<li>Lifetime: If the object’s lifetime needs to transcend beyond the block/scope where it was created, objects should be created on the heap. Alternatively, If the object’s lifetime is within the context of the block/scope where it was created, objects can be created on the stack.</li>
+<li>Lifetime: If the object’s lifetime needs to transcend beyond the block/scope where it was created, objects should be created on the heap. Alternatively, if the object’s lifetime is within the context of the block/scope where it was created, objects can be created on the stack.</li>
 <li>Dynamic allocation: Heap objects can be allocated dynamically at runtime, while stack objects need to be allocated at compile time.</li>
 <li>Sharing: Heap objects can be shared between multiple threads, while stack objects are local to a single thread.</li>
 <li>Polymorphism: Creating objects on the heap allows for polymorphism, where objects of different derived classes can be referenced using a base class pointer.</li>
 </ol>
-<h3 id="free-space-management"><a class="header" href="#free-space-management">Free space Management</a></h3>
+<h3 id="free-space-management"><a class="header" href="#free-space-management">Free Space Management</a></h3>
 <ul>
-<li><code>malloc</code> is one example of a library used to manage4 pages of a process’s heap, the OS manages the address space of a process</li>
-<li>managing free space is simple when the space being managed is divided into fixed-size units. When a client requests memory, just return the first available segment.</li>
+<li><code>malloc</code> is one example of a library used to manage pages of a process’s heap; the OS manages the address space of a process.</li>
+<li>Managing free space is simple when the space being managed is divided into fixed-size units. When a client requests memory, just return the first available segment.</li>
 <li>Free space management becomes difficult when the free space you are managing consists of variable-sized segments.</li>
-<li>This is external fragmentation</li>
+<li>This is external fragmentation.</li>
 <li>The generic data structure used to manage free space in the heap is known as the “free list”. The free list contains links to all free chunks of space in the managed memory.</li>
-<li>Any modern memory allocator will handle both splitting and coalescing</li>
-<li>Most allocators store a little bit of extra information in a header block which is kept in memory. The header contains the size of the allocated region, and potentially a magic number to provider additional integrity checking, additional pointers to speed up deallocation, etc.</li>
+<li>Any modern memory allocator will handle both splitting and coalescing.</li>
+<li>Most allocators store a little bit of extra information in a header block which is kept in memory. The header contains the size of the allocated region, and potentially a magic number to provide additional integrity checking, additional pointers to speed up deallocation, etc.</li>
+</ul>
+<hr>
+<h2 id="memory-addresses"><a class="header" href="#memory-addresses">Memory Addresses</a></h2>
+<p>Because processes operate within their own virtual address spaces, operating systems must make an important distinction between two types of memory addresses. Virtual addresses refer to storage locations in a process’s virtual address space, and physical addresses refer to a location in RAM.</p>
+<p>At any point in time, the OS stores in RAM the address space contents of many processes as well as OS code that it may map into every process’s virtual address space.</p>
+<h3 id="virtual-addresses"><a class="header" href="#virtual-addresses">Virtual Addresses</a></h3>
+<ul>
+<li>Virtual memory is the per-process view of its memory space, and virtual addresses are addresses in the process’s view of its memory. If two processes run the same binary executable, then they will have the exact same virtual addresses for function code and for global variables in the address spaces.</li>
+<li>Processors generally provide some hardware support for virtual memory. An OS can make use of this hardware support to perform virtual to physical address translation quickly, avoiding having to trap to the OS to handle every address translation.</li>
+<li>The memory management unit (MMU) is the part of the computer hardware that implements address translation. The CPU has a memory management unit (MMU) to add flexibility in accessing memory. The kernel assists the MMU by breaking down the memory used by a process into chunks called ‘pages’. The kernel maintains a data structure, called a ‘page table’, that maps a process’s virtual page addresses into real page addresses in memory. As a process accesses memory, the MMU translates the virtual addresses used by the process into real addresses based on the kernel’s page table.</li>
+</ul>
+<hr>
+<h2 id="paging"><a class="header" href="#paging">Paging</a></h2>
+<p>Although many virtual memory systems have been implemented over the years, paging is now the most widely used implementation of virtual memory.</p>
+<p>It is said that the operating system takes two approaches when solving most any space-management problem: the first approach is to chop things up into variable-sized pieces (i.e. segmentation), this can lead to fragmentation and becomes difficult to manage over time. The second approach chops things up into fixed-sized pieces (i.e. paging). With paging, we divide a process’s address space into a number of fixed-sized units known as ‘pages’. We then view physical memory as a number of fixed-sized slots called “page frames”, each of which can contain a single virtual memory page.</p>
+<p>In a paged virtual memory system, the OS divides the virtual address space of each process into fixed-sized chunks called pages. The OS defines the page size for the system. Page sizes of a few kilobytes are commonly used in general purpose operating systems today. 4 KB is the default page size on many systems. Physical memory is similarly divided into page-sized chunks called frames. Because pages and frames are defined to be the same size, any page of a process’s virtual memory can be stored in any frame of physical RAM.</p>
+<p>You can get a system’s page size by looking at the kernel configuration:</p>
+<pre><code class="language-sh">getconf PAGE_SIZE
+4096
+</code></pre>
+<p>Physical memory (100 MB total (we choose a small size here for simplicity)):
+Pages frames:</p>
+<pre><code>|------------------|
+|- Frame 0 (25MB) -|
+|------------------|
+|- Frame 1 (25MB) -|
+|------------------|
+|- Frame 2 (25MB) -|
+|------------------|
+|- Frame 3 (25MB) -|
+|------------------|
+</code></pre>
+<p>These frames can exist practically anywhere in physical memory. The OS keeps track of the virtual-to-physical mapping in a “page table”. The page table is a “per-process” data structure.</p>
+<p>Page table for process with PID 8012:</p>
+<pre><code>|---------------------------------------------|
+|- Virtual Frame 0 (25MB) &gt; Physical frame 0 -|
+|---------------------------------------------|
+|- Virtual Frame 1 (25MB) &gt; Physical frame 6 -|
+|---------------------------------------------|
+|- Virtual Frame 2 (25MB) &gt; Physical frame 1 -|
+|---------------------------------------------|
+|- Virtual Frame 3 (25MB) &gt; Physical frame 3 -|
+|---------------------------------------------|
+</code></pre>
+<h3 id="virtual-and-physical-addresses-in-paged-systems"><a class="header" href="#virtual-and-physical-addresses-in-paged-systems">Virtual and Physical Addresses in Paged Systems</a></h3>
+<p>Paged virtual memory systems divide the bits of a virtual address into two parts; the high-order bits specify the page number on which the virtual address is stored, and the low-order bits correspond to the byte offset within the page (which byte from the top of the page corresponds to the address).</p>
+<p>Similarly, paging systems divide physical addresses into two parts; the high-order bits specify the frame number of physical memory, and the low-order bits specify the byte offset within the frame. Because frames and pages are the same size, the byte offset bits in a virtual address are identical to the byte offset bits in its translated physical address. Virtual addresses differ from their translated physical addresses in their high-order bits, which specify the virtual page number and the physical frame number.</p>
+<h3 id="virtual-address-structure"><a class="header" href="#virtual-address-structure">Virtual Address Structure</a></h3>
+<ul>
+<li>Every virtual address issued by a process is split into two parts by the hardware:
+<ul>
+<li><strong>Virtual Page Number (VPN)</strong> — identifies which page the address falls in</li>
+<li><strong>Page Offset</strong> — the byte position <em>within</em> that page</li>
+</ul>
+</li>
+<li>The page size determines how many bits go to the offset. A 4 KB page needs 12 bits (2^12 = 4096).</li>
+<li>The remaining bits form the VPN.</li>
+</ul>
+<p>32-bit virtual address with 4 KB pages (12-bit offset, 20-bit VPN):</p>
+<pre><code> 31                 12 11                 0
+ |-------- VPN -------|------ Offset ------|
+ |     20 bits        |      12 bits       |
+ |--------------------|-------------------|
+</code></pre>
+<p>64-bit virtual address with 4 KB pages (common on x86-64):</p>
+<pre><code> 63          48 47          12 11          0
+ |-- unused --|---- VPN -----|-- Offset ---|
+ |  16 bits   |   36 bits    |   12 bits   |
+ |------------|--------------|-------------|
+</code></pre>
+<p>(x86-64 only uses 48 bits for virtual addresses in practice; bits 48–63 are sign-extended.)</p>
+<h3 id="translating-a-virtual-address-to-a-physical-address"><a class="header" href="#translating-a-virtual-address-to-a-physical-address">Translating a Virtual Address to a Physical Address</a></h3>
+<p>When the CPU accesses a virtual address, the MMU performs the following steps:</p>
+<pre><code>Step 1: Split the virtual address
++------------------+----------------+
+|   VPN            |   Offset       |
++------------------+----------------+
+
+Step 2: Use VPN to index into the page table
++------------------+      +---------------------+
+|   VPN            | ---&gt; | Page Table Entry    |
++------------------+      | (contains PFN +     |
+                          |  valid/dirty/prot   |
+                          |  flags)             |
+                          +---------------------+
+
+Step 3: Combine PFN with original offset
++------------------+----------------+
+|   PFN            |   Offset       |  &lt;-- Physical Address
++------------------+----------------+
+</code></pre>
+<ul>
+<li>The <strong>offset is never translated</strong> — it passes through unchanged. Only the VPN is replaced by the PFN.</li>
+<li>If the page table entry’s <strong>valid bit</strong> is 0, the page is not in physical memory and a <strong>page fault</strong> is triggered — the OS loads the page from disk and retries.</li>
+</ul>
+<h3 id="concrete-example"><a class="header" href="#concrete-example">Concrete Example</a></h3>
+<p>Assume:</p>
+<ul>
+<li>16-bit virtual address space</li>
+<li>Page size: 256 bytes → offset = 8 bits (2^8 = 256)</li>
+<li>VPN = upper 8 bits</li>
+</ul>
+<pre><code>Virtual address: 0x026C  =  0000 0010 0110 1100
+
+Split:
++----------+----------+
+|  VPN     |  Offset  |
+|  0x02    |  0x6C    |
+| (page 2) | (byte 108)|
++----------+----------+
+
+Page table lookup (VPN 0x02):
++---------+-------------------+
+| VPN     | PFN               |
++---------+-------------------+
+|  0x00   | 0x05              |
+|  0x01   | 0x08              |
+|  0x02   | 0x03  &lt;-- match   |
+|  0x03   | 0x07              |
++---------+-------------------+
+
+Physical address = PFN 0x03 + offset 0x6C:
++----------+----------+
+|  PFN     |  Offset  |
+|  0x03    |  0x6C    |
++----------+----------+
+= 0x036C
+</code></pre>
+<h3 id="page-table-entry-pte-flags"><a class="header" href="#page-table-entry-pte-flags">Page Table Entry (PTE) Flags</a></h3>
+<p>Each entry in the page table stores more than just the PFN — it also carries protection and status bits:</p>
+<pre><code>+-----+-----+-----+-----+-----+-------- PFN --------+
+|  V  |  R  |  W  |  X  |  D  |   Physical Frame #  |
++-----+-----+-----+-----+-----+--------------------+
+  ^     ^     ^     ^     ^
+  |     |     |     |     Dirty: page has been written to
+  |     |     |     Execute: page can be executed
+  |     |     Write: page can be written
+  |     Read: page can be read
+  Valid: page is present in physical memory (0 = page fault)
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Name</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>V</td><td>Valid</td><td>1 = page is in physical memory; 0 = triggers page fault</td></tr>
+<tr><td>R</td><td>Read</td><td>Page is readable</td></tr>
+<tr><td>W</td><td>Write</td><td>Page is writable</td></tr>
+<tr><td>X</td><td>Execute</td><td>Page is executable (NX bit when cleared = no-execute)</td></tr>
+<tr><td>D</td><td>Dirty</td><td>Page has been modified since last written to disk</td></tr>
+</tbody>
+</table>
+</div>
+<p>A Page Table Entry (PTE) also includes a dirty bit that is used to indicate if the in-RAM copy of the page has been modified.</p>
+<h3 id="page-table-structure"><a class="header" href="#page-table-structure">Page Table Structure</a></h3>
+<h4 id="linear-single-level-page-table"><a class="header" href="#linear-single-level-page-table">Linear (Single-Level) Page Table</a></h4>
+<ul>
+<li>The simplest form: a flat array stored in memory, indexed directly by the VPN.</li>
+<li>Entry <code>i</code> in the array is the PTE for virtual page <code>i</code>.</li>
+<li>The OS stores the base address of this array in a register (e.g., <code>CR3</code> on x86).</li>
+</ul>
+<pre><code>VPN 0  +------------------+
+       | PTE 0 (PFN + flags)|
+VPN 1  +------------------+
+       | PTE 1 (PFN + flags)|
+VPN 2  +------------------+
+       | PTE 2 (PFN + flags)|
+  ...  +------------------+
+VPN N  | PTE N (PFN + flags)|
+       +------------------+
+</code></pre>
+<p><strong>The size problem:</strong></p>
+<ul>
+<li>32-bit address space, 4 KB pages → 2^20 = 1,048,576 entries</li>
+<li>Each PTE is 4 bytes → <strong>4 MB per process</strong>, just for the page table</li>
+<li>With 100 running processes → 400 MB of memory consumed by page tables alone</li>
+<li>A 64-bit address space makes this completely impractical</li>
+</ul>
+<h4 id="multi-level-page-tables"><a class="header" href="#multi-level-page-tables">Multi-Level Page Tables</a></h4>
+<ul>
+<li>Rather than one large flat array, split the VPN into multiple parts and build a tree of page tables.</li>
+<li>Only allocate inner table nodes for regions of the address space actually in use — large unmapped gaps consume no memory.</li>
+<li>Each level of the tree is itself a page-sized table (fits in one 4 KB page).</li>
+</ul>
+<p><strong>Two-level example (x86 32-bit, 10|10|12 split):</strong></p>
+<pre><code>Virtual address (32 bits):
++----------+----------+--------------+
+|  VPN1    |  VPN2    |   Offset     |
+| 10 bits  | 10 bits  |   12 bits    |
++----------+----------+--------------+
+     |           |
+     |           +-------&gt; indexes into a second-level page table
+     +-----------------&gt; indexes into the Page Directory
+</code></pre>
+<p>The walk:</p>
+<pre><code>CR3 register
+     |
+     v
++--------------------+         (Page Directory — 1024 entries)
+| PDE 0              |
+| PDE 1              |
+| ...                |
+| PDE[VPN1] ------+  |
+| ...             |  |
++--------------------+
+                  |
+                  v
+         +--------------------+   (Second-level Page Table — 1024 entries)
+         | PTE 0              |
+         | PTE 1              |
+         | ...                |
+         | PTE[VPN2] ---+     |
+         | ...          |     |
+         +--------------------+
+                        |
+                        v
+                  +----------+----------+
+                  |   PFN    |  Offset  |  &lt;-- Physical Address
+                  +----------+----------+
+</code></pre>
+<ul>
+<li>If <code>PDE[VPN1]</code> is not valid, the entire second-level table for that region is not allocated — saving 4 MB for every 4 MB gap in the address space.</li>
+</ul>
+<h4 id="x86-64-four-level-page-table-999912"><a class="header" href="#x86-64-four-level-page-table-999912">x86-64 Four-Level Page Table (9|9|9|9|12)</a></h4>
+<p>x86-64 uses a 48-bit virtual address split into four 9-bit VPN fields plus a 12-bit offset:</p>
+<pre><code>Virtual address (48 bits used):
++-------+-------+-------+-------+--------------+
+|  PGD  |  PUD  |  PMD  |  PTE  |   Offset     |
+| 9 bits| 9 bits| 9 bits| 9 bits|   12 bits    |
++-------+-------+-------+-------+--------------+
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Level</th><th>Linux name</th><th>x86 name</th><th>Indexes</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>PGD (Page Global Directory)</td><td>PML4</td><td>bits 47–39</td></tr>
+<tr><td>2</td><td>PUD (Page Upper Directory)</td><td>PDPT</td><td>bits 38–30</td></tr>
+<tr><td>3</td><td>PMD (Page Middle Directory)</td><td>PD</td><td>bits 29–21</td></tr>
+<tr><td>4</td><td>PTE (Page Table Entry)</td><td>PT</td><td>bits 20–12</td></tr>
+<tr><td>—</td><td>Offset</td><td>—</td><td>bits 11–0</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code>CR3
+ |
+ v
++-------+    +-------+    +-------+    +-------+    +---------+
+|  PGD  | -&gt; |  PUD  | -&gt; |  PMD  | -&gt; |  PTE  | -&gt; | PFN +   |
+| [idx] |    | [idx] |    | [idx] |    | [idx] |    | Offset  |
++-------+    +-------+    +-------+    +-------+    +---------+
+  ^             ^             ^             ^
+  bits 47-39    bits 38-30    bits 29-21    bits 20-12
+</code></pre>
+<h4 id="page-table-size-comparison"><a class="header" href="#page-table-size-comparison">Page Table Size Comparison</a></h4>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Architecture</th><th>Levels</th><th>VPN split</th><th>Max virtual space</th><th>Table walk cost</th></tr>
+</thead>
+<tbody>
+<tr><td>x86 32-bit</td><td>2</td><td>10|10|12</td><td>4 GB</td><td>2 memory reads</td></tr>
+<tr><td>x86-64</td><td>4</td><td>9|9|9|9|12</td><td>128 TB</td><td>4 memory reads</td></tr>
+<tr><td>x86-64 (5-level)</td><td>5</td><td>9|9|9|9|9|12</td><td>128 PB</td><td>5 memory reads</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="translation-lookaside-buffer-tlb"><a class="header" href="#translation-lookaside-buffer-tlb">Translation Lookaside Buffer (TLB)</a></h3>
+<p>Although paging has many benefits, it also results in a significant slowdown to every memory access. In a paged virtual memory system, every load and store to a virtual memory address requires two RAM accesses; the first reads the page table entry (PTE) to get the frame number for virtual-to-physical address translation, and the second reads or writes the byte(s) at the physical RAM address. Thus, in a paged virtual memory system, every memory access is twice as slow as in a system that supports direct physical RAM addressing.</p>
+<p>One way to reduce the additional overhead of paging is to cache page table mappings of virtual page numbers to physical frame numbers. When translating a virtual address, the MMU first checks for the page numbers in the cache. If found, then the page’s frame number mapping can be grabbed from the cache entry, avoiding one RAM access for reading the PTE.</p>
+<p>A translation look-aside buffer (TLB) is a hardware cache that stores (page number, frame number) mappings. It is a small, fully associative cache that is optimized for fast lookups in hardware. When the MMU finds a mapping in the TLB (a TLB hit), a page table lookup is not needed, and only one RAM access is required to execute a load or store to a virtual memory address.</p>
+<pre><code>CPU issues virtual address
+         |
+         v
+   +------------+     hit     +----------------------+
+   |    TLB     | ----------&gt; | Use cached PFN       |
+   +------------+             +----------------------+
+         |
+       miss
+         |
+         v
+   +------------+
+   | Page Table | (walks the page table in memory)
+   | Walk       |
+   +------------+
+         |
+         v
+   +------------------+
+   | Load entry into  |
+   | TLB, retry       |
+   +------------------+
+</code></pre>
+<ul>
+<li>A <strong>TLB hit</strong> resolves the address in ~1 cycle. A <strong>TLB miss</strong> takes tens to hundreds of cycles (memory access to walk the page table).</li>
+<li>Context switches (switching between processes) require either <strong>flushing</strong> the TLB or tagging entries with an <strong>ASID</strong> (Address Space Identifier) so entries from different processes can coexist.</li>
+<li>With a warm TLB, the number of page table levels has no runtime impact.</li>
+</ul>
+<hr>
+<h2 id="demand-paging"><a class="header" href="#demand-paging">Demand Paging</a></h2>
+<p>A user process doesn’t need all of its memory to be immediately available in order to run. The kernel generally loads and allocates pages as a process needs them; this system is known as on-demand paging or just demand paging. Let’s see how a program starts and runs as a new process:</p>
+<ol>
+<li>The kernel loads the beginning of the program’s instruction code into memory pages.</li>
+<li>The kernel may allocate some working-memory pages to the new process.</li>
+<li>As the process runs, it may determine that the next instruction in code isn’t in any of the memory pages that the kernel loaded initially. At this point, the kernel will take over and load the necessary page into memory, and then lets the program resume execution.</li>
+</ol>
+<hr>
+<h2 id="page-faults"><a class="header" href="#page-faults">Page Faults</a></h2>
+<p>If a memory page isn’t ready when a process wants to use it, the process triggers a page fault. If a page fault occurs, the kernel takes control of the CPU from the process in order to get the page ready. There are two kinds of page faults, major and minor.</p>
+<ul>
+<li>A <strong>page fault</strong> occurs when a process tries to access a page that is not currently stored in RAM. The opposite is a page hit. To handle a page fault, the OS needs to keep track of which RAM frames are free so that it can find a free frame of RAM into which the page read from disk can be stored.</li>
+<li><strong>Minor page faults</strong> occur when the page is in main memory, but the MMU doesn’t know where it is.</li>
+<li><strong>Major page faults</strong> occur when the desired memory page isn’t in main memory at all, which means that the kernel must load it from disk or some other slow storage media. Major page faults will bog down a system. Some major page faults are unavoidable, like when the system loads the code from disk when running a program for the first time.</li>
+</ul>
+<p>You can drill down to the page faults for individual processes by using the <code>top</code>, <code>ps</code>, and <code>time</code> commands. You’ll need to use the system version of time for this:</p>
+<pre><code class="language-sh">/usr/bin/time cal &gt; /dev/null
+0.00user 0.00system 0:00.00elapsed 100%CPU (0avgtext+0avgdata 2824maxresident)k
+0inputs+0outputs (0major+130minor)pagefaults 0swaps
+</code></pre>
+<p>As you can see in the output above, there were 0 major page faults and 130 minor page faults when running the <code>cal</code> program.</p>
+<h4 id="page-fault-flow-control"><a class="header" href="#page-fault-flow-control">Page Fault Flow Control</a></h4>
+<ul>
+<li>There are three cases to understand when a TLB miss occurs:
+<ol>
+<li>The page was both present and valid. In this case, the TLB miss handler can simply grab the PFN from the PTE, retry the instruction (this time resulting in a TLB hit), and continue on.</li>
+<li>The page is valid but not present.</li>
+<li>The page is invalid and not present. The reason for the page being invalid is most likely due to a bug.</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="how-linux-organizes-physical-memory"><a class="header" href="#how-linux-organizes-physical-memory">How Linux Organizes Physical Memory</a></h2>
+<p>At boot, the kernel organizes and partitions RAM into a tree-like hierarchy consisting of nodes, zones, and page frames (page frames are physical pages of RAM). The top level of the hierarchy is made up of nodes, which represent a collection of memory that is local to a particular CPU or group of CPUs. Each node contains one or more zones, which are collections of page frames that share similar characteristics. The zones are further divided into page frames, which are the smallest unit of memory that can be allocated by the kernel.</p>
+<p>Any processor core can access any physical memory location, regardless of which node it belongs to. However, accessing memory that is local to the core’s node is faster than accessing memory that is located on a different node. This is because local memory access avoids the overhead of traversing interconnects between nodes.</p>
+<h3 id="numa-vs-uma"><a class="header" href="#numa-vs-uma">NUMA vs. UMA</a></h3>
+<p>Essentially, nodes are data structures that are used to denote and abstract a physical RAM module on the system motherboard and its associated controller chipset. Actual hardware is being abstracted via software. Two types of memory architectures exist, UMA (Uniform Memory Access) and NUMA (Non-Uniform Memory Access).</p>
+<h4 id="numa"><a class="header" href="#numa">NUMA</a></h4>
+<ul>
+<li>In a NUMA architecture, each processor has its own local memory, and accessing local memory is faster than accessing memory that is located on a different node. This is because local memory access avoids the overhead of traversing interconnects between nodes.</li>
+<li>NUMA architectures are commonly used in high-performance computing systems, where multiple processors are used to perform complex computations. By using NUMA, these systems can achieve better performance and scalability than traditional UMA architectures.</li>
+<li>NUMA systems must have at least 2 physical memory banks (nodes) to be considered NUMA.</li>
+<li>One can use the <code>lstopo</code> command to view the NUMA topology of a system. The output will show the number of nodes, the amount of memory in each node, and the CPUs that are associated with each node. <code>hwloc</code> is another tool that can be used to view the NUMA topology of a system. It provides a graphical representation of the system’s hardware topology, including the NUMA nodes and their associated memory and CPUs.</li>
+<li>The number of zones per node is dynamically determined by the kernel at boot time based on the amount of memory in the node and the system architecture. The kernel typically creates three zones per node: DMA, DMA32, and Normal. The DMA zone is used for memory that is accessible by devices that use direct memory access (DMA), the DMA32 zone is used for memory that is accessible by 32-bit devices, and the Normal zone is used for all other memory. In addition to these standard zones, the kernel may also create additional zones based on the system architecture and configuration. You can view <code>/proc/buddyinfo</code> to see the memory zones and their associated page frames.</li>
+</ul>
+<pre><code class="language-bash">cat /proc/buddyinfo
+Node 0, zone      DMA      0      0      0      0      0      0      0      0      1      1      2
+Node 0, zone    DMA32      6      6      8      7      5      6      7      4      8      9    283
+Node 0, zone   Normal   3170   7694  10543   8113   5011   1761    552    182     55     66  10595
+</code></pre>
+<h4 id="uma"><a class="header" href="#uma">UMA</a></h4>
+<ul>
+<li>In a UMA architecture, all processors share the same physical memory, and accessing any memory location takes the same amount of time, regardless of which processor is accessing it.</li>
+<li>In Linux, UMA systems are treated as NUMA systems with a single node. This means that the kernel still uses the same data structures and algorithms for managing memory, but there is no need to consider the locality of memory access.</li>
+</ul>
+<h4 id="policies"><a class="header" href="#policies">Policies</a></h4>
+<ul>
+<li>If we know the number of cache hits and misses, we can calculate the Average Memory Access Time (AMAT): AMAT = (memory access time) + ((cache hit probability) * disk access time)</li>
+<li>FIFO: typical first in, first out page replacement policy, nothing fancy here</li>
+<li>Random: Remove a random page or pages when under memory pressure</li>
+<li>LRU/LFU: Least recently used/Least Frequently used</li>
+<li>MRU/MFU: Most recently used/most frequently used</li>
 </ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../systems/memory.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../systems/make.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
@@ -267,7 +654,7 @@ Implementation of both the stack and heap is usually down to the runtime / OS.</
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../systems/memory.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../systems/make.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 

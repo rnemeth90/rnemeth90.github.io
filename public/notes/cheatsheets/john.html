@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-e5200d07.js";
+            window.path_to_searchindex_js = "../searchindex-ac4c2b02.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-33caecdc.js"></script>
+        <script src="../toc-f4375573.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,6 +182,14 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="john-the-ripper-cheatsheet"><a class="header" href="#john-the-ripper-cheatsheet">John the Ripper Cheatsheet</a></h1>
+<p>John the Ripper (JtR) is an open-source password cracking tool supporting brute-force and dictionary attacks. The <strong>jumbo</strong> variant is recommended for penetration testing — it includes performance optimizations, multilingual wordlists, 64-bit support, and more hash formats.</p>
+<h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
+<pre><code class="language-sh">sudo apt-get install john        # standard
+sudo apt-get install john-jumbo  # recommended
+</code></pre>
+<p>List all supported formats:</p>
+<pre><code class="language-sh">john --list=formats
+</code></pre>
 <h2 id="basic-syntax"><a class="header" href="#basic-syntax">Basic Syntax</a></h2>
 <pre><code>john [options] &lt;hash_file&gt;
 </code></pre>
@@ -199,6 +207,9 @@
 </tbody>
 </table>
 </div>
+<p><strong>Single crack mode</strong> — Most useful when targeting Linux credentials. Generates candidates from the victim’s username, home directory name, and GECOS values (full name, phone, etc.). A user whose real name is “Bob Smith” might use “Smith1” as their password.</p>
+<p><strong>Wordlist mode</strong> — Classic dictionary attack. Rules (<code>--rules</code>) apply transformations such as appending numbers, capitalizing letters, and adding special characters.</p>
+<p><strong>Incremental mode</strong> — Most exhaustive. Generates candidates dynamically using a statistical model (Markov chains), prioritizing likely passwords. Does not rely on a predefined wordlist.</p>
 <hr>
 <h2 id="common-options"><a class="header" href="#common-options">Common Options</a></h2>
 <div class="table-wrapper">
@@ -263,12 +274,19 @@
 <tr><td><code>truecrypt_volume2john</code></td><td>Convert TrueCrypt volumes</td></tr>
 <tr><td><code>bitlocker2john</code></td><td>Convert BitLocker volumes</td></tr>
 <tr><td><code>7z2john.pl</code></td><td>Convert 7-Zip archives</td></tr>
+<tr><td><code>hccap2john</code></td><td>Convert WPA/WPA2 handshake captures</td></tr>
+<tr><td><code>mscash2john</code></td><td>Convert MS Cache hashes</td></tr>
+<tr><td><code>pfx2john</code></td><td>Convert PKCS#12 files</td></tr>
+<tr><td><code>dmg2john</code></td><td>Convert macOS DMG files</td></tr>
 </tbody>
 </table>
 </div>
 <p><strong>Usage:</strong></p>
 <pre><code>&lt;tool&gt; &lt;file_to_crack&gt; &gt; file.hash
 john file.hash
+</code></pre>
+<p>Find all available 2john tools:</p>
+<pre><code class="language-sh">locate *2john*
 </code></pre>
 <hr>
 <h2 id="useful-examples"><a class="header" href="#useful-examples">Useful Examples</a></h2>
@@ -352,6 +370,7 @@ done
 grep "bitlocker\$0" backup.hashes &gt; backup.hash
 john --wordlist=rockyou.txt backup.hash
 </code></pre>
+<p>The script outputs four hashes: the first two are for the password, the latter two for the recovery key. Focus on the password hash (<code>$bitlocker$0$...</code>).</p>
 <hr>
 <h2 id="mounting-bitlocker-drives-linux"><a class="header" href="#mounting-bitlocker-drives-linux">Mounting BitLocker Drives (Linux)</a></h2>
 <pre><code class="language-bash"># Install dislocker

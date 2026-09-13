@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-e5200d07.js";
+            window.path_to_searchindex_js = "../searchindex-ac4c2b02.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-33caecdc.js"></script>
+        <script src="../toc-f4375573.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,6 +182,7 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="hashcat-cheatsheet"><a class="header" href="#hashcat-cheatsheet">Hashcat Cheatsheet</a></h1>
+<p>Hashcat is a well-known password cracking tool featuring GPU support for cracking a large variety of hashes. The success of a cracking attempt largely depends on the quality of the wordlists and the complexity of the passwords being targeted.</p>
 <h2 id="basic-syntax"><a class="header" href="#basic-syntax">Basic Syntax</a></h2>
 <pre><code class="language-bash">hashcat -a &lt;attack_mode&gt; -m &lt;hash_type&gt; &lt;hashes&gt; [wordlist, rule, mask, ...]
 </code></pre>
@@ -241,6 +242,15 @@
 </table>
 </div>
 <p>Full list: <code>hashcat --help</code> or <a href="https://hashcat.net/wiki/doku.php?id=example_hashes">hashcat.net/wiki/doku.php?id=example_hashes</a></p>
+<h3 id="identifying-hash-types"><a class="header" href="#identifying-hash-types">Identifying Hash Types</a></h3>
+<p>Use <code>hashid</code> to quickly identify the hash type and get the hashcat mode:</p>
+<pre><code class="language-bash">hashid -m '$1$FNr44XZC$wQxY6HHLrgrGX0e1195k.1'
+
+Analyzing '$1$FNr44XZC$wQxY6HHLrgrGX0e1195k.1'
+[+] MD5 Crypt [Hashcat Mode: 500]
+[+] Cisco-IOS(MD5) [Hashcat Mode: 500]
+[+] FreeBSD MD5 [Hashcat Mode: 500]
+</code></pre>
 <h2 id="mask-attack-character-sets"><a class="header" href="#mask-attack-character-sets">Mask Attack Character Sets</a></h2>
 <div class="table-wrapper">
 <table>
@@ -346,6 +356,7 @@ grep "bitlocker\$0" backup.hashes &gt; backup.hash
 # Crack with hashcat
 hashcat -a 0 -m 22100 backup.hash /usr/share/wordlists/rockyou.txt
 </code></pre>
+<p>The script outputs four hashes: the first two are for the BitLocker password, the latter two for the recovery key. Focus on the password hash (<code>$bitlocker$0$...</code>).</p>
 <h3 id="crack-zip-file-pkzip"><a class="header" href="#crack-zip-file-pkzip">Crack ZIP File (PKZIP)</a></h3>
 <pre><code class="language-bash"># Extract hash with zip2john (from JtR)
 zip2john protected.zip &gt; zip.hash
@@ -373,6 +384,32 @@ keepass2john database.kdbx &gt; keepass.hash
 
 # Crack with hashcat
 hashcat -a 0 -m 13400 keepass.hash /usr/share/wordlists/rockyou.txt
+</code></pre>
+<hr>
+<h2 id="hunting-for-encrypted-files"><a class="header" href="#hunting-for-encrypted-files">Hunting for Encrypted Files</a></h2>
+<h3 id="find-common-encrypted-file-types"><a class="header" href="#find-common-encrypted-file-types">Find common encrypted file types</a></h3>
+<pre><code class="language-bash">for ext in $(echo ".xls .xls* .xltx .od* .doc .doc* .pdf .pot .pot* .pp*"); do
+  echo -e "\nFile extension: " $ext
+  find / -name *$ext 2&gt;/dev/null | grep -v "lib\|fonts\|share\|core"
+done
+</code></pre>
+<h3 id="find-ssh-private-keys"><a class="header" href="#find-ssh-private-keys">Find SSH private keys</a></h3>
+<pre><code class="language-bash">grep -rnE '^\-{5}BEGIN [A-Z0-9]+ PRIVATE KEY\-{5}$' /* 2&gt;/dev/null
+</code></pre>
+<h3 id="check-if-ssh-key-is-encrypted"><a class="header" href="#check-if-ssh-key-is-encrypted">Check if SSH key is encrypted</a></h3>
+<pre><code class="language-bash">ssh-keygen -yf ~/.ssh/id_rsa
+# If encrypted, prompts for passphrase
+</code></pre>
+<p>Note: SSH keys are typically cracked with John the Ripper using <code>ssh2john.py</code>, as hashcat doesn’t have a direct mode for SSH private keys.</p>
+<h3 id="crack-openssl-encrypted-gzip"><a class="header" href="#crack-openssl-encrypted-gzip">Crack OpenSSL Encrypted GZIP</a></h3>
+<p>Identify the file type:</p>
+<pre><code class="language-bash">file GZIP.gzip
+# GZIP.gzip: openssl enc'd data with salted password
+</code></pre>
+<p>Brute-force with a loop (errors expected, file extracts on success):</p>
+<pre><code class="language-bash">for i in $(cat rockyou.txt); do
+  openssl enc -aes-256-cbc -d -in GZIP.gzip -k $i 2&gt;/dev/null | tar xz
+done
 </code></pre>
 
                     </main>

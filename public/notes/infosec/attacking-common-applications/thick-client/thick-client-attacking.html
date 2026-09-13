@@ -38,10 +38,10 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-e5200d07.js";
+            window.path_to_searchindex_js = "../../../searchindex-ac4c2b02.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../../toc-33caecdc.js"></script>
+        <script src="../../../toc-f4375573.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -451,6 +451,65 @@ strings restart-service_00000000001E0000.bin | grep -i "oracle\|password\|user"
 </code></pre>
 <p><strong>Result:</strong> Discover custom <code>runas.exe</code> implementation with hardcoded Oracle service credentials.</p>
 <hr>
+<h2 id="attacking-applications-connecting-to-services"><a class="header" href="#attacking-applications-connecting-to-services">Attacking Applications Connecting to Services</a></h2>
+<p>Applications that connect to backend services (databases, APIs, message queues) often embed connection strings containing credentials. If these strings aren’t sufficiently protected, they can be extracted through binary examination — either from a native ELF executable using a debugger, or from a .NET assembly using a decompiler. Recovered credentials can be reused directly against the backend service, or tried against other services on the network (password reuse/spraying).</p>
+<h3 id="elf-executable-examination-gdbpeda"><a class="header" href="#elf-executable-examination-gdbpeda">ELF Executable Examination (GDB/PEDA)</a></h3>
+<p><strong>Scenario:</strong> <code>octopus_checker</code> binary found on a remote Linux host. Running it locally shows it attempts a connection to a database instance:</p>
+<pre><code class="language-shellsession">rnemeth@htb[/htb]$ ./octopus_checker
+
+Program had started..
+Attempting Connection
+Connecting ...
+
+The driver reported the following diagnostics whilst running SQLDriverConnect
+
+01000:1:0:[unixODBC][Driver Manager]Can't open lib 'ODBC Driver 17 for SQL Server' : file not found
+connected
+</code></pre>
+<p>The binary likely builds a SQL connection string containing credentials at runtime. <strong>PEDA</strong> (Python Exploit Development Assistance for GDB) extends GDB with better register/memory visibility for stepping through the binary.</p>
+<p><strong>Step 1 — Load the binary and set the disassembly flavor:</strong></p>
+<pre><code class="language-shellsession">rnemeth@htb[/htb]$ gdb ./octopus_checker
+gdb-peda$ set disassembly-flavor intel
+gdb-peda$ disas main
+</code></pre>
+<p>Disassembling <code>main</code> reveals a series of <code>call</code> instructions referencing string addresses — these are fragments of the SQL connection string, but out of order and reversed due to endianness (the byte order in which the architecture reads multi-byte values).</p>
+<p><strong>Step 2 — Find the call to <code>SQLDriverConnect</code>:</strong></p>
+<pre><code class="language-assembly">0x00005555555555ff &lt;+425&gt;:   mov    esi,0x0
+0x0000555555555604 &lt;+430&gt;:   mov    rdi,rax
+0x0000555555555607 &lt;+433&gt;:   call   0x5555555551b0 &lt;SQLDriverConnect@plt&gt;
+0x000055555555560c &lt;+438&gt;:   add    rsp,0x10
+0x0000555555555610 &lt;+442&gt;:   mov    WORD PTR [rbp-0x4b4],ax
+</code></pre>
+<p><strong>Step 3 — Breakpoint on the call and run:</strong></p>
+<pre><code class="language-shellsession">gdb-peda$ b *0x5555555551b0
+Breakpoint 1 at 0x5555555551b0
+
+gdb-peda$ run
+</code></pre>
+<p>When the breakpoint hits, the fully-assembled connection string is visible in a register (here, <code>RDX</code>) since it’s passed as an argument to <code>SQLDriverConnect</code>:</p>
+<pre><code class="language-assembly">RDX: 0x7fffffffda70 ("DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost, 1401;UID=username;PWD=password;")
+</code></pre>
+<p><strong>Key insight:</strong> Rather than manually reconstructing a reversed/fragmented string from disassembly, breakpoint on the function that <em>consumes</em> the fully-built string (the driver connect call) and read it straight out of the register/stack at that point.</p>
+<h3 id="dll-file-examination-dnspy"><a class="header" href="#dll-file-examination-dnspy">DLL File Examination (dnSpy)</a></h3>
+<p><strong>Scenario:</strong> <code>MultimasterAPI.dll</code> found on a remote Windows host. Metadata confirms it’s a .NET assembly:</p>
+<pre><code class="language-powershell">C:\&gt; Get-FileMetaData .\MultimasterAPI.dll
+
+&lt;SNIP&gt;
+M .NETFramework,Version=v4.6.1 TFrameworkDisplayName.NET Framework 4.6.1    api/getColleagues
+http://localhost:8081*POST
+&lt;SNIP&gt;
+</code></pre>
+<p>Since it’s a managed .NET assembly, it can be decompiled directly (no need for a debugger/memory dump as with native binaries).</p>
+<p><strong>Step 1 — Open the DLL in dnSpy</strong> and browse the namespace/class tree.</p>
+<p><strong>Step 2 — Inspect controller classes</strong> for hardcoded backend logic. <code>MultimasterAPI.Controllers -&gt; ColleagueController</code> reveals a SQL connection string with a plaintext password embedded directly in the <code>Get</code>/<code>GetColleagues</code> methods.</p>
+<p><strong>Key insight:</strong> .NET assemblies decompile close to original source (dnSpy reconstructs readable C#/VB), so connection strings and other secrets are often trivially visible without any dynamic analysis — check controllers/data-access classes first.</p>
+<h3 id="takeaways"><a class="header" href="#takeaways">Takeaways</a></h3>
+<ul>
+<li>Native binaries (ELF/PE) that build connection strings at runtime can still leak the fully-assembled string via a breakpoint at the driver/connect API call — no need to manually reverse fragmented, endian-reversed string constants.</li>
+<li>Managed binaries (.NET, Java) are far easier: decompile with dnSpy/jd-gui and read the connection string directly from source.</li>
+<li>Extracted database credentials should be tested for direct reuse against the backend service, and also tried against other services/accounts on the network (password reuse).</li>
+</ul>
+<hr>
 <h2 id="tools-summary"><a class="header" href="#tools-summary">Tools Summary</a></h2>
 <h3 id="static-analysis-1"><a class="header" href="#static-analysis-1">Static Analysis</a></h3>
 <div class="table-wrapper">
@@ -466,6 +525,7 @@ strings restart-service_00000000001E0000.bin | grep -i "oracle\|password\|user"
 <tr><td>Radare2</td><td>Portable disassembler</td><td>EXE, DLL, binaries</td></tr>
 <tr><td>Strings</td><td>Extract readable text</td><td>Any binary</td></tr>
 <tr><td>CFF Explorer</td><td>PE file analysis</td><td>EXE, DLL</td></tr>
+<tr><td>GDB + PEDA</td><td>Disassembly, breakpoints, register/memory inspection</td><td>ELF binaries</td></tr>
 </tbody>
 </table>
 </div>
@@ -566,11 +626,11 @@ strings restart-service_00000000001E0000.bin | grep -i "oracle\|password\|user"
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../../infosec/attacking-common-applications/thick-client/thick-client-discovery-enumeration.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../../infosec/attacking-common-applications/thick-client/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../../../infosec/attacking-common-applications/thick-client/thick-client-web-vulnerabilities.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../../infosec/attacking-common-applications/thick-client/thick-client-discovery-enumeration.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -580,11 +640,11 @@ strings restart-service_00000000001E0000.bin | grep -i "oracle\|password\|user"
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../../infosec/attacking-common-applications/thick-client/thick-client-discovery-enumeration.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../../infosec/attacking-common-applications/thick-client/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../../../infosec/attacking-common-applications/thick-client/thick-client-web-vulnerabilities.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../../infosec/attacking-common-applications/thick-client/thick-client-discovery-enumeration.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>

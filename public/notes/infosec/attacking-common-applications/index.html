@@ -38,10 +38,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-e5200d07.js";
+            window.path_to_searchindex_js = "../../searchindex-ac4c2b02.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-33caecdc.js"></script>
+        <script src="../../toc-f4375573.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -186,6 +186,14 @@
 <ul>
 <li><a href="./app-discovery-enumeration.html">Application Discovery &amp; Enumeration — asset inventory, Nmap web discovery, EyeWitness, Aquatone, interpreting results, note-taking structure</a></li>
 </ul>
+<h3 id="coldfusion"><a class="header" href="#coldfusion">ColdFusion</a></h3>
+<ul>
+<li><a href="./coldfusion/">ColdFusion — searchsploit, CVE-2010-2861 directory traversal, CVE-2009-2265 unauthenticated RCE</a>
+<ul>
+<li><a href="./coldfusion/coldfusion-attacking.html">Attacking ColdFusion — searchsploit, password.properties traversal, FCKeditor unauthenticated file upload RCE</a></li>
+</ul>
+</li>
+</ul>
 <h3 id="cgi-applications"><a class="header" href="#cgi-applications">CGI Applications</a></h3>
 <ul>
 <li><a href="./cgi/">CGI Applications — Shellshock overview, enumeration, exploitation, mitigation</a>
@@ -253,8 +261,24 @@
 <li><a href="./thick-client/">Thick Client Applications — discovery, enumeration, reverse engineering, hardcoded credentials, DLL hijacking</a>
 <ul>
 <li><a href="./thick-client/thick-client-discovery-enumeration.html">Discovery &amp; Enumeration — application identification, metadata extraction, dependency analysis, static analysis, configuration discovery</a></li>
-<li><a href="./thick-client/thick-client-attacking.html">Attacking Thick Client Applications — hardcoded credentials extraction, static/dynamic analysis, case study, DLL hijacking, insecure storage exploitation</a></li>
+<li><a href="./thick-client/thick-client-attacking.html">Attacking Thick Client Applications — hardcoded credentials extraction, static/dynamic analysis, case study, DLL hijacking, insecure storage exploitation, GDB/PEDA &amp; dnSpy connection-string extraction</a></li>
 <li><a href="./thick-client/thick-client-web-vulnerabilities.html">Exploiting Web Vulnerabilities — SQL injection, path traversal, JAR modification, signature bypass, three-tier architecture attacks</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="ldap"><a class="header" href="#ldap">LDAP</a></h3>
+<ul>
+<li><a href="./ldap/">LDAP — protocol overview, use cases, LDAP vs AD, ldapsearch, LDAP injection, authentication bypass</a>
+<ul>
+<li><a href="./ldap/ldap.html">LDAP — protocol mechanics, client-server model, ldapsearch, injection attacks, wildcard auth bypass, enumeration</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="iis-internet-information-services"><a class="header" href="#iis-internet-information-services">IIS (Internet Information Services)</a></h3>
+<ul>
+<li><a href="./iis/">IIS — tilde enumeration, 8.3 short file names, IIS-ShortName-Scanner, Gobuster full-name resolution</a>
+<ul>
+<li><a href="./iis/iis-tilde-enumeration.html">IIS Tilde Enumeration — 8.3 short file name vulnerability, IIS-ShortName-Scanner, wordlist generation, Gobuster full-name resolution</a></li>
 </ul>
 </li>
 </ul>
@@ -274,6 +298,8 @@
 <p><strong>EyeWitness</strong> (<code>eyewitness --web -x web_discovery.xml</code>) and <strong>Aquatone</strong> (<code>cat web_discovery.xml | ./aquatone -nmap</code>) both accept Nmap XML and produce HTML screenshot reports, grouping targets into categories such as “High Value Targets.” These reports rapidly surface default-credential login pages (Tomcat Manager, Splunk, PRTG) and default install pages that confirm software versions without manual browsing across dozens of hosts.</p>
 <p>When interpreting results, prioritize applications with known default credentials or recent CVEs: Tomcat Manager enables WAR-based RCE, Splunk’s search engine can execute server-side scripts, PRTG has authenticated RCE vulnerabilities in older versions (CVE-2018-9276), and osTicket can leak internal employee/email data useful for phishing. Findings should be tracked in a hierarchical note structure (host → application → credentials → exploitation path) throughout the engagement to support the final report.</p>
 <p><strong>PRTG Network Monitor</strong> deserves special attention in internal assessments — it’s frequently encountered in monitored network infrastructure, has a well-known authenticated command injection (CVE-2018-9276 &lt; v18.2.39), and default credentials (<code>prtgadmin:prtgadmin</code>) are often unchanged. Successful exploitation yields SYSTEM-level code execution with built-in persistence through scheduled notifications, plus access to credentials stored for monitored infrastructure enabling further lateral movement.</p>
+<p><strong>IIS tilde enumeration</strong> leverages the Windows 8.3 short file name format to discover hidden directories and files on IIS 7.5 and earlier. The IIS-ShortName-Scanner tool automates the character-by-character HTTP probing, and Gobuster resolves identified short names (e.g., <code>TRANSF~1.ASP</code>) to their full filenames using a prefix-filtered wordlist.</p>
+<p><strong>LDAP injection</strong> exploits web applications that delegate authentication to LDAP without sanitising input. Injecting the wildcard character <code>*</code> into username or password fields can cause the underlying LDAP query to match any directory entry, bypassing authentication entirely. Anonymous <code>ldapsearch</code> queries against exposed port 389 can also enumerate users and organizational structure without credentials.</p>
 
                     </main>
 

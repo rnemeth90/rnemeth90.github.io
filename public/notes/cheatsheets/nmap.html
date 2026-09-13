@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-e5200d07.js";
+            window.path_to_searchindex_js = "../searchindex-ac4c2b02.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-33caecdc.js"></script>
+        <script src="../toc-f4375573.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -194,7 +194,6 @@
 <tr><td><strong>Service Version Scan</strong></td><td><code>nmap -sV &lt;target&gt;</code></td><td>Scan service version of open ports.</td></tr>
 <tr><td><strong>Connect Scan</strong></td><td><code>nmap -sT &lt;target&gt;</code></td><td>Full TCP handshake; accurate but noisy.</td></tr>
 <tr><td><strong>UDP Scan</strong></td><td><code>nmap -sU &lt;target&gt;</code></td><td>Scan UDP ports (slow).</td></tr>
-<tr><td><strong>Version Scan</strong></td><td><code>nmap -sV &lt;target&gt;</code></td><td>Identify service versions.</td></tr>
 <tr><td><strong>OS Detection</strong></td><td><code>nmap -O &lt;target&gt;</code></td><td>Guess OS.</td></tr>
 <tr><td><strong>Aggressive Scan</strong></td><td><code>nmap -A &lt;target&gt;</code></td><td>OS, version, scripts, traceroute.</td></tr>
 </tbody>
@@ -231,7 +230,7 @@
 <tr><td><code>--packet-trace</code></td><td>Show all sent/received packets</td></tr>
 <tr><td><code>--reason</code></td><td>Explain port states</td></tr>
 <tr><td><code>-T4</code></td><td>Faster timing template</td></tr>
-<tr><td><code>--stats-every=5s	</code></td><td>Show stats every 5 seconds</td></tr>
+<tr><td><code>--stats-every=5s</code></td><td>Show stats every 5 seconds</td></tr>
 </tbody>
 </table>
 </div>
@@ -266,6 +265,59 @@
 <h3 id="service-enumeration"><a class="header" href="#service-enumeration">Service Enumeration</a></h3>
 <pre><code>nmap -sV -p &lt;port&gt; &lt;target&gt;
 </code></pre>
+<hr>
+<h2 id="how-scanning-works"><a class="header" href="#how-scanning-works">How Scanning Works</a></h2>
+<p>Understanding how Nmap works is critical for interpreting scan results. After confirming a host is alive, scanning helps identify open ports &amp; services, service versions, and OS details.</p>
+<h3 id="tcp-scan-types"><a class="header" href="#tcp-scan-types">TCP Scan Types</a></h3>
+<p><strong>SYN Scan (<code>-sS</code>)</strong> — Default when running as root. Fast and stealthy (half-open). Interprets SYN-ACK → open, RST → closed. Does not complete the three-way handshake, so services may not log the attempt.</p>
+<p><strong>TCP Connect Scan (<code>-sT</code>)</strong> — Used when not root. Completes full handshake. Most accurate, least stealthy. Logged by services and IDS. Useful when outbound connections are allowed but inbound is blocked.</p>
+<p><strong>ACK Scan (<code>-sA</code>)</strong> — Difficult for firewalls to detect. TCP packet has only the ACK flag set, forcing RST responses from unfiltered ports. Useful for mapping firewall rules; does not determine open/closed, only filtered/unfiltered.</p>
+<h3 id="filtered-ports"><a class="header" href="#filtered-ports">Filtered Ports</a></h3>
+<p><strong>Dropped packets</strong> — No reply; Nmap retries (default 10 times). Slow scan.</p>
+<p><strong>Rejected packets</strong> — ICMP type 3 code 3 → port unreachable → likely firewall rejection.</p>
+<h3 id="udp-scanning--su"><a class="header" href="#udp-scanning--su">UDP Scanning (<code>-sU</code>)</a></h3>
+<p>Slow due to long timeouts. Many ports show <strong>open|filtered</strong> due to lack of response. State determination:</p>
+<ul>
+<li>UDP response → <strong>open</strong></li>
+<li>ICMP type 3 code 3 → <strong>closed</strong></li>
+<li>No response → <strong>open|filtered</strong></li>
+</ul>
+<h3 id="version-detection--sv"><a class="header" href="#version-detection--sv">Version Detection (<code>-sV</code>)</a></h3>
+<p>Probes services to identify service name, version, and extra metadata (workgroup, hostnames, OS hints). Nmap reads banners first; if version cannot be identified from the banner, it attempts signature matching — this is significantly noisier.</p>
+<h3 id="packet-tracing---packet-trace"><a class="header" href="#packet-tracing---packet-trace">Packet Tracing (<code>--packet-trace</code>)</a></h3>
+<p>Shows packets sent and received. For a closed port:</p>
+<pre><code>SENT: SYN
+RCVD: RST/ACK → closed
+</code></pre>
+<hr>
+<h2 id="timing-templates"><a class="header" href="#timing-templates">Timing Templates</a></h2>
+<p>Nmap offers six timing templates that control scan aggressiveness. Default is <code>-T 3</code> (normal).</p>
+<pre><code class="language-sh">-T 0 / -T paranoid
+-T 1 / -T sneaky
+-T 2 / -T polite
+-T 3 / -T normal
+-T 4 / -T aggressive
+-T 5 / -T insane
+</code></pre>
+<p>Overly aggressive timing can trigger security systems and result in being blocked.</p>
+<hr>
+<h2 id="firewall--ids-evasion"><a class="header" href="#firewall--ids-evasion">Firewall / IDS Evasion</a></h2>
+<h3 id="decoys--d"><a class="header" href="#decoys--d">Decoys (<code>-D</code>)</a></h3>
+<p>Use decoy IP addresses to obfuscate the true source of the scan:</p>
+<pre><code class="language-sh">nmap -D RND:10 &lt;target&gt;         # 10 random decoys
+nmap -D 10.0.0.1,10.0.0.2 &lt;target&gt;   # specific decoys
+</code></pre>
+<p>Decoys must be routable and online from the target’s perspective. Works with SYN, ACK, ICMP, and OS detection scans.</p>
+<h3 id="source-port-specification---source-port"><a class="header" href="#source-port-specification---source-port">Source Port Specification (<code>--source-port</code>)</a></h3>
+<p>Specify a source port to blend in with expected traffic (e.g., port 53 for DNS):</p>
+<pre><code class="language-sh">nmap -sS -Pn -p- --source-port 53 &lt;target&gt;
+</code></pre>
+<h3 id="additional-evasion-options"><a class="header" href="#additional-evasion-options">Additional Evasion Options</a></h3>
+<ul>
+<li>Packet fragmentation (<code>-f</code>)</li>
+<li>Randomizing port scan order (<code>--randomize-hosts</code>)</li>
+<li>Varying scan technique (Xmas scan <code>-sX</code>, NULL scan <code>-sN</code>, FIN scan <code>-sF</code>)</li>
+</ul>
 
                     </main>
 
