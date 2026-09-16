@@ -3,16 +3,28 @@ title: Links
 permalink: /links/
 ---
 
+[General](#general) · [Go](#go) · [InfoSec](#infosec) · [Cloud & DevOps](#cloud--devops) · [Dev Tools](#dev-tools) · [Networking](#networking) · [Vim / Neovim](#vim--neovim) · [Learning](#learning) · [Work](#work)
+
+---
+
 ## General
+
+<details markdown="1">
+<summary>show</summary>
 
 | [Laws of Software](https://www.laws-of-software.com/) | [Hacker News](https://news.ycombinator.com/) | [Distrowatch](https://distrowatch.com/) |
 | [Archive.org](https://archive.org/) | [go.dev](https://go.dev/) | [Azure DevOps Blog](https://devblogs.microsoft.com/devops/) |
 | [xkcd](https://xkcd.com/) | [stilldrinking](https://www.stilldrinking.org/) | [PCjs](https://www.pcjs.org/about/) |
 | [The Complain Dept](http://www.noreallyidocare.com/) | [lab401 Shop](https://lab401.com/) | |
 
+</details>
+
 ---
 
 ## Go
+
+<details markdown="1">
+<summary>show</summary>
 
 ### Articles & Concepts
 
@@ -24,7 +36,8 @@ permalink: /links/
 
 ### How-To
 
-|  [Watch File Changes](https://levelup.gitconnected.com/how-to-watch-for-file-change-in-golang-4d1eaa3d2964) | [Worker Pools (example)](https://gobyexample.com/worker-pools) |
+| [REST API with Gin](https://go.dev/doc/tutorial/web-service-gin) | [Web Scraping](https://www.scrapingbee.com/blog/web-scraping-go/) | [Build & Distribute CLI](https://dev.to/mauriciolinhares/building-and-distributing-a-command-line-tool-in-golang-go0) |
+| [K8s API Health Status](https://stackoverflow.com/questions/64113932/go-get-k8s-api-server-health-status) | [Watch File Changes](https://levelup.gitconnected.com/how-to-watch-for-file-change-in-golang-4d1eaa3d2964) | [Worker Pools (example)](https://gobyexample.com/worker-pools) |
 
 ### Apps
 
@@ -48,9 +61,14 @@ permalink: /links/
 | [Gophercises](https://gophercises.com/) | [Learn Go: 11 Projects](https://www.freecodecamp.org/news/learn-go-by-building-11-projects/) | [exercism](https://exercism.org/dashboard) |
 | [codecrafters](https://app.codecrafters.io/users/rnemeth90) | [boot.dev](https://www.boot.dev/u/rtn) | [Up For Grabs (Go)](https://up-for-grabs.net/#/filters?tags=go) |
 
+</details>
+
 ---
 
 ## InfoSec
+
+<details markdown="1">
+<summary>show</summary>
 
 ### References & Reads
 
@@ -107,9 +125,14 @@ permalink: /links/
 
 | [DVWA](https://github.com/digininja/DVWA) | [amass](https://github.com/owasp-amass/amass?tab=readme-ov-file) | [TryHackMe](https://tryhackme.com/) |
 
+</details>
+
 ---
 
 ## Cloud & DevOps
+
+<details markdown="1">
+<summary>show</summary>
 
 ### Azure
 
@@ -121,9 +144,14 @@ permalink: /links/
 
 | [Mizu (API traffic viewer)](https://getmizu.io/) | [kubescape](https://github.com/armosec/kubescape) | [Ksniff (packet capture)](https://kubesandclouds.com/index.php/2021/01/20/ksniff/) |
 
+</details>
+
 ---
 
 ## Dev Tools
+
+<details markdown="1">
+<summary>show</summary>
 
 | [asciinema](https://asciinema.org/) | [Crontab.guru](https://crontab.guru/) | [HttpREPL](https://docs.microsoft.com/en-us/aspnet/core/web-api/http-repl/?view=aspnetcore-6.0&tabs=windows) |
 | [HAR Analyzer](https://toolbox.googleapps.com/apps/har_analyzer/) | [ShellCheck](https://www.shellcheck.net/) | [ngrok](https://ngrok.com/download) |
@@ -140,9 +168,14 @@ permalink: /links/
 | [For the Badge](https://forthebadge.com/) | [Shields.io](https://shields.io/category/build) | [Up For Grabs](https://up-for-grabs.net/#/) |
 | [gist.cafe](https://gist.cafe/#hello/c) | | |
 
+</details>
+
 ---
 
 ## Networking
+
+<details markdown="1">
+<summary>show</summary>
 
 ### TCP/IP & DNS
 
@@ -154,18 +187,28 @@ permalink: /links/
 | [RFC 2616 (HTTP/1.1)](https://datatracker.ietf.org/doc/html/rfc2616) | [RFC 9110 (HTTP Semantics)](https://datatracker.ietf.org/doc/html/rfc9110) | [RFC 9112 (HTTP/1.1)](https://datatracker.ietf.org/doc/html/rfc9112) |
 | [RFC 7231 (HTTP/1.1 Semantics)](https://datatracker.ietf.org/doc/html/rfc7231) | | |
 
+</details>
+
 ---
 
 ## Vim / Neovim
+
+<details markdown="1">
+<summary>show</summary>
 
 | [Vim Cheat Sheet](https://vim.rtorr.com/) | [Vim Commands (ShortcutFoo)](https://www.shortcutfoo.com/app/dojos/vim) | [Buffers in Vim](https://mkaz.blog/working-with-vim/buffers) |
 | [Interactive Vim Tutorial](https://openvim.com/) | [Dotfyle (plugins)](https://dotfyle.com/) | [Configure Neovim with Lua](https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/) |
 | [Learn Lua in Y Minutes](https://learnxinyminutes.com/docs/lua/) | [nvim-lspconfig servers](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#gopls) | [Mason Packages](https://github.com/williamboman/mason.nvim/blob/main/PACKAGES.md#csharp-language-server) |
 | [tree-sitter-yaml](https://github.com/ikatyang/tree-sitter-yaml) | [C# LSP for Neovim (SO)](https://stackoverflow.com/questions/58627964/c-sharp-lsp-autocompletion-client-for-neovim-vim8) | |
 
+</details>
+
 ---
 
 ## Learning
+
+<details markdown="1">
+<summary>show</summary>
 
 ### General
 
@@ -184,8 +227,15 @@ permalink: /links/
 | [Cooperating Sequential Processes (Dijkstra)](https://www.cs.utexas.edu/users/EWD/transcriptions/EWD01xx/EWD123.html) | [Thread Local Storage (MSDN)](https://learn.microsoft.com/en-us/cpp/parallel/thread-local-storage-tls?view=msvc-170) | [OSTEP Book Notes](https://river.me/blog/book-notes-ostep-1/) |
 | [myCompiler](https://www.mycompiler.io/) | [Compiler Explorer (godbolt)](https://godbolt.org/) | |
 
+</details>
+
 ---
 
 ## Work
 
+<details markdown="1">
+<summary>show</summary>
+
 | [dotnet diagnostics in K8s](https://dev.azure.com/marketingops/Aprimo/_wiki/wikis/Aprimo.wiki/22028/-Tip-Using-dotnet-diagnostic-tools-in-Kubernetes) | [nginx-ingress pipeline run](https://dev.azure.com/marketingops/adam/_build/results?buildId=1054273&view=results) | [Azure VMSS (prod-09au1)](https://portal.azure.com/#@attune.gshapps.net/resource/subscriptions/3a0b2801-2ab5-4b2d-8ce7-426aa48f826f/resourceGroups/prod-09au1-nginx-rg/providers/Microsoft.Compute/virtualMachineScaleSets/prod-09au1-nginx-vmss/instances) |
+
+</details>
