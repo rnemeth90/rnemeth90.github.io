@@ -7,7 +7,7 @@ permalink: /cv/
 
 SRE | DevOps | Dev | Linux | Kubernetes | Azure | AWS | Always learning
 
-[LinkedIn](https://linkedin.com/in/ryan-nemeth-b0b1504b/) &middot; Chicago metropolitan area
+[LinkedIn](https://linkedin.com/in/ryan-nemeth-b0b1504b/) &middot; 
 
 [Download PDF version](/resume/ryan-nemeth-resume.pdf)
 
