@@ -18,6 +18,8 @@ Before joining Aprimo, I was a cloud architect for a software company specializi
 The opinions expressed here are my own personal opinions, and do not represent my employer’s view in any way.
 
 Contact me through [LinkedIn](https://www.linkedin.com/in/ryan-nemeth-b0b1504b/) or [Github](https://github.com/rnemeth90).
+
+You can download my resume as a [PDF](/resume/ryan-nemeth-resume.pdf).
 <br>
 <br>
 
