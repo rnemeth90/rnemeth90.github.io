@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  annotations:
+    contact: "Ryan Nemeth" 
+    commit-hash: "1234567890abcdef"
+  labels:
+    app: annotations
+  name: annotations
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: annotations
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: annotations
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+status: {}
