@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: capabilities-pod
+  labels:
+    app: capabilities
+spec:
+  containers:
+  - name: capabilities-container
+    image: busybox
+    command: [ "sleep", "infinity" ]
+    securityContext:
+      capabilities:
+        drop:
+        - ALL
+        add: ["NET_ADMIN"]

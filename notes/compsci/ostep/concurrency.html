@@ -1,0 +1,687 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Concurrency: Multi-Tasking &amp; Synchronization - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-23f36979.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-d36d24f7.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <blockquote>
+<p>Notes based on <em>Operating Systems: Three Easy Pieces</em> by Remzi &amp; Andrea Arpaci-Dusseau</p>
+</blockquote>
+<h2 id="concurrency-multi-tasking--synchronization"><a class="header" href="#concurrency-multi-tasking--synchronization">Concurrency: Multi-Tasking &amp; Synchronization</a></h2>
+<p>This section explores another important aspect of computer systems: concurrency. Concurrency generally means “multiple things going on at the same time”. We could also call it multi-tasking. With the support for virtualization, we have already seen how the OS runs multiple processes on a machine with shared CPU cores and memory space, which is one form of concurrency. However, processes generally represent separate entities and the OS tries its best to ensure isolation between processes. Are there alternatives?</p>
+<h3 id="abstraction-of-thread"><a class="header" href="#abstraction-of-thread">Abstraction of Thread</a></h3>
+<p>We introduce a new abstraction of a running entity called a thread. For a single process, it could have multiple threads sharing the same address space (hence, the same code, data, etc.). Different threads differentiate with each other mainly in:</p>
+<p>Different PC register values: each thread has its own PC, meaning they can (and probably will) be executing different pieces of code of the program
+Separate stacks and SP: each thread has its own function call stack space (because they will be executing different routines) and the corresponding stack pointer registers, etc.; the function stacks in this case may be called thread-local
+We call the action of utilizing multiple threads as multi-threading. A program spawning threads is a multi-threaded program. A default process with just the main thread can be viewed as a single-threaded process. Multi-threading brings at least two benefits:</p>
+<p>Parallelism if we have multiple CPU cores and/or certain excessive resources: multiple threads can run on different cores at the same time; this action is called parallelization
+Multiprogramming: enables overlapping of I/O (or other blocking behaviors) with other activities of the program: when one thread issues an I/O on behalf of the program, other threads can fill this gap and do useful computation on the core</p>
+<h3 id="multi-threaded-address-space"><a class="header" href="#multi-threaded-address-space">Multi-Threaded Address Space</a></h3>
+<p>A multi-threaded process’s address space looks like:</p>
+<p>The OS and the threading library could have different ways to layout the thread-local stacks.</p>
+<h3 id="thread-control-block-tcb"><a class="header" href="#thread-control-block-tcb">Thread Control Block (TCB)</a></h3>
+<p>Since threads have their own PC and other registers, switching between threads on a CPU core is also a context switch. The difference from process context switches is that thread context switches are more lightweight: just registers, no page table pointer switches, no TLB flushes, no open file state changing, etc.</p>
+<p>Apart from the registers context, each thread could have different scheduling properties, e.g., priorities, time-slice lengths, etc. A thread control block (TCB) is the data structure for keeping these states of a thread. TCBs of a process are typically part of the PCB of the process. For example, we could modify our xv6 PCB structure to something like:</p>
+<p>struct context {</p>
+<pre><code class="language-c">int eip;
+int esp;
+int ebx;
+int ecx;
+int edx;
+int esi;
+int edi;
+int ebp;
+</code></pre>
+<p>};
+​
+/** The TCB structure. */
+struct thread {</p>
+<pre><code class="language-c">int tid;                    // Thread ID
+struct context context;     // Register values context
+struct sched_properties sp; // Scheduling properties
+</code></pre>
+<p>};
+​
+/** The PCB structure. */
+struct proc {</p>
+<pre><code class="language-c">...
+struct thread threads[MAX_THREADS];     // TCBs
+</code></pre>
+<p>};</p>
+<h3 id="thread-apis"><a class="header" href="#thread-apis">Thread APIs</a></h3>
+<p>The POSIX specification defines a set of pthread APIs:</p>
+<p>pthread_create() - create a new thread with attributes and start its execution at the entry of a routine (often called thread function); the creator is the parent thread and the created one is a child thread; thread creations could form a deep tree like in process forks
+pthread_join() - wait for a specific thread to exit (called joining the thread)
+pthread_exit() - for a thread to exit itself (returning from thread function implicitly means exit)
+Synchronization primitives: pthread_mutex_<em>(), pthread_cond_</em>(), …
+These interfaces are either raw system calls or wrappers provided by a pthread library (should be explicitly linked against) if the OS provides slightly different threading syscalls in the low level.</p>
+<p>The portable operating system interface (POSIX) is a set of specifications that define the interfaces an operating system should provide to applications. There can be many different OS designs and implementations, but as long as they comply to a (sub)set of POSIX interfaces, applications can be developed on one POSIX system platform and ported to run on another POSIX platform with ease. Please see the linked wikipedia page for what interfaces the POSIX specification includes and which operating systems are POSIX-compliant.</p>
+<h3 id="synchronization"><a class="header" href="#synchronization">Synchronization</a></h3>
+<p>Threads are powerful because they share the same address space , but such sharing leads to a critical problem: how to prevent race conditions if they operate on shared data and how to express a “waiting-on-something” logic? In general, the term synchronization refers to mechanisms + policies to ensure</p>
+<p>Atomicity of accesses
+Ordering of execution
+It applies to any case where there are multiple running entities sharing something, but its exceptionally critical to OSes because the problem of sharing happens so often.</p>
+<h3 id="race-conditions"><a class="header" href="#race-conditions">Race Conditions</a></h3>
+<p>If we do not apply any restrictions on the scheduling of threads, the result of execution of a multi-threaded program is likely to be indeterministic. Each thread is executing its own stream of instructions, yet every time which one executes its next instruction could be arbitrary. Consider an example where two threads executing the same “plus-one” routine to a shared variable with original value 50:</p>
+<p>; increments the variable at addr by 1
+mov addr, %eax
+add $0x1, %eax
+mov %eax, addr
+You might expect a correct program to always produce 52 as the result. However, the following sequence could happen and the result could be 51 which is incorrect:</p>
+<p>This is what we call a race condition (or, more specifically, a data race): unprotected timing of execution. The result of such a program would be indeterminate: sometimes it produces the correct result but sometimes the results are different and are likely wrong. We call such piece of code a critical section: code routine that accesses a shared resource/data and, if unprotected, might yield incorrect result.</p>
+<h3 id="atomicity--mutex-locks"><a class="header" href="#atomicity--mutex-locks">Atomicity &amp; Mutex Locks</a></h3>
+<p>What we want is that whenever a thread starts executing a critical section, it executes until the completion of the critical section without anyone else interrupting in the middle to execute any conflicting critical section (executing unrelated code would be fine). In other words, we want the entire critical section to be atomic (we assume every single instruction is already guaranteed atomic).</p>
+<p>At a higher level, one big, atomic action that groups a sequence of small actions is logically called a transaction (a name widely used in database systems, though the problem setup is quite different).</p>
+<p>Atomicity is guaranteed if we have mutual exclusion (mutex) among concurrent executions of critical sections. We introduce a powerful synchronization primitive called a lock to enforce mutual exclusion. A lock is a data structure that supports at least the following two operations:</p>
+<p>acquire - when entering a critical section, grab the lock and mark it as acquired (or locked, held); if there are concurrent attempts on acquiring a lock, must ensure that only one thread succeeds and proceeds to execute the critical section; others must somehow wait until its release to compete again
+release - when leaving the critical section, release the lock so it turns available (or unlocked, free)
+pthread_mutex_t balance_lock = PTHREAD_MUTEX_INITIALIZER;
+​
+void deposit_one() {</p>
+<pre><code class="language-c">pthread_mutex_lock(&amp;balance_lock);
+balance++;        // Critical section
+pthread_mutex_unlock(&amp;balance_lock);
+</code></pre>
+<p>}
+​
+void withdraw_one() {</p>
+<pre><code class="language-c">pthread_mutex_lock(&amp;balance_lock);
+if (balance &gt; 0)  // Critical section with the same interest on
+    balance--;    // the shared balance variable, so protected
+                  // with the same lock.
+pthread_mutex_unlock(&amp;balance_lock);
+</code></pre>
+<p>}
+We will talk about how does the OS implement locks in a dedicated section below.</p>
+<h3 id="ordering--condition-variables"><a class="header" href="#ordering--condition-variables">Ordering &amp; Condition Variables</a></h3>
+<p>Apart from atomicity of critical sections, we also desire the ability to enforce certain ordering of executions so that a routine cannot proceed until some condition is made true by some other thread. Though constantly spinning on a variable might work, it is very inefficient. We introduce a second type of synchronization primitive called a condition variable. A condition variable is a data structure that supports at least the following two operations:</p>
+<p>wait - block and wait until some condition becomes true; waiter typically gets added to a queue
+signal - notify, wake up one waiter on a condition (typically head of wait queue)
+(optional) broadcast - wake up all waiters on the condition variable (assuming Mesa semantic, see below); a condition variable using broadcast is called a covering condition
+A condition variable is often coupled with a mutex lock to protect the shared resource to which the condition is related:</p>
+<p>volatile int done = 0;
+pthread_cond_t done_cond = PTHREAD_COND_INITIALIZER;
+pthread_cond_t done_lock = PTHREAD_MUTEX_INITIALIZER;
+​
+void thread_exit() {</p>
+<pre><code class="language-c">pthread_mutex_lock(&amp;done_lock);
+done = 1;
+pthread_cond_signal(&amp;done_cond);
+pthread_mutex_unlock(&amp;done_lock);
+</code></pre>
+<p>}
+​
+void thread_join() {</p>
+<pre><code class="language-c">pthread_mutex_lock(&amp;done_lock);
+// Use a while loop in case something reverted the condition
+// right after I wake up.
+while (done == 0) {
+    // When entering wait, done_lock will be released
+    pthread_cond_wait(&amp;done_cond, &amp;done_lock);
+    // Upon waking up, done_lock will be re-acquired
+}
+pthread_mutex_unlock(&amp;done_lock);
+</code></pre>
+<p>}
+Another great example of demonstrating the usage of condition variables is the famous bounded buffer producer/consumer problem introduced by Dijkstra, where we have a fixed-size buffer array, producer(s) trying to write to empty slots of the buffer, and consumer(s) trying to grab things from the buffer. Use cases of bounded buffer include a web server request dispatching queue, or piping the output of one command to the input of another. A correct implementation looks like:</p>
+<p>volatile int buffer[NUM_SLOTS];
+volatile int fill_idx = 0, grab_idx = 0;
+volatile int count = 0;
+​
+pthread_cond_t buf_not_empty = PTHREAD_COND_INITIALIZER;
+pthread_cond_t buf_not_full  = PTHREAD_COND_INITIALIZER;
+pthread_mtuex_t buf_lock = PTHREAD_MUTEX_INITIALIZER;
+​
+void producer() {</p>
+<pre><code class="language-c">while (1) {
+    pthread_mutex_lock(&amp;buf_lock);
+    while (count == NUM_SLOTS)
+        pthread_cond_wait(&amp;buf_not_full, &amp;buf_lock);
+    buffer[fill_idx] = something;
+    fill_idx = (fill_idx + 1) % NUM_SLOTS;
+    count++;
+    pthread_cond_signal(&amp;buf_not_empty);
+    pthread_mutex_unlock(&amp;buf_lock);
+}
+</code></pre>
+<p>}
+​
+void consumer() {</p>
+<pre><code class="language-c">while (1) {
+    pthread_mutex_lock(&amp;buf_lock);
+    while (count == 0)
+        pthread_cond_wait(&amp;buf_not_empty, &amp;buf_lock);
+    int grabbed = buffer[grab_idx];
+    grab_idx = (grab_idx + 1) % NUM_SLOTS;
+    count--;
+    pthread_cond_signal(&amp;buf_not_full);
+    pthread_mutex_unlock(&amp;buf_lock)
+}
+</code></pre>
+<p>}
+Using a while loop on the condition is something related to the semantic of the conditional variable.</p>
+<p>Mesa semantic: first explored in the Mesa system and later deployed by virtually every system, this semantic says a condition variable signal is just a hint that the state of the condition has changed, but it is not guaranteed that the state remains true when the woken up thread gets scheduled and runs
+Hoare semantic: described by Hoare, this stronger semantic requires a condition variable signal to immediately wake up and schedule the woken up thread to run, which is less practical in building actual systems</p>
+<h3 id="semaphores"><a class="header" href="#semaphores">Semaphores</a></h3>
+<p>The third type of synchronization primitive we will investigate is a semaphore. Dijkstra and colleagues invented semaphores as a more general form of synchronization primitive which can be used to implement the semantics of both locks and condition variables, unifying the two conceptually. A semaphore is an integer value that we can manipulate with two routines:</p>
+<p>wait (or down, or V) - decrement the value of semaphore by 1, and then wait if the value is now negative
+post (or up, or P) - increment the value of semaphore by 1, and if there are one or more threads waiting, wake up one
+We can use semaphores to implement mutex locks and condition variables. A binary semaphore is equivalent to a mutex lock:</p>
+<p>sem_t sem;
+sem_init(&amp;sem, 1);  // Initialize to 1
+​
+sem_wait(&amp;sem);
+… // Critical section
+sem_post(&amp;sem);
+And semaphores could be used to enforce ordering as well, like what condition variables do:</p>
+<p>sem_t sem;
+sem_init(&amp;sem, 0);  // Initialize to 0
+​
+void thread_exit() {</p>
+<pre><code class="language-c">sem_post(&amp;sem);
+</code></pre>
+<p>}
+​
+void thread_join() {</p>
+<pre><code class="language-c">sem_wait(&amp;sem);
+</code></pre>
+<p>}
+sem_t vacant, filled;
+sem_init(&amp;vacant, NUM_SLOTS);  // all vacant
+sem_init(&amp;filled, 0);          // none filled
+​
+sem_t mutex;
+sem_init(&amp;mutex, 1);  // Lock initialized to 1
+​
+void producer() {</p>
+<pre><code class="language-c">while (1) {
+    sem_wait(&amp;vacant);
+    sem_wait(&amp;mutex);
+    put_something();
+    sem_post(&amp;mutex);
+    sem_post(&amp;filled);
+}
+</code></pre>
+<p>}
+​
+void consumer() {</p>
+<pre><code class="language-c">while (1) {
+    sem_wait(&amp;filled);
+    sem_wait(&amp;mutex);
+    grab_something();
+    sem_post(&amp;mutex);
+    sem_post(&amp;vacant);
+}
+</code></pre>
+<p>}
+Generally, it is the initial value of a semaphore that determines how it behaves. To set the initial value of a semaphore, Kivolowitz has a general rule that you set it to the number of resources you are able to give away immediately after initialization. For example, mutex lock  1, waiting for child thread done  0, buffer vacant slots  size of buffer, etc. However, generality is not always good and easy - given that we already have good primitives like locks and condition variables, it is mostly not necessary to use semaphores in practice.</p>
+<h3 id="implementing-locks"><a class="header" href="#implementing-locks">Implementing Locks</a></h3>
+<p>We introduced the lock interface but haven’t talked about how are locks implemented. We would like a lock implementation that provides the following four properties:</p>
+<p>Correctness: mutual exclusion must be enforced
+Fairness: each thread contending for a lock should get a fair shot at acquiring it, possibly considering their incoming order; there should be no starvation: a lock waiter thread constantly losing the competition, thus never obtaining it
+Performance: the acquire and release operations themselves should not incur too much overhead, and the lock should be against contention: multiple threads trying to acquire but none succeeds in bounded-time
+Scalability: with more CPU cores and/or an increasing number of lock competitors, performance should not drop badly
+Certainly, a simple spin-wait on a shared variable is neither correct nor performant (this is not saying spinning locks are bad, as we will discuss in a section below):</p>
+<p>void acquire(mutex_t *lock) {</p>
+<pre><code class="language-c">while (mutex-&gt;flag == 1) {}  // spin-wait
+mutex-&gt;flag = 1;
+</code></pre>
+<p>}
+​
+void release(mutex_t *lock) {</p>
+<pre><code class="language-c">mutex-&gt;flag = 0;
+</code></pre>
+<p>}
+This implementation does not guarantee mutual exclusion, for example:</p>
+<h3 id="controlling-interrupts"><a class="header" href="#controlling-interrupts">Controlling Interrupts</a></h3>
+<p>Assume we only have a single-processor machine and we only want one lock variable, a naive approach would be to just disable interrupts for critical sections:</p>
+<p>void acquire() {</p>
+<pre><code class="language-c">DisableInterrupts();
+</code></pre>
+<p>}
+​
+void release() {</p>
+<pre><code class="language-c">EnableInterrupts();
+</code></pre>
+<p>}
+Though simple, this approach has significant drawbacks:</p>
+<p>Controlling interrupts are privileged operations and we do not want any thread to abuse them
+Does not work on multiprocessors as it shuts down the whole interrupt mechanism if anyone enters critical section
+Cannot do fine-grained locking: there is effectively only one lock variable because disabling interrupts is a global effect, so we cannot assign different locks to unrelated critical sections (in other words, it is very coarse-grained locking)
+Disabling interrupts could lead to bad things because the CPU misses everything from any external device</p>
+<h3 id="hardware-atomic-instructions"><a class="header" href="#hardware-atomic-instructions">Hardware Atomic Instructions</a></h3>
+<p>Building locks out of pure load/store instructions are possible (e.g., see Peterson’s algorithm and Lamport’s bakery algorithm), yet with a little bit of extra hardware support, things can get much easier and much more efficient. Here we demand the hardware to provide certain atomic instructions: do something more than just a single load/store in one instruction, guaranteed to be atomic by the hardware. Classic examples include:</p>
+<p>Test-and-Set (TAS): write a 1 to a memory location and return the old value on this location “simultaneously”</p>
+<p>TEST_AND_SET(addr) -&gt; old_val
+// old_val = *addr;
+// *addr = 1;
+// return old_val;
+This slightly more powerful TAS instruction enables this lock implementation:</p>
+<p>void acquire() {</p>
+<pre><code class="language-c">while (TEST_AND_SET(&amp;flag) == 1) {}
+</code></pre>
+<p>}
+​
+void release() {</p>
+<pre><code class="language-c">flag = 0;
+</code></pre>
+<p>}
+Compare-and-Swap (CAS): compare the value on a memory location with a given value, and if they are the same, write a new value into it, again “simultaneously”</p>
+<p>COMPARE_AND_SWAP(addr, val, new_val) -&gt; old_val
+// old_val = *addr;
+// if (old_val == val)
+//   *addr = new_val;
+// return old_val;
+Building a lock out of CAS:</p>
+<p>void acquire() {</p>
+<pre><code class="language-c">while (COMPARE_AND_SWAP(&amp;flag, 0, 1) == 1) {}
+</code></pre>
+<p>}
+​
+void release() {</p>
+<pre><code class="language-c">flag = 0;
+</code></pre>
+<p>}
+Load-Linked (LL) &amp; Store-Conditional (SC): a pair of instructions used together; LL is just like a normal load; SC tries to store a value to the location and succeeds only if there’s no LL going on at the same time, otherwise it returns failure</p>
+<p>LOAD_LINKED(addr) -&gt; val
+// return *addr;
+STORE_CONDITIONAL(addr, val) -&gt; success?
+// if (no LL to addr happening) {
+//   *addr = val;
+//   return 1;  // success
+// } else
+//   return 0;  // failed
+Building a lock out of LL/SC:</p>
+<p>void acquire() {</p>
+<pre><code class="language-c">while (1) {
+    while (LOAD_LINKED(&amp;flag) == 1) {}
+    if (STORE_CONDITIONAL(&amp;flag, 1) == 1)
+        return;
+}
+</code></pre>
+<p>}
+​
+void release() {</p>
+<pre><code class="language-c">flag = 0;
+</code></pre>
+<p>}
+Fetch-and-Add (FAA): increment a value while returning the old value at the location</p>
+<p>FETCH_AND_ADD(addr) -&gt; old_val
+// old_val = *addr;
+// *addr += 1;
+// return old_val;
+FAA enables us to build a ticket lock which takes fairness into consideration and ensures progress for all threads, thus preventing starvation:</p>
+<p>volatile int ticket = 0;
+volatile int turn = 0;
+​
+void acquire() {</p>
+<pre><code class="language-c">int myturn = FETCH_AND_ADD(&amp;ticket);
+while (turn != myturn) {}
+</code></pre>
+<p>}
+​
+void release() {</p>
+<pre><code class="language-c">turn++;
+</code></pre>
+<p>}
+In modern multicore systems, the scalability of locks becomes critical. There are many more advanced lock design &amp; implementations trying to avoid cache contention and trying to have NUMA-awareness. Please see this post if interested.</p>
+<h3 id="spinning-vs-blocking"><a class="header" href="#spinning-vs-blocking">Spinning vs. Blocking</a></h3>
+<p>A spinning lock (or spinlock, non-blocking lock) is a lock implementation where lock waiters will spinning in a loop checking for some condition. The examples given above are basic spinlocks. Spinlocks are typically used for low-level critical sections that are short, small, but invoked very frequently, e.g., in device drivers.</p>
+<p>Advantage: low latency for lock acquirement as there is no scheduling stuff kicking in – value changes reflect almost immediately</p>
+<p>Disadvantage:</p>
+<p>Spinning occupies the whole CPU core and wastes CPU power if the waiting time is long that could have been used for scheduling another free thread in to do useful work
+Spinning also introduces the cache invalidation traffic throttling problem if not handled properly
+Spinning locks make sense only if the scheduler is preemptive, otherwise there is no way to break out of an infinite loop spin
+Spinning also worsens certain cases of priority inversion, if we are using a priority-based scheduler
+A blocking lock is a lock implementation where a lock waiter yields the core to the scheduler when the lock is currently taken. A lock waiter thread adds itself to the lock’s wait queue and blocks the execution of itself (called parking, or yielding, or descheduling) to let some other free thread run on the core, until it gets woken up (typically by the previous lock holder) and scheduled back. It is designed for higher-level critical sections. The pros and cons are exactly the opposite of a spinlock.</p>
+<p>Advantage: not occupying full core during the waiting period, good for long critical sections
+Disadvantage: switching back and forth from/to the scheduler and doing scheduling stuff takes significant time, so if the critical sections are fast and invoked frequently, better just do spinning
+For example, our previous TAS-based lock could be modified to do blocking and queueing instead:</p>
+<p>volatile queue_t *queue;
+volatile int flag = 0;
+volatile int guard = 0;  // essentially an internal “lock”</p>
+<pre><code class="language-c">                     // protecting the flag variable
+</code></pre>
+<p>​
+void acquire() {</p>
+<pre><code class="language-c">while (TEST_AND_SET(&amp;guard, 1) == 1) {}
+if (flag == 0) {
+    flag = 1;
+    guard = 0;
+} else {
+    queue_add(queue, self_tid);
+    guard = 0;
+    park();
+}
+</code></pre>
+<p>}
+​
+void release() {</p>
+<pre><code class="language-c">while (TEST_AND_SET(&amp;guard, 1) == 1) {}
+if (queue_empty(queue))
+    flag = 0;
+else
+    unpark(queue_pop(queue));
+guard = 0;
+</code></pre>
+<p>}
+The above code has one subtle problem called a wakeup/waiting race: what if a context switch happens right before the acquirer’s park(), and the switched thread happens to release the lock? The releaser will try to unpack the not-yet-parked acquirer, so the acquirer could end up parking forever. One solution is to add a setpark() call before releasing guard, and let the park() call wake up immediately if any unpark() is made after setpark().</p>
+<p>} else {</p>
+<pre><code class="language-c">queue_add(queue, self_tid);
+setpark();
+guard = 0;
+park();
+</code></pre>
+<p>}
+There are also hybrid approaches mixing spinlocks with blocking locks, by first spinning for a while in case the lock is about to be released, otherwise go to park. It is referred to as a two-phase lock. For example, the Linux locks based on its futex syscall support is one such approach.</p>
+<h3 id="advanced-concurrency"><a class="header" href="#advanced-concurrency">Advanced Concurrency</a></h3>
+<p>We have yet more to discuss around concurrency and synchronization.</p>
+<h3 id="lock-optimized-data-structures"><a class="header" href="#lock-optimized-data-structures">Lock-Optimized Data Structures</a></h3>
+<p>Adding locks to protect a data structure makes it thread-safe: safe to be used by concurrent running entities (not only for multi-threaded applications, but also for OS kernel data structures). Simply acquiring &amp; releasing a coarse-grained lock around every operation on an object could lead to performance and scalability issues.</p>
+<p>In general, the more fine-grained locks (smaller, fewer logics in critical sections), the better scalability. Here we list some examples on optimized data structures that reduce lock contention:</p>
+<p>Approximate counters: on multicore machine, for a logical counter variable, have one local counter per core as well as one global counter; local counters are each protected by a core-local lock, and the global counter is protected by a global lock; a counter update issued by a thread just grabs the local lock on the core and applies to the local counter; whenever a local counter reaches a value/time threshold, the core grabs the global lock and updates the global counter.
+Move memory allocation &amp; deallocation out of locks, and only lock necessary critical sections; take extra care about failure paths.
+Hand-over-hand locking (lock coupling) on linked lists: instead of locking the whole list on every operation, have one lock per node; when traversing, first grabs the next node’s lock and then releases the current nodes lock; however, acquiring &amp; releasing locks at every step of a traversal probably leads to poor performance in practice.
+Dual-lock queues: use a head lock for enqueue and a tail lock for dequeue on a queue with a dummy node
+Bucket-lock hash tables: use one lock per bucket on a (closed-addressing) hash table
+Reader-writer lock: a lock that allows, at any time, either one writer and nobody else holding it, or multiple readers but no writer holding it; see Chapter 31.5 of the book for more
+Many more concurrent data structures designs exist since this has been a long line of research. There are also a category of data structures named lock-free (or non-blocking) data structures which don’t use locks at all with the help of clever memory operations &amp; ordering. See read-copy-update (RCU) for an example.</p>
+<h3 id="concurrency-bugs"><a class="header" href="#concurrency-bugs">Concurrency Bugs</a></h3>
+<p>The biggest source of bugs in concurrency code is the deadlock problem: all entities end up waiting for one another and hence making no progress - the system halts. Examples of deadlocks are everywhere:</p>
+<p>Deadlocks stem from having resource dependency cycles in the dependency graph. The simplest form of such cycle:</p>
+<p>thread T1:               thread T2:</p>
+<pre><code class="language-c">acquire(lock_A);        acquire(lock_B);
+acquire(lock_B);        acquire(lock_A);
+...                     ...
+</code></pre>
+<p>T1’s code order results in lock_B depending on lock_A while T2’s code order results in the opposite, forming a cycle. If T2 gets scheduled and acquires lock_B right after T1 acquires lock_A, they are stuck. In real-world code, the code logic will be much more complicated and encapsulated, so deadlock problems are way harder to identify.</p>
+<p>The famous dinning philosophers problem is a great thought experiment for demonstrating deadlocks: philosophers sit around a table with forks between them, each philosopher spends time to think or eat; when one attempts to eat, must grab the fork on their left and on their right.</p>
+<p>If every philosopher always grabs the fork on the left before grabbing the fork on the right, there could be deadlocks: each philosopher grabs the fork on their left at roughly the same time and none is able to grab the fork on their right. A classic solution is to break the dependency: let one specific philosopher always grab the fork on the right before grabbing the fork on the left.</p>
+<p>There has also been a long line of research on deadlocks. Theoretically, four conditions need to hold for a deadlock to occur:</p>
+<p>Mutual exclusion: threads claim exclusive control of resources that they have acquired
+Hold-and-wait: threads hold resources allocated to them while waiting for additional resources
+No preemption: resources cannot be forcibly removed from holders
+Circular wait: there exists a circular chain of threads s.t. each holds some resources being requested by the next thread in chain
+Accordingly, to tackle the deadlocks problem, we could take the following approaches, trying to break some of the conditions (see Chapter 32 of the book for detailed examples):</p>
+<p>Prevention (in advance)</p>
+<p>Avoid circular wait: sort the locks in a partial order, and whenever the code wants to acquire locks, adhere to this order
+Avoid hold-and-wait: acquire all locks at once, atomically, through e.g. always acquiring a meta-lock
+Allow preemption: use a trylock() interface on lock_B and revert lock_A if B is not available at the time
+Avoid mutual exclusion: use lock-free data structures with the help of powerful hardware atomic instructions
+Avoidance (at run-time) via scheduling: don’t schedule threads that could deadlock with each other at the same time</p>
+<p>Recovery (after detection): allow deadlocks to occur but reserve the ability to revert system state (rolling back or just rebooting)</p>
+<p>Apart from deadlocks, most of the other bugs are due to forgetting to apply synchronization, according to Lu et al.’s study:</p>
+<p>Atomicity violation: a code region is intended to be atomic, but the atomicity is not enforced (e.g., by locking)
+Order violation: logic A should always be executed before B, but the order is not enforced (e.g., by condition variables)</p>
+<h3 id="event-based-model"><a class="header" href="#event-based-model">Event-Based Model</a></h3>
+<p>Many modern applications, in particular GUI-based applications and web servers, explore a different type of concurrency based on events instead of threads. To be more specific:</p>
+<p>Thread-based (work dispatching) model: what we have discussed so far are based on programs with multiple threads (say with a dynamic thread pool); multi-threading allows us to exploit parallelism (as well as multiprogramming)</p>
+<p>Data parallelism: multiple threads doing the same processing, each on a different chunk of input data
+Task parallelism: multiple threads each handling a different sub-task; could be in the form of pipelining
+This model is intuitive, but managing locks could be error-prone. Dispatching work could have overheads. It also gives programmers little control on scheduling.</p>
+<p>Event-based concurrency model: using only one thread, have it running in an event loop; concurrent events happen in the form of incoming requests, and the thread runs corresponding handler logic for requests one by one</p>
+<p>while (1) {</p>
+<pre><code class="language-c">events = getEvents();
+for (e in events)
+    handleEvent(e);
+</code></pre>
+<p>}
+This model sacrifices parallelism but provides a cleaner way to do programming (in some cases) and yields shorter latency (again, in some cases).</p>
+<p>See the select() and epoll() syscalls for examples. Modern applications typically use multi-threading with event-based polling on each thread in some form to maximize performance and programmability.</p>
+<p>There are some other popular terminologies used in concurrent programming that I’d like to clarify:</p>
+<p>Polling vs. Interrupts</p>
+<p>Polling: actively check the status of something; useful for reducing latency if the thing is going to happen very fast (common for modern ultra-fast external devices), but wastes CPU resource on doing so
+Interrupts (general): passively wait for signals; has overhead on context switching to/from the handler
+Synchronous vs. Asynchronous</p>
+<p>Synchronous (blocking, sync): interfaces that do all of the work upon invocation, before returning to the caller
+Asynchronous (non-blocking, async): interfaces that kick off some work but return to the caller immediately, leaving the work in the background and the status to be checked by the caller later on; asynchronous interfaces are crucial to event-based programming since a synchronous (blocking) interface will halt all progress
+Inter-process communication (IPC): so far we talked about threads sharing the same address space, but there must also be mechanisms for multiple isolated processes to communicate with each other. IPC could happen in two forms</p>
+<p>Shared-memory: use memory map to share some memory pages (or through files) across processes, and do communication (&amp; correct synchronization) beyond
+Message-passing: sending messages to each other, see UNIX signals, domain sockets, pipes, etc.</p>
+<h3 id="multi-cpu-scheduling"><a class="header" href="#multi-cpu-scheduling">Multi-CPU Scheduling</a></h3>
+<p>With the knowledge about the memory hierarchy and concurrency, let’s now go back to scheduling and add back a missing piece of the “virtualizing the CPU” section: scheduling on multiprocessor machines (multiple CPUs, or multiple cores packed in one CPU). Multi-CPU scheduling is challenging due to these reasons:</p>
+<p>Cache coherence traffic can cause thrashing, as we have mentioned
+Threads are unlikely independent so we need to take care of synchronization
+Cache affinity: a process, when run on a particular CPU, builds up state in that CPU’s cache and thus has affinity to be scheduled on that CPU later
+NUMA-awareness: similar to cache affinity, on NUMA architectures it is way cheaper to access socket-local memory than memory on a remote socket
+Here are two general multiprocessor scheduling policies:</p>
+<p>Single-Queue Multiprocessor Scheduling (SQMS)</p>
+<p>It is simple to adapt a single-CPU scheduling policy to SQMS, but the downside is that SQMS typically requires some form of locking over the queue, limiting scalability. Also, it is common to enhance SQMS with cache affinity- and NUMA-awareness, like shown in the example figure. It migrates process E across CPUs while preserving others on their core. Fairness could be ensured by choosing a different one to migrate for the next window.</p>
+<p>Multi-Queue Multiprocessor Scheduling (MQMS)</p>
+<p>MQMS has one local queue per CPU, and uses single-CPU scheduling policies for each queue. MQMS is inherently more scalable, but has a problem of load imbalance: if one CPU has a shorter queue than another, processes assigned to that CPU effectively get more time slices scheduled. A general load balancing technique is do to work stealing across cores based on some fairness measure.</p>
+<p>The Linux multiprocessor scheduler adopts MQMS (O(1), CFS) and SQMS (BFS) at different times.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../compsci/ostep/advanced.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../compsci/ostep/introduction.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../compsci/ostep/advanced.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../compsci/ostep/introduction.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-09f2665d.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

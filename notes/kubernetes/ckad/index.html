@@ -1,0 +1,780 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Ckad - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-23f36979.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-d36d24f7.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="kubernetes-certified-application-developer-ckad-notes"><a class="header" href="#kubernetes-certified-application-developer-ckad-notes">Kubernetes Certified Application Developer (CKAD) Notes</a></h1>
+<p align="center"><img width="180" alt="portfolio_view" src="badge.jpg"></p>
+
+<p align="center"><img width="300" alt="portfolio_view" src="kubernetes.png"></p>
+
+<h4 align="center"><a href="https://www.cncf.io/certification/ckad/">https://www.cncf.io/certification/ckad/</a></h4>
+
+<h1 align="center">Kubernetes Certified Application Developer (CKAD) Notes</h1>
+
+<ul>
+<li><a href="https://www.cncf.io/certification/ckad/">CNCF Official CKAD Main</a></li>
+<li><a href="https://github.com/cncf/curriculum">CNCF Kubernetes Curriculum Repo</a></li>
+<li><a href="https://www2.thelinuxfoundation.org/ckad-tips">CNCF Official CKAD Exam Tips</a></li>
+<li><a href="https://www.cncf.io/certification/candidate-handbook">CNCF Official CKAD Candidate Handbook</a></li>
+<li><a href="https://devhints.io/vim">VIM Cheatsheet - You should know VIM pretty well</a></li>
+<li><a href="https://github.com/dgkanatsios/CKAD-exercises">Excellent CKAD Exercises to complement this guide</a></li>
+<li><a href="https://dev.to/liptanbiswas/ckad-practice-questions-4mpn">More CKAD Practice Questions</a></li>
+<li><a href="https://gist.github.com/MohamedAlaa/2961058">TMUX Cheat Sheet - TMUX is useful, especially for CKA</a></li>
+<li><a href="https://thospfuller.com/2020/11/09/answers_to_five_kubernetes_ckad_practice_questions_2021/">Answers to 5 Kubernetes CKAD Practice Questions</a></li>
+</ul>
+<h2 id="important-vi-tips"><a class="header" href="#important-vi-tips">Important vi Tips</a></h2>
+<ul>
+<li>‘dG’ - Deletes contents from cursor to end of file. This is very useful when editing YAML files.</li>
+<li>‘ZZ’ - Save and exit quickly.</li>
+</ul>
+<h2 id="kubectl-tips"><a class="header" href="#kubectl-tips">kubectl Tips</a></h2>
+<p>To set nano as your editor for ‘kubectl edit’</p>
+<pre><code>export KUBE_EDITOR="nano"
+</code></pre>
+<h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of Contents</a></h2>
+<ul>
+<li><a href="#current-kubernetes-version-exam">Current Kubernetes Version (EXAM)</a></li>
+<li><a href="#important-vi-tips">Important vi Tips</a></li>
+<li><a href="#kubectl-tips">kubectl Tips</a></li>
+<li><a href="#tips">Tips</a></li>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#current-progress">Current Progress</a></li>
+<li><a href="#where-to-practice">Where to Practice</a>
+<ul>
+<li><a href="#setting-kubectl-credentials">Setting kubectl Credentials</a></li>
+<li><a href="#deleting-your-cluster">Deleting Your Cluster</a></li>
+<li><a href="#to-get-current-gke-kubernetes-versions">To Get Current GKE Kubernetes Versions</a></li>
+</ul>
+</li>
+<li><a href="#detailed-review">Detailed Review</a>
+<ul>
+<li><a href="#core-concepts">CORE CONCEPTS</a>
+<ul>
+<li><a href="#using-the-runcreate-command-for-pods-deployments-etc">Using the RUN/CREATE command for Pods, Deployments, etc.</a></li>
+</ul>
+</li>
+<li><a href="#configuration">CONFIGURATION</a>
+<ul>
+<li><a href="#config-maps--environment-variables">Config Maps / Environment Variables</a></li>
+<li><a href="#security-contexts">Security Contexts</a></li>
+<li><a href="#app-resource-requirements">App Resource Requirements</a></li>
+<li><a href="#secrets">Secrets</a></li>
+<li><a href="#service-accounts">Service Accounts</a></li>
+</ul>
+</li>
+<li><a href="#multi-container-pods">MULTI-CONTAINER PODS</a></li>
+<li><a href="#pod-design">POD DESIGN</a>
+<ul>
+<li><a href="#deployment-updates">Deployment Updates</a></li>
+<li><a href="#jobs-and-cronjobs">Jobs and CronJobs</a></li>
+</ul>
+</li>
+<li><a href="#state-persistence">STATE PERSISTENCE</a></li>
+<li><a href="#observability">OBSERVABILITY</a>
+<ul>
+<li><a href="#container-metrics">Container Metrics</a></li>
+</ul>
+</li>
+<li><a href="#services-and-networking">SERVICES and NETWORKING</a>
+<ul>
+<li><a href="#services">Services</a></li>
+<li><a href="#exposing-ports-for-pods">‘Exposing’ Ports for PODS</a></li>
+<li><a href="#network-policies">Network Policies</a></li>
+</ul>
+</li>
+<li><a href="#miscelaneous-tips-and-tricks">MISCELANEOUS TIPS and TRICKS</a>
+<ul>
+<li><a href="#extracting-yaml-from-running-resource">Extracting yaml from running resource</a></li>
+<li><a href="#the---dry-run-flag">The –dry-run flag</a></li>
+<li><a href="#the---from-literal-flag">The –from-literal flag</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#tasks-from-kubernetes-doc">Tasks from Kubernetes Doc</a>
+<ul>
+<li><a href="#core-concepts-and-kubectl">Core Concepts and Kubectl</a></li>
+<li><a href="#configuration-1">Configuration</a></li>
+<li><a href="#multi-container-pods-1">Multi-Container Pods</a></li>
+<li><a href="#pod-design-1">Pod Design</a>
+<ul>
+<li><a href="#cron">CRON</a></li>
+</ul>
+</li>
+<li><a href="#state-persistence-1">State Persistence</a></li>
+<li><a href="#observability-1">Observability</a></li>
+<li><a href="#services-and-networking-1">Services and Networking</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="tips"><a class="header" href="#tips">Tips</a></h1>
+<p>Okay, this section is new and contains some general pointers to help pass the exam.</p>
+<p>First, as discussed later, the exam is primarily about speed. With that in mind, the best way to approach the moderate to complex questions is to generate the initial YAML via the dry run flag. Then, edit the file with either vi or nano, and then create the required resource. The steps are outlined below.</p>
+<pre><code>$ kubectl run nginx --image=nginx --restart=Never --dry-run -o yaml &gt; mypod.yaml
+$ nano mypod.yaml
+$ kubectl create -f mypod.yaml
+pod "nginx" created
+</code></pre>
+<p>There you go. If you’re not satisfied with the results. Delete the resource, re-edit the declaritive yaml file, and redo.</p>
+<pre><code>$ kubectl delete -f mypod.yaml
+pod "nginx" deleted
+$ nano mypod.yaml
+$ kubectl create -f mypod.yaml
+pod "nginx" created
+</code></pre>
+<h1 id="overview"><a class="header" href="#overview">Overview</a></h1>
+<p>The exam is 100% hands on using the innovative exams (www.examslocal.com) product. The CKAD exam requires an excellent understanding of K8s along with how to efficiently use kubectl to accomplish various tasks on Kubernetes. I’m sure they use this exam approach as it pretty much precludes any form of cheating. You either know the material and can very quickly implement it or not.</p>
+<p>You will be given a list of ‘tasks’ to accomplish on one of four kubernetes clusters (these are described in the official exam tips above). The exam is ‘open book’ but only with the content available at kubernetes.io. You will have one tab for the exam content and one additional tab for kubernetes.io. However, don’t expect that you can just research questions during the exam, as there will be very little time for ‘learning’ a specific k8s concept at exam time. It’s there to help with YAML syntax detail only, IMO.</p>
+<p>The items in this particular repo / page describe and follow the official curriculum and point back to the various documents at Kubernetes.io.  There is a lot of content on k8s and a lot of it does not pertain to the CKAD exam, so I’ve pulled out the sections that are pertinent based on the curriculum. There is a nice checklist below that you can update once you think you have mastered a particular topic.</p>
+<p>I think the best approach is to fork this repo as a starting point for your studies, and then use the markdown checklist to ensure you cover all of the expected material, etc.</p>
+<h1 id="current-progress"><a class="header" href="#current-progress">Current Progress</a></h1>
+<p>The list below is based on the curriculum v1.0. Once you have mastered a section, check it off and move on to the next. You need to understand them ALL very well. The Core Concepts piece is kind of vague, but the others are defined well enough that it is easy to prepare for with a hands-on work through the tasks offered at kubernetes.io. The rest of this document follows this same outline of curriculum.</p>
+<ul>
+<li><input disabled="" type="checkbox" checked=""> <strong>Core Concepts - 13%</strong>
+<ul>
+<li><input disabled="" type="checkbox" checked=""> API Primitives</li>
+<li><input disabled="" type="checkbox" checked=""> Create and Configure Basic Pods</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"> <strong>Configuration - 18%</strong>
+<ul>
+<li><input disabled="" type="checkbox" checked=""> Understand ConfigMaps</li>
+<li><input disabled="" type="checkbox" checked=""> Understand SecurityContexts</li>
+<li><input disabled="" type="checkbox" checked=""> Define App Resource Requirements</li>
+<li><input disabled="" type="checkbox"> Create and Consume Secrets</li>
+<li><input disabled="" type="checkbox" checked=""> Understand Service Accounts</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"> <strong>Multi-Container Pods - 10%</strong>
+<ul>
+<li><input disabled="" type="checkbox"> Design Patterns: Ambassador, Adapter, Sidecar
+<ul>
+<li><input disabled="" type="checkbox"> - Sidecar Pattern</li>
+<li><input disabled="" type="checkbox"> - Init Containers</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox" checked=""> <strong>Pod Design - 20%</strong>
+<ul>
+<li><input disabled="" type="checkbox" checked=""> Using Labels, Selectors, and Annotations</li>
+<li><input disabled="" type="checkbox" checked=""> Understand Deployments and Rolling Updates</li>
+<li><input disabled="" type="checkbox" checked=""> Understand Deployment Rollbacks</li>
+<li><input disabled="" type="checkbox" checked=""> Understand Jobs and CronJobs</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"> - <strong>State Persistence - 8%</strong>
+<ul>
+<li><input disabled="" type="checkbox"> - Understand PVCs for Storage</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"> <strong>Observability - 18%</strong>
+<ul>
+<li><input disabled="" type="checkbox" checked=""> Liveness and Readiness Probes</li>
+<li><input disabled="" type="checkbox" checked=""> Understand Container Logging</li>
+<li><input disabled="" type="checkbox"> Understand Monitoring Application in Kubernetes</li>
+<li><input disabled="" type="checkbox" checked=""> Understand Debugging in Kubernetes</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox" checked=""> <strong>Services and Networking - 13%</strong>
+<ul>
+<li><input disabled="" type="checkbox" checked=""> Understand Services</li>
+<li><input disabled="" type="checkbox" checked=""> Basic Network Policies</li>
+</ul>
+</li>
+</ul>
+<h1 id="where-to-practice"><a class="header" href="#where-to-practice">Where to Practice</a></h1>
+<p>This particular items was difficult for me as I didn’t have a (current) k8s cluster to use at work. As I was initially studying for the CKA which requires more cluster-level work, I tried many, many different approaches for an inexpensive k8s environment. built many clusters using K8s The Hard way on gcloud (and AWS), built a raspberry pi cluster I could carry to work, and tried using kubeadm / kops on gcloud and aws.</p>
+<p>In my opinion, and all that is required to pass this test, is to just setup a gcloud account, and use a two-node GKE cluster for studying. Heck, you can even use the very nice google cloud shell and not even leave your browser.</p>
+<p><a href="https://cloud.google.com/sdk/">gcloud command line (SDK) documentation</a></p>
+<p>Here are commands used to create a two-node cluster for studying. I keep these here just so I can fire up and destroy a cluster for a few hours each day for study. Notice that you can tailor the cluster version to match the k8s version for the exam.</p>
+<pre><code>gcloud config set compute/zone us-central1-a
+gcloud config set compute/region us-central1
+gcloud container clusters create my-cluster --cluster-version=1.15.8-gke.2 --image-type=ubuntu --num-nodes=2
+</code></pre>
+<p>The result:</p>
+<pre><code>NAME        LOCATION       MASTER_VERSION  MASTER_IP     MACHINE_TYPE   NODE_VERSION  NUM_NODES  STATUS
+my-cluster  us-central1-a  v1.15.8-gke.2   35.232.253.6  n1-standard-1  v1.15.8-gke.2  2          RUNNING
+
+cloudshell:~$ kubectl get nodes
+NAME                                        STATUS    ROLES     AGE       VERSION
+gke-my-cluster-default-pool-5f731fab-9d6n   Ready     &lt;none&gt;    44s       v1.15.8-gke.2
+gke-my-cluster-default-pool-5f731fab-llrb   Ready     &lt;none&gt;    41s       v1.15.8-gke.2
+</code></pre>
+<h2 id="setting-kubectl-credentials"><a class="header" href="#setting-kubectl-credentials">Setting kubectl Credentials</a></h2>
+<p>If using the cloud shell, you’ll sometimes need to authorize kubectl to connect to your cluster instance.</p>
+<pre><code>gcloud container clusters get-credentials my-cluster
+</code></pre>
+<h2 id="deleting-your-cluster"><a class="header" href="#deleting-your-cluster">Deleting Your Cluster</a></h2>
+<p>No need to keep the cluster around when not studying, so:</p>
+<pre><code>gcloud container clusters delete my-cluster
+</code></pre>
+<h2 id="to-get-current-gke-kubernetes-versions"><a class="header" href="#to-get-current-gke-kubernetes-versions">To Get Current GKE Kubernetes Versions</a></h2>
+<pre><code>  gcloud container get-server-config
+</code></pre>
+<h1 id="detailed-review"><a class="header" href="#detailed-review">Detailed Review</a></h1>
+<p>The exam is about speed and efficiency. If you spend very much time looking at documentation, you will have zero chance of completing the many questions. With that said, the following will help with time management. I’ve aligned the tips to follow the curriculum. This section is best used to provide a quick overview of the curriculum along with the needed kubectl commands for a hands-on exam.</p>
+<h2 id="core-concepts"><a class="header" href="#core-concepts">CORE CONCEPTS</a></h2>
+<p>The core concepts section covers the core K8s API and its primitives and resources. It also covers the important concept of a POD. This is the basic unit of deployment for app developers and so this ‘POD’ concept is important to understand as well as how they are managed with kubectl. To me, this is embodied in the kubectl RUN command.</p>
+<h3 id="using-the-runcreate-command-for-pods-deployments-etc"><a class="header" href="#using-the-runcreate-command-for-pods-deployments-etc">Using the RUN/CREATE command for Pods, Deployments, etc.</a></h3>
+<p>The <code>run</code> command allows quick creation of the various high-level execution resources in k8s, and provides speed, which we need for the exam. (NOTE: The use of run to handle various resource creations was updated to instead use the create command as of 1.14)</p>
+<p>The specific, underlying resource created from a particular <code>create</code>/<code>run</code> command is based on its ‘generator’.</p>
+<pre><code>$ kubectl create deployment nginx --image=nginx  #deployment
+$ kubectl run nginx --image=nginx --restart=Never  #pod
+$ kubectl create job nginx --image=nginx  #job
+$ kubectl create cronjob nginx --image=nginx --schedule="* * * * *"  #cronJob
+</code></pre>
+<p>The above is helpful in the exam as speed is important. If the question indicates to ‘create a pod’, use the quick syntax to get a pod going.</p>
+<h2 id="configuration"><a class="header" href="#configuration">CONFIGURATION</a></h2>
+<p>Configuration covers how run-time ‘config’ data is provided to your applications running in k8s. This includes environment variables, config maps, secrets, etc. Other items that are pertinent to config are the service account and security contexts used to execute the containers. The below items are covered by this part of the curriculum.</p>
+<h3 id="config-maps--environment-variables"><a class="header" href="#config-maps--environment-variables">Config Maps / Environment Variables</a></h3>
+<p>The exam is about application development and its support within Kubernetes. With that said, high on the list of objectives is setting up config options and secrets for your applications. To create the most basic config map with a key value pair, see below.</p>
+<pre><code>$ kubectl create configmap app-config --from-literal=key123=value123
+configmap "app-config" created
+</code></pre>
+<p>There are many ways to map config map items to environment variables within a container process. One quick, but tricky (syntax) option is shown below. This would be for a simple nginx container.</p>
+<pre><code>spec:
+  containers:
+  - image: nginx
+    name: nginx
+    envFrom:
+    - configMapRef:
+        name: app-config
+</code></pre>
+<p>Here is another way to map a specific value to a specific environment variable value.</p>
+<pre><code>  containers:
+  - image: nginx
+    name: nginx
+    env:
+      - name: SPECIAL_APP_KEY
+        valueFrom:
+          configMapKeyRef:
+            name: app-config
+            key: key123
+</code></pre>
+<p>Now to verify it worked.</p>
+<pre><code>$ kubectl exec -it nginx /bin/bash
+root@nginx:/# env
+HOSTNAME=nginx
+SPECIAL_APP_KEY=value123
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+...
+</code></pre>
+<h3 id="security-contexts"><a class="header" href="#security-contexts">Security Contexts</a></h3>
+<p>Security contexts can be applied at either the pod or container level. Of course pod-level contexts apply to all containers within that pod. There are several ways of defining privileges and access controls with these contexts.</p>
+<p>These concepts are covered well in the tasks section below, but here is a basic RunAs example from the doc that shows both pod and container contexts being used.</p>
+<pre><code>apiVersion: v1
+kind: Pod
+spec:
+  securityContext:
+    runAsUser: 1000
+  containers:
+  - name: sec-ctx-demo
+    image: gcr.io/google-samples/node-hello:1.0
+    securityContext:
+      runAsUser: 2000
+      allowPrivilegeEscalation: false
+</code></pre>
+<h3 id="app-resource-requirements"><a class="header" href="#app-resource-requirements">App Resource Requirements</a></h3>
+<p>Defining the memory and cpu requirements for your containers is something that should always be done. It allows for more efficient scheduling and better overall hygiene for your application environment. Again, covered well in the tasks section below, but here is a brief snippet for the standard mem/cpu specification.</p>
+<pre><code>apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: demo
+    image: polinux/stress
+    resources:
+      limits:
+        memory: 200Mi
+        cpu: 200m
+      requests:
+        memory: 100Mi
+        cpu: 100m
+</code></pre>
+<p>Now to verify:</p>
+<pre><code>$ kubectl describe po stress
+Name:         stress
+Namespace:    default
+Labels:       run=stress
+IP:           10.36.1.17
+Containers:
+  stress:
+  Image:          polinux/stress
+  Limits:
+      cpu:     200m
+      memory:  200Mi
+    Requests:
+      cpu:        100m
+      memory:     100Mi
+</code></pre>
+<h3 id="secrets"><a class="header" href="#secrets">Secrets</a></h3>
+<p>To quickly generate secrets, use the –from-literal flag like this:</p>
+<pre><code>$ kubectl create secret generic my-secret --from-literal=foo=bar -o yaml --dry-run &gt; my-secret.yaml
+</code></pre>
+<p>This produces the following secret that can then be consumed by your containers. The value is encoded.</p>
+<pre><code>apiVersion: v1
+data:
+  foo: YmFy
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: my-secret
+</code></pre>
+<p>Now create the secret:</p>
+<pre><code>$ kubectl create -f my-secret.yaml
+secret "my-secret" created
+</code></pre>
+<p>Now have a look at it:</p>
+<pre><code> kubectl get secret my-secret -o yaml
+apiVersion: v1
+data:
+  foo: YmFy
+kind: Secret
+metadata:
+  name: my-secret
+  namespace: default
+  uid: bae5b8d8-d01a-11e8-8972-42010a800002
+type: Opaque
+</code></pre>
+<p>Decode it:</p>
+<pre><code>$ echo "YmFy" | base64 --decode
+bar
+</code></pre>
+<p>Secrets can be mounted as data volumes or be exposed as environment variables to be used by a container in a pod. Here we’ll mount our above secret as a volume.</p>
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: secrets-test-pod
+spec:
+  containers:
+  - image: nginx
+    name: test-container
+    volumeMounts:
+    - mountPath: /etc/secret/volume
+      name: secret-volume
+  volumes:
+  - name: secret-volume
+    secret:
+      secretName: my-secret
+</code></pre>
+<h3 id="service-accounts"><a class="header" href="#service-accounts">Service Accounts</a></h3>
+<p>When pods are created by K8s they are provided an identify via the service account. In most cases, pods use the default service account, but it can be specified directly.</p>
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  serviceAccountName: build-robot
+  ...
+</code></pre>
+<h2 id="multi-container-pods"><a class="header" href="#multi-container-pods">MULTI-CONTAINER PODS</a></h2>
+<p>This particular section needs additional detail as these concepts are not covered that well via the tasks provided at kubernetes.io. Actually, the best coverage (for sidecars) is in the concepts section under logging architecture.</p>
+<ul>
+<li>
+<p>One or more containers running within a pod for enhancing the main container functionality (logger container, git synchronizer container); These are sidecar container</p>
+</li>
+<li>
+<p>One or more containers running within a pod for accessing external applications/servers (Redis cluster, memcache cluster); These are called ambassador container</p>
+</li>
+<li>
+<p>One or more containers running within a pod to allow access to application running within the container (Monitoring container); These are called as adapter containers-</p>
+</li>
+</ul>
+<p><a href="https://kubernetes.io/docs/concepts/cluster-administration/logging/">Concepts -&gt; Logging Architecture</a></p>
+<h2 id="pod-design"><a class="header" href="#pod-design">POD DESIGN</a></h2>
+<p>The Pod design section mostly covers deployments, rolling updates, and rollbacks (and jobs). These are all covered well in the tasks section later in this document. The primary trick here is to really understand the basic commands for updating a deployment which causes a new replicaSet to be created for the rollout. Both replica sets exist as the rollout continues and completes.</p>
+<h3 id="deployment-updates"><a class="header" href="#deployment-updates">Deployment Updates</a></h3>
+<p>Below is a quick example of creating a deployment and then updating its image. This will force a rolling deployment to start. You can then roll it back.</p>
+<pre><code>$ kubectl run nginx --image=nginx  --replicas=3
+deployment.apps "nginx" created
+</code></pre>
+<p>Okay, now force a rolling update by updating its image.</p>
+<pre><code>$ kubectl set image deploy/nginx nginx=nginx:1.9.1
+deployment.apps "nginx" image updated
+</code></pre>
+<p>Now you can check the status of the roll out.</p>
+<pre><code>$ kubectl rollout status deploy/nginx
+Waiting for rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for rollout to finish: 1 old replicas are pending termination...
+Waiting for rollout to finish: 2 of 3 updated replicas are available...
+deployment "nginx" successfully rolled out
+</code></pre>
+<p>Now, if you want to roll it back:</p>
+<pre><code>$ kubectl rollout undo deploy/nginx
+$ kubectl rollout status deploy/nginx
+Waiting for rollout to finish: 1 old replicas are pending termination...
+Waiting for rollout to finish: 2 of 3 updated replicas are available...
+deployment "nginx" successfully rolled out
+</code></pre>
+<p>This is all describe well on kubernetes.io by searching for ‘deployment’ and reading the overview there. <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Kubernetes Deployments</a></p>
+<h3 id="jobs-and-cronjobs"><a class="header" href="#jobs-and-cronjobs">Jobs and CronJobs</a></h3>
+<p>Job vs CronJob -&gt; A job runs a pod to a number of successful completions. Cron jobs manage jobs that run at specified intervals and/or repeatedly at a specific point in time, thus they have the ‘schedule’ aspect. The below demonstrates quickly creating a cronjob and then a quick edit to add a command, etc.</p>
+<pre><code>$ kubectl run crontest  --image=busybox --schedule="*/1 * * * *" --restart=OnFailure --dry-run -o yaml
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    run: crontest
+  name: crontest
+spec:
+  schedule: '*/1 * * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - image: busybox
+            name: crontest
+            command: ["date; echo Hello"]
+          restartPolicy: OnFailure
+</code></pre>
+<p>You can also redirect (&gt; cron.yaml) the above to a file, edit it to add the container command, and then create the cronjob with the kubectl create:</p>
+<pre><code>$ kubectl create -f cron.yaml
+</code></pre>
+<h2 id="state-persistence"><a class="header" href="#state-persistence">STATE PERSISTENCE</a></h2>
+<p>This is still one of my weaknesses and the whole PV creation is high dependent on the underlying cloud or file storage technique used. For now, the links provided later in the persistence tasks are best for studying this.</p>
+<h2 id="observability"><a class="header" href="#observability">OBSERVABILITY</a></h2>
+<p>This part of the curriculum covers the logging, debugging, and metrics of your running applications.</p>
+<h3 id="container-metrics"><a class="header" href="#container-metrics">Container Metrics</a></h3>
+<p>Container metrics require that heapster be running, and it is pretty standard on clusters now.</p>
+<pre><code>$ kubectl top pod -n my-namespace
+$ kubectl top node -n my-namespace
+</code></pre>
+<h2 id="services-and-networking"><a class="header" href="#services-and-networking">SERVICES and NETWORKING</a></h2>
+<p>Services are pretty straight forward, but there are lots of networking details in a k8s cluster. The curriculum only mentions network policies so you should understand that particular aspect of networking in good detail.</p>
+<h3 id="services"><a class="header" href="#services">Services</a></h3>
+<p>Services provide a persistent endpoint for a logical set of pods. This endpoint is typically used to expose a pods services externally. They are quite straight forward and quick to build and configure, so the concepts are more important than the ‘speed’ factor for the exam, IMO. There are several ways to expose a service as well as the underlying detail of using selectors to ultimately select the target pods of the service.</p>
+<h3 id="exposing-ports-for-pods"><a class="header" href="#exposing-ports-for-pods">‘Exposing’ Ports for PODS</a></h3>
+<p>By default pods can all inter-communicate via their internal IP address and port. Services are needed to expose services OUTSIDE of the cluster. So, it’s important to understand the basic container spec for specifying the port a container will use. The example below declares the port as well as an environment variable describing same.</p>
+<pre><code>spec:
+    containers:
+    image: nginx
+    imagePullPolicy: Always
+    name: busybox
+    env:
+    - name: PORT
+        value: "80"
+    ports:
+    - containerPort: 80
+        protocol: TCP
+</code></pre>
+<h3 id="network-policies"><a class="header" href="#network-policies">Network Policies</a></h3>
+<p>Resources use labels to select pods and define rules which specify what traffic is allowed to the selected pods. So, the pods themselves require certain labels / selectors to enable network policies.</p>
+<p>By default, pods are non-isolated; they accept traffic from any source.</p>
+<p>Pods become isolated by having a NetworkPolicy that selects them. Once there is any NetworkPolicy in a namespace selecting a particular pod, that pod will reject any connections that are not allowed by any NetworkPolicy. (Other pods in the namespace that are not selected by any NetworkPolicy will continue to accept all traffic.)</p>
+<h2 id="miscelaneous-tips-and-tricks"><a class="header" href="#miscelaneous-tips-and-tricks">MISCELANEOUS TIPS and TRICKS</a></h2>
+<h3 id="extracting-yaml-from-running-resource"><a class="header" href="#extracting-yaml-from-running-resource">Extracting yaml from running resource</a></h3>
+<p>Use the –export and -o yaml flags to export the basic yaml from an existing resource:</p>
+<pre><code>kubectl get deploy busybox --export -o yaml &gt; exported.yaml
+</code></pre>
+<h3 id="the-dry-run-flag"><a class="header" href="#the-dry-run-flag">The –dry-run flag</a></h3>
+<p>The –dry-run flag can be used with the kubectl run and create commands. It provides a nice template to start your declarative yaml config files. Below is an example for creating a basic secret yaml.</p>
+<pre><code>kubectl create secret generic my-secret --from-literal=foo=bar -o yaml --dry-run &gt; my-secret.yaml
+</code></pre>
+<h3 id="the-from-literal-flag"><a class="header" href="#the-from-literal-flag">The –from-literal flag</a></h3>
+<p>As shown above, the –from-literal flag is useful for things like config maps and secrets for the basic cases.</p>
+<pre><code>apiVersion: v1
+data:
+  foo: YmFy
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: my-secret
+</code></pre>
+<h1 id="tasks-from-kubernetes-doc"><a class="header" href="#tasks-from-kubernetes-doc">Tasks from Kubernetes Doc</a></h1>
+<p>The following are primarily links to either the ‘concepts’ or ‘tasks’ section of the kubernetes.io documentation. The ‘task’ items are very useful to use as labs. I’ve tied them directly to the curriculum to ensure they are appropriate study material for the exam.</p>
+<h2 id="core-concepts-and-kubectl"><a class="header" href="#core-concepts-and-kubectl">Core Concepts and Kubectl</a></h2>
+<ul>
+<li><a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">Tasks -&gt; Accessing Multiple Clusters</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/">Tasks -&gt; Accessing Cluster with API</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/">Tasks -&gt; Port Forwarding</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/debug-application-cluster/get-shell-running-container/">Tasks -&gt; Shell to Running Container (exec)</a></li>
+</ul>
+<h2 id="configuration-1"><a class="header" href="#configuration-1">Configuration</a></h2>
+<ul>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/">Task -&gt; Config Maps</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/">Task -&gt; Security Contexts</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/">Tasks -&gt; Assigning Memory Resources to Pods</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/">Tasks -&gt; Assigning CPU Resources to Pods</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/quality-service-pod/">Tasks -&gt; Pod QOS</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/">Tasks -&gt; Credentials using Secrets</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-projected-volume-storage/">Tasks -&gt; Project Volume w/Secrets</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/">Tasks -&gt; Setting Service Account</a></li>
+</ul>
+<h2 id="multi-container-pods-1"><a class="header" href="#multi-container-pods-1">Multi-Container Pods</a></h2>
+<ul>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-initialization/">Tasks -&gt; Init Containers</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/cluster-administration/logging/">Concepts -&gt; Logging Architecture</a></li>
+</ul>
+<h2 id="pod-design-1"><a class="header" href="#pod-design-1">Pod Design</a></h2>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/configuration/assign-pod-node/">Concepts -&gt; Assign Pods to Nodes - Selectors</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/">Concepts -&gt; Annotations</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">Concepts -&gt; Labels and Selectors</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/">Tasks -&gt; ReplicaSet Rolling Updates</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Concepts -&gt; Deployments, Rollouts, and Rollbacks</a></li>
+</ul>
+<h3 id="cron"><a class="header" href="#cron">CRON</a></h3>
+<ul>
+<li><a href="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/">Tasks -&gt; Automated Tasks with Cron Jobs</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/job/parallel-processing-expansion/">Tasks -&gt; Parallel Jobs with Expansions</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/job/coarse-parallel-processing-work-queue/">Tasks -&gt; Course Parallel Processing with a Work Queue</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/job/fine-parallel-processing-work-queue/">Tasks -&gt; Fine Parallel Processsing with a Work Queue</a></li>
+</ul>
+<h2 id="state-persistence-1"><a class="header" href="#state-persistence-1">State Persistence</a></h2>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Concepts -&gt; Persistent Volumes</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/">Tasks -&gt; Configuring PVCs</a></li>
+</ul>
+<h2 id="observability-1"><a class="header" href="#observability-1">Observability</a></h2>
+<ul>
+<li><a href="https://kubernetes.io/docs/tasks/debug-application-cluster/debug-application-introspection/">Tasks -&gt; App Introspection and Debugging</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/">Tasks - Liveness and Readiness Probes</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/debug-application-cluster/debug-pod-replication-controller/">Tasks -&gt; Debugging Pods</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/debug-application-cluster/debug-application/">Tasks -&gt; Troubleshooting Applications</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/debug-application-cluster/debug-service/">Tasks -&gt; Debugging Services</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/debug-application-cluster/local-debugging/">Tasks -&gt; Debugging Services Locally</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/debug-application-cluster/resource-usage-monitoring/">Tasks -&gt; Tools for Monitoring Resources</a></li>
+</ul>
+<h2 id="services-and-networking-1"><a class="header" href="#services-and-networking-1">Services and Networking</a></h2>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/">Concepts -&gt; Connecting Apps with Services</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/">Tasks -&gt; Declare Network Policy</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../kubernetes/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../kubernetes/cks/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../kubernetes/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../kubernetes/cks/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-09f2665d.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

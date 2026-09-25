@@ -1,0 +1,499 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Virtualizing the Memory: Memory Management - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-23f36979.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-d36d24f7.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <blockquote>
+<p>Notes based on <em>Operating Systems: Three Easy Pieces</em> by Remzi &amp; Andrea Arpaci-Dusseau</p>
+</blockquote>
+<h2 id="virtualizing-the-memory-memory-management"><a class="header" href="#virtualizing-the-memory-memory-management">Virtualizing the Memory: Memory Management</a></h2>
+<p>Apart from virtualizing the CPU, an OS must also be able to enable sharing of another important resource across processes - the memory. Processes require memory space to hold all of their runtime data, and it would be way too slow if we save/restore the entire memory content upon every context switch, especially when we are time-sharing the CPU (frequent switches). Hence, the OS must be able to do space-sharing of the memory: put all processes’ in-memory data in the physical memory, and somehow let a process know how to address a byte it wants. Upon a context switch, we just switch the registers so that they point to correct addresses for the switched process. The OS must provide protection, efficiency in addressing, and a way to handle insufficient space if the physical memory is running out.</p>
+<h3 id="abstraction-of-address-space"><a class="header" href="#abstraction-of-address-space">Abstraction of Address Space</a></h3>
+<p>To enable the space-sharing of memory, we again turn to virtualization. We give each process an illusion of the ability to address across its own memory space, which could be huge and sparse. This abstraction is called the address space of the process - it is the running program’s view of memory (virtual memory, VM) and is completely decoupled with what the DRAM chip actually provides (physical memory). A program uses virtual address to locate any byte in its address space.</p>
+<h3 id="address-space-layout"><a class="header" href="#address-space-layout">Address Space Layout</a></h3>
+<p>An OS must give a clear definition of the address space layout it expects. Conventionally, an address space contains the following segments and is structured in the following way:</p>
+<p>Code: the program’s machine code (the instruction); PC always points to somewhere in this segment
+Static data: holding global static data, could be further separated into initialized region (so read-only) and uninitialized region (so writes allowed)
+Stack: the function call stack of the program to keep track of where it is in the call chain; function calls form a stack of frames, where the local variables of a function resides in its frame; SP &amp; FP always point to somewhere in this segment; stack grows negatively
+Heap (data): for dynamically allocating runtime, user-managed memory (e.g., when calling malloc()); heap grows positively
+(optional) OS kernel mapped: the kernel could also be mapped into every process’s address space (probably into the higher half), and is thus shared across processes</p>
+<p>In reality, size of the virtual address space typically depends on the number of bits the hardware platform uses for addressing. If the hardware operates on 32-bit numbers, we could use an entire range from 0x00000000 to 0xffffffff. The virtual address space could be very huge in size and very sparse (mostly empty) - this is not a problem. It is just the process’s view on memory but we are not putting this space directly on physical memory at address 0. The OS will have some way to map the occupied bytes in the address spaces of all processes onto physical memory, which we will talk about in the next section.</p>
+<p>This layout is just a convention for single-threaded processes. There could be other arrangements and things could be more complicated when a process becomes multi-threaded, which we will talk about in the concurrency section.</p>
+<h3 id="memory-apis"><a class="header" href="#memory-apis">Memory APIs</a></h3>
+<p>These are the interfaces in C programming on UNIX systems for user programs to allocate memory. Other platforms might have different interfaces but they share the same spirit.</p>
+<p>Implicit (automatic) allocation of function call stack memory, containing local variables &amp; local data</p>
+<p>Explicit, dynamic allocation of heap memory for large or long-lived, dynamic-size data</p>
+<p>brk(), sbrk() - the primitive syscalls for changing (enlarging or shrinking) the heap data segment end-point bound; since memory allocation is tricky, user programs should never call these syscalls directly, but should rather use the library functions described below
+malloc(), calloc(), realloc(), free() - normally, C programs link against a standard library which contains higher-level routines (wrapping over the brk syscalls) for allocating heap memory regions; these are not syscalls but are library functions with sophisticated allocation policies (using the syscalls as mechanism)
+mmap(), munmap() - create/unmap a memory region for mapping a file or a device into the address space, often in a lazy manner, as an alternative I/O mechanism
+With the malloc() + free() interface, here is a list of common memory errors in C programming:</p>
+<p>Forgetting to allocate memory and using an uninitialized pointer variable (wild pointer)
+Not allocating enough memory (buffer overflow)
+Not initializing allocated memory to known state (uninitialized read)
+Forgetting to free memory (memory leak)
+Accessing memory after it’s freed (dangling pointer)
+Freeing memory repeatedly (double free)
+Freeing incorrect memory addresses
+They often lead to the infamous segmentation fault (SEGFAULT) which happens when accessing a memory address the process shouldn’t touch. Beware that code compiles &amp; runs no segfault does not mean it runs semantically correctly - you could be accessing incorrect (but valid) memory addresses, which is still a serious bug.</p>
+<h3 id="address-mapping--translation"><a class="header" href="#address-mapping--translation">Address Mapping &amp; Translation</a></h3>
+<p>Every address a user program sees is virtual. The OS makes the virtual memory system transparent to users and implicitly translates any address a process asks for into physical memory. This is the procedure of (hardware-based) address translation and it implicitly implies the address mapping scheme the OS adopts. Here we list three address mapping and translation schemes. For efficiency, the OS makes use of hardware support (from a few register to full page table support) instead of simulating everything in software.</p>
+<p>The idea of interposition is really powerful and essential in systems. When virtualizing the CPU, the hardware timer sends timer interrupts to interpose the execution of a process to let the OS re-gain control periodically; this enables transparent time-sharing of the CPU. When virtualizing the memory, the hardware MMU interposes on each memory access to perform address translation; this enables transparent space-sharing of the memory.</p>
+<p>We will discuss three address translation schemes, along with some complementory knowledge:</p>
+<h3 id="base--bound"><a class="header" href="#base--bound">Base &amp; Bound</a></h3>
+<h3 id="segmentation"><a class="header" href="#segmentation">Segmentation</a></h3>
+<p>Paging</p>
+<h3 id="base--bound-1"><a class="header" href="#base--bound-1">Base &amp; Bound</a></h3>
+<p>Let’s first assume that the address spaces are small and compact, so it can fit in physical memory contiguously. With this assumption, the most intuitive way of address mapping is to simply relocate the address space to start at some offset in physical memory. The base &amp; bound method (BB, or dynamic relocation, or hardware-based relocation) makes use of two hardware registers:</p>
+<p>Base register: the starting offset the OS decides to put the current process’s address space at
+Bound register: the size (limit) of the current process’s address space</p>
+<p>Upon a context switch to a process, the two registers get loaded the base &amp; bound values for this process. This step requires OS intervention to decide where to relocate (where is base). Along its execution, upon any memory access, the address translation is done by the hardware directly. This part of hardware (doing address translations) is often named the memory management unit (MMU).</p>
+<p>The MMU algorithm for base &amp; bound is obviously simple:</p>
+<p>if virtual_addr &gt;= bound:</p>
+<pre><code class="language-c">raise out-of-bound exception
+</code></pre>
+<p>else:</p>
+<pre><code class="language-c">physical_addr = virtual_addr + base
+</code></pre>
+<p>Without hardware support, purely software-based relocation is not so great. We could let a loader scan through the machine code of the executable file and change add a base value to every address it sees at process loading. However, this approach lacks protection and is not flexible.</p>
+<h3 id="hardwareos-responsibilities"><a class="header" href="#hardwareos-responsibilities">Hardware/OS Responsibilities</a></h3>
+<p>A brief summary of hardware support we have talked about so far:</p>
+<p>Two privilege modes - OS code runs in privileged kernel mode and user program runs in user mode
+MMU registers, specifications, and the translation algorithm
+Privileged instructions only to be executed in kernel mode (e.g., updating base/bound)
+Privileged instructions to register trap/exception handlers
+Ability to raise hardware exception upon invalid memory access, …
+And the OS must take these responsibilities for virtual memory to work:</p>
+<p>Free space management: finding free space for new processes and reclaiming memory back at termination, via some sort of free-list data structures
+Upon context switch: setting proper MMU register states (e.g., base &amp; bound values)
+Exception handling: decide what to do upon memory access exceptions the hardware reports, probably terminating the offending process or handling the fault if that is an innocent fault</p>
+<h3 id="segmentation-1"><a class="header" href="#segmentation-1">Segmentation</a></h3>
+<p>The base &amp; bound approach has an obvious drawback: it requires that the physical memory has a big, contiguous chunk of empty space to hold the address space of a process. However, our address space could be huge and sparse, so it might not fit in as a whole. And all the unused bytes are still mapped, wasting a lot of memory space. Segmentation is a generalized form of base &amp; bound which eases this problem.</p>
+<p>A segment is a a contiguous portion of the address space. We could break the code, stack, &amp; heap into three segments, then for each of them, apply base &amp; bound independently. This way, only used memory is allocated space in physical memory.</p>
+<p>One problem thus arise: given a virtual address, how does the hardware know which segment it is referring to (so that it can do the base &amp; bound check)? There are two approaches:</p>
+<p>Explicit: we chop the address space into fixed-sized segments, so that the highest several bits of a virtual address is the segment ID and the remaining bits is the offset in the segment (as we will see soon, this is an early form of paging)</p>
+<p>The MMU algorithm thus goes:</p>
+<p>segment_id = virtual_addr &gt;&gt; SEG_SHIFT
+offset = virtual_addr &amp; OFFSET_MASK
+if offset &gt;= bounds[segment_id]:</p>
+<pre><code class="language-c">raise out-of-bound exception
+</code></pre>
+<p>else:</p>
+<pre><code class="language-c">physical_addr = offset + bases[segment_id]
+</code></pre>
+<p>Implicit: the hardware detects how an address value is derived, and determines the segment accordingly (e.g., if an address value is computed by adding something to PC, it should be referring to the code segment)</p>
+<p>Some extra support from hardware could be added:</p>
+<p>Negative-growth bit for stack: since stack grows negatively, this bit indicates offset should be calculated into a negative value
+Protection (permission mode) bits for sharing: some systems support sharing segments across processes (e.g., if code is the same, could share the code segment with read-exec permission)</p>
+<h3 id="concept-of-paging"><a class="header" href="#concept-of-paging">Concept of Paging</a></h3>
+<p>Chopping things into variable-sized segments can make free-space management very challenging. Most modern OSes take a more generalized approach of explicit segmentation called paging: chopping the address space into fixed-sized, relatively small pieces, in size of say 4KB. Each of such pieces is called a page (or virtual page). Physical memory is also chopped into pieces of the same size. To allocate space for a page, the OS allocates a physical frame (or physical page) to hold the page.</p>
+<p>Paging offers these advantages over previous approaches:</p>
+<p>Flexibility: no assumptions on how the address space layout is defined; we just map in-use pages to frames; for example, the heap can grow arbitrarily non-contiguously if we want
+Simplicity: pages are in fixed size, so the allocation and tracking of free frames will be much easier</p>
+<p>The OS must maintain a per-process data structure to record the current mapping from pages to their allocated physical frames. This data structure is called the page table. A page table is essentially a mapping table from virtual page number (VPN) to physical frame number (PFN, or PPN). Assume page size is a power of 2:</p>
+<p>Any virtual address can be split into two components: VPN of the page &amp; offset in the page</p>
+<p>#bits for offset
+#bits for VPN  #bits per address  #bits for offset
+// Say page size is 16 bytes, and a virtual address is 6 bits
+//   -&gt; Within a page, we need 4 bits to index a byte
+//   -&gt; Offset is the least significant 4 bits
+//        (where am I in the page?)
+//   -&gt; VPN is the most significant 2 bits
+//        (which page?)
+0b  01  0101  // example virtual address in binary
+// |–||––|
+// VPN offset
+Address translation is now the process of translating VPN into PFN, and offset stays the same:</p>
+<p>The size of DRAM on the machine determines the number of physical frames available, which in turn determines how many bits we need for PFN. Just like in segmentation, multiple processes could share a same physical frame (possibly as different virtual page addresses), one good example being sharing a common code page.</p>
+<h3 id="linear-page-tables"><a class="header" href="#linear-page-tables">Linear Page Tables</a></h3>
+<p>Due to efficiency issues, dynamic data structures like linked lists or hash tables are generally out of concern for implementing a page table. Let’s first consider the simplest form of a linear (flat) page table: a one-level array of page table entries (PTE). The OS indexes the array by VPN, and each PTE holds the PFN for that VPN and a few necessary control bits:</p>
+<p>Valid bit (V): whether this VPN is in-use (mapped) or unused; if a translation finds an invalid PTE (valid bit unset), it means the process is trying to access a page not mapped yet, and the hardware raises the famous exception named page fault to trap into OS kernel, which then decides how to deal with this access. The OS could check the faulty address and decide whether to allocate memory for the new page or just terminate the process
+Present bit (P): this relates to swapping, which we will talk about in the advanced paging section; present bit unset (but valid bit set) means the page is mapped but currently swapped out of memory to disk; (our x86 example only has present bit but no valid bit, because it triggers a page fault as long as page is not present, and leaves the OS to keep track of whether the page is swapped out or is simply not valid)
+Protection bits (R/W, etc.): indicate whether the page is readable, writable, and/or executable; for example, modifying a read-only page will trigger an exception to trap to the OS
+Dirty bit (D): if page is writable, has it been modified since brought to memory (useful for page replacement in swapping or when caching mmap’ed files)
+Reference bit (R), or Access bit (A): used to track whether a page has been accessed (useful for helping page replacement in swapping)</p>
+<p>The page table in this form can be incredibly large (e.g., 4MB page table per 32-bit process address space) and cannot fit in hardware MMU. Thus, the page tables themselves are stored in memory, specifically somewhere in kernel-reserved memory. Hardware MMU just keeps a page-table base register (PTBR) to record a pointer to start of the current process’s page table, and upon a translation, go to that location on memory. The MMU algorithm goes:</p>
+<p>VPN = virtual_addr &gt;&gt; ADDR_PN_SHIFT
+offset = virtual_addr &amp; ADDR_OFFSET_MASK
+PTE_addr = PTBR_reg + (VPN * sizeof(PTE))
+PTE_content = *PTE_addr  # goes to memory (or hits TLB)
+if any_control_bit_violation:</p>
+<pre><code class="language-c">raise page-fault or permission exception
+</code></pre>
+<p>else:</p>
+<pre><code class="language-c">PFN = PTE_content &gt;&gt; PTE_PFN_SHIFT
+physical_addr = (PFN &lt;&lt; ADDR_PN_SHIFT) | offset
+</code></pre>
+<p>We will talk about useful techniques on saving space and speed up translations in the advanced paging section.</p>
+<h3 id="free-space-management-policies"><a class="header" href="#free-space-management-policies">Free-Space Management Policies</a></h3>
+<p>In the above sections, we haven’t really answered this question: how does the OS find proper free space when it needs to enlarge/allocate something? How to manage free space efficiently? We use the name fragmentation to describe the situation where there is space wasted in an address mapping scheme.</p>
+<p>Internal fragmentation: unused bytes in the address space getting mapped
+External fragmentation: small free spaces being left over between two mapped regions, which can hardly be used to map something else; there is no single contiguous free chunk, though the total number of free bytes is enough
+Different address translation schemes have different behaviors with regard to the two types of fragmentation. Fragmentation is hard to eliminate completely, but we can try to do better.</p>
+<p>Base &amp; bound has both serious external fragmentation and internal fragmentation
+Segmentation has no internal fragmentation, but has external fragmentation (if w/o periodic garbage collection/compaction, useful but very expensive operations)
+Paging has no external fragmentation, but has a little bit of internal fragmentation (worse with larger page size)
+Note that the problem of free-space management is generic. It applies to how a malloc() library allocates new bytes on heap, how an OS allocates physical memory for new segments, etc. Here we list a few classic free-space management policies.</p>
+<h4 id="splitting--coalescing"><a class="header" href="#splitting--coalescing">Splitting &amp; Coalescing</a></h4>
+<p>Suppose we keep a free list data structure as a linked list of free spaces. Two mechanisms play a significant role in all allocator policies:</p>
+<p>Splitting: when a small request comes, split an existing large chunk, return the requested size and keep the remaining chunk</p>
+<p>Coalescing: when a piece of memory is freed and there is free chunk next to it, merge them into one big free chunk</p>
+<h4 id="basic-policies"><a class="header" href="#basic-policies">Basic Policies</a></h4>
+<p>These are the most basic, intuitive policies for memory allocation:</p>
+<p>Best-Fit: search through the free list and find the smallest free chunk that is big enough for a request (possibly with splitting)</p>
+<p>Advantage: intuitive, nearly optimal
+Disadvantage: expensive to do exhaustive search
+Worst-Fit: find the largest chunk, split and return the requested amount, keep the remaining chunk</p>
+<p>Advantage: if using a max-heap, finding the largest chunk could be fast
+Disadvantage: performs badly, leading to excess fragmentation
+First-Fit: find the first block that is big enough, split and return the request amount</p>
+<p>Advantage: fast, stops early
+Disadvantage: tends to pollute the beginning of the free list with small objects; address-based ordering could help
+Next-Fit: just like first-fit, but instead of always starting from the beginning, maintains a pointer to remember where it was looking last; start the search from there</p>
+<p>Advantage: same efficiency advantage as first-fit
+Disadvantage: requires keeping an extra state
+There is hardly any perfect free space allocation policy in general, because we could always construct a worst-case input of requests (adversarial input) to mess it up. We can only compare their pros and cons.</p>
+<h4 id="segregated-lists"><a class="header" href="#segregated-lists">Segregated Lists</a></h4>
+<p>If a particular application has one (or a few) popular-sized request it makes, keep a separate list just to manage objects (i.e. free chunks of fixed size) of that size. All other requests are forwarded to a general memory allocator, say running one of the above policies. The slab allocator (see here) used in Solaris and Linux kernel is one such example.</p>
+<p>When the kernel boots up, allocate a number of object caches for possibly-popular kernel objects, e.g., locks, inodes, etc.
+When a given cache is running low on free space, itself requests some slabs of memory from a general allocator, the amount being a multiple of its object’s size
+When a given cache is going empty, it releases some of the spaces back to the general allocator
+Objects in the cache can also be pre-initialized so that the time for initialization and destruction at run time is saved.</p>
+<h4 id="buddy-allocation"><a class="header" href="#buddy-allocation">Buddy Allocation</a></h4>
+<p>The binary buddy allocator (see here) is designed around splitting &amp; coalescing in sizes of 2, allowing some internal fragmentation but making the coalescing procedure much more efficient.</p>
+<p>In the beginning, the allocator holds a one big space of size 2
+When a request comes, the search for free space recursively divides free space by 2, until the smallest power of 2 that is big enough for the request is found
+When that block is freed, the allocator checks if its buddy block (the one produced by the last split, its sibling block) is free; if so, it coalesces the two blocks; this procedure repeats recursively up the tree until the top of the tree is reached, or until a level where the buddy is in use</p>
+<p>We are particularly interested in binary buddy allocation, because it fits the binary address representation on most architectures so well. The address for a block differs with the address of its buddy block in just one bit (which bit depends on its level), so we can have highly-efficient implementations using bit-wise operations. Of course, there could be higher-order buddy allocation.</p>
+<p>For scalability issues on multiprocessors, concurrent data structures are being used in modern memory allocators to speed up concurrent accesses on the free list and to reduce the steps for synchronization. We will touch these in the concurrency section.</p>
+<h3 id="advanced-paging"><a class="header" href="#advanced-paging">Advanced Paging</a></h3>
+<p>We have talked about basic paging with linear page tables, but they are not very efficient. It requires extra memory read for every memory access (notice that fetching an instruction is also a memory access), which almost doubles the latency penalty. The page tables take up a lot of space, but most pages in an address space are probably unused. We now talk about techniques to optimize paging.</p>
+<h3 id="translation-lookaside-buffer-tlb"><a class="header" href="#translation-lookaside-buffer-tlb">Translation Lookaside Buffer (TLB)</a></h3>
+<p>A translation lookaside buffer (TLB) is a cache for address translation - it is part of the hardware MMU for storing several popular PTE entries with fast access speed (e.g., in SRAM instead of DRAM). Like all caches, it assumes that there is locality in page accesses (code instructions tend to be sequentially executed, etc.), so there tend to be popular pages at a given time.</p>
+<p>At a context switch to a new process, if we do not have an address-space ID (ASID) field in TLB entries, the TLB must be flushed (i.e., emptied, all invalidated)</p>
+<p>Upon an address translation, the MMU checks if the TLB holds the translation for this VPN (and ASID matches):</p>
+<p>If yes, it is a TLB hit, and we just extract the PFN from the relevant TLB entry</p>
+<p>If no, it is a TLB miss, and we have to go to the page table on memory to perform the translation</p>
+<p>After getting the PFN for a TLB miss, we need to decide whether to put the translation for this VPN into TLB; if so and if the TLB was full, it triggers a replacement, and we need to choose a victim entry to replace</p>
+<p>Since memory accesses are so common, page lookups happen so frequently, thus we would like to minimize the chance of TLB misses as much as possible (i.e., maximizing the hit rate). Also, one problem remains as who should handle TLB misses.</p>
+<p>Hardware-managed TLB: old hardware architectures handle TLB misses entirely in hardware; hence, they need to strictly define the page table format they expect
+Software-managed TLB: with the impact of RISC architectures, modern architectures raise a fault and trap into OS kernel to let the OS decide how to handle a TLB miss; this allows the OS to define its own page table structures more flexibly, but we must be careful not to let the execution of the trap handler cause chained (cascading) TLB misses, by e.g. keeping the trap handler always accessible bypassing the TLB, or reserve some wired TLB entries for the handler</p>
+<h3 id="multi-level-page-tables"><a class="header" href="#multi-level-page-tables">Multi-Level Page Tables</a></h3>
+<p>Now we focus on making the page tables smaller. The main observation is that most of the pages in a sparse address space are unmapped, yet they still take up a PTE slot. To ease this issue, we use multi-level page tables: breaking the page table into multiple levels of indirection. Suppose we use two levels:</p>
+<p>The top level is often called a page directory: it is still an array, but in a coarser granularity; it is indexed using the higher bits of VPN, and instead of recording PFNs, they record pointers to sub-level page tables; each entry in the top-level, here could call them page directory entries (PDE), represent a subarray of a linear page table
+The leaf level is a sub-table indexed using the lower bits of VPN; they store actual PFNs
+To fit better in memory, every table (at any level) itself takes up the space of a page; so the number of branches per level  page size  size of PTE; when a sub-table turns active, the OS just need to allocate a page for that</p>
+<p>As you can see, if pages in an entire sub-table are unmapped, that sub-table (and it’s children) won’t be allocated at all, saving a lot of space. The virtual address split and the MMU algorithm goes (looking up a multi-level page table is often called walking a page table):</p>
+<p>VPN = virtual_addr &gt;&gt; ADDR_PN_SHIFT
+PDI = VPN &gt;&gt; VPN_PDI_SHIFT
+PTI = VPN &amp; VPN_PTI_MASK
+offset = virtual_addr &amp; ADDR_OFFSET_MASK</p>
+<h1 id="index-the-page-directories"><a class="header" href="#index-the-page-directories">index the page directories</a></h1>
+<p>PD_start = PTBR_reg
+for levels of page directories:</p>
+<pre><code class="language-c">PDE_addr = PD_start + (PDI * sizeof(PDE))
+PDE_content = *PDE_addr  # goes to memory (or hits TLB)
+PD_start = (PDE_content &gt;&gt; PDE_PFN_SHIFT) &lt;&lt; ADDR_PN_SHIFT
+</code></pre>
+<h1 id="index-the-leaf-level-page-table"><a class="header" href="#index-the-leaf-level-page-table">index the leaf-level page table</a></h1>
+<p>PT_start = PD_start
+PTE_addr = PT_start + (PTI * sizeof(PTE))
+PTE_content = *PTE_addr      # goes to memory (or hits TLB)
+if any_control_bit_violation:</p>
+<pre><code class="language-c">raise page-fault or permission exception
+</code></pre>
+<p>else:</p>
+<pre><code class="language-c">PFN = PTE_content &gt;&gt; PTE_PFN_SHIFT
+physical_addr = (PFN &lt;&lt; ADDR_PN_SHIFT) | offset
+</code></pre>
+<p>Two factors here require careful tradeoff between page table size and translation latency performance (time-space tradeoff):</p>
+<p>#Levels of page tables: more levels  saving more space, but slower translation (more memory accesses)
+Page size: larger pages  fewer pages, smaller tables, possibly faster lookups, but worse internal fragmentation; modern systems do support multiple page sizes, and allow smarter applications to ask for using so-called hugepages on demand
+A more extreme space-saving technique is to have an inverted page table, which is a global (one) mapping from physical frames to its currently mapped virtual address space &amp; page. Hash tables could be built upon it to enable address translations.</p>
+<h3 id="concept-of-swapping"><a class="header" href="#concept-of-swapping">Concept of Swapping</a></h3>
+<p>Now let’s consider the situation where the physical memory space is running low and we cannot find a free physical frame to put a new page. This is when swapping is needed: writing some pages to persistent storage to free up frames. Swapping is at its essence a caching problem.</p>
+<p>The OS takes out a certain region of a block storage device’s space (say an HDD) as the swap space. Let’s assume that the block device has block size equal the page size of our VM system. A PTE with valid bit set but present bit unset means it is mapped, but currently swapped out to disk. With swapping enabled, the name page fault sometimes narrowly refers to accessing a valid but swapped page, requiring the OS the handle the fault and bring the page back. An example snapshot of system state:</p>
+<p>Page out: moving a page from memory to disk
+Page in: moving a page from disk back to memory
+Page replacement (or eviction in general caching): when we access a swapped page but the memory is nearly full, we first need to choose a victim page to page out, then page in the requested page to that frame
+The mechanism of swapping is transparent to user processes, just like almost everything in our VM system. Be aware that, no matter how smart your page replacement policy is, if your workload demands way more memory than the actual physical memory size, paging in/out will happen and they are slow. In this case, the best solution is to buy more memory.</p>
+<p>Swapping only at full could be dangerous and could trigger thrashing (or throttling). The OS can have a background process named the swap daemon or page daemon that monitors the free ratio of physical memory. If there are fewer than low watermark (LW) frames free, the daemon starts swapping out pages, until there are high watermark (HW) frames free.</p>
+<p>Linux also has an out-of-memory (OOM) killer that kills processes when memory is nearly (but not exactly) full. These are examples of admission control and they help prevent thrashing.</p>
+<h3 id="page-replacement-policies"><a class="header" href="#page-replacement-policies">Page Replacement Policies</a></h3>
+<p>Accessing a block on a disk is significantly slower than accessing the memory, and is sensitive to sequentiality, thus the page replacement policies must be smart enough to avoid disk reads/writes as much as possible. These policies more generally fit in any caching systems and there are so many of them. Read this wikipedia page and this post if interested.</p>
+<p>Optimal (MIN, OPT)</p>
+<p>Given perfect knowledge of the workload (memory access pattern), we could derive a theoretically optimal (but quite unpractical) policy that minimizes the miss rate: always replace the page that will be accessed furthest in the future. The optimal hit rate is probably not 100%: you at least have a cold-start miss (compulsory miss). Having an optimal hit rate serves as a good baseline to evaluate other policies.</p>
+<p>First-In-First-Out (FIFO)</p>
+<p>Simple, intuitive, but generally does not perform well. FIFO suffers from a phenomenon called Belady’s Anomaly: enlarging the cache size could possibly make hit rate worse. Policies like LRUs do not suffer from this problem.</p>
+<p>Random (RAND)</p>
+<p>Simple and works pretty well in some cases. The strongest thing about random is that its does not suffer from any particular adversarial input - there’s is no special input sequence guaranteed to trigger horrible performance on random, but there are for any other deterministic policy. The downside is of course its non-determinism (performance instability).</p>
+<p>Least-Recently-Used (LRU) and Least-Frequently-Used (LFU)</p>
+<p>Do accounting on the recency and/or frequency of page accesses, and choose the least-recently used or least-frequently used page. LRU is the most classic caching algorithm that works well in most cases and is very understandable and intuitive. Its downside is that it does not have scan-resistance: if our working set is just slightly larger than the cache, a scanning workload could trigger a miss for every access. Keeping account of recency/frequency is also expensive.</p>
+<p>Second-Chance FIFO and Clock</p>
+<p>Second-Chance is an example of efforts on approximating LRU while throwing away the accounting for time/frequency. It works as a FIFO but clears the access bit on a page at the first chance, giving it a second chance. Please see the post for details. Clock is an implementation optimization to Second-Chance to make it even more efficient. Clock algorithm could also be enhanced with dirty bits to prioritized pages that aren’t modified (so no need to write back to disk).</p>
+<p>Many more advanced caching policies…</p>
+<p>Given an average miss rate of , we can calculate the average memory access time (AMAT) for a page as:</p>
+<p>, where  is the latency of reading from memory and  is the latency of reading from disk. Even a tiny bit of increase in  builds up AMAT because  is generally much larger than .</p>
+<p>So far we assumed demand paging (or lazy paging), meaning that we only bring a page to memory the first time it is accessed. Some systems deploy prefetching of nearby pages ahead of time when a page is accessed.</p>
+<p>The system also do clustering (or grouping) of write-backs so that a sequence of pages next to each other are evicted in one sequential request to disk, yielding better throughput performance, as we will learn in the persistence section.</p>
+<h3 id="caching-everywhere"><a class="header" href="#caching-everywhere">Caching Everywhere</a></h3>
+<p>We have touched on the important idea of caching several times, a concept that should have been well explained in computer architecture courses. Caching is critical to the performance of modern computer systems.</p>
+<h3 id="memory-hierarchy"><a class="header" href="#memory-hierarchy">Memory Hierarchy</a></h3>
+<p>In general, on any architecture that forms a memory hierarchy: different levels of storage from faster, smaller, volatile storage to slower, larger, persistent storage, caching brings benefits. The typical memory hierarchy in modern machines has at least the following layers:</p>
+<p>Private L1 &amp; L2 CPU cache
+Shared L3 CPU cache across cores
+On-chip SRAM for TLB, etc.
+DRAM as the main memory
+Persistent memory
+Fast block devices (NVMe SSDs, etc.)
+Data over the network
+Slow block devices (HDDs, etc.)
+Caching is based on the observation that data accesses tend to have spatial locality &amp; temporal locality:</p>
+<p>Spatial locality: a data access tends to be followed by accesses to nearby data around it, in some pattern
+Temporal locality: a certain range of data tends to be accessed repeatedly in a period of time, in some pattern
+Hence it would be beneficial if we maintain certain hot (popular) pieces of data in a faster, smaller, upper layer while keeping the majority of data in a slower, larger, lower layer of storage.</p>
+<h3 id="examples-of-caching"><a class="header" href="#examples-of-caching">Examples of Caching</a></h3>
+<p>Quite a few concepts covered in this note are just instances of caching:</p>
+<p>CPU cache: fast SRAM over DRAM
+TLB for paging: SRAM over DRAM
+Swapping: DRAM over persistent storage
+File system page cache (block cache): DRAM over persistent storage
+On-disk cache: on-disk DRAM over persistent media
+…
+For caching to work well, a smart (and suitable) policy is a must to maximize hit rate (= minimize miss rate). Caching has been a long line of research and there are tons of caching policies with different characteristics. Please read this post if interested.</p>
+<p>See Chapter 23 of the book for a case study on two real-world operating systems’ virtual memory management: DEC VAX/VMS and the Linux VM.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../compsci/ostep/introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../compsci/ostep/persistence.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../compsci/ostep/introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../compsci/ostep/persistence.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-09f2665d.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

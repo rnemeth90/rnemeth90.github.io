@@ -1,0 +1,575 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Persistence: Storage Devices &amp; File Systems - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-23f36979.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-d36d24f7.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <blockquote>
+<p>Notes based on <em>Operating Systems: Three Easy Pieces</em> by Remzi &amp; Andrea Arpaci-Dusseau</p>
+</blockquote>
+<h2 id="persistence-storage-devices--file-systems"><a class="header" href="#persistence-storage-devices--file-systems">Persistence: Storage Devices &amp; File Systems</a></h2>
+<p>Beyond run-time sharing of volatile states, a complete operating system must also be able to persist data across power-offs. The OS code itself should at least be stored on persistent media and be loaded into memory to run at boot time, not to mention any storage and connectivity requirements from applications. Hence, we move to the third aspect of an OS: persistence through communicating with and managing input/output (I/O) devices.</p>
+<h3 id="general-inputoutput-io"><a class="header" href="#general-inputoutput-io">General Input/Output (I/O)</a></h3>
+<p>For any computer program to be interesting, it must be taking in some input and be producing some output. For a computer system as a whole, inputs come from input devices and outputs go to output devices. Hardware components connect with the central CPU through various types of bus (interconnect):</p>
+<p>Thicker lines represent higher-bandwidth, lower-latency interconnect; we need such a hierarchy because of physics and cost: the faster a bus and device is, the shorter, smaller, and more costly it must be
+I/O interfaces evolve rather quickly over the last decades, so this modern architecture looks quite differently from old-fashioned architecture (which used to have CPU on one side and everything on the other side); see this post for more
+I/O includes more than just storage: network cards, peripheral devices, etc., are all I/O devices
+Inside a typical I/O device is a controller (a small CPU with small memory) that runs firmware code to implement its functionality, to control how the device media works, and to provide an interface to the rest of the system. The interface adheres to a certain protocol (e.g., AHCI for SATA disks, NVMe for PCIe disks, etc.).</p>
+<h3 id="polling-vs-interrupts"><a class="header" href="#polling-vs-interrupts">Polling v.s Interrupts</a></h3>
+<p>In a simplified protocol, the CPU communicates with a device through reading &amp; writing its hardware registers. Instructions that manipulate external device registers are called I/O instructions and are privileged.</p>
+<p>One can easily come up with a polling-based protocol that looks like:</p>
+<p>while (STATUS == BUSY)</p>
+<pre><code class="language-c">; // wait until device is not busy
+</code></pre>
+<p>write data to DATA register
+write command to COMMAND register</p>
+<pre><code class="language-c">(starts the device and executes the command)
+</code></pre>
+<p>while (STATUS == BUSY)</p>
+<pre><code class="language-c">; // wait until device is done with the request
+</code></pre>
+<p>To avoid wasting CPU time on polling, devices could also issue interrupts to indicate job done, and the OS must have corresponding ISRs registered to react to the interrupts, like what we have described before</p>
+<p>Interrupt-based I/O is not always better than polling-based I/O, because if the device is so fast or the request is so small that the first few polls will likely get the response, than reacting to interrupts actually slows down the system; modern storage solutions use polling or take a hybrid approach (poll for some time and use interrupts if not yet finished) on ultra-fast devices to improve performance
+Interrupts could cause the OS to livelock in certain use cases: consider a huge stream of incoming packets each generating an interrupt, and the OS ends up only processing interrupts and never giving user processes a chance to run to service the requests
+We could do coalescing of interrupts: merge multiple interrupts into a single interrupt delivery; however, this increases latency of a request if we wait too long</p>
+<h3 id="direct-memory-access-dma"><a class="header" href="#direct-memory-access-dma">Direct Memory Access (DMA)</a></h3>
+<p>So far we described programmed I/O: I/O requests that involve the CPU in every I/O instruction. If our requests are data-intensive, it could over-burden the CPU with a trivial task of data transfer.</p>
+<p>Instead of letting the CPU transfer data word-by-word, we introduce the direct memory access (DMA) engine: a special hardware component that can orchestrate transfers between devices and main memory without much CPU intervention.</p>
+<p>Also, instead of using explicit I/O instructions (e.g., in and out on x86), modern systems also support memory-mapped I/O: mapping device registers to memory locations so that loading/storing these addresses are routed to the device instead of to main memory. Both approaches are in use today.</p>
+<p>Memory-mapped I/O sometimes also refer to the Linux syscall mmap() of mapping a storage space (or file) into memory and using the memory as a cache (the OS is responsible for flushing dirty updates to disk). This is a file system level terminology and is total separate from DMA.</p>
+<h3 id="os-software-stack"><a class="header" href="#os-software-stack">OS Software Stack</a></h3>
+<p>Ideally, we want to hide all the nasty details of I/O protocols from users and provide a cleaner interface. The OS does this through multiple layers of abstractions, forming a software stack. (We refer to them as the storage stack, the network stack, etc.) At the lowest level are device drivers that actually implement one side of the device protocols to talk to specific models of devices.</p>
+<p>Since device drivers are mostly boiler-plate code and are needed for any device you might plug into your system, they have become a huge percentage of kernel code (over 70% of Linux code lines are device drivers). In the next few sections, we will first talk about some common storage devices, their structures and characteristics, and device driver/on-device controller level optimizations. We will talk about the file system layer in later sections.</p>
+<h3 id="storage-devices"><a class="header" href="#storage-devices">Storage Devices</a></h3>
+<p>Disk-like storage devices are often viewed as block devices by the system because we do reads/writes in the granularity of blocks, of size e.g. 4KB. Let’s first take a look at two common types of block devices (based on different media): HDD &amp; SSD. Understanding the internals of a device is critical to building efficient, performant, and correct software stack for it.</p>
+<h3 id="hard-disk-drives-hdd"><a class="header" href="#hard-disk-drives-hdd">Hard Disk Drives (HDD)</a></h3>
+<p>The hard disk drives (HDD) have been the main form of persistent data storage for decades. Many classic file system technologies are built around HDDs. An HDD is characterized by its unique mechanical structure:</p>
+<p>Multiple platters rotating around a spindle, with magnetic media on both sides of platters</p>
+<p>Each platter has 2 sides, each called a surface; each surface is coated with a thin magnetic layer that enables the drive to read and persistently store bits (through the heads)
+Platters rotate around the spindle at some speed, measured in rotations per minute (RPM), often in the range of 7,200 to 15,000; RPM = 10,000 means it takes about 6 ms for a single rotation
+A corresponding number of read/write heads stretch from the disk arm onto the surfaces</p>
+<p>There are typically two heads per platter (one per surface, hovering just a little bit off the surface)
+When the platter spins, bits flow through under the head, enabling data read/write
+The disk arm allows the heads (as a whole) to move (back/forth) or swing (left/right) to select different tracks, see below
+Now we focus on a surface, the top view looks like:</p>
+<p>Each platter contains many thousands of circular tracks (example shows just 3)</p>
+<p>Each track is further divided into sectors of typically 512 bytes</p>
+<p>Only reading/writing a single sector is guaranteed to be atomic
+Since tracks are concentric circles, outer sectors may seem more “stretched”, but they still store 512 bytes
+The same track index across all surfaces form a cylinder; cylinders turn out to be important in how we group data - we place data that are likely to be fetched together:</p>
+<p>First in the same sector location across the cylinder (can be read simultaneously)
+Then in consecutive sectors
+Then in nearby tracks
+The latency of completing a sector request on an HDD is composed of:</p>
+<p>Seek time: disk heads locating the correct track (this may be further divided into acceleration time + coasting time + deceleration time + settling time); avg. is  of the full seek time (see Chapter 37.4 of the book for the math)
+Rotate time: wait for the beginning of the sector to be under the head; avg. is time taken to do a  rotation
+Transfer time: where I/O actually takes place as the sector passes under the head
+Modern disks deploy some fancier technologies:</p>
+<p>Track skew: say sector 23 is the last on track 1 and sector 24 is the first on track 2, 24 is not directly to the inner of 23 but instead shifted a little bit to make sure sequential reads from 23  24 can be properly serviced when the head crosses tracks</p>
+<p>Multi-zoned (ZBR): some HDD models group tracks into zones and put more sectors in tracks in outer zones to save space</p>
+<p>Disks have an internal cache for speeding up requests, historically called track buffer; different disks report a write request as complete at different time points</p>
+<p>Write-back cache reports complete as long as data has been put in the internal cache memory; appears “faster” but has the risk of losing data if a power failure happens
+Write-through cache immediately persists the update to disk media and reports complete only if that completes
+As we can see, sequentiality is so crucial to HDD performance: its mechanical structure determines its sequentiality nature that reading/writing to consecutive addresses performs much better than randomly seeking around.</p>
+<h3 id="hdd-scheduling-policies"><a class="header" href="#hdd-scheduling-policies">HDD Scheduling Policies</a></h3>
+<p>Due to the high cost of I/O, the disk controller (historically the OS) runs a disk scheduler to decide how to schedule HDD requests to minimize seeking. The major difference from CPU scheduling is that disk requests are of fixed sizes, so we have a pretty good estimate on the completion time of jobs. Here is a list of classic disk scheduling policies:</p>
+<p>Shortest-Seek-Time-First (SSTF, or SSF): always pick the request with the shortest seek distance (from current head position) in the I/O queue; a similar policy is Nearest-Block-First (NBF) which always picks the block with nearest index to current</p>
+<p>A fundamental problem with SSTF is starvation: if there is a steady stream of requests on one track, other requests starve.</p>
+<p>Elevator (a.k.a. SCAN): simply make the head move back and forth across the disk, servicing requests on a track when reaching it; a single pass across the disk is called a sweep, and a request arriving at a track after the head has moved off the track needs to wait until the next sweep when the head reaches the track</p>
+<p>F-SCAN: freezes the queue for a sweep when starting a sweep, avoids getting stuck at a track
+C-SCAN (circular SCAN): instead of sweeping both directions, the algorithm only sweeps from outer to inner, then resets the head at the outer track to begin again; this avoids favoring middle tracks
+The downside of SCAN is that it ignores rotation.</p>
+<p>Shortest-Positioning-Time-First (SPTF, or access, SATF): since both seek cost and rotation cost are roughly equivalent, we calculate which request needs the shortest position time  from current position</p>
+<p>SPTF is deployed in most modern HDDs (in the disk controller, not in the OS, since the OS does not have a good idea on where the disk head currently is and where are track boundaries).</p>
+<p>In modern systems, the OS and the disk collaborate on scheduling: the OS uses various storage stack techniques to try to issue sequential requests and pick the best few requests to send to the disk, and the disk controller uses internal knowledge to arrange the batch of requests, possibly doing I/O merging.</p>
+<p>There is also tradeoff on how long should we wait before issuing a batch of requests to the disk: work-conserving approaches issue a request as soon as one arrives at the block layer, while non-work-conserving approaches wait for some time in case there are “better” requests arriving.</p>
+<h3 id="raid-arrays"><a class="header" href="#raid-arrays">RAID Arrays</a></h3>
+<p>Making a single disk fast, large, and reliable at the same time is hard (law of physics). Patterson, Katz, &amp; Gibson first introduced the idea of redundant array of inexpensive disks (RAID) to build a collectively large, fast, and reliable disk out of an array of disks. A RAID system provides a disk interface to the file systems layer above, and translates a logical block reads/writes into sophisticated physical requests to the underlying disks. RAID thus brings the following three advantages transparently:</p>
+<p>Performance: using multiple disks in parallel improves I/O throughput greatly
+Capacity: smaller disks collectively form a large storage space
+Reliability: through reserving some space for some form of redundancy, can tolerate the loss of a single disk (but cannot tolerate  2 concurrent disk failures)
+The RAID design levels that appeared are listed below. For the performance analysis, we assume a single disk has capacity , single-request latency , and steady-state throughput  for sequential workload and  for random workload ().</p>
+<p>RAID-0: only do striping, and there’s no redundancy; we call blocks in the same row a stripe; striping could happen with a larger chunk size:</p>
+<p>Small chunk size  better intra-file parallelism, but positioning time is determined by the slowest disk
+Large chunk size  less intra-file parallelism, relies on multiple concurrent requests, but reduces positioning time</p>
+<p>RAID-1: only do mirroring on pairs of disks; there could be two types of arrangement:</p>
+<p>RAID-10: stripe of mirrors (shown in example)
+RAID-01: mirror of stripes (the first row of example will then be 0 1 0 1)</p>
+<p>RAID-2 (using Hamming code) and RAID-3 (byte-level striping instead of block-level) are rarely used in practice</p>
+<p>RAID-4: saving space with parity bits (parity bit’s value is calculated to let the XOR of the same bit index across all disks to be 0, in other words, there are an even number of 1’s at any index across the stripe); a parity reconstruction needs to happen whenever there are updates to the row, and there are two approaches:</p>
+<p>Additive parity: read out all the non-written chunks, add up the chunks to get the new parity chunk, and write that back to the parity disk; if our workload is dominated by full-stripe writes, then additive parity is reasonable</p>
+<p>Subtractive parity: read out the old parity chunk, then for the updated data chunks, compare their new value with their old value (must be remembered somehow), and if there are an odd number of flips for a bit index, the parity bit for that index should be flipped, otherwise the parity bit stays the same</p>
+<p>Nonetheless, the parity disk will be a serious bottleneck.</p>
+<p>RAID-5: rotating the parity disk for each stripe to avoid bottleneck a single parity disk</p>
+<p>RAID-6 uses more parity bits per stripe to try to tolerate more than one disk failure</p>
+<p>A symbolical analysis of these RAID levels give the following results (see Chapter 38 of the book for our assumptions and calculations):</p>
+<h3 id="solid-state-drives-ssd"><a class="header" href="#solid-state-drives-ssd">Solid-State Drives (SSD)</a></h3>
+<p>Generally, storage devices with no mechanical structures or moving parts are referred to as solid-state storage device (SSD). Unlike random-access memory (RAM, SRAM or DRAM), SSDs retain data despite power loss. Unlike HDDS, SSDs do not have moving parts and have largely different performance characteristics. We focus on the most well-known solid-state storage technology called flash (more specifically, NAND-based flash). The acronym SSD sometimes narrowly refers to solid-state drives exposed as large-capacity block devices, though ROMs (for storing firmware) and USB flash drives are all solid-state storage.</p>
+<p>Logically, the internal of a NAND-flash SSD looks like:</p>
+<p>An SSD has multiple flash chips (called channels, or packages)</p>
+<p>A channel is composed of a set of planar blocks of size e.g. 128KB or 256KB</p>
+<p>A block is composed of a series of pages (or words) of size e.g. 4KB</p>
+<p>A page is a row of cells where actual bits are stored as the voltage level</p>
+<p>When uncharged, a cell represents 1; when a cell is broken-down and charged, it represents 0
+It is possible for a cell to store more than one binary bit; single-level cell (SLC) can store 1 bit (0/1) by comparing against the half voltage level; multi-level cell (MLC) can store two bits by comparing against one-fourths voltage levels; there are even triple-level (TLC) or quad-level (QLC) ones
+SLC chips achieve higher performance and reliability and are more expensive per capacity
+The limitation of one-way charging in flash media leads to the fact that updating bits gets very tricky. The flash media allows three basic operations &amp; their granularity:</p>
+<p>Read a page: by pre-charging &amp; leaking a word-line, client can read any page
+Program a page: at the page granularity, flash only allows charging cells from 1 to 0; assuming a free page of all 1’s, client can program the page and change some bits to 0
+Erase a whole block: changing bits from 0 to 1 requires leaking an entire block back to 1’s; hence, to write arbitrary content to a page, either the page was previously free, or it is required to first erase the entire block it is in, then program the pages
+Flash storage does not need to worry about physical head crashes, and has better theoretical latency than magnetic disks. However, it becomes more complicated when turning flash media into a block device. An SSD must keep a mapping from logical addresses (addresses exposed to device driver) to actual physical pages. This is done by the flash translation layer software running on the in-device controller.</p>
+<p>Direct mapping is bad because then whenever there is an update to a page, we must read out the whole block into controller, erase the whole block, and write back the updated block page-by-page, yielding terrible performance and involving too many breaking-downs of cells</p>
+<p>Log-structured approach is better (see the LFS section below): treat every channel as an append-only log and always just append; the device keeps an address translation mapping from logical address to actual page in the controller memory</p>
+<p>The mapping is kept in an out-of-band (OOB) region to survive across power loss
+A flat page-level translation map will be way too big; typically the mapping will be block-level or hybrid mapping, and persisted, and the controller memory caches popular entries
+The FTL algorithm must take care of at least the following things:</p>
+<p>Write amplification reduction: unless we are writing to contiguous free pages at the end of a block, any in-place or back-jumping write will require much more data to be actually moved and more flash operations to be carried out, even if we are using a clever log-structured FTL. This is called write amplification. Erasing a block is particularly expensive (several ms). Typical amplification ratio in commercial SSDs ranges from 5x to 20x.
+Wear-leveling: a cell has very limited lifetime of break-downs and cannot afford one re-charge per update to any place in its residing block. Thus, SSDs do redirection on writes (RoW) - append the updated content somewhere cold and redirect subsequent reads to that new location, in order to make all blocks evenly wore. An SSD typically has shorter overall lifetime than an HDD, and is also vulnerable to program disturbance (similar to RowHammer attacks in DRAM).
+Garbage collection: just like in LFS, only the latest page of a logical address is useful and older versions are garbage. The controller runs a periodic garbage cleaner that picks some blocks, scans them and collects mapped pages (discarding garbage), and groups them into some free blocks, then erases the cleaned blocks. Some SSDs do over-provisioning and always reserve ~20% of the space empty, to avoid running garbage collection in a nearly-full device with no free blocks to write to.
+In-device parallelism: different flash channels can be accessed simultaneously in parallel, so the FTL should exploit such parallelism to deliver better throughput.
+For NAND flash storage devices, a new disk command interface (other than disk read, write, and cache_flush) is introduced: trim. Trim basically tells the FTL that certain addresses have been deleted and thus the device no longer has to track information about those addresses, allowing optimizations in the FTL algorithm.</p>
+<p>Compared with HDDs, SSD performance is generally better, especially in random read/write cases, but SSDs cost more per capacity.</p>
+<p>The file system implementation section of this note focuses on HDD-based file systems. Some ideas also apply to SSDs and other media, but we leave the software stack technologies for flash SSDs, byte-addressable non-volatile memory (NVM) devices, and network devices as advanced topics.</p>
+<h3 id="abstraction-of-files"><a class="header" href="#abstraction-of-files">Abstraction of Files</a></h3>
+<p>Now that we’ve seen how storage devices work, it’s time to think about what abstractions and interfaces should an OS provide to user programs for managing persistent data storage. Unlike memory, which is run-time volatile and loses contents when there is a power-off or power accident, persistent storage devices keep data intact and can survive across power loss. Thus, the abstractions for persistent data will look much different.</p>
+<h3 id="files--directories"><a class="header" href="#files--directories">Files &amp; Directories</a></h3>
+<p>We begin by having files. A file is simply a linear array of blocks (or pages) of bytes. A file has a filename chosen by the user to be memorable, yet at the low level it has a unique, flat name (often in the form of an inode number, or i-number). The system tracks information through low level names.</p>
+<p>Files reside in a directory tree (directory hierarchy): a directory is a “file” whose contents are a list of files or sub-directories. What a directory actually stores is a list of  tuples. An example directory tree looks like:</p>
+<p>The hierarchy starts at a root directory denoted / in UNIX systems</p>
+<p>The symbol / is used as a separator that clearly breaks a path into a sequence in traversal order</p>
+<p>A file’s name prefixed by the entire path starting from the root directory is called an absolute path (e.g., /bar/foo/bar.txt)</p>
+<p>A relative path indicates starting from a certain location in the tree instead of from the root directory (e.g., if we are inside the directory /foo/, the path ../bar/foo/bar.txt resolves to the file /bar/foo/bar.txt and the path bar.txt resolves to /foo/bar.txt)</p>
+<p>.. means the parent directory
+. means the current directory
+By convention, a filename is suffixed by a . and an extension name indicating the type of the file</p>
+<p>Essentially, the files &amp; directories abstraction gives us a powerful &amp; standardized way of naming things. Since this way of naming is so great, UNIX systems push it to an extreme that it names almost everything accessible by the system through the file system interface, so everything looks like a “file” but does not necessarily represent data on persistent storage (for example, /dev/xxx names a raw device, /proc/xxx names the run-time information of a process, etc.).</p>
+<h3 id="file-system-fs-apis"><a class="header" href="#file-system-fs-apis">File System (FS) APIs</a></h3>
+<p>A file system (FS) is a layer that provides a set of POSIX APIs to user programs and transforms POSIX API calls to efficient block layer requests. In some operating systems, this can be further separated into two layers:</p>
+<p>A thin virtual file system (VFS) layer that takes POSIX APIs to a defined set of vfs_*() APIs
+Actual file system implementations (e.g., FFS, LFS, Ext4, BtrFS, …) that hook with the VFS APIs; an OS can provide multiple implementations
+A disk (e.g., /dev/sda) can be partitioned into multiple partitions (physical volumes, e.g., /dev/sda1, /dev/sda2, …). Often, we view each single partition as a separate device. Each partition can be formatted as a particular file system (meaning laying out the file system data structures onto that partition), and can get mounted to a particular directory location.</p>
+<p>A logical volume (in Linux, managed by the logical volume manager, LVM) is a logical device that can span across multiple physical volumes, managed specially.</p>
+<p>The POSIX syscall APIs for file &amp; directory operations include at least:</p>
+<p>open() - open a file, creating one if with certain arguments</p>
+<p>Returns a file descriptor (fd) - a process-local integer that identifies the open file; all open file descriptors of a process are recorded in its open file table (part of its PCB)
+Takes in some flags (OR’ed if there are multiple) that determine the capability of the returned file descriptor, e.g., whether it is open as read-only, etc.
+(old-fashioned) creat() (without the ‘e’) - equivalent to open() with the O_CREAT | O_WRONLY | O_TRUNC flags; the spelling was an interesting mistake by UNIX creators Thompson &amp; Ritchie</p>
+<p>read() - read a given number of bytes at the current offset of a file into a user-space buffer, and update the offset</p>
+<p>write() - write a given number of bytes of a user-space buffer to the current offset of a file, and update the offset</p>
+<p>lseek() - seek a file to a certain offset, i.e., set its current offset to a given value; seek happens when we do non-sequential reads/writes</p>
+<p>dup() &amp; cousins - by default, each process has its own open file table, and if two processes open the same file, they do so independently and have independent file offsets; this syscall allows creating a duplicate reference to an open file table entry so that two fds can be used interchangeably; dup() following a fork() enables processes to share an open file table entry</p>
+<p>fsync() - we will get to file system buffering (caching) later, but basically an fsync() tells the FS to immediately flush previous dirty writes to a file that might be cached to persistent storage; fsync() on directories is sometimes necessary; this syscall is tightly related to many application-level consistency bugs</p>
+<p>rename() - rename the file, replacing one if the name already exists; often implemented in an atomic way so that if a crash happens during the renaming, the file will either be the old name or the new name; due to its atomicity property, rename() is often used by certain kinds of applications that require an atomic update to file state</p>
+<p>int fd = open(“foo.txt.tmp”,</p>
+<pre><code class="language-c">          O_WRONLY|O_CREAT|O_TRUNC,
+          S_IRUSR|S_IWUSR);
+</code></pre>
+<p>write(fd, buffer, size);  // write updates to tmp
+fsync(fd);                // make sure tmp persisted
+close(fd);
+rename(“foo.txt.tmp”,</p>
+<pre><code class="language-c">   "foo.txt");  // atomically rename to original
+</code></pre>
+<p>stat() - get the metadata information of a file: the mapping from block indexes to on-disk addresses (usually kept in an inode structure, as we will see soon), owner’s user ID &amp; group ID, total size, last access/modify/change timestamp, etc.</p>
+<p>mkdir(), opendir(), readdir(), closedir(), rmdir() - creating, opening, traversing, closing, and removing a directory</p>
+<p>link() - create a link to a file: another way to refer to the same file (not a copy of the file)</p>
+<p>A hard link means a different name pointing to the same low-level identifier (e.g., /foo/file1 and /bar/file2 both to inode number 67158084)</p>
+<p>Hard links cannot be created on directories because that may cause a cycle in the directory tree; Hard links cannot be created to files in other disk partitions, because inode number are only unique within a particular file system.</p>
+<p>A soft link (or symbolic link) means a separate file (so with a different inode number) of a special type, and the file’s content simply contains the target file’s pathname</p>
+<p>Soft links could have dangling reference if the original file gets deleted.</p>
+<p>unlink() - remove a file (to be specific, remove a filename link); it is called unlink because deleting a filename is essentially unlinking it with its actual structure identified by the inode number; when the reference count of that inode comes to zero, this is when the file system actually deletes the file</p>
+<p>mount() - mount a particular disk partition (formatted as a particular file system type) to a given directory location (the mount point); the mount point then refers to the root directory of that disk partition</p>
+<p>Many more advanced syscall interfaces exist…</p>
+<p>Above listed are FS-related syscalls. Often, we might be using a higher-level wrapper or a shell program that uses these syscalls and provides a more abstracted API, e.g., fopen() in C standard library that returns a FILE * pointer, and cp, mv, rm, touch, mdkir, mount shell commands, etc.</p>
+<h3 id="file-system-implementation"><a class="header" href="#file-system-implementation">File System Implementation</a></h3>
+<p>To find out what’s going on inside the file system layer, we start from a Very Simple File System design (we call VSFS) and move towards real FS implementations. We will discuss consistency issues along the way. There is great flexibility in how one can build a file system, hence many excellent implementations exist. We only touch on the basics.</p>
+<p>We think about two aspects of a file system:</p>
+<p>The on-disk data structures layout it keeps to organize all the files’ data and metadata
+The access methods it uses to process POSIX calls such as open(), read(), and write(), given the data structures</p>
+<h3 id="vsfs-data-structures"><a class="header" href="#vsfs-data-structures">VSFS Data Structures</a></h3>
+<p>Our VSFS operates on very simple data structures. We divide the disk device space into blocks of commonly-used 4KB size (we only support one fixed block size). Say we have a very small disk of 64 blocks, we assign different roles to these blocks:</p>
+<p>Most blocks belong to the data region; these blocks will hold actual user file data</p>
+<p>The first few blocks are reserved for storing metadata information; in particular, we have per-file metadata and FS-wide metadata</p>
+<p>Each file has its metadata stored in an inode structure, and all the inodes reside in the inode table region; as we mentioned in the last section, metadata of a file includes which data blocks belong to the file, its owner and access rights, timestamps, etc.</p>
+<p>Inode structure is typically small, so a 4KB block can probably hold a bunch of inodes. Each inode is uniqued specified by the file’s low-level name - its inode number (i-number), typically just the index of its position in the inode table</p>
+<p>To track FS-wide information of which data blocks are free and which inode slots are free to use, we have a data bitmap and an inode bitmap, each taking up a block</p>
+<p>Finally, we reserve the very first block as the superblock, which holds FS-specific information like a magic name identifier of the file system type, how many inodes and data blocks in total, etc.; the superblock is read when mounting the file system, so the OS knows which type it is and thus knows what routines to call</p>
+<p>Inside an inode structure, probably the most important part of it is the array of pointers to the file’s data blocks.</p>
+<p>Direct pointers: an intuitive way is to just store pointers to data blocks as an array, in the order of block index</p>
+<p>This approach is limited as the max number of blocks a file could contain is bounded by how many such pointers could be stored in one inode structure. We probably cannot support large files.</p>
+<p>Indirect pointers: the solution is quite similar to what we have done to page tables - adding in layers of indirection by having a multi-level index structure; we let some pointers in the first-level array to point to a block of more pointers; this could happen recursively</p>
+<p>Adding in multiple layers makes addressing slower. Truth is, “most files are small”. To avoid affecting small files, we still keep a fixed number of direct pointers; if the file grows larger, we will starting using indirect pointers, or even double-indirect pointers, or even triple-indirect pointers.</p>
+<p>Extents: an alternative approach to pointers is to store extents: pointer plus a length in blocks, marking a consecutive region of data blocks; this way, only one extent is needed per consecutive region; extents are less flexible than pointers but are more compact</p>
+<p>Other forms of data structures are of course possible, such as linked lists (with an in-memory table to speed up addressing, see the old Windows FAT file system)</p>
+<p>To allocate &amp; track free space, the two bitmaps are used. This is essentially a free-space management problem, as we have seen in memory allocations, but this time in the FS context. Many optimizations to the free-space tracking data structure are possible:</p>
+<p>Pre-allocation: try to find and allocate consecutive blocks that are free for a new file to improve sequentiality
+B-trees: using B-trees or B+-trees instead of bitmaps is a common alternative to compactly manage free space
+We also need to think about directories. Directories are just a special type of file. For a directory, its contents (what stored in its data blocks) are a collection of  tuples. Each such tuple is called a directory entry (dentry). Again, the collection can be in the form of any data structure - fixed-slot array, linked list, B-tree, etc.</p>
+<h3 id="vsfs-access-paths"><a class="header" href="#vsfs-access-paths">VSFS Access Paths</a></h3>
+<p>Having a clear picture of the data structures, it would not be too hard to figure out what happens upon an access to a file, step by step. Assume the initial state is that the file system just gets mounted, so only the superblock is in memory.</p>
+<p>Reading /foo/bar (the write to bar’s inode is for updating the last access timestamp):</p>
+<p>Creating and writing out (extending) /foo/bar (the write to foo’s inode is for updating timestamp):</p>
+<p>Things will get much more complicated when caching is involved.</p>
+<p>The first read to any block must be a disk read; probably, it will bring that block into the page cache (see here, the name is now used with buffer cache interchangeably), so subsequent reads to that block will likely hit the cache
+Depending on the file system’s consistency mode (which we will talk about soon), writes may be cached as well (reported complete when just reaching the cache), which may introduce inconsistency; this is the durability-performance tradeoff
+Caching writes might bring the benefits of write buffering: grouping a few writes into a batch and writing them to disk sequentially
+For certain applications or on certain fast devices, users might want to bypass caching through direct I/O, or use the raw disk interface to avoid the file system altogether
+In some operating systems, to speed up directory lookups in large directories, there is also a dentry cache that holds recent/popular directory entries</p>
+<h3 id="unix-fast-fs-ffs"><a class="header" href="#unix-fast-fs-ffs">UNIX Fast FS (FFS)</a></h3>
+<p>Our VSFS (exactly the original design of the old UNIX file system) captures the basic ideas in building a file system, but it has serious performance problems:</p>
+<p>It treats the disk as if it was a random-access memory, and does not consider locality &amp; sequentiality; for example, inode of a file is very far away from its data blocks, so expensive seeks happen
+The file system will be getting quite fragmented: the free space will be spread across the disk, making a new logical file be allocated data blocks scattered around the disk (so there exist disk defragmentation tools)
+A group at Berkeley decided to build a better HDD-based file system which they call the Fast file system (FFS, see the paper). FFS is built to be disk-aware: it knows it runs on disks, assumes certain internal knowledge about underlying disks, and is optimized for disks. FFS does so through the following set of major optimizations:</p>
+<p>Cylinder groups: aggregates every  consecutive cylinders into a group (more modern file systems use block groups since the disk might not export cylinder information)</p>
+<p>FFS puts the metadata of a group at the beginning of the group, so each group has a VSFS-like layout
+Accessing files within one group is thus guaranteed to not have long seeks
+Placement policy: FFS tries to put related things inside the same group</p>
+<p>A new directory is placed in a group with a low number of allocated directories and a high number of free inode spaces
+For a file, its data blocks are put in the same group as its metadata information
+Files in the same directory are often accessed together, so are put in the same group if possible
+Amortization: for large files, to prevent them from filling up an entire group quickly, FFS allocates the first “chunk” of it in one group and the second “chunk” in another group, and so on</p>
+<p>Parameterization: configure the file system with changeable parameters (track skewness, skip distance, etc.) and decide the exact layout scheme given the parameter values for a given disk device</p>
+<h3 id="crash-consistency"><a class="header" href="#crash-consistency">Crash Consistency</a></h3>
+<p>A major challenge faced by a file system is crash consistency: since a file write operation is often composed of multiple steps, how to ensure that persisted data stays in a correct and consistent state if a power loss or system crash happens in the middle?</p>
+<h3 id="crash-scenarios"><a class="header" href="#crash-scenarios">Crash Scenarios</a></h3>
+<dl>
+<dt id="writes-are-often-buffered-so-actual-requests-to-disk-are-often-triggered-by-an-fsync-formally-a-write-barrier-let-us-consider-the-most-interesting-case-of-appending-new-blocks-of-data-to-a-file-the-requests-include"><a class="header" href="#writes-are-often-buffered-so-actual-requests-to-disk-are-often-triggered-by-an-fsync-formally-a-write-barrier-let-us-consider-the-most-interesting-case-of-appending-new-blocks-of-data-to-a-file-the-requests-include">Writes are often buffered, so actual requests to disk are often triggered by an fsync(), formally a write barrier. Let us consider the most interesting case of appending new blocks of data to a file, the requests include:</a></dt>
+<dd>
+<p>write data to chosen (previously free) data blocks</p>
+</dd>
+<dd>
+<p>update to metadata, which further includes:</p>
+</dd>
+<dd>
+<p>update to the file’s inode (add pointers to the new data blocks, update file length info, etc.)</p>
+</dd>
+<dd>
+<p>update to the data bitmap (mark new data blocks as in use)
+Now we enumerate all the possible crash scenarios. What if a crash happens when…</p>
+</dd>
+</dl>
+<p>is done, but  and  are not: as if the write didn’t happen, not a problem
+is done, but  and  are not: inconsistency from FS perspective - will see garbage data (what was left in the new data block, or worse, other file’s data if that data block is later chosen by another allocation), need to resolve
+is done, but  and  are not: inconsistency from FS perspective - space leak on the marked blocks, need to resolve
+and  are done, but  is not: nothing seems wrong from FS perspective, but the file ends up with garbage data (what was left in the new data block)
+and  are done, but  is not: inconsistency from FS perspective - the data blocks might later be chosen by another allocation, need to resolve
+and  are done, but  is not: inconsistency from FS perspective - space leak again, need to resolve
+So, among the six cases, 1. is not a problem, 4. is a problem that might be expensive to resolve as we will see later, and 2., 3., 5., and 6. are all FS metadata inconsistency cases (only part of metadata changed). Ideally, we would like the FS to transit from one state to another state atomically, but atomicity is very hard to provide in disk requests since their granularity is too big and the disk media can only do sector writes atomically.</p>
+<h3 id="file-system-checker-fsck"><a class="header" href="#file-system-checker-fsck">File System Checker (FSCK)</a></h3>
+<p>Early file systems took a simple approach to resolve inconsistency by running a full-pass metadata checking over the entire file system at the reboot after a crash. The checker is named the file system checker (fsck). The basic steps are:</p>
+<p>Check superblock for corruption (rare)</p>
+<p>Scan the inodes, follow all the pointers to build an understanding of which blocks are currently (considered) in use, then produce a corresponding version of bitmaps</p>
+<p>Each inode is checked for corruption, and inodes with say invalid type fields are neglected
+Each inode’s link count is also remembered
+Also checks for cases where two different inodes refer to the same data block (duplicates); if so, clear one inode if it is obviously bad, or create a copy of the data block
+Also checks for bad block pointers: pointers that are obviously out of valid range, e.g., larger than partition size
+Do a directory tree traversal starting from the root directory, build its own link counts for every file and directory, and compare against the link counts stored in inodes</p>
+<p>Also checks for directory formation, e.g., . and .. are always the first two entries, etc.
+A complete fsck pass can only resolve metadata inconsistency issues (2., 3., 5., 6.), and is incredibly slow (may take several hours for large disks), thus is not the preferred approach now.</p>
+<h3 id="journaling-write-ahead-logging"><a class="header" href="#journaling-write-ahead-logging">Journaling (Write-Ahead Logging)</a></h3>
+<p>Modern file systems, such as Linux ext3/4, do journaling (write-ahead logging) which is a run-time approach: to update something, we first write a log entry into an append-only log (i.e., the journal; the FS must then reserve some space for the journal) saying “we are going to do these operations”, before actually applying them in place. After a transaction has been committed to the journal, we checkpoint the file system by applying the pending transaction(s). Here, the ordering between journal writes and in-place updates matter.</p>
+<p>Each journal entry starts with a transaction begin (TxB) and ends with a transaction end (TxE). TxB contains a transaction identifier (TID) and some information about the transaction, e.g., addresses of the  and . TxE is simply a closing mark of journal commit. If a crash happens, at the next reboot, all committed log entries after the last checkpoint are replayed to recover state, and incomplete entries are discarded.</p>
+<p>Journaling could be done in the following different modes:</p>
+<p>Data journaling mode: includes data content in the journal</p>
+<p>Ordering requirement:  (things in brackets could be issued to disk at the same time, but things after an arrow cannot be issued until everything before the arrow has been acknowledged)</p>
+<p>Some optimizations could be applied:</p>
+<p>Batching log updates to reduce the overhead of journaling when we are repeatedly updating some blocks
+Use a circular log with an appropriate checkpointing interval to avoid running out of space; this involves adding a journal superblock for tracking the current head and size of the log
+Data journaling protects against case 4. because the content of data blocks are logged ahead as well, but this also means everything will be written twice (write-twice penalty), yielding poor performance.</p>
+<p>Metadata journaling (ordered journaling) mode: just include  ( and ) in the journal</p>
+<p>Ordering requirement:</p>
+<p>Metadata journaling is more popular than full data journaling because it balances performance with consistency. Whether case 4. is guarded against or not depends on whether we enforce the ordering of completing  before TxE. In some configurations, this ordering is not enforced to generate better performance - it is then the application’s responsibility to check data consistency.</p>
+<p>There are other approaches to the crash consistency problem:</p>
+<p>Copy-on-write file systems like LFS combine write buffering with journaling by always writing to an append-only log and never overwriting things in place - the log is the file system
+Backpointer-based consistency: let data blocks maintain a back pointer pointing back to the inode, and always check if that inode has a forward pointer to the data block
+Optimistic crash consistency: issue as many requests to disk as possible, and use certain techniques like checksums to detect inconsistencies and abort conflicting transactions (this shares much similarity with optimistic concurrency control in distributed transactions)</p>
+<h3 id="more-on-storage-systems"><a class="header" href="#more-on-storage-systems">More on Storage Systems</a></h3>
+<p>Storage system is a design space with great flexibility and we cannot cover all the aspects in this note. Here we add a few more points. Advanced topics such as modern storage devices, more FS design schemes, distributed storage systems, and data security are left as advanced topics.</p>
+<h3 id="log-structured-fs-lfs"><a class="header" href="#log-structured-fs-lfs">Log-Structured FS (LFS)</a></h3>
+<p>Ousterhout &amp; Rosenblum proposed a log-structured way of building storage systems (see the paper). The motivations are:</p>
+<p>Memory sizes are growing so more reads hit the cache, hence disk traffic increasingly consists of writes
+Large gap between random I/O performance and sequential I/O performance
+Designs like FFS trigger too many disk writes to different places for a single file update; though these places are grouped together, small seeks still happen frequently
+Designs like FFS are not RAID-aware, they trigger too many small writes which are bad for RAID-4/5
+A log-structured file system (LFS) maximizes the idea of write buffering by making the entire file system a sequential log:</p>
+<p>Any update to the file system is appended to an in-memory append-only buffer</p>
+<p>If it is a new inode, the pointers in it point to offsets in the log - where the latest version of data blocks reside
+Say we update some bytes in a data block, LFS first appends the newer version of the data block, then appends the newer version of the inode - inode must change because the data block address changes; nothing happens in-place
+When the buffer becomes full, LFS flushes it to disk sequentially; this sequence of blocks is named a segment</p>
+<p>Since now the inodes scatter around in the log (instead of in a known place), and an inode may have different versions of through the log (with the latest version towards the end of the log that should be used), LFS keeps an inode map (imap) which records the latest location of each inode</p>
+<p>The inode map itself needs to be persisted, so whenever an inode gets appended, a newer version of the imap follows; imap is divided into smaller pieces to avoid re-appending the entire imap for every inode change
+A fixed place on disk is reserved for the so-called checkpoint region which contains pointers to the latest imap pieces; this region is the only place where in-place updates happen, and it updated only every 30 seconds or so
+Directory contains filename  inode number mapping, not inode address, to avoid recursive update up the directory tree</p>
+<p>Reading a block through LFS incurs 1 extra lookup on the inode map, then the rest are the same number of I/Os as in FFS. LFS caches all the mappings in memory. Everything seems fine instead of one critical problem that now arises in any log-structured system: garbage collection. When a newer version of any block gets appended, the older version becomes garbage, yet still occupies space in the log. Soon the log will be full of useless old blocks.</p>
+<p>We call the latest version of a block as live, and older versions of a block as garbage</p>
+<p>Versioning file systems keep a certain number of old versions of blocks (as snapshots) to allow users to go back to a history version; this cleverly turns a problem into a feature</p>
+<p>LFS wants to keep only the latest live version, and garbage blocks need to be cleaned</p>
+<p>LFS periodically runs a cleaner that scans a number of  old segments and determines which blocks are live (with the help of a segment summary block)
+The cleaner then compacts the live blocks together and writes them to  empty segments (); the  old segments now become free segments
+Some policy questions remain: how often to run cleaner and which segments to clean
+When a crash happens, everything before the last checkpoint region update are guaranteed correct, and LFS rolls forward starting from the last checkpoint towards the known end of the log to recover state. Cached updates will be lost.</p>
+<p>The log-structured FS design is sometimes also called copy-on-write FS, and is similar to shadow paging in databases. Similar copy-on-write approaches are found in WAFL, ZFS, Btrfs, and flash-based SSDs.</p>
+<h3 id="access-control"><a class="header" href="#access-control">Access Control</a></h3>
+<p>Modern operating systems are multi-user, so we must have a way to describe permissions on resources, allow operations from permitted users, and deny operations from under-permitted users. Take UNIX as an example, since every resource is exported through its file system interface, the basic mechanism for access control is the permission bits (or file modes). An example output of ls’ing a file looks like:</p>
+<p>prompt&gt; ls -l foo.o
+-rwxrw-r– 1 remzi wheel  0 Aug 24 16:29 foo.o
+, where -rwxrw-r– is the field we are interested in.</p>
+<p>First character indicates the type of the file and is not part of the permission bits; - means regular file, d means directory, and s means symbolic link
+The next rwx means that the owner of the file (single user remzi) can read, write, and execute the file as a program
+The next rw- means that other users in the group of the file (users in group wheel) can read and write, but cannot execute
+The next r– means that anyone else (sometimes referred to as other) on the system can only read, but cannot write or execute
+The superuser of the system (named root in UNIX) has administrator privilege and can do anything to any file, bypassing the permission bits
+Changing a file’s permission bits is done through the chmod command, which takes a sequence of three digits (e.g., 640), each from 0 to 7. The three digits represent the aforementioned user, group, and other permission of the file, interpreting each as three binary bits (so rwx = 111 = 7, rw- = 110 = 6, etc.).</p>
+<p>Beyond permission bits, some file systems, especially distributed file systems, use an explicit access control list (ACL) which is a list of all users with their detailed permissions.</p>
+<p>In all systems that involve access control, we must be wary of the time-of-check to time-of-use (TOCTTOU) problem: the time of accessing a resource must be after the time of checking for permission, so if we allow certain operations to be done during this gap (e.g., re-linking the file to /etc/passwd), there is security vulnerability.</p>
+<h3 id="disk-data-integrity"><a class="header" href="#disk-data-integrity">Disk Data Integrity</a></h3>
+<p>In RAID, we talked about disks are not perfect and they may fail. The general area is referred to as data integrity (or data protection): given the unreliable nature of hardware media/structures, how to ensure that data is safe and stays what we believe have been stored?</p>
+<p>RAID assumes a relatively simple fail-stop model, but there are other worse types of failure modes:</p>
+<p>Latent-sector errors (LSE): when a disk sector has been damaged in some way, e.g., by a head crash; LSEs could be detected (or in some cases, recovered) through in-disk error-correcting codes (ECC); Hamming code and parity code are examples of ECC
+Block corruption: when a disk block goes wrong in a way not detectable by the disk itself, e.g., a buggy firmware returns a wrong block or a faulty bus transfers wrong data
+LSEs are easier to deal with and modern RAID solutions use ECCs to reconstruct a disk when full-disk faults or LSEs happen. Solutions like RDP has the equivalent of two parity disks instead of one.</p>
+<p>Detecting corruptions, however, require upper-level software involvement, e.g., the file system or the application. A typical mechanism called the checksum is used: it takes a chunk of data and computes some hash function over the data, producing a short summary of the chunk. When reading that chunk, the procedure is applied to read data and the result is compared with the remembered checksum to see if they match. Examples of checksum functions:</p>
+<p>XOR
+Fletcher checksum
+Cyclic redundancy check (CRC)
+MD5
+Checksums are also used in verifying transferred data over a network. Beyond checksums, there are other techniques used to defend against specific failure cases:</p>
+<p>Using physical identifiers to defend against misdirected writes
+Read-after-write (write verify) to defend against lost writes
+Do disk scrubbing: periodically read through every block of a device and verify checksums to avoid leaving cold data unchecked for too long
+In data deduplication systems, cryptographically-safe hash functions are used to compute fingerprints of chunks of data, which are used as unique identifiers and duplicate detectors.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../compsci/ostep/memory-management.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../compsci/ostep/processes-and-scheduling.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../compsci/ostep/memory-management.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../compsci/ostep/processes-and-scheduling.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-09f2665d.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

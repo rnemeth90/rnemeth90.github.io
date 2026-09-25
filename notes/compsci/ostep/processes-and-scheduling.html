@@ -1,0 +1,398 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Virtualizing the CPU: Processes &amp; Scheduling - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-23f36979.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-d36d24f7.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <blockquote>
+<p>Notes based on <em>Operating Systems: Three Easy Pieces</em> by Remzi &amp; Andrea Arpaci-Dusseau</p>
+</blockquote>
+<h2 id="virtualizing-the-cpu-processes--scheduling"><a class="header" href="#virtualizing-the-cpu-processes--scheduling">Virtualizing the CPU: Processes &amp; Scheduling</a></h2>
+<p>One of the most important abstractions an OS provides is the process: a running instance of a program. We typically want to run many processes at the same time (e.g., a desktop environment, several browser windows, a music player, etc.), more than the number of available CPU cores. The OS must be able to virtualize a physical resource and let multiple processes share the limited resource. This section focuses on sharing the CPU, which is the most fundamental resource required to kick off any process.</p>
+<h3 id="abstraction-of-process"><a class="header" href="#abstraction-of-process">Abstraction of Process</a></h3>
+<p>A process is simply an instance (the dynamic instance, doing actual work) of a piece of program (the static code + data, residing on persistent storage) running in the system. There can be multiple processes executing the same piece of program code. Each process represents a somewhat isolated entity.</p>
+<h3 id="machine-state"><a class="header" href="#machine-state">Machine State</a></h3>
+<p>Running a process instance of a program requires the OS to remember the machine state of the process, which typically consists of the following information:</p>
+<p>Address space: memory space that a process can address, typically also virtualized, which contains at least:</p>
+<p>Code: compiled machine code of the program
+Data: any initial static data/space the program needs
+Stack: space reserved for the run-time function stack of the process
+Heap: space reserved for any new run-time data
+Registers context: CPU registers’ values; particularly special ones include:</p>
+<p>Program counter (PC, or instruction pointer): which instruction of the program to execute next
+Stack pointer (SP) &amp; Frame pointer (FP): for managing the function stack
+I/O information: states related to storage or network, for example:</p>
+<p>List of currently open files (say in the form of file descriptors)</p>
+<h3 id="process-status"><a class="header" href="#process-status">Process Status</a></h3>
+<p>A process can be in one of the following states at any given time:</p>
+<p>(optional) Initial:  being created and hasn’t finished initialization yet
+Ready: is ready to be scheduled onto a CPU to run, but not scheduled at this moment
+Running: scheduled on a CPU and executing instructions
+Blocked: waiting for some event to happen, e.g., waiting for disk I/O completion or waiting for another process to finish, hence not ready to be scheduled at this moment
+(optional) Terminated: has exited/been killed but its information data structures have not been cleaned up yet</p>
+<h3 id="process-control-block-pcb"><a class="header" href="#process-control-block-pcb">Process Control Block (PCB)</a></h3>
+<p>The OS must have some data structures to hold the information of each process. We call the metadata structure of a process the process control block (PCB, or process descriptor). This structure must include the machine state of the process, the status of the process, and any other necessary information related to the process. For example, the xv6 OS has the following PCB struct:</p>
+<p>struct context {</p>
+<pre><code class="language-c">int eip;
+int esp;
+int ebx;
+int ecx;
+int edx;
+int esi;
+int edi;
+int ebp;
+</code></pre>
+<p>};
+​
+enum proc_state { UNUSED, EMBRYO, SLEEPING,</p>
+<pre><code class="language-c">              RUNNABLE, RUNNING, ZOMBIE };
+</code></pre>
+<p>​
+/** The PCB structure. */
+struct proc {</p>
+<pre><code class="language-c">char *mem;                  // Start of process memory
+uint sz;                    // Size of process memory
+char *kstack;               // Bottom of kernel stack
+enum proc_state state;      // Process state
+int pid;                    // Process ID
+struct proc *parent;        // Parent process
+void *chan;                 // If !zero, sleeping on chan
+int killed;                 // If !zero, has been killed
+struct file *ofile[NOFILE]; // Open files
+struct inode *cwd;          // Current directory
+struct context context;     // Register values context
+struct trapframe *tf;       // Trap frame of current interrupt
+</code></pre>
+<p>};
+The collection of PCBs is the process list (or task list), the first essential data structure we meet in an OS. It can be implemented as just a fixed-sized array of PCB slots as in xv6, but can also take other forms such as a linked list or a hash table.</p>
+<h3 id="process-apis"><a class="header" href="#process-apis">Process APIs</a></h3>
+<p>These interfaces are available on any modern OS to enable processes:</p>
+<p>create - initialize the above mentioned states, load the program from persistent storage in some executable format, and get the process running at the entry point of its code; the process then runs until completion and exits (, or possibly runs indefinitely)</p>
+<p>destroy - forcefully destroy (kill, halt) a process in the middle of its execution</p>
+<p>wait - let a process wait for the termination of another process</p>
+<p>status - retrieve the status information of a process</p>
+<p>other control signals like suspending &amp; resuming, …</p>
+<p>Application programming interface (API) means the set of interfaces a lower-layer system/library provides to upper-layer programs. The APIs that an OS provides to user programs are called system calls (syscalls). Everything a user program wants to do that might require system-level privileges, such as creating processes, accessing shared resources, and communicating with other processes, are typically done through invoking system calls.</p>
+<p>In UNIX systems, process creation is done through a pair of fork() + exec() syscalls.</p>
+<p>Initialization of a process is done through fork()ing an existing process: creating an exact duplicate</p>
+<p>The original process is the parent process and the created duplicate becomes one of its child process; a process can have multiple children processes
+There is a special init process created by the OS at the end of the booting process, and several basic user processes, e.g., the command-line shell or the desktop GUI, are forked from the init processes. They then fork other processes (e.g., when the user opens a calculator from the shell), forming a tree of processes
+Executable loading is done through exec()ing an executable file: replace the code and data section with that executable and start executing it from its entry</p>
+<p>Copying over the entire state of a process when forking it could be very expensive. A general technique called copy-on-write (COW) can be applied. Upon forking, the system does not produce a duplicate of most of the states (more specifically, most pages in its address space). A page is copied over when the new process attempts to modify that page.</p>
+<p>See Chapter 5, Figure 5.3 of the book for a fork+exec+wait example, Section 5.4 for an introduction to UNIX shell terminologies, and Section 5.5. for control signals handling.</p>
+<h3 id="time-sharing-of-the-cpu"><a class="header" href="#time-sharing-of-the-cpu">Time-Sharing of the CPU</a></h3>
+<p>To virtualize the CPU and coordinate multiple processes, the virtualization must be both performant (no excessive overhead) and controlled (OS controls which one runs at which time; bad processes cannot simply run forever and take over the machine). OS balances these two goals with the following two techniques:</p>
+<p>(Limited) Direct Execution (LDE): just run the user program directly on the CPU; OS is not simulating processor hardware; but the OS must be able to re-gain control in some way to do the coordination
+Time-Sharing (Multiprogramming): divide time into small slots, schedule a process to run for a few slots and switch to another one, constantly switching back and forth among ready processes
+The OS needs to solve several problems to enable the combination of these two techniques.</p>
+<h3 id="privilege-modes"><a class="header" href="#privilege-modes">Privilege Modes</a></h3>
+<p>If we just let a process run all possible instructions directly, it will have dominant control over the machine. Hence, the processor lists a set of sensitive instructions as privileged instructions, which can only be run in high privilege mode. A user process normally runs in user mode, with restricted permissions. When it invokes a syscall (mentioned in the section above), it switches to kernel mode to execute the registered syscall handler containing privileged instructions. After the handler has done its work, it returns the process back to user mode.</p>
+<p>Examples of privileged instructions in x86 (can only be called in “ring-0” mode, as opposed least-privileged “ring-3” mode) include:</p>
+<p>HALT - stop execution
+I/O port instructions
+Turning off interrupts
+…
+The switching between modes is enabled through a mechanism called trap. The special trap instruction simultaneously jumps into somewhere in kernel mode (identified by a trap number) and raises the privilege level to kernel mode. This also includes changing the stack pointer to the kernel stack reserved for this process, and saving the process’s user registers into the kernel stack.</p>
+<p>To let the hardware know where is the corresponding handler code for a given trap number, the OS registers the address of a trap table: trap no.  trap handler addresses into a special hardware register. This trapping mechanism provides protection since a user process cannot do arbitrary system-level actions, but rather must request a particular action via a number.</p>
+<p>Trapping into kernel from software through a syscall is sometimes called a software interrupt.</p>
+<p>We often use trap to name an active syscall made by the program. We use exception (or fault) to name a passive fall-through into kernel if the program misbehaves (e.g., tries to directly call a privileged instruction) or encounters an error (e.g., runs out-of-memory, OOM).</p>
+<h3 id="hardware-interrupts"><a class="header" href="#hardware-interrupts">Hardware Interrupts</a></h3>
+<p>Another big issue is that the OS must be able to re-gain control in the middle of the user-level execution of a process, and achieve a switch between processes. We need help from a special hardware component - the timer.</p>
+<p>A process can trap/fault into kernel, so does a hardware device. The behavior of a hardware device sending a signal to the processor to pause it current user code execution and to run a specified handler is called an interrupt. The handler is often called an interrupt service routine (ISR). Similar to traps, there is an interrupt table from interrupting device no.  interrupt handler addresses (sometimes the software trap table is just embedded in the interrupt table).</p>
+<p>One particularly important type of interrupt is the timer interrupt, issued by the timer every configured interval (e.g., 10ms). The ISR for timer interrupt is the place where the OS re-gains control on deciding which process to schedule for the next time slot.</p>
+<p>Examples of other hardware interrupts include:</p>
+<p>Keystroke of a specific key from a keyboard device
+Mouse movement/click; other peripheral devices
+…
+Interrupts need to be disabled (meaning not obeying incoming interrupts) during the handling of a trap/interrupt, so that every interrupt is handled to its completion. Also see double fault and triple fault if interested.</p>
+<h3 id="context-switch--scheduler"><a class="header" href="#context-switch--scheduler">Context Switch &amp; Scheduler</a></h3>
+<p>We have defined the context of a process as the set of important registers values. Switching from process A to process B is a context switch procedure:</p>
+<p>Save the current registers values (the context of A) into A’s PCB
+Restore the saved register values (the context) of B from B’s PCB
+Jump to where B was left off - most likely B is in its kernel stack right after the switch, because the last time B was scheduled out, it must be in the scheduler routine
+The timer interrupt ISR typically calls the scheduler: a routine that chooses which process to run for the next time slot, possibly using its knowledge of what were scheduled in the history, based on a scheduling policy. It then performs a context switch to switch to the target process. The entire picture looks like:</p>
+<p>Note the difference between user registers (those at user-level execution of the program) and kernel registers (those actually stored in the context). At a timer interrupt, the user registers are already stored into the process’s kernel stack and the registers have been switched to the set for kernel execution (PC pointing to the handler code, SP pointing to kernel stack, etc.). Hence, the context saved for a process is actually the set of its kernel registers, and the user registers are recovered by the “return-from-trap” operation - this is when the process returns back to user mode.</p>
+<p>Context switch is not free and there is observable overhead (saving/restoring registers, making caches/TLBs/branch predictors cold, etc.). We should not ignore this overhead when developing scheduling policies.</p>
+<h3 id="cpu-scheduling-policies"><a class="header" href="#cpu-scheduling-policies">CPU Scheduling Policies</a></h3>
+<p>With the trap/interrupt mechanism and the context switch mechanism in hand, it is now time to develop scheduling policies for the scheduler to decide which process runs next. Determining the workload - here the processes running in the system and their characteristics - is critical to building policies. A policy can be more find-tuned if we know more about the workload.</p>
+<h4 id="basic-policies"><a class="header" href="#basic-policies">Basic Policies</a></h4>
+<p>Let’s first (unrealistically) assume that our workloads are:</p>
+<p>All jobs only use the CPU (so a single resource w/o blocking) and perform no I/O
+The run-time of each job is known
+We look at these metrics to compare across policies:</p>
+<p>Turnaround time  for each job, then averaged over jobs; if with the assumption of “jobs arrive at the same time”,  will be 0 for everyone
+Response time  for each job; it measures how “promptive” an interactive job (say the shell) would be
+Fairness: we often need to tradeoff between turnaround time and fairness
+Some basic, classic policies are:</p>
+<p>First-In-First-Out (FIFO, or First-Come-First-Serve, FCFS)</p>
+<p>FIFO is intuitive but can often leads to the convoy effect: where a number of relatively short jobs get queued after a long job, yielding poor overall turnaround time. FIFO may work well in some cases such as caching, but not for CPU scheduling.</p>
+<p>Shortest-Job-First (SJF)</p>
+<p>SJF is optimal on turnaround time if all jobs arrive at the same time, each job runs until completion, and their durations are known; however, in reality, this is rarely the case, and suppose A comes a little bit earlier than B &amp; C in the above example, it encounters the same problem as in FIFO.</p>
+<p>Shortest-Time-to-Completion-First (STCF, or Preemptive-Shortest-Job-First, PSJF)</p>
+<p>STCF is a preemptive policy - it can preempt a job in the middle if another one with shorter TtoC arrives. (Accordingly, FIFO and SJF schedulers are non-preemptive.) STCF is optimal given our current assumption and the turnaround time metric.</p>
+<p>Round-Robin (RR)</p>
+<p>Above-mentioned policies are not really taking advantage of the time-sharing mechanisms. RR divides time into small slots (scheduling quantum) and then switches to the next job in the run queue in a determined order. RR is a time-slicing scheduling policy. The time slice length should be chosen carefully: short enough to be responsive, and long enough to amortize the cost of context switches.</p>
+<p>RR is quite fair and responsive, but one of the worst on turnaround time. With RR, we can also take I/O into consideration: when job A blocks itself on doing a disk I/O, the scheduler schedules B for the next slot, overlapping these two jobs.</p>
+<h3 id="multi-level-feedback-queue-mlfq"><a class="header" href="#multi-level-feedback-queue-mlfq">Multi-Level Feedback Queue (MLFQ)</a></h3>
+<p>The biggest problem of the above basic policies is that they assume job durations are known beforehand (priori knowledge). However, this is hardly true in any real systems. Good scheduling policies tend to learn something from jobs’ past behavior (history) and make decisions accordingly. One of the best-known approaches is Multi-Level Feedback Queue (MLFQ). It tries to trade-off between optimizing turnaround time and minimizing response time. In other words, it well mixes interactive or I/O-intensive jobs with long-running CPU-intensive jobs.</p>
+<p>MLFQ has a number of distinct queues, each assigned a different priority level. A job is in a single queue at any given time.</p>
+<p>If , i.e., A is in a higher level than B, A runs;
+If , i.e., for jobs in the same level, they run in RR.</p>
+<p>The key lies in how MLFQ dynamically sets priorities for jobs. MLFQ first assumes that a job might be short-running &amp; interactive, hence giving it highest priority. Then, every time it runs till the end of a time slice without blocking itself on e.g. I/O, we reduce its priority level by 1, moving it to the queue one level down.</p>
+<p>When a job enters, it is placed at the highest priority (the topmost queue);
+If a job uses up an entire time slice without relinquishing the CPU, it moves down one queue;
+If a job gives up the CPU before the time slice is up, it stays in the same priority level queue.</p>
+<p>There are still a few problems. There might be starvation if there are quite a few interactive jobs that a long-running job might have no chance to run. A program could game the scheduler by issuing an I/O at the very end of every time slice. The behavior of a job might also change over time. Hence, we add several rules:</p>
+<p>Priority boost: after some time period , move all the jobs in the system to the topmost queue;
+Gaming tolerance: once a job uses up its time allotment at a given level (regardless of how many times it has given up the CPU), it moves down one queue.
+Smarter MLFQ implementations tune these parameters instead of setting them as a default constant: adjusting #priority levels (#queues), lower levels have longer time slice quanta, using math formula (e.g., decaying) to calculate quanta and allotment, etc. OS implementations, such as FreeBSD, Solaris, and Windows NT, use some form of MLFQ as the base scheduler.</p>
+<h3 id="lottery-scheduling"><a class="header" href="#lottery-scheduling">Lottery Scheduling</a></h3>
+<p>We also examine a different type of scheduler known as fair-share scheduler. Instead of minimizing turnaround time, it tries to guarantee that each job obtain a certain percentage of CPU time - a proportional share. Lottery Scheduling is a good example of such scheduler, see the paper.</p>
+<p>Lottery scheduling assigns each job a number of tickets. At each scheduling decision point, it uses randomness to decide who wins the next slot. Say A has 75 tickets, B has 25, and C has 100, so the total amount of tickets is 200. The systems picks a random number between 0~199 and walks a running sum: if 75 &gt; num, A wins, else if 75+25=100 &gt; num &gt; 75, B wins, otherwise C wins.</p>
+<p>There are a few extra ticket mechanisms that might be useful:</p>
+<p>Ticket currency: a group/user can allocate tickets among their own child jobs in whatever scale - they form a hierarchy of currencies and the eventual proportions are multiplied (Figure 3 of the paper)
+Ticket transfer: a process can temporarily transfer tickets to another process to boost its share, e.g., when a client sends a request to a server process and wants it to finish the request quickly
+Ticket inflation: in a cooperative (trusted) scenario, a process can simply inflate its number of tickets to reflect the need of more CPU share, without even communicating with any shared state in kernel
+Stride scheduling avoids using randomness but instead divides the #tickets by a large number to get the stride value of each process. Whenever a process finishes a slot, increment its pass value by its stride. Pick the process with smallest pass value to run next. The strength of lottery scheduling (using randomness) is that it does not need any global state.</p>
+<h3 id="completely-fair-scheduler-cfs"><a class="header" href="#completely-fair-scheduler-cfs">Completely Fair Scheduler (CFS)</a></h3>
+<p>Linux adopts a scalable, weighted-RR, fair-share scheduler named the Completely Fair Scheduler (CFS), see here. It tries to be efficient and scalable by spending very little time making scheduling decisions. CFS accounts virtual runtime (vruntime) for every job.</p>
+<p>Each job’s vruntime increases at the same rate with physical time; always pick the process with the lowest vruntime;</p>
+<p>Parameter sched_latency (e.g., 48ms) decides the length of a whole round; CFS divides this value by the number of processes to determine the time slice length for each process;</p>
+<p>CFS never assigns time slice lengths shorter than parameter min_granularity, so it won’t go wrong if there are too many processes;</p>
+<p>Each process has a nice value from -20 to +19, positive niceness implies lower priority (so smaller weight); there is a mapping from niceness to weight value (in a log-scale manner, just like the dB unit of loudness); CFS then weights time slices across  processes:</p>
+<p>CFS uses a red-black tree to keep track of all ready processes for efficiency. When a process goes to sleep, it is removed from the tree. CFS also has many advanced features including heuristics and scheduling across groups and multiple CPUs.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../compsci/ostep/persistence.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../databases/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../compsci/ostep/persistence.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../databases/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-09f2665d.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
