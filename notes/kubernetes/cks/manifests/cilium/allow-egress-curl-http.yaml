@@ -1,0 +1,13 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-external-80
+spec:
+  endpointSelector:
+    matchLabels:
+      run: curl
+  egress:
+    - toPorts:
+      - ports:
+        - port: "80"
+          protocol: TCP

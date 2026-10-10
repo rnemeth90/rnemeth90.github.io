@@ -1,0 +1,16 @@
+# Scenario 3: Cluster-wide Policy (CiliumClusterwideNetworkPolicy)
+#
+# Problem:
+# Ensure that only pods with the label app=frontend in any namespace can talk to app=backend pods in any namespace.
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: cluster-wide-app-to-backend
+spec:
+  endpointSelector:
+    matchLabels:
+      app: backend
+  ingress:
+  - fromEndpoints:  
+    - matchLabels:
+          app: frontend
