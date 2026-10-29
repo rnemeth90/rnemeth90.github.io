@@ -1,0 +1,11 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: deny-in-out
+  namespace: web
+spec:
+  endpointSelector: {}
+  ingress: 
+  - {}
+  egress:
+  - {}

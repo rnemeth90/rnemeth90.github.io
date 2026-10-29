@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: 
+  name: default-deny-all-egress
+  namespace: g02
+spec:
+  policyTypes:
+  - Egress
+  podSelector:
+    matchLabels:
+      app: backend
+  egress:
+  - to:
+    - namespaceSelector: {}
+  - ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53

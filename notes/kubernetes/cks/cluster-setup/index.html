@@ -1,0 +1,1071 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Cluster Setup - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex-fa79b661.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc-a8220245.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="cluster-setup-10"><a class="header" href="#cluster-setup-10">Cluster Setup (10%)</a></h1>
+<h2 id="cis-benchmark"><a class="header" href="#cis-benchmark">CIS Benchmark</a></h2>
+<h3 id="what-is-a-security-benchmark"><a class="header" href="#what-is-a-security-benchmark">What is a security benchmark?</a></h3>
+<ul>
+<li>A security benchmark is a set of standard benchmarks that define a state of optimized security for a given system (servers, network devices, etc.)</li>
+<li>CIS (Center for Internet Security) provides standardized benchmarks (in the form of downloadable files) that one can use to implement security on their system.</li>
+<li>CIS provides benchmarks for public clouds (Azure, AWS, GCP, etc.), operating systems (Linux, Windows, MacOS), network devices (Cisco, Juniper, HP, etc.), mobile devices (Android and Apple), desktop and server software (such as Kubernetes)</li>
+<li>View more info <a href="https://www.cisecurity.org/cis-benchmarks">here</a></li>
+<li>You must register at the CIS website to download benchmarks</li>
+<li>Each benchmark provides a description of a vulnerability, as well as a path to resolution.</li>
+<li>CIS-CAT is a tool you can run on a system to generate recommendations for a given system. There are two versions available for download, CIS-CAT Lite and CIS-CAT Pro. The Lite version only includes benchmarks for Windows 10, MacOS, Ubuntu, and desktop software (Google Chrome, etc.). The Pro version includes all benchmarks.</li>
+<li>CIS Benchmarks for Kubernetes
+<ul>
+<li>Register at the CIS website and download the CIS Benchmarks for <a href="https://www.cisecurity.org/benchmark/kubernetes">kubernetes</a></li>
+<li>Includes security benchmarks for master and worker nodes</li>
+</ul>
+</li>
+</ul>
+<h3 id="kubebench"><a class="header" href="#kubebench">KubeBench</a></h3>
+<ul>
+<li>KubeBench is an alternative to CIS-CAT Pro to run benchmarks against a Kubernetes cluster.</li>
+<li>KubeBench is open source and maintained by Aqua Security</li>
+<li>KubeBench can be deployed as a Docker container or a pod. It can also be invoked directly from the binaries or compiled from source.</li>
+<li>Once run, kube-bench will scan the cluster to identify if best-practices have been implemented. If will output a report specifying which benchmarks have passed/failed. It will tell you how to fix any failed benchmarks.</li>
+<li>You can view the report by tailing the pod logs of the kube-bench pod.</li>
+</ul>
+<h2 id="cluster-upgrades"><a class="header" href="#cluster-upgrades">Cluster Upgrades</a></h2>
+<ul>
+<li>The controller-manager and kube-scheduler can be one minor revision behind the API server.
+<ul>
+<li>For example, if the API server is at version 1.10, controller-manager and kube-scheduler can be at 1.9 or 1.10</li>
+</ul>
+</li>
+<li>The kubelet and kube-proxy can be up to 2 minor revisions behind the API server</li>
+<li>kubectl can be x+1 or x-1 minor revisions from the kube API server</li>
+<li>You can upgrade the cluster one minor version at a time</li>
+</ul>
+<h3 id="upgrade-process"><a class="header" href="#upgrade-process">Upgrade Process</a></h3>
+<ul>
+<li>Drain and cordon the node before upgrading it
+<ul>
+<li><code>kubectl drain &lt;node name&gt; --ignore-daemonsets</code></li>
+</ul>
+</li>
+<li>Upgrade the master node first.</li>
+<li>Upgrade worker nodes after the master node.</li>
+</ul>
+<h3 id="upgrading-with-kubeadm"><a class="header" href="#upgrading-with-kubeadm">Upgrading with Kubeadm</a></h3>
+<ul>
+<li>If the cluster was created with kubeadm, you can use kubeadm to upgrade it.</li>
+<li>The upgrade process with kubeadm:
+<pre><code># Increase the minor version in the apt repository file for kubernetes:
+  sudo vi /etc/apt/sources.list.d/kubernetes.list
+
+# Determine which version to upgrade to
+  sudo apt update
+  sudo apt-cache madison kubeadm
+
+# Upgrade kubeadm first
+  sudo apt-mark unhold kubeadm &amp;&amp; \
+  sudo apt-get update &amp;&amp; sudo apt-get install -y kubeadm='1.31.x-*' &amp;&amp; \
+  sudo apt-mark hold kubeadm
+
+# Verify the version of kubeadm
+  kubeadm version
+
+# Check the kubeadm upgrade plan
+  sudo kubeadm upgrade plan
+
+# Apply the upgrade plan
+  sudo kubeadm upgrade apply v1.31.x
+
+# Upgrade the nodes
+  sudo kubeadm upgrade node
+
+# Upgrade kubelet and kubectl
+  sudo apt-mark unhold kubelet kubectl &amp;&amp; \
+  sudo apt-get update &amp;&amp; sudo apt-get install -y kubelet='1.31.x-*' kubectl='1.31.x-*' &amp;&amp; \
+  sudo apt-mark hold kubelet kubectl
+
+# Restart the kubelet
+  sudo systemctl daemon-reload
+  sudo systemctl restart kubelet
+</code></pre>
+</li>
+</ul>
+<h2 id="network-policies"><a class="header" href="#network-policies">Network Policies</a></h2>
+<h3 id="overview"><a class="header" href="#overview">Overview</a></h3>
+<ul>
+<li>
+<p>Kubernetes Network Policies allow you to control the flow of traffic to and from pods. They define rules that specify:</p>
+<ul>
+<li>What traffic is allowed to reach a set of pods.</li>
+<li>What traffic a set of pods can send out.</li>
+</ul>
+</li>
+<li>
+<p>Pods can communicate with each other by default. Network Policies allow you to restrict this communication.</p>
+</li>
+<li>
+<p>Network Policies operate at Layer 3 and Layer 4 (IP and TCP/UDP). They do not cover Layer 7 (application layer).</p>
+</li>
+<li>
+<p>Network Policies are additive. Meaning, to grant more permissions for network communication, simply create another network policy with more fine-grained rules.</p>
+</li>
+<li>
+<p>Network Policies are implemented by the network plugin. The network plugin must support NetworkPolicy for the policies to take effect.</p>
+</li>
+<li>
+<p>Network Policies are namespace-scoped. They apply to pods in the same namespace.</p>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: 
+  name: default-deny-all
+  namespace: secure-namespace
+spec:
+    podSelector: {}
+    policyTypes
+    - Ingress
+</code></pre>
+</li>
+<li>
+<p>Say we now want to grant the ‘frontend’ pods with label ‘teir: frontend’ in the ‘app’ namespace access to the ‘backend’ pods in ‘secure-namespace’. We can do that by creating another Network Policy like this:</p>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-app-pods
+  namespace: secure-namespace
+spec:
+    podSelector:
+      matchLabels:
+        tier: backend
+    policyTypes:
+    - Ingress
+    ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            name: app
+        podSelector:
+          matchLabels:
+            teir: frontend
+      ports:
+      - protocol: TCP
+        port: 3000
+
+</code></pre>
+</li>
+</ul>
+<h3 id="key-concepts"><a class="header" href="#key-concepts">Key Concepts</a></h3>
+<ol>
+<li><strong>Namespace Scope</strong>: Network policies are applied at the namespace level.</li>
+<li><strong>Selector-Based Rules</strong>:
+<ul>
+<li><strong>Pod Selector</strong>: Select pods the policy applies to.</li>
+<li><strong>Namespace Selector</strong>: Select pods based on their namespace.</li>
+</ul>
+</li>
+<li><strong>Traffic Direction</strong>:
+<ul>
+<li><strong>Ingress</strong>: Traffic coming into the pod.</li>
+<li><strong>Egress</strong>: Traffic leaving the pod.</li>
+</ul>
+</li>
+<li><strong>Default Behavior</strong>:
+<ul>
+<li>Pods are non-isolated by default (accept all traffic).</li>
+<li>A pod becomes isolated when a network policy matches it.</li>
+</ul>
+</li>
+</ol>
+<h3 id="common-fields-in-a-network-policy"><a class="header" href="#common-fields-in-a-network-policy">Common Fields in a Network Policy</a></h3>
+<ul>
+<li><strong><code>podSelector</code></strong>: Specifies the pods the policy applies to.</li>
+<li><strong><code>ingress</code>/<code>egress</code></strong>: Lists rules for ingress or egress traffic.</li>
+<li><strong><code>from</code>/<code>to</code></strong>: Specifies allowed sources/destinations (can use IP blocks, pod selectors, or namespace selectors).</li>
+<li><strong><code>ports</code></strong>: Specifies allowed ports and protocols.</li>
+</ul>
+<h3 id="example-network-policies"><a class="header" href="#example-network-policies">Example Network Policies</a></h3>
+<h4 id="allow-all-ingress-traffic"><a class="header" href="#allow-all-ingress-traffic">Allow All Ingress Traffic</a></h4>
+<pre><code>````
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all-ingress
+  namespace: default
+spec:
+  podSelector: {}
+  ingress:
+  - {}
+```
+</code></pre>
+<h4 id="deny-all-ingress-and-egress-traffic"><a class="header" href="#deny-all-ingress-and-egress-traffic">Deny All Ingress and Egress Traffic</a></h4>
+<pre><code>````
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+    name: deny-all
+    namespace: defaulT
+spec:
+    podSelector: {}
+    ingress: []
+    egress: []
+
+```
+</code></pre>
+<h4 id="allow-specific-ingress-from-a-namespace"><a class="header" href="#allow-specific-ingress-from-a-namespace">Allow Specific Ingress from a Namespace</a></h4>
+<pre><code>```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+    name: allow-namespace-ingress
+    namespace: default
+spec:
+    podSelector:
+        matchLabels:
+            app: my-app
+    ingress:
+    - from:
+      - namespaceSelector:
+        matchLabels:
+        team: frontend
+```
+</code></pre>
+<h4 id="allow-egress-to-a-specific-ip"><a class="header" href="#allow-egress-to-a-specific-ip">Allow Egress to a Specific IP</a></h4>
+<pre><code>```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+    name: allow-egress-specific-ip
+    namespace: default
+spec:
+    podSelector:
+        matchLabels:
+            app: my-app
+    egress:
+    - to:
+      - ipBlock:
+        cidr: 192.168.1.0/24
+        ports:
+      - protocol: TCP
+        port: 8080
+```
+</code></pre>
+<h2 id="cilium-network-policy"><a class="header" href="#cilium-network-policy">Cilium Network Policy</a></h2>
+<ul>
+<li>Cilium Network Policies provide more granularity, flexibility, and features than traditional Kubernetes Network Policies</li>
+<li>Cilium Network Policies operate up to layer 7 of the OSI model. Traditional Network Policies only operate up to layer 4.</li>
+<li>Cilium Network Policies perform well due to the fact that they use eBPF</li>
+<li>Hubble allows you to watch traffic going to and from pods</li>
+<li>You can add Cilium to the cluster by:
+<ul>
+<li>Deploying with helm</li>
+<li>Running <code>cilium install</code> after you install the cilium CLI tool</li>
+</ul>
+</li>
+</ul>
+<h3 id="cilium-network-policy-structure"><a class="header" href="#cilium-network-policy-structure">Cilium Network Policy Structure</a></h3>
+<ul>
+<li>Cilium Network Policies are defined in YAML files</li>
+<li>The structure is similar to Kubernetes Network Policies</li>
+</ul>
+<h3 id="layer-3-rules"><a class="header" href="#layer-3-rules">Layer 3 Rules</a></h3>
+<ul>
+<li>Endpoints Based - Apply the policy to pods based on Kubernetes label selectors</li>
+<li>Services Based - Apply the policy based on kubernetes services, controlling traffic based on service names rather than individual pods</li>
+<li>Entities Based - Cilium has pre-defined entities like cluster, host, and world. This type of policy uses these entities to determine what traffic the policy is applied to.
+<ul>
+<li>Cluster - Represents all kubernetes endpoints
+<ul>
+<li>Example:
+<pre><code>apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-egress-to-cluster-resources
+spec:
+  endpointSelector: {}
+  egress:
+  - toEntities:
+    - cluster
+</code></pre>
+</li>
+</ul>
+</li>
+<li>World - Represents any external traffic, but not cluster traffic
+<pre><code>apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-egress-to-external-resources
+spec:
+  endpointSelector: {}
+  egress:
+  - toEntities:
+    - world
+</code></pre>
+</li>
+<li>Host - Represents the local kubernetes node</li>
+<li>Remote-node - Represents traffic from a remote node</li>
+<li>All - Represents all endpoints both internal and external to the cluster
+<pre><code>apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-egress-to-external-resources
+spec:
+  endpointSelector: {}
+  egress:
+  - toEntities:
+    - all
+</code></pre>
+</li>
+</ul>
+</li>
+<li>Node Based - Apply the policy based on nodes in the cluster</li>
+<li>IP/CIDR Based - Apply the policy based on IP addresses or CIDR blocks</li>
+</ul>
+<h3 id="layer-4-rules"><a class="header" href="#layer-4-rules">Layer 4 Rules</a></h3>
+<ul>
+<li>If no layer 4 rules are defined, all traffic is allowed for layer 4</li>
+<li>Example:
+<pre><code>  apiVersion: "cilium.io/v2"
+  kind: CiliumNetworkPolicy
+  metadata:
+    name: allow-external-80
+  spec:
+    endpointSelector:
+      matchLabels:
+        run: curl
+    egress:
+      - toPorts:
+        - ports:
+          - port: "80"
+            protocol: TCP
+</code></pre>
+</li>
+</ul>
+<h3 id="layer-7-rules"><a class="header" href="#layer-7-rules">Layer 7 Rules</a></h3>
+<h3 id="deny-policies"><a class="header" href="#deny-policies">Deny Policies</a></h3>
+<ul>
+<li>You can create deny policies to explicitly block traffic</li>
+<li>Deny policies take higher precedence over allow policies</li>
+<li>ingressDeny Example:
+<pre><code>apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: deny-ingress-80-for-backend
+spec:
+  endpointSelector:
+    matchLabels:
+      app: backend
+  ingressDeny:
+  - fromEntities:
+    - all
+  - toPorts:
+    - ports:
+      - port: "80"
+        protocol: TCP
+</code></pre>
+</li>
+<li>egressDeny Example:
+<pre><code>apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "deny-egress"
+spec:
+  endpointSelector:
+    matchLabels:
+      app: random-pod
+  egress:
+  - toEntities:
+    - all
+  egressDeny:
+  - toEndpoints:
+    - matchLabels:
+        app: server
+</code></pre>
+</li>
+</ul>
+<h3 id="examples"><a class="header" href="#examples">Examples</a></h3>
+<h4 id="default-deny-all"><a class="header" href="#default-deny-all">Default Deny All</a></h4>
+<pre><code>apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: default-deny-all
+spec:
+  endpointSelector: {}
+  ingress:
+  - fromEntities:
+    - world
+</code></pre>
+<h2 id="kubernetes-ingress"><a class="header" href="#kubernetes-ingress">Kubernetes Ingress</a></h2>
+<h3 id="what-is-ingress"><a class="header" href="#what-is-ingress">What is Ingress?</a></h3>
+<ul>
+<li><strong>Ingress</strong> is an API object that manages external access to services in a Kubernetes cluster, typically HTTP and HTTPS.</li>
+<li>Provides:
+<ul>
+<li><strong>Load balancing</strong></li>
+<li><strong>SSL termination</strong></li>
+<li><strong>Name-based virtual hosting</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="why-use-ingress"><a class="header" href="#why-use-ingress">Why Use Ingress?</a></h3>
+<ul>
+<li>To consolidate multiple service endpoints behind a single, externally accessible URL.</li>
+<li>Reduce the need for creating individual LoadBalancers or NodePort services.</li>
+</ul>
+<h3 id="key-components-of-ingress"><a class="header" href="#key-components-of-ingress">Key Components of Ingress</a></h3>
+<ol>
+<li>
+<p><strong>Ingress Controller</strong></p>
+<ul>
+<li>Software that watches for Ingress resources and implements the rules.</li>
+<li>Popular Ingress controllers:
+<ul>
+<li><code>ingress-nginx</code></li>
+<li><code>Traefik</code></li>
+<li><code>HAProxy</code></li>
+<li><code>Istio Gateway</code></li>
+</ul>
+</li>
+<li>Must be installed separately in the cluster.</li>
+</ul>
+</li>
+<li>
+<p><strong>Ingress Resource</strong></p>
+<ul>
+<li>The Kubernetes object that defines how requests should be routed to services.</li>
+</ul>
+</li>
+</ol>
+<h3 id="ingress-resource-configuration"><a class="header" href="#ingress-resource-configuration">Ingress Resource Configuration</a></h3>
+<ul>
+<li>As of Kubernetes 1.20, you can create an ingress using kubectl:
+<pre><code>kubectl create ingress  --rule="host/path=service:port"
+</code></pre>
+</li>
+</ul>
+<h3 id="basic-structure"><a class="header" href="#basic-structure">Basic Structure</a></h3>
+<pre><code>```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+spec:
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: example-service
+                port:
+                  number: 80
+```
+</code></pre>
+<h3 id="ingress-with-tls"><a class="header" href="#ingress-with-tls">Ingress with TLS</a></h3>
+<ul>
+<li>
+<p>Kubernetes automatically creates a self-signed certificate for HTTPS. To view it, first determine the HTTPS port of the ingress controller service:</p>
+<pre><code>kubeadmin@kube-controlplane:~$ k get svc -n ingress-nginx
+NAME                                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+ingress-nginx-controller             NodePort    10.103.169.156   &lt;none&gt;        80:31818/TCP,443:30506/TCP   38m
+ingress-nginx-controller-admission   ClusterIP   10.103.26.228    &lt;none&gt;        443/TCP                      38m
+kubeadmin@kube-controlplane:~$
+</code></pre>
+</li>
+<li>
+<p>The HTTPS port is 30506 in this case. To view the self-signed certificate, we can use curl:</p>
+<pre><code> λ notes $ curl https://13.68.211.113:30506/service1 -k -v
+* (304) (OUT), TLS handshake, Finished (20):
+} [52 bytes data]
+* SSL connection using TLSv1.3 / AEAD-AES256-GCM-SHA384 / [blank] / UNDEF
+* ALPN: server accepted h2
+* Server certificate:
+*  subject: O=Acme Co; CN=Kubernetes Ingress Controller Fake Certificate             &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+*  start date: Dec 20 14:23:08 2024 GMT
+*  expire date: Dec 20 14:23:08 2025 GMT
+*  issuer: O=Acme Co; CN=Kubernetes Ingress Controller Fake Certificate
+*  SSL certificate verify result: unable to get local issuer certificate (20), continuing anyway.
+* using HTTP/2
+* [HTTP/2] [1] OPENED stream for https://13.68.211.113:30506/service1
+* [HTTP/2] [1] [:method: GET]
+* [HTTP/2] [1] [:scheme: https]
+* [HTTP/2] [1] [:authority: 13.68.211.113:30506]
+* [HTTP/2] [1] [:path: /service1]
+* [HTTP/2] [1] [user-agent: Mozilla/5.0 Gecko]
+* [HTTP/2] [1] [accept: */*]
+&gt; GET /service1 HTTP/2
+&gt; Host: 13.68.211.113:30506
+&gt; User-Agent: Mozilla/5.0 Gecko
+&gt; Accept: */*
+</code></pre>
+</li>
+<li>
+<p>To configure a ingress resource to use TLS (HTTPS), we first need to create a certificate:</p>
+<pre><code># create a new 2048-bit RSA private key and associated cert
+openssl req -nodes -new -x509 -keyout my.key -out my.crt -subj "/CN=mysite.com"
+</code></pre>
+</li>
+<li>
+<p>Next, create a secret for the tls cert:</p>
+<pre><code>kubectl create secret tls mycert --cert=my.crt --key=my.key -n my-namespace
+</code></pre>
+</li>
+<li>
+<p>Create the ingress:</p>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: secure-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+    - hosts:
+        - example.com
+      secretName: mycert
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: secure-service
+                port:
+                  number: 80
+</code></pre>
+</li>
+</ul>
+<h3 id="annotations"><a class="header" href="#annotations">Annotations</a></h3>
+<ul>
+<li>Extend the functionality of Ingress controllers.</li>
+<li>Common examples (specific to nginx):
+<ul>
+<li>nginx.ingress.kubernetes.io/rewrite-target: Rewrite request paths.</li>
+<li>nginx.ingress.kubernetes.io/ssl-redirect: Force SSL.</li>
+<li>nginx.ingress.kubernetes.io/proxy-body-size: Limit request size.</li>
+</ul>
+</li>
+</ul>
+<h2 id="protecting-node-metadata-and-endpoints"><a class="header" href="#protecting-node-metadata-and-endpoints">Protecting Node Metadata and Endpoints</a></h2>
+<h3 id="protecting-endpoints"><a class="header" href="#protecting-endpoints">Protecting Endpoints</a></h3>
+<pre><code>- Kubernetes clusters expose information on various ports:
+
+    | Port Range | Purpose  |
+    | ---------- | -------  | 
+    | 6443       | kube-api |
+    | 2379 - 2380 | etcd    |
+    | 10250       | kubelet api |
+    | 10259       | kube-scheduler |
+    | 10257       | kube-controller-manager |
+
+- Many of these ports are configurable. For example, to change the port that kube-api listens on, just modify `--secure-port` in the kube-api manifest.
+- Setup firewall rules to minimize the attack surface
+</code></pre>
+<h3 id="securing-node-metadata"><a class="header" href="#securing-node-metadata">Securing Node Metadata</a></h3>
+<ul>
+<li>
+<p>A lot of information can be obtained from node metadata</p>
+<ul>
+<li>Node name</li>
+<li>Node state</li>
+<li>annotations</li>
+<li>System Info</li>
+<li>etc.</li>
+</ul>
+</li>
+<li>
+<p>Why secure node metadata?</p>
+<ul>
+<li>If node metadata is tampered with, pods may be assigned to the wrong nodes, which has security implications to considers</li>
+<li>You can determine the version of kubelet and other kubernetes components from node metadata</li>
+<li>If an attacker can modify node metadata, they could taint all the nodes, making all nodes unscheduleable</li>
+</ul>
+</li>
+<li>
+<p>Protection Strategies</p>
+<ul>
+<li>Use RBAC to control who has access to modify node metadata</li>
+<li>Node isolation using labels and node selectors</li>
+<li>Audit logs to determine who is accessing the cluster and respond accordingly</li>
+<li>Update node operating systems regularly</li>
+<li>Update cluster components regularly</li>
+</ul>
+</li>
+<li>
+<p>Cloud providers such as Amazon and Azure often expose node information via metadata endpoints on the node. These endpoints are important to protect.</p>
+</li>
+<li>
+<p>This endpoint can be accessed at 169.254.169.254 on nodes in both Azure and AWS. An example for Azure:</p>
+<pre><code>curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | jq
+</code></pre>
+</li>
+<li>
+<p>Node metadata endpoints can be prevented from being accessed by pods by creating network policies.</p>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress-metadata-server
+  namespace: a12
+spec:
+  policyTypes:
+  - Egress
+  podSelector: {}
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 169.254.169.254/32
+</code></pre>
+</li>
+</ul>
+<h2 id="verify-kubernetes-binaries"><a class="header" href="#verify-kubernetes-binaries">Verify Kubernetes Binaries</a></h2>
+<ul>
+<li>The SHA sum of a file changes if the content within the file is changed</li>
+<li>You can download the binaries from github using wget.
+Example: <code>wget -O /opt/kubernetes.tar.gz https://dl.k8s.io/v1.31.1/kubernetes.tar.gz</code></li>
+<li>To validate that a binary downloaded from the internet has not been modified, check the hash code:
+<pre><code>echo $(cat kubectl.sha256) kubectl | sha256sum --check
+</code></pre>
+</li>
+</ul>
+<h2 id="securing-etcd"><a class="header" href="#securing-etcd">Securing etcd</a></h2>
+<ul>
+<li>etcd is a distributed key-value store that Kubernetes uses to store configuration data</li>
+<li>etcd by default listens on port 2379/tcp</li>
+</ul>
+<h3 id="play-with-etcd"><a class="header" href="#play-with-etcd">Play with etcd</a></h3>
+<h4 id="step-1-create-the-base-binaries-directory"><a class="header" href="#step-1-create-the-base-binaries-directory">Step 1: Create the Base Binaries Directory</a></h4>
+<pre><code>```sh
+    mkdir /root/binaries
+    cd /root/binaries
+```
+</code></pre>
+<h4 id="step-2-download-and-copy-the-etcd-binaries-to-path"><a class="header" href="#step-2-download-and-copy-the-etcd-binaries-to-path">Step 2: Download and Copy the ETCD Binaries to Path</a></h4>
+<pre><code>```sh
+    wget https://github.com/etcd-io/etcd/releases/download/v3.5.18/etcd-v3.5.18-linux-amd64.tar.gz
+
+    tar -xzvf etcd-v3.5.18-linux-amd64.tar.gz
+
+    cd /root/binaries/etcd-v3.5.18-linux-amd64/
+
+    cp etcd etcdctl /usr/local/bin/
+```
+</code></pre>
+<h4 id="step-3-start-etcd"><a class="header" href="#step-3-start-etcd">Step 3: Start etcd</a></h4>
+<pre><code>```sh
+    cd /tmp
+    etcd
+```
+</code></pre>
+<h4 id="step-4-verification---store-and-fetch-data-from-etcd"><a class="header" href="#step-4-verification---store-and-fetch-data-from-etcd">Step 4: Verification - Store and Fetch Data from etcd</a></h4>
+<pre><code>```sh
+    etcdctl put key1 "value1"
+```
+
+```sh
+    etcdctl get key1
+```
+</code></pre>
+<h3 id="encrypting-data-in-transit-in-etcd"><a class="header" href="#encrypting-data-in-transit-in-etcd">Encrypting data in transit in etcd</a></h3>
+<ul>
+<li>etcd supports TLS encryption for data in transit</li>
+<li>By default, etcd packaged with kubeadm is configured to use TLS encryption</li>
+<li>One can capture packets from etcd using tcpdump:
+<pre><code>      root@controlplane00:/var/lib/etcd/member# tcpdump -i lo -X port 2379
+
+      tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+      listening on lo, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+      16:10:01.691453 IP localhost.2379 &gt; localhost.42040: Flags [P.], seq 235868994:235869033, ack 3277609642, win 640, options [nop,nop,TS val 1280288044 ecr 1280288042], length 39
+              0x0000:  4500 005b 35e4 4000 4006 06b7 7f00 0001  E..[5.@.@.......
+              0x0010:  7f00 0001 094b a438 0e0f 1342 c35c 5aaa  .....K.8...B.\Z.
+              0x0020:  8018 0280 fe4f 0000 0101 080a 4c4f a52c  .....O......LO.,
+              0x0030:  4c4f a52a 1703 0300 2289 00d8 5dcc 7b88  LO.*...."...].{.
+              0x0040:  6f7a 290f 536b 0fd0 f7d9 1fb4 f83f 4aab  oz).Sk.......?J.
+              0x0050:  a6e7 0af8 0835 e597 a93d 4d              .....5...=M
+      16:10:01.691479 IP localhost.42040 &gt; localhost.2379: Flags [.], ack 39, win 14819, options [nop,nop,TS val 1280288044 ecr 1280288044], length 0
+              0x0000:  4500 0034 7174 4000 4006 cb4d 7f00 0001  E..4qt@.@..M....
+              0x0010:  7f00 0001 a438 094b c35c 5aaa 0e0f 1369  .....8.K.\Z....i
+              0x0020:  8010 39e3 fe28 0000 0101 080a 4c4f a52c  ..9..(......LO.,
+              0x0030:  4c4f a52c                                LO.,
+      16:10:01.691611 IP localhost.2379 &gt; localhost.42040: Flags [P.], seq 39:1222, ack 1, win 640, options [nop,nop,TS val 1280288044 ecr 1280288044], length 1183
+              0x0000:  4500 04d3 35e5 4000 4006 023e 7f00 0001  E...5.@.@..&gt;....
+              0x0010:  7f00 0001 094b a438 0e0f 1369 c35c 5aaa  .....K.8...i.\Z.
+              0x0020:  8018 0280 02c8 0000 0101 080a 4c4f a52c  ............LO.,
+              0x0030:  4c4f a52c 1703 0304 9ac0 c579 d4ed 808c  LO.,.......y....
+
+              ..... redacted
+</code></pre>
+</li>
+<li>The traffic captured in the output above is encrypted.</li>
+</ul>
+<h3 id="encrypting-data-at-rest-in-etcd"><a class="header" href="#encrypting-data-at-rest-in-etcd">Encrypting data at rest in etcd</a></h3>
+<ul>
+<li>
+<p>By default, the API server stores plain-text representations of resources into etcd, with no at-rest encryption.</p>
+</li>
+<li>
+<p>etcd stores data in the <code>/var/lib/etcd/member</code> directory. When the database is not encrypted, one can easily grep the contents of this directory, looking for secrets:</p>
+<pre><code>root@controlplane00:/var/lib/etcd/member# ls -lisa
+total 16
+639000 4 drwx------ 4 root root 4096 Mar 21 10:53 .
+385187 4 drwx------ 3 root root 4096 Mar 21 10:52 ..
+639002 4 drwx------ 2 root root 4096 Mar 21 14:43 snap
+638820 4 drwx------ 2 root root 4096 Mar 21 11:59 wal
+
+root@controlplane00:/var/lib/etcd/member# grep -R test-secret .
+grep: ./wal/00000000000000ac-0000000000a9340b.wal: binary file matches
+grep: ./wal/00000000000000a8-0000000000a721c1.wal: binary file matches
+grep: ./wal/00000000000000aa-0000000000a83f1e.wal: binary file matches
+grep: ./wal/00000000000000a9-0000000000a7b97e.wal: binary file matches
+grep: ./wal/00000000000000ab-0000000000a8d8a7.wal: binary file matches
+grep: ./snap/db: binary file matches
+</code></pre>
+</li>
+<li>
+<p>The kube-apiserver process accepts an argument –encryption-provider-config that specifies a path to a configuration file. The contents of that file, if you specify one, control how Kubernetes API data is encrypted in etcd.</p>
+</li>
+<li>
+<p>If you are running the kube-apiserver without the –encryption-provider-config command line argument, you do not have encryption at rest enabled. If you are running the kube-apiserver with the –encryption-provider-config command line argument, and the file that it references specifies the <code>identity</code> provider as the first encryption provider in the list, then you do not have at-rest encryption enabled (the default identity provider does not provide any confidentiality protection.)</p>
+</li>
+<li>
+<p>If you are running the kube-apiserver with the –encryption-provider-config command line argument, and the file that it references specifies a provider other than <code>identity</code> as the first encryption provider in the list, then you already have at-rest encryption enabled. However, that check does not tell you whether a previous migration to encrypted storage has succeeded.</p>
+</li>
+<li>
+<p>Example EncryptionConfiguration:</p>
+<pre><code>  apiVersion: apiserver.config.k8s.io/v1
+  kind: EncryptionConfiguration
+  resources:
+    - resources:
+        - secrets
+        - configmaps
+        - pandas.awesome.bears.example # a custom resource API
+      providers:
+        # This configuration does not provide data confidentiality. The first
+        # configured provider is specifying the "identity" mechanism, which
+        # stores resources as plain text.
+        #
+        - identity: {} # plain text, in other words NO encryption
+        - aesgcm:
+            keys:
+              - name: key1
+                secret: c2VjcmV0IGlzIHNlY3VyZQ==
+              - name: key2
+                secret: dGhpcyBpcyBwYXNzd29yZA==
+        - aescbc:
+            keys:
+              - name: key1
+                secret: c2VjcmV0IGlzIHNlY3VyZQ==
+              - name: key2
+                secret: dGhpcyBpcyBwYXNzd29yZA==
+        - secretbox:
+            keys:
+              - name: key1
+                secret: YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY=
+    - resources:
+        - events
+      providers:
+        - identity: {} # do not encrypt Events even though *.* is specified below
+    - resources:
+        - '*.apps' # wildcard match requires Kubernetes 1.27 or later
+      providers:
+        - aescbc:
+            keys:
+            - name: key2
+              secret: c2VjcmV0IGlzIHNlY3VyZSwgb3IgaXMgaXQ/Cg==
+    - resources:
+        - '*.*' # wildcard match requires Kubernetes 1.27 or later
+      providers:
+        - aescbc:
+            keys:
+            - name: key3
+              secret: c2VjcmV0IGlzIHNlY3VyZSwgSSB0aGluaw==
+</code></pre>
+</li>
+<li>
+<p>Each resources array item is a separate config and contains a complete configuration. The resources.resources field is an array of Kubernetes resource names (resource or resource.group) that should be encrypted like Secrets, ConfigMaps, or other resources.</p>
+</li>
+<li>
+<p>https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/</p>
+</li>
+<li>
+<p>After enabling encryption in etcd, any resources that you created prior to enabling encryption will not be encrypted. For example, you can encrypt secrets by running:</p>
+</li>
+</ul>
+<pre><code>kubectl get secrets -A -o yaml | kubectl replace -f -
+</code></pre>
+<ul>
+<li>Example of getting a secret in etcd:</li>
+</ul>
+<pre><code>root@controlplane00:/etc/kubernetes/pki# ETCDCTL_API=3 etcdctl --cacert=./etcd/ca.crt --cert=./apiserver-etcd-client.crt --key=./apiserver-etcd-client.key get /registry/secrets/default/mysecret
+
+/registry/secrets/default/mysecret
+k8s:enc:aescbc:v1:key1:ܨt&gt;;8ܑ%TUIodEs*lsHGwjeF8S!Aqaj\Pq;9Ⱥ7dJe{B2=|p4#'BuCxUY,*IuFM
+                                                                                   wxx@
+2Q0e5UzH^^)rX_H%GUɈ-XqC.˽pC `kBW&gt;K12 n
+
+</code></pre>
+<p>The path to the resource in the etcd database is ‘/registry/<resource type="">/<namespace>/<resource name="">’</resource></namespace></resource></p>
+<h2 id="securing-kube-apiserver"><a class="header" href="#securing-kube-apiserver">Securing kube-apiserver</a></h2>
+<ul>
+<li>Kube-apiserver acts as the gateway for all resources in kubernetes. Kube-apiserver is the only component in kubernetes that communicates with etcd</li>
+<li>kube-apiserver authenticates to etcd using TLS client certificates.</li>
+<li>Kube-apiserver should encrypt data before it is stored in etcd</li>
+<li>kube-apiserver should only listen on an HTTPS endpoint. There was an option to host kube-apiserver on an HTTP endpoint, but this option has been deprecated as of 1.10 and removed in 1.22</li>
+<li>kube-apiserver should have auditing enabled</li>
+</ul>
+<h3 id="authentication"><a class="header" href="#authentication">Authentication</a></h3>
+<ul>
+<li>One can authentication to the KubeAPI server using certificates or a kubeconfig file</li>
+</ul>
+<h3 id="access-controls"><a class="header" href="#access-controls">Access Controls</a></h3>
+<ul>
+<li>After a request is authenticated, it is authorized. Authorization is the process of determining what actions a user can perform.</li>
+<li>Multiple authorization modules are supported:
+<ul>
+<li>AlwaysAllow - Allows all requests</li>
+<li>AlwaysDeny - Blocks all requests</li>
+<li>RBAC - Role-based access control for requests. This is the default authorization module in kubernetes</li>
+<li>Node - Authorizes kubelets to access the kube-api server</li>
+</ul>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../kubernetes/cks/cluster-hardening/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../kubernetes/cks/minimize-microservice-vulnerabilities/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../kubernetes/cks/cluster-hardening/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../kubernetes/cks/minimize-microservice-vulnerabilities/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../searcher-09f2665d.js"></script>
+
+        <script src="../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../highlight-abc7f01d.js"></script>
+        <script src="../../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../mermaid-eefea253.min.js"></script>
+        <script src="../../../mermaid-init-53b67c53.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

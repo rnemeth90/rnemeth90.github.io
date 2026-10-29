@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: privileged-pod
+  labels:
+    app: privileged
+spec:
+  containers:
+    - name: privileged-container
+      image: busybox
+      command: [ "sleep", "infinity" ]
+      securityContext:
+        privileged: true
+        allowPrivilegeEscalation: true
+  restartPolicy: Always

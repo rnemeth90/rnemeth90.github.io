@@ -1,0 +1,511 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Cluster Architecture Installation And Configuration - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex-fa79b661.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc-a8220245.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="cluster-architecture-installation--configuration-25"><a class="header" href="#cluster-architecture-installation--configuration-25">Cluster Architecture, Installation &amp; Configuration (25%)</a></h1>
+<p>Notes on control-plane/node architecture, kubeadm cluster bootstrapping and upgrades, RBAC, and high availability.</p>
+<h2 id="topics"><a class="header" href="#topics">Topics</a></h2>
+<ul>
+<li><input disabled="" type="checkbox" checked=""> Manage role based access control (RBAC)</li>
+<li><input disabled="" type="checkbox" checked=""> Use Kubeadm to install a basic cluster</li>
+<li><input disabled="" type="checkbox" checked=""> Manage a highly-available Kubernetes cluster</li>
+<li><input disabled="" type="checkbox" checked=""> Provision underlying infrastructure to deploy a Kubernetes cluster</li>
+<li><input disabled="" type="checkbox" checked=""> Perform a version upgrade on a Kubernetes cluster using Kubeadm</li>
+<li><input disabled="" type="checkbox" checked=""> Implement etcd backup and restore</li>
+</ul>
+<h2 id="architecture-refresher"><a class="header" href="#architecture-refresher">Architecture refresher</a></h2>
+<p><strong>Control plane</strong> components:</p>
+<ul>
+<li><strong>kube-apiserver</strong>: the front door. Every component and user talks to it over REST. It authenticates, authorizes (RBAC), runs admission control, and persists state to etcd. It is the only component that talks to etcd.</li>
+<li><strong>etcd</strong>: consistent key-value store holding all cluster state. Losing etcd without a backup means losing the cluster.</li>
+<li><strong>kube-scheduler</strong>: watches for unscheduled Pods and assigns them to nodes based on resources, taints, affinity, and so on.</li>
+<li><strong>kube-controller-manager</strong>: runs the control loops (Deployment, ReplicaSet, Node, Job, EndpointSlice controllers and more) that drive actual state toward desired state.</li>
+<li><strong>cloud-controller-manager</strong>: optional, integrates with the cloud provider (load balancers, routes, node lifecycle).</li>
+</ul>
+<p><strong>Node</strong> components:</p>
+<ul>
+<li><strong>kubelet</strong>: agent that makes sure containers described in PodSpecs are running. It is a systemd service, not a Pod.</li>
+<li><strong>kube-proxy</strong>: programs iptables/IPVS rules that implement Services.</li>
+<li><strong>Container runtime</strong>: containerd or CRI-O, speaks CRI to the kubelet.</li>
+</ul>
+<p>On a kubeadm cluster the control-plane components run as <strong>static Pods</strong>. The kubelet reads manifests from <code>/etc/kubernetes/manifests/</code> and keeps them running. Editing a manifest there restarts the component. Moving it out of the directory stops it.</p>
+<p>Important paths:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Path</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>/etc/kubernetes/manifests/</code></td><td>Static Pod manifests (apiserver, etcd, scheduler, controller-manager)</td></tr>
+<tr><td><code>/etc/kubernetes/pki/</code></td><td>Cluster CA and component certificates</td></tr>
+<tr><td><code>/etc/kubernetes/admin.conf</code></td><td>Admin kubeconfig</td></tr>
+<tr><td><code>/etc/kubernetes/kubelet.conf</code></td><td>Kubelet kubeconfig</td></tr>
+<tr><td><code>/var/lib/kubelet/config.yaml</code></td><td>Kubelet configuration</td></tr>
+<tr><td><code>/var/lib/etcd</code></td><td>etcd data directory</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="rbac"><a class="header" href="#rbac">RBAC</a></h2>
+<p>RBAC controls what an identity can do against the API. Four objects:</p>
+<ul>
+<li><strong>Role</strong>: set of permissions within one namespace.</li>
+<li><strong>ClusterRole</strong>: permissions cluster-wide, or on cluster-scoped resources (nodes, PVs), or reusable across namespaces.</li>
+<li><strong>RoleBinding</strong>: grants a Role or ClusterRole to subjects within one namespace.</li>
+<li><strong>ClusterRoleBinding</strong>: grants a ClusterRole to subjects across the whole cluster.</li>
+</ul>
+<p>Subjects are <code>User</code>, <code>Group</code>, or <code>ServiceAccount</code>. Users are not API objects; they come from client certificates (CN is the user, O is the group) or an external identity provider. RBAC is purely additive: there are no deny rules.</p>
+<p>A binding to a ClusterRole through a RoleBinding limits it to that namespace. This is a common way to reuse one ClusterRole such as <code>view</code> in many namespaces.</p>
+<pre><code class="language-yaml">apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-reader
+  namespace: dev
+rules:
+- apiGroups: [""]          # "" is the core group
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: dev
+subjects:
+- kind: User
+  name: jane
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+<p>Imperative creation is faster on the exam:</p>
+<pre><code class="language-bash">kubectl create role pod-reader --verb=get,list,watch --resource=pods -n dev
+kubectl create rolebinding read-pods --role=pod-reader --user=jane -n dev
+kubectl create clusterrole node-reader --verb=get,list --resource=nodes
+kubectl create clusterrolebinding read-nodes --clusterrole=node-reader --user=jane
+kubectl create serviceaccount app-sa -n dev
+kubectl create rolebinding app-view --clusterrole=view --serviceaccount=dev:app-sa -n dev
+
+# Verify
+kubectl auth can-i list pods -n dev --as jane
+kubectl auth can-i '*' '*' --as system:serviceaccount:dev:app-sa
+kubectl auth can-i --list -n dev --as jane
+</code></pre>
+<h2 id="installing-a-cluster-with-kubeadm"><a class="header" href="#installing-a-cluster-with-kubeadm">Installing a cluster with kubeadm</a></h2>
+<h3 id="1-prepare-every-node"><a class="header" href="#1-prepare-every-node">1. Prepare every node</a></h3>
+<ul>
+<li>Unique hostname, MAC, and product_uuid; connectivity between nodes.</li>
+<li>Swap off (<code>swapoff -a</code> and remove from <code>/etc/fstab</code>), unless explicitly configured otherwise.</li>
+<li>Load kernel modules <code>overlay</code> and <code>br_netfilter</code>.</li>
+<li>Sysctl: <code>net.bridge.bridge-nf-call-iptables=1</code>, <code>net.bridge.bridge-nf-call-ip6tables=1</code>, <code>net.ipv4.ip_forward=1</code>.</li>
+<li>Open required ports: 6443 (API), 2379-2380 (etcd), 10250 (kubelet), 10257 (controller-manager), 10259 (scheduler), 30000-32767 (NodePort) on workers.</li>
+<li>Install a container runtime (containerd) with <code>SystemdCgroup = true</code> in <code>/etc/containerd/config.toml</code>.</li>
+<li>Install <code>kubeadm</code>, <code>kubelet</code>, <code>kubectl</code> and hold their versions (<code>apt-mark hold</code>).</li>
+</ul>
+<pre><code class="language-bash">cat &lt;&lt;EOF | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+sudo modprobe overlay &amp;&amp; sudo modprobe br_netfilter
+
+cat &lt;&lt;EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward                 = 1
+EOF
+sudo sysctl --system
+</code></pre>
+<h3 id="2-initialize-the-control-plane"><a class="header" href="#2-initialize-the-control-plane">2. Initialize the control plane</a></h3>
+<pre><code class="language-bash">sudo kubeadm init \
+  --pod-network-cidr=10.244.0.0/16 \
+  --apiserver-advertise-address=&lt;CP_IP&gt; \
+  --kubernetes-version=v1.31.0
+
+mkdir -p $HOME/.kube
+sudo cp /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+</code></pre>
+<p>The pod CIDR must match what the CNI expects. Nodes stay <code>NotReady</code> and CoreDNS stays <code>Pending</code> until a CNI plugin is installed.</p>
+<h3 id="3-install-a-cni"><a class="header" href="#3-install-a-cni">3. Install a CNI</a></h3>
+<pre><code class="language-bash">kubectl apply -f &lt;cni-manifest.yaml&gt;   # Calico, Flannel, Cilium, etc.
+</code></pre>
+<h3 id="4-join-workers"><a class="header" href="#4-join-workers">4. Join workers</a></h3>
+<pre><code class="language-bash"># Print a fresh join command (tokens expire after 24h)
+kubeadm token create --print-join-command
+
+# On the worker
+sudo kubeadm join &lt;CP_IP&gt;:6443 --token &lt;token&gt; \
+  --discovery-token-ca-cert-hash sha256:&lt;hash&gt;
+</code></pre>
+<h2 id="provisioning-the-underlying-infrastructure"><a class="header" href="#provisioning-the-underlying-infrastructure">Provisioning the underlying infrastructure</a></h2>
+<p>Things to decide before running kubeadm:</p>
+<ul>
+<li><strong>Sizing</strong>: control-plane nodes typically 2+ vCPU and 2+ GB RAM minimum (more for production); workers sized for the workload. etcd wants fast disks (SSD) and low latency.</li>
+<li><strong>Node count</strong>: odd number of control-plane nodes (3 or 5) for etcd quorum. Quorum is <code>floor(n/2)+1</code>, so 3 nodes tolerate 1 failure and 5 tolerate 2.</li>
+<li><strong>Networking</strong>: node subnet, pod CIDR, and service CIDR must not overlap each other or the corporate network. Plan a stable endpoint (DNS name or load balancer) for the API server.</li>
+<li><strong>OS</strong>: a supported Linux distro, synchronized time (chrony/NTP), unique hostnames, firewall rules for the ports listed above.</li>
+<li><strong>Runtime and CNI</strong>: pick them up front; a CNI that supports NetworkPolicy (Calico, Cilium) is needed if policies will be enforced.</li>
+<li><strong>Automation</strong>: Terraform/cloud-init for machines, Ansible for node prep, kubeadm (or Cluster API) for bootstrap.</li>
+</ul>
+<h2 id="high-availability"><a class="header" href="#high-availability">High availability</a></h2>
+<p>Two topologies:</p>
+<ul>
+<li><strong>Stacked etcd</strong>: etcd runs on the same nodes as the control plane. Simpler, fewer machines, but losing a node loses both a control-plane member and an etcd member.</li>
+<li><strong>External etcd</strong>: etcd runs on dedicated nodes. More machines and more complexity, better failure isolation.</li>
+</ul>
+<p>Both need a load balancer in front of the API servers (HAProxy plus keepalived, or a cloud LB), and <code>--control-plane-endpoint</code> set at init so that all kubeconfigs and certs point to the LB.</p>
+<pre><code class="language-bash"># First control-plane node
+sudo kubeadm init \
+  --control-plane-endpoint "k8s-api.example.com:6443" \
+  --upload-certs \
+  --pod-network-cidr=10.244.0.0/16
+
+# Additional control-plane nodes
+sudo kubeadm join k8s-api.example.com:6443 --token &lt;t&gt; \
+  --discovery-token-ca-cert-hash sha256:&lt;h&gt; \
+  --control-plane --certificate-key &lt;key&gt;
+</code></pre>
+<p>Notes:</p>
+<ul>
+<li><code>--upload-certs</code> stores control-plane certs in a Secret encrypted with the certificate key; it is deleted after 2 hours. Regenerate with <code>kubeadm init phase upload-certs --upload-certs</code>.</li>
+<li>The scheduler and controller-manager use leader election, so only one is active at a time. The API server is active on all nodes.</li>
+<li>Check etcd membership: <code>etcdctl member list</code> with the cert flags shown below.</li>
+</ul>
+<h2 id="upgrading-with-kubeadm"><a class="header" href="#upgrading-with-kubeadm">Upgrading with kubeadm</a></h2>
+<p>Rules:</p>
+<ul>
+<li>Upgrade one minor version at a time (1.30 to 1.31, never skip).</li>
+<li>Control plane first, then workers.</li>
+<li>kubelet and kubectl must be upgraded after kubeadm. The kubelet may not be newer than the API server.</li>
+<li>Always take an etcd backup first.</li>
+</ul>
+<h3 id="control-plane-node-first-node"><a class="header" href="#control-plane-node-first-node">Control-plane node (first node)</a></h3>
+<pre><code class="language-bash"># 1. Upgrade kubeadm
+sudo apt-mark unhold kubeadm
+sudo apt-get update &amp;&amp; sudo apt-get install -y kubeadm=1.31.x-*
+sudo apt-mark hold kubeadm
+kubeadm version
+
+# 2. Plan and apply
+sudo kubeadm upgrade plan
+sudo kubeadm upgrade apply v1.31.x
+
+# 3. Drain, upgrade kubelet and kubectl, restart, uncordon
+kubectl drain cp1 --ignore-daemonsets
+sudo apt-mark unhold kubelet kubectl
+sudo apt-get install -y kubelet=1.31.x-* kubectl=1.31.x-*
+sudo apt-mark hold kubelet kubectl
+sudo systemctl daemon-reload &amp;&amp; sudo systemctl restart kubelet
+kubectl uncordon cp1
+</code></pre>
+<h3 id="additional-control-plane-nodes-and-workers"><a class="header" href="#additional-control-plane-nodes-and-workers">Additional control-plane nodes and workers</a></h3>
+<p>On additional control-plane nodes use <code>sudo kubeadm upgrade node</code> instead of <code>apply</code>. Same for workers:</p>
+<pre><code class="language-bash"># From a machine with kubectl
+kubectl drain worker1 --ignore-daemonsets --delete-emptydir-data
+
+# On worker1
+sudo apt-get install -y kubeadm=1.31.x-*
+sudo kubeadm upgrade node
+sudo apt-get install -y kubelet=1.31.x-* kubectl=1.31.x-*
+sudo systemctl daemon-reload &amp;&amp; sudo systemctl restart kubelet
+
+# From kubectl machine
+kubectl uncordon worker1
+</code></pre>
+<h2 id="etcd-backup-and-restore"><a class="header" href="#etcd-backup-and-restore">etcd backup and restore</a></h2>
+<h3 id="backup"><a class="header" href="#backup">Backup</a></h3>
+<p>etcd uses TLS. Find the cert paths in <code>/etc/kubernetes/manifests/etcd.yaml</code> (<code>--cert-file</code>, <code>--key-file</code>, <code>--trusted-ca-file</code>, <code>--listen-client-urls</code>).</p>
+<pre><code class="language-bash">ETCDCTL_API=3 etcdctl snapshot save /opt/backup/etcd-snapshot.db \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key
+
+# Verify
+etcdutl snapshot status /opt/backup/etcd-snapshot.db --write-out=table
+</code></pre>
+<h3 id="restore"><a class="header" href="#restore">Restore</a></h3>
+<p>Restore writes a new data directory; it does not need TLS flags because it works on the file, not the live server.</p>
+<pre><code class="language-bash">sudo etcdutl snapshot restore /opt/backup/etcd-snapshot.db \
+  --data-dir /var/lib/etcd-restore
+</code></pre>
+<p>Then point etcd at the new directory by editing <code>/etc/kubernetes/manifests/etcd.yaml</code>: change the <code>etcd-data</code> hostPath volume <code>path</code> from <code>/var/lib/etcd</code> to <code>/var/lib/etcd-restore</code>. The kubelet recreates the etcd Pod automatically. Wait for the API server to return (<code>crictl ps</code> is useful while kubectl is down).</p>
+<p>If <code>etcdutl</code> is not installed, <code>etcdctl snapshot restore</code> is the older equivalent (deprecated for restore in newer releases).</p>
+<h2 id="cheat-sheet"><a class="header" href="#cheat-sheet">Cheat sheet</a></h2>
+<pre><code class="language-bash"># Cluster info
+kubectl cluster-info
+kubectl get nodes -o wide
+kubectl get pods -n kube-system
+kubectl get componentstatuses            # deprecated, but still sometimes works
+kubectl config get-contexts
+kubectl config use-context &lt;ctx&gt;
+kubectl config set-context --current --namespace=&lt;ns&gt;
+
+# kubeadm
+kubeadm init / join / reset
+kubeadm token list | create --print-join-command
+kubeadm certs check-expiration
+kubeadm certs renew all
+kubeadm upgrade plan | apply &lt;v&gt; | node
+kubeadm config print init-defaults
+kubeadm config images list
+
+# Node maintenance
+kubectl cordon &lt;node&gt;
+kubectl drain &lt;node&gt; --ignore-daemonsets --delete-emptydir-data
+kubectl uncordon &lt;node&gt;
+
+# RBAC
+kubectl create role|clusterrole &lt;name&gt; --verb=... --resource=...
+kubectl create rolebinding|clusterrolebinding &lt;name&gt; --role|--clusterrole=... --user|--group|--serviceaccount=...
+kubectl auth can-i &lt;verb&gt; &lt;resource&gt; --as &lt;user&gt; -n &lt;ns&gt;
+
+# Explain fields quickly (docs inside the terminal)
+kubectl explain pod.spec.containers --recursive
+</code></pre>
+<p>Exam tips:</p>
+<ul>
+<li>Set up aliases early: <code>alias k=kubectl</code>, <code>export do="--dry-run=client -o yaml"</code>, and enable completion.</li>
+<li>Always check which context a question targets and switch to it first.</li>
+<li>Use <code>kubectl ... $do &gt; file.yaml</code> to scaffold manifests, then edit.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../kubernetes/cka/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../kubernetes/cka/services-and-networking/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../kubernetes/cka/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../kubernetes/cka/services-and-networking/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../searcher-09f2665d.js"></script>
+
+        <script src="../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../highlight-abc7f01d.js"></script>
+        <script src="../../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../mermaid-eefea253.min.js"></script>
+        <script src="../../../mermaid-init-53b67c53.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

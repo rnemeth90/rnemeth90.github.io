@@ -1,0 +1,13 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "l3-policy"
+  namespace: dev
+spec:
+  endpointSelector:
+    matchLabels:
+      app: app1-dev
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app: app2-dev

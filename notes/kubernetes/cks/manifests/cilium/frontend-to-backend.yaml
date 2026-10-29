@@ -1,0 +1,28 @@
+# Create a CiliumNetworkPolicy that allows only traffic from pods labeled app=frontend to reach pods labeled app=backend in your Kubernetes cluster. Verify that traffic from other pods is denied.
+
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-frontend-to-backend
+  namespace: backend
+spec:
+  endpointSelector:
+    matchLabels:
+      app: backend
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app: frontend
+    toPorts:
+    - ports:
+      - port: "80"
+        protocol: "TCP"
+
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        k8s-app: kube-dns
+    toPorts:
+      - ports:
+        - port: "53"
+          protocol: "ANY"

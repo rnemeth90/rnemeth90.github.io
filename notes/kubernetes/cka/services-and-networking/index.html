@@ -1,0 +1,494 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Services And Networking - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex-fa79b661.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc-a8220245.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="services--networking-20"><a class="header" href="#services--networking-20">Services &amp; Networking (20%)</a></h1>
+<p>Notes on cluster networking, Services, Ingress, and NetworkPolicies.</p>
+<h2 id="topics"><a class="header" href="#topics">Topics</a></h2>
+<ul>
+<li><input disabled="" type="checkbox" checked=""> Understand host networking configuration on the cluster nodes</li>
+<li><input disabled="" type="checkbox" checked=""> Understand connectivity between Pods</li>
+<li><input disabled="" type="checkbox" checked=""> Understand ClusterIP, NodePort, LoadBalancer service types and endpoints</li>
+<li><input disabled="" type="checkbox" checked=""> Know how to use Ingress controllers and Ingress resources</li>
+<li><input disabled="" type="checkbox" checked=""> Know how to configure and use CoreDNS</li>
+<li><input disabled="" type="checkbox" checked=""> Choose an appropriate container network interface plugin</li>
+</ul>
+<h2 id="the-kubernetes-network-model"><a class="header" href="#the-kubernetes-network-model">The Kubernetes network model</a></h2>
+<p>Rules every conformant cluster follows:</p>
+<ol>
+<li>Every Pod gets its own IP address.</li>
+<li>Any Pod can talk to any other Pod directly <strong>without NAT</strong>, regardless of node.</li>
+<li>Agents on a node (kubelet, system daemons) can talk to all Pods on that node.</li>
+</ol>
+<p>Three separate address ranges must not overlap: the <strong>node network</strong>, the <strong>Pod CIDR</strong>, and the <strong>Service CIDR</strong>. Service IPs are virtual; no interface owns them. kube-proxy (or the CNI in kube-proxy-free setups) translates them to Pod IPs.</p>
+<h2 id="host-networking-on-the-nodes"><a class="header" href="#host-networking-on-the-nodes">Host networking on the nodes</a></h2>
+<p>What to check on a node:</p>
+<pre><code class="language-bash">ip addr                    # interfaces and IPs (node IP, CNI bridge, veth pairs)
+ip route                   # routes; Pod CIDR routes are installed by the CNI
+ip link
+ss -tulpn                  # listening ports (kubelet 10250, etc.)
+iptables -t nat -L -n | grep &lt;svc-name&gt;     # kube-proxy rules in iptables mode
+ipvsadm -Ln                                 # IPVS mode
+cat /etc/cni/net.d/*                        # CNI config
+ls /opt/cni/bin                             # CNI binaries
+sysctl net.ipv4.ip_forward                  # must be 1
+cat /etc/resolv.conf                        # node DNS
+</code></pre>
+<p>Key points:</p>
+<ul>
+<li><code>net.ipv4.ip_forward=1</code> and <code>br_netfilter</code> are required so bridged Pod traffic hits iptables.</li>
+<li>Pods with <code>hostNetwork: true</code> share the node’s network namespace and IP and may bind node ports.</li>
+<li>The node’s kubelet reads the CNI config from <code>/etc/cni/net.d</code> and binaries from <code>/opt/cni/bin</code> (path set by the container runtime).</li>
+<li>Find a cluster’s CIDRs: <code>kubectl cluster-info dump | grep -m1 cluster-cidr</code>, or look at <code>--cluster-cidr</code> and <code>--service-cluster-ip-range</code> in the controller-manager and apiserver manifests.</li>
+</ul>
+<h2 id="pod-to-pod-connectivity"><a class="header" href="#pod-to-pod-connectivity">Pod to Pod connectivity</a></h2>
+<ul>
+<li><strong>Same node</strong>: Pods connect through a virtual ethernet pair (veth) into a bridge or directly routed by the CNI.</li>
+<li><strong>Different nodes</strong>: the CNI either routes the Pod CIDR (BGP, host routes) or encapsulates traffic (VXLAN, IP-in-IP, Geneve), or uses eBPF.</li>
+<li>A Pod’s network namespace is shared by all containers in it; they reach each other on <code>localhost</code>.</li>
+</ul>
+<p>Quick tests:</p>
+<pre><code class="language-bash">kubectl run tmp --rm -it --image=busybox:1.36 --restart=Never -- sh
+# inside: wget -qO- &lt;pod-ip&gt;:&lt;port&gt;   or   nslookup &lt;svc&gt;
+kubectl exec &lt;pod&gt; -- curl -s &lt;other-pod-ip&gt;:8080
+kubectl get pods -o wide                   # shows Pod IPs and nodes
+</code></pre>
+<h2 id="services"><a class="header" href="#services">Services</a></h2>
+<p>A <strong>Service</strong> gives a stable virtual IP and DNS name to a changing set of Pods selected by labels. The EndpointSlice controller maintains the list of ready Pod IPs behind it.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Behavior</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>ClusterIP</strong> (default)</td><td>Virtual IP reachable only inside the cluster</td></tr>
+<tr><td><strong>NodePort</strong></td><td>ClusterIP plus a port (30000-32767) opened on every node</td></tr>
+<tr><td><strong>LoadBalancer</strong></td><td>NodePort plus an external load balancer from the cloud provider</td></tr>
+<tr><td><strong>ExternalName</strong></td><td>DNS CNAME to an external name; no proxying</td></tr>
+<tr><td><strong>Headless</strong> (<code>clusterIP: None</code>)</td><td>No virtual IP; DNS returns Pod IPs directly. Used with StatefulSets</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  type: NodePort
+  selector:
+    app: web
+  ports:
+  - port: 80          # Service port
+    targetPort: 8080  # container port (number or named port)
+    nodePort: 30080   # optional, NodePort only
+</code></pre>
+<pre><code class="language-bash">kubectl expose deployment web --port=80 --target-port=8080 --type=ClusterIP
+kubectl expose pod web --port=80 --name=web-svc
+kubectl get svc,endpoints,endpointslices
+kubectl describe svc web
+</code></pre>
+<p>Troubleshooting a Service with no traffic:</p>
+<ol>
+<li><code>kubectl get endpoints web</code>: empty means the selector matches no <strong>Ready</strong> Pods (label mismatch or failing readiness probe).</li>
+<li><code>targetPort</code> must match the port the app actually listens on.</li>
+<li>Check NetworkPolicies and kube-proxy health (<code>kubectl -n kube-system get pods -l k8s-app=kube-proxy</code>).</li>
+</ol>
+<p>Other details:</p>
+<ul>
+<li><code>externalTrafficPolicy: Local</code> preserves the client source IP and avoids an extra hop, but only routes to Pods on the receiving node.</li>
+<li><code>sessionAffinity: ClientIP</code> gives sticky sessions.</li>
+<li>Environment variables <code>&lt;SVC&gt;_SERVICE_HOST</code> are injected for Services that existed before the Pod started; DNS is the preferred method.</li>
+</ul>
+<h2 id="ingress"><a class="header" href="#ingress">Ingress</a></h2>
+<p><strong>Ingress</strong> is an L7 (HTTP/HTTPS) routing resource: host and path rules mapped to Services. It does nothing alone; an <strong>Ingress controller</strong> (ingress-nginx, Traefik, HAProxy, Contour, and others) must be installed and watches the Ingress objects. The controller itself is usually exposed via a LoadBalancer or NodePort Service.</p>
+<p>Use <code>ingressClassName</code> to pick the controller.</p>
+<pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts: [app.example.com]
+    secretName: app-tls
+  rules:
+  - host: app.example.com
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: api
+            port: { number: 80 }
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web
+            port: { number: 80 }
+</code></pre>
+<pre><code class="language-bash">kubectl create ingress web --class=nginx --rule="app.example.com/=web:80" --rule="app.example.com/api*=api:80"
+kubectl get ingress
+kubectl describe ingress web
+kubectl get ingressclass
+</code></pre>
+<p><code>pathType</code>: <code>Exact</code>, <code>Prefix</code>, or <code>ImplementationSpecific</code>.</p>
+<p>The <strong>Gateway API</strong> (<code>GatewayClass</code>, <code>Gateway</code>, <code>HTTPRoute</code>) is the successor to Ingress, with role-oriented resources and richer routing. Expect it to appear in the current curriculum.</p>
+<h2 id="networkpolicy"><a class="header" href="#networkpolicy">NetworkPolicy</a></h2>
+<p>By default all Pods accept all traffic. A <strong>NetworkPolicy</strong> selects Pods and, once any policy selects a Pod for a direction, only the traffic explicitly allowed for that direction is permitted. Policies are additive. They require a CNI that enforces them (Calico, Cilium, Weave; <strong>not</strong> plain Flannel).</p>
+<pre><code class="language-yaml"># Default deny all ingress in the namespace
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: prod
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+---
+# Allow only frontend Pods and the monitoring namespace to reach db on 5432
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-allow
+  namespace: prod
+spec:
+  podSelector:
+    matchLabels: { app: db }
+  policyTypes: [Ingress, Egress]
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels: { app: frontend }
+    - namespaceSelector:
+        matchLabels: { kubernetes.io/metadata.name: monitoring }
+    ports:
+    - protocol: TCP
+      port: 5432
+  egress:
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels: { k8s-app: kube-dns }
+    ports:
+    - { protocol: UDP, port: 53 }
+    - { protocol: TCP, port: 53 }
+</code></pre>
+<p>Gotchas:</p>
+<ul>
+<li>Within a single <code>from</code> list, <strong>separate items are OR’d</strong>; <code>podSelector</code> and <code>namespaceSelector</code> in the <strong>same item</strong> are AND’d. This indentation difference is a classic trap.</li>
+<li>When restricting egress, remember to allow DNS (port 53) or name resolution breaks.</li>
+<li>Policies are namespaced and select by labels, so label the namespaces you reference.</li>
+</ul>
+<h2 id="coredns"><a class="header" href="#coredns">CoreDNS</a></h2>
+<p>CoreDNS is the cluster DNS, deployed as a Deployment (<code>coredns</code>) in <code>kube-system</code> behind the Service <code>kube-dns</code> (the IP the kubelet writes into each Pod’s <code>resolv.conf</code> via <code>clusterDNS</code>).</p>
+<p>Record formats:</p>
+<ul>
+<li>Service: <code>&lt;svc&gt;.&lt;ns&gt;.svc.cluster.local</code> resolves to the ClusterIP (headless: Pod IPs).</li>
+<li>Pod: <code>&lt;ip-with-dashes&gt;.&lt;ns&gt;.pod.cluster.local</code>.</li>
+<li>StatefulSet Pod via headless Service: <code>&lt;pod&gt;.&lt;svc&gt;.&lt;ns&gt;.svc.cluster.local</code>.</li>
+<li>Pods’ <code>/etc/resolv.conf</code> has <code>search &lt;ns&gt;.svc.cluster.local svc.cluster.local cluster.local</code> and <code>ndots:5</code>, so short names such as <code>web</code> or <code>web.other-ns</code> work.</li>
+</ul>
+<p>Configuration lives in the <code>coredns</code> ConfigMap (a Corefile):</p>
+<pre><code>.:53 {
+    errors
+    health { lameduck 5s }
+    ready
+    kubernetes cluster.local in-addr.arpa ip6.arpa {
+       pods insecure
+       fallthrough in-addr.arpa ip6.arpa
+       ttl 30
+    }
+    prometheus :9153
+    forward . /etc/resolv.conf     # upstream for non-cluster names
+    cache 30
+    loop
+    reload
+    loadbalance
+}
+</code></pre>
+<p>Customize by editing the ConfigMap, for example a stub domain:</p>
+<pre><code>example.internal:53 {
+    forward . 10.10.0.53
+}
+</code></pre>
+<p><code>reload</code> picks up changes automatically; otherwise <code>kubectl -n kube-system rollout restart deployment coredns</code>.</p>
+<p>Pod DNS policy: <code>ClusterFirst</code> (default), <code>Default</code> (inherit node resolv.conf), <code>None</code> with <code>dnsConfig</code>, <code>ClusterFirstWithHostNet</code> for hostNetwork Pods.</p>
+<pre><code class="language-bash">kubectl -n kube-system get pods -l k8s-app=kube-dns
+kubectl -n kube-system logs -l k8s-app=kube-dns
+kubectl -n kube-system get cm coredns -o yaml
+kubectl run dns --rm -it --image=busybox:1.36 --restart=Never -- nslookup web.default.svc.cluster.local
+kubectl exec &lt;pod&gt; -- cat /etc/resolv.conf
+</code></pre>
+<h2 id="choosing-a-cni-plugin"><a class="header" href="#choosing-a-cni-plugin">Choosing a CNI plugin</a></h2>
+<p>The CNI plugin allocates Pod IPs and wires Pod networking. Kubeadm does not install one, so the cluster has no working Pod network until you do.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Plugin</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Flannel</strong></td><td>Simple VXLAN overlay. No NetworkPolicy support</td></tr>
+<tr><td><strong>Calico</strong></td><td>BGP or VXLAN/IP-in-IP, strong NetworkPolicy support, widely used</td></tr>
+<tr><td><strong>Cilium</strong></td><td>eBPF based, NetworkPolicy plus L7 policy, observability (Hubble), can replace kube-proxy</td></tr>
+<tr><td><strong>Weave Net</strong></td><td>Mesh overlay with NetworkPolicy; less active upstream</td></tr>
+<tr><td><strong>Cloud CNIs</strong> (AWS VPC CNI, Azure CNI)</td><td>Pods get native VPC/VNet IPs</td></tr>
+</tbody>
+</table>
+</div>
+<p>Selection criteria: NetworkPolicy requirement, performance and overlay overhead, cloud integration, observability, encryption (WireGuard/IPsec), operational familiarity, and scale. On the exam the CNI is normally given or specified by the task; remember to apply its manifest after <code>kubeadm init</code>, and that the Pod CIDR must match.</p>
+<h2 id="cheat-sheet"><a class="header" href="#cheat-sheet">Cheat sheet</a></h2>
+<pre><code class="language-bash">kubectl get svc -A
+kubectl get endpoints &lt;svc&gt;
+kubectl get ingress -A
+kubectl get netpol -A
+kubectl describe netpol &lt;name&gt;
+kubectl port-forward svc/web 8080:80
+kubectl port-forward pod/web-abc 8080:80
+kubectl run curl --rm -it --image=curlimages/curl --restart=Never -- curl -s http://web.default
+kubectl get pods -A -o wide | grep &lt;ip&gt;
+kubectl -n kube-system get cm kube-proxy -o yaml | grep mode
+kubectl cluster-info dump | grep -E "cluster-cidr|service-cluster-ip-range"
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../kubernetes/cka/cluster-architecture-installation-and-configuration/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../kubernetes/cka/storage/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../kubernetes/cka/cluster-architecture-installation-and-configuration/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../kubernetes/cka/storage/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../searcher-09f2665d.js"></script>
+
+        <script src="../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../highlight-abc7f01d.js"></script>
+        <script src="../../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../mermaid-eefea253.min.js"></script>
+        <script src="../../../mermaid-init-53b67c53.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

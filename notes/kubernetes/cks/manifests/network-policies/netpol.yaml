@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-inter-pod-comms
+  namespace: g04
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
