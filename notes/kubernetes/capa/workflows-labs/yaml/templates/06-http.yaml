@@ -1,0 +1,19 @@
+# http: make an HTTP request without launching a container pod. runs in the agent pod
+# needs 00-rbac.yaml applied (workflowtaskresults)
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: tt-http-
+  namespace: argo
+spec:
+  entrypoint: main
+  templates:
+    - name: main
+      http:
+        url: https://httpbin.org/get
+        method: GET
+        timeoutSeconds: 20
+        successCondition: "response.statusCode == 200"
+        headers:
+          - name: x-lab
+            value: argo

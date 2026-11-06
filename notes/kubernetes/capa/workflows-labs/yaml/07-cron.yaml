@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: every-minute
+  namespace: argo
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  workflowSpec:
+    entrypoint: tick
+    templates:
+      - name: tick
+        container:
+          image: alpine:3.20
+          command: [sh, -c]
+          args: ["date"]

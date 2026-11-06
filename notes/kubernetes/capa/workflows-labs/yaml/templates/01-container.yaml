@@ -1,0 +1,14 @@
+# container: run a single container. the most common type
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: tt-container-
+  namespace: argo
+spec:
+  entrypoint: main
+  templates:
+    - name: main
+      container:
+        image: alpine:3.20
+        command: [sh, -c]
+        args: ["echo container template; uname -a"]

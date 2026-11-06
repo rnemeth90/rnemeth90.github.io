@@ -1,0 +1,26 @@
+# Scenario 3: Restrict Traffic to a Specific Pod Label
+# Problem:
+# A team wants to restrict access to the database pod running in db-namespace. Only app=backend pods from backend-namespace should be able to communicate with it.
+#
+# Tasks:
+#
+# Define a NetworkPolicy that allows traffic only from pods labeled app=backend in the backend-namespace to the database pod.
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: restrict-to-pods-with-label-in-different-namespace
+  namespace: db-namespace
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/namespace: backend-namespace
+        podSelector:
+          matchLabels:
+            app: backend
+

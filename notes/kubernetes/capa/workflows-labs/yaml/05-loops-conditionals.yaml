@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: loops-
+  namespace: argo
+spec:
+  entrypoint: main
+  templates:
+    - name: main
+      steps:
+        # loop: one pod per item, run in parallel
+        - - name: fanout
+            template: say
+            arguments:
+              parameters: [{name: msg, value: "{{item}}"}]
+            withItems: [apple, banana, cherry]
+        # conditional: only runs if the expression is true
+        - - name: flip
+            template: coin
+        - - name: heads
+            template: say
+            arguments:
+              parameters: [{name: msg, value: "it was heads"}]
+            when: "{{steps.flip.outputs.result}} == heads"
+          - name: tails
+            template: say
+            arguments:
+              parameters: [{name: msg, value: "it was tails"}]
+            when: "{{steps.flip.outputs.result}} == tails"
+
+    # stdout of a script template is available as outputs.result
+    - name: coin
+      script:
+        image: python:3.12-alpine
+        command: [python]
+        source: |
+          import random
+          print(random.choice(["heads", "tails"]))
+
+    - name: say
+      inputs:
+        parameters:
+          - name: msg
+      container:
+        image: alpine:3.20
+        command: [echo]
+        args: ["{{inputs.parameters.msg}}"]

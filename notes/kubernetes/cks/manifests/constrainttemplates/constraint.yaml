@@ -1,0 +1,10 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sReplicaLimits
+metadata:
+  name: example-limits
+spec:
+  ranges:
+    - min_replicas: 2
+      max_replicas: 10
+    - min_replicas: 5
+      max_replicas: 50
