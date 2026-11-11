@@ -48,6 +48,14 @@ jobs:
           # never commit a stray submodule gitlink to gh-pages.
           rsync -a --exclude='.git*' --exclude='.github' notes-src/book/ public/notes/
 
+      - name: Install Typst
+        uses: typst-community/setup-typst@v4
+        with:
+          typst-version: '0.15.1'
+
+      - name: Generate resume PDF from content/cv.md
+        run: python3 resume/build.py
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
