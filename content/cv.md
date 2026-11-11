@@ -7,7 +7,8 @@ permalink: /cv/
 
 SRE | DevOps | Dev | Linux | Kubernetes | Azure | AWS | Always learning
 
-[LinkedIn](https://linkedin.com/in/ryan-nemeth-b0b1504b/) &middot;
+[Kubestronaut](https://www.cncf.io/training/kubestronaut/?p=ryan-nemeth&_sf_s=ryan+nemeth)
+[LinkedIn](https://linkedin.com/in/ryan-nemeth-b0b1504b/)
 
 [Download PDF version](/resume/ryan-nemeth-resume.pdf)
 
