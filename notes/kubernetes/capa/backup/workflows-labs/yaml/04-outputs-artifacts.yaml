@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: outputs-
+  namespace: argo
+spec:
+  entrypoint: main
+  templates:
+    - name: main
+      steps:
+        - - name: generate
+            template: generate
+        - - name: consume
+            template: consume
+            arguments:
+              parameters:
+                - name: value
+                  value: "{{steps.generate.outputs.parameters.result}}"
+              artifacts:
+                - name: data
+                  from: "{{steps.generate.outputs.artifacts.data}}"
+
+    - name: generate
+      container:
+        image: alpine:3.20
+        command: [sh, -c]
+        args:
+          - |
+            echo -n 42 > /tmp/result.txt
+            echo "some artifact content" > /tmp/data.txt
+      outputs:
+        parameters:
+          - name: result
+            valueFrom:
+              path: /tmp/result.txt
+        artifacts:
+          - name: data
+            path: /tmp/data.txt
+
+    - name: consume
+      inputs:
+        parameters:
+          - name: value
+        artifacts:
+          - name: data
+            path: /tmp/in.txt
+      container:
+        image: alpine:3.20
+        command: [sh, -c]
+        args:
+          - |
+            echo "param: {{inputs.parameters.value}}"
+            echo "artifact:"; cat /tmp/in.txt

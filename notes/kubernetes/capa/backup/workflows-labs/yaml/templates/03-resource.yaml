@@ -1,0 +1,21 @@
+# resource: create/patch/delete a kubernetes resource directly (no kubectl image needed)
+# needs 00-rbac.yaml applied
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: tt-resource-
+  namespace: argo
+spec:
+  entrypoint: main
+  templates:
+    - name: main
+      resource:
+        action: create            # create | patch | apply | delete | get
+        successCondition: metadata.name
+        manifest: |
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            generateName: made-by-workflow-
+          data:
+            hello: world

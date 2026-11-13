@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: use-template-
+  namespace: argo
+spec:
+  entrypoint: main
+  templates:
+    - name: main
+      steps:
+        - - name: greet
+            templateRef:
+              name: greeter
+              template: greet
+            arguments:
+              parameters: [{name: name, value: ryan}]

@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: steps-
+  namespace: argo
+spec:
+  entrypoint: main
+  arguments:
+    parameters:
+      - name: message
+        value: hello
+  templates:
+    - name: main
+      steps:
+        # each inner list is a group. groups run in order, items in a group run in parallel
+        - - name: first
+            template: say
+            arguments:
+              parameters: [{name: msg, value: "{{workflow.parameters.message}} - step 1"}]
+        - - name: parallel-a
+            template: say
+            arguments:
+              parameters: [{name: msg, value: "parallel a"}]
+          - name: parallel-b
+            template: say
+            arguments:
+              parameters: [{name: msg, value: "parallel b"}]
+        - - name: last
+            template: say
+            arguments:
+              parameters: [{name: msg, value: "done"}]
+
+    - name: say
+      inputs:
+        parameters:
+          - name: msg
+      container:
+        image: alpine:3.20
+        command: [echo]
+        args: ["{{inputs.parameters.msg}}"]

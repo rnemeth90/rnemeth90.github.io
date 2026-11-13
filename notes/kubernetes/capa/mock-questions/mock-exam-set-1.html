@@ -1,0 +1,883 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Mock Exam 1 - notebook</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="theme/logo.png">
+        
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../theme/custom-e80eafda.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex-ad38f91d.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc-1c176e6a.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <a href="https://rnemeth90.github.io" class="back-to-blog">
+                    🏠 Back to Blog
+                </a>
+                
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">notebook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="mock-exam-1"><a class="header" href="#mock-exam-1">Mock Exam 1</a></h1>
+<ul>
+<li>60 questions, 90 min, pass at 70% (42)</li>
+<li>Q1-15 Workflows, Q16-36 CD, Q37-51 Rollouts, Q52-60 Events</li>
+</ul>
+<h1 id="argo-workflows"><a class="header" href="#argo-workflows">Argo Workflows</a></h1>
+<h2 id="1"><a class="header" href="#1">1</a></h2>
+<p>Main purpose of Argo Workflows?</p>
+<ul>
+<li>A. Continuous delivery for k8s apps</li>
+<li>B. Orchestrate parallel/sequential containers on k8s</li>
+<li>C. Progressive delivery</li>
+<li>D. Trigger workflows from events</li>
+</ul>
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - container-native workflow engine. A is CD, C is Rollouts, D is Events.</p>
+</details>
+## 2
+Which template type defines parallel execution with dependencies?
+- A. Steps
+- B. DAG
+- C. Container
+- D. Suspend
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - DAG tasks declare <code>dependencies</code> (or <code>depends</code>) and run as soon as those finish.</p>
+</details>
+## 3
+Purpose of `retryStrategy`?
+- A. Retry the whole workflow
+- B. Retry a specific step/task on failure
+- C. Schedule periodic runs
+- D. Backoff for API calls only
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - set on a template; <code>limit</code>, <code>retryPolicy</code> (<code>Always</code>, <code>OnFailure</code>, <code>OnError</code>, <code>OnTransientError</code>), <code>backoff</code>.</p>
+</details>
+## 4
+Command to submit a Workflow from a file?
+- A. `argo create workflow.yaml`
+- B. `argo submit workflow.yaml`
+- C. `argo run workflow.yaml`
+- D. `argo start workflow.yaml`
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - <code>argo submit</code>. The others are not argo commands.</p>
+</details>
+## 5
+What does this do?
+```yaml
+steps:
+- - name: step1
+    template: whalesay
+- - name: step2a
+    template: whalesay
+  - name: step2b
+    template: whalesay
+```
+- A. All three sequentially
+- B. All three in parallel
+- C. step1, then step2a and step2b in parallel
+- D. Invalid syntax
+<details>
+<summary>Answer</summary>
+<p><strong>C</strong> - outer list = sequential groups, inner list = parallel.</p>
+</details>
+## 6
+Which is NOT a supported artifact repository?
+- A. S3
+- B. GCS
+- C. Redis
+- D. Azure Blob Storage
+<details>
+<summary>Answer</summary>
+<p><strong>C</strong> - supported: S3 (and compatibles like MinIO), GCS, Azure Blob, Artifactory, HDFS, OSS, Git, HTTP.</p>
+</details>
+## 7
+Purpose of `when`?
+- A. Schedule a workflow
+- B. Conditionally run a step/task
+- C. Set a step timeout
+- D. Define artifact upload time
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - e.g. <code>when: "{{steps.step1.status}} == Succeeded"</code>.</p>
+</details>
+## 8
+Which field limits total workflow run time?
+- A. `spec.timeout`
+- B. `spec.activeDeadlineSeconds`
+- C. `spec.deadline`
+- D. `spec.ttlStrategy.secondsAfterCompletion`
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - workflow is terminated when exceeded. <code>ttlStrategy</code> is cleanup after completion.</p>
+</details>
+## 9
+What is a WorkflowTemplate?
+- A. Reusable, namespaced workflow definition referenced by other workflows
+- B. Template for generating workflows from events
+- C. A container template inside a workflow
+- D. A Helm template for Argo Workflows
+<details>
+<summary>Answer</summary>
+<p><strong>A</strong> - referenced via <code>workflowTemplateRef</code> or <code>templateRef</code>. <code>ClusterWorkflowTemplate</code> is the cluster-scoped version.</p>
+</details>
+## 10
+How to pass a step's output to another step?
+- A. Env vars
+- B. `{{steps.stepname.outputs.result}}`
+- C. ConfigMaps
+- D. Not possible
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - also <code>{{steps.name.outputs.parameters.param}}</code>. In a DAG use <code>tasks.name</code>.</p>
+</details>
+## 11
+Which template type pauses until resumed?
+- A. Pause
+- B. Suspend
+- C. Wait
+- D. Manual
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - resume with <code>argo resume</code> or <code>duration</code>; useful for approval gates.</p>
+</details>
+## 12
+Purpose of input/output parameters?
+- A. Scheduling
+- B. Pass data/config between templates
+- C. Resource requests
+- D. Artifact locations
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong></p>
+</details>
+## 13
+Command for workflow logs?
+- A. `kubectl logs workflow-name`
+- B. `argo logs workflow-name`
+- C. `argo workflow logs workflow-name`
+- D. `argo get workflow-name --logs`
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - <code>argo logs &lt;wf&gt; [pod]</code>; <code>-f</code> to follow.</p>
+</details>
+## 14
+What does `parallelism` control?
+- A. Workflow replicas
+- B. Max pods running at once
+- C. CPU per pod
+- D. Number of steps defined
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - can be set on the workflow or on a template (limits its children).</p>
+</details>
+## 15
+What is a CronWorkflow?
+- A. Workflow run on a schedule
+- B. Workflow using cron containers
+- C. Workflow with time-based retry
+- D. Workflow that monitors CronJobs
+<details>
+<summary>Answer</summary>
+<p><strong>A</strong> - like a CronJob; <code>spec.schedule</code> (cron syntax) plus <code>workflowSpec</code>.</p>
+</details>
+# Argo CD
+<h2 id="16"><a class="header" href="#16">16</a></h2>
+<p>What does <code>RespectIgnoreDifferences</code> do?</p>
+<ul>
+<li>A. Ignores all differences</li>
+<li>B. Honors <code>ignoreDifferences</code> during sync</li>
+<li>C. Blocks sync when diffs exist</li>
+<li>D. Ignores resource deletion</li>
+</ul>
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - sync option; ignored fields are not overwritten on sync.</p>
+</details>
+## 17
+Which lists all applications?
+- A. `argocd app list`
+- B. `argocd app get --all`
+- C. `kubectl get applications -n argocd`
+- D. A and C
+<details>
+<summary>Answer</summary>
+<p><strong>D</strong> - the CLI via the API, kubectl via the <code>Application</code> CRs (if they live in <code>argocd</code>).</p>
+</details>
+## 18
+Kustomize app with overlays: how to pick the overlay?
+- A. `source.kustomize.overlay`
+- B. `source.path` pointing at the overlay dir
+- C. `source.targetRevision`
+- D. AppProject config
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - Argo CD detects <code>kustomization.yaml</code> in the path.</p>
+</details>
+## 19
+Purpose of `argocd.argoproj.io/sync-wave`?
+- A. Order resources are synced
+- B. Group resources for batch ops
+- C. Number of sync attempts
+- D. Sync frequency
+<details>
+<summary>Answer</summary>
+<p><strong>A</strong> - lower waves first (default 0, can be negative); waits for health before next wave.</p>
+</details>
+## 20
+How can you preview a sync without applying it?
+- A. `argocd app diff`
+- B. `argocd app sync --dry-run`
+- C. `argocd app wait`
+- D. A and B
+<details>
+<summary>Answer</summary>
+<p><strong>D</strong></p>
+</details>
+## 21
+Deploy to a namespace that doesn't exist yet?
+- A. Create it by hand
+- B. Sync option `CreateNamespace=true`
+- C. `destination.createNamespace: true`
+- D. Not supported
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - under <code>syncPolicy.syncOptions</code>.</p>
+</details>
+## 22
+What does OutOfSync mean?
+- A. Sync failed
+- B. Git (desired) differs from live state
+- C. App is unhealthy
+- D. Repo unreachable
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - not necessarily a problem; sync status is separate from health.</p>
+</details>
+## 23
+Primary role of the Application Controller?
+- A. AuthN/AuthZ
+- B. Poll Git for changes
+- C. Compare desired (Git) with live state
+- D. Serve UI/API
+<details>
+<summary>Answer</summary>
+<p><strong>C</strong> - repo server handles Git/manifests, API server handles auth/UI.</p>
+</details>
+## 24
+Which setting syncs automatically on drift from manual cluster changes?
+- A. `automated.prune: true`
+- B. `automated.selfHeal: true`
+- C. `automated.allowEmpty: true`
+- D. `syncOptions: [AutoSync=true]`
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - <code>prune</code> deletes resources removed from Git.</p>
+</details>
+## 25
+Keep a Secret from being deleted on sync?
+- A. `sync-options: Delete=false`
+- B. `compare-options: IgnoreDuringDeletion`
+- C. `sync-options: Prune=false`
+- D. `tracking-id: ignore`
+<details>
+<summary>Answer</summary>
+<p><strong>C</strong> - annotation <code>argocd.argoproj.io/sync-options: Prune=false</code>.</p>
+</details>
+## 26
+Show diff between Git and live state?
+- A. `argocd app status myapp`
+- B. `argocd app diff myapp`
+- C. `argocd app get myapp --show-params`
+- D. `argocd app history myapp`
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong></p>
+</details>
+## 27
+App stuck in Progressing - most likely cause?
+- A. Repo unreachable
+- B. A resource hasn't become healthy yet
+- C. Bad YAML
+- D. Sync cancelled
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - e.g. Deployment not reaching ready replicas.</p>
+</details>
+## 28
+Purpose of the `project` field?
+- A. Git project of manifests
+- B. References an AppProject (repos, destinations, resource restrictions, roles)
+- C. Target namespace
+- D. Cosmetic grouping
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - defaults to <code>default</code>.</p>
+</details>
+## 29
+Skip schema validation on apply?
+- A. `Validate=false`
+- B. `SkipSchemaValidation`
+- C. `ServerSideApply=true`
+- D. `ApplyOutOfSyncOnly=true`
+<details>
+<summary>Answer</summary>
+<p><strong>A</strong></p>
+</details>
+## 30
+Best way to deploy one repo to many clusters?
+- A. One Argo CD per cluster
+- B. ApplicationSet with cluster generator
+- C. One repo per cluster
+- D. Helm values + manual sync
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong></p>
+</details>
+## 31
+What does `health.status: Degraded` mean?
+- A. Sync failed
+- B. Resource has health problems (e.g. CrashLoopBackOff)
+- C. Out of sync
+- D. App was pruned
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - health values: Healthy, Progressing, Degraded, Suspended, Missing, Unknown.</p>
+</details>
+## 32
+Which component renders Helm/Kustomize/Jsonnet into manifests?
+- A. Application Controller
+- B. API Server
+- C. Repo Server
+- D. Redis
+<details>
+<summary>Answer</summary>
+<p><strong>C</strong></p>
+</details>
+## 33
+Exclude files from processing in a directory source?
+- A. `source.path` with negation
+- B. `source.directory.exclude`
+- C. `ignoreDifferences`
+- D. `ignoreFiles`
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - glob pattern; <code>include</code> is the inverse.</p>
+</details>
+## 34
+What does `argocd app wait` do?
+- A. Pause a sync
+- B. Block until app is synced and healthy
+- C. Delay a sync
+- D. Wait for confirmation
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - handy in CI; flags like <code>--health</code>, <code>--sync</code>, <code>--timeout</code>.</p>
+</details>
+## 35
+Which AppProject field restricts target namespaces?
+- A. `sourceRepos`
+- B. `destinations`
+- C. `clusterResourceWhitelist`
+- D. `namespaceResourceBlacklist`
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - cluster + namespace pairs.</p>
+</details>
+## 36
+Use a private repo over SSH?
+- A. Register repo credentials with the SSH private key
+- B. `source.sshKey` in the Application
+- C. Key in `argocd-cm`
+- D. SSH not supported
+<details>
+<summary>Answer</summary>
+<p><strong>A</strong> - <code>argocd repo add git@... --ssh-private-key-path</code>; stored as a Secret labeled <code>argocd.argoproj.io/secret-type: repository</code>.</p>
+</details>
+# Argo Rollouts
+<h2 id="37"><a class="header" href="#37">37</a></h2>
+<p>Command for rollout status and history?</p>
+<ul>
+<li>A. <code>kubectl get rollout name</code></li>
+<li>B. <code>kubectl argo rollouts get rollout name</code></li>
+<li>C. <code>kubectl describe rollout name</code></li>
+<li>D. <code>kubectl argo rollouts status name</code></li>
+</ul>
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - shows steps, weights, replica sets, analysis runs. <code>--watch</code> to follow. <code>status</code> only reports progress/health.</p>
+</details>
+## 38
+What is an Experiment?
+- A. Test environment
+- B. Run one or more ReplicaSets side by side (optionally with analysis) for comparison
+- C. An analysis template type
+- D. Rollback strategy
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong></p>
+</details>
+## 39
+Which strategy rolls back fastest?
+- A. Canary
+- B. Blue-Green
+- C. Rolling Update
+- D. Same
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - old ReplicaSet stays up for <code>scaleDownDelaySeconds</code>, so rollback is a service selector switch.</p>
+</details>
+## 40
+What is `abortScaleDownDelaySeconds`?
+- A. Delay before abort starts
+- B. Delay before scaling down the new ReplicaSet after an abort
+- C. Abort timeout
+- D. Blocks scaling during abort
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - default 30s; <code>0</code> disables scale down. Applies to blue-green and canary with traffic routing.</p>
+</details>
+## 41
+Where is the traffic router configured for canary?
+- A. `spec.strategy.canary.trafficManagement`
+- B. `spec.trafficRouting`
+- C. `spec.strategy.canary.trafficRouting`
+- D. `spec.networking.trafficManager`
+<details>
+<summary>Answer</summary>
+<p><strong>C</strong> - providers: Istio, NGINX, ALB, SMI, Traefik, etc.</p>
+</details>
+## 42
+With a traffic router configured, what does this do?
+```yaml
+steps:
+- setWeight: 20
+- pause: {duration: 10m}
+- setWeight: 50
+- pause: {duration: 10m}
+```
+- A. 20% traffic to canary, 10m, then 50%, 10m, then 100%
+- B. Fails without analysis
+- C. Needs manual promotion at each pause
+- D. Deploys 20% pods only
+<details>
+<summary>Answer</summary>
+<p><strong>A</strong> - <code>pause</code> with a duration auto-continues; bare <code>pause: {}</code> waits for promote.</p>
+</details>
+## 43
+Primary purpose of Argo Rollouts?
+- A. Cluster upgrades
+- B. Progressive delivery (blue-green, canary)
+- C. Auto-rollback only
+- D. Workflow execution
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - replaces <code>Deployment</code> with a <code>Rollout</code> CRD.</p>
+</details>
+## 44
+What does `setWeight` do?
+- A. Percentage of traffic to canary
+- B. Canary replica count
+- C. Pod priority
+- D. Resource limits
+<details>
+<summary>Answer</summary>
+<p><strong>A</strong> - without a traffic router it approximates by canary pod ratio.</p>
+</details>
+## 45
+Promote a paused rollout?
+- A. `kubectl argo rollouts promote name`
+- B. `kubectl rollout promote name`
+- C. `kubectl argo rollouts continue name`
+- D. `kubectl argo rollouts resume name`
+<details>
+<summary>Answer</summary>
+<p><strong>A</strong> - <code>--full</code> skips remaining steps and analysis.</p>
+</details>
+## 46
+`activeService` vs `previewService` in blue-green?
+- A. Active = current version, preview = new version
+- B. Both load balance all versions
+- C. Active = prod, preview = monitoring only
+- D. Optional, monitoring only
+<details>
+<summary>Answer</summary>
+<p><strong>A</strong> - selectors are swapped on promotion; <code>previewService</code> is optional.</p>
+</details>
+## 47
+Which metric providers does AnalysisTemplate support?
+- A. Prometheus
+- B. Datadog
+- C. Web
+- D. All of the above
+<details>
+<summary>Answer</summary>
+<p><strong>D</strong> - also New Relic, Wavefront, CloudWatch, Kayenta, Job, Influx.</p>
+</details>
+## 48
+AnalysisRun fails during canary?
+- A. Continues
+- B. Pauses for manual input
+- C. Aborted, reverts to stable
+- D. Ignored
+<details>
+<summary>Answer</summary>
+<p><strong>C</strong> - rollout goes <code>Degraded</code>; traffic shifts back to stable.</p>
+</details>
+## 49
+Blue-green with `autoPromotionEnabled: false`?
+- A. Disables auto-rollback
+- B. Waits for manual promotion after preview is ready
+- C. Disables analysis
+- D. Rollout won't start
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - default <code>true</code> promotes as soon as preview is ready.</p>
+</details>
+## 50
+Best strategy to test new version with a little real traffic?
+- A. Blue-Green
+- B. Canary
+- C. Rolling Update
+- D. Recreate
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong></p>
+</details>
+## 51
+Purpose of `scaleDownDelaySeconds` in blue-green?
+- A. Delay deployment start
+- B. Delay scaling down the previous version after promotion
+- C. Promotion timeout
+- D. Delay analysis
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - default 30s; gives time for connections to drain and for fast rollback.</p>
+</details>
+# Argo Events
+<h2 id="52"><a class="header" href="#52">52</a></h2>
+<p>What does this Sensor dependency set mean?</p>
+<pre><code class="language-yaml">dependencies:
+- name: webhook-dep
+  eventSourceName: webhook
+  eventName: example
+- name: calendar-dep
+  eventSourceName: calendar
+  eventName: hourly
+</code></pre>
+<ul>
+<li>A. Either event triggers</li>
+<li>B. Both events are required</li>
+<li>C. Webhook fires, then waits for calendar</li>
+<li>D. Invalid</li>
+</ul>
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - default is AND. Use <code>circuit</code>/<code>conditions</code> for OR logic.</p>
+</details>
+## 53
+Which is NOT an EventSource type?
+- A. Kafka
+- B. Redis
+- C. PostgreSQL
+- D. GitHub
+<details>
+<summary>Answer</summary>
+<p><strong>C</strong></p>
+</details>
+## 54
+Primary purpose of Argo Events?
+- A. Monitor k8s Events
+- B. Trigger workflows/resources from events of many sources
+- C. Log events externally
+- D. Microservice framework
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong></p>
+</details>
+## 55
+Two main components?
+- A. EventSource and Trigger
+- B. EventSource and Sensor
+- C. Webhook and Workflow
+- D. Source and Destination
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - plus the EventBus that carries events (NATS JetStream by default).</p>
+</details>
+## 56
+Which EventSource receives HTTP POST?
+- A. Webhook
+- B. HTTP
+- C. API
+- D. REST
+<details>
+<summary>Answer</summary>
+<p><strong>A</strong></p>
+</details>
+## 57
+What does a Sensor do when dependencies are met?
+- A. Logs the event
+- B. Executes triggers
+- C. Stops listening
+- D. Creates an EventSource
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong></p>
+</details>
+## 58
+Trigger type to create a Workflow?
+- A. Workflow Trigger
+- B. Argo Workflow Trigger
+- C. K8s Resource Trigger
+- D. Custom Trigger
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - <code>argoWorkflow</code> trigger; the k8s resource trigger can also create arbitrary objects.</p>
+</details>
+## 59
+Purpose of event filters on a Sensor?
+- A. Block malicious events
+- B. Conditionally process events by payload/metadata
+- C. Rate limit
+- D. Encrypt
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - <code>filters</code> on data, time, context, expression.</p>
+</details>
+## 60
+Which EventSource handles MinIO bucket notifications?
+- A. S3
+- B. Minio
+- C. Bucket
+- D. Storage
+<details>
+<summary>Answer</summary>
+<p><strong>B</strong> - for AWS S3, use <code>sns</code> or <code>sqs</code>.</p>
+</details>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../kubernetes/capa/mock-questions/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../kubernetes/capa/mock-questions/mock-exam-set-2.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../kubernetes/capa/mock-questions/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../kubernetes/capa/mock-questions/mock-exam-set-2.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../searcher-09f2665d.js"></script>
+
+        <script src="../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../highlight-abc7f01d.js"></script>
+        <script src="../../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../mermaid-eefea253.min.js"></script>
+        <script src="../../../mermaid-init-53b67c53.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,257 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+  labels:
+    name: dev
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: staging
+  labels:
+    name: staging
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+  labels:
+    name: prod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1
+  namespace: dev
+  labels:
+    app: app1-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app1-dev
+  template:
+    metadata:
+      labels:
+        app: app1-dev
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+          - containerPort: 80
+      - name: app1
+        image: nicolaka/netshoot
+        command: ["sleep","9999999"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1
+  namespace: staging
+  labels:
+    app: app1-staging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app1-staging
+  template:
+    metadata:
+      labels:
+        app: app1-staging
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+          - containerPort: 80
+      - name: app1
+        image: nicolaka/netshoot
+        command: ["sleep","9999999"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1
+  namespace: prod
+  labels:
+    app: app1-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app1-prod
+  template:
+    metadata:
+      labels:
+        app: app1-prod
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+          - containerPort: 80
+      - name: app1
+        image: nicolaka/netshoot
+        command: ["sleep","9999999"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app2
+  namespace: dev
+  labels:
+    app: app2-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app2-dev
+  template:
+    metadata:
+      labels:
+        app: app2-dev
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+          - containerPort: 80
+      - name: app2
+        image: nicolaka/netshoot
+        command: ["sleep","9999999"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app2
+  namespace: staging
+  labels:
+    app: app2-staging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app2-staging
+  template:
+    metadata:
+      labels:
+        app: app2-staging
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+          - containerPort: 80
+      - name: app2
+        image: nicolaka/netshoot
+        command: ["sleep","9999999"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app2
+  namespace: prod
+  labels:
+    app: app2-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app2-prod
+  template:
+    metadata:
+      labels:
+        app: app2-prod
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+          - containerPort: 80
+      - name: app2
+        image: nicolaka/netshoot
+        command: ["sleep","9999999"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app3
+  namespace: dev
+  labels:
+    app: app3-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app3-dev
+  template:
+    metadata:
+      labels:
+        app: app3-dev
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+          - containerPort: 80
+      - name: app3
+        image: nicolaka/netshoot
+        command: ["sleep","9999999"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app3
+  namespace: staging
+  labels:
+    app: app3-staging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app3-staging
+  template:
+    metadata:
+      labels:
+        app: app3-staging
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+          - containerPort: 80
+      - name: app3
+        image: nicolaka/netshoot
+        command: ["sleep","9999999"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app3
+  namespace: prod
+  labels:
+    app: app3-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app3-prod
+  template:
+    metadata:
+      labels:
+        app: app3-prod
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+          - containerPort: 80
+      - name: app3
+        image: nicolaka/netshoot
+        command: ["sleep","9999999"]
+
+
+

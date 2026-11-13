@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sync-lab-web
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  selector:
+    app: sync-lab-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
