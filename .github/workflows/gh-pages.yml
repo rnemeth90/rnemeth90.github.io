@@ -47,6 +47,10 @@ jobs:
           # root (including .git/.gitmodules) into book/. Exclude those so we
           # never commit a stray submodule gitlink to gh-pages.
           rsync -a --exclude='.git*' --exclude='.github' notes-src/book/ public/notes/
+          # mdBook renders README.md as index.html; keep README.html working too
+          # so links to a directory's README don't 404.
+          find public/notes -name index.html -execdir sh -c \
+            '[ -e README.html ] || cp index.html README.html' \;
 
       - name: Install Typst
         uses: typst-community/setup-typst@v4
