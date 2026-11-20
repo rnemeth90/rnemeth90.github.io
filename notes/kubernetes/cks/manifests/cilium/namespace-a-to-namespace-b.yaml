@@ -1,0 +1,13 @@
+#Create a CiliumNetworkPolicy that isolates two namespaces (namespace-a and namespace-b) such that pods in namespace-a cannot communicate with pods in namespace-b. Verify that communication within each namespace is allowed.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: namespace-a-to-namespace-b
+  namespace: namespace-a
+spec:
+  endpointSelector: {}
+  egress:
+  - toEndpoints: 
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: namespace-b
+        name: namespace-b

@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: greeter
+  namespace: argo
+spec:
+  templates:
+    - name: greet
+      inputs:
+        parameters:
+          - name: name
+            value: world
+      container:
+        image: alpine:3.20
+        command: [echo]
+        args: ["hello {{inputs.parameters.name}}"]

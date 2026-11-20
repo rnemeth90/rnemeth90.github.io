@@ -1,0 +1,13 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: cluster-wide-allow-kube-dns
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s-app: kube-dns
+  ingress:
+    - fromEndpoints: []
+  egress:
+    - toEntities:
+      - "all"

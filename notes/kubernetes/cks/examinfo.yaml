@@ -1,0 +1,79 @@
+---
+exam:
+  name: Certified Kubernetes Security Specialist
+  abbreviation: CKS
+  provider: Linux Foundation / CNCF
+  official_page: https://www.cncf.io/certification/cks/
+  curriculum: https://github.com/cncf/curriculum/blob/master/CKS_Curriculum%20v1.31.pdf
+  level: specialist (requires active CKA)
+  description: >
+    Validates the skills, knowledge, and competency to secure
+    container-based applications and Kubernetes platforms during build,
+    deployment, and runtime.
+  prerequisites: active, valid Certified Kubernetes Administrator (CKA) certification
+
+format:
+  delivery: online, proctored (PSI)
+  question_type: performance-based, hands-on command-line tasks
+  duration_minutes: 120
+  passing_score_percent: 66
+  language: English
+  environment_note: >
+    As of 11/2024, exam environment runs Kubernetes 1.31 on Ubuntu 20.04
+    with vim, tmux, jq, yq, firefox, base64, and kubectl pre-installed.
+
+cost:
+  exam_usd_approx: 445
+  note: list price, includes one free retake; varies with bundles/promos
+
+policy:
+  validity_years: 3
+  retakes_included: 1
+
+domains:
+  - name: Cluster Setup
+    weight_percent: 10
+    dir: cluster-setup
+  - name: Cluster Hardening
+    weight_percent: 15
+    dir: cluster-hardening
+  - name: System Hardening
+    weight_percent: 15
+    dir: system-hardening
+  - name: Minimize Microservice Vulnerabilities
+    weight_percent: 20
+    dir: minimize-microservice-vulnerabilities
+  - name: Supply Chain Security
+    weight_percent: 20
+    dir: supply-chain-security
+  - name: Monitoring, Logging and Runtime Security
+    weight_percent: 20
+    dir: monitoring-logging-and-runtime-security
+
+preparation:
+  study_resources:
+    - name: Official Kubernetes Documentation
+      url: https://kubernetes.io/docs/home/
+    - name: KodeKloud CKS Course
+      url: https://learn.kodekloud.com/user/courses/certified-kubernetes-security-specialist-cks
+    - name: The Kubernetes Book — Nigel Poulton
+      url: https://www.amazon.com/Kubernetes-Book-Nigel-Poulton/dp/1521823634
+    - name: CKS Study Guide (Kubernetes Security In-Depth)
+      url: https://www.amazon.com/Certified-Kubernetes-Security-Specialist-Depth/dp/1098132971
+    - name: killer.sh labs
+      url: https://killer.sh/
+  practice:
+    - name: Play with Kubernetes
+      url: https://labs.play-with-k8s.com/
+    - name: killer.sh CKS practice exam/environment
+      url: https://killer.sh/cks
+  tools_to_know:
+    - tracee
+    - OPA Gatekeeper
+    - kube-bench
+    - syft
+    - grype
+    - kube-linter
+    - kubesec
+    - trivy
+    - falco

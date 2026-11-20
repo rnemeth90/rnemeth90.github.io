@@ -1,0 +1,26 @@
+# Gatekeeper constraint template to check if the number of replicas is greater than 1
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequiredreplicas
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredReplicas
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8srequiredreplicas
+
+        violation[{"msg": msg, "details": {"missing_field": missing_field}}] {
+          input.review.object.spec.replicas < 2
+          missing_field := "spec.replicas"
+          msg := sprintf("Deployment must have at least 2 replicas. Found: %v", [input.review.object.spec.replicas])
+        }
+
+        violation[{"msg": msg, "details": {"missing_field": missing_field}}] {
+          input.review.object.spec.replicas > 100
+          missing_field := "spec.replicas"
+          msg := sprintf("Deployment must have at most 100 replicas. Found: %v", [input.review.object.spec.replicas])
+        }

@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: dag-
+  namespace: argo
+spec:
+  entrypoint: diamond
+  templates:
+    # A -> (B, C) -> D
+    - name: diamond
+      dag:
+        tasks:
+          - name: A
+            template: echo
+            arguments:
+              parameters: [{name: msg, value: A}]
+          - name: B
+            dependencies: [A]
+            template: echo
+            arguments:
+              parameters: [{name: msg, value: B}]
+          - name: C
+            dependencies: [A]
+            template: echo
+            arguments:
+              parameters: [{name: msg, value: C}]
+          - name: D
+            dependencies: [B, C]
+            template: echo
+            arguments:
+              parameters: [{name: msg, value: D}]
+
+    - name: echo
+      inputs:
+        parameters:
+          - name: msg
+      container:
+        image: alpine:3.20
+        command: [echo]
+        args: ["{{inputs.parameters.msg}}"]

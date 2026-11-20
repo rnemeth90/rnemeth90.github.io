@@ -1,0 +1,133 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: gateway
+  namespace: httpbin
+spec:
+  gatewayClassName: cilium
+  listeners:
+  - name: default
+    hostname: "*.example.com"
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: All
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: http
+  namespace: httpbin
+spec:
+  parentRefs:
+  - name: gateway
+    namespace: cilium-ingress
+  hostnames: ["httpbin.example.com"]
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /get
+    backendRefs:
+    - name: httpbin-v1
+      port: 8000
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: httpbin
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: httpbin
+  name: httpbin-v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin-v1
+  namespace: httpbin
+  labels:
+    app: httpbin-v1
+    service: httpbin-v1
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 80
+  selector:
+    app: httpbin
+    version: v1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbin-v1
+  namespace: httpbin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpbin
+  template:
+    metadata:
+      labels:
+        app: httpbin
+        version: v1
+    spec:
+      serviceAccountName: httpbin-v1
+      containers:
+      - image: docker.io/kennethreitz/httpbin
+        imagePullPolicy: IfNotPresent
+        name: httpbin
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: httpbin-v2
+  namespace: httpbin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin-v2
+  namespace: httpbin
+  labels:
+    app: httpbin-v2
+    service: httpbin-v2
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 80
+  selector:
+    app: httpbin
+    version: v2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: httpbin
+  name: httpbin-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpbin
+  template:
+    metadata:
+      labels:
+        app: httpbin
+        version: v2
+    spec:
+      serviceAccountName: httpbin-v2
+      containers:
+      - image: docker.io/kennethreitz/httpbin
+        imagePullPolicy: IfNotPresent
+        name: httpbin
+        ports:
+        - containerPort: 80

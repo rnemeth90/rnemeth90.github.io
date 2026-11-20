@@ -1,0 +1,30 @@
+# script: like container, but the source is inline. stdout becomes outputs.result
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: tt-script-
+  namespace: argo
+spec:
+  entrypoint: main
+  templates:
+    - name: main
+      steps:
+        - - name: gen
+            template: gen
+        - - name: show
+            template: show
+            arguments:
+              parameters: [{name: v, value: "{{steps.gen.outputs.result}}"}]
+    - name: gen
+      script:
+        image: python:3.12-alpine
+        command: [python]
+        source: |
+          print(sum(range(1, 11)))
+    - name: show
+      inputs:
+        parameters: [{name: v}]
+      container:
+        image: alpine:3.20
+        command: [echo]
+        args: ["script result was {{inputs.parameters.v}}"]
