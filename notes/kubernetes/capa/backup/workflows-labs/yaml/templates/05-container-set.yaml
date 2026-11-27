@@ -1,0 +1,34 @@
+# containerSet: multiple containers in ONE pod, with dependencies between them.
+# containers share the pod's volumes so they can pass files without artifacts.
+# one container must be named `main`
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: tt-containerset-
+  namespace: argo
+spec:
+  entrypoint: main
+  templates:
+    - name: main
+      volumes:
+        - name: workspace
+          emptyDir: {}
+      containerSet:
+        volumeMounts:
+          - name: workspace
+            mountPath: /workspace
+        containers:
+          - name: a
+            image: alpine:3.20
+            command: [sh, -c]
+            args: ["echo from-a > /workspace/a.txt"]
+          - name: b
+            dependencies: [a]
+            image: alpine:3.20
+            command: [sh, -c]
+            args: ["cat /workspace/a.txt; echo from-b > /workspace/b.txt"]
+          - name: main
+            dependencies: [b]
+            image: alpine:3.20
+            command: [sh, -c]
+            args: ["cat /workspace/a.txt /workspace/b.txt"]

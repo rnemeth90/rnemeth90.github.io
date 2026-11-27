@@ -1,0 +1,85 @@
+---
+exam:
+  name: Cilium Certified Associate
+  abbreviation: CCA
+  provider: Linux Foundation / CNCF
+  developed_with: Isovalent
+  official_page: https://www.cncf.io/training/certification/cca/
+  registration_page: https://training.linuxfoundation.org/certification/cilium-certified-associate-cca/
+  curriculum: https://github.com/cncf/curriculum/blob/master/cca/CCA_Curriculum.pdf
+  announcement: https://training.linuxfoundation.org/blog/cilium-certified-associate-cca-launches/
+  level: entry-level associate
+  description: >
+    Confirms a candidate's knowledge of connecting, securing, and observing
+    Kubernetes clusters using Cilium.
+  target_audience:
+    - Platform engineers
+    - Cloud engineers
+    - Anyone interested in Kubernetes networking, security, and observability
+  recommended_background:
+    - Foundational knowledge of Kubernetes
+    - Basic networking concepts (TCP/UDP, DNS, HTTP)
+    - KCNA, CKA, or CKAD certification is a good complement (not required)
+  prerequisites: none
+
+format:
+  delivery: online, proctored
+  question_type: multiple-choice
+  question_count: 60
+  duration_minutes: 90
+  passing_score_percent: 75
+  language: English (Chinese option also available)
+
+cost:
+  exam_only_usd: 250
+  bundle_usd: 495
+  bundle_includes: THRIVE-ONE Annual Subscription (100+ educational products)
+  includes_free_retake: true
+  money_back_guarantee: true
+
+policy:
+  validity_years: 2
+  eligibility_window_months: 12
+  retakes_included: 1
+
+domains:
+  - name: Architecture
+    weight_percent: 20
+  - name: Network Policy
+    weight_percent: 18
+  - name: Service Mesh
+    weight_percent: 16
+  - name: Network Observability
+    weight_percent: 10
+  - name: Installation and Configuration
+    weight_percent: 10
+  - name: Cluster Mesh
+    weight_percent: 10
+  - name: eBPF
+    weight_percent: 10
+  - name: BGP and External Networking
+    weight_percent: 6
+
+preparation:
+  study_resources:
+    - name: Cilium Documentation
+      url: https://docs.cilium.io/en/stable/
+    - name: Isovalent CCA Study Guide (GitHub)
+      url: https://github.com/isovalent/CCA-Study-Guide
+    - name: CNCF CCA Curriculum (PDF)
+      url: https://github.com/cncf/curriculum/blob/master/cca/CCA_Curriculum.pdf
+    - name: Cilium Getting Started / Labs
+      url: https://cilium.io/get-started/
+    - name: eBPF and XDP Reference Guide
+      url: https://docs.cilium.io/en/stable/bpf/
+  practice:
+    - name: Cilium Certified Associate (CCA) Practice Exams (Udemy)
+      url: https://www.udemy.com/course/cilium-certified-associate-cca-practice-exams/
+  labs:
+    - Deploy Cilium as a CNI on a local kind/minikube cluster
+    - Author and test CiliumNetworkPolicy and CiliumClusterwideNetworkPolicy resources
+    - Enable and explore Hubble for network observability
+    - Configure Cilium Service Mesh (Ingress/Gateway API) without a sidecar proxy
+    - Set up Cluster Mesh across two clusters
+    - Configure BGP peering with Cilium's BGP Control Plane
+    - Inspect eBPF programs/maps with cilium-dbg / bpftool

@@ -1,0 +1,30 @@
+# suspend: pause the workflow. resume from the UI or `argo resume @latest -n argo`
+# with a duration it resumes on its own
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: tt-suspend-
+  namespace: argo
+spec:
+  entrypoint: main
+  templates:
+    - name: main
+      steps:
+        - - name: before
+            template: say
+        - - name: approval        # waits for a human
+            template: wait
+        - - name: delay           # resumes itself after 10s
+            template: pause10
+        - - name: after
+            template: say
+    - name: wait
+      suspend: {}
+    - name: pause10
+      suspend:
+        duration: "10s"
+    - name: say
+      container:
+        image: alpine:3.20
+        command: [echo]
+        args: ["step ran"]

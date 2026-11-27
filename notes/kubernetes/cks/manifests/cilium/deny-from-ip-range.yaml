@@ -1,0 +1,21 @@
+# Scenario 2: Denying Traffic from a Specific IP Range
+#
+# You have a database namespace running a PostgreSQL database service. You want to restrict access to the database service based on the following criteria:
+# 	1.	Allow access to the database only from the api service in the backend namespace.
+# 	2.	Deny access from any IP address within the 192.168.1.0/24 range.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: deny-from-ip-range
+  namespace: database
+spec:
+  endpointSelector: {}
+  ingressDeny:
+    - fromCIDR:
+      - 192.168.1.0/24
+  ingress:
+    - fromEndpoints:
+      - matchLabels:
+          k8s:io.kubernetes.pod.namespace: backend
+          service: api
+

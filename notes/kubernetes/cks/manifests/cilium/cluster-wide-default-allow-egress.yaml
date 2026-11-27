@@ -1,0 +1,15 @@
+# Scenario 3: Cluster-wide Policy (CiliumClusterwideNetworkPolicy)
+#
+# Problem:
+# Create a clustler-wide policy to allow all egress traffic but deny all ingress
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: cluster-wide-default-allow-egress
+spec:
+  endpointSelector: {}
+  ingress: 
+    - fromEndpoints: []
+  egress:
+  - toEntities:
+    - "all"

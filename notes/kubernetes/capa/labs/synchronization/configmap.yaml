@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sync-lab-page
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+data:
+  index.html: |
+    <!doctype html>
+    <html>
+      <body><h1>Argo CD sync lab</h1><p>The app is serving its ConfigMap.</p></body>
+    </html>

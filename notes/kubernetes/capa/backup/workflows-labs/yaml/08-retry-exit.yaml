@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: retry-exit-
+  namespace: argo
+spec:
+  entrypoint: flaky
+  # runs at the end no matter what the result was
+  onExit: cleanup
+  templates:
+    - name: flaky
+      retryStrategy:
+        limit: "5"
+        retryPolicy: Always
+        backoff:
+          duration: 2s
+          factor: 2
+      script:
+        image: python:3.12-alpine
+        command: [python]
+        source: |
+          import random, sys
+          n = random.randint(1, 3)
+          print(f"rolled {n}")
+          sys.exit(0 if n == 1 else 1)
+
+    - name: cleanup
+      container:
+        image: alpine:3.20
+        command: [echo]
+        args: ["exit handler. workflow status: {{workflow.status}}"]

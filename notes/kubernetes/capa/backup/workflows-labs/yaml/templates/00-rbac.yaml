@@ -1,0 +1,28 @@
+# resource and http templates need extra permissions for the workflow's service account.
+# lab only. grants the default SA in the argo namespace more than it should have
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: template-types-lab
+  namespace: argo
+rules:
+  - apiGroups: [""]
+    resources: [configmaps]
+    verbs: [create, get, patch, delete]
+  - apiGroups: [argoproj.io]
+    resources: [workflowtaskresults]
+    verbs: [create, patch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: template-types-lab
+  namespace: argo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: template-types-lab
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: argo

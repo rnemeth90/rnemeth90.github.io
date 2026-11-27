@@ -1,0 +1,79 @@
+---
+exam:
+  name: Certified Kubernetes Administrator
+  abbreviation: CKA
+  provider: Linux Foundation / CNCF
+  official_page: https://www.cncf.io/training/certification/cka/
+  registration_page: https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/
+  curriculum: https://github.com/cncf/curriculum
+  candidate_handbook: https://www.cncf.io/certification/candidate-handbook
+  exam_tips: https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
+  level: professional / administrator
+  description: >
+    Validates the skills, knowledge, and competency to perform the
+    responsibilities of a Kubernetes administrator — installation,
+    configuration, and management of production-grade Kubernetes
+    clusters.
+  target_audience:
+    - Kubernetes/cluster administrators
+    - Platform engineers / SREs
+    - DevOps engineers responsible for cluster lifecycle
+  recommended_background:
+    - Hands-on Kubernetes cluster administration experience
+    - Comfortable with the Linux command line and YAML
+    - KCNA is a good (not required) stepping stone
+  prerequisites: none
+
+format:
+  delivery: online, proctored (PSI)
+  question_type: performance-based, hands-on command-line tasks
+  task_count_approx: 15-20
+  duration_minutes: 120
+  passing_score_percent: 66
+  language: English
+  open_book: Kubernetes.io docs (and a short allow-list of related sites) accessible during the exam
+
+cost:
+  exam_usd_approx: 445
+  note: list price, includes one free retake; varies with bundles/promos
+
+policy:
+  validity_years: 3
+  retakes_included: 1
+
+domains:
+  - name: Cluster Architecture, Installation & Configuration
+    weight_percent: 25
+    dir: cluster-architecture-installation-and-configuration
+  - name: Workloads & Scheduling
+    weight_percent: 15
+    dir: workloads-and-scheduling
+  - name: Services & Networking
+    weight_percent: 20
+    dir: services-and-networking
+  - name: Storage
+    weight_percent: 10
+    dir: storage
+  - name: Troubleshooting
+    weight_percent: 30
+    dir: troubleshooting
+
+preparation:
+  study_resources:
+    - name: Kubernetes Documentation
+      url: https://kubernetes.io/docs/home/
+    - name: CNCF CKA Curriculum (GitHub)
+      url: https://github.com/cncf/curriculum
+    - name: killer.sh CKA Simulator (included with exam registration)
+      url: https://killer.sh/cka
+  practice:
+    - name: Kubernetes the Hard Way
+      url: https://github.com/kelseyhightower/kubernetes-the-hard-way
+  labs:
+    - Bootstrap a multi-node cluster with kubeadm
+    - Perform a control-plane and node upgrade with kubeadm
+    - Back up and restore etcd
+    - Configure RBAC, Services, Ingress, and NetworkPolicies
+    - Manage workloads with Deployments, DaemonSets, and StatefulSets
+    - Configure static/dynamic PersistentVolumes and StorageClasses
+    - Troubleshoot cluster, node, and application failures (logs, events, kubelet, control-plane components)

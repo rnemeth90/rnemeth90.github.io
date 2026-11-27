@@ -1,0 +1,114 @@
+# Certified Kubernetes Security Specialist (CKS) Notes
+## Table of Contents
+# Exam
+## Outline
+## Changes
+## Software / Environment
+## Exam Environment Setup
+### Terminal Shortcuts/Aliases
+# If kc-dry and kr-dry do not autocomplete, add the following
+### Terminal Command Completion
+### VIM
+#### Pasting Text Into VIM
+### tmux
+#### Mouse Support
+# Preperation
+## Study Resources
+## Practice
+# Fundamentals
+# Cluster Setup
+## CIS Benchmark
+### What is a security benchmark?
+### KubeBench
+## Cluster Upgrades
+### Upgrade Process
+### Upgrading with Kubeadm
+## Network Policies
+### Overview
+### Key Concepts
+### Common Fields in a Network Policy
+### Example Network Policies
+#### Allow All Ingress Traffic
+#### Deny All Ingress and Egress Traffic
+#### Allow Specific Ingress from a Namespace
+#### Allow Egress to a Specific IP
+## Kubernetes Ingress
+### What is Ingress?
+### Why Use Ingress?
+### Key Components of Ingress
+### Ingress Resource Configuration
+### Basic Structure
+### Ingress with TLS
+# create a new 2048-bit RSA private key and associated cert
+### Annotations
+## Protecting Node Metadata and Endpoints
+### Protecting Endpoints
+### Protecting Node Metadata
+## Protecting the Kubernetes Dashboard
+## Validating Kubernetes Binaries
+# Cluster Hardening
+## Securing Access to the KubeAPI Server
+## Authentication
+### User accounts
+### Service Accounts
+## TLS Certificates
+## kubelet Security
+## Verify Kubernetes Binaries
+## Authorization
+### Roles and ClusterRoles
+### Role Bindings and Cluster Role Bindings
+## Securing Node Metadata
+# System Hardening
+## Principle of Least Privilege
+## Limit access to nodes
+### Managing Local Users and Groups
+### Securing SSH
+### Using sudo
+# Example Lines
+# ----------------------------------
+# User/Group       Host=Command(s)
+# Field Breakdown
+# Examples Explained
+### Remove Packages Packages
+### Restrict Kernel Modules
+### Disable Open Ports
+## Tracing Syscalls
+### strace
+### AquaSec Tracee
+### Restricting Access to syscalls
+## Restrict access to file systems
+## Linux Capabilities in Pods
+# Minimize Microservice Vulnerabilities
+## Pod Security Admission
+## Security Contexts
+## Admission Controllers
+## Open Policy Agent
+### OPA in Kubernetes
+#### GateKeeper
+## Kubernetes Secrets
+## Encrypting etcd
+## Container Sandboxing
+### gVisor
+### Kata Containers
+## RuntimeClass
+#### To use a runtime class
+## Resource Quotas
+## API Priority and Fairness
+## Pod Priority and Preemption
+## Pod to Pod Encryption
+# Supply Chain Security
+## SBOM
+## Reduce docker image size
+## Static Analysis
+### SBOM
+### Kubesec
+### Syft
+### Grype
+### Kube-linter
+## Scanning Images for Vulnerabilities
+### trivy
+# Monitoring, Logging, and Runtime Security
+## falco
+## Ensuring Container Immutability
+## Audit Logs
+### Sample Audit Policy
